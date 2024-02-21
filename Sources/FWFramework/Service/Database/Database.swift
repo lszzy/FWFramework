@@ -246,14 +246,20 @@ public class DatabaseManager: NSObject {
         return nil
     }
     
-    /// 更新本地模型对象
+    /// 更新本地模型对象，主键必须存在
     @discardableResult
-    public static func update(_ model: DatabaseModel, where condition: String? = nil) -> Bool {
-        guard localName(with: type(of: model)) != nil else { return false }
+    public static func update(_ model: DatabaseModel) -> Bool {
+        let modelClass = type(of: model)
+        guard localName(with: modelClass) != nil else { return false }
+        
+        let primaryKey = getPrimaryKey(modelClass)
+        let primaryValue = getPrimaryValue(model)
+        if primaryValue <= 0 { return false }
         
         if !isMigration {
             semaphore.wait()
         }
+        let condition = String(format: "%@ = %ld", primaryKey, primaryValue)
         let result = updateModel(model, where: condition)
         if !isMigration {
             semaphore.signal()
@@ -261,7 +267,22 @@ public class DatabaseManager: NSObject {
         return result
     }
     
-    /// 更新数据表字段
+    /// 更新数据表字段，where为空则更新所有
+    @discardableResult
+    public static func update<T: DatabaseModel>(_ type: T.Type, value: T, where condition: String? = nil) -> Bool {
+        guard localName(with: type) != nil else { return false }
+        
+        if !isMigration {
+            semaphore.wait()
+        }
+        let result = updateModel(value, where: condition)
+        if !isMigration {
+            semaphore.signal()
+        }
+        return result
+    }
+    
+    /// 更新数据表字段，where为空则更新所有
     @discardableResult
     public static func update<T: DatabaseModel>(_ type: T.Type, value: String, where condition: String? = nil) -> Bool {
         guard localName(with: type) != nil,
