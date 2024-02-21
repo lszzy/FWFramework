@@ -1139,8 +1139,8 @@ private extension DatabaseManager {
                     let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
                     sqlite3_bind_double(ppStmt, index, value.doubleValue)
                 case .int:
-                    let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
-                    sqlite3_bind_int64(ppStmt, index, value.int64Value)
+                    let value = currentModel.value(forKey: actualField) as? Int64 ?? 0
+                    sqlite3_bind_int64(ppStmt, index, value)
                 case .char:
                     let value = currentModel.value(forKey: propertyInfo.propertyName) as? Int ?? 0
                     sqlite3_bind_int(ppStmt, index, Int32(value))
