@@ -116,7 +116,7 @@ public class DatabaseManager: NSObject {
         }
         var models: [T] = []
         if openTable(type) {
-            models = commonQuery(type, where: condition, order: order, limit: limit)
+            models = commonQuery(type, where: condition, order: order, limit: limit) as? [T] ?? []
             close()
         }
         if !isMigration {
@@ -134,7 +134,7 @@ public class DatabaseManager: NSObject {
         }
         var models: [T] = []
         if openTable(type) {
-            models = startSqlQuery(type, sql: sql)
+            models = startSqlQuery(type, sql: sql) as? [T] ?? []
             close()
         }
         if !isMigration {
@@ -150,7 +150,92 @@ public class DatabaseManager: NSObject {
     }
     
     /// 利用sqlite 函数进行查询，condition为其他查询条件例如：(where age > 20 order by age desc ....)
-    public static func query<T: DatabaseModel>(_ type: T.Type, func: String, condition: String? = nil) -> Any? {
+    public static func query<T: DatabaseModel>(_ type: T.Type, func function: String, condition: String? = nil) -> Any? {
+        guard localName(with: type) != nil,
+              !function.isEmpty else { return nil }
+        
+        if !isMigration {
+            semaphore.wait()
+        }
+        var resultArray: [[Any]] = []
+        if openTable(type) {
+            let tableName = getTableName(type)
+            let selectSql = String(format: "SELECT %@ FROM %@ %@", function, tableName, handleWhere(condition))
+            var ppStmt: OpaquePointer?
+            if sqlite3_prepare_v2(database, selectSql, -1, &ppStmt, nil) == SQLITE_OK {
+                let columnCount = sqlite3_column_count(ppStmt)
+                while sqlite3_step(ppStmt) == SQLITE_ROW {
+                    var rowResultArray: [Any] = []
+                    for column in 0..<columnCount {
+                        let columnType = sqlite3_column_type(ppStmt, column)
+                        switch columnType {
+                        case SQLITE_INTEGER:
+                            let value = sqlite3_column_int64(ppStmt, column)
+                            rowResultArray.append(NSNumber(value: value))
+                        case SQLITE_FLOAT:
+                            let value = sqlite3_column_double(ppStmt, column)
+                            rowResultArray.append(NSNumber(value: value))
+                        case SQLITE_TEXT:
+                            let text = sqlite3_column_text(ppStmt, column)
+                            if let text = text {
+                                let value = String(cString: UnsafePointer(text), encoding: .utf8) ?? ""
+                                rowResultArray.append(value)
+                            }
+                        case SQLITE_BLOB:
+                            let length = sqlite3_column_bytes(ppStmt, column)
+                            let blob = sqlite3_column_blob(ppStmt, column)
+                            if blob != nil {
+                                let value = NSData(bytes: blob, length: Int(length)) as Data
+                                rowResultArray.append(value)
+                            }
+                        default:
+                            break
+                        }
+                    }
+                    if rowResultArray.count > 0 {
+                        resultArray.append(rowResultArray)
+                    }
+                }
+                sqlite3_finalize(ppStmt)
+            } else {
+                log("Sorry 查询失败, 建议检查sqlite 函数书写格式是否正确！")
+            }
+            close()
+            
+            if resultArray.count > 0 {
+                var handleResultDict: [String: [Any]] = [:]
+                for rowResultArray in resultArray {
+                    for (idx, columnValue) in rowResultArray.enumerated() {
+                        let columnArrayKey = "\(idx)"
+                        var columnValueArray = handleResultDict[columnArrayKey] ?? []
+                        columnValueArray.append(columnValue)
+                        handleResultDict[columnArrayKey] = columnValueArray
+                    }
+                }
+                
+                let allKeys = handleResultDict.keys.sorted() as NSArray
+                let handleColumnArrayKey = allKeys.sortedArray { key1, key2 in
+                    let result = (key1 as! NSString).compare(key2 as! String)
+                    return result == .orderedDescending ? .orderedAscending : result
+                } as? [String] ?? []
+                resultArray.removeAll()
+                for key in handleColumnArrayKey {
+                    if let value = handleResultDict[key] {
+                        resultArray.append(value)
+                    }
+                }
+            }
+        }
+        if !isMigration {
+            semaphore.signal()
+        }
+        
+        if resultArray.count == 1 {
+            let element = resultArray[0]
+            return element.count > 1 ? element : element.first
+        } else if resultArray.count > 1 {
+            return resultArray
+        }
         return nil
     }
     
@@ -464,7 +549,7 @@ private extension DatabaseManager {
                     checkUpdate = false
                     var oldModelDatas: [DatabaseModel] = []
                     if let type = modelClass as? DatabaseModel.Type {
-                        oldModelDatas = commonQuery(type)
+                        oldModelDatas = commonQuery(type) as? [DatabaseModel] ?? []
                     }
                     close()
                     if let type = modelClass as? DatabaseModel.Type,
@@ -490,7 +575,7 @@ private extension DatabaseManager {
         }
     }
     
-    static func autoNewSubmodel(_ modelClass: AnyClass) -> Any? {
+    static func autoNewSubmodel(_ modelClass: AnyClass) -> NSObject? {
         guard let objectClass = modelClass as? NSObject.Type else { return nil }
         
         let model = objectClass.init()
@@ -698,12 +783,102 @@ private extension DatabaseManager {
         return result
     }
     
-    static func startSqlQuery<T: DatabaseModel>(_ type: T.Type, sql: String) -> [T] {
-        return []
+    static func startSqlQuery(_ modelClass: AnyClass, sql: String) -> [Any] {
+        let fieldDictionary = parseModelFields(modelClass, hasPrimary: false)
+        var models: [Any] = []
+        var ppStmt: OpaquePointer?
+        if sqlite3_prepare_v2(database, sql, -1, &ppStmt, nil) == SQLITE_OK {
+            let columnCount = sqlite3_column_count(ppStmt)
+            while sqlite3_step(ppStmt) == SQLITE_ROW {
+                guard let model = autoNewSubmodel(modelClass) else { break }
+                let primarySetter = DatabasePropertyInfo.setter(propertyName: getPrimaryKey(modelClass))
+                if model.responds(to: primarySetter) {
+                    let value = sqlite3_column_int64(ppStmt, 0)
+                    ObjCBridge.invokeMethod(model, selector: primarySetter, object: value)
+                }
+                for column in 1..<columnCount {
+                    let fieldName = String(cString: sqlite3_column_name(ppStmt, column), encoding: .utf8)
+                    guard var fieldName = fieldName,
+                          let propertyInfo = fieldDictionary[fieldName] else { continue }
+                    
+                    var currentModel: NSObject? = model
+                    if fieldName.range(of: "$") != nil {
+                        let handleFieldName = fieldName.replacingOccurrences(of: "$", with: ".") as NSString
+                        let backwardsRange = handleFieldName.range(of: ".", options: .backwards)
+                        let keyPath = handleFieldName.substring(with: NSMakeRange(0, backwardsRange.location))
+                        currentModel = model.value(forKeyPath: keyPath) as? NSObject
+                        fieldName = handleFieldName.substring(from: backwardsRange.location + backwardsRange.length)
+                    }
+                    guard let currentModel = currentModel else { continue }
+                    
+                    switch propertyInfo.type {
+                    case .mutableArray, .mutableDictionary, .dictionary, .array:
+                        let length = sqlite3_column_bytes(ppStmt, column)
+                        let blob = sqlite3_column_blob(ppStmt, column)
+                        if blob != nil {
+                            let value = NSData(bytes: blob, length: Int(length)) as Data
+                            if var fieldValue = value.fw_unarchivedObject() {
+                                switch propertyInfo.type {
+                                case .mutableArray:
+                                    if let valueArray = fieldValue as? NSArray {
+                                        fieldValue = NSMutableArray(array: valueArray)
+                                    }
+                                case .mutableDictionary:
+                                    if let valueDict = fieldValue as? NSDictionary {
+                                        fieldValue = NSMutableDictionary(dictionary: valueDict)
+                                    }
+                                default:
+                                    break
+                                }
+                                currentModel.setValue(fieldValue, forKey: fieldName)
+                            } else {
+                                log("query 查询异常 Array/Dictionary 元素没实现NSCoding协议解归档失败")
+                            }
+                        }
+                    case .date:
+                        let value = sqlite3_column_double(ppStmt, column)
+                        if value > 0 {
+                            let fieldValue = Date(timeIntervalSince1970: value)
+                            currentModel.setValue(fieldValue, forKey: fieldName)
+                        }
+                    case .data:
+                        let length = sqlite3_column_bytes(ppStmt, column)
+                        let blob = sqlite3_column_blob(ppStmt, column)
+                        if blob != nil {
+                            let fieldValue = NSData(bytes: blob, length: Int(length)) as Data
+                            currentModel.setValue(fieldValue, forKey: fieldName)
+                        }
+                    case .string:
+                        let text = sqlite3_column_text(ppStmt, column)
+                        if let text = text {
+                            let fieldValue = String(cString: UnsafePointer(text), encoding: .utf8) ?? ""
+                            currentModel.setValue(fieldValue, forKey: fieldName)
+                        }
+                    case .number:
+                        let value = sqlite3_column_double(ppStmt, column)
+                        currentModel.setValue(NSNumber(value: value), forKey: fieldName)
+                    case .int:
+                        let value = sqlite3_column_int64(ppStmt, column)
+                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                    case .float, .double:
+                        let value = sqlite3_column_double(ppStmt, column)
+                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                    case .char, .boolean:
+                        let value = sqlite3_column_int(ppStmt, column)
+                        ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.setter, object: value)
+                    }
+                }
+                models.append(model)
+            }
+        } else {
+            log("Sorry查询语句异常,建议检查查询条件Sql语句语法是否正确")
+        }
+        sqlite3_finalize(ppStmt)
+        return models
     }
     
-    static func commonQuery<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil, order: String? = nil, limit: String? = nil) -> [T] {
-        let tableName = getTableName(type)
+    static func commonQuery(_ modelClass: AnyClass, where condition: String? = nil, order: String? = nil, limit: String? = nil) -> [Any] {
+        let tableName = getTableName(modelClass)
         var selectSql = String(format: "SELECT * FROM %@", tableName)
         if let condition = condition, !condition.isEmpty {
             selectSql = selectSql.appendingFormat(" WHERE %@", condition)
@@ -714,7 +889,7 @@ private extension DatabaseManager {
         if let limit = limit, !limit.isEmpty {
             selectSql = selectSql.appendingFormat(" LIMIT %@", limit.replacingOccurrences(of: ".", with: "$"))
         }
-        return startSqlQuery(type, sql: selectSql)
+        return startSqlQuery(modelClass, sql: selectSql)
     }
     
     @discardableResult
