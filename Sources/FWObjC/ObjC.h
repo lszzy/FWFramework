@@ -10,9 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define FWLogDebug( aFormat, ... ) \
-    [FWObjCBridge logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
-
 #pragma mark - WeakProxyBridge
 
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
@@ -55,7 +52,6 @@ NS_SWIFT_NAME(ObjCBridgeProtocol)
 @optional
 
 + (void)autoload;
-+ (void)log:(NSString *)message;
 
 @end
 
@@ -96,8 +92,6 @@ NS_SWIFT_NAME(ObjCBridge)
 + (NSArray<Class> *)getClasses:(Class)superClass;
 
 + (void)logMessage:(NSString *)message;
-
-+ (void)logDebug:(NSString *)message;
 
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException *exception))exceptionHandler;
 

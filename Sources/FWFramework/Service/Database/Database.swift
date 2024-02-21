@@ -870,10 +870,10 @@ private extension DatabaseManager {
                 }
                 models.append(model)
             }
+            sqlite3_finalize(ppStmt)
         } else {
             log("Sorry查询语句异常,建议检查查询条件Sql语句语法是否正确")
         }
-        sqlite3_finalize(ppStmt)
         return models
     }
     
@@ -1030,8 +1030,98 @@ private extension DatabaseManager {
         }
     }
     
-    static func updateModel(_ model: DatabaseModel, where: String?) -> Bool {
-        return false
+    static func updateModel(_ model: DatabaseModel, where condition: String?) -> Bool {
+        let modelClass = type(of: model)
+        if !openTable(modelClass) { return false }
+        
+        let fieldDictionary = parseModelFields(modelClass, hasPrimary: false)
+        let tableName = getTableName(modelClass)
+        var updateSql = String(format: "UPDATE %@ SET ", tableName)
+        let fieldArray = fieldDictionary.keys
+        var updateFieldArray: [String] = []
+        for field in fieldArray {
+            updateSql.append(String(format: "%@ = ?,", field))
+            updateFieldArray.append(field)
+        }
+        updateSql = String(updateSql.dropLast())
+        if let condition = condition, !condition.isEmpty {
+            updateSql.append(String(format: " WHERE %@", handleWhere(condition)))
+        }
+        
+        var ppStmt: OpaquePointer?
+        if sqlite3_prepare_v2(database, updateSql, -1, &ppStmt, nil) == SQLITE_OK {
+            for fieldName in fieldArray {
+                let propertyInfo = fieldDictionary[fieldName]!
+                var currentModel = model as? NSObject
+                var actualField = fieldName
+                if fieldName.range(of: "$") != nil {
+                    let handleFieldName = fieldName.replacingOccurrences(of: "$", with: ".") as NSString
+                    let backwardsRange = handleFieldName.range(of: ".", options: .backwards)
+                    let keyPath = handleFieldName.substring(with: NSMakeRange(0, backwardsRange.location))
+                    currentModel = currentModel?.value(forKeyPath: keyPath) as? NSObject
+                    actualField = handleFieldName.substring(from: backwardsRange.location + backwardsRange.length)
+                }
+                guard let currentModel = currentModel else { break }
+                
+                let index = Int32((updateFieldArray.firstIndex(of: fieldName) ?? 0) + 1)
+                switch propertyInfo.type {
+                case .mutableDictionary, .mutableArray, .dictionary, .array:
+                    var value = currentModel.value(forKey: actualField)
+                    if value == nil {
+                        if propertyInfo.type == .mutableDictionary {
+                            value = NSMutableDictionary()
+                        } else if propertyInfo.type == .mutableArray {
+                            value = NSMutableArray()
+                        } else if propertyInfo.type == .dictionary {
+                            value = NSDictionary()
+                        } else {
+                            value = NSArray()
+                        }
+                    }
+                    let data = Data.fw_archivedData(value) as? NSData
+                    let safeData = data ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
+                    if data == nil {
+                        log("update 操作异常 Array/Dictionary 元素没实现NSCoding协议归档失败")
+                    }
+                case .date:
+                    let value = currentModel.value(forKey: actualField) as? Date
+                    sqlite3_bind_double(ppStmt, index, value?.timeIntervalSince1970 ?? 0)
+                case .data:
+                    let value = currentModel.value(forKey: actualField) as? NSData ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, value.bytes, Int32(value.length), nil)
+                case .string:
+                    let value = currentModel.value(forKey: actualField) as? String ?? ""
+                    sqlite3_bind_text(ppStmt, index, value, -1, nil)
+                case .number:
+                    let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
+                    sqlite3_bind_double(ppStmt, index, value.doubleValue)
+                case .int:
+                    let value = currentModel.value(forKey: actualField) as? NSNumber ?? NSNumber(value: 0)
+                    sqlite3_bind_int64(ppStmt, index, value.int64Value)
+                case .char:
+                    let value = ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.getter) as? Int ?? 0
+                    sqlite3_bind_int(ppStmt, index, Int32(value))
+                case .boolean:
+                    let value = ObjCBridge.invokeMethod(currentModel, selector: propertyInfo.getter) as? Bool ?? false
+                    sqlite3_bind_int(ppStmt, index, NSNumber(value: value).int32Value)
+                case .float:
+                    let value = currentModel.value(forKey: actualField) as? Float ?? 0
+                    sqlite3_bind_double(ppStmt, index, Double(value))
+                case .double:
+                    let value = currentModel.value(forKey: actualField) as? Double ?? 0
+                    sqlite3_bind_double(ppStmt, index, value)
+                }
+            }
+            let result = sqlite3_step(ppStmt) == SQLITE_DONE
+            sqlite3_finalize(ppStmt)
+            close()
+            return result
+        } else {
+            log("更新失败")
+            close()
+            return false
+        }
     }
     
     static func commonDeleteModel(_ modelClass: AnyClass, where condition: String?) -> Bool {

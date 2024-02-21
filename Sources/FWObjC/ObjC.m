@@ -508,13 +508,6 @@ static SEL FWCGSVGDocumentSEL = NULL;
     NSLog(@"%@", message);
 }
 
-+ (void)logDebug:(NSString *)message {
-    if ([FWObjCBridge respondsToSelector:@selector(log:)]) {
-        id objcBridge = [FWObjCBridge class];
-        [objcBridge log:message];
-    }
-}
-
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();
