@@ -49,7 +49,10 @@ import SQLite3
 public class DatabaseManager: NSObject {
     
     /// 全局数据库模型版本号，默认1.0。如果模型实现了databaseVersion且不为空，则会忽略全局版本号
-    public static var version: String = "1.0"
+    public static var version = "1.0"
+    
+    /// 是否打印调试SQL语句，默认true
+    public static var printSql = true
     
     private static var database: OpaquePointer!
     private static var semaphore = DispatchSemaphore(value: 1)
@@ -161,6 +164,10 @@ public class DatabaseManager: NSObject {
         if openTable(type) {
             let tableName = getTableName(type)
             let selectSql = String(format: "SELECT %@ FROM %@ %@", function, tableName, handleWhere(condition))
+            if printSql {
+                log(String(format: "执行查询 -> %@", selectSql))
+            }
+            
             var ppStmt: OpaquePointer?
             if sqlite3_prepare_v2(database, selectSql, -1, &ppStmt, nil) == SQLITE_OK {
                 let columnCount = sqlite3_column_count(ppStmt)
@@ -322,7 +329,7 @@ public class DatabaseManager: NSObject {
                 if file != ".DS_Store" {
                     let filePath = cachePath.fw_appendingPath(file)
                     try? FileManager.default.removeItem(atPath: filePath)
-                    log(String(format: "已经删除了数据库 ->%@", filePath))
+                    log(String(format: "已经删除了数据库 -> %@", filePath))
                 }
             })
         }
@@ -667,7 +674,7 @@ private extension DatabaseManager {
     static func executeSql(_ sql: String) -> Bool {
         let result = sqlite3_exec(database, sql, nil, nil, nil) == SQLITE_OK
         if !result {
-            log(String(format: "执行失败->%@", sql))
+            log(String(format: "执行失败 -> %@", sql))
         }
         return result
     }
@@ -786,6 +793,10 @@ private extension DatabaseManager {
     static func startSqlQuery(_ modelClass: AnyClass, sql: String) -> [Any] {
         let fieldDictionary = parseModelFields(modelClass, hasPrimary: false)
         var models: [Any] = []
+        if printSql {
+            log(String(format: "执行查询 -> %@", sql))
+        }
+        
         var ppStmt: OpaquePointer?
         if sqlite3_prepare_v2(database, sql, -1, &ppStmt, nil) == SQLITE_OK {
             let columnCount = sqlite3_column_count(ppStmt)
@@ -979,10 +990,13 @@ private extension DatabaseManager {
         }
         
         insertSql = String(insertSql.dropLast()).appending(") VALUES (")
-        for field in fieldArray {
+        for _ in fieldArray {
             insertSql.append("?,")
         }
         insertSql = String(insertSql.dropLast()).appending(")")
+        if printSql {
+            log(String(format: "执行写入 -> %@", insertSql))
+        }
         
         if sqlite3_prepare_v2(database, insertSql, -1, &ppStmt, nil) == SQLITE_OK {
             for (idx, field) in fieldArray.enumerated() {
@@ -1046,6 +1060,9 @@ private extension DatabaseManager {
         updateSql = String(updateSql.dropLast())
         if let condition = condition, !condition.isEmpty {
             updateSql.append(String(format: " WHERE %@", handleWhere(condition)))
+        }
+        if printSql {
+            log(String(format: "执行更新 -> %@", updateSql))
         }
         
         var ppStmt: OpaquePointer?
@@ -1191,7 +1208,7 @@ private extension DatabaseManager {
     
     static func log(_ msg: String) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "Database: [%@]", msg)
+        Logger.debug(group: Logger.fw_moduleName, "Database: %@", msg)
         #endif
     }
     

@@ -48,6 +48,11 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
+        let count = DatabaseManager.count(TestDatabaseModel.self)
+        if count > 0 {
+            navigationItem.title = "Database-\(count)"
+        }
+        
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["新增一条数据", "获取当前版本号", "更新数据库版本", "清空所有数据", "删除数据库文件"], actionBlock: { index in
                 if index == 0 {
@@ -92,6 +97,18 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         cell.textLabel?.text = "\(model.id)\(tag)\n" + model.content
         cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = tableData[indexPath.row]
+        app.showPrompt(title: "请编辑内容", message: nil) { textField in
+            textField.text = model.content
+        } confirmBlock: { [weak self] text in
+            model.content = text
+            DatabaseManager.update(model)
+            
+            self?.setupSubviews()
+        }
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
