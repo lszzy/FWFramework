@@ -639,9 +639,10 @@ private extension DatabaseManager {
     }
     
     static func getPrimaryValue(_ model: DatabaseModel) -> Int {
-        let primaryGetter = NSSelectorFromString(getPrimaryKey(type(of: model)))
-        if model.responds(to: primaryGetter) {
-            return ObjCBridge.invokeMethod(model, selector: primaryGetter) as? Int ?? -1
+        let primaryKey = getPrimaryKey(type(of: model))
+        let primaryGetter = NSSelectorFromString(primaryKey)
+        if let object = model as? NSObject, object.responds(to: primaryGetter) {
+            return object.value(forKey: primaryKey) as? Int ?? -1
         }
         
         return -1
@@ -796,11 +797,12 @@ private extension DatabaseManager {
         if openTable(type(of: model)) {
             result = commonInsert(model, isReplace: isReplace)
             let value = result ? getPrimaryValue(model) : -1
-            if result && value == 0 {
+            if result && value < 1 {
                 let rowId = Int(sqlite3_last_insert_rowid(database))
-                let primarySetter = DatabasePropertyInfo.setter(propertyName: getPrimaryKey(type(of: model)))
-                if model.responds(to: primarySetter) {
-                    ObjCBridge.invokeMethod(model, selector: primarySetter, object: rowId)
+                let primaryKey = getPrimaryKey(type(of: model))
+                let primarySetter = DatabasePropertyInfo.setter(propertyName: primaryKey)
+                if let object = model as? NSObject, object.responds(to: primarySetter) {
+                    object.setValue(rowId, forKey: primaryKey)
                 }
             }
             close()
@@ -823,10 +825,11 @@ private extension DatabaseManager {
             let columnCount = sqlite3_column_count(ppStmt)
             while sqlite3_step(ppStmt) == SQLITE_ROW {
                 guard let model = autoNewSubmodel(modelClass) else { break }
-                let primarySetter = DatabasePropertyInfo.setter(propertyName: getPrimaryKey(modelClass))
+                let primaryKey = getPrimaryKey(modelClass)
+                let primarySetter = DatabasePropertyInfo.setter(propertyName: primaryKey)
                 if model.responds(to: primarySetter) {
                     let value = sqlite3_column_int64(ppStmt, 0)
-                    ObjCBridge.invokeMethod(model, selector: primarySetter, object: value)
+                    model.setValue(value, forKey: primaryKey)
                 }
                 for column in 1..<columnCount {
                     let fieldName = String(cString: sqlite3_column_name(ppStmt, column), encoding: .utf8)
