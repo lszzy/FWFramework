@@ -333,7 +333,8 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     /// 内容视图背景色，默认nil
     open var contentViewBackgroundColor: UIColor?
     
-    private var pageControlIndex: Int = -1
+    /// 当前index，默认-1
+    open private(set) var currentIndex: Int = -1
     
     private var imagePathsGroup: [Any] = [] {
         didSet {
@@ -360,7 +361,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     private var timer: Timer?
     
     // MARK: - Subviews
-    fileprivate lazy var mainView: UICollectionView = {
+    open private(set) lazy var mainView: UICollectionView = {
         let result = UICollectionView(frame: bounds, collectionViewLayout: flowLayout)
         result.backgroundColor = .clear
         result.isPagingEnabled = true
@@ -374,14 +375,15 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         return result
     }()
     
-    private lazy var flowLayout: BannerViewFlowLayout = {
+    open private(set) lazy var flowLayout: BannerViewFlowLayout = {
         let result = BannerViewFlowLayout()
         result.minimumLineSpacing = 0
         result.scrollDirection = .horizontal
         return result
     }()
     
-    private weak var pageControl: UIControl?
+    open private(set) weak var pageControl: UIControl?
+    
     private let bannerViewCellID = "BannerViewCell"
     
     // MARK: - Lifecycle
@@ -693,14 +695,14 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             pageDotImage = dotImage
         }
         
-        pageControlIndex = -1
+        currentIndex = -1
         notifyPageControlIndex(indexOnPageControl)
     }
     
     private func notifyPageControlIndex(_ index: Int) {
-        guard pageControlIndex != index else { return }
+        guard currentIndex != index else { return }
         
-        pageControlIndex = index
+        currentIndex = index
         delegate?.bannerView?(self, didScrollToItemAt: index)
         didScrollToItemBlock?(index)
     }

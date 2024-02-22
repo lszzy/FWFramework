@@ -10,9 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define FWLogDebug( aFormat, ... ) \
-    [FWObjCBridge logDebug:[NSString stringWithFormat:(@"(%@ %@ #%d %s) " aFormat), NSThread.isMainThread ? @"[M]" : @"[T]", [@(__FILE__) lastPathComponent], __LINE__, __PRETTY_FUNCTION__, ##__VA_ARGS__]];
-
 #pragma mark - WeakProxyBridge
 
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
@@ -55,8 +52,6 @@ NS_SWIFT_NAME(ObjCBridgeProtocol)
 @optional
 
 + (void)autoload;
-+ (void)log:(NSString *)message;
-+ (nullable UIImage *)image:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
 
 @end
 
@@ -98,11 +93,7 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (void)logMessage:(NSString *)message;
 
-+ (void)logDebug:(NSString *)message;
-
-+ (nullable UIImage *)decodeImage:(NSData *)data scale:(CGFloat)scale options:(nullable NSDictionary *)options;
-
-+ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(nullable void (^)(NSException *exception))exceptionHandler;
++ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException *exception))exceptionHandler;
 
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;
 

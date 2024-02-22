@@ -72,7 +72,7 @@ open class CacheSqlite: CacheEngine {
                 let sql = "SELECT object FROM FWCache WHERE key = ?"
                 var stmt: OpaquePointer?
                 if sqlite3_prepare_v2(database, sql, -1, &stmt, nil) == SQLITE_OK {
-                    sqlite3_bind_text(stmt, 1, key, -1, nil)
+                    sqlite3_bind_text(stmt, 1, (key as NSString).utf8String, -1, nil)
                     
                     while sqlite3_step(stmt) == SQLITE_ROW {
                         let dataBuffer = sqlite3_column_blob(stmt, 0)
@@ -99,7 +99,7 @@ open class CacheSqlite: CacheEngine {
                 let sql = "REPLACE INTO FWCache (key, object) VALUES (?, ?)"
                 var stmt: OpaquePointer?
                 if sqlite3_prepare_v2(database, sql, -1, &stmt, nil) == SQLITE_OK {
-                    sqlite3_bind_text(stmt, 1, key, -1, nil)
+                    sqlite3_bind_text(stmt, 1, (key as NSString).utf8String, -1, nil)
                     
                     sqlite3_bind_blob(stmt, 2, data.bytes, Int32(data.length), nil)
                     sqlite3_step(stmt)
@@ -117,7 +117,7 @@ open class CacheSqlite: CacheEngine {
                 let sql = "DELETE FROM FWCache WHERE key = ?"
                 var stmt: OpaquePointer?
                 if sqlite3_prepare_v2(database, sql, -1, &stmt, nil) == SQLITE_OK {
-                    sqlite3_bind_text(stmt, 1, key, -1, nil)
+                    sqlite3_bind_text(stmt, 1, (key as NSString).utf8String, -1, nil)
                     
                     sqlite3_step(stmt)
                 }

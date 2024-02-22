@@ -10,6 +10,15 @@ import Foundation
 import FWObjC
 #endif
 
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 自动加载Swift类并调用autoload方法，参数为Class或String
+    @discardableResult
+    public static func autoload(_ clazz: Any) -> Bool {
+        return Autoloader.autoload(clazz)
+    }
+}
+
 // MARK: - AutoloadProtocol
 /// Swift自动加载协议，配合autoload(_:)方法使用
 public protocol AutoloadProtocol {
@@ -149,29 +158,6 @@ internal class FrameworkAutoloader: NSObject {
     /// 自动加载Autoloader
     public static func autoload() {
         Autoloader.autoload()
-    }
-    
-    /// 打印日志桥接方法
-    public static func log(_ message: String) {
-        #if DEBUG
-        Logger.log(.debug, group: Logger.fw_moduleName, message: message)
-        #endif
-    }
-    
-    /// 图片解码桥接方法
-    public static func image(_ data: Data, scale: CGFloat, options: [AnyHashable : Any]? = nil) -> UIImage? {
-        var targetOptions: [ImageCoderOptions: Any]?
-        if let options = options {
-            targetOptions = [:]
-            for (key, value) in options {
-                if let option = key as? ImageCoderOptions {
-                    targetOptions?[option] = value
-                } else {
-                    targetOptions?[.init("\(key)")] = value
-                }
-            }
-        }
-        return UIImage.fw_image(data: data, scale: scale, options: targetOptions)
     }
     
 }

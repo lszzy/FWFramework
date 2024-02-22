@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import AVFoundation
 
 class TestAudioController: UIViewController {
     
@@ -16,6 +17,9 @@ class TestAudioController: UIViewController {
     
     @StoredValue("TestAudioCacheEnabled")
     private var cacheEnabled: Bool = false
+    
+    @StoredValue("TestAudioUrl")
+    private var audioUrl = ""
     
     // MARK: - Subviews
     private lazy var audioImage: UIImageView = {
@@ -72,17 +76,30 @@ extension TestAudioController: ViewControllerProtocol {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             guard let self = self else { return }
             
-            self.app.showSheet(title: nil, message: nil, actions: [self.audioPlayer.repeatMode == .on ? "关闭循环" : "循环播放", self.audioPlayer.shuffleMode == .on ? "顺序播放" : "随机播放", self.cacheEnabled ? "禁用缓存" : "启用缓存"]) { [weak self] index in
+            self.app.showSheet(title: nil, message: nil, actions: [self.audioPlayer.repeatMode == .on ? "关闭循环" : "循环播放", self.audioPlayer.shuffleMode == .on ? "顺序播放" : "随机播放", self.cacheEnabled ? "禁用缓存" : "启用缓存", "自定义音频URL"]) { [weak self] index in
                 guard let self = self else { return }
                 
                 if index == 0 {
                     self.audioPlayer.repeatMode = self.audioPlayer.repeatMode == .on ? .off : .on
                 } else if index == 1 {
                     self.audioPlayer.shuffleMode = self.audioPlayer.shuffleMode == .on ? .off : .on
-                } else {
+                } else if index == 2 {
                     self.cacheEnabled = !self.cacheEnabled
+                    if !self.cacheEnabled {
+                        FileManager.app.removeItem(atPath: PlayerCacheManager.cacheDirectory)
+                    }
                     self.audioPlayer.playItem(from: 0)
                     self.renderData()
+                } else {
+                    self.app.showPrompt(title: "请输入音频URL", message: nil) { [weak self] textField in
+                        guard let self = self else { return }
+                        
+                        textField.text = !self.audioUrl.isEmpty ? self.audioUrl : "http://music.163.com/song/media/outer/url?id=447925558.mp3"
+                    } confirmBlock: { [weak self] text in
+                        self?.audioUrl = text
+                        self?.audioPlayer.playItem(from: 0)
+                        self?.renderData()
+                    }
                 }
             }
         }
@@ -160,27 +177,34 @@ extension TestAudioController: ViewControllerProtocol {
 extension TestAudioController: AudioPlayerDelegate, AudioPlayerDataSource {
     
     func audioPlayerNumberOfItems() -> Int {
+        if !audioUrl.isEmpty {
+            return 1
+        }
         return 3
     }
     
     func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> Any? {
         var url: URL?
-        switch index {
-            case 0:
-                url = Bundle.main.url(forResource: "Audio1", withExtension: "mp3")
-                break
-            case 1:
-                url = Bundle.main.url(forResource: "Audio2", withExtension: "m4a")
-                break
-            case 2:
-                url = Bundle.main.url(forResource: "Audio3", withExtension: "m4a")
-                break
-            default:
-                break
+        if !audioUrl.isEmpty {
+            url = URL.app.url(string: audioUrl)
+        } else {
+            switch index {
+                case 0:
+                    url = Bundle.main.url(forResource: "Audio1", withExtension: "mp3")
+                    break
+                case 1:
+                    url = Bundle.main.url(forResource: "Audio2", withExtension: "m4a")
+                    break
+                case 2:
+                    url = Bundle.main.url(forResource: "Audio3", withExtension: "m4a")
+                    break
+                default:
+                    break
+            }
         }
         
         if let audioUrl = url, cacheEnabled {
-            return resourceLoader.urlAsset(with: audioUrl)
+            return resourceLoader.urlAsset(url: audioUrl)
         }
         return url
     }

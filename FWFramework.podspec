@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.0.0-beta.4'
+  s.version               = '5.0.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -15,7 +15,6 @@ Pod::Spec.new do |s|
   
   s.subspec 'FWObjC' do |ss|
     ss.source_files = 'Sources/FWObjC/**/*.{h,m}'
-    ss.library = 'sqlite3'
   end
   
   s.subspec 'FWFramework' do |ss|

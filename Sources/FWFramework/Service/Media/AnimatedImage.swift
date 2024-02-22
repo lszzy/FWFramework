@@ -12,6 +12,69 @@ import ImageIO
 import FWObjC
 #endif
 
+// MARK: - Wrapper+UIImage
+extension Wrapper where Base: UIImage {
+    /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
+    public var imageLoopCount: UInt {
+        get { return base.fw_imageLoopCount }
+        set { base.fw_imageLoopCount = newValue }
+    }
+
+    /// 是否是动图，内部检查images数组
+    public var isAnimated: Bool {
+        return base.fw_isAnimated
+    }
+    
+    /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
+    public var isVector: Bool {
+        return base.fw_isVector
+    }
+    
+    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
+    public var imageFormat: ImageFormat {
+        get { return base.fw_imageFormat }
+        set { base.fw_imageFormat = newValue }
+    }
+}
+
+// MARK: - Wrapper+Data
+extension Wrapper where Base == Data {
+    /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
+    public static func imageFormat(for imageData: Data?) -> ImageFormat {
+        return Base.fw_imageFormat(for: imageData)
+    }
+    
+    /// 图片格式转化为UTType，未知格式返回kUTTypeImage
+    public static func utType(from imageFormat: ImageFormat) -> CFString {
+        return Base.fw_utType(from: imageFormat)
+    }
+
+    /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
+    public static func imageFormat(from utType: CFString) -> ImageFormat {
+        return Base.fw_imageFormat(from: utType)
+    }
+
+    /// 图片格式转化为mimeType，未知格式返回application/octet-stream
+    public static func mimeType(from imageFormat: ImageFormat) -> String {
+        return Base.fw_mimeType(from: imageFormat)
+    }
+    
+    /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
+    public static func mimeType(from fileExtension: String) -> String {
+        return Base.fw_mimeType(from: fileExtension)
+    }
+
+    /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
+    public static func base64String(for imageData: Data?) -> String? {
+        return Base.fw_base64String(for: imageData)
+    }
+    
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    public static func imageData(for base64String: String?) -> Data? {
+        return Base.fw_imageData(for: base64String)
+    }
+}
+
 // MARK: - ImageFormat
 /// 图片格式可扩展枚举
 public struct ImageFormat: RawRepresentable, Equatable, Hashable {
@@ -433,9 +496,9 @@ open class ImageCoder: NSObject {
 
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
     open class func mimeType(from fileExtension: String) -> String {
-        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeUnretainedValue(),
-           let mimeType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeUnretainedValue() as String? {
-            return mimeType
+        if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeRetainedValue(),
+           let contentType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeRetainedValue() {
+            return contentType as String
         }
         return "application/octet-stream"
     }
@@ -499,6 +562,20 @@ open class ImageCoder: NSObject {
         let mimeType = ImageCoder.mimeType(from: ImageCoder.imageFormat(for: data))
         let base64Prefix = "data:\(mimeType);base64,"
         return base64Prefix + base64String
+    }
+    
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    open class func imageData(for base64String: String?) -> Data? {
+        guard var string = base64String, string.count > 0 else {
+            return nil
+        }
+        string = string.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "\r", with: "")
+            .replacingOccurrences(of: "\n", with: "")
+        if string.hasPrefix("data:"), let range = string.range(of: ";base64,") {
+            string = String(string.suffix(from: range.upperBound))
+        }
+        return Data(base64Encoded: string, options: .ignoreUnknownCharacters)
     }
 
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
@@ -807,6 +884,11 @@ open class ImageCoder: NSObject {
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
     public static func fw_base64String(for imageData: Data?) -> String? {
         return ImageCoder.base64String(for: imageData)
+    }
+    
+    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
+    public static func fw_imageData(for base64String: String?) -> Data? {
+        return ImageCoder.imageData(for: base64String)
     }
     
 }
