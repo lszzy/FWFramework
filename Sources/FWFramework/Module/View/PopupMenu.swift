@@ -514,7 +514,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     
     /// 灰色蒙层
     open lazy var menuMaskView: UIView = {
-        let result = UIView(frame: containerBounds)
+        let result = UIView(frame: .zero)
         result.backgroundColor = UIColor.black.withAlphaComponent(0.1)
         result.alpha = 1
         
@@ -523,7 +523,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         return result
     }()
     
-    /// 自定义容器视图，需先于relyView设置，需show之前调用
+    /// 自定义容器视图，需show之前调用
     open weak var containerView: UIView? {
         get {
             return _containerView ?? UIWindow.fw_mainWindow
@@ -539,12 +539,10 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         return containerView?.bounds ?? UIScreen.main.bounds
     }
     
-    /// 自定义依赖视图，需先设置containerView，需show之前调用
-    open weak var relyView: UIView? {
-        didSet { calculateRealPointIfNeed() }
-    }
+    /// 自定义依赖视图，优先级高于point，需show之前调用
+    open weak var relyView: UIView?
     
-    /// 自定义弹出位置，需show之前调用
+    /// 自定义弹出位置，优先级低于relyView，需show之前调用
     open var point: CGPoint = .zero
     
     /// 自定义菜单宽度，需show之前调用
@@ -558,7 +556,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     @discardableResult
     open class func show(in containerView: UIView? = nil, at point: CGPoint, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
         let popupMenu = PopupMenu()
-        popupMenu._containerView = containerView
+        popupMenu.containerView = containerView
         popupMenu.point = point
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
@@ -572,7 +570,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     @discardableResult
     open class func show(in containerView: UIView? = nil, relyOn view: UIView?, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
         let popupMenu = PopupMenu()
-        popupMenu._containerView = containerView
+        popupMenu.containerView = containerView
         popupMenu.relyView = view
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
@@ -619,6 +617,9 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     /// 显示
     open func show() {
         orientationManager.startMonitorDeviceOrientation()
+        if relyView != nil {
+            calculateRealPointIfNeed()
+        }
         updateUI()
         containerView?.addSubview(menuMaskView)
         containerView?.addSubview(self)
