@@ -489,6 +489,12 @@ extension Wrapper where Base: UIView {
 // MARK: - NSLayoutConstraint+AutoLayout
 extension Wrapper where Base: NSLayoutConstraint {
     
+    /// 是否自动等比例缩放偏移值，默认未设置时检查视图和全局配置
+    public var autoScaleLayout: Bool {
+        get { base.fw_autoScaleLayout }
+        set { base.fw_autoScaleLayout = newValue }
+    }
+    
     /// 设置偏移值，根据配置自动等比例缩放和取反
     public var offset: CGFloat {
         get { base.fw_offset }

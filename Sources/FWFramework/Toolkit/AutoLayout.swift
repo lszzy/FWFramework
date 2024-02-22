@@ -770,13 +770,12 @@ extension UILayoutPriority {
 // MARK: - NSLayoutConstraint+AutoLayout
 @_spi(FW) extension NSLayoutConstraint {
     
-    /// 设置偏移值，根据配置自动等比例缩放和取反
-    public var fw_offset: CGFloat {
+    /// 是否自动等比例缩放偏移值，默认未设置时检查视图和全局配置
+    public var fw_autoScaleLayout: Bool {
         get {
-            fw_propertyDouble(forName: "fw_offset")
-        }
-        set {
-            fw_setPropertyDouble(newValue, forName: "fw_offset")
+            if let number = fw_propertyNumber(forName: "fw_autoScaleLayout") {
+                return number.boolValue
+            }
             
             var autoScaleLayout = UIView.fw_autoScaleLayout
             if let view = firstItem as? UIView {
@@ -784,7 +783,27 @@ extension UILayoutPriority {
             } else if let view = (firstItem as? UILayoutGuide)?.owningView {
                 autoScaleLayout = view.fw_autoScaleLayout
             }
-            let offset = autoScaleLayout ? (UIView.fw_autoScaleBlock?(newValue) ?? newValue) : newValue
+            return autoScaleLayout
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
+            
+            if let offset = fw_propertyNumber(forName: "fw_offset") {
+                fw_offset = offset.doubleValue
+            }
+        }
+    }
+    
+    /// 设置偏移值，根据配置自动等比例缩放和取反
+    public var fw_offset: CGFloat {
+        get {
+            let number = fw_propertyNumber(forName: "fw_offset")
+            return number?.doubleValue ?? .zero
+        }
+        set {
+            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_offset")
+            
+            let offset = fw_autoScaleLayout ? (UIView.fw_autoScaleBlock?(newValue) ?? newValue) : newValue
             self.constant = fw_isOpposite ? -offset : offset
         }
     }
@@ -1352,6 +1371,22 @@ public class LayoutChain {
     }
     
     // MARK: - Offset
+    @discardableResult
+    public func relative() -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_autoScaleLayout = true
+        })
+        return self
+    }
+    
+    @discardableResult
+    public func fixed() -> Self {
+        self.view?.fw_lastConstraints.forEach({ obj in
+            obj.fw_autoScaleLayout = false
+        })
+        return self
+    }
+    
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
         self.view?.fw_lastConstraints.forEach({ obj in
