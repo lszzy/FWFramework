@@ -7,8 +7,65 @@
 
 import UIKit
 
-// MARK: - SkeletonAnimation
+// MARK: - Wrapper+UIView
+/// 视图显示骨架屏扩展
+extension Wrapper where Base: UIView {
+    /// 显示骨架屏，指定布局代理
+    public func showSkeleton(delegate: SkeletonViewDelegate?) {
+        base.fw_showSkeleton(delegate: delegate)
+    }
+    
+    /// 显示骨架屏，指定布局句柄
+    public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
+        base.fw_showSkeleton(block: block)
+    }
+    
+    /// 显示骨架屏，默认布局代理为self
+    public func showSkeleton() {
+        base.fw_showSkeleton()
+    }
+    
+    /// 隐藏骨架屏
+    public func hideSkeleton() {
+        base.fw_hideSkeleton()
+    }
+    
+    /// 是否正在显示骨架屏
+    public var hasSkeleton: Bool {
+        return base.fw_hasSkeleton
+    }
+}
 
+// MARK: - Wrapper+UIViewController
+/// 控制器显示骨架屏扩展
+extension Wrapper where Base: UIViewController {
+    /// 显示view骨架屏，指定布局代理
+    public func showSkeleton(delegate: SkeletonViewDelegate?) {
+        base.fw_showSkeleton(delegate: delegate)
+    }
+    
+    /// 显示view骨架屏，指定布局句柄
+    public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
+        base.fw_showSkeleton(block: block)
+    }
+    
+    /// 显示view骨架屏，默认布局代理为self
+    public func showSkeleton() {
+        base.fw_showSkeleton()
+    }
+    
+    /// 隐藏view骨架屏
+    public func hideSkeleton() {
+        base.fw_hideSkeleton()
+    }
+    
+    /// 是否正在显示view骨架屏
+    public var hasSkeleton: Bool {
+        return base.fw_hasSkeleton
+    }
+}
+
+// MARK: - SkeletonAnimation
 /// 骨架屏动画协议
 public protocol SkeletonAnimationProtocol {
     func skeletonAnimationStart(_ gradientLayer: CAGradientLayer)
@@ -50,7 +107,6 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
     private var type: SkeletonAnimationType = .shimmer
     
     // MARK: - Lifecycle
-    
     public override init() {
         super.init()
         setupAnimation()
@@ -85,7 +141,6 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
     }
     
     // MARK: - SkeletonAnimationProtocol
-    
     open func skeletonAnimationStart(_ gradientLayer: CAGradientLayer) {
         var animation: CAAnimation
         switch type {
@@ -169,7 +224,6 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
 }
 
 // MARK: - SkeletonAppearance
-
 /// 骨架屏通用样式
 public class SkeletonAppearance: NSObject {
     /// 单例对象
@@ -194,7 +248,6 @@ public class SkeletonAppearance: NSObject {
 }
 
 // MARK: - SkeletonView
-
 /// 骨架屏视图数据源协议
 @objc public protocol SkeletonViewDataSource {
     /// 骨架屏视图创建方法
@@ -277,7 +330,6 @@ open class SkeletonView: UIView {
 }
 
 // MARK: - SkeletonLabel
-
 /// 骨架屏多行标签视图，可显示多行骨架
 open class SkeletonLabel: SkeletonView {
     /// 行数，默认0
@@ -335,7 +387,6 @@ open class SkeletonLabel: SkeletonView {
 }
 
 // MARK: - SkeletonLayout
-
 /// 骨架屏布局视图，可从视图生成骨架屏，嵌套到UIScrollView即可实现滚动
 open class SkeletonLayout: SkeletonView {
     /// 相对布局视图
@@ -393,7 +444,6 @@ open class SkeletonLayout: SkeletonView {
     }
     
     // MARK: - Skeleton
-    
     /// 批量添加子视图(兼容骨架视图)，返回生成的骨架视图数组
     @discardableResult
     open func addSkeletonViews(_ views: [UIView]) -> [SkeletonView] {
@@ -451,7 +501,6 @@ open class SkeletonLayout: SkeletonView {
     }
     
     // MARK: - Parser
-    
     /// 解析视图为骨架视图
     open class func parseSkeletonView(_ view: UIView) -> SkeletonView {
         if view is SkeletonView {
@@ -493,7 +542,6 @@ open class SkeletonLayout: SkeletonView {
 }
 
 // MARK: - SkeletonTableView
-
 /// 骨架屏表格视图，可生成表格骨架屏
 open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图，默认不可滚动
@@ -565,7 +613,6 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
     }
     
     // MARK: - UITableView
-    
     open func numberOfSections(in tableView: UITableView) -> Int {
         let count = tableDelegate.numberOfSections(in: tableView)
         return count > 0 ? count : 1
@@ -657,7 +704,6 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
 }
 
 // MARK: - SkeletonCollectionView
-
 /// 骨架屏集合视图，可生成集合骨架屏
 open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     /// 集合视图，默认不可滚动
@@ -714,7 +760,6 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     }
     
     // MARK: - UICollectionView
-    
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
         let count = collectionDelegate.numberOfSections(in: collectionView)
         return count > 0 ? count : 1
@@ -817,8 +862,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     }
 }
 
-// MARK: - Wrapper+SkeletonLayout
-
+// MARK: - UIKit+SkeletonLayout
 /// 视图显示骨架屏扩展
 @_spi(FW) extension UIView {
     private func fw_showSkeleton(delegate: SkeletonViewDelegate? = nil, block: ((SkeletonLayout) -> Void)? = nil) {
@@ -912,7 +956,6 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
 }
 
 // MARK: - UIKit+SkeletonView
-
 /// UILabel骨架屏视图数据源扩展
 extension UILabel: SkeletonViewDataSource {
     open func skeletonViewProvider() -> SkeletonView? {
