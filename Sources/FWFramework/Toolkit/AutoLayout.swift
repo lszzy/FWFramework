@@ -803,7 +803,10 @@ extension UILayoutPriority {
         set {
             fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_offset")
             
-            let offset = fw_autoScaleLayout ? (UIView.fw_autoScaleBlock?(newValue) ?? newValue) : newValue
+            var offset = newValue
+            if fw_autoScaleLayout {
+                offset = UIView.fw_autoScaleBlock?(newValue) ?? UIScreen.fw_relativeValue(newValue, flat: UIView.fw_autoFlatLayout)
+            }
             self.constant = fw_isOpposite ? -offset : offset
         }
     }
