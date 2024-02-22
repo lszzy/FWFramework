@@ -7,6 +7,12 @@
 
 import UIKit
 
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 路由快速访问
+    public static var router = Router.self
+}
+
 // MARK: - Router
 /// URL路由器
 ///

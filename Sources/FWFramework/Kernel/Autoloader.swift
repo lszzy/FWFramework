@@ -10,6 +10,15 @@ import Foundation
 import FWObjC
 #endif
 
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 自动加载Swift类并调用autoload方法，参数为Class或String
+    @discardableResult
+    public static func autoload(_ clazz: Any) -> Bool {
+        return Autoloader.autoload(clazz)
+    }
+}
+
 // MARK: - AutoloadProtocol
 /// Swift自动加载协议，配合autoload(_:)方法使用
 public protocol AutoloadProtocol {
