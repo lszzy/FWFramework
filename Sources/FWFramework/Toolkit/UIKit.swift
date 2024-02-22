@@ -539,6 +539,8 @@ extension Wrapper where Base: UIButton {
     ///
     /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
     /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
+    /// 当开启粗体文本时，若图文按钮文本显示不全(显示...)，解决方案如下：
+    /// titleLabel?.lineBreakMode = .byClipping
     public func setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
         base.fw_setImageEdge(edge, spacing: spacing)
     }
@@ -2922,6 +2924,8 @@ extension Wrapper where Base: UIViewController {
     ///
     /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
     /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
+    /// 当开启粗体文本时，若图文按钮文本显示不全(显示...)，解决方案如下：
+    /// titleLabel?.lineBreakMode = .byClipping
     public func fw_setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
         let imageSize = self.imageView?.image?.size ?? .zero
         let labelSize = self.titleLabel?.intrinsicContentSize ?? .zero
