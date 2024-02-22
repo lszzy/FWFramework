@@ -1714,7 +1714,7 @@ public enum AlertActionStyle: Int {
 }
 
 /// 弹窗动作
-public class AlertAction: NSObject, NSCopying {
+public class AlertAction: NSObject {
     
     /// action的标题
     public var title: String? {
@@ -1821,20 +1821,6 @@ public class AlertAction: NSObject, NSCopying {
         
         self.titleColor = alertAppearance.titleDynamicColor
         self.titleFont = alertAppearance.actionFont
-    }
-    
-    public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = AlertAction(title: title, style: style, appearance: appearance, handler: handler)
-        copy.attributedTitle = attributedTitle
-        copy.image = image
-        copy.imageTitleSpacing = imageTitleSpacing
-        copy.tintColor = tintColor
-        copy.isEnabled = isEnabled
-        copy.titleColor = titleColor
-        copy.titleFont = titleFont
-        copy.titleEdgeInsets = titleEdgeInsets
-        copy.propertyChangedBlock = propertyChangedBlock
-        return copy
     }
     
 }

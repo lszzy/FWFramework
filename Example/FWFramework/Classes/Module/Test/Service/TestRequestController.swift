@@ -187,7 +187,7 @@ class TestUploadRequest: HTTPRequest {
             }
             // 默认插件限制宽度以模拟长时间上传
             if let streamingFormData = formData as? StreamingMultipartFormData {
-                streamingFormData.throttleBandwidth(withPacketSize: 1024 * 100, delay: 0.1)
+                streamingFormData.throttleBandwidth(packetSize: 1024 * 100, delay: 0.1)
             }
         }
     }

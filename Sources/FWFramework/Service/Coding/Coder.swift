@@ -7,6 +7,18 @@
 
 import Foundation
 
+// MARK: - Wrapper+Data
+extension Wrapper where Base == Data {
+    public static func encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+        return try Base.fw_encoded(value, using: encoder)
+    }
+    
+    public func decoded<T: Decodable>(as type: T.Type = T.self,
+                                      using decoder: AnyDecoder = JSONDecoder()) throws -> T {
+        return try base.fw_decoded(as: type, using: decoder)
+    }
+}
+
 // MARK: - AnyEncoder
 /// https://github.com/JohnSundell/Codextended
 public protocol AnyEncoder {

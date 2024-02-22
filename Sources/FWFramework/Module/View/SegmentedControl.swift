@@ -69,6 +69,14 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
     }
     open var sectionSelectedImages: [UIImage] = []
+    open var sectionCount: Int {
+        if self.type == .text {
+            return sectionTitles.count
+        } else if self.type == .images || self.type == .textImages {
+            return sectionImages.count
+        }
+        return 0
+    }
     
     open var indexChangedBlock: ((Int) -> Void)?
     open var titleFormatter: ((_ segmentedControl: SegmentedControl, _ title: String, _ index: Int, _ selected: Bool) -> NSAttributedString)?
@@ -125,6 +133,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var isTouchEnabled: Bool = true
     open var isVerticalDividerEnabled: Bool = false
     open var shouldStretchSegmentsToScreenSize: Bool = false
+    open var useSelectedTitleTextAttributesSize: Bool = false
     /// 当前选中index, -1表示不选中
     open var selectedSegmentIndex: Int {
         get {
@@ -157,6 +166,9 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var segmentCustomBlock: ((_ segmentedControl: SegmentedControl, _ index: Int, _ rect: CGRect) -> Void)?
     open var enlargeEdgeInset: UIEdgeInsets = .zero
     open var shouldAnimateUserSelection: Bool = true
+    open var contentSize: CGSize {
+        return scrollView.contentSize
+    }
     
     open lazy var scrollView: UIScrollView = {
         let result = SegmentedScrollView()
@@ -569,7 +581,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             }
         }
         
-        if selectedSegmentIndex >= 0 && sectionCount() > 0 {
+        if selectedSegmentIndex >= 0 && sectionCount > 0 {
             if selectionStyle == .arrow ||
                 selectionStyle == .circle {
                 if selectionIndicatorShapeLayer.superlayer == nil {
@@ -604,7 +616,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         } else if let titleFormatter = titleFormatter {
             size = titleFormatter(self, title.stringValue, index, selected).size()
         } else {
-            let titleAttrs = selected ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
+            let titleAttrs = selected || useSelectedTitleTextAttributesSize ? resultingSelectedTitleTextAttributes() : resultingTitleTextAttributes()
             let attributedString = NSAttributedString(string: title.stringValue, attributes: titleAttrs)
             size = attributedString.size()
         }
@@ -819,8 +831,8 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.contentInset = .zero
         scrollView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
 
-        if sectionCount() > 0 {
-            segmentWidth = frame.size.width / CGFloat(sectionCount())
+        if sectionCount > 0 {
+            segmentWidth = frame.size.width / CGFloat(sectionCount)
         }
         
         if self.type == .text && segmentWidthStyle == .fixed {
@@ -894,15 +906,6 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.contentSize = CGSize(width: totalSegmentedControlWidth() + contentEdgeInset.left + contentEdgeInset.right, height: frame.size.height)
     }
     
-    private func sectionCount() -> Int {
-        if self.type == .text {
-            return sectionTitles.count
-        } else if self.type == .images || self.type == .textImages {
-            return sectionImages.count
-        }
-        return 0
-    }
-    
     private func totalSegmentedControlWidth() -> CGFloat {
         if self.type == .text && segmentWidthStyle == .fixed {
             return CGFloat(sectionTitles.count) * segmentWidth
@@ -948,14 +951,14 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         _selectedSegmentIndex = index
         setNeedsDisplay()
         
-        if index < 0 || sectionCount() < 1 {
+        if index < 0 || sectionCount < 1 {
             selectionIndicatorShapeLayer.removeFromSuperlayer()
             selectionIndicatorStripLayer.removeFromSuperlayer()
             selectionIndicatorBoxLayer.removeFromSuperlayer()
         } else {
-            if segmentWidthStyle == .dynamic && sectionCount() != segmentWidthsArray.count {
+            if segmentWidthStyle == .dynamic && sectionCount != segmentWidthsArray.count {
                 layoutIfNeeded()
-                if sectionCount() != segmentWidthsArray.count { return }
+                if sectionCount != segmentWidthsArray.count { return }
             }
             
             scrollToSelectedSegmentIndex(animated: animated)

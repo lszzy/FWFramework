@@ -484,8 +484,12 @@ open class TextTagConfig: NSObject, NSCopying {
     open var exactHeight: CGFloat = 0
     open var extraData: Any?
     
-    public func copy(with zone: NSZone? = nil) -> Any {
-        let newConfig = TextTagConfig()
+    public required override init() {
+        super.init()
+    }
+    
+    open func copy(with zone: NSZone? = nil) -> Any {
+        let newConfig = Self.init()
         newConfig.textFont = textFont
         newConfig.selectedTextFont = selectedTextFont
         newConfig.textColor = textColor

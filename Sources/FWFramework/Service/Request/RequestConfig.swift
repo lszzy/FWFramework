@@ -526,11 +526,11 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
     public var creationDate: Date?
     public var appVersionString: String?
     
+    public override init() { }
+    
     public static var supportsSecureCoding: Bool {
         return true
     }
-    
-    public override init() { }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init()

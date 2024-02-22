@@ -30,6 +30,19 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     private var toolbarHidden = true
     
+    @StoredValue("allowsDownloadUrl")
+    private var allowsDownloadUrl: Bool = false {
+        didSet {
+            if allowsDownloadUrl {
+                webView.allowsDownloadUrl = { url in
+                    return UIApplication.app.isSchemeURL(url, schemes: ["data", "blob"])
+                }
+            } else {
+                webView.allowsDownloadUrl = nil
+            }
+        }
+    }
+    
     // MARK: - Lifecycle
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -67,8 +80,10 @@ class WebController: UIViewController, WebViewControllerProtocol {
     func setupWebView() {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
-        webView.allowsSchemeURL = true
         webView.allowsArbitraryLoads = true
+        webView.allowsRouterSchemes = ["app"]
+        let allowsDownloadUrl = self.allowsDownloadUrl
+        self.allowsDownloadUrl = allowsDownloadUrl
         
         if navigationItem.leftBarButtonItem != nil {
             webView.app.navigationItems = nil
@@ -126,14 +141,6 @@ class WebController: UIViewController, WebViewControllerProtocol {
         app.showEmptyView(text: RequestError.isConnectionError(error) ? "网络连接失败" : "服务器异常", detail: error.localizedDescription, image: nil, action: "点击重试") { [weak self] _ in
             self?.loadRequestUrl()
         }
-    }
-    
-    func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
-        if navigationAction.request.url?.scheme == "app" {
-            Router.openURL(navigationAction.request.url?.absoluteString ?? "")
-            return false
-        }
-        return true
     }
     
     // MARK: - Private
@@ -201,7 +208,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     @objc func shareRequestUrl() {
         let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
-        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用"]) { [weak self] index in
+        app.showSheet(title: nil, message: nil, actions: ["分享", "刷新", "重新加载", "清空堆栈", reuseEnabled ? "关闭重用" : "开启重用", allowsDownloadUrl ? "关闭下载" : "开启下载"]) { [weak self] index in
             if index == 0 {
                 UIApplication.app.openActivityItems([APP.safeURL(self?.requestUrl)])
             } else if index == 1 {
@@ -214,10 +221,12 @@ class WebController: UIViewController, WebViewControllerProtocol {
                 let urlRequest = self?.createUrlRequest(nil)
                 self?.webView.load(urlRequest!)
                 self?.webView.app.clearBackForwardList()
-            } else {
+            } else if index == 4 {
                 WebView.app.processPool = WKProcessPool()
                 UserDefaults.app.setObject(!reuseEnabled, forKey: "WebReuseEnabled")
                 WebController.toggleReuse(enabled: !reuseEnabled)
+            } else {
+                self?.allowsDownloadUrl = !(self?.allowsDownloadUrl ?? false)
             }
         }
     }

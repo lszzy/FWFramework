@@ -66,10 +66,22 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         let result = createTextView()
         result.tag = 3
         result.backgroundColor = AppTheme.backgroundColor
-        result.app.maxUnicodeLength = 50
-        result.app.placeholder = "问题\n最多50个中文"
+        result.app.maxLength = 200
+        result.app.placeholder = "问题\n最多200个字符"
         result.app.lineHeight = 25
+        result.app.textChangedBlock = { [weak self] text in
+            self?.countLabel.text = "\(self?.textView.app.actualNumberOfLines ?? 0)行 \(text.count)/\(self?.textView.app.maxLength ?? 0)字"
+        }
         // result.returnKeyType = .next
+        return result
+    }()
+    
+    private lazy var countLabel: UILabel = {
+        let result = UILabel()
+        result.font = UIFont.app.font(ofSize: 13)
+        result.textColor = AppTheme.textColor
+        result.textAlignment = .right
+        result.text = "0行 0/\(textView.app.maxLength)字"
         return result
     }()
     
@@ -137,12 +149,17 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         textView.app.nextResponderTag = 4
         textView.app.addToolbar(title: NSAttributedString.app.attributedString(textView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         
+        contentView.addSubview(countLabel)
+        countLabel.app.layoutChain
+            .top(toViewBottom: textView, offset: 15)
+            .right(15)
+        
         contentView.addSubview(descView)
         descView.app.previousResponderTag = 3
         descView.app.addToolbar(title: NSAttributedString.app.attributedString(descView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         descView.app.layoutChain
             .centerX()
-            .top(toViewBottom: textView, offset: 15)
+            .top(toViewBottom: countLabel, offset: 15)
         
         contentView.addSubview(submitButton)
         submitButton.app.layoutChain

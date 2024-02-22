@@ -7,6 +7,42 @@
 
 import UIKit
 
+// MARK: - Wrapper+UIScrollView
+extension Wrapper where Base: UIScrollView {
+    /// 滚动事件代理，需手工设置delegate生效
+    public var scrollDelegate: ScrollViewDelegate {
+        get { base.fw_scrollDelegate }
+        set { base.fw_scrollDelegate = newValue }
+    }
+}
+
+// MARK: - Wrapper+UITextField
+extension Wrapper where Base: UITextField {
+    /// 输入事件代理，需手工设置delegate生效
+    public var textDelegate: TextFieldDelegate {
+        get { base.fw_textDelegate }
+        set { base.fw_textDelegate = newValue }
+    }
+}
+
+// MARK: - Wrapper+UITextView
+extension Wrapper where Base: UITextView {
+    /// 输入事件代理，需手工设置delegate生效
+    public var textDelegate: TextViewDelegate {
+        get { base.fw_textDelegate }
+        set { base.fw_textDelegate = newValue }
+    }
+}
+
+// MARK: - Wrapper+UISearchBar
+extension Wrapper where Base: UISearchBar {
+    /// 搜索栏事件代理，需手工设置delegate生效
+    public var searchDelegate: SearchBarDelegate {
+        get { base.fw_searchDelegate }
+        set { base.fw_searchDelegate = newValue }
+    }
+}
+
 // MARK: - ScrollViewDelegate
 /// 常用滚动视图事件代理，可继承
 open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollViewDelegate {

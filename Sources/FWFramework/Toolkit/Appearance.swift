@@ -10,6 +10,14 @@ import UIKit
 import FWObjC
 #endif
 
+// MARK: - Wrapper+NSObject
+extension Wrapper where Base: NSObject {
+    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
+    public func applyAppearance() {
+        base.fw_applyAppearance()
+    }
+}
+
 // MARK: - Appearance
 /// UIAppearance扩展类，支持任意NSObject对象使用UIAppearance能力
 ///

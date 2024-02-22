@@ -22,14 +22,14 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     /// SessionConfiguration配置，默认nil
     open var sessionConfiguration: URLSessionConfiguration = .default
     /// 自定义安全策略，默认default
-    open var securityPolicy = SecurityPolicy.default()
+    open var securityPolicy: SecurityPolicy = .default
     /// SessionTaskMetrics配置句柄，默认nil
     open var collectingMetricsBlock: ((_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
     
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
     /// 有效状态码范围，默认为(100-600)
-    open var acceptableStatusCodes = NSIndexSet(indexesIn: NSMakeRange(100, 500)) as IndexSet
+    open var acceptableStatusCodes = IndexSet(integersIn: 100..<600)
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: Set<String>?
     
@@ -53,7 +53,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         result.securityPolicy = securityPolicy
         result.responseSerializer = httpResponseSerializer
         result.completionQueue = completionQueue
-        result.setTaskDidFinishCollectingMetricsBlock(collectingMetricsBlock)
+        result.taskDidFinishCollectingMetrics = collectingMetricsBlock
         return result
     }()
     
@@ -99,7 +99,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         if let headerFieldArray = request.requestAuthorizationHeaders(),
            !headerFieldArray.isEmpty {
-            requestSerializer.setAuthorizationHeaderFieldWithUsername(headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
+            requestSerializer.setAuthorizationHeaderField(username: headerFieldArray.first ?? "", password: headerFieldArray.last ?? "")
         }
         if let headerFieldDictionary = request.requestHeaders(),
            !headerFieldDictionary.isEmpty {
@@ -110,18 +110,13 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
         
         var urlRequest: URLRequest
         if request.constructingBodyBlock != nil {
-            var error: NSError?
-            let mutableRequest = requestSerializer.multipartFormRequest(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBodyWith: { formData in
+            urlRequest = try requestSerializer.multipartFormRequest(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument() as? [String: Any], constructingBody: { formData in
                 if let requestFormData = formData as? RequestMultipartFormData {
                     request.constructingBodyBlock?(requestFormData)
                 }
-            }, error: &error)
-            
-            if let error = error { throw error }
-            urlRequest = mutableRequest as URLRequest
+            })
         } else {
-            let mutableRequest = try requestSerializer.request(withMethod: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
-            urlRequest = mutableRequest as URLRequest
+            urlRequest = try requestSerializer.request(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
         }
         
         RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
@@ -138,7 +133,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             return
         }
         
-        let dataTask = manager.dataTask(with: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: { [weak self] response, responseObject, error in
+        let dataTask = manager.dataTask(request: urlRequest, uploadProgress: request.uploadProgressBlock, downloadProgress: nil, completionHandler: { [weak self] response, responseObject, error in
             self?.handleResponse(for: request, response: response, responseObject: responseObject, error: error, completionHandler: completionHandler)
         })
         
@@ -148,7 +143,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
         let downloadTask: URLSessionDownloadTask
         if let resumeData = resumeData {
-            downloadTask = manager.downloadTask(withResumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
+            downloadTask = manager.downloadTask(resumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
             }, completionHandler: { [weak self] response, fileUrl, error in
                 self?.handleResponse(for: request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
@@ -164,7 +159,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
                 return
             }
             
-            downloadTask = manager.downloadTask(with: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
+            downloadTask = manager.downloadTask(request: urlRequest, progress: request.downloadProgressBlock, destination: { _, _ in
                 return URL(fileURLWithPath: destination, isDirectory: false)
             }, completionHandler: { [weak self] response, fileUrl, error in
                 self?.handleResponse(for: request, response: response, responseObject: fileUrl, error: error, completionHandler: { response, responseObject, error in
@@ -204,7 +199,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
     }
     
     private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
-        var serializationError: NSError?
+        var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {
             request.responseData = responseData
@@ -212,8 +207,12 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
             
             switch request.responseSerializerType() {
             case .JSON:
-                request.responseObject = jsonResponseSerializer.responseObject(for: response, data: request.responseData, error: &serializationError)
-                request.responseJSONObject = request.responseObject
+                do {
+                    request.responseObject = try jsonResponseSerializer.responseObject(for: response, data: responseData)
+                    request.responseJSONObject = request.responseObject
+                } catch let decodeError {
+                    serializationError = decodeError
+                }
             default:
                 break
             }
@@ -227,30 +226,30 @@ open class RequestPluginImpl: NSObject, RequestPlugin {
 // MARK: - StreamingMultipartFormData+RequestPluginImpl
 extension StreamingMultipartFormData: RequestMultipartFormData {
     public func append(_ formData: Data, name: String) {
-        appendPart(withForm: formData, name: name)
+        appendPart(formData: formData, name: name)
     }
     
     public func append(_ fileData: Data, name: String, fileName: String, mimeType: String) {
-        appendPart(withFileData: fileData, name: name, fileName: fileName, mimeType: mimeType)
+        appendPart(fileData: fileData, name: name, fileName: fileName, mimeType: mimeType)
     }
     
     public func append(_ fileURL: URL, name: String) {
-        try? appendPart(withFileURL: fileURL, name: name)
+        try? appendPart(fileURL: fileURL, name: name)
     }
     
     public func append(_ fileURL: URL, name: String, fileName: String, mimeType: String) {
-        try? appendPart(withFileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
+        try? appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
     }
     
     public func append(_ inputStream: InputStream, length: UInt64, name: String, fileName: String, mimeType: String) {
-        appendPart(with: inputStream, name: name, fileName: fileName, length: Int64(length), mimeType: mimeType)
+        appendPart(inputStream: inputStream, length: length, name: name, fileName: fileName, mimeType: mimeType)
     }
     
     public func append(_ inputStream: InputStream, length: UInt64, headers: [String: String]) {
-        appendPart(with: inputStream, length: Int64(length), headers: headers)
+        appendPart(inputStream: inputStream, length: length, headers: headers)
     }
     
     public func append(_ body: Data, headers: [String: String]) {
-        appendPart(withHeaders: headers, body: body)
+        appendPart(headers: headers, body: body)
     }
 }

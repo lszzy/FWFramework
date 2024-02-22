@@ -89,6 +89,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         result.selectionIndicatorLocation = .bottom
         result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
         result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.useSelectedTitleTextAttributesSize = true
         return result
     }()
     
@@ -274,8 +275,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             ]
             return event
         }
-        segmentedControl.app.statisticalExposureListener = { [weak self] event in
-            self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+        segmentedControl.app.statisticalExposureListener = { /*[weak self]*/ event in
+            // self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(segmentedControl.app.statisticalExposure)
         tagCollectionView.app.statisticalExposure = StatisticalEvent(name: "exposure_tag", object: "tag")

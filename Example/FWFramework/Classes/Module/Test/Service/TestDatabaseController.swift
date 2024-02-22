@@ -16,6 +16,8 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     @objc var content: String = ""
     @objc var time: TimeInterval = Date.app.currentTime
     @objc var tag: String = ""
+    @objc var tags: [String] = []
+    @objc var subs: [TestDatabaseSubModel] = []
     
     static func databaseVersion() -> String? {
         return isLatest ? "2.0" : nil
@@ -38,16 +40,45 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     }
 }
 
+class TestDatabaseSubModel: NSObject, NSSecureCoding {
+    @objc var id: Int = 0
+    @objc var tag: String = ""
+    
+    static var supportsSecureCoding: Bool {
+        return true
+    }
+    
+    override init() {
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init()
+        id = coder.decodeInteger(forKey: "id")
+        tag = coder.decodeObject(forKey: "tag").safeString
+    }
+    
+    func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: "id")
+        coder.encode(tag, forKey: "tag")
+    }
+}
+
 class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = TestDatabaseModel
     
     func didInitialize() {
-        let version = DatabaseManager.version(withModel: TestDatabaseModel.self).safeDouble
+        let version = DatabaseManager.version(with: TestDatabaseModel.self).safeDouble
         TestDatabaseModel.isLatest = version > 1
     }
     
     func setupNavbar() {
+        let count = DatabaseManager.count(TestDatabaseModel.self)
+        if count > 0 {
+            navigationItem.title = "Database-\(count)"
+        }
+        
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["新增一条数据", "获取当前版本号", "更新数据库版本", "清空所有数据", "删除数据库文件"], actionBlock: { index in
                 if index == 0 {
@@ -76,7 +107,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        tableData = DatabaseManager.query(TestDatabaseModel.self) as! [TestDatabaseModel]
+        tableData = DatabaseManager.query(TestDatabaseModel.self)
         tableView.reloadData()
     }
     
@@ -86,12 +117,27 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .subtitle)
+        cell.selectionStyle = .none
         let model = tableData[indexPath.row]
         cell.textLabel?.numberOfLines = 0
         let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
-        cell.textLabel?.text = "\(model.id)\(tag)\n" + model.content
+        let tags = !model.tags.isEmpty ? " - [\(model.tags.joined(separator: ","))]" : ""
+        let subs = !model.subs.isEmpty ? " - [\(model.subs.first?.id ?? 0):\(model.subs.first?.tag ?? "")]" : ""
+        cell.textLabel?.text = "\(model.id)\(tag)\(tags)\(subs)\n" + model.content
         cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let model = tableData[indexPath.row]
+        app.showPrompt(title: "请编辑内容", message: nil) { textField in
+            textField.text = model.content
+        } confirmBlock: { [weak self] text in
+            model.content = text
+            DatabaseManager.update(model)
+            
+            self?.setupSubviews()
+        }
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -119,6 +165,11 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             let model = TestDatabaseModel()
             model.content = content
             model.tag = "新"
+            model.tags = ["标签"]
+            let subModel = TestDatabaseSubModel()
+            subModel.id = Int(arc4random() % 1000)
+            subModel.tag = "子标签"
+            model.subs = [subModel]
             DatabaseManager.insert(model)
             
             self?.setupSubviews()
@@ -126,7 +177,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func onVersion() {
-        let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
+        let versionString = DatabaseManager.version(with: TestDatabaseModel.self)
         if let versionString = versionString {
             app.showAlert(title: "当前版本号", message: versionString)
         } else {
@@ -135,7 +186,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func onUpdate() {
-        let versionString = DatabaseManager.version(withModel: TestDatabaseModel.self)
+        let versionString = DatabaseManager.version(with: TestDatabaseModel.self)
         guard let versionString = versionString else {
             app.showAlert(title: "数据库不存在", message: nil)
             return

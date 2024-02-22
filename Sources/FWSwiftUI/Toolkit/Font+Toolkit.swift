@@ -17,33 +17,37 @@ extension Font {
     public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
     
     /// 返回系统Thin字体，自动等比例缩放
-    public static func thinFont(size: CGFloat) -> Font {
-        return font(size: size, weight: .thin)
+    public static func thinFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
+        return font(size: size, weight: .thin, autoScale: autoScale)
     }
     
     /// 返回系统Light字体，自动等比例缩放
-    public static func lightFont(size: CGFloat) -> Font {
-        return font(size: size, weight: .light)
+    public static func lightFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
+        return font(size: size, weight: .light, autoScale: autoScale)
     }
     
     /// 返回系统Medium字体，自动等比例缩放
-    public static func mediumFont(size: CGFloat) -> Font {
-        return font(size: size, weight: .medium)
+    public static func mediumFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
+        return font(size: size, weight: .medium, autoScale: autoScale)
     }
     
     /// 返回系统Semibold字体，自动等比例缩放
-    public static func semiboldFont(size: CGFloat) -> Font {
-        return font(size: size, weight: .semibold)
+    public static func semiboldFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
+        return font(size: size, weight: .semibold, autoScale: autoScale)
     }
     
     /// 返回系统Bold字体，自动等比例缩放
-    public static func boldFont(size: CGFloat) -> Font {
-        return font(size: size, weight: .bold)
+    public static func boldFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
+        return font(size: size, weight: .bold, autoScale: autoScale)
     }
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
-    public static func font(size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        let fontSize = UIFont.fw_autoScaleBlock?(size) ?? size
+    public static func font(size: CGFloat, weight: Font.Weight = .regular, autoScale: Bool? = nil) -> Font {
+        var fontSize = size
+        if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
+            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlatFont)
+        }
+        
         if let font = fontBlock?(fontSize, weight) { return font }
         return .system(size: fontSize, weight: weight)
     }
