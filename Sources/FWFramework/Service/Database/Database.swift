@@ -205,7 +205,7 @@ public class DatabaseManager: NSObject {
                 }
                 sqlite3_finalize(ppStmt)
             } else {
-                log("Sorry 查询失败, 建议检查sqlite 函数书写格式是否正确！")
+                log("Sorry 查询失败, 建议检查sqlite 函数书写格式是否正确！", error: true)
             }
             close()
             
@@ -476,7 +476,7 @@ private extension DatabaseManager {
                            classType == Scanner.self ||
                            classType == NSException.self ||
                            classType == Bundle.self) {
-                    log("检查模型类异常数据类型")
+                    log("检查模型类异常数据类型", error: true)
                 } else if let classType = classType {
                     if needDictionarySave {
                         parseSubModelFields(classType, propertyName: name, hasPrimary: hasPrimary) { key, propertyObject in
@@ -696,7 +696,7 @@ private extension DatabaseManager {
     static func executeSql(_ sql: String) -> Bool {
         let result = sqlite3_exec(database, sql, nil, nil, nil) == SQLITE_OK
         if !result {
-            log(String(format: "执行失败 -> %@", sql))
+            log(String(format: "执行失败 -> %@", sql), error: true)
         }
         return result
     }
@@ -867,7 +867,7 @@ private extension DatabaseManager {
                                 }
                                 currentModel.setValue(fieldValue, forKey: fieldName)
                             } else {
-                                log("query 查询异常 Array/Dictionary 元素没实现NSCoding协议解归档失败")
+                                log("query 查询异常 Array/Dictionary 元素没实现NSCoding协议解归档失败", error: true)
                             }
                         }
                     case .date:
@@ -907,7 +907,7 @@ private extension DatabaseManager {
             }
             sqlite3_finalize(ppStmt)
         } else {
-            log("Sorry查询语句异常,建议检查查询条件Sql语句语法是否正确")
+            log("Sorry查询语句异常,建议检查查询条件Sql语句语法是否正确", error: true)
         }
         return models
     }
@@ -1038,7 +1038,7 @@ private extension DatabaseManager {
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                     if data == nil {
-                        log("insert 异常 Array/Dictionary类型元素未实现NSCoding协议归档失败")
+                        log("insert 异常 Array/Dictionary类型元素未实现NSCoding协议归档失败", error: true)
                     }
                 case .data:
                     let data = value as? NSData ?? NSData()
@@ -1064,7 +1064,7 @@ private extension DatabaseManager {
             sqlite3_finalize(ppStmt)
             return result
         } else {
-            log("Sorry存储数据失败,建议检查模型类属性类型是否符合规范")
+            log("Sorry存储数据失败,建议检查模型类属性类型是否符合规范", error: true)
             return false
         }
     }
@@ -1124,7 +1124,7 @@ private extension DatabaseManager {
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                     if data == nil {
-                        log("update 操作异常 Array/Dictionary 元素没实现NSCoding协议归档失败")
+                        log("update 操作异常 Array/Dictionary 元素没实现NSCoding协议归档失败", error: true)
                     }
                 case .date:
                     let value = currentModel.value(forKey: actualField) as? Date
@@ -1160,7 +1160,7 @@ private extension DatabaseManager {
             close()
             return result
         } else {
-            log("更新失败")
+            log("更新模型失败", error: true)
             close()
             return false
         }
@@ -1231,9 +1231,13 @@ private extension DatabaseManager {
         return scanner.scanInt(&value) && scanner.isAtEnd
     }
     
-    static func log(_ msg: String) {
+    static func log(_ msg: String, error: Bool = false) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "Database: %@", msg)
+        if error {
+            Logger.error(group: Logger.fw_moduleName, "Database: %@", msg)
+        } else {
+            Logger.debug(group: Logger.fw_moduleName, "Database: %@", msg)
+        }
         #endif
     }
     

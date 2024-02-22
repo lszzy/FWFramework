@@ -16,6 +16,8 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     @objc var content: String = ""
     @objc var time: TimeInterval = Date.app.currentTime
     @objc var tag: String = ""
+    @objc var tags: [String] = []
+    @objc var subs: [TestDatabaseSubModel] = []
     
     static func databaseVersion() -> String? {
         return isLatest ? "2.0" : nil
@@ -35,6 +37,30 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     
     static func tablePropertyBlacklist() -> [String]? {
         return isLatest ? nil : ["tag"]
+    }
+}
+
+class TestDatabaseSubModel: NSObject, NSSecureCoding {
+    @objc var id: Int = 0
+    @objc var tag: String = ""
+    
+    static var supportsSecureCoding: Bool {
+        return true
+    }
+    
+    override init() {
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init()
+        id = coder.decodeInteger(forKey: "id")
+        tag = coder.decodeObject(forKey: "tag").safeString
+    }
+    
+    func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: "id")
+        coder.encode(tag, forKey: "tag")
     }
 }
 
@@ -95,7 +121,9 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         let model = tableData[indexPath.row]
         cell.textLabel?.numberOfLines = 0
         let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
-        cell.textLabel?.text = "\(model.id)\(tag)\n" + model.content
+        let tags = !model.tags.isEmpty ? " - [\(model.tags.joined(separator: ","))]" : ""
+        let subs = !model.subs.isEmpty ? " - [\(model.subs.first?.id ?? 0):\(model.subs.first?.tag ?? "")]" : ""
+        cell.textLabel?.text = "\(model.id)\(tag)\(tags)\(subs)\n" + model.content
         cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
     }
@@ -137,6 +165,11 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             let model = TestDatabaseModel()
             model.content = content
             model.tag = "新"
+            model.tags = ["标签"]
+            let subModel = TestDatabaseSubModel()
+            subModel.id = Int(arc4random() % 1000)
+            subModel.tag = "子标签"
+            model.subs = [subModel]
             DatabaseManager.insert(model)
             
             self?.setupSubviews()
