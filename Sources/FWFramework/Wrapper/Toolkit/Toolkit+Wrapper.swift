@@ -44,9 +44,10 @@ extension WrapperGlobal {
     /// - Parameters:
     ///   - size: 字体字号
     ///   - weight: 字重可选，默认Regular
+    ///   - autoScale: 是否自动等比例缩放，默认全局配置
     /// - Returns: UIFont
-    public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular) -> UIFont {
-        return UIFont.fw_font(ofSize: size, weight: weight)
+    public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        return UIFont.fw_font(ofSize: size, weight: weight, autoScale: autoScale)
     }
     
     /// 快速创建图标对象
@@ -389,33 +390,29 @@ extension Wrapper where Base: UIFont {
     }
 
     /// 返回系统Thin字体，自动等比例缩放
-    public static func thinFont(ofSize: CGFloat) -> UIFont {
-        return Base.fw_thinFont(ofSize: ofSize)
+    public static func thinFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_thinFont(ofSize: ofSize, autoScale: autoScale)
     }
     /// 返回系统Light字体，自动等比例缩放
-    public static func lightFont(ofSize: CGFloat) -> UIFont {
-        return Base.fw_lightFont(ofSize: ofSize)
-    }
-    /// 返回系统Regular字体，自动等比例缩放
-    public static func font(ofSize: CGFloat) -> UIFont {
-        return Base.fw_font(ofSize: ofSize)
+    public static func lightFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_lightFont(ofSize: ofSize, autoScale: autoScale)
     }
     /// 返回系统Medium字体，自动等比例缩放
-    public static func mediumFont(ofSize: CGFloat) -> UIFont {
-        return Base.fw_mediumFont(ofSize: ofSize)
+    public static func mediumFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_mediumFont(ofSize: ofSize, autoScale: autoScale)
     }
     /// 返回系统Semibold字体，自动等比例缩放
-    public static func semiboldFont(ofSize: CGFloat) -> UIFont {
-        return Base.fw_semiboldFont(ofSize: ofSize)
+    public static func semiboldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_semiboldFont(ofSize: ofSize, autoScale: autoScale)
     }
     /// 返回系统Bold字体，自动等比例缩放
-    public static func boldFont(ofSize: CGFloat) -> UIFont {
-        return Base.fw_boldFont(ofSize: ofSize)
+    public static func boldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_boldFont(ofSize: ofSize, autoScale: autoScale)
     }
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
-    public static func font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
-        return Base.fw_font(ofSize: ofSize, weight: weight)
+    public static func font(ofSize: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        return Base.fw_font(ofSize: ofSize, weight: weight, autoScale: autoScale)
     }
     
     /// 获取指定名称、字重、斜体字体的完整规范名称
