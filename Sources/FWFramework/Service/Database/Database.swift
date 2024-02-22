@@ -1233,11 +1233,7 @@ private extension DatabaseManager {
     
     static func log(_ msg: String, error: Bool = false) {
         #if DEBUG
-        if error {
-            Logger.error(group: Logger.fw_moduleName, "Database: %@", msg)
-        } else {
-            Logger.debug(group: Logger.fw_moduleName, "Database: %@", msg)
-        }
+        Logger.debug(group: Logger.fw_moduleName, "Database:%@ %@", error ? " [Error]" : "", msg)
         #endif
     }
     
