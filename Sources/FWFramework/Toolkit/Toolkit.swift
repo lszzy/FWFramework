@@ -710,35 +710,35 @@ import StoreKit
     public static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
 
     /// 返回系统Thin字体，自动等比例缩放
-    public static func fw_thinFont(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .thin)
+    public static func fw_thinFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return fw_font(ofSize: ofSize, weight: .thin, autoScale: autoScale)
     }
     /// 返回系统Light字体，自动等比例缩放
-    public static func fw_lightFont(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .light)
-    }
-    /// 返回系统Regular字体，自动等比例缩放
-    public static func fw_font(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .regular)
+    public static func fw_lightFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return fw_font(ofSize: ofSize, weight: .light, autoScale: autoScale)
     }
     /// 返回系统Medium字体，自动等比例缩放
-    public static func fw_mediumFont(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .medium)
+    public static func fw_mediumFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return fw_font(ofSize: ofSize, weight: .medium, autoScale: autoScale)
     }
     /// 返回系统Semibold字体，自动等比例缩放
-    public static func fw_semiboldFont(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .semibold)
+    public static func fw_semiboldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return fw_font(ofSize: ofSize, weight: .semibold, autoScale: autoScale)
     }
     /// 返回系统Bold字体，自动等比例缩放
-    public static func fw_boldFont(ofSize: CGFloat) -> UIFont {
-        return fw_font(ofSize: ofSize, weight: .bold)
+    public static func fw_boldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+        return fw_font(ofSize: ofSize, weight: .bold, autoScale: autoScale)
     }
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
-    public static func fw_font(ofSize: CGFloat, weight: UIFont.Weight) -> UIFont {
-        let size = UIFont.fw_autoScaleBlock?(ofSize) ?? ofSize
-        if let font = fw_fontBlock?(size, weight) { return font }
-        return UIFont.systemFont(ofSize: size, weight: weight)
+    public static func fw_font(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        var fontSize = size
+        if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
+            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlatFont)
+        }
+        
+        if let font = fw_fontBlock?(fontSize, weight) { return font }
+        return UIFont.systemFont(ofSize: fontSize, weight: weight)
     }
     
     /// 获取指定名称、字重、斜体字体的完整规范名称
