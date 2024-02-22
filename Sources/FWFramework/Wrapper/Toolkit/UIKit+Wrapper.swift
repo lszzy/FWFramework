@@ -644,6 +644,11 @@ extension Wrapper where Base: UIScrollView {
     }
     
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
+    ///
+    /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
+    /// 为防止浮点数误差导致scrollView拖拽时出现纵向可滚动的兼容问题，解决方案如下：
+    /// 1. 设置scrollView属性isDirectionalLockEnabled为true
+    /// 2. 设置布局高度为固定ceil高度，如：FW.fixed(ceil(FW.relative(40)))
     public var contentView: UIView {
         return base.fw_contentView
     }
