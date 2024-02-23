@@ -129,11 +129,11 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return app.statusBarHidden
+        return app.statusBarHidden ?? false
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return app.statusBarStyle
+        return app.statusBarStyle ?? .default
     }
     
     @objc func refreshBarFrame() {
@@ -141,12 +141,12 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onStatusBar() {
-        app.statusBarHidden = !app.statusBarHidden
+        app.statusBarHidden = !(app.statusBarHidden ?? false)
         refreshBarFrame()
     }
     
     @objc func onStatusStyle() {
-        if app.statusBarStyle == .default {
+        if (app.statusBarStyle ?? .default) == .default {
             app.statusBarStyle = .lightContent
         } else {
             app.statusBarStyle = .default
@@ -155,12 +155,12 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onNavigationBar() {
-        app.navigationBarHidden = !app.navigationBarHidden
+        app.navigationBarHidden = !(app.navigationBarHidden ?? false)
         refreshBarFrame()
     }
     
     @objc func onNavigationStyle() {
-        if app.navigationBarStyle == .default {
+        if (app.navigationBarStyle ?? .default) == .default {
             app.navigationBarStyle = .white
         } else {
             app.navigationBarStyle = .default
@@ -299,9 +299,9 @@ class TestAdaptiveChildController: UIViewController, ViewControllerProtocol {
             app.navigationBarStyle = .transparent
         } else {
             app.navigationBarStyle = .init([-1, 0, 1, 2].randomElement()!)
-            app.navigationBarHidden = app.navigationBarStyle.rawValue == -1
+            app.navigationBarHidden = app.navigationBarStyle?.rawValue == -1
         }
-        navigationItem.title = "标题:\(index + 1) 样式:\(app.navigationBarStyle.rawValue)"
+        navigationItem.title = "标题:\(index + 1) 样式:\(app.navigationBarStyle?.rawValue ?? -1)"
         
         app.setRightBarItem("打开界面") { [weak self] _ in
             let vc = TestAdaptiveChildController()
