@@ -22,14 +22,14 @@ extension Wrapper where Base: UINavigationBar {
 
 // MARK: - Wrapper+UIViewController
 extension Wrapper where Base: UIViewController {
-    /// 状态栏样式，默认UIStatusBarStyleDefault，设置后才会生效
-    public var statusBarStyle: UIStatusBarStyle {
+    /// 状态栏样式，默认nil，设置后才会生效
+    public var statusBarStyle: UIStatusBarStyle? {
         get { return base.fw_statusBarStyle }
         set { base.fw_statusBarStyle = newValue }
     }
 
-    /// 状态栏是否隐藏，默认NO，设置后才会生效
-    public var statusBarHidden: Bool {
+    /// 状态栏是否隐藏，默认nil，设置后才会生效
+    public var statusBarHidden: Bool? {
         get { return base.fw_statusBarHidden }
         set { base.fw_statusBarHidden = newValue }
     }
@@ -40,14 +40,14 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_navigationBarAppearance = newValue }
     }
 
-    /// 当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效
-    public var navigationBarStyle: NavigationBarStyle {
+    /// 当前导航栏样式，默认nil，设置后才会在viewWillAppear:自动应用生效
+    public var navigationBarStyle: NavigationBarStyle? {
         get { return base.fw_navigationBarStyle }
         set { base.fw_navigationBarStyle = newValue }
     }
 
-    /// 导航栏是否隐藏，默认NO，设置后才会在viewWillAppear:自动应用生效
-    public var navigationBarHidden: Bool {
+    /// 导航栏是否隐藏，默认nil，设置后才会在viewWillAppear:自动应用生效
+    public var navigationBarHidden: Bool? {
         get { return base.fw_navigationBarHidden }
         set { base.fw_navigationBarHidden = newValue }
     }
@@ -63,13 +63,13 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_allowsBarAppearance = newValue }
     }
 
-    /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
+    /// 标签栏是否隐藏，默认为true，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
     public var tabBarHidden: Bool {
         get { return base.fw_tabBarHidden }
         set { base.fw_tabBarHidden = newValue }
     }
     
-    /// 工具栏是否隐藏，默认为YES。需设置toolbarItems，立即生效
+    /// 工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效
     public var toolBarHidden: Bool {
         get { return base.fw_toolBarHidden }
         set { base.fw_toolBarHidden = newValue }
@@ -206,8 +206,8 @@ open class NavigationBarAppearance: NSObject {
             methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
             swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
         ) { store in { selfObject in
-            if let hiddenValue = selfObject.fw_propertyNumber(forName: "fw_statusBarHidden") {
-                return hiddenValue.boolValue
+            if let hidden = selfObject.fw_statusBarHidden {
+                return hidden
             } else {
                 return store.original(selfObject, store.selector)
             }
@@ -219,8 +219,8 @@ open class NavigationBarAppearance: NSObject {
             methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
             swizzleSignature: (@convention(block) (UIViewController) -> UIStatusBarStyle).self
         ) { store in { selfObject in
-            if let styleValue = selfObject.fw_propertyNumber(forName: "fw_statusBarStyle") {
-                return .init(rawValue: styleValue.intValue) ?? .default
+            if let style = selfObject.fw_statusBarStyle {
+                return style
             } else {
                 return store.original(selfObject, store.selector)
             }
@@ -237,25 +237,32 @@ open class NavigationBarAppearance: NSObject {
         }}
     }
     
-    /// 状态栏样式，默认UIStatusBarStyleDefault，设置后才会生效
-    public var fw_statusBarStyle: UIStatusBarStyle {
+    /// 状态栏样式，默认nil，设置后才会生效
+    public var fw_statusBarStyle: UIStatusBarStyle? {
         get {
-            let value = fw_propertyInt(forName: "fw_statusBarStyle")
-            return .init(rawValue: value) ?? .default
+            if let number = fw_propertyNumber(forName: "fw_statusBarStyle") {
+                return .init(rawValue: number.intValue)
+            }
+            return nil
         }
         set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_statusBarStyle")
+            let number = newValue != nil ? NSNumber(value: newValue!.rawValue) : nil
+            fw_setPropertyNumber(number, forName: "fw_statusBarStyle")
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
 
-    /// 状态栏是否隐藏，默认NO，设置后才会生效
-    public var fw_statusBarHidden: Bool {
+    /// 状态栏是否隐藏，默认nil，设置后才会生效
+    public var fw_statusBarHidden: Bool? {
         get {
-            return fw_propertyBool(forName: "fw_statusBarHidden")
+            if let number = fw_propertyNumber(forName: "fw_statusBarHidden") {
+                return number.boolValue
+            }
+            return nil
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_statusBarHidden")
+            let number = newValue != nil ? NSNumber(value: newValue!) : nil
+            fw_setPropertyNumber(number, forName: "fw_statusBarHidden")
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
@@ -273,27 +280,37 @@ open class NavigationBarAppearance: NSObject {
         }
     }
 
-    /// 当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效
-    public var fw_navigationBarStyle: NavigationBarStyle {
+    /// 当前导航栏样式，默认nil，设置后才会在viewWillAppear:自动应用生效
+    public var fw_navigationBarStyle: NavigationBarStyle? {
         get {
-            let value = fw_propertyInt(forName: "fw_navigationBarStyle")
-            return .init(rawValue: value)
+            if let number = fw_propertyNumber(forName: "fw_navigationBarStyle") {
+                return .init(rawValue: number.intValue)
+            }
+            return nil
         }
         set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_navigationBarStyle")
+            let number = newValue != nil ? NSNumber(value: newValue!.rawValue) : nil
+            fw_setPropertyNumber(number, forName: "fw_navigationBarStyle")
             if self.isViewLoaded && self.view.window != nil {
                 self.fw_updateNavigationBarStyle(false, isAppeared: true)
             }
         }
     }
 
-    /// 导航栏是否隐藏，默认NO，设置后才会在viewWillAppear:自动应用生效
-    public var fw_navigationBarHidden: Bool {
+    /// 导航栏是否隐藏，默认nil，设置后才会在viewWillAppear:自动应用生效
+    public var fw_navigationBarHidden: Bool? {
         get {
-            return fw_propertyBool(forName: "fw_navigationBarHidden")
+            if let number = fw_propertyNumber(forName: "fw_navigationBarHidden") {
+                return number.boolValue
+            }
+            return nil
         }
         set {
-            self.fw_setNavigationBarHidden(newValue, animated: false)
+            if let newValue = newValue {
+                self.fw_setNavigationBarHidden(newValue, animated: false)
+            } else {
+                fw_setPropertyNumber(nil, forName: "fw_navigationBarHidden")
+            }
             // 直接设置navigtionBar.isHidden不会影响右滑关闭手势
             // self.navigationController?.navigationBar.isHidden = true
         }
@@ -301,7 +318,7 @@ open class NavigationBarAppearance: NSObject {
 
     /// 动态隐藏导航栏，如果当前已经viewWillAppear:时立即执行
     public func fw_setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
-        fw_setPropertyBool(hidden, forName: "fw_navigationBarHidden")
+        fw_setPropertyNumber(NSNumber(value: hidden), forName: "fw_navigationBarHidden")
         if self.isViewLoaded && self.view.window != nil {
             self.fw_updateNavigationBarStyle(false, isAppeared: true)
         }
@@ -326,16 +343,16 @@ open class NavigationBarAppearance: NSObject {
             return appearance
         }
         // 2. 检查VC是否自定义style
-        if let style = fw_propertyNumber(forName: "fw_navigationBarStyle") {
-            return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
+        if let style = fw_navigationBarStyle {
+            return NavigationBarAppearance.appearance(for: style)
         }
         // 3. 检查NAV是否自定义appearance
         if let appearance = self.navigationController?.fw_navigationBarAppearance {
             return appearance
         }
         // 4. 检查NAV是否自定义style
-        if let style = self.navigationController?.fw_propertyNumber(forName: "fw_navigationBarStyle") {
-            return NavigationBarAppearance.appearance(for: .init(rawValue: style.intValue))
+        if let style = self.navigationController?.fw_navigationBarStyle {
+            return NavigationBarAppearance.appearance(for: style)
         }
         return nil
     }
@@ -346,10 +363,10 @@ open class NavigationBarAppearance: NSObject {
               !(self is UINavigationController) else { return }
         if !fw_allowsBarAppearance { return }
         
-        // fwNavigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
-        if let hidden = fw_propertyNumber(forName: "fw_navigationBarHidden"),
-           navigationController.isNavigationBarHidden != hidden.boolValue {
-            navigationController.setNavigationBarHidden(hidden.boolValue, animated: animated)
+        // fw_navigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
+        if let hidden = fw_navigationBarHidden,
+           navigationController.isNavigationBarHidden != hidden {
+            navigationController.setNavigationBarHidden(hidden, animated: animated)
         }
         
         // 获取当前用于显示的appearance，未设置时不处理
@@ -375,20 +392,20 @@ open class NavigationBarAppearance: NSObject {
         }
     }
 
-    /// 标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
+    /// 标签栏是否隐藏，默认为true，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
     public var fw_tabBarHidden: Bool {
         get {
-            return self.tabBarController?.tabBar.isHidden ?? false
+            return self.tabBarController?.tabBar.isHidden ?? true
         }
         set {
             self.tabBarController?.tabBar.isHidden = newValue
         }
     }
     
-    /// 工具栏是否隐藏，默认为YES。需设置toolbarItems，立即生效
+    /// 工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效
     public var fw_toolBarHidden: Bool {
         get {
-            return self.navigationController?.isToolbarHidden ?? false
+            return self.navigationController?.isToolbarHidden ?? true
         }
         set {
             self.navigationController?.isToolbarHidden = newValue
