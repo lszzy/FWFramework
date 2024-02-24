@@ -837,7 +837,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_statusBarHeight: CGFloat {
         // 1. 导航栏隐藏时不占用布局高度始终为0
         guard let navController = self.navigationController else { return 0 }
-        let navHidden = fw_navigationBarHidden ?? navController.isNavigationBarHidden
+        let navHidden = fw_propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
         guard !navHidden else { return 0 }
         
         // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
@@ -859,7 +859,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_navigationBarHeight: CGFloat {
         // 系统导航栏
         guard let navController = self.navigationController else { return 0 }
-        let navHidden = fw_navigationBarHidden ?? navController.isNavigationBarHidden
+        let navHidden = fw_propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
         guard !navHidden else { return 0 }
         return navController.navigationBar.frame.height
     }
