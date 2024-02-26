@@ -39,10 +39,10 @@ open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin {
         previewController.sourceImageView = sourceView
         previewController.imagePreviewView.imageURLs = imageURLs
         previewController.imagePreviewView.imageInfos = imageInfos
-        previewController.imagePreviewView.currentImageIndex = currentIndex
         
         self.customBlock?(previewController)
         customBlock?(previewController)
+        previewController.imagePreviewView.currentImageIndex = currentIndex
         viewController.present(previewController, animated: true)
     }
     
