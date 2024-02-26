@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.1] - 2024-02-26
+
+### Changed
+* Added RoundedCornerView to handle semi-circle corner problem without frame
+* Modify NavigationStyle to get the current status when it is not set
+* PopupMenu supports specifying container views. Modify showsMaskView to hide maskView. Migration testing is required.
+* Optimize Database performance and increase ModelFields parsing cache
+
 ## [5.0.0] - 2024-02-22
 
 ### Added

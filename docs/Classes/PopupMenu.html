@@ -17,7 +17,7 @@
     <a title="PopupMenu Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -610,6 +610,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ReusableViewPool.html">ReusableViewPool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RoundedCornerView.html">RoundedCornerView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Router.html">Router</a>
@@ -2519,14 +2522,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>标题数组，支持String|NSAttributedString</p>
+                        <p>标题数组，支持String|NSAttributedString，需show之前调用</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -2546,14 +2549,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>图片数组，支持String|UIImage</p>
+                        <p>图片数组，支持String|UIImage，需show之前调用</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -2654,7 +2657,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>是否显示灰色覆盖层，默认true</p>
+                        <p>是否显示灰色蒙层，默认true</p>
 
                       </div>
                       <div class="declaration">
@@ -2681,7 +2684,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义灰色覆盖层颜色，默认黑色、透明度0.1</p>
+                        <p>自定义灰色蒙层颜色，默认黑色、透明度0.1，可设置为透明等</p>
 
                       </div>
                       <div class="declaration">
@@ -3049,9 +3052,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9PopupMenuC9backColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/backColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9PopupMenuC9backColorSo7UIColorCSgvp">backColor</a>
+                    <a name="/s:11FWFramework9PopupMenuC19menuBackgroundColorSo7UIColorCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/menuBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC19menuBackgroundColorSo7UIColorCSgvp">menuBackgroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3066,7 +3069,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">backColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">menuBackgroundColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3437,7 +3440,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>默认表格视图</p>
+                        <p>表格视图</p>
 
                       </div>
                       <div class="declaration">
@@ -3454,9 +3457,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9PopupMenuC4show2at6titles5icons9menuWidth9customizeACSo7CGPointV_SayypGSgAM14CoreFoundation7CGFloatVyACcSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/show(at:titles:icons:menuWidth:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9PopupMenuC4show2at6titles5icons9menuWidth9customizeACSo7CGPointV_SayypGSgAM14CoreFoundation7CGFloatVyACcSgtFZ">show(at:<wbr>titles:<wbr>icons:<wbr>menuWidth:<wbr>customize:<wbr>)</a>
+                    <a name="/s:11FWFramework9PopupMenuC12menuMaskViewSo6UIViewCvp"></a>
+                    <a name="//apple_ref/swift/Property/menuMaskView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC12menuMaskViewSo6UIViewCvp">menuMaskView</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3464,15 +3467,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>在指定位置弹出</p>
+                        <p>灰色蒙层</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">show</span><span class="p">(</span><span class="n">at</span> <span class="nv">point</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">icons</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">menuWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">PopupMenu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PopupMenu</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">menuMaskView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3482,9 +3484,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9PopupMenuC4show6relyOn6titles5icons9menuWidth9customizeACSo6UIViewCSg_SayypGSgAN14CoreFoundation7CGFloatVyACcSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/show(relyOn:titles:icons:menuWidth:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9PopupMenuC4show6relyOn6titles5icons9menuWidth9customizeACSo6UIViewCSg_SayypGSgAN14CoreFoundation7CGFloatVyACcSgtFZ">show(relyOn:<wbr>titles:<wbr>icons:<wbr>menuWidth:<wbr>customize:<wbr>)</a>
+                    <a name="/s:11FWFramework9PopupMenuC13containerViewSo6UIViewCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/containerView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC13containerViewSo6UIViewCSgvp">containerView</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3492,7 +3494,115 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>依赖指定view弹出</p>
+                        <p>自定义容器视图，需show之前调用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">containerView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC15containerBoundsSo6CGRectVvp"></a>
+                    <a name="//apple_ref/swift/Property/containerBounds" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC15containerBoundsSo6CGRectVvp">containerBounds</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取容器bounds</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">containerBounds</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC8relyViewSo6UIViewCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/relyView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC8relyViewSo6UIViewCSgvp">relyView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义依赖视图，优先级高于point，需show之前调用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">relyView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC5pointSo7CGPointVvp"></a>
+                    <a name="//apple_ref/swift/Property/point" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC5pointSo7CGPointVvp">point</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义弹出位置，优先级低于relyView，需show之前调用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">point</span><span class="p">:</span> <span class="kt">CGPoint</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC4show2in2at6titles5icons9menuWidth9customizeACSo6UIViewCSg_So7CGPointVSayypGSgAQ14CoreFoundation7CGFloatVyACcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/show(in:at:titles:icons:menuWidth:customize:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC4show2in2at6titles5icons9menuWidth9customizeACSo6UIViewCSg_So7CGPointVSayypGSgAQ14CoreFoundation7CGFloatVyACcSgtFZ">show(in:<wbr>at:<wbr>titles:<wbr>icons:<wbr>menuWidth:<wbr>customize:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>在指定位置弹出，可指定容器视图</p>
 
                       </div>
                       <div class="declaration">
@@ -3500,7 +3610,35 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">show</span><span class="p">(</span><span class="n">relyOn</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?,</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">icons</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">menuWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">PopupMenu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PopupMenu</span></code></pre>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">show</span><span class="p">(</span><span class="k">in</span> <span class="nv">containerView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">at</span> <span class="nv">point</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">icons</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">menuWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">PopupMenu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PopupMenu</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC4show2in6relyOn6titles5icons9menuWidth9customizeACSo6UIViewCSg_AMSayypGSgAO14CoreFoundation7CGFloatVyACcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/show(in:relyOn:titles:icons:menuWidth:customize:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC4show2in6relyOn6titles5icons9menuWidth9customizeACSo6UIViewCSg_AMSayypGSgAO14CoreFoundation7CGFloatVyACcSgtFZ">show(in:<wbr>relyOn:<wbr>titles:<wbr>icons:<wbr>menuWidth:<wbr>customize:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>依赖指定view弹出，可指定容器视图</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">show</span><span class="p">(</span><span class="k">in</span> <span class="nv">containerView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">relyOn</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?,</span> <span class="nv">titles</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">icons</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">menuWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">PopupMenu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PopupMenu</span></code></pre>
 
                         </div>
                       </div>
@@ -3555,6 +3693,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">coder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9PopupMenuC4showyyF"></a>
+                    <a name="//apple_ref/swift/Method/show()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9PopupMenuC4showyyF">show()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>显示</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">show</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3781,7 +3946,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-02-22)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-02-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
