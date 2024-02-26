@@ -48,7 +48,10 @@ import SQLite3
 /// [WHC_ModelSqliteKit](https://github.com/netyouli/WHC_ModelSqliteKit)
 public class DatabaseManager: NSObject {
     
-    /// 全局数据库模型版本号，默认1.0。如果模型实现了databaseVersion且不为空，则会忽略全局版本号
+    /// 全局数据库模型版本号，默认1.0
+    ///
+    /// 如果模型实现了databaseVersion且不为空，则会忽略全局版本号；
+    /// 可设置为appVersion+appBuildVersion从而实现App升级时自动更新版本号
     public static var version = "1.0"
     
     /// 是否打印调试SQL语句，默认true
