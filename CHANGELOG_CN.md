@@ -1,5 +1,11 @@
 # 更新日志
 
+## [5.0.2] - 2024-02-26
+
+### Changed
+* 控制器navigationBarHeight兼容自定义navigationBarHidden设置
+* 修复图片预览插件customBlock位置变动引起未更新countLabel的问题
+
 ## [5.0.1] - 2024-02-26
 
 ### Changed
