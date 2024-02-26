@@ -24,6 +24,8 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }()
     
     func setupNavbar() {
+        app.statusBarStyle = .default
+        app.statusBarHidden = false
         app.tabBarHidden = true
         app.observeNotification(UIDevice.orientationDidChangeNotification, target: self, action: #selector(refreshBarFrame))
         
@@ -126,14 +128,6 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         refreshBarFrame()
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return app.statusBarHidden
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return app.statusBarStyle
     }
     
     @objc func refreshBarFrame() {

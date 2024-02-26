@@ -137,7 +137,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
             popupMenu.delegate = self
             popupMenu.offset = 10
             popupMenu.textColor = UIColor.lightGray
-            popupMenu.backColor = UIColor(red: 0.25, green: 0.27, blue: 0.29, alpha: 1)
+            popupMenu.menuBackgroundColor = UIColor(red: 0.25, green: 0.27, blue: 0.29, alpha: 1)
             popupMenu.rectCorner = [.bottomLeft, .bottomRight]
         }
     }
@@ -167,7 +167,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         popupMenu = PopupMenu.show(relyOn: textField, titles: ["密码必须为数字、大写字母、小写字母和特殊字符中至少三种的组合，长度不少于8且不大于20"], icons: nil, menuWidth: textField.bounds.width, customize: { popupMenu in
             popupMenu.delegate = self
-            popupMenu.showsMaskView = false
+            popupMenu.maskViewColor = .clear
             popupMenu.priorityDirection = .bottom
             popupMenu.maxVisibleCount = 1
             popupMenu.itemHeight = 60

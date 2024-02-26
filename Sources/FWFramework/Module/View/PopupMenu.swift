@@ -382,11 +382,11 @@ public enum PopupMenuPriorityDirection: Int {
 /// [YBPopupMenu](https://github.com/lyb5834/YBPopupMenu)
 open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     
-    /// 标题数组，支持String|NSAttributedString
-    open private(set) var titles: [Any] = []
+    /// 标题数组，支持String|NSAttributedString，需show之前调用
+    open var titles: [Any] = []
     
-    /// 图片数组，支持String|UIImage
-    open private(set) var images: [Any] = []
+    /// 图片数组，支持String|UIImage，需show之前调用
+    open var images: [Any] = []
     
     /// 圆角半径
     open var cornerRadius: CGFloat = 5.0
@@ -403,17 +403,17 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    /// 是否显示灰色覆盖层，默认true
+    /// 是否显示灰色蒙层，默认true
     open var showsMaskView = true {
         didSet {
-            menuBackView.backgroundColor = showsMaskView ? maskViewColor : .clear
+            menuMaskView.isHidden = !showsMaskView
         }
     }
     
-    /// 自定义灰色覆盖层颜色，默认黑色、透明度0.1
+    /// 自定义灰色蒙层颜色，默认黑色、透明度0.1，可设置为透明等
     open var maskViewColor: UIColor? = UIColor.black.withAlphaComponent(0.1) {
         didSet {
-            menuBackView.backgroundColor = showsMaskView ? maskViewColor : .clear
+            menuMaskView.backgroundColor = maskViewColor
         }
     }
     
@@ -457,7 +457,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     open var maxVisibleCount: Int = 5
     
     /// menu背景色
-    open var backColor: UIColor? = .white
+    open var menuBackgroundColor: UIColor? = .white
     
     /// item高度，默认44
     open var itemHeight: CGFloat = 44
@@ -498,7 +498,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     /// 事件代理
     open weak var delegate: PopupMenuDelegate?
     
-    /// 默认表格视图
+    /// 表格视图
     open lazy var tableView: UITableView = {
         let result = UITableView(frame: .zero, style: .plain)
         result.backgroundColor = UIColor.clear
@@ -512,8 +512,9 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         return result
     }()
     
-    private lazy var menuBackView: UIView = {
-        let result = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+    /// 灰色蒙层
+    open lazy var menuMaskView: UIView = {
+        let result = UIView(frame: .zero)
         result.backgroundColor = UIColor.black.withAlphaComponent(0.1)
         result.alpha = 1
         
@@ -522,19 +523,40 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         return result
     }()
     
-    private var relyRect: CGRect = .zero
-    private var itemWidth: CGFloat = 0
-    private var point: CGPoint = .zero
-    private var isCornerChanged = false
-    private var isChangeDirection = false
-    private weak var relyView: UIView? {
-        didSet { calculateRealPointIfNeed() }
+    /// 自定义容器视图，需show之前调用
+    open weak var containerView: UIView? {
+        get {
+            return _containerView ?? UIWindow.fw_mainWindow
+        }
+        set {
+            _containerView = newValue
+        }
+    }
+    private weak var _containerView: UIView?
+    
+    /// 获取容器bounds
+    open var containerBounds: CGRect {
+        return containerView?.bounds ?? UIScreen.main.bounds
     }
     
-    /// 在指定位置弹出
+    /// 自定义依赖视图，优先级高于point，需show之前调用
+    open weak var relyView: UIView?
+    
+    /// 自定义弹出位置，优先级低于relyView，需show之前调用
+    open var point: CGPoint = .zero
+    
+    /// 自定义菜单宽度，需show之前调用
+    private var itemWidth: CGFloat = 0
+    
+    private var relyRect: CGRect = .zero
+    private var isCornerChanged = false
+    private var isChangeDirection = false
+    
+    /// 在指定位置弹出，可指定容器视图
     @discardableResult
-    open class func show(at point: CGPoint, titles: [Any]?, icons: [Any]?, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(in containerView: UIView? = nil, at point: CGPoint, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
         let popupMenu = PopupMenu()
+        popupMenu.containerView = containerView
         popupMenu.point = point
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
@@ -544,10 +566,11 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         return popupMenu
     }
     
-    /// 依赖指定view弹出
+    /// 依赖指定view弹出，可指定容器视图
     @discardableResult
-    open class func show(relyOn view: UIView?, titles: [Any]?, icons: [Any]?, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(in containerView: UIView? = nil, relyOn view: UIView?, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
         let popupMenu = PopupMenu()
+        popupMenu.containerView = containerView
         popupMenu.relyView = view
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
@@ -591,6 +614,22 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    /// 显示
+    open func show() {
+        orientationManager.startMonitorDeviceOrientation()
+        if relyView != nil {
+            calculateRealPointIfNeed()
+        }
+        updateUI()
+        containerView?.addSubview(menuMaskView)
+        containerView?.addSubview(self)
+        delegate?.popupMenuBeganShow?(self)
+        animationManager.displayShowAnimationCompletion { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.popupMenuDidShow?(self)
+        }
+    }
+    
     /// 隐藏
     open func dismiss() {
         orientationManager.stopMonitorDeviceOrientation()
@@ -600,7 +639,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
             self.delegate?.popupMenuDidDismiss?(self)
             self.delegate = nil
             self.removeFromSuperview()
-            self.menuBackView.removeFromSuperview()
+            self.menuMaskView.removeFromSuperview()
         }
     }
     
@@ -683,21 +722,9 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     open override func draw(_ rect: CGRect) {
-        let bezierPath = PopupMenuPath.bezierPath(rect: rect, rectCorner: rectCorner, cornerRadius: cornerRadius, borderWidth: borderWidth, borderColor: borderColor, backgroundColor: backColor, arrowWidth: arrowWidth, arrowHeight: arrowHeight, arrowPosition: arrowPosition, arrowDirection: arrowDirection)
+        let bezierPath = PopupMenuPath.bezierPath(rect: rect, rectCorner: rectCorner, cornerRadius: cornerRadius, borderWidth: borderWidth, borderColor: borderColor, backgroundColor: menuBackgroundColor, arrowWidth: arrowWidth, arrowHeight: arrowHeight, arrowPosition: arrowPosition, arrowDirection: arrowDirection)
         bezierPath.fill()
         bezierPath.stroke()
-    }
-    
-    private func show() {
-        orientationManager.startMonitorDeviceOrientation()
-        updateUI()
-        UIWindow.fw_mainWindow?.addSubview(menuBackView)
-        UIWindow.fw_mainWindow?.addSubview(self)
-        delegate?.popupMenuBeganShow?(self)
-        animationManager.displayShowAnimationCompletion { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.popupMenuDidShow?(self)
-        }
     }
     
     @objc private func touchOutSide() {
@@ -707,14 +734,15 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     private func calculateRealPointIfNeed() {
-        let absoluteRect = relyView?.convert(relyView?.bounds ?? .zero, to: UIWindow.fw_mainWindow) ?? .zero
+        let absoluteRect = relyView?.convert(relyView?.bounds ?? .zero, to: containerView) ?? .zero
         let relyPoint = CGPoint(x: absoluteRect.origin.x + absoluteRect.size.width / 2, y: absoluteRect.origin.y + absoluteRect.size.height)
         self.relyRect = absoluteRect
         self.point = relyPoint
     }
     
     private func updateUI() {
-        menuBackView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        let containerSize = containerBounds.size
+        menuMaskView.frame = CGRect(x: 0, y: 0, width: containerSize.width, height: containerSize.height)
         var height: CGFloat = 0
         if titles.count > maxVisibleCount {
             height = itemHeight * CGFloat(maxVisibleCount) + borderWidth * 2
@@ -725,7 +753,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         }
         isChangeDirection = false
         if priorityDirection == .top {
-            if point.y + height + arrowHeight > UIScreen.main.bounds.size.height - minSpace {
+            if point.y + height + arrowHeight > containerSize.height - minSpace {
                 arrowDirection = .bottom
                 isChangeDirection = true
             } else {
@@ -741,7 +769,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
                 isChangeDirection = false
             }
         } else if priorityDirection == .left {
-            if point.x + itemWidth + arrowHeight > UIScreen.main.bounds.size.width - minSpace {
+            if point.x + itemWidth + arrowHeight > containerSize.width - minSpace {
                 arrowDirection = .right
                 isChangeDirection = true
             } else {
@@ -763,7 +791,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         if arrowDirection == .top {
             let y = isChangeDirection ? point.y : point.y
             if arrowPosition > itemWidth / 2 {
-                self.frame = CGRect(x: UIScreen.main.bounds.size.width - minSpace - itemWidth, y: y, width: itemWidth, height: height + arrowHeight)
+                self.frame = CGRect(x: containerSize.width - minSpace - itemWidth, y: y, width: itemWidth, height: height + arrowHeight)
             } else if arrowPosition < itemWidth / 2 {
                 self.frame = CGRect(x: minSpace, y: y, width: itemWidth, height: height + arrowHeight)
             } else {
@@ -772,7 +800,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         } else if arrowDirection == .bottom {
             let y = isChangeDirection ? point.y - arrowHeight - height : point.y - arrowHeight - height
             if arrowPosition > itemWidth / 2 {
-                self.frame = CGRect(x: UIScreen.main.bounds.size.width - minSpace - itemWidth, y: y, width: itemWidth, height: height + arrowHeight)
+                self.frame = CGRect(x: containerSize.width - minSpace - itemWidth, y: y, width: itemWidth, height: height + arrowHeight)
             } else if arrowPosition < itemWidth / 2 {
                 self.frame = CGRect(x: minSpace, y: y, width: itemWidth, height: height + arrowHeight)
             } else {
@@ -931,8 +959,9 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         if priorityDirection == .none { return }
         
         if arrowDirection == .top || arrowDirection == .bottom {
-            if point.x + itemWidth / 2 > UIScreen.main.bounds.width - minSpace {
-                arrowPosition = itemWidth - (UIScreen.main.bounds.size.width - minSpace - point.x)
+            let containerSize = containerBounds.size
+            if point.x + itemWidth / 2 > containerSize.width - minSpace {
+                arrowPosition = itemWidth - (containerSize.width - minSpace - point.x)
             } else if point.x < itemWidth / 2 + minSpace {
                 arrowPosition = point.x - minSpace
             } else {

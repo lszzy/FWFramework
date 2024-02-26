@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -610,6 +610,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ReusableViewPool.html">ReusableViewPool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RoundedCornerView.html">RoundedCornerView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Router.html">Router</a>
@@ -9501,7 +9504,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>状态栏样式，默认UIStatusBarStyleDefault，设置后才会生效</p>
+                        <p>状态栏样式，默认preferredStatusBarStyle，设置后才会生效</p>
 
                       </div>
                       <div class="declaration">
@@ -9528,7 +9531,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>状态栏是否隐藏，默认NO，设置后才会生效</p>
+                        <p>状态栏是否隐藏，默认prefersStatusBarHidden，设置后才会生效</p>
 
                       </div>
                       <div class="declaration">
@@ -9582,7 +9585,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>当前导航栏样式，默认Default，设置后才会在viewWillAppear:自动应用生效</p>
+                        <p>当前导航栏样式，默认default，设置后才会在viewWillAppear:自动应用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -9609,7 +9612,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>导航栏是否隐藏，默认NO，设置后才会在viewWillAppear:自动应用生效</p>
+                        <p>导航栏是否隐藏，默认isNavigationBarHidden，设置后才会在viewWillAppear:自动应用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -9690,7 +9693,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>标签栏是否隐藏，默认为NO，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar</p>
+                        <p>标签栏是否隐藏，默认为true，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar</p>
 
                       </div>
                       <div class="declaration">
@@ -9717,7 +9720,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>工具栏是否隐藏，默认为YES。需设置toolbarItems，立即生效</p>
+                        <p>工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效</p>
 
                       </div>
                       <div class="declaration">
@@ -46548,6 +46551,33 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIButtonCRbzlE14adjustBoldTextyyF"></a>
+                    <a name="//apple_ref/swift/Method/adjustBoldText()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIButtonCRbzlE14adjustBoldTextyyF">adjustBoldText()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>图文模式时自适应粗体文本，解决图文按钮文本显示不全(&hellip;)的兼容性问题</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">adjustBoldText</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo8UIButtonCRbzlE18setBackgroundColor_3forySo7UIColorCSg_So14UIControlStateVtF"></a>
                     <a name="//apple_ref/swift/Method/setBackgroundColor(_:for:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIButtonCRbzlE18setBackgroundColor_3forySo7UIColorCSg_So14UIControlStateVtF">setBackgroundColor(_:<wbr>for:<wbr>)</a>
@@ -49802,7 +49832,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-02-22)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-02-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

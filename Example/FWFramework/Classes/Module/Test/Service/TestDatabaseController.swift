@@ -74,11 +74,6 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        let count = DatabaseManager.count(TestDatabaseModel.self)
-        if count > 0 {
-            navigationItem.title = "Database-\(count)"
-        }
-        
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["新增一条数据", "获取当前版本号", "更新数据库版本", "清空所有数据", "删除数据库文件"], actionBlock: { index in
                 if index == 0 {
@@ -107,6 +102,9 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
+        let count = DatabaseManager.count(TestDatabaseModel.self)
+        navigationItem.title = "Database" + (count > 0 ? "-\(count)" : "")
+        
         tableData = DatabaseManager.query(TestDatabaseModel.self)
         tableView.reloadData()
     }
