@@ -1,5 +1,13 @@
 # 更新日志
 
+## [5.0.1] - 2024-02-26
+
+### Changed
+* 新增RoundedCornerView无需frame处理半圆圆角问题
+* 修改NavigationStyle未设置时获取当前状态
+* PopupMenu支持指定容器视图，修改showsMaskView为隐藏maskView，需迁移测试
+* 优化Database性能，增加ModelFields解析缓存
+
 ## [5.0.0] - 2024-02-22
 
 ### Added

@@ -48,7 +48,10 @@ import SQLite3
 /// [WHC_ModelSqliteKit](https://github.com/netyouli/WHC_ModelSqliteKit)
 public class DatabaseManager: NSObject {
     
-    /// 全局数据库模型版本号，默认1.0。如果模型实现了databaseVersion且不为空，则会忽略全局版本号
+    /// 全局数据库模型版本号，默认1.0
+    ///
+    /// 如果模型实现了databaseVersion且不为空，则会忽略全局版本号；
+    /// 可设置为appVersion+appBuildVersion从而实现App升级时自动更新版本号
     public static var version = "1.0"
     
     /// 是否打印调试SQL语句，默认true
@@ -354,6 +357,7 @@ public class DatabaseManager: NSObject {
                 }
             })
         }
+        removeModelFieldsCache(nil)
         if !isMigration {
             semaphore.signal()
         }
@@ -366,7 +370,9 @@ public class DatabaseManager: NSObject {
         }
         if let filePath = localPath(with: type) {
             try? FileManager.default.removeItem(atPath: filePath)
+            log(String(format: "已经删除了数据库 -> %@", filePath))
         }
+        removeModelFieldsCache(type)
         if !isMigration {
             semaphore.signal()
         }
@@ -396,8 +402,33 @@ private extension DatabaseManager {
         return FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "Database"])
     }
     
+    static var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
+    
+    static func removeModelFieldsCache(_ modelClass: AnyClass?) {
+        guard let modelClass = modelClass else {
+            modelFieldsCaches.removeAll()
+            return
+        }
+        
+        let cachePrefix = NSStringFromClass(modelClass)
+        let cacheKeys = modelFieldsCaches.keys
+        for cacheKey in cacheKeys {
+            if cacheKey.hasPrefix(cachePrefix) {
+                modelFieldsCaches.removeValue(forKey: cacheKey)
+            }
+        }
+    }
+    
     static func parseModelFields(_ modelClass: AnyClass, hasPrimary: Bool) -> [String: DatabasePropertyInfo] {
-        return parseSubModelFields(modelClass, propertyName: nil, hasPrimary: hasPrimary, completion: nil)
+        let version = getModelVersion(modelClass)
+        let cacheKey = NSStringFromClass(modelClass) + "_\(version)_\(hasPrimary ? 1 : 0)"
+        if let modelFields = modelFieldsCaches[cacheKey] {
+            return modelFields
+        }
+        
+        let modelFields = parseSubModelFields(modelClass, propertyName: nil, hasPrimary: hasPrimary, completion: nil)
+        modelFieldsCaches[cacheKey] = modelFields
+        return modelFields
     }
     
     @discardableResult
@@ -629,6 +660,14 @@ private extension DatabaseManager {
         return model
     }
     
+    static func getModelVersion(_ modelClass: AnyClass) -> String {
+        var version = ""
+        if let type = modelClass as? DatabaseModel.Type {
+            version = type.databaseVersion?() ?? ""
+        }
+        return !version.isEmpty ? version : DatabaseManager.version
+    }
+    
     static func getPrimaryKey(_ modelClass: AnyClass) -> String {
         if let type = modelClass as? DatabaseModel.Type,
            let primaryKey = type.tablePrimaryKey?(), !primaryKey.isEmpty {
@@ -677,12 +716,7 @@ private extension DatabaseManager {
         }
         
         if let vendorPath = getVendorPath(modelClass), !vendorPath.isEmpty {
-            var version = ""
-            if let type = modelClass as? DatabaseModel.Type {
-                version = type.databaseVersion?() ?? ""
-            }
-            if version.isEmpty { version = DatabaseManager.version }
-            
+            let version = getModelVersion(modelClass)
             let sqlitePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
             if FileManager.default.fileExists(atPath: vendorPath),
                !FileManager.default.fileExists(atPath: sqlitePath) {
@@ -739,11 +773,7 @@ private extension DatabaseManager {
     
     static func openTable(_ modelClass: AnyClass) -> Bool {
         let cacheDirectory = autoHandleOldSqlite(modelClass)
-        var version = ""
-        if let type = modelClass as? DatabaseModel.Type {
-            version = type.databaseVersion?() ?? ""
-        }
-        if version.isEmpty { version = DatabaseManager.version }
+        let version = getModelVersion(modelClass)
         if checkUpdate {
             let localModelName = localName(with: modelClass)
             if let localModelName = localModelName,
