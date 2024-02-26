@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.2] - 2024-02-26
+
+### Changed
+* Controller navigationBarHeight is compatible with custom navigationBarHidden settings
+* Fixed the problem of countLabel not being updated due to position change of customBlock in image preview plug-in
+
 ## [5.0.1] - 2024-02-26
 
 ### Changed
