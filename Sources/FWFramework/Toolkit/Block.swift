@@ -227,19 +227,19 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_title = newValue }
     }
     
-    /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
+    /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头
     public var backBarItem: Any? {
         get { base.fw_backBarItem }
         set { base.fw_backBarItem = newValue }
     }
     
-    /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+    /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面
     public var leftBarItem: Any? {
         get { base.fw_leftBarItem }
         set { base.fw_leftBarItem = newValue }
     }
     
-    /// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+    /// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面
     public var rightBarItem: Any? {
         get { base.fw_rightBarItem }
         set { base.fw_rightBarItem = newValue }
@@ -902,7 +902,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         set { self.navigationItem.title = newValue }
     }
     
-    /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效
+    /// 设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头
     public var fw_backBarItem: Any? {
         get {
             return self.navigationItem.backBarButtonItem
@@ -921,7 +921,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         }
     }
     
-    /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+    /// 设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面
     public var fw_leftBarItem: Any? {
         get {
             return self.navigationItem.leftBarButtonItem
@@ -941,7 +941,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         }
     }
     
-    /// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效
+    /// 设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面
     public var fw_rightBarItem: Any? {
         get {
             return self.navigationItem.rightBarButtonItem
