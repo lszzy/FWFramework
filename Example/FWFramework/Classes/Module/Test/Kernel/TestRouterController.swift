@@ -518,9 +518,10 @@ class TestRouter: NSObject, AutoloadProtocol {
         var vcs = nav.viewControllers
         vcs.append(vc)
         vcs.append(vc2)
-        // 预加载第一个界面，返回时无需等待网络请求
-        vc.loadViewIfNeeded()
         nav.setViewControllers(vcs, animated: true)
+        
+        // 预加载第一个界面，需放到setViewControllers之后导航栏才能获取到
+        vc.loadViewIfNeeded()
         return nil
     }
     
