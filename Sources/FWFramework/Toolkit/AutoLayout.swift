@@ -12,9 +12,9 @@ import UIKit
 /// 如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
 ///
-/// 另外，safeAreaLayoutGuide在iOS15+包含导航栏和标签栏，在iOS14及以下却不包含，兼容方法示例：
-/// 1. 可以将控制器的edgesForExtendedLayout设置为[]，不扩展Bar，这样在iOS14及以下不会被上下Bar遮挡
-/// 2. 也可以在布局时上下间距设置为topBarHeight|bottomBarHeight，如需兼容横屏则屏幕方向变化时刷新布局即可
+/// 另外，safeAreaLayoutGuide在iOS15+包含标签栏，在iOS14及以下却不包含，兼容方法示例：
+/// 1. 可以将控制器的edgesForExtendedLayout设置为top或[]，不扩展标签栏，这样在iOS14及以下不会被标签栏遮挡
+/// 2. 也可以在布局时将下间距设置为bottomBarHeight，如需兼容横屏则屏幕方向变化时刷新布局即可
 extension Wrapper where Base: UIView {
     // MARK: - AutoLayout
     /// 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
