@@ -85,6 +85,11 @@ extension Wrapper where Base: UIViewController {
         get { return base.fw_extendedLayoutEdge }
         set { base.fw_extendedLayoutEdge = newValue }
     }
+    
+    /// 自适应Bar延伸类型，兼容顶部和底部栏safeArea布局方式，需在viewDidLoad及之后调用生效。开启兼容模式时仅在iOS14及以下生效
+    public func adjustExtendedLayout(compatible: Bool = false) {
+        base.fw_adjustExtendedLayout(compatible: compatible)
+    }
 }
 
 // MARK: - NavigationStyle
@@ -418,6 +423,21 @@ open class NavigationBarAppearance: NSObject {
         set {
             self.edgesForExtendedLayout = newValue
             self.extendedLayoutIncludesOpaqueBars = true
+        }
+    }
+    
+    /// 自适应Bar延伸类型，兼容顶部和底部栏safeArea布局方式，需在viewDidLoad及之后调用生效。开启兼容模式时仅在iOS14及以下生效
+    public func fw_adjustExtendedLayout(compatible: Bool = false) {
+        self.extendedLayoutIncludesOpaqueBars = true
+        // iOS15+系统默认使用safeArea布局时自适应标签栏，开启兼容模式时仅处理iOS14及以下
+        var shouldAdjust = true
+        if compatible, #available(iOS 15.0, *) {
+            shouldAdjust = false
+        }
+        if shouldAdjust, !self.hidesBottomBarWhenPushed,
+           self.tabBarController != nil, fw_isHead {
+            // 注意移除bottom后无法实现标签栏半透明效果，可换成bottomBarHeight布局方式等
+            self.edgesForExtendedLayout.remove(.bottom)
         }
     }
     
