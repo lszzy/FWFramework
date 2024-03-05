@@ -12,7 +12,8 @@ import UIKit
 /// 如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 默认布局方式使用LTR，如果需要RTL布局，可通过fwAutoLayoutRTL统一启用
 ///
-/// 另外，safeAreaLayoutGuide在iOS15+包含标签栏，在iOS14及以下却不包含，兼容方法示例：
+/// 另外，safeAreaLayoutGuide在iOS13+都包含顶部导航栏，所以布局时使用top(toSafeArea:)方式是安全的；
+/// 但是，safeAreaLayoutGuide在iOS15+包含底部标签栏，在iOS14及以下却不包含，因此在含有标签栏的页面使用bottom(toSafeArea:)时需注意，兼容方法示例：
 /// 1. 可以将控制器的edgesForExtendedLayout设置为top或[]，不扩展标签栏，这样在iOS14及以下不会被标签栏遮挡
 /// 2. 也可以在布局时将下间距设置为bottomBarHeight，如需兼容横屏则屏幕方向变化时刷新布局即可
 extension Wrapper where Base: UIView {
