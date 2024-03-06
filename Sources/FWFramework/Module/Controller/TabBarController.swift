@@ -830,6 +830,14 @@ open class TabBarItemContentView: UIView {
         }
     }
     
+    /// The insets that you use to determine the insets edge for image, default is `UIEdgeInsets.zero`
+    open var imageInsets = UIEdgeInsets.zero
+    {
+        didSet {
+            self.updateDisplay()
+        }
+    }
+    
     open var imageView: UIImageView = {
         let imageView = UIImageView.init(frame: CGRect.zero)
         imageView.backgroundColor = .clear
@@ -921,11 +929,11 @@ open class TabBarItemContentView: UIView {
                 if let cgImage = renderImage.cgImage {
                     renderImage = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: renderImage.imageOrientation)
                 }
-                self?.imageView.image = renderImage.withRenderingMode(self?.renderingMode ?? .alwaysTemplate)
+                self?.imageView.image = renderImage.withRenderingMode(self?.renderingMode ?? .alwaysTemplate).fw_image(insets: self?.imageInsets ?? .zero)
                 self?.updateLayout()
             }, progress: nil)
         } else {
-            imageView.image = currentImage
+            imageView.image = currentImage?.fw_image(insets: imageInsets)
         }
         imageView.tintColor = selected ? highlightIconColor : iconColor
         titleLabel.textColor = selected ? highlightTextColor : textColor
