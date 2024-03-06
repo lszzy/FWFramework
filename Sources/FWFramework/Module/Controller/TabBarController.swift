@@ -921,19 +921,19 @@ open class TabBarItemContentView: UIView {
     open func updateDisplay() {
         var currentImage = selected ? (selectedImage ?? image) : image
         if let targetImage = currentImage, targetImage.size.width > 0, targetImage.size.height > 0 {
-            currentImage = targetImage.withRenderingMode(renderingMode)
+            currentImage = targetImage.withRenderingMode(renderingMode).fw_image(insets: imageInsets)
         }
         if let currentImageURL = selected ? (selectedImageURL ?? imageURL) : imageURL {
             imageView.fw_setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
-                guard var renderImage = image else { return }
-                if let cgImage = renderImage.cgImage {
-                    renderImage = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: renderImage.imageOrientation)
+                guard var image = image else { return }
+                if let cgImage = image.cgImage {
+                    image = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: image.imageOrientation)
                 }
-                self?.imageView.image = renderImage.withRenderingMode(self?.renderingMode ?? .alwaysTemplate).fw_image(insets: self?.imageInsets ?? .zero)
+                self?.imageView.image = image.withRenderingMode(self?.renderingMode ?? .alwaysTemplate).fw_image(insets: self?.imageInsets ?? .zero)
                 self?.updateLayout()
             }, progress: nil)
         } else {
-            imageView.image = currentImage?.fw_image(insets: imageInsets)
+            imageView.image = currentImage
         }
         imageView.tintColor = selected ? highlightIconColor : iconColor
         titleLabel.textColor = selected ? highlightTextColor : textColor
