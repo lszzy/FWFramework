@@ -55,7 +55,7 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testBarItem.contentView = TestTabbarContentView()
         testBarItem.contentView.highlightTextColor = AppTheme.textColor
         testBarItem.contentView.highlightIconColor = AppTheme.textColor
-        testBarItem.image = Icon.iconImage("zmdi-var-bug", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil)
+        testBarItem.image = Icon.iconImage("zmdi-var-bug", size: 50)
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
         
@@ -85,6 +85,7 @@ class TestTabbarContentView: TabBarItemContentView {
         self.imageView.backgroundColor = AppTheme.barColor
         self.imageView.layer.cornerRadius = 35
         self.insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
+        self.imageInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
     }
     
     required init?(coder aDecoder: NSCoder) {
