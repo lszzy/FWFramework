@@ -145,6 +145,8 @@ public struct WebImageOptions: OptionSet {
     
     /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
     public static let refreshCached: WebImageOptions = .init(rawValue: 1 << 3)
+    /// 是否延迟占位，将加载占位图作为错误占位图
+    public static let delayPlaceholder: WebImageOptions = .init(rawValue: 1 << 8)
     /// 禁止调用imageView.setImage:显示图片
     public static let avoidSetImage: WebImageOptions = .init(rawValue: 1 << 10)
     /// 忽略图片缓存，始终重新请求

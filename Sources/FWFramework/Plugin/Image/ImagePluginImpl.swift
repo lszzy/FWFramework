@@ -114,7 +114,9 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         customBlock?(view)
         
         ImageDownloader.shared.downloadImage(for: view, imageURL: imageURL, options: options, context: context, placeholder: {
-            setImageBlock(placeholder)
+            if !options.contains(.delayPlaceholder) {
+                setImageBlock(placeholder)
+            }
         }, completion: { [weak self] image, isCache, error in
             if let indicatorView = indicatorView {
                 if indicatorView.isAnimating {
@@ -124,7 +126,8 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
             }
             self?.customCompletionBlock?(view, image, error)
             
-            let autoSetImage = image != nil && (!(options.contains(.avoidSetImage)) || completion == nil)
+            let autoSetImage = !((image != nil && options.contains(.avoidSetImage) && completion != nil) || (image == nil && !options.contains(.delayPlaceholder)))
+            let delayPlaceholder = autoSetImage && options.contains(.delayPlaceholder) ? placeholder : nil
             if autoSetImage, ImagePluginImpl.shared.fadeAnimated, !isCache {
                 let originalOperationKey = ImageDownloader.shared.imageOperationKey(for: view)
                 UIView.transition(with: view, duration: 0, options: [], animations: {
@@ -135,11 +138,11 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                         let operationKey = ImageDownloader.shared.imageOperationKey(for: view)
                         if operationKey == nil || operationKey != originalOperationKey { return }
                         
-                        setImageBlock(image)
+                        setImageBlock(image ?? delayPlaceholder)
                     }, completion: nil)
                 })
             } else if autoSetImage {
-                setImageBlock(image)
+                setImageBlock(image ?? delayPlaceholder)
             }
             
             completion?(image, error)
