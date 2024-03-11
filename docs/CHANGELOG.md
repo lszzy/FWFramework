@@ -3,6 +3,7 @@
 ## [5.0.3] - 2024-03-11
 
 ### Changed
+* JSONModel is compatible with Xcode15.3
 * Added delayPlaceholder option to the picture plug-in
 * TabBarController adds imageInsets attribute
 * Added global fast ceil extension method
