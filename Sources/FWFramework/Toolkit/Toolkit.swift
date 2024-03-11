@@ -512,7 +512,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 指定颜色填充图片边缘
-    public func image(insets: UIEdgeInsets, color: UIColor?) -> UIImage? {
+    public func image(insets: UIEdgeInsets, color: UIColor? = nil) -> UIImage? {
         return base.fw_image(insets: insets, color: color)
     }
 
@@ -1829,7 +1829,9 @@ extension Wrapper where Base: UINavigationController {
     }
 
     /// 指定颜色填充图片边缘
-    public func fw_image(insets: UIEdgeInsets, color: UIColor?) -> UIImage? {
+    public func fw_image(insets: UIEdgeInsets, color: UIColor? = nil) -> UIImage? {
+        guard insets != .zero else { return self }
+        
         var size = self.size
         size.width -= insets.left + insets.right
         size.height -= insets.top + insets.bottom
