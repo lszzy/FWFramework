@@ -17,7 +17,7 @@
     <a title="UIViewController Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.0.2 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.0.3 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -3014,6 +3014,33 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:So16UIViewControllerC11FWFrameworkE23fw_adjustExtendedLayout10compatibleySb_tF"></a>
+                    <a name="//apple_ref/swift/Method/fw_adjustExtendedLayout(compatible:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So16UIViewControllerC11FWFrameworkE23fw_adjustExtendedLayout10compatibleySb_tF">fw_adjustExtendedLayout(compatible:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自适应Bar延伸类型，兼容顶部和底部栏safeArea布局方式，需在viewDidLoad及之后调用生效。开启兼容模式时仅在iOS14及以下生效</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_adjustExtendedLayout</span><span class="p">(</span><span class="nv">compatible</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -4924,7 +4951,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>手工隐藏弹出框，完成后回调</p>
+                        <p>手工隐藏弹出框，完成后回调。当animated为false时如需获取最新控制器等，也需在异步completion中处理</p>
 
                       </div>
                       <div class="declaration">
@@ -4962,7 +4989,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>完成回调</p>
+                                  <p>完成异步回调</p>
                                 </div>
                               </td>
                             </tr>
@@ -5012,6 +5039,33 @@
                 </div>
               </div>
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:So16UIViewControllerC11FWFrameworkE14fw_emptyPluginAC05EmptyF0_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/fw_emptyPlugin" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So16UIViewControllerC11FWFrameworkE14fw_emptyPluginAC05EmptyF0_pSgvp">fw_emptyPlugin</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义空界面插件，未设置时自动从插件池加载</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_emptyPlugin</span><span class="p">:</span> <span class="kt"><a href="../Protocols/EmptyPlugin.html">EmptyPlugin</a></span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -5967,6 +6021,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:So16UIViewControllerC11FWFrameworkE14fw_toastPluginAC05ToastF0_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/fw_toastPlugin" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So16UIViewControllerC11FWFrameworkE14fw_toastPluginAC05ToastF0_pSgvp">fw_toastPlugin</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义吐司插件，未设置时自动从插件池加载</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_toastPlugin</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ToastPlugin.html">ToastPlugin</a></span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:So16UIViewControllerC11FWFrameworkE14fw_toastInsetsSo06UIEdgeF0Vvp"></a>
                     <a name="//apple_ref/swift/Property/fw_toastInsets" class="dashAnchor"></a>
                     <a class="token" href="#/s:So16UIViewControllerC11FWFrameworkE14fw_toastInsetsSo06UIEdgeF0Vvp">fw_toastInsets</a>
@@ -5985,6 +6066,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_toastInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:So16UIViewControllerC11FWFrameworkE17fw_toastContainerSo0A0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/fw_toastContainer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So16UIViewControllerC11FWFrameworkE17fw_toastContainerSo0A0CSgvp">fw_toastContainer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取或设置吐司容器视图，默认view</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_toastContainer</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -6597,7 +6705,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头，下个页面生效</p>
+                        <p>设置导航栏返回按钮，支持UIBarButtonItem|NSString|UIImage等，nil时显示系统箭头</p>
 
                       </div>
                       <div class="declaration">
@@ -6624,7 +6732,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效</p>
+                        <p>设置导航栏左侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面</p>
 
                       </div>
                       <div class="declaration">
@@ -6651,7 +6759,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面，下个页面生效</p>
+                        <p>设置导航栏右侧按钮，支持UIBarButtonItem|UIImage等，默认事件为关闭当前页面</p>
 
                       </div>
                       <div class="declaration">
@@ -7481,7 +7589,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-02-26)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-11)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
