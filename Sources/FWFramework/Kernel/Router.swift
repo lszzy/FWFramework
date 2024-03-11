@@ -243,7 +243,7 @@ public class Router: NSObject {
     /// 是否可以打开URL，不含object
     /// - Parameter url: URL 带 Scheme，如 app://beauty/3
     /// - Returns: 是否可以打开
-    public class func canOpenURL(_ url: StringParameter) -> Bool {
+    public class func canOpenURL(_ url: StringParameter?) -> Bool {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return false }
         
@@ -256,7 +256,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: StringParameter, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
+    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -294,7 +294,7 @@ public class Router: NSObject {
     ///   - url: URL 带 Scheme，如 app://beauty/3
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
-    public class func object(forURL url: StringParameter, userInfo: [AnyHashable: Any]? = nil) -> Any? {
+    public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
         
@@ -646,19 +646,18 @@ extension Router {
     private static var rewriteRules = [String: String]()
     
     /// 全局重写过滤器
-    public static var rewriteFilter: ((String) -> String?)?
+    public static var rewriteFilter: ((String) -> String)?
     
     /// 根据重写规则，重写URL
     /// - Parameter url: 需要重写的url
     /// - Returns: 重写之后的url
-    public class func rewriteURL(_ url: StringParameter) -> String {
-        var rewriteURL = url.stringValue
+    public class func rewriteURL(_ url: StringParameter?) -> String {
+        var rewriteURL = url?.stringValue ?? ""
         if let rewriteFilter = rewriteFilter {
-            guard let filterURL = rewriteFilter(rewriteURL) else { return "" }
-            rewriteURL = filterURL
+            rewriteURL = rewriteFilter(rewriteURL)
         }
+        guard !rewriteURL.isEmpty, rewriteRules.count > 0 else { return rewriteURL }
         
-        if rewriteRules.count < 1 { return rewriteURL }
         let rewriteCaptureGroups = rewriteCaptureGroups(originalURL: rewriteURL)
         rewriteURL = rewriteComponents(originalURL: rewriteURL, targetRule: rewriteCaptureGroups)
         return rewriteURL
