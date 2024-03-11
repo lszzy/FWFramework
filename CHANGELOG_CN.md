@@ -3,6 +3,7 @@
 ## [5.0.3] - 2024-03-11
 
 ### Changed
+* JSONModel兼容Xcode15.3
 * 图片插件新增delayPlaceholder选项
 * TabBarController新增imageInsets属性
 * 新增全局快速ceil扩展方法
