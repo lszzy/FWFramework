@@ -247,10 +247,10 @@ extension Wrapper where Base: UIViewController {
         base.fw_showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock)
     }
     
-    /// 手工隐藏弹出框，完成后回调
+    /// 手工隐藏弹出框，完成后回调。当animated为false时如需获取最新控制器等，也需在异步completion中处理
     /// - Parameters:
     ///   - animated: 是否执行动画
-    ///   - completion: 完成回调
+    ///   - completion: 完成异步回调
     public func hideAlert(
         animated: Bool,
         completion: (() -> Void)? = nil
@@ -971,10 +971,10 @@ public class AlertAppearance: NSObject {
         plugin.showSheet(title: title, message: message, cancel: targetCancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: self)
     }
     
-    /// 手工隐藏弹出框，完成后回调
+    /// 手工隐藏弹出框，完成后回调。当animated为false时如需获取最新控制器等，也需在异步completion中处理
     /// - Parameters:
     ///   - animated: 是否执行动画
-    ///   - completion: 完成回调
+    ///   - completion: 完成异步回调
     public func fw_hideAlert(
         animated: Bool,
         completion: (() -> Void)? = nil

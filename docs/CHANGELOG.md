@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.0.3] - 2024-03-11
+
+### Changed
+* Added delayPlaceholder option to the picture plug-in
+* TabBarController adds imageInsets attribute
+* Added global fast ceil extension method
+* Added controller compatible with TabBar adaptation method when using safeArea layout
+* Added new controller quick customization Toast|Empty plug-in method
+* The routing openURL method parameter url is changed to Optional
+
 ## [5.0.2] - 2024-02-26
 
 ### Changed

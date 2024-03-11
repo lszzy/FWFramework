@@ -106,10 +106,22 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_toastInAncestor = newValue }
     }
     
+    /// 自定义吐司插件，未设置时自动从插件池加载
+    public var toastPlugin: ToastPlugin! {
+        get { return base.fw_toastPlugin }
+        set { base.fw_toastPlugin = newValue }
+    }
+    
     /// 设置吐司外间距，默认zero
     public var toastInsets: UIEdgeInsets {
         get { return base.fw_toastInsets }
         set { base.fw_toastInsets = newValue }
+    }
+    
+    /// 获取或设置吐司容器视图，默认view
+    public var toastContainer: UIView! {
+        get { return base.fw_toastContainer }
+        set { base.fw_toastContainer = newValue }
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
@@ -185,6 +197,12 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - Wrapper+UIWindow
 extension Wrapper where Base: UIWindow {
+    /// 自定义吐司插件，未设置时自动从插件池加载
+    public static var toastPlugin: ToastPlugin! {
+        get { return Base.fw_toastPlugin }
+        set { Base.fw_toastPlugin = newValue }
+    }
+    
     /// 设置吐司外间距，默认zero
     public static var toastInsets: UIEdgeInsets {
         get { return Base.fw_toastInsets }
@@ -504,92 +522,113 @@ extension ToastPlugin {
         set { fw_setPropertyBool(newValue, forName: "fw_toastInAncestor") }
     }
     
-    private var fw_toastContainerView: UIView? {
-        if self.fw_toastInWindow { return UIWindow.fw_mainWindow }
-        if self.fw_toastInAncestor { return self.fw_ancestorView }
-        return self.view
+    /// 自定义吐司插件，未设置时自动从插件池加载
+    public var fw_toastPlugin: ToastPlugin! {
+        get { return fw_toastContainer.fw_toastPlugin }
+        set { fw_toastContainer.fw_toastPlugin = newValue }
     }
     
     /// 设置吐司外间距，默认zero
     public var fw_toastInsets: UIEdgeInsets {
-        get { return fw_toastContainerView?.fw_toastInsets ?? .zero }
-        set { fw_toastContainerView?.fw_toastInsets = newValue }
+        get { return fw_toastContainer.fw_toastInsets }
+        set { fw_toastContainer.fw_toastInsets = newValue }
+    }
+    
+    /// 获取或设置吐司容器视图，默认view
+    public var fw_toastContainer: UIView! {
+        get {
+            if let view = fw_property(forName: "fw_toastContainer") as? UIView {
+                return view
+            }
+            if self.fw_toastInWindow { return UIWindow.fw_mainWindow ?? self.view }
+            if self.fw_toastInAncestor { return self.fw_ancestorView }
+            return self.view
+        }
+        set {
+            fw_setPropertyWeak(newValue, forName: "fw_toastContainer")
+        }
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func fw_showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        fw_toastContainerView?.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+        fw_toastContainer.fw_showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
     public func fw_hideLoading(delayed: Bool = false) {
-        fw_toastContainerView?.fw_hideLoading(delayed: delayed)
+        fw_toastContainer.fw_hideLoading(delayed: delayed)
     }
     
     /// 获取正在显示的加载吐司视图
     public var fw_showingLoadingView: UIView? {
-        return fw_toastContainerView?.fw_showingLoadingView
+        return fw_toastContainer.fw_showingLoadingView
     }
     
     /// 是否正在显示加载吐司
     public var fw_isShowingLoading: Bool {
-        return fw_toastContainerView?.fw_isShowingLoading ?? false
+        return fw_toastContainer.fw_isShowingLoading
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func fw_showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        fw_toastContainerView?.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+        fw_toastContainer.fw_showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏进度条吐司
     public func fw_hideProgress() {
-        fw_toastContainerView?.fw_hideProgress()
+        fw_toastContainer.fw_hideProgress()
     }
     
     /// 获取正在显示的进度条吐司视图
     public var fw_showingProgressView: UIView? {
-        return fw_toastContainerView?.fw_showingProgressView
+        return fw_toastContainer.fw_showingProgressView
     }
     
     /// 是否正在显示进度条吐司
     public var fw_isShowingProgress: Bool {
-        return fw_toastContainerView?.fw_isShowingProgress ?? false
+        return fw_toastContainer.fw_isShowingProgress
     }
     
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
     public func fw_showMessage(error: Error?, completion: (() -> Void)? = nil) {
-        fw_toastContainerView?.fw_showMessage(error: error, completion: completion)
+        fw_toastContainer.fw_showMessage(error: error, completion: completion)
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
     public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        fw_toastContainerView?.fw_showMessage(text: text, style: style, completion: completion)
+        fw_toastContainer.fw_showMessage(text: text, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
     public func fw_showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        fw_toastContainerView?.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
+        fw_toastContainer.fw_showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
     /// 隐藏消息吐司
     public func fw_hideMessage() {
-        fw_toastContainerView?.fw_hideMessage()
+        fw_toastContainer.fw_hideMessage()
     }
     
     /// 获取正在显示的消息吐司视图
     public var fw_showingMessageView: UIView? {
-        return fw_toastContainerView?.fw_showingMessageView
+        return fw_toastContainer.fw_showingMessageView
     }
     
     /// 是否正在显示消息吐司
     public var fw_isShowingMessage: Bool {
-        return fw_toastContainerView?.fw_isShowingMessage ?? false
+        return fw_toastContainer.fw_isShowingMessage
     }
     
 }
 
 // MARK: - UIWindow+ToastPlugin
 @_spi(FW) extension UIWindow {
+    
+    /// 自定义吐司插件，未设置时自动从插件池加载
+    public static var fw_toastPlugin: ToastPlugin! {
+        get { return UIWindow.fw_mainWindow?.fw_toastPlugin }
+        set { UIWindow.fw_mainWindow?.fw_toastPlugin = newValue }
+    }
     
     /// 设置吐司外间距，默认zero
     public static var fw_toastInsets: UIEdgeInsets {

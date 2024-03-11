@@ -1,5 +1,15 @@
 # 更新日志
 
+## [5.0.3] - 2024-03-11
+
+### Changed
+* 图片插件新增delayPlaceholder选项
+* TabBarController新增imageInsets属性
+* 新增全局快速ceil扩展方法
+* 新增控制器使用safeArea布局时兼容TabBar适配方法
+* 新增控制器快捷定制Toast|Empty插件方法
+* 路由openURL方法参数url修改为Optional
+
 ## [5.0.2] - 2024-02-26
 
 ### Changed

@@ -517,7 +517,7 @@ extension Wrapper where Base: UIToolbar {
             return self.backIndicatorImage
         }
         set {
-            let image = newValue?.fw_image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0), color: nil)
+            let image = newValue?.fw_image(insets: UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 0))
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.setBackIndicatorImage(image, transitionMaskImage: image)
                 fw_updateAppearance()

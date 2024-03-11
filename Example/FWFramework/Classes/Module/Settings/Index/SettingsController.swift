@@ -45,6 +45,12 @@ extension SettingsController: TableViewControllerProtocol {
         loginButton.app.layoutChain.center()
     }
     
+    func setupTableLayout() {
+        // 示例父视图布局，scrollView自适应contentInset
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        tableView.app.pinEdges()
+    }
+    
     func renderData() {
         navigationItem.title = APP.localized("settingTitle")
         

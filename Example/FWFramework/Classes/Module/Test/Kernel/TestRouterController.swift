@@ -55,6 +55,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["通用链接douyin", "onOpenUniversalLinks"],
         ["外部safari", "onOpenUrl"],
         ["内部safari", "onOpenSafari"],
+        ["打开两个界面", "onOpenMulti"],
         ["iOS14bug", "onOpen14"],
     ]
     
@@ -351,6 +352,10 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         }
     }
     
+    func onOpenMulti() {
+        Router.openURL(TestRouter.multiUrl)
+    }
+    
     func onOpen14() {
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
@@ -404,6 +409,7 @@ class TestRouter: NSObject, AutoloadProtocol {
     static let htmlUrl = "app://pages/:id.html"
     static let javascriptUrl = "app://javascript"
     static let closeUrl = "app://close"
+    static let multiUrl = "app://multi"
     
     class func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
@@ -492,6 +498,30 @@ class TestRouter: NSObject, AutoloadProtocol {
     class func closeRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
+        return nil
+    }
+    
+    class func multiRouter(_ context: Router.Context) -> Any? {
+        guard context.isOpening else { return nil }
+        guard let nav = Navigator.topNavigationController else { return nil }
+        
+        let vc = TestRouterResultController()
+        vc.showLoading = true
+        vc.rule = context.url + "?page=1"
+        vc.context = context
+        
+        let vc2 = TestRouterResultController()
+        vc2.showLoading = true
+        vc2.rule = context.url + "?page=2"
+        vc2.context = context
+        
+        var vcs = nav.viewControllers
+        vcs.append(vc)
+        vcs.append(vc2)
+        nav.setViewControllers(vcs, animated: true)
+        
+        // 预加载第一个界面，需放到setViewControllers之后导航栏才能获取到
+        vc.loadViewIfNeeded()
         return nil
     }
     
@@ -588,6 +618,7 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
     
     var rule: String?
     var context: Router.Context?
+    var showLoading: Bool = false
     
     func setupNavbar() {
         navigationItem.title = rule ?? context?.url
@@ -616,6 +647,15 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
         label.app.layoutChain
             .center()
             .width(APP.screenWidth - 40)
+        
+        if showLoading {
+            label.isHidden = true
+            app.showLoading()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.app.hideLoading()
+                label.isHidden = false
+            }
+        }
     }
     
 }

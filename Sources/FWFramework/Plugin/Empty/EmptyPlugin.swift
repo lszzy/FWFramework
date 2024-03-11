@@ -64,6 +64,12 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIViewController
 extension Wrapper where Base: UIViewController {
+    /// 自定义空界面插件，未设置时自动从插件池加载
+    public var emptyPlugin: EmptyPlugin! {
+        get { return base.fw_emptyPlugin }
+        set { base.fw_emptyPlugin = newValue }
+    }
+    
     /// 设置空界面外间距，默认zero
     public var emptyInsets: UIEdgeInsets {
         get { return base.fw_emptyInsets }
@@ -345,6 +351,12 @@ extension EmptyViewDelegate {
 }
 
 @_spi(FW) extension UIViewController {
+    
+    /// 自定义空界面插件，未设置时自动从插件池加载
+    public var fw_emptyPlugin: EmptyPlugin! {
+        get { return self.view.fw_emptyPlugin }
+        set { self.view.fw_emptyPlugin = newValue }
+    }
     
     /// 设置空界面外间距，默认zero
     public var fw_emptyInsets: UIEdgeInsets {
