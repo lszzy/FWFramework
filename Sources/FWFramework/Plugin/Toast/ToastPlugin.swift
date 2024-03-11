@@ -119,7 +119,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 获取或设置吐司容器视图，默认view
-    public var toastContainer: UIView {
+    public var toastContainer: UIView! {
         get { return base.fw_toastContainer }
         set { base.fw_toastContainer = newValue }
     }
@@ -535,7 +535,7 @@ extension ToastPlugin {
     }
     
     /// 获取或设置吐司容器视图，默认view
-    public var fw_toastContainer: UIView {
+    public var fw_toastContainer: UIView! {
         get {
             if let view = fw_property(forName: "fw_toastContainer") as? UIView {
                 return view
