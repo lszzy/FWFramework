@@ -52,6 +52,7 @@ extension Float: AnyCodableModel {}
 extension Double: AnyCodableModel {}
 extension URL: AnyCodableModel {}
 extension Data: AnyCodableModel {}
+extension Date: AnyCodableModel {}
 extension String: AnyCodableModel {}
 extension Array: AnyCodableModel {}
 extension Set: AnyCodableModel {}
@@ -77,6 +78,14 @@ extension AnyCodableModel where Self: BasicCodableType {
 // MARK: - AnyCodableModel+CodableModel
 /// 通用Codable编码模型协议，默认未实现SafeCodableModel(实现init即可)
 public protocol CodableModel: Codable, AnyCodableModel {}
+
+extension CodableModel where Self: AnyObject {
+    /// 获取对象的内存hash字符串
+    public var hashString: String {
+        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
+        return String(describing: opaquePointer)
+    }
+}
 
 extension AnyCodableModel where Self: CodableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
