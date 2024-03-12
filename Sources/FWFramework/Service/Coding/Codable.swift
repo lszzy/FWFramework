@@ -146,6 +146,19 @@ extension Optional {
     }
 }
 
+// MARK: - DefaultCaseCodable
+public protocol DefaultCaseCodable: RawRepresentable, Codable {
+    static var defaultCase: Self { get }
+}
+
+public extension DefaultCaseCodable where Self.RawValue: Decodable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(RawValue.self)
+        self = Self.init(rawValue: rawValue) ?? Self.defaultCase
+    }
+}
+
 // MARK: - AnyCodableType
 public protocol AnyCodableType {
     init()
