@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.18.3] - 2024-03-12
+
+### Fixed
+* Compatible with Xcode15.3, fix Archive failure problem
+
 ## [4.18.2] - 2023-10-27
 
 ### Added
