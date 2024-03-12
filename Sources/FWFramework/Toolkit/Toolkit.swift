@@ -83,9 +83,10 @@ extension Wrapper where Base: UIApplication {
         return Base.fw_appDisplayName
     }
 
-    /// 读取应用主版本号，示例：1.0.0
+    /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var appVersion: String {
-        return Base.fw_appVersion
+        get { return Base.fw_appVersion }
+        set { Base.fw_appVersion = newValue }
     }
 
     /// 读取应用构建版本号，示例：1.0.0.1
@@ -913,12 +914,21 @@ extension Wrapper where Base: UINavigationController {
         return displayName ?? fw_appName
     }
 
-    /// 读取应用主版本号，示例：1.0.0
+    /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var fw_appVersion: String {
-        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        return appVersion ?? fw_appBuildVersion
+        get {
+            if let appVersion = fw_appVersion_ {
+                return appVersion
+            }
+            let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            return appVersion ?? fw_appBuildVersion
+        }
+        set {
+            fw_appVersion_ = newValue
+        }
     }
-
+    private static var fw_appVersion_: String?
+    
     /// 读取应用构建版本号，示例：1.0.0.1
     public static var fw_appBuildVersion: String {
         let buildVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
