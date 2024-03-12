@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - Wrapper+UIView
 extension Wrapper where Base: UIView {
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
         base.fw_showBadgeView(badgeView, badgeValue: badgeValue)
     }
@@ -44,7 +44,7 @@ extension Wrapper where Base: UIBarItem {
 
 // MARK: - Wrapper+UIBarButtonItem
 extension Wrapper where Base: UIBarButtonItem {
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
         base.fw_showBadgeView(badgeView, badgeValue: badgeValue)
     }
@@ -62,7 +62,7 @@ extension Wrapper where Base: UITabBarItem {
         return base.fw_imageView
     }
     
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
         base.fw_showBadgeView(badgeView, badgeValue: badgeValue)
     }
@@ -78,20 +78,17 @@ extension Wrapper where Base: UITabBarItem {
 public protocol BadgeViewProtocol {
     /// 提醒灯文本标签，默认nil
     var badgeLabel: UILabel? { get }
-    /// 通用提醒灯右上偏移值，默认zero
+    /// 提醒灯高度，默认zero
+    var badgeHeight: CGFloat { get }
+    /// 通用提醒灯右上偏移值(正外负内)，默认zero
     var badgeOffset: CGPoint { get }
-    /// 导航栏提醒灯右上偏移值，默认badgeOffset
-    var navbarBadgeOffset: CGPoint { get }
-    /// 标签栏提醒灯右上偏移值，默认badgeOffset
-    var tabbarBadgeOffset: CGPoint { get }
 }
 
 /// 提醒灯视图协议默认实现
 extension BadgeViewProtocol {
     public var badgeLabel: UILabel? { nil }
+    public var badgeHeight: CGFloat { .zero }
     public var badgeOffset: CGPoint { .zero }
-    public var navbarBadgeOffset: CGPoint { badgeOffset }
-    public var tabbarBadgeOffset: CGPoint { badgeOffset }
 }
 
 /// 自带提醒灯样式
@@ -115,24 +112,17 @@ open class BadgeView: UIView, BadgeViewProtocol {
     /// 提醒灯文本标签。可自定义样式
     open private(set) var badgeLabel: UILabel?
     
-    /// 提醒灯右上偏移值
+    /// 提醒灯高度，默认zero
+    open private(set) var badgeHeight: CGFloat = .zero
+    
+    /// 提醒灯右上偏移值(正外负内)
     open private(set) var badgeOffset: CGPoint = .zero
-    
-    /// 导航栏提醒灯右上偏移值，默认badgeOffset
-    open var navbarBadgeOffset: CGPoint {
-        return badgeStyle == .custom ? badgeOffset : .zero
-    }
-    
-    /// 标签栏提醒灯右上偏移值，默认badgeOffset
-    open var tabbarBadgeOffset: CGPoint {
-        return badgeStyle == .custom ? badgeOffset : CGPoint(x: badgeOffset.x, y: -2.0)
-    }
     
     /// 初始化方法，宽高自动布局，其它手工布局
     /// - Parameters:
     ///   - badgeStyle: 提醒灯样式
     ///   - badgeHeight: 提醒灯高度，nil时使用默认
-    ///   - badgeOffset: 提醒灯偏移，nil时使用默认
+    ///   - badgeOffset: 提醒灯偏移(正外负内)，nil时使用默认
     ///   - textInset: 文本提醒灯边距，nil时使用默认
     ///   - fontSize: 文本提醒灯字体，nil时使用默认
     public init(badgeStyle: BadgeStyle, badgeHeight: CGFloat? = nil, badgeOffset: CGPoint? = nil, textInset: CGFloat? = nil, fontSize: CGFloat? = nil) {
@@ -141,13 +131,13 @@ open class BadgeView: UIView, BadgeViewProtocol {
         
         switch badgeStyle {
         case .dot:
-            setupDot(badgeHeight: badgeHeight ?? 10, badgeOffset: badgeOffset ?? CGPoint(x: 3, y: 3))
+            setupDot(badgeHeight: badgeHeight ?? 10, badgeOffset: badgeOffset ?? .zero)
         case .small:
-            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? CGPoint(x: 7, y: 7), textInset: textInset ?? 5, fontSize: fontSize ?? 12)
+            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? .zero, textInset: textInset ?? 5, fontSize: fontSize ?? 12)
         case .big:
-            setupLabel(badgeHeight: badgeHeight ?? 24, badgeOffset: badgeOffset ?? CGPoint(x: 9, y: 9), textInset: textInset ?? 6, fontSize: fontSize ?? 14)
+            setupLabel(badgeHeight: badgeHeight ?? 24, badgeOffset: badgeOffset ?? .zero, textInset: textInset ?? 6, fontSize: fontSize ?? 14)
         default:
-            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? CGPoint(x: 7, y: 7), textInset: textInset ?? 5, fontSize: fontSize ?? 12)
+            setupLabel(badgeHeight: badgeHeight ?? 18, badgeOffset: badgeOffset ?? .zero, textInset: textInset ?? 5, fontSize: fontSize ?? 12)
         }
     }
     
@@ -156,6 +146,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
     }
     
     private func setupDot(badgeHeight: CGFloat, badgeOffset: CGPoint) {
+        self.badgeHeight = badgeHeight
         self.badgeOffset = badgeOffset
         
         isUserInteractionEnabled = false
@@ -166,6 +157,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
     }
     
     private func setupLabel(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
+        self.badgeHeight = badgeHeight
         self.badgeOffset = badgeOffset
         
         isUserInteractionEnabled = false
@@ -191,7 +183,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
 
 @_spi(FW) extension UIView {
     
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
@@ -200,9 +192,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
         self.addSubview(badgeView)
         self.bringSubviewToFront(badgeView)
         
-        // 默认偏移
-        badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y)
-        badgeView.fw_pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x)
+        badgeView.fw_pinEdge(toSuperview: .top, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.y))
+        badgeView.fw_pinEdge(toSuperview: .right, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.x))
     }
 
     /// 隐藏提醒灯
@@ -257,7 +248,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
 
 @_spi(FW) extension UIBarButtonItem {
     
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
@@ -268,9 +259,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            // 自定义视图时默认偏移，否则固定偏移
-            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.navbarBadgeOffset.y)
-            badgeView.fw_pinEdge(toSuperview: .right, inset: -badgeView.navbarBadgeOffset.x)
+            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y)
+            badgeView.fw_pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x)
         }
     }
 
@@ -307,7 +297,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if let imageView = UITabBarItem.fw_imageView(selfObject) {
-                        badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
+                        badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
                     }
                     break
                 }
@@ -340,7 +330,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         return nil
     }
     
-    /// 显示右上角提醒灯，上右偏移指定距离
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
@@ -355,8 +345,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.tabbarBadgeOffset.y)
-            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: -badgeView.tabbarBadgeOffset.x)
+            badgeView.fw_pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
+            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
         }
     }
 
