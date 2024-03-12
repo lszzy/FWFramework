@@ -191,6 +191,7 @@ extension URL: BasicCodableType {
     }
 }
 extension Data: BasicCodableType {}
+extension Date: BasicCodableType {}
 extension String: BasicCodableType {}
 extension Array: BasicCodableType {
     public var isNotEmpty: Bool { return !isEmpty }
