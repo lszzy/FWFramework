@@ -917,17 +917,17 @@ extension Wrapper where Base: UINavigationController {
     /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var fw_appVersion: String {
         get {
-            if let appVersion = fw_appVersion_ {
+            if let appVersion = _fw_appVersion {
                 return appVersion
             }
             let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
             return appVersion ?? fw_appBuildVersion
         }
         set {
-            fw_appVersion_ = newValue
+            _fw_appVersion = newValue
         }
     }
-    private static var fw_appVersion_: String?
+    private static var _fw_appVersion: String?
     
     /// 读取应用构建版本号，示例：1.0.0.1
     public static var fw_appBuildVersion: String {
