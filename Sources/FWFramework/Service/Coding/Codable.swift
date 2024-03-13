@@ -432,7 +432,7 @@ extension KeyedEncodingContainer {
 private extension KeyedEncodingContainer where K == AnyCodingKey {
     mutating func encode(_ value: [AnyHashable: Any]) throws {
         for (k, v) in value {
-            let key = AnyCodingKey(stringValue: String(describing: k))!
+            let key = AnyCodingKey(k as? String ?? String(describing: k))
             switch v {
             case is NSNull:
                 try encodeNil(forKey: key)
@@ -577,14 +577,13 @@ extension CodableValue: EncodableAnyPropertyWrapper {
         if encode != nil { try encode!(encoder, wrappedValue) }
         else {
             let t = type(of: wrappedValue)
-            if let key = AnyCodingKey(stringValue: String(label)) {
-                if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
-                    var container = encoder.container(keyedBy: AnyCodingKey.self)
-                    try container.encodeIfPresent(wrappedValue as? [AnyHashable: Any], forKey: key)
-                } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
-                    var container = encoder.container(keyedBy: AnyCodingKey.self)
-                    try container.encodeIfPresent(wrappedValue as? [Any], forKey: key)
-                }
+            let key = AnyCodingKey(label)
+            if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
+                var container = encoder.container(keyedBy: AnyCodingKey.self)
+                try container.encodeIfPresent(wrappedValue as? [AnyHashable: Any], forKey: key)
+            } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
+                var container = encoder.container(keyedBy: AnyCodingKey.self)
+                try container.encodeIfPresent(wrappedValue as? [Any], forKey: key)
             }
         }
     }
@@ -602,17 +601,16 @@ extension CodableValue: DecodableAnyPropertyWrapper {
             }
         } else {
             let t = type(of: wrappedValue)
-            if let key = AnyCodingKey(stringValue: String(label)) {
-                if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
-                    let container = try decoder.container(keyedBy: AnyCodingKey.self)
-                    if let value = try container.decodeIfPresent([AnyHashable: Any].self, forKey: key) as? Value {
-                        wrappedValue = value
-                    }
-                } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
-                    let container = try decoder.container(keyedBy: AnyCodingKey.self)
-                    if let value = try container.decodeIfPresent([Any].self, forKey: key) as? Value {
-                        wrappedValue = value
-                    }
+            let key = AnyCodingKey(label)
+            if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
+                let container = try decoder.container(keyedBy: AnyCodingKey.self)
+                if let value = try container.decodeIfPresent([AnyHashable: Any].self, forKey: key) as? Value {
+                    wrappedValue = value
+                }
+            } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
+                let container = try decoder.container(keyedBy: AnyCodingKey.self)
+                if let value = try container.decodeIfPresent([Any].self, forKey: key) as? Value {
+                    wrappedValue = value
                 }
             }
         }
