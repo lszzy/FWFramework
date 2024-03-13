@@ -111,7 +111,7 @@ extension HTTPRequest {
     }
     
     /// 异步获取响应模型，注意非Task取消也会触发(Continuation流程)
-    public func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T? {
+    public func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T? {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 requestCancelledBlock { _ in
@@ -133,7 +133,7 @@ extension HTTPRequest {
     }
     
     /// 异步获取安全响应模型，注意非Task取消也会触发(Continuation流程)
-    public func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T {
+    public func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 requestCancelledBlock { _ in
@@ -182,7 +182,7 @@ extension ResponseModelRequest where Self: HTTPRequest {
     
 }
 
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodableModel {
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel {
     
     /// 异步获取安全模型响应，注意非Task取消也会触发(Continuation流程)
     public func safeResponseModel() async throws -> ResponseModel {

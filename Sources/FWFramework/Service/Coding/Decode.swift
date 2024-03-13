@@ -25,12 +25,12 @@ extension WrapperGlobal {
     }
     
     /// 获取安全值
-    public static func safeValue<T: BasicCodableType>(_ value: T?) -> T {
+    public static func safeValue<T: BasicType>(_ value: T?) -> T {
         return value.safeValue
     }
 
     /// 判断是否不为空
-    public static func isNotEmpty<T: BasicCodableType>(_ value: T?) -> Bool {
+    public static func isNotEmpty<T: BasicType>(_ value: T?) -> Bool {
         return value.isNotEmpty
     }
     
@@ -146,54 +146,54 @@ extension Optional {
     }
 }
 
-// MARK: - AnyCodableType
-public protocol AnyCodableType {
+// MARK: - SafeType
+public protocol SafeType {
     init()
 }
 
-public protocol BasicCodableType: AnyCodableType {
+public protocol BasicType: SafeType {
     var isNotEmpty: Bool { get }
 }
 
-extension BasicCodableType where Self: Equatable {
+extension BasicType where Self: Equatable {
     public var isNotEmpty: Bool { return self != .init() }
 }
 
-extension Optional where Wrapped: AnyCodableType {
+extension Optional where Wrapped: SafeType {
     public var safeValue: Wrapped { if let value = self { return value } else { return .init() } }
 }
-extension Optional where Wrapped: BasicCodableType {
+extension Optional where Wrapped: BasicType {
     public var isNotEmpty: Bool { if let value = self { return value.isNotEmpty } else { return false } }
 }
 
-// MARK: - AnyCodableType+Extension
-extension Int: BasicCodableType {}
-extension Int8: BasicCodableType {}
-extension Int16: BasicCodableType {}
-extension Int32: BasicCodableType {}
-extension Int64: BasicCodableType {}
-extension UInt: BasicCodableType {}
-extension UInt8: BasicCodableType {}
-extension UInt16: BasicCodableType {}
-extension UInt32: BasicCodableType {}
-extension UInt64: BasicCodableType {}
-extension Bool: BasicCodableType {}
-extension Float: BasicCodableType {
+// MARK: - SafeType+Extension
+extension Int: BasicType {}
+extension Int8: BasicType {}
+extension Int16: BasicType {}
+extension Int32: BasicType {}
+extension Int64: BasicType {}
+extension UInt: BasicType {}
+extension UInt8: BasicType {}
+extension UInt16: BasicType {}
+extension UInt32: BasicType {}
+extension UInt64: BasicType {}
+extension Bool: BasicType {}
+extension Float: BasicType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension Double: BasicCodableType {
+extension Double: BasicType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension URL: BasicCodableType {
+extension URL: BasicType {
     public init() {
         self.init(string: " ")!
         self = NSURL() as URL
     }
 }
-extension Data: BasicCodableType {}
-extension Date: BasicCodableType {}
-extension String: BasicCodableType {}
-extension Array: BasicCodableType {
+extension Data: BasicType {}
+extension Date: BasicType {}
+extension String: BasicType {}
+extension Array: BasicType {
     public var isNotEmpty: Bool { return !isEmpty }
     public func safeElement(_ index: Int) -> Element? {
         return index >= 0 && index < endIndex ? self[index] : nil
@@ -221,8 +221,8 @@ extension Array where Element: Equatable {
         return self
     }
 }
-extension Set: BasicCodableType {}
-extension Dictionary: BasicCodableType {
+extension Set: BasicType {}
+extension Dictionary: BasicType {
     public var isNotEmpty: Bool { return !isEmpty }
     public func has(key: Key) -> Bool {
         return index(forKey: key) != nil
@@ -231,16 +231,16 @@ extension Dictionary: BasicCodableType {
         keys.forEach { removeValue(forKey: $0) }
     }
 }
-extension CGFloat: BasicCodableType {
+extension CGFloat: BasicType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
-extension CGPoint: BasicCodableType {
+extension CGPoint: BasicType {
     public var isValid: Bool { return x.isValid && y.isValid }
 }
-extension CGSize: BasicCodableType {
+extension CGSize: BasicType {
     public var isValid: Bool { return width.isValid && height.isValid }
 }
-extension CGRect: BasicCodableType {
+extension CGRect: BasicType {
     public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
 }
 

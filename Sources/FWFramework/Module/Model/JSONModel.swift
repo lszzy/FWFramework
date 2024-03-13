@@ -14,7 +14,7 @@ import UIKit
  
  - see: [HandyJSON](https://github.com/alibaba/HandyJSON)
  */
-public protocol JSONModel: _ExtendCustomModelType, AnyCodableModel {}
+public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
 
 public protocol JSONModelCustomTransformable: _ExtendCustomBasicType {}
 

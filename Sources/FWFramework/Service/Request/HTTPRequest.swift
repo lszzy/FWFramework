@@ -1096,7 +1096,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    open func responseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         _responseModelBlock = { request in
             if (request._cacheResponseModel as? T) == nil {
                 request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -1114,7 +1114,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    open func safeResponseModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    open func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         return responseModel(of: type, designatedPath: designatedPath, success: success != nil ? { responseModel in
             success?(responseModel ?? .init())
         } : nil)
@@ -1137,7 +1137,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 解析指定缓存响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
-    open func responseCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func responseCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { request in
             if (request._cacheResponseModel as? T) == nil {
                 request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -1153,7 +1153,7 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 解析指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
     @discardableResult
-    open func responseSafeCacheModel<T: AnyCodableModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
+    open func responseSafeCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
         return responseCacheModel(of: type, designatedPath: designatedPath, success: success != nil ? { cacheModel in
             success?(cacheModel ?? .init())
         } : nil)
@@ -1326,7 +1326,7 @@ public protocol RequestMultipartFormData: AnyObject {
 // MARK: - ResponseModelRequest
 /// 响应模型请求协议
 public protocol ResponseModelRequest {
-    /// 关联响应模型数据类型，默认支持Any|AnyCodableModel，可扩展
+    /// 关联响应模型数据类型，默认支持Any|AnyModel，可扩展
     associatedtype ResponseModel: Any
     
     /// 当前响应模型，默认调用responseModelFilter
@@ -1376,8 +1376,8 @@ extension ResponseModelRequest where Self: HTTPRequest {
     
 }
 
-/// HTTPRequest AnyCodableModel响应模型请求协议默认实现
-extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyCodableModel {
+/// HTTPRequest AnyModel响应模型请求协议默认实现
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel {
     
     /// 默认实现当前安全响应模型
     public var safeResponseModel: ResponseModel {
