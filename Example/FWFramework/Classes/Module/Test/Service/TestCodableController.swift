@@ -12,6 +12,9 @@ struct TestCodableModel: CodableModel, AutoCodable {
     @CodableValue var id: Int = 0
     @CodableValue var name: String = ""
     @CodableValue var age: Int?
+    @CodableValue var any: Any?
+    @CodableValue var dict: [AnyHashable: Any]?
+    @CodableValue var array: [Any]?
     @CodableValue var optional1: String = ""
     @CodableValue var optional2: String = ""
     @CodableValue var optional3: String? = "default"
@@ -106,6 +109,9 @@ extension TestCodableController {
             "id": 1,
             "name": "name",
             "age": "2",
+            "any": "any",
+            "dict": [:],
+            "array": [1],
             "optional1": NSNull(),
             "optional4": [:],
             "sub": [
@@ -128,6 +134,9 @@ extension TestCodableController {
         success = success && (model?.id == 1)
         success = success && (model?.name == "name")
         success = success && (model?.age == 2)
+        success = success && (String.app.safeString(model?.any) == "any")
+        success = success && (model?.dict != nil)
+        success = success && ((model?.array as? [Int])?.first == 1)
         success = success && (model?.optional1 == "")
         success = success && (model?.optional2 == "")
         success = success && (model?.optional3 == "default")

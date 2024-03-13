@@ -259,33 +259,33 @@ extension Decoder {
             return json.uInt32Value as? T
         case is UInt64.Type:
             return json.uInt64Value as? T
-        case is Optional<Bool.Type>:
+        case is Bool?.Type:
             return json.bool as? T
-        case is Optional<String.Type>:
+        case is String?.Type:
             return json.string as? T
-        case is Optional<Double.Type>:
+        case is Double?.Type:
             return json.double as? T
-        case is Optional<Float.Type>:
+        case is Float?.Type:
             return json.float as? T
-        case is Optional<Int.Type>:
+        case is Int?.Type:
             return json.int as? T
-        case is Optional<Int8.Type>:
+        case is Int8?.Type:
             return json.int8 as? T
-        case is Optional<Int16.Type>:
+        case is Int16?.Type:
             return json.int16 as? T
-        case is Optional<Int32.Type>:
+        case is Int32?.Type:
             return json.int32 as? T
-        case is Optional<Int64.Type>:
+        case is Int64?.Type:
             return json.int64 as? T
-        case is Optional<UInt.Type>:
+        case is UInt?.Type:
             return json.uInt as? T
-        case is Optional<UInt8.Type>:
+        case is UInt8?.Type:
             return json.uInt8 as? T
-        case is Optional<UInt16.Type>:
+        case is UInt16?.Type:
             return json.uInt16 as? T
-        case is Optional<UInt32.Type>:
+        case is UInt32?.Type:
             return json.uInt32 as? T
-        case is Optional<UInt64.Type>:
+        case is UInt64?.Type:
             return json.uInt64 as? T
         default:
             return nil
@@ -361,22 +361,6 @@ public final class CodableValue<Value> {
     }
     
     public convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., nonnull: Bool? = nil, throws: Bool? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
-        self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, nonnull: nonnull, throws: `throws`, encode: encode, decode: decode)
-    }
-    
-    private init<WrappedValue>(wrappedValue: WrappedValue? = nil, stringKeys: [String]? = nil, nonnull: Bool? = nil, throws: Bool? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) where WrappedValue? == Value {
-        (self.wrappedValue, self.stringKeys, self.nonnull, self.throws, self.encode, self.decode) = (wrappedValue, stringKeys, nonnull, `throws`, encode, decode)
-    }
-    
-    public convenience init<WrappedValue>(wrappedValue: WrappedValue? = nil, _ stringKey: String? = nil, nonnull: Bool? = nil, throws: Bool? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) where WrappedValue? == Value {
-        self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] }, nonnull: nonnull, throws: `throws`, encode: encode, decode: decode)
-    }
-    
-    public convenience init<WrappedValue>(wrappedValue: WrappedValue? = nil, _ stringKeys: String..., nonnull: Bool? = nil, throws: Bool? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) where WrappedValue? == Value {
-        self.init(wrappedValue: wrappedValue, stringKeys: stringKeys, nonnull: nonnull, throws: `throws`, encode: encode, decode: decode)
-    }
-    
-    public convenience init<WrappedValue>(wrappedValue: WrappedValue? = nil, _ codingKeys: CodingKey..., nonnull: Bool? = nil, throws: Bool? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) where WrappedValue? == Value {
         self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, nonnull: nonnull, throws: `throws`, encode: encode, decode: decode)
     }
 }
@@ -692,7 +676,7 @@ fileprivate extension KeyedDecodingContainer {
     
     func decodeForTypeConversion<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
         
-        if type is Bool.Type || type is Optional<Bool>.Type {
+        if type is Bool.Type || type is Bool?.Type {
             if let int = try? decodeIfPresent(Int.self, forKey: codingKey) {
                 return (int != 0) as? T
             }
@@ -708,60 +692,60 @@ fileprivate extension KeyedDecodingContainer {
                 }
             }
         }
-        else if type is Int.Type || type is Optional<Int>.Type {
+        else if type is Int.Type || type is Int?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int(bool ? 1 : 0) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int(double) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int(string) { return value as? T }
         }
-        else if type is Int8.Type || type is Optional<Int8>.Type {
+        else if type is Int8.Type || type is Int8?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int8(bool ? 1 : 0) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int8(double) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int8(string) { return value as? T }
         }
-        else if type is Int16.Type || type is Optional<Int16>.Type {
+        else if type is Int16.Type || type is Int16?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int16(bool ? 1 : 0) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int16(double) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int16(string) { return value as? T }
         }
-        else if type is Int32.Type || type is Optional<Int32>.Type {
+        else if type is Int32.Type || type is Int32?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int32(bool ? 1 : 0) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int32(double) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int32(string) { return value as? T }
         }
-        else if type is Int64.Type || type is Optional<Int64>.Type {
+        else if type is Int64.Type || type is Int64?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int64(bool ? 1 : 0) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int64(double) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int64(string) { return value as? T }
         }
-        else if type is UInt.Type || type is Optional<UInt>.Type {
+        else if type is UInt.Type || type is UInt?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt(bool ? 1 : 0) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt(string) { return value as? T }
         }
-        else if type is UInt8.Type || type is Optional<UInt8>.Type {
+        else if type is UInt8.Type || type is UInt8?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt8(bool ? 1 : 0) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt8(string) { return value as? T }
         }
-        else if type is UInt16.Type || type is Optional<UInt16>.Type {
+        else if type is UInt16.Type || type is UInt16?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt16(bool ? 1 : 0) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt16(string) { return value as? T }
         }
-        else if type is UInt32.Type || type is Optional<UInt32>.Type {
+        else if type is UInt32.Type || type is UInt32?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt32(bool ? 1 : 0) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt32(string) { return value as? T }
         }
-        else if type is UInt64.Type || type is Optional<UInt64>.Type {
+        else if type is UInt64.Type || type is UInt64?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt64(bool ? 1 : 0) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt64(string) { return value as? T }
         }
-        else if type is Double.Type || type is Optional<Double>.Type {
+        else if type is Double.Type || type is Double?.Type {
             if      let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Double(int64) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Double(string) { return value as? T }
         }
-        else if type is Float.Type || type is Optional<Float>.Type {
+        else if type is Float.Type || type is Float?.Type {
             if      let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Float(int64) as? T }
             else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Float(string) { return value as? T }
         }
-        else if type is String.Type || type is Optional<String>.Type {
+        else if type is String.Type || type is String?.Type {
             if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return String(describing: bool) as? T }
             else if let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return String(describing: int64) as? T }
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T }
