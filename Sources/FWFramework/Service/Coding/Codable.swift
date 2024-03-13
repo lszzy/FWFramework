@@ -338,6 +338,8 @@ public extension DefaultCaseCodable where Self.RawValue: Decodable {
 }
 
 // MARK: - CodableValue
+/// Codable属性注解，解析成功且不为nil时才会覆盖默认值
+///
 /// https://github.com/iwill/ExCodable
 @propertyWrapper
 public final class CodableValue<Value> {
@@ -412,9 +414,8 @@ fileprivate protocol DecodablePropertyWrapper {
 
 extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
     fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws {
-        if let value = (decode != nil
-                        ? try decode!(decoder)
-                        : try decoder.decode(stringKeys ?? [String(label)], nonnull: self.nonnull ?? nonnull, throws: self.throws ?? `throws`)) {
+        let value = decode != nil ? try decode!(decoder) : try decoder.decode(stringKeys ?? [String(label)], nonnull: self.nonnull ?? nonnull, throws: self.throws ?? `throws`)
+        if let value = value {
             wrappedValue = value
         }
     }
@@ -792,20 +793,20 @@ public func register(_ decodingConverter: CodableDecodingConverter) {
 }
 
 // MARK: - CodableValue+Optional
-private protocol OptionalProtocol {
+private protocol _OptionalProtocol {
     var deepWrapped: Any? { get }
 }
 
-extension Optional: OptionalProtocol {
+extension Optional: _OptionalProtocol {
     var deepWrapped: Any? {
         guard case let .some(wrapped) = self else { return nil }
-        guard let wrapped = wrapped as? OptionalProtocol else { return wrapped }
+        guard let wrapped = wrapped as? _OptionalProtocol else { return wrapped }
         return wrapped.deepWrapped
     }
 }
 
 private func deepUnwrap(_ any: Any) -> Any? {
-    if let any = any as? OptionalProtocol {
+    if let any = any as? _OptionalProtocol {
         return any.deepWrapped
     }
     return any

@@ -15,7 +15,7 @@ struct TestCodableModel: CodableModel, AutoCodable {
     @CodableValue var optional1: String = ""
     @CodableValue var optional2: String = ""
     @CodableValue var optional3: String? = "default"
-    @CodableValue var optional4: Int? = 4
+    @CodableValue var optional4: Int?
     @CodableValue var optional5: Int? = 5
     @CodableValue var sub: TestSubCodableModel?
     @CodableValue var sub2: TestSubCodableModel = .init()
@@ -45,7 +45,7 @@ struct TestJSONModel: JSONModel {
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
-    var optional4: Int? = 4
+    var optional4: Int?
     var optional5: Int? = 5
     var sub: TestSubJSONModel?
     var sub2: TestSubJSONModel = .init()
