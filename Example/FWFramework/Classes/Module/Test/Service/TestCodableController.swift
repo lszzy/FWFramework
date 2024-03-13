@@ -8,44 +8,21 @@
 
 import FWFramework
 
-struct TestCodableModel: MappableModel {
-    var id: Int = 0
-    var name: String = ""
-    var age: Int?
-    var optional1: String = ""
-    var optional2: String = ""
-    var optional3: String? = "default"
-    var optional4: Int? = 4
-    var optional5: Int? = 5
-    var sub: TestSubCodableModel?
-    var sub2: TestSubCodableModel = .init()
-    var subs: [TestSubCodableModel] = []
-    var enum1: TestCodableModelEnum = .unknown
-    var enum2: TestCodableModelEnum = .unknown
-    var enum3: TestCodableModelEnum?
-    
-    static let keyMapping: [KeyMapper<Self>] = [
-        KeyMapper(\.id, to: "id"),
-        KeyMapper(\.name, to: "name"),
-        KeyMapper(\.age, to: "age"),
-        KeyMapper(\.optional1, to: "optional1"),
-        KeyMapper(\.optional2, to: "optional2"),
-        KeyMapper(\.optional3, to: "optional3"),
-        KeyMapper(\.optional4, to: "optional4"),
-        KeyMapper(\.optional5, to: "optional5"),
-        KeyMapper(\.sub, to: "sub"),
-        KeyMapper(\.sub2, to: "sub2"),
-        KeyMapper(\.subs, to: "subs"),
-        KeyMapper(\.enum1, to: "enum1"),
-        KeyMapper(\.enum2, to: "enum2"),
-        KeyMapper(\.enum3, to: "enum3"),
-    ]
-    
-    init() {}
-    
-    init(from decoder: Decoder) throws {
-        try decode(from: decoder, with: Self.keyMapping)
-    }
+struct TestCodableModel: CodableModel, AutoCodable {
+    @CodableValue var id: Int = 0
+    @CodableValue var name: String = ""
+    @CodableValue var age: Int?
+    @CodableValue var optional1: String = ""
+    @CodableValue var optional2: String = ""
+    @CodableValue var optional3: String? = "default"
+    @CodableValue var optional4: Int? = 4
+    @CodableValue var optional5: Int? = 5
+    @CodableValue var sub: TestSubCodableModel?
+    @CodableValue var sub2: TestSubCodableModel = .init()
+    @CodableValue var subs: [TestSubCodableModel] = []
+    @CodableValue var enum1: TestCodableModelEnum = .unknown
+    @CodableValue var enum2: TestCodableModelEnum = .unknown
+    @CodableValue var enum3: TestCodableModelEnum?
 }
 
 struct TestSubCodableModel: CodableModel {
