@@ -66,11 +66,17 @@ extension AnyModel where Self: BasicType {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        if let object = object, let transformer = Self.self as? _Transformable.Type {
+            return transformer.transform(from: object) as? Self
+        }
         return object as? Self
     }
     
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
+        if let transformer = self as? _Transformable {
+            return transformer.plainValue()
+        }
         return self
     }
 }
