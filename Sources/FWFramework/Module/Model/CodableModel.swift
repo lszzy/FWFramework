@@ -82,8 +82,11 @@ extension AnyModel where Self: BasicType {
 }
 
 // MARK: - AnyModel+CodableModel
-/// 通用Codable编码模型协议，默认未实现SafeCodableModel(实现init即可)
+/// 通用Codable编码模型协议，默认未实现init方法
 public protocol CodableModel: Codable, AnyModel {}
+
+/// 通用Mappable编码模型协议，默认未实现init方法
+public protocol MappableModel: MappableCodable, CodableModel {}
 
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串
@@ -105,8 +108,10 @@ extension AnyModel where Self: CodableModel {
                 data = Data.fw_jsonEncode(object)
             }
         }
+        guard let data = data else { return nil }
+        
         do {
-            return try data?.fw_decoded(as: self)
+            return try data.decoded() as Self
         } catch {
             InternalLogger.logError(error.localizedDescription)
             return nil
@@ -116,7 +121,7 @@ extension AnyModel where Self: CodableModel {
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
         do {
-            let data = try Data.fw_encoded(self)
+            let data = try self.encoded() as Data
             return try Data.fw_jsonDecode(data)
         } catch {
             InternalLogger.logError(error.localizedDescription)

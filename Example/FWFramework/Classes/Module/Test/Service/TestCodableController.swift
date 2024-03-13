@@ -8,7 +8,7 @@
 
 import FWFramework
 
-struct TestCodableModel: CodableModel {
+struct TestCodableModel: MappableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -23,6 +23,29 @@ struct TestCodableModel: CodableModel {
     var enum1: TestCodableModelEnum = .unknown
     var enum2: TestCodableModelEnum = .unknown
     var enum3: TestCodableModelEnum?
+    
+    static let keyMapping: [KeyMapper<Self>] = [
+        KeyMapper(\.id, to: "id"),
+        KeyMapper(\.name, to: "name"),
+        KeyMapper(\.age, to: "age"),
+        KeyMapper(\.optional1, to: "optional1"),
+        KeyMapper(\.optional2, to: "optional2"),
+        KeyMapper(\.optional3, to: "optional3"),
+        KeyMapper(\.optional4, to: "optional4"),
+        KeyMapper(\.optional5, to: "optional5"),
+        KeyMapper(\.sub, to: "sub"),
+        KeyMapper(\.sub2, to: "sub2"),
+        KeyMapper(\.subs, to: "subs"),
+        KeyMapper(\.enum1, to: "enum1"),
+        KeyMapper(\.enum2, to: "enum2"),
+        KeyMapper(\.enum3, to: "enum3"),
+    ]
+    
+    init() {}
+    
+    init(from decoder: Decoder) throws {
+        try decode(from: decoder, with: Self.keyMapping)
+    }
 }
 
 struct TestSubCodableModel: CodableModel {
@@ -107,7 +130,7 @@ extension TestCodableController {
             "name": "name",
             "age": "2",
             "optional1": NSNull(),
-            "optional4": Data(),
+            "optional4": [:],
             "sub": [
                 "id": 2,
                 "name": "sub",
@@ -152,7 +175,7 @@ extension TestCodableController {
             "dict": [:],
             "array": [1],
             "optional1": NSNull(),
-            "optional4": Data(),
+            "optional4": [:],
             "sub": [
                 "id": 2,
                 "name": "sub",
