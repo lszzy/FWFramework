@@ -7,142 +7,239 @@
 
 import Foundation
 
-// MARK: - WrapperGlobal
-extension WrapperGlobal {
-    /// 安全字符串，不为nil
-    public static func safeString(_ value: Any?) -> String {
-        return String.fw_safeString(value)
-    }
-
-    /// 安全数字，不为nil
-    public static func safeNumber(_ value: Any?) -> NSNumber {
-        return NSNumber.fw_safeNumber(value)
-    }
-
-    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
-    public static func safeURL(_ value: Any?) -> URL {
-        return URL.fw_safeURL(value)
+// MARK: - Wrapper+Data
+extension Wrapper where Base == Data {
+    public static func encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+        return try Base.fw_encoded(value, using: encoder)
     }
     
-    /// 获取安全值
-    public static func safeValue<T: BasicCodableType>(_ value: T?) -> T {
-        return value.safeValue
-    }
-
-    /// 判断是否不为空
-    public static func isNotEmpty<T: BasicCodableType>(_ value: T?) -> Bool {
-        return value.isNotEmpty
-    }
-    
-    /// 判断是否为nil，兼容嵌套Optional
-    public static func isNil(_ value: Any?) -> Bool {
-        return Optional<Any>.isNil(value)
+    public func decoded<T: Decodable>(as type: T.Type = T.self,
+                                      using decoder: AnyDecoder = JSONDecoder()) throws -> T {
+        return try base.fw_decoded(as: type, using: decoder)
     }
 }
 
-// MARK: - Codable+Extension
-@_spi(FW) extension String {
-    /// 安全字符串，不为nil
-    public static func fw_safeString(_ value: Any?) -> String {
-        guard let value = value, !(value is NSNull) else { return "" }
-        if let string = value as? String { return string }
-        if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
-        if let url = value as? URL { return url.absoluteString }
-        if let object = value as? NSObject { return object.description }
-        if let clazz = value as? AnyClass { return NSStringFromClass(clazz) }
-        if let proto = value as? Protocol { return NSStringFromProtocol(proto) }
-        return String(describing: value)
+// MARK: - AnyEncoder
+/// https://github.com/JohnSundell/Codextended
+public protocol AnyEncoder {
+    func encode<T: Encodable>(_ value: T) throws -> Data
+}
+
+extension JSONEncoder: AnyEncoder {}
+
+#if canImport(ObjectiveC) || swift(>=5.1)
+extension PropertyListEncoder: AnyEncoder {}
+#endif
+
+// MARK: - Data+AnyEncoder
+@_spi(FW) extension Data {
+    public static func fw_encoded<T>(_ value: T, using encoder: AnyEncoder = JSONEncoder()) throws -> Data where T : Encodable {
+        return try encoder.encode(value)
+    }
+}
+
+// MARK: - Encoder+AnyEncoder
+extension Encoder {
+    public func encodeSingle<T: Encodable>(_ value: T) throws {
+        var container = singleValueContainer()
+        try container.encode(value)
+    }
+
+    public func encode<T: Encodable>(_ value: T, for key: String) throws {
+        try encode(value, for: AnyCodingKey(key))
+    }
+
+    public func encode<T: Encodable, K: CodingKey>(_ value: T, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encode(value, forKey: key)
+    }
+
+    public func encode<F: AnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
+        try encode(date, for: AnyCodingKey(key), using: formatter)
+    }
+
+    public func encode<K: CodingKey, F: AnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
+        let string = formatter.string(from: date)
+        try encode(string, for: key)
+    }
+}
+
+// MARK: - AnyDecoder
+public protocol AnyDecoder {
+    func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
+}
+
+extension JSONDecoder: AnyDecoder {}
+
+#if canImport(ObjectiveC) || swift(>=5.1)
+extension PropertyListDecoder: AnyDecoder {}
+#endif
+
+// MARK: - Data+AnyDecoder
+@_spi(FW) extension Data {
+    public func fw_decoded<T: Decodable>(as type: T.Type = T.self,
+                                      using decoder: AnyDecoder = JSONDecoder()) throws -> T {
+        return try decoder.decode(T.self, from: self)
+    }
+}
+
+// MARK: - Decoder+AnyDecoder
+extension Decoder {
+    public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
+        let container = try singleValueContainer()
+        return try container.decode(type)
+    }
+
+    public func decode<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+        return try decode(AnyCodingKey(key), as: type)
+    }
+
+    public func decode<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+        let container = try container(keyedBy: K.self)
+        return try container.decode(type, forKey: key)
+    }
+
+    public func decodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+        return try decodeIf(AnyCodingKey(key), as: type)
+    }
+
+    public func decodeIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        let container = try container(keyedBy: K.self)
+        return try container.decodeIfPresent(type, forKey: key)
+    }
+
+    public func decode<F: AnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
+        return try decode(AnyCodingKey(key), using: formatter)
+    }
+
+    public func decode<K: CodingKey, F: AnyDateFormatter>(_ key: K, using formatter: F) throws -> Date {
+        let container = try container(keyedBy: K.self)
+        let rawString = try container.decode(String.self, forKey: key)
+
+        guard let date = formatter.date(from: rawString) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: container,
+                debugDescription: "Unable to format date string"
+            )
+        }
+
+        return date
     }
     
-    /// 转换为UTF8数据
-    public var fw_utf8Data: Data? {
-        return self.data(using: .utf8)
+    // MARK: - JSON
+    public func jsonSingle() throws -> JSON {
+        return try decodeSingle(as: JSON.self)
     }
     
-    /// 转换为URL
-    public var fw_url: URL? {
-        return URL.fw_url(string: self)
+    public func json(_ key: String) throws -> JSON {
+        return try decodeIf(key, as: JSON.self) ?? JSON.null
     }
     
-    /// 转换为文件URL
-    public var fw_fileURL: URL {
-        return URL(fileURLWithPath: self)
+    public func json<K: CodingKey>(_ key: K) throws -> JSON {
+        return try decodeIf(key, as: JSON.self) ?? JSON.null
+    }
+
+    public func jsonIf(_ key: String) throws -> JSON? {
+        return try decodeIf(key, as: JSON.self)
+    }
+
+    public func jsonIf<K: CodingKey>(_ key: K) throws -> JSON? {
+        return try decodeIf(key, as: JSON.self)
     }
     
-    /// 转换为NSNumber
-    public var fw_number: NSNumber? {
-        let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]
-        let nilNumbers = ["nil", "null", "(null)", "<null>"]
-        let lowerStr = self.lowercased()
-        if let value = boolNumbers[lowerStr] { return NSNumber(value: value) }
-        if nilNumbers.contains(lowerStr) { return nil }
-        
-        guard let cstring = self.cString(using: .utf8) else { return nil }
-        if self.rangeOfCharacter(from: CharacterSet(charactersIn: ".")) != nil {
-            let cnumber = atof(cstring)
-            if cnumber.isNaN || cnumber.isInfinite { return nil }
-            return NSNumber(value: cnumber)
-        } else {
-            return NSNumber(value: atoll(cstring))
+    // MARK: - Value
+    public func valueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
+        if let value = value(with: try decodeSingle(as: JSON.self), as: type) {
+            return value
+        }
+        return try decodeSingle(as: type)
+    }
+    
+    public func value<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
+        return try value(AnyCodingKey(key), as: type)
+    }
+
+    public func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
+        if let value = value(with: try decodeIf(key, as: JSON.self) ?? JSON.null, as: type) {
+            return value
+        }
+        return try decode(key, as: type)
+    }
+
+    public func valueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
+        return try valueIf(AnyCodingKey(key), as: type)
+    }
+
+    public func valueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
+        if let json = try decodeIf(key, as: JSON.self), let value = value(with: json, as: type) {
+            return value
+        }
+        return try decodeIf(key, as: type)
+    }
+    
+    private func value<T>(with json: JSON, as type: T.Type) -> T? {
+        switch type {
+        case is Bool.Type:
+            return json.boolValue as? T
+        case is String.Type:
+            return json.stringValue as? T
+        case is Double.Type:
+            return json.doubleValue as? T
+        case is Float.Type:
+            return json.floatValue as? T
+        case is Int.Type:
+            return json.intValue as? T
+        case is Int8.Type:
+            return json.int8Value as? T
+        case is Int16.Type:
+            return json.int16Value as? T
+        case is Int32.Type:
+            return json.int32Value as? T
+        case is Int64.Type:
+            return json.int64Value as? T
+        case is UInt.Type:
+            return json.uIntValue as? T
+        case is UInt8.Type:
+            return json.uInt8Value as? T
+        case is UInt16.Type:
+            return json.uInt16Value as? T
+        case is UInt32.Type:
+            return json.uInt32Value as? T
+        case is UInt64.Type:
+            return json.uInt64Value as? T
+        default:
+            return nil
         }
     }
 }
 
-@_spi(FW) extension NSNumber {
-    /// 安全数字，不为nil
-    public static func fw_safeNumber(_ value: Any?) -> NSNumber {
-        guard let value = value else { return NSNumber(value: 0) }
-        if let number = value as? NSNumber { return number }
-        return String.fw_safeString(value).fw_number ?? NSNumber(value: 0)
-    }
+// MARK: - AnyDateFormatter
+public protocol AnyDateFormatter {
+    func date(from string: String) -> Date?
+    func string(from date: Date) -> String
 }
 
-@_spi(FW) extension URL {
-    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
-    public static func fw_safeURL(_ value: Any?) -> URL {
-        guard let value = value else { return NSURL() as URL }
-        if let url = value as? URL { return url }
-        if let url = URL.fw_url(string: String.fw_safeString(value)) { return url }
-        return NSURL() as URL
-    }
-    
-    /// 生成URL，中文自动URL编码
-    public static func fw_url(string: String?) -> URL? {
-        guard let string = string else { return nil }
-        if let url = URL(string: string) { return url }
-        // 如果生成失败，自动URL编码再试
-        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: encodeString)
-    }
-    
-    /// 生成URL，中文自动URL编码，支持基准URL
-    public static func fw_url(string: String?, relativeTo baseURL: URL?) -> URL? {
-        guard let string = string else { return nil }
-        if let url = URL(string: string, relativeTo: baseURL) { return url }
-        // 如果生成失败，自动URL编码再试
-        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: encodeString, relativeTo: baseURL)
-    }
-}
+extension DateFormatter: AnyDateFormatter {}
 
-/// 可选类安全转换，不为nil
-extension Optional {
-    public var safeInt: Int { return safeNumber.intValue }
-    public var safeBool: Bool { return safeNumber.boolValue }
-    public var safeFloat: Float { return safeNumber.floatValue }
-    public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return String.fw_safeString(self) }
-    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
-    public var safeArray: [Any] { return (self as? [Any]) ?? [] }
-    public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
-    
-    public var isNil: Bool { return self == nil }
-    public static func isNil(_ value: Wrapped?) -> Bool {
-        return value == nil || value._plainValue() == nil
+extension ISO8601DateFormatter: AnyDateFormatter {}
+
+// MARK: - AnyCodingKey
+private struct AnyCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+
+    init(_ string: String) {
+        stringValue = string
     }
-    public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
-        guard let this = self else { return nil }
-        return try block(this)
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+        self.intValue = intValue
+        self.stringValue = String(intValue)
     }
 }
 
@@ -156,193 +253,5 @@ public extension DefaultCaseCodable where Self.RawValue: Decodable {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(RawValue.self)
         self = Self.init(rawValue: rawValue) ?? Self.defaultCase
-    }
-}
-
-// MARK: - AnyCodableType
-public protocol AnyCodableType {
-    init()
-}
-
-public protocol BasicCodableType: AnyCodableType {
-    var isNotEmpty: Bool { get }
-}
-
-extension BasicCodableType where Self: Equatable {
-    public var isNotEmpty: Bool { return self != .init() }
-}
-
-extension Optional where Wrapped: AnyCodableType {
-    public var safeValue: Wrapped { if let value = self { return value } else { return .init() } }
-}
-extension Optional where Wrapped: BasicCodableType {
-    public var isNotEmpty: Bool { if let value = self { return value.isNotEmpty } else { return false } }
-}
-
-// MARK: - AnyCodableType+Extension
-extension Int: BasicCodableType {}
-extension Int8: BasicCodableType {}
-extension Int16: BasicCodableType {}
-extension Int32: BasicCodableType {}
-extension Int64: BasicCodableType {}
-extension UInt: BasicCodableType {}
-extension UInt8: BasicCodableType {}
-extension UInt16: BasicCodableType {}
-extension UInt32: BasicCodableType {}
-extension UInt64: BasicCodableType {}
-extension Bool: BasicCodableType {}
-extension Float: BasicCodableType {
-    public var isValid: Bool { return !isNaN && !isInfinite }
-}
-extension Double: BasicCodableType {
-    public var isValid: Bool { return !isNaN && !isInfinite }
-}
-extension URL: BasicCodableType {
-    public init() {
-        self.init(string: " ")!
-        self = NSURL() as URL
-    }
-}
-extension Data: BasicCodableType {}
-extension Date: BasicCodableType {}
-extension String: BasicCodableType {}
-extension Array: BasicCodableType {
-    public var isNotEmpty: Bool { return !isEmpty }
-    public func safeElement(_ index: Int) -> Element? {
-        return index >= 0 && index < endIndex ? self[index] : nil
-    }
-    public subscript(safe index: Int) -> Element? {
-        return safeElement(index)
-    }
-    public mutating func safeSwap(from index: Index, to otherIndex: Index) {
-        guard index != otherIndex else { return }
-        guard startIndex..<endIndex ~= index else { return }
-        guard startIndex..<endIndex ~= otherIndex else { return }
-        swapAt(index, otherIndex)
-    }
-}
-extension Array where Element: Equatable {
-    @discardableResult
-    public mutating func removeAll(_ item: Element) -> [Element] {
-        removeAll(where: { $0 == item })
-        return self
-    }
-    @discardableResult
-    public mutating func removeAll(_ items: [Element]) -> [Element] {
-        guard !items.isEmpty else { return self }
-        removeAll(where: { items.contains($0) })
-        return self
-    }
-}
-extension Set: BasicCodableType {}
-extension Dictionary: BasicCodableType {
-    public var isNotEmpty: Bool { return !isEmpty }
-    public func has(key: Key) -> Bool {
-        return index(forKey: key) != nil
-    }
-    public mutating func removeAll<S: Sequence>(keys: S) where S.Element == Key {
-        keys.forEach { removeValue(forKey: $0) }
-    }
-}
-extension CGFloat: BasicCodableType {
-    public var isValid: Bool { return !isNaN && !isInfinite }
-}
-extension CGPoint: BasicCodableType {
-    public var isValid: Bool { return x.isValid && y.isValid }
-}
-extension CGSize: BasicCodableType {
-    public var isValid: Bool { return width.isValid && height.isValid }
-}
-extension CGRect: BasicCodableType {
-    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
-}
-
-// MARK: - AnyParameter
-public protocol AnyParameter {}
-
-public protocol DataParameter: AnyParameter {
-    var dataValue: Data { get }
-}
-
-public protocol StringParameter: AnyParameter {
-    var stringValue: String { get }
-}
-
-public protocol AttributedStringParameter: AnyParameter {
-    var attributedStringValue: NSAttributedString { get }
-}
-
-public protocol URLParameter: AnyParameter {
-    var urlValue: URL { get }
-}
-
-public protocol URLRequestParameter: AnyParameter {
-    var urlRequestValue: URLRequest { get }
-}
-
-public protocol ArrayParameter<E>: AnyParameter {
-    associatedtype E
-    var arrayValue: Array<E> { get }
-}
-
-public protocol DictionaryParameter<K, V>: AnyParameter where K: Hashable {
-    associatedtype K
-    associatedtype V
-    var dictionaryValue: Dictionary<K, V> { get }
-}
-
-public protocol ObjectParameter: DictionaryParameter {
-    init(dictionaryValue: [AnyHashable: Any])
-}
-
-// MARK: - AnyParameter+Extension
-extension Data: DataParameter, StringParameter {
-    public var dataValue: Data { self }
-    public var stringValue: String { String(data: self, encoding: .utf8) ?? .init() }
-}
-
-extension String: StringParameter, AttributedStringParameter, DataParameter, URLParameter, URLRequestParameter {
-    public var stringValue: String { self }
-    public var attributedStringValue: NSAttributedString { NSAttributedString(string: self) }
-    public var dataValue: Data { data(using: .utf8) ?? .init() }
-    public var urlValue: URL { URL.fw_url(string: self) ?? NSURL() as URL }
-    public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
-}
-
-extension NSAttributedString: AttributedStringParameter, StringParameter {
-    public var attributedStringValue: NSAttributedString { self }
-    public var stringValue: String { string }
-}
-
-extension URL: URLParameter, StringParameter, URLRequestParameter {
-    public var urlValue: URL { self }
-    public var stringValue: String { absoluteString }
-    public var urlRequestValue: URLRequest { URLRequest(url: self) }
-}
-
-extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
-    public var urlRequestValue: URLRequest { self }
-    public var urlValue: URL { url ?? NSURL() as URL }
-    public var stringValue: String { url?.absoluteString ?? .init() }
-}
-
-extension Array: ArrayParameter {
-    public var arrayValue: Array<Element> { self }
-}
-
-extension Dictionary: DictionaryParameter {
-    public var dictionaryValue: Dictionary<Key, Value> { self }
-}
-
-extension ObjectParameter {
-    public var dictionaryValue: [AnyHashable: Any] {
-        NSObject.fw_mirrorDictionary(self)
-    }
-}
-
-extension ObjectParameter where Self: JSONModel {
-    public init(dictionaryValue: [AnyHashable: Any]) {
-        self.init()
-        merge(from: dictionaryValue)
     }
 }
