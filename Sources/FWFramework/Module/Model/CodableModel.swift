@@ -85,9 +85,6 @@ extension AnyModel where Self: BasicType {
 /// 通用Codable编码模型协议，默认未实现init方法
 public protocol CodableModel: Codable, AnyModel {}
 
-/// 通用Mappable编码模型协议，默认未实现init方法
-public protocol MappableModel: MappableCodable, CodableModel {}
-
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串
     public var hashString: String {
