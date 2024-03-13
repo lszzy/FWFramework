@@ -41,6 +41,7 @@ struct TestJSONModel: JSONModel {
     var age: Int?
     var any: Any?
     var dict: [AnyHashable: Any]?
+    var array: [Any]?
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
@@ -149,6 +150,7 @@ extension TestCodableController {
             "age": "2",
             "any": "any",
             "dict": [:],
+            "array": [1],
             "optional1": NSNull(),
             "optional4": Data(),
             "sub": [
@@ -173,6 +175,7 @@ extension TestCodableController {
         success = success && (model?.age == 2)
         success = success && (String.app.safeString(model?.any) == "any")
         success = success && (model?.dict != nil)
+        success = success && ((model?.array as? [Int])?.first == 1)
         success = success && (model?.optional1 == "")
         success = success && (model?.optional2 == "")
         success = success && (model?.optional3 == "default")
