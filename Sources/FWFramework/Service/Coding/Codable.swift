@@ -324,6 +324,169 @@ private struct AnyCodingKey: CodingKey {
     }
 }
 
+// MARK: - AnyCodable
+extension KeyedDecodingContainer {
+    public func decode(_ type: [Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [Any] {
+        var values = try nestedUnkeyedContainer(forKey: key)
+        return try values.decode(type)
+    }
+
+    public func decode(_ type: [AnyHashable: Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [AnyHashable: Any] {
+        let values = try nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+        return try values.decode(type)
+    }
+
+    public func decodeIfPresent(_ type: [Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [Any]? {
+        guard contains(key),
+            try decodeNil(forKey: key) == false else { return nil }
+        return try decode(type, forKey: key)
+    }
+
+    public func decodeIfPresent(_ type: [AnyHashable: Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [AnyHashable: Any]? {
+        guard contains(key),
+            try decodeNil(forKey: key) == false else { return nil }
+        return try decode(type, forKey: key)
+    }
+}
+
+private extension KeyedDecodingContainer {
+    func decode(_ type: [AnyHashable: Any].Type) throws -> [AnyHashable: Any] {
+        var dictionary: [AnyHashable: Any] = [:]
+        for key in allKeys {
+            if try decodeNil(forKey: key) {
+                dictionary[key.stringValue] = NSNull()
+            } else if let bool = try? decode(Bool.self, forKey: key) {
+                dictionary[key.stringValue] = bool
+            } else if let string = try? decode(String.self, forKey: key) {
+                dictionary[key.stringValue] = string
+            } else if let int = try? decode(Int.self, forKey: key) {
+                dictionary[key.stringValue] = int
+            } else if let double = try? decode(Double.self, forKey: key) {
+                dictionary[key.stringValue] = double
+            } else if let dict = try? decode([AnyHashable: Any].self, forKey: key) {
+                dictionary[key.stringValue] = dict
+            } else if let array = try? decode([Any].self, forKey: key) {
+                dictionary[key.stringValue] = array
+            }
+        }
+        return dictionary
+    }
+}
+
+private extension UnkeyedDecodingContainer {
+    mutating func decode(_ type: [Any].Type) throws -> [Any] {
+        var elements: [Any] = []
+        while !isAtEnd {
+            if try decodeNil() {
+                elements.append(NSNull())
+            } else if let int = try? decode(Int.self) {
+                elements.append(int)
+            } else if let bool = try? decode(Bool.self) {
+                elements.append(bool)
+            } else if let double = try? decode(Double.self) {
+                elements.append(double)
+            } else if let string = try? decode(String.self) {
+                elements.append(string)
+            } else if let values = try? nestedContainer(keyedBy: AnyCodingKey.self),
+                let element = try? values.decode([AnyHashable: Any].self) {
+                elements.append(element)
+            } else if var values = try? nestedUnkeyedContainer(),
+                let element = try? values.decode([Any].self) {
+                elements.append(element)
+            }
+        }
+        return elements
+    }
+}
+
+extension KeyedEncodingContainer {
+    public mutating func encode(_ value: [AnyHashable: Any], forKey key: KeyedEncodingContainer<K>.Key) throws {
+        var container = nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+        try container.encode(value)
+    }
+
+    public mutating func encode(_ value: [Any], forKey key: KeyedEncodingContainer<K>.Key) throws {
+        var container = nestedUnkeyedContainer(forKey: key)
+        try container.encode(value)
+    }
+
+    public mutating func encodeIfPresent(_ value: [AnyHashable: Any]?, forKey key: KeyedEncodingContainer<K>.Key) throws {
+        if let value = value {
+            var container = nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+            try container.encode(value)
+        } else {
+            try encodeNil(forKey: key)
+        }
+    }
+
+    public mutating func encodeIfPresent(_ value: [Any]?, forKey key: KeyedEncodingContainer<K>.Key) throws {
+        if let value = value {
+            var container = nestedUnkeyedContainer(forKey: key)
+            try container.encode(value)
+        } else {
+            try encodeNil(forKey: key)
+        }
+    }
+}
+
+private extension KeyedEncodingContainer where K == AnyCodingKey {
+    mutating func encode(_ value: [AnyHashable: Any]) throws {
+        for (k, v) in value {
+            let key = AnyCodingKey(stringValue: String(describing: k))!
+            switch v {
+            case is NSNull:
+                try encodeNil(forKey: key)
+            case let string as String:
+                try encode(string, forKey: key)
+            case let int as Int:
+                try encode(int, forKey: key)
+            case let bool as Bool:
+                try encode(bool, forKey: key)
+            case let double as Double:
+                try encode(double, forKey: key)
+            case let dict as [AnyHashable: Any]:
+                try encode(dict, forKey: key)
+            case let array as [Any]:
+                try encode(array, forKey: key)
+            default:
+                debugPrint("⚠️ Unsuported type!", v)
+                continue
+            }
+        }
+    }
+}
+
+private extension UnkeyedEncodingContainer {
+    mutating func encode(_ value: [Any]) throws {
+        for v in value {
+            switch v {
+            case is NSNull:
+                try encodeNil()
+            case let string as String:
+                try encode(string)
+            case let int as Int:
+                try encode(int)
+            case let bool as Bool:
+                try encode(bool)
+            case let double as Double:
+                try encode(double)
+            case let dict as [AnyHashable: Any]:
+                try encode(dict)
+            case let array as [Any]:
+                var values = nestedUnkeyedContainer()
+                try values.encode(array)
+            default:
+                debugPrint("⚠️ Unsuported type!", v)
+            }
+        }
+    }
+
+    mutating func encode(_ value: [AnyHashable: Any]) throws {
+        var container = self.nestedContainer(keyedBy: AnyCodingKey.self)
+        try container.encode(value)
+    }
+}
+
 // MARK: - DefaultCaseCodable
 public protocol DefaultCaseCodable: RawRepresentable, Codable {
     static var defaultCase: Self { get }
@@ -405,6 +568,57 @@ extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
     }
 }
 
+fileprivate protocol EncodableAnyPropertyWrapper {
+    func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws
+}
+
+extension CodableValue: EncodableAnyPropertyWrapper {
+    fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws {
+        if encode != nil { try encode!(encoder, wrappedValue) }
+        else {
+            let t = type(of: wrappedValue)
+            if let key = AnyCodingKey(stringValue: String(label)) {
+                if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
+                    var container = encoder.container(keyedBy: AnyCodingKey.self)
+                    try container.encodeIfPresent(wrappedValue as? [AnyHashable: Any], forKey: key)
+                } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
+                    var container = encoder.container(keyedBy: AnyCodingKey.self)
+                    try container.encodeIfPresent(wrappedValue as? [Any], forKey: key)
+                }
+            }
+        }
+    }
+}
+
+fileprivate protocol DecodableAnyPropertyWrapper {
+    func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws
+}
+
+extension CodableValue: DecodableAnyPropertyWrapper {
+    fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws {
+        if let decode = decode {
+            if let value = try decode(decoder) {
+                wrappedValue = value
+            }
+        } else {
+            let t = type(of: wrappedValue)
+            if let key = AnyCodingKey(stringValue: String(label)) {
+                if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
+                    let container = try decoder.container(keyedBy: AnyCodingKey.self)
+                    if let value = try container.decodeIfPresent([AnyHashable: Any].self, forKey: key) as? Value {
+                        wrappedValue = value
+                    }
+                } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
+                    let container = try decoder.container(keyedBy: AnyCodingKey.self)
+                    if let value = try container.decodeIfPresent([Any].self, forKey: key) as? Value {
+                        wrappedValue = value
+                    }
+                }
+            }
+        }
+    }
+}
+
 // MARK: - AutoCodable
 public protocol AutoEncodable: Encodable {}
 public protocol AutoDecodable: Decodable { init() }
@@ -428,7 +642,11 @@ public extension Encodable {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                try (child.value as? EncodablePropertyWrapper)?.encode(to: encoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                if let wrapper = (child.value as? EncodablePropertyWrapper) {
+                    try wrapper.encode(to: encoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                } else {
+                    try (child.value as? EncodableAnyPropertyWrapper)?.encode(to: encoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                }
             }
             mirror = mirror.superclassMirror
         }
@@ -440,7 +658,11 @@ public extension Decodable {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                try (child.value as? DecodablePropertyWrapper)?.decode(from: decoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                if let wrapper = (child.value as? DecodablePropertyWrapper) {
+                    try wrapper.decode(from: decoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                } else {
+                    try (child.value as? DecodableAnyPropertyWrapper)?.decode(from: decoder, label: child.label!.dropFirst(), nonnull: false, throws: false)
+                }
             }
             mirror = mirror.superclassMirror
         }
