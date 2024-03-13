@@ -105,13 +105,23 @@ extension AnyModel where Self: CodableModel {
                 data = Data.fw_jsonEncode(object)
             }
         }
-        return try? data?.fw_decoded(as: self)
+        do {
+            return try data?.fw_decoded(as: self)
+        } catch {
+            InternalLogger.logError(error.localizedDescription)
+            return nil
+        }
     }
     
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
-        let data = try? Data.fw_encoded(self)
-        return data?.fw_jsonDecode
+        do {
+            let data = try Data.fw_encoded(self)
+            return try Data.fw_jsonDecode(data)
+        } catch {
+            InternalLogger.logError(error.localizedDescription)
+            return nil
+        }
     }
 }
 
