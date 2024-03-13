@@ -335,6 +335,26 @@ extension KeyedDecodingContainer {
         let values = try nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
         return try values.decode(type)
     }
+    
+    public func decodeAny(_ type: Any.Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> Any {
+        if try decodeNil(forKey: key) {
+            return NSNull()
+        } else if let bool = try? decode(Bool.self, forKey: key) {
+            return bool
+        } else if let string = try? decode(String.self, forKey: key) {
+            return string
+        } else if let int = try? decode(Int.self, forKey: key) {
+            return int
+        } else if let double = try? decode(Double.self, forKey: key) {
+            return double
+        } else if let dict = try? decode([AnyHashable: Any].self, forKey: key) {
+            return dict
+        } else if let array = try? decode([Any].self, forKey: key) {
+            return array
+        } else {
+            throw DecodingError.typeMismatch(Any.self, .init(codingPath: codingPath, debugDescription: "Unsuported type"))
+        }
+    }
 
     public func decodeIfPresent(_ type: [Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [Any]? {
         guard contains(key),
@@ -346,6 +366,12 @@ extension KeyedDecodingContainer {
         guard contains(key),
             try decodeNil(forKey: key) == false else { return nil }
         return try decode(type, forKey: key)
+    }
+    
+    public func decodeAnyIfPresent(_ type: Any.Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> Any? {
+        guard contains(key),
+            try decodeNil(forKey: key) == false else { return nil }
+        return try decodeAny(type, forKey: key)
     }
 }
 
@@ -409,6 +435,27 @@ extension KeyedEncodingContainer {
         var container = nestedUnkeyedContainer(forKey: key)
         try container.encode(value)
     }
+    
+    public mutating func encodeAny(_ value: Any, forKey key: KeyedEncodingContainer<K>.Key) throws {
+        switch value {
+        case is NSNull:
+            try encodeNil(forKey: key)
+        case let string as String:
+            try encode(string, forKey: key)
+        case let int as Int:
+            try encode(int, forKey: key)
+        case let bool as Bool:
+            try encode(bool, forKey: key)
+        case let double as Double:
+            try encode(double, forKey: key)
+        case let dict as [AnyHashable: Any]:
+            try encode(dict, forKey: key)
+        case let array as [Any]:
+            try encode(array, forKey: key)
+        default:
+            throw EncodingError.invalidValue(value, .init(codingPath: codingPath, debugDescription: "Unsuported type"))
+        }
+    }
 
     public mutating func encodeIfPresent(_ value: [AnyHashable: Any]?, forKey key: KeyedEncodingContainer<K>.Key) throws {
         if let value = value {
@@ -423,6 +470,14 @@ extension KeyedEncodingContainer {
         if let value = value {
             var container = nestedUnkeyedContainer(forKey: key)
             try container.encode(value)
+        } else {
+            try encodeNil(forKey: key)
+        }
+    }
+    
+    public mutating func encodeAnyIfPresent(_ value: Any?, forKey key: KeyedEncodingContainer<K>.Key) throws {
+        if let value = value {
+            try encodeAny(value, forKey: key)
         } else {
             try encodeNil(forKey: key)
         }
@@ -449,8 +504,7 @@ private extension KeyedEncodingContainer where K == AnyCodingKey {
             case let array as [Any]:
                 try encode(array, forKey: key)
             default:
-                debugPrint("⚠️ Unsuported type!", v)
-                continue
+                throw EncodingError.invalidValue(v, .init(codingPath: codingPath, debugDescription: "Unsuported type"))
             }
         }
     }
@@ -476,7 +530,7 @@ private extension UnkeyedEncodingContainer {
                 var values = nestedUnkeyedContainer()
                 try values.encode(array)
             default:
-                debugPrint("⚠️ Unsuported type!", v)
+                throw EncodingError.invalidValue(v, .init(codingPath: codingPath, debugDescription: "Unsuported type"))
             }
         }
     }
@@ -584,6 +638,9 @@ extension CodableValue: EncodableAnyPropertyWrapper {
             } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
                 var container = encoder.container(keyedBy: AnyCodingKey.self)
                 try container.encodeIfPresent(wrappedValue as? [Any], forKey: key)
+            } else {
+                var container = encoder.container(keyedBy: AnyCodingKey.self)
+                try container.encodeAnyIfPresent(wrappedValue, forKey: key)
             }
         }
     }
@@ -610,6 +667,11 @@ extension CodableValue: DecodableAnyPropertyWrapper {
             } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
                 let container = try decoder.container(keyedBy: AnyCodingKey.self)
                 if let value = try container.decodeIfPresent([Any].self, forKey: key) as? Value {
+                    wrappedValue = value
+                }
+            } else {
+                let container = try decoder.container(keyedBy: AnyCodingKey.self)
+                if let value = try container.decodeAnyIfPresent(Any.self, forKey: key) as? Value {
                     wrappedValue = value
                 }
             }
