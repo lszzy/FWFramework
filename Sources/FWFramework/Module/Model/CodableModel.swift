@@ -7,9 +7,9 @@
 
 import Foundation
 
-// MARK: - AnyCodableModel
-/// 通用编码模型协议，默认兼容BasicCodableTypelJSON|CodableMode|JSONModel，可扩展
-public protocol AnyCodableModel: AnyCodableType {
+// MARK: - AnyModel
+/// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel，可扩展
+public protocol AnyModel: SafeType {
     /// 从Object解码成可选Model，当object为字典和数组时支持具体路径
     static func decodeAnyModel(from object: Any?, designatedPath: String?) -> Self?
     /// 从Object安全解码成Model，当object为字典和数组时支持具体路径
@@ -18,7 +18,7 @@ public protocol AnyCodableModel: AnyCodableType {
     func encodeAnyObject() -> Any?
 }
 
-extension AnyCodableModel {
+extension AnyModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
@@ -36,33 +36,33 @@ extension AnyCodableModel {
     }
 }
 
-// MARK: - AnyCodableModel+BasicCodableType
-extension Int: AnyCodableModel {}
-extension Int8: AnyCodableModel {}
-extension Int16: AnyCodableModel {}
-extension Int32: AnyCodableModel {}
-extension Int64: AnyCodableModel {}
-extension UInt: AnyCodableModel {}
-extension UInt8: AnyCodableModel {}
-extension UInt16: AnyCodableModel {}
-extension UInt32: AnyCodableModel {}
-extension UInt64: AnyCodableModel {}
-extension Bool: AnyCodableModel {}
-extension Float: AnyCodableModel {}
-extension Double: AnyCodableModel {}
-extension URL: AnyCodableModel {}
-extension Data: AnyCodableModel {}
-extension Date: AnyCodableModel {}
-extension String: AnyCodableModel {}
-extension Array: AnyCodableModel {}
-extension Set: AnyCodableModel {}
-extension Dictionary: AnyCodableModel {}
-extension CGFloat: AnyCodableModel {}
-extension CGPoint: AnyCodableModel {}
-extension CGSize: AnyCodableModel {}
-extension CGRect: AnyCodableModel {}
+// MARK: - AnyModel+BasicType
+extension Int: AnyModel {}
+extension Int8: AnyModel {}
+extension Int16: AnyModel {}
+extension Int32: AnyModel {}
+extension Int64: AnyModel {}
+extension UInt: AnyModel {}
+extension UInt8: AnyModel {}
+extension UInt16: AnyModel {}
+extension UInt32: AnyModel {}
+extension UInt64: AnyModel {}
+extension Bool: AnyModel {}
+extension Float: AnyModel {}
+extension Double: AnyModel {}
+extension URL: AnyModel {}
+extension Data: AnyModel {}
+extension Date: AnyModel {}
+extension String: AnyModel {}
+extension Array: AnyModel {}
+extension Set: AnyModel {}
+extension Dictionary: AnyModel {}
+extension CGFloat: AnyModel {}
+extension CGPoint: AnyModel {}
+extension CGSize: AnyModel {}
+extension CGRect: AnyModel {}
 
-extension AnyCodableModel where Self: BasicCodableType {
+extension AnyModel where Self: BasicType {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
@@ -75,9 +75,9 @@ extension AnyCodableModel where Self: BasicCodableType {
     }
 }
 
-// MARK: - AnyCodableModel+CodableModel
+// MARK: - AnyModel+CodableModel
 /// 通用Codable编码模型协议，默认未实现SafeCodableModel(实现init即可)
-public protocol CodableModel: Codable, AnyCodableModel {}
+public protocol CodableModel: Codable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串
@@ -87,7 +87,7 @@ extension CodableModel where Self: AnyObject {
     }
 }
 
-extension AnyCodableModel where Self: CodableModel {
+extension AnyModel where Self: CodableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
@@ -109,11 +109,11 @@ extension AnyCodableModel where Self: CodableModel {
     }
 }
 
-// MARK: - AnyCodableModel+JSON
+// MARK: - AnyModel+JSON
 /// 默认实现编码模型协议
-extension JSON: AnyCodableModel {}
+extension JSON: AnyModel {}
 
-extension AnyCodableModel where Self == JSON {
+extension AnyModel where Self == JSON {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
@@ -126,8 +126,8 @@ extension AnyCodableModel where Self == JSON {
     }
 }
 
-// MARK: - AnyCodableModel+JSONModel
-extension AnyCodableModel where Self: JSONModel {
+// MARK: - AnyModel+JSONModel
+extension AnyModel where Self: JSONModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         return deserializeAny(from: object, designatedPath: designatedPath)
@@ -139,7 +139,7 @@ extension AnyCodableModel where Self: JSONModel {
     }
 }
 
-extension AnyCodableModel where Self: JSONModelCustomTransformable {
+extension AnyModel where Self: JSONModelCustomTransformable {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
@@ -154,7 +154,7 @@ extension AnyCodableModel where Self: JSONModelCustomTransformable {
     }
 }
 
-extension AnyCodableModel where Self: JSONModelEnum {
+extension AnyModel where Self: JSONModelEnum {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
@@ -169,8 +169,8 @@ extension AnyCodableModel where Self: JSONModelEnum {
     }
 }
 
-// MARK: - AnyCodableModel+Array
-extension Array where Element: AnyCodableModel {
+// MARK: - AnyModel+Array
+extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
     public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)

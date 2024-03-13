@@ -205,7 +205,7 @@ extension Validator {
 }
 
 // MARK: - Validator+Extension
-extension Validator where Value: BasicCodableType {
+extension Validator where Value: BasicType {
     
     /// 空验证器
     public static var isEmpty: Self {
