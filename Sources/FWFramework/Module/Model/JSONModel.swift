@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - Export
 /**
- HandyJSON
+ JSON模型，解析键存在时才会覆盖默认值
  
  - see: [HandyJSON](https://github.com/alibaba/HandyJSON)
  */
