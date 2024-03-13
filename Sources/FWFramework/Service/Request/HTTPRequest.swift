@@ -1099,13 +1099,13 @@ open class HTTPRequest: CustomStringConvertible {
     open func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         _responseModelBlock = { request in
             if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+                request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         }
         
         successCompletionBlock = { request in
             if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+                request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
             success?(request._cacheResponseModel as? T)
         }
@@ -1140,12 +1140,12 @@ open class HTTPRequest: CustomStringConvertible {
     open func responseCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { request in
             if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+                request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
             success?(request._cacheResponseModel as? T)
         }, processor: { request in
             if (request._cacheResponseModel as? T) == nil {
-                request._cacheResponseModel = T.decodeAnyModel(from: request.responseJSONObject, designatedPath: designatedPath)
+                request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
             }
         })
         return self
@@ -1391,7 +1391,7 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel 
     
     /// 默认实现解析响应数据为数据模型，支持具体路径
     public func decodeResponseModel(designatedPath: String? = nil) -> ResponseModel? {
-        return ResponseModel.decodeAnyModel(from: responseJSONObject, designatedPath: designatedPath)
+        return ResponseModel.decodeModel(from: responseJSONObject, designatedPath: designatedPath)
     }
     
     /// 快捷设置安全模型响应成功句柄

@@ -11,27 +11,27 @@ import Foundation
 /// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel，可扩展
 public protocol AnyModel: SafeType {
     /// 从Object解码成可选Model，当object为字典和数组时支持具体路径
-    static func decodeAnyModel(from object: Any?, designatedPath: String?) -> Self?
+    static func decodeModel(from object: Any?, designatedPath: String?) -> Self?
     /// 从Object安全解码成Model，当object为字典和数组时支持具体路径
     static func decodeSafeModel(from object: Any?, designatedPath: String?) -> Self
     /// 从Model编码成Object
-    func encodeAnyObject() -> Any?
+    func encodeObject() -> Any?
 }
 
 extension AnyModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         return object as? Self
     }
     
     /// 默认实现从Object安全解码成Model，当object为字典和数组时支持具体路径
     public static func decodeSafeModel(from object: Any?, designatedPath: String? = nil) -> Self {
-        return decodeAnyModel(from: object, designatedPath: designatedPath) ?? .init()
+        return decodeModel(from: object, designatedPath: designatedPath) ?? .init()
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return self
     }
 }
@@ -64,13 +64,13 @@ extension CGRect: AnyModel {}
 
 extension AnyModel where Self: BasicType {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         return object as? Self
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return self
     }
 }
@@ -89,7 +89,7 @@ extension CodableModel where Self: AnyObject {
 
 extension AnyModel where Self: CodableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         var data: Data? = object as? Data
         if data == nil, let object = object {
@@ -103,7 +103,7 @@ extension AnyModel where Self: CodableModel {
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         let data = try? Data.fw_encoded(self)
         return data?.fw_jsonDecode
     }
@@ -115,13 +115,13 @@ extension JSON: AnyModel {}
 
 extension AnyModel where Self == JSON {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         return object != nil ? JSON(object) : nil
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return self.object
     }
 }
@@ -129,19 +129,19 @@ extension AnyModel where Self == JSON {
 // MARK: - AnyModel+JSONModel
 extension AnyModel where Self: JSONModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         return deserializeAny(from: object, designatedPath: designatedPath)
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return toJSON()
     }
 }
 
 extension AnyModel where Self: JSONModelCustomTransformable {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
             return transform(from: object)
         }
@@ -149,14 +149,14 @@ extension AnyModel where Self: JSONModelCustomTransformable {
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return plainValue()
     }
 }
 
 extension AnyModel where Self: JSONModelEnum {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
             return transform(from: object)
         }
@@ -164,7 +164,7 @@ extension AnyModel where Self: JSONModelEnum {
     }
     
     /// 默认实现从Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return plainValue()
     }
 }
@@ -172,33 +172,33 @@ extension AnyModel where Self: JSONModelEnum {
 // MARK: - AnyModel+Array
 extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         if let array = object as? [Any] {
-            return array.compactMap { Element.decodeAnyModel(from: $0) }
+            return array.compactMap { Element.decodeModel(from: $0) }
         }
         return nil
     }
     
     /// 从Object安全解码成Model数组，当object为字典和数组时支持具体路径
     public static func decodeSafeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element> {
-        return decodeAnyModel(from: object, designatedPath: designatedPath) ?? []
+        return decodeModel(from: object, designatedPath: designatedPath) ?? []
     }
     
     /// 从数组Model编码成Object
-    public func encodeAnyObject() -> Any? {
-        return compactMap { $0.encodeAnyObject() }
+    public func encodeObject() -> Any? {
+        return compactMap { $0.encodeObject() }
     }
 }
 
 extension Array where Element: JSONModel {
     /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeAnyModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
         return deserializeAny(from: object, designatedPath: designatedPath)
     }
     
     /// 从数组Model编码成Object
-    public func encodeAnyObject() -> Any? {
+    public func encodeObject() -> Any? {
         return toJSON()
     }
 }
