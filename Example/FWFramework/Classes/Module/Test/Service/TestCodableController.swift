@@ -30,11 +30,13 @@ struct TestCodableModel: CodableModel {
     init() {}
     
     init(from decoder: any Decoder) throws {
-        self.init()
+        id = try decoder.decode("id")
+        name = try decoder.decode("name")
     }
     
     func encode(to encoder: any Encoder) throws {
-        
+        try encoder.encode(id, for: "id")
+        try encoder.encode(name, for: "name")
     }
 }
 
@@ -44,6 +46,47 @@ struct TestCodableSubModel: Codable {
 }
 
 enum TestCodableEnum: String, Codable {
+    case test = "test"
+    case unknown = ""
+}
+
+struct TestJSONCodableModel: CodableModel {
+    var id: Int = 0
+    var name: String = ""
+    var age: Int?
+    var any: Any?
+    var dict: [AnyHashable: Any]?
+    var array: [Any]?
+    var optional1: String = ""
+    var optional2: String = ""
+    var optional3: String? = "default"
+    var optional4: Int?
+    var optional5: Int? = 5
+    var sub: TestJSONCodableSubModel?
+    var sub2: TestJSONCodableSubModel = .init()
+    var subs: [TestJSONCodableSubModel] = []
+    var enum1: TestJSONCodableEnum = .unknown
+    var enum2: TestJSONCodableEnum = .unknown
+    var enum3: TestJSONCodableEnum?
+    
+    init() {}
+    
+    init(from decoder: any Decoder) throws {
+        id = try decoder.json("id").intValue
+        name = try decoder.json("name").stringValue
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        
+    }
+}
+
+struct TestJSONCodableSubModel: Codable {
+    var id: Int = 0
+    var name: String?
+}
+
+enum TestJSONCodableEnum: String, Codable {
     case test = "test"
     case unknown = ""
 }
@@ -136,6 +179,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
+            ["JSONCodable", "onJSONCodable"],
             ["AutoCodable", "onAutoCodable"],
             ["JSONModel", "onJSONModel"],
         ])
@@ -145,8 +189,8 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
 
 extension TestCodableController {
     
-    @objc func onCodableModel() {
-        let model: TestCodableModel? = TestCodableModel.decodeModel(from: [
+    func testCodableData() -> [AnyHashable: Any] {
+        return [
             "id": 1,
             "name": "name",
             "age": "2",
@@ -168,127 +212,134 @@ extension TestCodableController {
             "enum1": "test",
             "enum2": "unknown",
             "enum3": "unknown",
-        ])
-        
-        let tests: [Bool] = [
-            (model != nil),
-            (model?.id == 1),
-            (model?.name == "name"),
-            (model?.age == 2),
-            (String.app.safeString(model?.any) == "any"),
-            (model?.dict != nil),
-            ((model?.array as? [Int])?.first == 1),
-            (model?.optional1 == ""),
-            (model?.optional2 == ""),
-            (model?.optional3 == "default"),
-            (model?.optional4 == nil),
-            (model?.optional5 == 5),
-            (model?.sub?.name == "sub"),
-            (model?.sub2 != nil),
-            (model?.subs.first?.name == "subs"),
-            (model?.enum1 == .test),
-            (model?.enum2 == .unknown),
-            (model?.enum3 == nil),
         ]
+    }
+    
+    @objc func onCodableModel() {
+        func testModel(_ model: TestCodableModel?, encode: Bool = false) -> [Bool] {
+            var results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == nil),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
         
+        var model: TestCodableModel? = TestCodableModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestCodableModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
+    }
+    
+    @objc func onJSONCodable() {
+        func testModel(_ model: TestJSONCodableModel?, encode: Bool = false) -> [Bool] {
+            var results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == nil),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
+        
+        var model: TestJSONCodableModel? = TestJSONCodableModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestJSONCodableModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
         app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
     }
     
     @objc func onAutoCodable() {
-        let model: TestAutoCodableModel? = TestAutoCodableModel.decodeModel(from: [
-            "id": 1,
-            "name": "name",
-            "age": "2",
-            "any": "any",
-            "dict": [:],
-            "array": [1],
-            "optional1": NSNull(),
-            "optional4": [:],
-            "sub": [
-                "id": 2,
-                "name": "sub",
-            ],
-            "subs": [
-                [
-                    "id": 3,
-                    "name": "subs",
-                ],
-            ],
-            "enum1": "test",
-            "enum2": "unknown",
-            "enum3": "unknown",
-        ])
+        func testModel(_ model: TestAutoCodableModel?, encode: Bool = false) -> [Bool] {
+            var results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == nil),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
         
-        let tests: [Bool] = [
-            (model != nil),
-            (model?.id == 1),
-            (model?.name == "name"),
-            (model?.age == 2),
-            (String.app.safeString(model?.any) == "any"),
-            (model?.dict != nil),
-            ((model?.array as? [Int])?.first == 1),
-            (model?.optional1 == ""),
-            (model?.optional2 == ""),
-            (model?.optional3 == "default"),
-            (model?.optional4 == nil),
-            (model?.optional5 == 5),
-            (model?.sub?.name == "sub"),
-            (model?.sub2 != nil),
-            (model?.subs.first?.name == "subs"),
-            (model?.enum1 == .test),
-            (model?.enum2 == .unknown),
-            (model?.enum3 == nil),
-        ]
-        
+        var model: TestAutoCodableModel? = TestAutoCodableModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestAutoCodableModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
         app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
     }
     
     @objc func onJSONModel() {
-        let model: TestJSONModel? = TestJSONModel.decodeModel(from: [
-            "id": 1,
-            "name": "name",
-            "age": "2",
-            "any": "any",
-            "dict": [:],
-            "array": [1],
-            "optional1": NSNull(),
-            "optional4": [:],
-            "sub": [
-                "id": 2,
-                "name": "sub",
-            ],
-            "subs": [
-                [
-                    "id": 3,
-                    "name": "subs",
-                ],
-            ],
-            "enum1": "test",
-            "enum2": "unknown",
-            "enum3": "unknown",
-        ])
+        func testModel(_ model: TestJSONModel?, encode: Bool = false) -> [Bool] {
+            var results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == nil),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
         
-        let tests: [Bool] = [
-            (model != nil),
-            (model?.id == 1),
-            (model?.name == "name"),
-            (model?.age == 2),
-            (String.app.safeString(model?.any) == "any"),
-            (model?.dict != nil),
-            ((model?.array as? [Int])?.first == 1),
-            (model?.optional1 == ""),
-            (model?.optional2 == ""),
-            (model?.optional3 == "default"),
-            (model?.optional4 == nil),
-            (model?.optional5 == 5),
-            (model?.sub?.name == "sub"),
-            (model?.sub2 != nil),
-            (model?.subs.first?.name == "subs"),
-            (model?.enum1 == .test),
-            (model?.enum2 == .unknown),
-            (model?.enum3 == nil),
-        ]
-        
+        var model: TestJSONModel? = TestJSONModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestJSONModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
         app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
     }
     
