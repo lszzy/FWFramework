@@ -217,7 +217,7 @@ extension TestCodableController {
     
     @objc func onCodableModel() {
         func testModel(_ model: TestCodableModel?, encode: Bool = false) -> [Bool] {
-            var results: [Bool] = [
+            let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
                 (model?.name == "name"),
@@ -249,7 +249,7 @@ extension TestCodableController {
     
     @objc func onJSONCodable() {
         func testModel(_ model: TestJSONCodableModel?, encode: Bool = false) -> [Bool] {
-            var results: [Bool] = [
+            let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
                 (model?.name == "name"),
@@ -281,7 +281,7 @@ extension TestCodableController {
     
     @objc func onAutoCodable() {
         func testModel(_ model: TestAutoCodableModel?, encode: Bool = false) -> [Bool] {
-            var results: [Bool] = [
+            let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
                 (model?.name == "name"),
@@ -313,7 +313,7 @@ extension TestCodableController {
     
     @objc func onJSONModel() {
         func testModel(_ model: TestJSONModel?, encode: Bool = false) -> [Bool] {
-            var results: [Bool] = [
+            let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
                 (model?.name == "name"),
