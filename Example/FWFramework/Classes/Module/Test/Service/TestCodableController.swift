@@ -152,10 +152,10 @@ struct TestJSONCodableModel: CodableModel {
         }
         subs = try decoder.valueIf("subs") ?? []
         enum1 = try decoder.value("enum1")
-        if let val2 = try decoder.valueIf("enum2", as: TestJSONCodableEnum.self) {
+        if let val2 = try? decoder.valueIf("enum2", as: TestJSONCodableEnum.self) {
             enum2 = val2
         }
-        enum3 = try decoder.valueIf("enum3")
+        enum3 = try? decoder.valueIf("enum3")
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -276,6 +276,8 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [String]
     
+    private var count = 0
+    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
@@ -341,6 +343,11 @@ extension TestCodableController {
         ]
     }
     
+    func showResults(_ tests: [Bool]) {
+        count += 1
+        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(count)-\(tests.count))" : "❌ 测试失败 (\(count)-\(tests.filter({ !$0 }).count))")
+    }
+    
     @objc func onCodableModel() {
         func testModel(_ model: TestCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -374,7 +381,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
+        showResults(tests)
     }
     
     @objc func onJSONCodableModel() {
@@ -410,7 +417,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestJSONCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
+        showResults(tests)
     }
     
     @objc func onAutoCodableModel() {
@@ -446,7 +453,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestAutoCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
+        showResults(tests)
     }
     
     @objc func onJSONModel() {
@@ -482,7 +489,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
+        showResults(tests)
     }
     
 }
