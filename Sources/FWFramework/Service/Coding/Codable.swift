@@ -174,7 +174,25 @@ extension Decoder {
                 debugDescription: "Unable to format date string"
             )
         }
+        return date
+    }
+    
+    public func decodeIf<F: AnyDateFormatter>(_ key: String, using formatter: F) throws -> Date? {
+        return try decodeIf(AnyCodingKey(key), using: formatter)
+    }
 
+    public func decodeIf<K: CodingKey, F: AnyDateFormatter>(_ key: K, using formatter: F) throws -> Date? {
+        let container = try container(keyedBy: K.self)
+        let rawString = try container.decodeIfPresent(String.self, forKey: key)
+        guard let rawString = rawString, !rawString.isEmpty else { return nil }
+
+        guard let date = formatter.date(from: rawString) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: container,
+                debugDescription: "Unable to format date string"
+            )
+        }
         return date
     }
     
