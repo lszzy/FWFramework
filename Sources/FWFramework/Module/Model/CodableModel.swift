@@ -96,7 +96,7 @@ extension CodableValue: EncodableAnyPropertyWrapper {
         if encode != nil { try encode!(encoder, wrappedValue) }
         else {
             var container = encoder.container(keyedBy: AnyCodingKey.self)
-            try container.encodeAnyIfPresent(wrappedValue, type: type(of: wrappedValue), forKey: AnyCodingKey(label))
+            try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
         }
     }
 }
@@ -230,6 +230,28 @@ public extension Encoder {
         catch { if `throws` || nonnull { throw error } }
     }
     
+    internal func encodeAny<T>(_ value: T?, for stringKey: String, nonnull: Bool = false, throws: Bool = false) throws {
+        
+        let dot: Character = "."
+        guard stringKey.contains(dot), stringKey.count > 1 else {
+            try encodeAny(value, for: AnyCodingKey(stringKey), nonnull: nonnull, throws: `throws`)
+            return
+        }
+        
+        let keys = stringKey.split(separator: dot).map { AnyCodingKey($0) }
+        var container = self.container(keyedBy: AnyCodingKey.self)
+        for key in keys.dropLast() {
+            container = container.nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+        }
+        
+        let codingKey = keys.last!
+        do {
+            if nonnull { try container.encodeAny(value!, as: T.self, forKey: codingKey) }
+            else { try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey) }
+        }
+        catch { if `throws` || nonnull { throw error } }
+    }
+    
     func encodeNonnullThrows<T: Encodable, K: CodingKey>(_ value: T, for codingKey: K) throws {
         try encode(value, for: codingKey, nonnull: true, throws: true)
     }
@@ -247,6 +269,15 @@ public extension Encoder {
         do {
             if nonnull { try container.encode(value, forKey: codingKey) }
             else { try container.encodeIfPresent(value, forKey: codingKey) }
+        }
+        catch { if `throws` || nonnull { throw error } }
+    }
+    
+    internal func encodeAny<T, K: CodingKey>(_ value: T?, for codingKey: K, nonnull: Bool = false, throws: Bool = false) throws {
+        var container = self.container(keyedBy: K.self)
+        do {
+            if nonnull { try container.encodeAny(value!, as: T.self, forKey: codingKey) }
+            else { try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey) }
         }
         catch { if `throws` || nonnull { throw error } }
     }
@@ -281,6 +312,10 @@ public extension Decoder {
         return try decode(stringKeys.map { AnyCodingKey($0) }, as: type, nonnull: nonnull, throws: `throws`)
     }
     
+    internal func decodeAny<T>(_ stringKeys: [String], as type: T.Type = T.self, nonnull: Bool = false, throws: Bool = false) throws -> T? {
+        return try decodeAny(stringKeys.map { AnyCodingKey($0) }, as: type, nonnull: nonnull, throws: `throws`)
+    }
+    
     func decodeNonnullThrows<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T {
         return try decodeNonnullThrows(codingKeys, as: type)
     }
@@ -313,6 +348,15 @@ public extension Decoder {
         catch { if `throws` || nonnull { throw error } }
         return nil
     }
+    
+    internal func decodeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, nonnull: Bool = false, throws: Bool = false) throws -> T? {
+        do {
+            let container = try self.container(keyedBy: K.self)
+            return try container.decodeAnyForAlternativeKeys(codingKeys, as: type, nonnull: nonnull, throws: `throws`)
+        }
+        catch { if `throws` || nonnull { throw error } }
+        return nil
+    }
 }
 
 fileprivate extension KeyedDecodingContainer {
@@ -330,6 +374,27 @@ fileprivate extension KeyedDecodingContainer {
         let codingKeys = Array(codingKeys.dropFirst())
         if !codingKeys.isEmpty,
            let value = try? decodeForAlternativeKeys(codingKeys, as: type, nonnull: nonnull, throws: `throws`) {
+            return value
+        }
+        
+        if (`throws` || nonnull) && firstError != nil { throw firstError! }
+        return nil
+    }
+    
+    func decodeAnyForAlternativeKeys<T>(_ codingKeys: [Self.Key], as type: T.Type = T.self, nonnull: Bool, throws: Bool) throws -> T? {
+        
+        var firstError: Error?
+        do {
+            let codingKey = codingKeys.first!
+            if let value = try decodeAnyForNestedKeys(codingKey, as: type, nonnull: nonnull, throws: `throws`) {
+                return value
+            }
+        }
+        catch { firstError = error }
+        
+        let codingKeys = Array(codingKeys.dropFirst())
+        if !codingKeys.isEmpty,
+           let value = try? decodeAnyForAlternativeKeys(codingKeys, as: type, nonnull: nonnull, throws: `throws`) {
             return value
         }
         
@@ -363,6 +428,32 @@ fileprivate extension KeyedDecodingContainer {
         return nil
     }
     
+    func decodeAnyForNestedKeys<T>(_ codingKey: Self.Key, as type: T.Type = T.self, nonnull: Bool, throws: Bool) throws -> T? {
+        
+        var firstError: Error?
+        do {
+            if let value = try decodeAnyForValue(codingKey, as: type, nonnull: nonnull, throws: `throws`) {
+                return value
+            }
+        }
+        catch { firstError = error }
+        
+        let dot: Character = "."
+        if let exCodingKey = codingKey as? AnyCodingKey,
+           exCodingKey.intValue == nil && exCodingKey.stringValue.contains(dot) {
+            let keys = exCodingKey.stringValue.split(separator: dot).map { AnyCodingKey($0) }
+            if !keys.isEmpty,
+               let container = nestedContainer(with: keys.dropLast()),
+               let codingKey = keys.last,
+               let value = try? container.decodeAnyForNestedKeys(codingKey as! Self.Key, as: type, nonnull: nonnull, throws: `throws`) {
+                return value
+            }
+        }
+        
+        if firstError != nil && (`throws` || nonnull) { throw firstError! }
+        return nil
+    }
+    
     private func nestedContainer(with keys: [AnyCodingKey]) -> Self? {
         var container: Self? = self
         for key in keys {
@@ -386,6 +477,27 @@ fileprivate extension KeyedDecodingContainer {
         
         if contains(codingKey),
            let value = decodeForTypeConversion(codingKey, as: type) {
+            return value
+        }
+        
+        if firstError != nil && (`throws` || nonnull) { throw firstError! }
+        return nil
+    }
+    
+    func decodeAnyForValue<T>(_ codingKey: Self.Key, as type: T.Type = T.self, nonnull: Bool, throws: Bool) throws -> T? {
+        
+        var firstError: Error?
+        do {
+            if let value = (nonnull
+                            ? (`throws` ? try decodeAny(type, forKey: codingKey) : try? decodeAny(type, forKey: codingKey))
+                            : (`throws` ? try decodeAnyIfPresent(type, forKey: codingKey) : try? decodeAnyIfPresent(type, forKey: codingKey))) {
+                return value
+            }
+        }
+        catch { firstError = error }
+        
+        if contains(codingKey),
+           let value = try? decodeAnyIfPresent(type, forKey: codingKey) {
             return value
         }
         
@@ -594,6 +706,46 @@ public extension KeyMapper {
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
         }, decode: nil, decodeReference: { root, decoder, nonnullAll, throwsAll in
             if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        })
+    }
+    
+    convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decodeAny(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    
+    convenience init<Value, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decodeAny(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    
+    convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: nil, decodeReference: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decodeAny(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        })
+    }
+    
+    convenience init<Value, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: nil, decodeReference: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decodeAny(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
                 root[keyPath: keyPath] = value
             }
         })
