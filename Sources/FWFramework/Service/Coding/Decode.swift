@@ -146,12 +146,12 @@ extension Optional {
     }
 }
 
-// MARK: - SafeType
-public protocol SafeType {
+// MARK: - ObjectType
+public protocol ObjectType {
     init()
 }
 
-public protocol BasicType: SafeType {
+public protocol BasicType: ObjectType {
     var isNotEmpty: Bool { get }
 }
 
@@ -159,14 +159,14 @@ extension BasicType where Self: Equatable {
     public var isNotEmpty: Bool { return self != .init() }
 }
 
-extension Optional where Wrapped: SafeType {
+extension Optional where Wrapped: ObjectType {
     public var safeValue: Wrapped { if let value = self { return value } else { return .init() } }
 }
 extension Optional where Wrapped: BasicType {
     public var isNotEmpty: Bool { if let value = self { return value.isNotEmpty } else { return false } }
 }
 
-// MARK: - SafeType+Extension
+// MARK: - ObjectType+Extension
 extension Int: BasicType {}
 extension Int8: BasicType {}
 extension Int16: BasicType {}

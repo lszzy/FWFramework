@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - AnyModel
 /// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel，可扩展
-public protocol AnyModel: SafeType {
+public protocol AnyModel: ObjectType {
     /// 从Object解码成可选Model，当object为字典和数组时支持具体路径
     static func decodeModel(from object: Any?, designatedPath: String?) -> Self?
     /// 从Object安全解码成Model，当object为字典和数组时支持具体路径
