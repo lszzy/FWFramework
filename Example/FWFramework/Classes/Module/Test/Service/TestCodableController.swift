@@ -13,6 +13,9 @@ struct TestCodableModel: CodableModel {
     var name: String = ""
     var age: Int?
     var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -39,6 +42,8 @@ struct TestCodableModel: CodableModel {
             age = Int(string) ?? .zero
         }
         amount = try decoder.decode("amount")
+        alias = try decoder.decode("alias_key")
+        camelName = try decoder.decode("camel_name")
         any = try decoder.decodeAnyIf("any")
         dict = try decoder.decodeIf("dict")
         array = try decoder.decodeIf("array")
@@ -70,6 +75,8 @@ struct TestCodableModel: CodableModel {
         try encoder.encode(name, for: "name")
         try encoder.encodeIf(age, for: "age")
         try encoder.encode(amount, for: "amount")
+        try encoder.encode(alias, for: "alias_key")
+        try encoder.encode(camelName, for: "camel_name")
         try encoder.encodeAnyIf(any, for: "any")
         try encoder.encodeIf(dict, for: "dict")
         try encoder.encodeIf(array, for: "array")
@@ -102,6 +109,9 @@ struct TestJSONCodableModel: CodableModel {
     var name: String = ""
     var age: Int?
     var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -124,6 +134,8 @@ struct TestJSONCodableModel: CodableModel {
         name = try decoder.value("name")
         age = try decoder.valueIf("age")
         amount = try decoder.value("amount")
+        alias = try decoder.value("alias_key")
+        camelName = try decoder.value("camel_name")
         any = try decoder.valueAnyIf("any")
         dict = try decoder.valueIf("dict")
         array = try decoder.valueIf("array")
@@ -155,6 +167,8 @@ struct TestJSONCodableModel: CodableModel {
         try encoder.encode(name, for: "name")
         try encoder.encodeIf(age, for: "age")
         try encoder.encode(amount, for: "amount")
+        try encoder.encode(alias, for: "alias_key")
+        try encoder.encode(camelName, for: "camel_name")
         try encoder.encodeAnyIf(any, for: "any")
         try encoder.encodeIf(dict, for: "dict")
         try encoder.encodeIf(array, for: "array")
@@ -187,6 +201,11 @@ struct TestAutoCodableModel: CodableModel, AutoCodable {
     @CodableValue var name: String = ""
     @CodableValue var age: Int?
     @CodableValue var amount: Float = 0
+    @CodableValue("alias_key")
+    var alias: String = ""
+    var except: String = ""
+    @CodableValue("camel_name")
+    var camelName: String = ""
     @CodableValue var any: Any?
     @CodableValue var dict: [AnyHashable: Any]?
     @CodableValue var array: [Any]?
@@ -218,6 +237,9 @@ struct TestJSONModel: JSONModel {
     var name: String = ""
     var age: Int?
     var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -232,6 +254,16 @@ struct TestJSONModel: JSONModel {
     var enum1: TestJSONModelEnum = .unknown
     var enum2: TestJSONModelEnum = .unknown
     var enum3: TestJSONModelEnum?
+    
+    mutating func mapping(mapper: HelpingMapper) {
+        mapper >>> self.except
+        
+        mapper <<<
+            self.alias <-- "alias_key"
+        
+        mapper <<<
+            self.camelName <-- "camel_name"
+    }
 }
 
 struct TestJSONSubModel: JSONModel {
@@ -288,6 +320,9 @@ extension TestCodableController {
             "name": "name",
             "age": "2",
             "amount": 100,
+            "alias_key": "alias",
+            "except": "except",
+            "camel_name": "camelName",
             "any": "any",
             "dict": [:],
             "array": [1],
@@ -317,6 +352,9 @@ extension TestCodableController {
                 (model?.name == "name"),
                 (model?.age == 2),
                 (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -350,6 +388,9 @@ extension TestCodableController {
                 (model?.name == "name"),
                 (model?.age == 2),
                 (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -383,6 +424,9 @@ extension TestCodableController {
                 (model?.name == "name"),
                 (model?.age == 2),
                 (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -416,6 +460,9 @@ extension TestCodableController {
                 (model?.name == "name"),
                 (model?.age == 2),
                 (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
