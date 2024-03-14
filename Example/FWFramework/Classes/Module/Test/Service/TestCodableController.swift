@@ -23,7 +23,7 @@ struct TestCodableModel: CodableModel {
     var optional2: String = ""
     var optional3: String? = "default"
     var optional4: Int?
-    var optional5: Int? = 5
+    var optional5: Int? = 0
     var sub: TestCodableSubModel?
     var sub2: TestCodableSubModel = .init()
     var subs: [TestCodableSubModel] = []
@@ -54,10 +54,8 @@ struct TestCodableModel: CodableModel {
         if let value3 = try decoder.decodeIf("optional3", as: String.self) {
             optional3 = value3
         }
-        optional4 = try decoder.decodeIf("optional4", as: Int?.self) ?? nil
-        if let value5 = try decoder.decodeIf("optional5", as: Int.self) {
-            optional5 = value5
-        }
+        optional4 = try? decoder.decodeIf("optional4", as: Int?.self) ?? nil
+        optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
         sub = try decoder.decodeIf("sub")
         if let val2 = try decoder.decodeIf("sub2", as: TestCodableSubModel.self) {
             sub2 = val2
@@ -119,7 +117,7 @@ struct TestJSONCodableModel: CodableModel {
     var optional2: String = ""
     var optional3: String? = "default"
     var optional4: Int?
-    var optional5: Int? = 5
+    var optional5: Int? = 0
     var sub: TestJSONCodableSubModel?
     var sub2: TestJSONCodableSubModel = .init()
     var subs: [TestJSONCodableSubModel] = []
@@ -146,10 +144,8 @@ struct TestJSONCodableModel: CodableModel {
         if let value3 = try decoder.valueIf("optional3", as: String.self) {
             optional3 = value3
         }
-        optional4 = try decoder.valueIf("optional4", as: Int?.self) ?? nil
-        if let value5 = try decoder.valueIf("optional5", as: Int.self) {
-            optional5 = value5
-        }
+        optional4 = try? decoder.valueIf("optional4", as: Int?.self) ?? nil
+        optional5 = try decoder.valueIf("optional5", as: Int?.self) ?? nil
         sub = try decoder.valueIf("sub")
         if let val2 = try decoder.valueIf("sub2", as: TestJSONCodableSubModel.self) {
             sub2 = val2
@@ -213,7 +209,7 @@ struct TestAutoCodableModel: CodableModel, AutoCodable {
     @CodableValue var optional2: String = ""
     @CodableValue var optional3: String? = "default"
     @CodableValue var optional4: Int?
-    @CodableValue var optional5: Int? = 5
+    @CodableValue var optional5: Int? = 0
     @CodableValue var sub: TestAutoCodableSubModel?
     @CodableValue var sub2: TestAutoCodableSubModel = .init()
     @CodableValue var subs: [TestAutoCodableSubModel] = []
@@ -247,7 +243,7 @@ struct TestJSONModel: JSONModel {
     var optional2: String = ""
     var optional3: String? = "default"
     var optional4: Int?
-    var optional5: Int? = 5
+    var optional5: Int? = 0
     var sub: TestJSONSubModel?
     var sub2: TestJSONSubModel = .init()
     var subs: [TestJSONSubModel] = []
@@ -328,6 +324,7 @@ extension TestCodableController {
             "array": [1],
             "optional1": NSNull(),
             "optional4": [:],
+            "optional5": 5,
             "sub": [
                 "id": 2,
                 "name": "sub",
