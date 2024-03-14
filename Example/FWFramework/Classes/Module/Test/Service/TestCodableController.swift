@@ -270,11 +270,9 @@ struct TestMappableCodableModel: CodableModel, MappableCodable {
         KeyMapper(\.amount, to: "amount"),
         KeyMapper(\.alias, to: "alias_key"),
         KeyMapper(\.camelName, to: "camel_name"),
-        /*
         KeyMapper(\.any, to: "any"),
         KeyMapper(\.dict, to: "dict"),
         KeyMapper(\.array, to: "array"),
-         */
         KeyMapper(\.optional1, to: "optional1"),
         KeyMapper(\.optional2, to: "optional2"),
         KeyMapper(\.optional3, to: "optional3"),
@@ -552,11 +550,9 @@ extension TestCodableController {
                 (model?.alias == "alias"),
                 (model?.except == ""),
                 (model?.camelName == "camelName"),
-                /*
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
-                 */
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
