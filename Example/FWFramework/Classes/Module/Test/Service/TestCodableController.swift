@@ -120,13 +120,13 @@ struct TestJSONCodableModel: CodableModel {
     init() {}
     
     init(from decoder: any Decoder) throws {
-        id = try decoder.json("id").intValue
+        id = try decoder.value("id")
         name = try decoder.value("name")
-        age = try decoder.jsonIf("age")?.int
+        age = try decoder.valueIf("age")
         amount = try decoder.value("amount")
-        any = try decoder.jsonIf("any")?.object
-        dict = try decoder.jsonIf("dict")?.dictionaryObject
-        array = try decoder.jsonIf("array")?.arrayObject
+        any = try decoder.valueAnyIf("any")
+        dict = try decoder.valueIf("dict")
+        array = try decoder.valueIf("array")
         optional1 = try decoder.valueIf("optional1") ?? ""
         if let value2 = try decoder.valueIf("optional2", as: String.self) {
             optional2 = value2
@@ -142,7 +142,7 @@ struct TestJSONCodableModel: CodableModel {
         if let val2 = try decoder.valueIf("sub2", as: TestJSONCodableSubModel.self) {
             sub2 = val2
         }
-        subs = try decoder.decodeIf("subs") ?? []
+        subs = try decoder.valueIf("subs") ?? []
         enum1 = try decoder.value("enum1")
         if let val2 = try decoder.valueIf("enum2", as: TestJSONCodableEnum.self) {
             enum2 = val2
@@ -151,7 +151,24 @@ struct TestJSONCodableModel: CodableModel {
     }
     
     func encode(to encoder: any Encoder) throws {
-        
+        try encoder.encode(id, for: "id")
+        try encoder.encode(name, for: "name")
+        try encoder.encodeIf(age, for: "age")
+        try encoder.encode(amount, for: "amount")
+        try encoder.encodeAnyIf(any, for: "any")
+        try encoder.encodeIf(dict, for: "dict")
+        try encoder.encodeIf(array, for: "array")
+        try encoder.encodeIf(optional1, for: "optional1")
+        try encoder.encodeIf(optional2, for: "optional2")
+        try encoder.encodeIf(optional3, for: "optional3")
+        try encoder.encodeIf(optional4, for: "optional4")
+        try encoder.encodeIf(optional5, for: "optional5")
+        try encoder.encodeIf(sub, for: "sub")
+        try encoder.encodeIf(sub2, for: "sub2")
+        try encoder.encodeIf(subs, for: "subs")
+        try encoder.encode(enum1, for: "enum1")
+        try encoder.encodeIf(enum2, for: "enum2")
+        try encoder.encodeIf(enum3, for: "enum3")
     }
 }
 
@@ -255,8 +272,8 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
-            ["JSONCodable", "onJSONCodable"],
-            ["AutoCodable", "onAutoCodable"],
+            ["CodableModel+JSON", "onJSONCodableModel"],
+            ["CodableModel+AutoCodable", "onAutoCodableModel"],
             ["JSONModel", "onJSONModel"],
         ])
     }
@@ -325,7 +342,7 @@ extension TestCodableController {
         app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
     }
     
-    @objc func onJSONCodable() {
+    @objc func onJSONCodableModel() {
         func testModel(_ model: TestJSONCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
@@ -358,7 +375,7 @@ extension TestCodableController {
         app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(tests.count))" : "❌ 测试失败 (\(tests.filter({ !$0 }).count))")
     }
     
-    @objc func onAutoCodable() {
+    @objc func onAutoCodableModel() {
         func testModel(_ model: TestAutoCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
