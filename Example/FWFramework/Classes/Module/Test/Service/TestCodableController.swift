@@ -33,6 +33,36 @@ struct TestCodableModel: CodableModel {
     init(from decoder: any Decoder) throws {
         id = try decoder.decode("id")
         name = try decoder.decode("name")
+        if let int = try? decoder.decodeIf("age", as: Int.self) {
+            age = int
+        } else if let string = try? decoder.decodeIf("age", as: String.self) {
+            age = Int(string) ?? .zero
+        }
+        amount = try decoder.decode("amount")
+        any = try decoder.jsonIf("any")?.object
+        dict = try decoder.jsonIf("dict")?.dictionaryObject
+        array = try decoder.jsonIf("array")?.arrayObject
+        optional1 = try decoder.decodeIf("option1") ?? ""
+        if let value2 = try decoder.decodeIf("option2", as: String.self) {
+            optional2 = value2
+        }
+        if let value3 = try decoder.decodeIf("option3", as: String.self) {
+            optional3 = value3
+        }
+        optional4 = try decoder.decodeIf("option4", as: Int?.self) ?? nil
+        if let value5 = try decoder.decodeIf("option5", as: Int.self) {
+            optional5 = value5
+        }
+        sub = try decoder.decodeIf("sub")
+        if let val2 = try decoder.decodeIf("sub2", as: TestCodableSubModel.self) {
+            sub2 = val2
+        }
+        subs = try decoder.decodeIf("subs") ?? []
+        enum1 = try decoder.decode("enum1")
+        if let val2 = try? decoder.decodeIf("enum2", as: TestCodableEnum.self) {
+            enum2 = val2
+        }
+        enum3 = try? decoder.decodeIf("enum3")
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -88,7 +118,7 @@ struct TestJSONCodableModel: CodableModel {
         if let value3 = try decoder.valueIf("option3", as: String.self) {
             optional3 = value3
         }
-        optional4 = try decoder.valueIf("option4")
+        optional4 = try decoder.valueIf("option4", as: Int?.self) ?? nil
         if let value5 = try decoder.valueIf("option5", as: Int.self) {
             optional5 = value5
         }
