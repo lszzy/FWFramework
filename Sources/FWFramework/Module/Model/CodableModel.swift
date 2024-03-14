@@ -121,7 +121,7 @@ extension CodableValue: DecodableAnyPropertyWrapper {
 }
 
 // MARK: - AutoCodable
-public protocol AutoCodable: Codable, SafeType {}
+public protocol AutoCodable: Codable, ObjectType {}
 
 public extension AutoCodable {
     func encode(to encoder: Encoder) throws {
@@ -628,7 +628,7 @@ private func deepUnwrap(_ any: Any) -> Any? {
 }
 
 // MARK: - MappableCodable
-public protocol MappableCodable: Codable, SafeType {
+public protocol MappableCodable: Codable, ObjectType {
     associatedtype Root = Self where Root: MappableCodable
     
     static var keyMapping: [KeyMapper<Root>] { get }
