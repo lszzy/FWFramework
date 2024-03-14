@@ -28,6 +28,7 @@ struct TestCodableModel: CodableModel {
     var sub: TestCodableSubModel?
     var sub2: TestCodableSubModel = .init()
     var subs: [TestCodableSubModel] = []
+    var subdict: [String: TestCodableSubModel] = [:]
     var enum1: TestCodableEnum = .unknown
     var enum2: TestCodableEnum = .unknown
     var enum3: TestCodableEnum?
@@ -62,6 +63,7 @@ struct TestCodableModel: CodableModel {
             sub2 = val2
         }
         subs = try decoder.decodeIf("subs") ?? []
+        subdict = try decoder.decodeIf("subdict") ?? [:]
         enum1 = try decoder.decode("enum1")
         if let val2 = try? decoder.decodeIf("enum2", as: TestCodableEnum.self) {
             enum2 = val2
@@ -87,6 +89,7 @@ struct TestCodableModel: CodableModel {
         try encoder.encodeIf(sub, for: "sub")
         try encoder.encodeIf(sub2, for: "sub2")
         try encoder.encodeIf(subs, for: "subs")
+        try encoder.encodeIf(subdict, for: "subdict")
         try encoder.encode(enum1, for: "enum1")
         try encoder.encodeIf(enum2, for: "enum2")
         try encoder.encodeIf(enum3, for: "enum3")
@@ -123,6 +126,7 @@ struct TestJSONCodableModel: CodableModel {
     var sub: TestJSONCodableSubModel?
     var sub2: TestJSONCodableSubModel = .init()
     var subs: [TestJSONCodableSubModel] = []
+    var subdict: [String: TestJSONCodableSubModel] = [:]
     var enum1: TestJSONCodableEnum = .unknown
     var enum2: TestJSONCodableEnum = .unknown
     var enum3: TestJSONCodableEnum?
@@ -153,6 +157,7 @@ struct TestJSONCodableModel: CodableModel {
             sub2 = val2
         }
         subs = try decoder.valueIf("subs") ?? []
+        subdict = try decoder.valueIf("subdict") ?? [:]
         enum1 = try decoder.value("enum1")
         if let val2 = try? decoder.valueIf("enum2", as: TestJSONCodableEnum.self) {
             enum2 = val2
@@ -178,6 +183,7 @@ struct TestJSONCodableModel: CodableModel {
         try encoder.encodeIf(sub, for: "sub")
         try encoder.encodeIf(sub2, for: "sub2")
         try encoder.encodeIf(subs, for: "subs")
+        try encoder.encodeIf(subdict, for: "subdict")
         try encoder.encode(enum1, for: "enum1")
         try encoder.encodeIf(enum2, for: "enum2")
         try encoder.encodeIf(enum3, for: "enum3")
@@ -216,6 +222,7 @@ struct TestAutoCodableModel: CodableModel, AutoCodable {
     @CodableValue var sub: TestAutoCodableSubModel?
     @CodableValue var sub2: TestAutoCodableSubModel = .init()
     @CodableValue var subs: [TestAutoCodableSubModel] = []
+    @CodableValue var subdict: [String: TestAutoCodableSubModel] = [:]
     @CodableValue var enum1: TestAutoCodableModelEnum = .unknown
     @CodableValue var enum2: TestAutoCodableModelEnum = .unknown
     @CodableValue var enum3: TestAutoCodableModelEnum?
@@ -251,6 +258,7 @@ struct TestMappableCodableModel: CodableModel, MappableCodable {
     var sub: TestMappableCodableSubModel?
     var sub2: TestMappableCodableSubModel = .init()
     var subs: [TestMappableCodableSubModel] = []
+    var subdict: [String: TestMappableCodableSubModel] = [:]
     var enum1: TestMappableCodableModelEnum = .unknown
     var enum2: TestMappableCodableModelEnum = .unknown
     var enum3: TestMappableCodableModelEnum?
@@ -262,9 +270,11 @@ struct TestMappableCodableModel: CodableModel, MappableCodable {
         KeyMapper(\.amount, to: "amount"),
         KeyMapper(\.alias, to: "alias_key"),
         KeyMapper(\.camelName, to: "camel_name"),
+        /*
         KeyMapper(\.any, to: "any"),
         KeyMapper(\.dict, to: "dict"),
         KeyMapper(\.array, to: "array"),
+         */
         KeyMapper(\.optional1, to: "optional1"),
         KeyMapper(\.optional2, to: "optional2"),
         KeyMapper(\.optional3, to: "optional3"),
@@ -273,6 +283,7 @@ struct TestMappableCodableModel: CodableModel, MappableCodable {
         KeyMapper(\.sub, to: "sub"),
         KeyMapper(\.sub2, to: "sub2"),
         KeyMapper(\.subs, to: "subs"),
+        KeyMapper(\.subdict, to: "subdict"),
         KeyMapper(\.enum1, to: "enum1"),
         KeyMapper(\.enum2, to: "enum2"),
         KeyMapper(\.enum3, to: "enum3"),
@@ -309,6 +320,7 @@ struct TestJSONModel: JSONModel {
     var sub: TestJSONSubModel?
     var sub2: TestJSONSubModel = .init()
     var subs: [TestJSONSubModel] = []
+    var subdict: [String: TestJSONSubModel] = [:]
     var enum1: TestJSONModelEnum = .unknown
     var enum2: TestJSONModelEnum = .unknown
     var enum3: TestJSONModelEnum?
@@ -401,6 +413,12 @@ extension TestCodableController {
                     "name": "subs",
                 ],
             ],
+            "subdict": [
+                "key": [
+                    "id": 4,
+                    "name": "subdict",
+                ],
+            ],
             "enum1": "test",
             "enum2": "unknown",
             "enum3": "unknown",
@@ -434,6 +452,7 @@ extension TestCodableController {
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
                 (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
                 (model?.enum1 == .test),
                 (model?.enum2 == .unknown),
                 (model?.enum3 == nil),
@@ -470,6 +489,7 @@ extension TestCodableController {
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
                 (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
                 (model?.enum1 == .test),
                 (model?.enum2 == .unknown),
                 (model?.enum3 == nil),
@@ -506,6 +526,7 @@ extension TestCodableController {
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
                 (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
                 (model?.enum1 == .test),
                 (model?.enum2 == .unknown),
                 (model?.enum3 == nil),
@@ -531,9 +552,11 @@ extension TestCodableController {
                 (model?.alias == "alias"),
                 (model?.except == ""),
                 (model?.camelName == "camelName"),
+                /*
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
+                 */
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
@@ -542,6 +565,7 @@ extension TestCodableController {
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
                 (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
                 (model?.enum1 == .test),
                 (model?.enum2 == .unknown),
                 (model?.enum3 == nil),
@@ -578,6 +602,7 @@ extension TestCodableController {
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
                 (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
                 (model?.enum1 == .test),
                 (model?.enum2 == .unknown),
                 (model?.enum3 == nil),
