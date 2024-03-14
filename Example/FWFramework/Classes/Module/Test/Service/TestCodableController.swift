@@ -8,6 +8,7 @@
 
 import FWFramework
 
+// MARK: - TestCodableModel
 struct TestCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
@@ -102,6 +103,7 @@ enum TestCodableEnum: String, Codable {
     case unknown = ""
 }
 
+// MARK: - TestJSONCodableModel
 struct TestJSONCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
@@ -192,6 +194,7 @@ enum TestJSONCodableEnum: String, Codable {
     case unknown = ""
 }
 
+// MARK: - TestAutoCodableModel
 struct TestAutoCodableModel: CodableModel, AutoCodable {
     @CodableValue var id: Int = 0
     @CodableValue var name: String = ""
@@ -228,6 +231,65 @@ enum TestAutoCodableModelEnum: String, Codable {
     case unknown = ""
 }
 
+// MARK: - TestMappableCodableModel
+struct TestMappableCodableModel: CodableModel, MappableCodable {
+    var id: Int = 0
+    var name: String = ""
+    var age: Int?
+    var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
+    var any: Any?
+    var dict: [AnyHashable: Any]?
+    var array: [Any]?
+    var optional1: String = ""
+    var optional2: String = ""
+    var optional3: String? = "default"
+    var optional4: Int?
+    var optional5: Int? = 0
+    var sub: TestMappableCodableSubModel?
+    var sub2: TestMappableCodableSubModel = .init()
+    var subs: [TestMappableCodableSubModel] = []
+    var enum1: TestMappableCodableModelEnum = .unknown
+    var enum2: TestMappableCodableModelEnum = .unknown
+    var enum3: TestMappableCodableModelEnum?
+    
+    static let keyMapping: [KeyMapper<Self>] = [
+        KeyMapper(\.id, to: "id"),
+        KeyMapper(\.name, to: "name"),
+        KeyMapper(\.age, to: "age"),
+        KeyMapper(\.amount, to: "amount"),
+        KeyMapper(\.alias, to: "alias_key"),
+        KeyMapper(\.camelName, to: "camel_name"),
+        KeyMapper(\.any, to: "any"),
+        KeyMapper(\.dict, to: "dict"),
+        KeyMapper(\.array, to: "array"),
+        KeyMapper(\.optional1, to: "optional1"),
+        KeyMapper(\.optional2, to: "optional2"),
+        KeyMapper(\.optional3, to: "optional3"),
+        KeyMapper(\.optional4, to: "optional4"),
+        KeyMapper(\.optional5, to: "optional5"),
+        KeyMapper(\.sub, to: "sub"),
+        KeyMapper(\.sub2, to: "sub2"),
+        KeyMapper(\.subs, to: "subs"),
+        KeyMapper(\.enum1, to: "enum1"),
+        KeyMapper(\.enum2, to: "enum2"),
+        KeyMapper(\.enum3, to: "enum3"),
+    ]
+}
+
+struct TestMappableCodableSubModel: CodableModel {
+    var id: Int = 0
+    var name: String?
+}
+
+enum TestMappableCodableModelEnum: String, Codable {
+    case test = "test"
+    case unknown = ""
+}
+
+// MARK: - TestJSONModel
 struct TestJSONModel: JSONModel {
     var id: Int = 0
     var name: String = ""
@@ -272,6 +334,7 @@ enum TestJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
+// MARK: - TestCodableController
 class TestCodableController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [String]
@@ -304,6 +367,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["CodableModel", "onCodableModel"],
             ["CodableModel+JSON", "onJSONCodableModel"],
             ["CodableModel+AutoCodable", "onAutoCodableModel"],
+            ["CodableModel+MappableCodable", "onMappableCodableModel"],
             ["JSONModel", "onJSONModel"],
         ])
     }
@@ -452,6 +516,42 @@ extension TestCodableController {
         var model: TestAutoCodableModel? = TestAutoCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestAutoCodableModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        showResults(tests)
+    }
+    
+    @objc func onMappableCodableModel() {
+        func testModel(_ model: TestMappableCodableModel?, encode: Bool = false) -> [Bool] {
+            let results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == nil),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
+        
+        var model: TestMappableCodableModel? = TestMappableCodableModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestMappableCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
