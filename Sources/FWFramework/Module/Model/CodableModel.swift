@@ -145,17 +145,13 @@ extension CodableValue: DecodableAnyPropertyWrapper {
 }
 
 // MARK: - AutoCodable
-public protocol AutoEncodable: Encodable {}
-public protocol AutoDecodable: Decodable { init() }
-public typealias AutoCodable = AutoEncodable & AutoDecodable
+public protocol AutoCodable: Codable, SafeType {}
 
-public extension AutoEncodable {
+public extension AutoCodable {
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, nonnull: false, throws: false)
     }
-}
-
-public extension AutoDecodable {
+    
     init(from decoder: Decoder) throws {
         self.init()
         try decode(from: decoder, nonnull: false, throws: false)
@@ -541,4 +537,89 @@ private func deepUnwrap(_ any: Any) -> Any? {
         return any.deepWrapped
     }
     return any
+}
+
+// MARK: - MappableCodable
+public protocol MappableCodable: Codable, SafeType {
+    associatedtype Root = Self where Root: MappableCodable
+    
+    static var keyMapping: [KeyMapper<Root>] { get }
+}
+
+public extension MappableCodable where Root == Self {
+    func encode(to encoder: Encoder) throws {
+        try encode(to: encoder, with: Self.keyMapping)
+    }
+    
+    init(from decoder: Decoder) throws {
+        self.init()
+        try decode(from: decoder, with: Self.keyMapping)
+    }
+}
+
+public extension MappableCodable {
+    func encode(to encoder: Encoder, with keyMapping: [KeyMapper<Self>], nonnull: Bool = false, throws: Bool = false) throws {
+        try keyMapping.forEach { try $0.encode(self, encoder, nonnull, `throws`) }
+    }
+    
+    mutating func decode(from decoder: Decoder, with keyMapping: [KeyMapper<Self>], nonnull: Bool = false, throws: Bool = false) throws {
+        try keyMapping.forEach { try $0.decode?(&self, decoder, nonnull, `throws`) }
+    }
+    
+    func decodeReference(from decoder: Decoder, with keyMapping: [KeyMapper<Self>], nonnull: Bool = false, throws: Bool = false) throws {
+        try keyMapping.forEach { try $0.decodeReference?(self, decoder, nonnull, `throws`) }
+    }
+}
+
+public final class KeyMapper<Root: Codable> {
+    fileprivate let encode: (_ root: Root, _ encoder: Encoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void
+    fileprivate let decode: ((_ root: inout Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void)?
+    fileprivate let decodeReference: ((_ root: Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void)?
+    private init(encode: @escaping (_ root: Root, _ encoder: Encoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void,
+                 decode: ((_ root: inout Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void)?,
+                 decodeReference: ((_ root: Root, _ decoder: Decoder, _ nonnullAll: Bool, _ throwsAll: Bool) throws -> Void)?) {
+        (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
+    }
+}
+
+public extension KeyMapper {
+    convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    
+    convenience init<Value: Codable, Key: CodingKey>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    
+    convenience init<Value: Codable>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: nil, decodeReference: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        })
+    }
+    
+    convenience init<Value: Codable, Key: CodingKey>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: Key ..., nonnull: Bool? = nil, throws: Bool? = nil) {
+        self.init(encode: { root, encoder, nonnullAll, throwsAll in
+            try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll)
+        }, decode: nil, decodeReference: { root, decoder, nonnullAll, throwsAll in
+            if let value: Value = try decoder.decode(codingKeys, nonnull: nonnull ?? nonnullAll, throws: `throws` ?? throwsAll) {
+                root[keyPath: keyPath] = value
+            }
+        })
+    }
 }
