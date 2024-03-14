@@ -99,10 +99,10 @@ extension CodableValue: EncodableAnyPropertyWrapper {
             let key = AnyCodingKey(label)
             if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
                 var container = encoder.container(keyedBy: AnyCodingKey.self)
-                try container.encodeIfPresent(wrappedValue as? [AnyHashable: Any], forKey: key)
+                try container.encodeAnyIfPresent(wrappedValue as? [AnyHashable: Any], forKey: key)
             } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
                 var container = encoder.container(keyedBy: AnyCodingKey.self)
-                try container.encodeIfPresent(wrappedValue as? [Any], forKey: key)
+                try container.encodeAnyIfPresent(wrappedValue as? [Any], forKey: key)
             } else {
                 var container = encoder.container(keyedBy: AnyCodingKey.self)
                 try container.encodeAnyIfPresent(wrappedValue, forKey: key)
@@ -126,12 +126,12 @@ extension CodableValue: DecodableAnyPropertyWrapper {
             let key = AnyCodingKey(label)
             if (t is [AnyHashable: Any].Type || t is [AnyHashable: Any?].Type || t is [AnyHashable: Any]?.Type || t is [AnyHashable: Any?]?.Type) {
                 let container = try decoder.container(keyedBy: AnyCodingKey.self)
-                if let value = try container.decodeIfPresent([AnyHashable: Any].self, forKey: key) as? Value {
+                if let value = try container.decodeAnyIfPresent([AnyHashable: Any].self, forKey: key) as? Value {
                     wrappedValue = value
                 }
             } else if (t is [Any].Type || t is [Any?].Type || t is [Any]?.Type || t is [Any?]?.Type) {
                 let container = try decoder.container(keyedBy: AnyCodingKey.self)
-                if let value = try container.decodeIfPresent([Any].self, forKey: key) as? Value {
+                if let value = try container.decodeAnyIfPresent([Any].self, forKey: key) as? Value {
                     wrappedValue = value
                 }
             } else {

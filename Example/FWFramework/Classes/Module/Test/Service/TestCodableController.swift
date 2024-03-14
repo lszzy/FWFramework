@@ -47,8 +47,8 @@ struct TestCodableModel: CodableModel {
         alias = try decoder.decode("alias_key")
         camelName = try decoder.decode("camel_name")
         any = try decoder.decodeAnyIf("any")
-        dict = try decoder.decodeIf("dict")
-        array = try decoder.decodeIf("array")
+        dict = try decoder.decodeAnyIf("dict")
+        array = try decoder.decodeAnyIf("array")
         optional1 = try decoder.decodeIf("optional1") ?? ""
         if let value2 = try decoder.decodeIf("optional2", as: String.self) {
             optional2 = value2
@@ -79,8 +79,8 @@ struct TestCodableModel: CodableModel {
         try encoder.encode(alias, for: "alias_key")
         try encoder.encode(camelName, for: "camel_name")
         try encoder.encodeAnyIf(any, for: "any")
-        try encoder.encodeIf(dict, for: "dict")
-        try encoder.encodeIf(array, for: "array")
+        try encoder.encodeAnyIf(dict, for: "dict")
+        try encoder.encodeAnyIf(array, for: "array")
         try encoder.encodeIf(optional1, for: "optional1")
         try encoder.encodeIf(optional2, for: "optional2")
         try encoder.encodeIf(optional3, for: "optional3")
@@ -173,8 +173,8 @@ struct TestJSONCodableModel: CodableModel {
         try encoder.encode(alias, for: "alias_key")
         try encoder.encode(camelName, for: "camel_name")
         try encoder.encodeAnyIf(any, for: "any")
-        try encoder.encodeIf(dict, for: "dict")
-        try encoder.encodeIf(array, for: "array")
+        try encoder.encodeAnyIf(dict, for: "dict")
+        try encoder.encodeAnyIf(array, for: "array")
         try encoder.encodeIf(optional1, for: "optional1")
         try encoder.encodeIf(optional2, for: "optional2")
         try encoder.encodeIf(optional3, for: "optional3")
