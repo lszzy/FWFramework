@@ -39,9 +39,9 @@ struct TestCodableModel: CodableModel {
             age = Int(string) ?? .zero
         }
         amount = try decoder.decode("amount")
-        any = try decoder.jsonIf("any")?.object
-        dict = try decoder.jsonIf("dict")?.dictionaryObject
-        array = try decoder.jsonIf("array")?.arrayObject
+        any = try decoder.decodeAnyIf("any")
+        dict = try decoder.decodeIf("dict")
+        array = try decoder.decodeIf("array")
         optional1 = try decoder.decodeIf("option1") ?? ""
         if let value2 = try decoder.decodeIf("option2", as: String.self) {
             optional2 = value2
