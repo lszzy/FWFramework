@@ -136,6 +136,7 @@ public extension String {
 
 // MARK: - Decoder+AnyDecoder
 extension Decoder {
+    // MARK: - Decodable
     public func decodeSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
         let container = try singleValueContainer()
         return try container.decode(type)
@@ -149,7 +150,7 @@ extension Decoder {
         let container = try container(keyedBy: K.self)
         return try container.decode(type, forKey: key)
     }
-
+    
     public func decodeIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
         return try decodeIf(AnyCodingKey(key), as: type)
     }
@@ -158,7 +159,63 @@ extension Decoder {
         let container = try container(keyedBy: K.self)
         return try container.decodeIfPresent(type, forKey: key)
     }
+    
+    // MARK: - Any
+    public func decode(_ key: String, as type: [Any].Type = [Any].self) throws -> [Any] {
+        return try decode(AnyCodingKey(key), as: type)
+    }
+    
+    public func decode<K: CodingKey>(_ key: K, as type: [Any].Type = [Any].self) throws -> [Any] {
+        let container = try container(keyedBy: K.self)
+        return try container.decode([Any].self, forKey: key)
+    }
+    
+    public func decode(_ key: String, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any] {
+        return try decode(AnyCodingKey(key), as: type)
+    }
+    
+    public func decode<K: CodingKey>(_ key: K, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any] {
+        let container = try container(keyedBy: K.self)
+        return try container.decode([AnyHashable: Any].self, forKey: key)
+    }
+    
+    public func decodeAny(_ key: String, as type: Any.Type = Any.self) throws -> Any {
+        return try decodeAny(AnyCodingKey(key), as: type)
+    }
+    
+    public func decodeAny<K: CodingKey>(_ key: K, as type: Any.Type = Any.self) throws -> Any {
+        let container = try container(keyedBy: K.self)
+        return try container.decodeAny(type, forKey: key)
+    }
+    
+    public func decodeIf(_ key: String, as type: [Any].Type = [Any].self) throws -> [Any]? {
+        return try decodeIf(AnyCodingKey(key), as: type)
+    }
+    
+    public func decodeIf<K: CodingKey>(_ key: K, as type: [Any].Type = [Any].self) throws -> [Any]? {
+        let container = try container(keyedBy: K.self)
+        return try container.decodeIfPresent([Any].self, forKey: key)
+    }
+    
+    public func decodeIf(_ key: String, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any]? {
+        return try decodeIf(AnyCodingKey(key), as: type)
+    }
+    
+    public func decodeIf<K: CodingKey>(_ key: K, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any]? {
+        let container = try container(keyedBy: K.self)
+        return try container.decodeIfPresent([AnyHashable: Any].self, forKey: key)
+    }
+    
+    public func decodeAnyIf(_ key: String, as type: Any.Type = Any.self) throws -> Any? {
+        return try decodeAnyIf(AnyCodingKey(key), as: type)
+    }
+    
+    public func decodeAnyIf<K: CodingKey>(_ key: K, as type: Any.Type = Any.self) throws -> Any? {
+        let container = try container(keyedBy: K.self)
+        return try container.decodeAnyIfPresent(type, forKey: key)
+    }
 
+    // MARK: - Date
     public func decode<F: AnyDateFormatter>(_ key: String, using formatter: F) throws -> Date {
         return try decode(AnyCodingKey(key), using: formatter)
     }
