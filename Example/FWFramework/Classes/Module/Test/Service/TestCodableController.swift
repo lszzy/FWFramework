@@ -12,6 +12,7 @@ struct TestCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
+    var amount: Float = 0
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -54,6 +55,7 @@ struct TestJSONCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
+    var amount: Float = 0
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -73,7 +75,33 @@ struct TestJSONCodableModel: CodableModel {
     
     init(from decoder: any Decoder) throws {
         id = try decoder.json("id").intValue
-        name = try decoder.json("name").stringValue
+        name = try decoder.value("name")
+        age = try decoder.jsonIf("age")?.int
+        amount = try decoder.value("amount")
+        any = try decoder.jsonIf("any")?.object
+        dict = try decoder.jsonIf("dict")?.dictionaryObject
+        array = try decoder.jsonIf("array")?.arrayObject
+        optional1 = try decoder.valueIf("option1") ?? ""
+        if let value2 = try decoder.valueIf("option2", as: String.self) {
+            optional2 = value2
+        }
+        if let value3 = try decoder.valueIf("option3", as: String.self) {
+            optional3 = value3
+        }
+        optional4 = try decoder.valueIf("option4")
+        if let value5 = try decoder.valueIf("option5", as: Int.self) {
+            optional5 = value5
+        }
+        sub = try decoder.valueIf("sub")
+        if let val2 = try decoder.valueIf("sub2", as: TestJSONCodableSubModel.self) {
+            sub2 = val2
+        }
+        subs = try decoder.decodeIf("subs") ?? []
+        enum1 = try decoder.value("enum1")
+        if let val2 = try decoder.valueIf("enum2", as: TestJSONCodableEnum.self) {
+            enum2 = val2
+        }
+        enum3 = try decoder.valueIf("enum3")
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -95,6 +123,7 @@ struct TestAutoCodableModel: CodableModel, AutoCodable {
     @CodableValue var id: Int = 0
     @CodableValue var name: String = ""
     @CodableValue var age: Int?
+    @CodableValue var amount: Float = 0
     @CodableValue var any: Any?
     @CodableValue var dict: [AnyHashable: Any]?
     @CodableValue var array: [Any]?
@@ -125,6 +154,7 @@ struct TestJSONModel: JSONModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
+    var amount: Float = 0
     var any: Any?
     var dict: [AnyHashable: Any]?
     var array: [Any]?
@@ -194,6 +224,7 @@ extension TestCodableController {
             "id": 1,
             "name": "name",
             "age": "2",
+            "amount": 100,
             "any": "any",
             "dict": [:],
             "array": [1],
@@ -222,6 +253,7 @@ extension TestCodableController {
                 (model?.id == 1),
                 (model?.name == "name"),
                 (model?.age == 2),
+                (model?.amount == 100.0),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -254,6 +286,7 @@ extension TestCodableController {
                 (model?.id == 1),
                 (model?.name == "name"),
                 (model?.age == 2),
+                (model?.amount == 100.0),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -286,6 +319,7 @@ extension TestCodableController {
                 (model?.id == 1),
                 (model?.name == "name"),
                 (model?.age == 2),
+                (model?.amount == 100.0),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
@@ -318,6 +352,7 @@ extension TestCodableController {
                 (model?.id == 1),
                 (model?.name == "name"),
                 (model?.age == 2),
+                (model?.amount == 100.0),
                 (String.app.safeString(model?.any) == "any"),
                 (model?.dict != nil),
                 ((model?.array as? [Int])?.first == 1),
