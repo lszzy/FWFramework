@@ -50,6 +50,7 @@ public extension Data {
 
 // MARK: - Encoder+AnyEncoder
 extension Encoder {
+    // MARK: - Encodable
     public func encodeSingle<T: Encodable>(_ value: T) throws {
         var container = singleValueContainer()
         try container.encode(value)
@@ -63,7 +64,72 @@ extension Encoder {
         var container = container(keyedBy: K.self)
         try container.encode(value, forKey: key)
     }
+    
+    public func encodeIf<T: Encodable>(_ value: T?, for key: String) throws {
+        try encodeIf(value, for: AnyCodingKey(key))
+    }
 
+    public func encodeIf<T: Encodable, K: CodingKey>(_ value: T?, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encodeIfPresent(value, forKey: key)
+    }
+    
+    // MARK: - Any
+    public func encode(_ value: [Any], for key: String) throws {
+        try encode(value, for: AnyCodingKey(key))
+    }
+
+    public func encode<K: CodingKey>(_ value: [Any], for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encode(value, forKey: key)
+    }
+    
+    public func encode(_ value: [AnyHashable: Any], for key: String) throws {
+        try encode(value, for: AnyCodingKey(key))
+    }
+
+    public func encode<K: CodingKey>(_ value: [AnyHashable: Any], for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encode(value, forKey: key)
+    }
+    
+    public func encodeAny(_ value: Any, for key: String) throws {
+        try encodeAny(value, for: AnyCodingKey(key))
+    }
+
+    public func encodeAny<K: CodingKey>(_ value: Any, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encodeAny(value, forKey: key)
+    }
+    
+    public func encodeIf(_ value: [Any]?, for key: String) throws {
+        try encodeIf(value, for: AnyCodingKey(key))
+    }
+
+    public func encodeIf<K: CodingKey>(_ value: [Any]?, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encodeIfPresent(value, forKey: key)
+    }
+    
+    public func encodeIf(_ value: [AnyHashable: Any]?, for key: String) throws {
+        try encodeIf(value, for: AnyCodingKey(key))
+    }
+
+    public func encodeIf<K: CodingKey>(_ value: [AnyHashable: Any]?, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encodeIfPresent(value, forKey: key)
+    }
+    
+    public func encodeAnyIf(_ value: Any?, for key: String) throws {
+        try encodeAnyIf(value, for: AnyCodingKey(key))
+    }
+
+    public func encodeAnyIf<K: CodingKey>(_ value: Any?, for key: K) throws {
+        var container = container(keyedBy: K.self)
+        try container.encodeAnyIfPresent(value, forKey: key)
+    }
+
+    // MARK: - Date
     public func encode<F: AnyDateFormatter>(_ date: Date, for key: String, using formatter: F) throws {
         try encode(date, for: AnyCodingKey(key), using: formatter)
     }
@@ -71,6 +137,15 @@ extension Encoder {
     public func encode<K: CodingKey, F: AnyDateFormatter>(_ date: Date, for key: K, using formatter: F) throws {
         let string = formatter.string(from: date)
         try encode(string, for: key)
+    }
+    
+    public func encodeIf<F: AnyDateFormatter>(_ date: Date?, for key: String, using formatter: F) throws {
+        try encodeIf(date, for: AnyCodingKey(key), using: formatter)
+    }
+
+    public func encodeIf<K: CodingKey, F: AnyDateFormatter>(_ date: Date?, for key: K, using formatter: F) throws {
+        let string = date != nil ? formatter.string(from: date!) : nil
+        try encodeIf(string, for: key)
     }
 }
 
@@ -287,7 +362,7 @@ extension Decoder {
     }
 
     public func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        if let value = value(with: try decodeIf(key, as: JSON.self) ?? JSON.null, as: type) {
+        if let json = try decodeIf(key, as: JSON.self), let value = value(with: json, as: type) {
             return value
         }
         return try decode(key, as: type)
@@ -365,6 +440,75 @@ extension Decoder {
         default:
             return nil
         }
+    }
+    
+    // MARK: - ValueAny
+    public func value(_ key: String, as type: [Any].Type = [Any].self) throws -> [Any] {
+        return try value(AnyCodingKey(key), as: type)
+    }
+
+    public func value<K: CodingKey>(_ key: K, as type: [Any].Type = [Any].self) throws -> [Any] {
+        if let value = (try decodeIf(key, as: JSON.self))?.arrayObject {
+            return value
+        }
+        return try decode(key, as: type)
+    }
+    
+    public func value(_ key: String, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any] {
+        return try value(AnyCodingKey(key), as: type)
+    }
+
+    public func value<K: CodingKey>(_ key: K, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any] {
+        if let value = (try decodeIf(key, as: JSON.self))?.dictionaryObject {
+            return value
+        }
+        return try decode(key, as: type)
+    }
+    
+    public func valueAny(_ key: String, as type: Any.Type = Any.self) throws -> Any {
+        return try valueAny(AnyCodingKey(key), as: type)
+    }
+
+    public func valueAny<K: CodingKey>(_ key: K, as type: Any.Type = Any.self) throws -> Any {
+        let value = (try decodeIf(key, as: JSON.self))?.object
+        if let value = value, !(value is NSNull) {
+            return value
+        }
+        return try decodeAny(key, as: type)
+    }
+
+    public func valueIf(_ key: String, as type: [Any].Type = [Any].self) throws -> [Any]? {
+        return try valueIf(AnyCodingKey(key), as: type)
+    }
+
+    public func valueIf<K: CodingKey>(_ key: K, as type: [Any].Type = [Any].self) throws -> [Any]? {
+        if let value = (try decodeIf(key, as: JSON.self))?.arrayObject {
+            return value
+        }
+        return try decodeIf(key, as: type)
+    }
+
+    public func valueIf(_ key: String, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any]? {
+        return try valueIf(AnyCodingKey(key), as: type)
+    }
+
+    public func valueIf<K: CodingKey>(_ key: K, as type: [AnyHashable: Any].Type = [AnyHashable: Any].self) throws -> [AnyHashable: Any]? {
+        if let value = (try decodeIf(key, as: JSON.self))?.dictionaryObject {
+            return value
+        }
+        return try decodeIf(key, as: type)
+    }
+
+    public func valueAnyIf(_ key: String, as type: Any.Type = Any.self) throws -> Any? {
+        return try valueAnyIf(AnyCodingKey(key), as: type)
+    }
+
+    public func valueAnyIf<K: CodingKey>(_ key: K, as type: Any.Type = Any.self) throws -> Any? {
+        let value = (try decodeIf(key, as: JSON.self))?.object
+        if let value = value, !(value is NSNull) {
+            return value
+        }
+        return try decodeAnyIf(key, as: type)
     }
 }
 
