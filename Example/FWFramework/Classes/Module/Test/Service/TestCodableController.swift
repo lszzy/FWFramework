@@ -141,8 +141,8 @@ struct TestJSONCodableModel: CodableModel {
         alias = try decoder.value("alias_key")
         camelName = try decoder.value("camel_name")
         any = try decoder.valueAnyIf("any")
-        dict = try decoder.valueIf("dict")
-        array = try decoder.valueIf("array")
+        dict = try decoder.valueAnyIf("dict")
+        array = try decoder.valueAnyIf("array")
         optional1 = try decoder.valueIf("optional1") ?? ""
         if let value2 = try decoder.valueIf("optional2", as: String.self) {
             optional2 = value2
