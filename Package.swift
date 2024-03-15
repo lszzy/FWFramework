@@ -19,7 +19,7 @@ let package = Package(
             targets: ["FWSwiftUI"]),
         .library(
             name: "FWVendor",
-            targets: ["FWVendorSDWebImage", "FWVendorLottie", "FWVendorAlamofire"])
+            targets: ["FWVendorJSONModel", "FWVendorSDWebImage", "FWVendorLottie", "FWVendorAlamofire"])
     ],
     dependencies: [
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
@@ -55,6 +55,19 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
+            cSettings: [
+                .define("FWMacroSPM", to: "1")
+            ],
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]),
+        .target(
+            name: "FWVendorJSONModel",
+            dependencies: [
+                "FWFramework"
+            ],
+            path: "Sources/FWVendor/JSONModel",
             cSettings: [
                 .define("FWMacroSPM", to: "1")
             ],
