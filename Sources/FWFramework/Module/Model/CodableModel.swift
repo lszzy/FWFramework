@@ -32,31 +32,30 @@ public extension KeyMappable where Root == Self {
     
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, with: Self.keyMapping)
+        try encodeWrapper(to: encoder)
     }
     
     init(from decoder: Decoder) throws {
         self.init()
         try decode(from: decoder, with: Self.keyMapping)
+        try decodeWrapper(from: decoder)
     }
 }
 
 public extension KeyMappable {
     func encode(to encoder: Encoder, with keyMapping: [KeyMapper<Self>]) throws {
         try keyMapping.forEach { try $0.encode(self, encoder) }
-        try encodeWrapper(to: encoder)
     }
     
     mutating func decode(from decoder: Decoder, with keyMapping: [KeyMapper<Self>]) throws {
         try keyMapping.forEach { try $0.decode?(&self, decoder) }
-        try decodeWrapper(from: decoder)
     }
     
     func decodeReference(from decoder: Decoder, with keyMapping: [KeyMapper<Self>]) throws {
         try keyMapping.forEach { try $0.decodeReference?(self, decoder) }
-        try decodeWrapper(from: decoder)
     }
     
-    private func encodeWrapper(to encoder: Encoder) throws {
+    func encodeWrapper(to encoder: Encoder) throws {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
@@ -70,7 +69,7 @@ public extension KeyMappable {
         }
     }
     
-    private func decodeWrapper(from decoder: Decoder) throws {
+    func decodeWrapper(from decoder: Decoder) throws {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
@@ -401,6 +400,10 @@ public extension Decoder {
         return try decode(stringKeys.map { AnyCodingKey($0) }, as: type)
     }
     
+    func decodeAny<T>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeAny(stringKeys, as: type)
+    }
+    
     func decodeAny<T>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
         return try decodeAny(stringKeys.map { AnyCodingKey($0) }, as: type)
     }
@@ -416,6 +419,10 @@ public extension Decoder {
         }
         catch {}
         return nil
+    }
+    
+    func decodeAny<T, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeAny(codingKeys, as: type)
     }
     
     func decodeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
