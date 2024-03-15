@@ -201,31 +201,31 @@ enum TestJSONCodableEnum: String, Codable {
 }
 
 // MARK: - TestAutoCodableModel
-struct TestAutoCodableModel: CodableModel, CodableMappable {
-    @CodableValue var id: Int = 0
-    @CodableValue var name: String = ""
-    @CodableValue var age: Int?
-    @CodableValue var amount: Float = 0
-    @CodableValue("alias_key")
+struct TestAutoCodableModel: CodableModel, KeyMappable {
+    @MappableValue var id: Int = 0
+    @MappableValue var name: String = ""
+    @MappableValue var age: Int?
+    @MappableValue var amount: Float = 0
+    @MappableValue("alias_key")
     var alias: String = ""
     var except: String = ""
-    @CodableValue("camel_name")
+    @MappableValue("camel_name")
     var camelName: String = ""
-    @CodableValue var any: Any?
-    @CodableValue var dict: [AnyHashable: Any]?
-    @CodableValue var array: [Any]?
-    @CodableValue var optional1: String = ""
-    @CodableValue var optional2: String = ""
-    @CodableValue var optional3: String? = "default"
-    @CodableValue var optional4: Int?
-    @CodableValue var optional5: Int? = 0
-    @CodableValue var sub: TestAutoCodableSubModel?
-    @CodableValue var sub2: TestAutoCodableSubModel = .init()
-    @CodableValue var subs: [TestAutoCodableSubModel] = []
-    @CodableValue var subdict: [String: TestAutoCodableSubModel] = [:]
-    @CodableValue var enum1: TestAutoCodableModelEnum = .unknown
-    @CodableValue var enum2: TestAutoCodableModelEnum = .unknown
-    @CodableValue var enum3: TestAutoCodableModelEnum?
+    @MappableValue var any: Any?
+    @MappableValue var dict: [AnyHashable: Any]?
+    @MappableValue var array: [Any]?
+    @MappableValue var optional1: String = ""
+    @MappableValue var optional2: String = ""
+    @MappableValue var optional3: String? = "default"
+    @MappableValue var optional4: Int?
+    @MappableValue var optional5: Int? = 0
+    @MappableValue var sub: TestAutoCodableSubModel?
+    @MappableValue var sub2: TestAutoCodableSubModel = .init()
+    @MappableValue var subs: [TestAutoCodableSubModel] = []
+    @MappableValue var subdict: [String: TestAutoCodableSubModel] = [:]
+    @MappableValue var enum1: TestAutoCodableModelEnum = .unknown
+    @MappableValue var enum2: TestAutoCodableModelEnum = .unknown
+    @MappableValue var enum3: TestAutoCodableModelEnum?
 }
 
 struct TestAutoCodableSubModel: CodableModel {
@@ -239,7 +239,7 @@ enum TestAutoCodableModelEnum: String, Codable {
 }
 
 // MARK: - TestMappableCodableModel
-struct TestMappableCodableModel: CodableModel, CodableMappable {
+struct TestMappableCodableModel: CodableModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
