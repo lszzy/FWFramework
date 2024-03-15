@@ -74,6 +74,23 @@ extension CodableValue: EncodablePropertyWrapper where Value: Encodable {
     }
 }
 
+fileprivate protocol EncodableAnyPropertyWrapper {
+    func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws
+}
+
+extension CodableValue: EncodableAnyPropertyWrapper {
+    fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws {
+        if encode != nil { try encode!(encoder, wrappedValue) }
+        else {
+            let value = deepUnwrap(wrappedValue)
+            if value != nil || self.nonnull ?? nonnull {
+                var container = encoder.container(keyedBy: AnyCodingKey.self)
+                try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
+            }
+        }
+    }
+}
+
 fileprivate protocol DecodablePropertyWrapper {
     func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws
 }
@@ -83,20 +100,6 @@ extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
         let value = decode != nil ? try decode!(decoder) : try decoder.decode(stringKeys ?? [String(label)], nonnull: self.nonnull ?? nonnull, throws: self.throws ?? `throws`)
         if let value = value {
             wrappedValue = value
-        }
-    }
-}
-
-fileprivate protocol EncodableAnyPropertyWrapper {
-    func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws
-}
-
-extension CodableValue: EncodableAnyPropertyWrapper {
-    fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws {
-        if encode != nil { try encode!(encoder, wrappedValue) }
-        else {
-            var container = encoder.container(keyedBy: AnyCodingKey.self)
-            try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
         }
     }
 }
