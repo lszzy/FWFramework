@@ -201,7 +201,7 @@ enum TestJSONCodableEnum: String, Codable {
 }
 
 // MARK: - TestAutoCodableModel
-struct TestAutoCodableModel: CodableModel, AutoCodable {
+struct TestAutoCodableModel: CodableModel, CodableMappable {
     @CodableValue var id: Int = 0
     @CodableValue var name: String = ""
     @CodableValue var age: Int?
@@ -239,7 +239,7 @@ enum TestAutoCodableModelEnum: String, Codable {
 }
 
 // MARK: - TestMappableCodableModel
-struct TestMappableCodableModel: CodableModel, MappableCodable {
+struct TestMappableCodableModel: CodableModel, CodableMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
