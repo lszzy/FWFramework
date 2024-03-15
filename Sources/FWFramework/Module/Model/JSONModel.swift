@@ -2560,3 +2560,8 @@ open class CustomDateFormatTransform: DateFormatterTransform {
         super.init(dateFormatter: formatter)
     }
 }
+
+// MARK: - JSONModelPlugin
+@_spi(FW) public protocol JSONModelPlugin {
+    
+}
