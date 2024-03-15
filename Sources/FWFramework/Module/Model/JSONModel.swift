@@ -2561,6 +2561,131 @@ open class CustomDateFormatTransform: DateFormatterTransform {
     }
 }
 
+// MARK: - JSONMappable
+/// 通用JSON键名映射协议，需至少实现一种映射方法，推荐使用，启用之后自动禁用内存读写
+public protocol JSONMappable {
+    associatedtype Root = Self where Root: JSONMappable
+    
+    static var keyMapping: [JSONMap<Root>] { get }
+}
+
+public extension JSONMappable where Root == Self {
+    static var keyMapping: [JSONMap<Root>] { [] }
+}
+
+public extension JSONMappable {
+    
+}
+
+// MARK: - JSONMap
+public final class JSONMap<Root: JSONMappable> {
+    fileprivate let encode: (_ root: Root, _ encoder: JSONMapper) -> Void
+    fileprivate let decode: ((_ root: inout Root, _ decoder: JSONMapper) -> Void)?
+    fileprivate let decodeReference: ((_ root: Root, _ decoder: JSONMapper) -> Void)?
+    private init(encode: @escaping (_ root: Root, _ encoder: JSONMapper) -> Void,
+                 decode: ((_ root: inout Root, _ decoder: JSONMapper) -> Void)?,
+                 decodeReference: ((_ root: Root, _ decoder: JSONMapper) -> Void)?) {
+        (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
+    }
+}
+
+public extension JSONMap {
+    convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ...) {
+        self.init(encode: { root, encoder in
+            encoder.storage[codingKeys.first!] = root[keyPath: keyPath]
+        }, decode: { root, decoder in
+            var value: Value?
+            for codingKey in codingKeys {
+                value = decoder.storage[codingKey] as? Value
+                if value != nil { break }
+            }
+            if let value = value {
+                root[keyPath: keyPath] = value
+            }
+        }, decodeReference: nil)
+    }
+    
+    convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to codingKeys: String ...) {
+        self.init(encode: { root, encoder in
+            encoder.storage[codingKeys.first!] = root[keyPath: keyPath]
+        }, decode: nil, decodeReference: { root, decoder in
+            var value: Value?
+            for codingKey in codingKeys {
+                value = decoder.storage[codingKey] as? Value
+                if value != nil { break }
+            }
+            if let value = value {
+                root[keyPath: keyPath] = value
+            }
+        })
+    }
+}
+
+public class JSONMapper {
+    var storage: [String: Any] = [:]
+}
+
+// MARK: - JSONValue
+/// JSON属性注解，解析键存在时才会覆盖默认值
+@propertyWrapper
+public final class JSONValue<Value> {
+    fileprivate let stringKeys: [String]?
+    fileprivate let encode: ((_ encoder: JSONMapper, _ value: Value) -> Void)?, decode: ((_ decoder: JSONMapper) -> Value?)?
+    public var wrappedValue: Value
+    
+    private init(wrappedValue: Value, stringKeys: [String]? = nil, encode: ((_ encoder: JSONMapper, _ value: Value) -> Void)?, decode: ((_ decoder: JSONMapper) -> Value?)?) {
+        (self.wrappedValue, self.stringKeys, self.encode, self.decode) = (wrappedValue, stringKeys, encode, decode)
+    }
+    
+    public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: JSONMapper, _ value: Value) -> Void)? = nil, decode: ((_ decoder: JSONMapper) -> Value?)? = nil) {
+        self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] }, encode: encode, decode: decode)
+    }
+    
+    public convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: JSONMapper, _ value: Value) -> Void)? = nil, decode: ((_ decoder: JSONMapper) -> Value?)? = nil) {
+        self.init(wrappedValue: wrappedValue, stringKeys: stringKeys, encode: encode, decode: decode)
+    }
+}
+
+extension JSONValue: Equatable where Value: Equatable {
+    public static func == (lhs: JSONValue<Value>, rhs: JSONValue<Value>) -> Bool {
+        return lhs.wrappedValue == rhs.wrappedValue
+    }
+}
+
+extension JSONValue: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String { String(describing: wrappedValue) }
+    public var debugDescription: String { description }
+}
+
+fileprivate protocol JSONPropertyWrapper {
+    func encode<Label: StringProtocol>(to encoder: JSONMapper, label: Label)
+    func decode<Label: StringProtocol>(from decoder: JSONMapper, label: Label)
+}
+
+extension JSONValue: JSONPropertyWrapper {
+    fileprivate func encode<Label: StringProtocol>(to encoder: JSONMapper, label: Label) {
+        if encode != nil { encode!(encoder, wrappedValue) }
+        else {
+            let value = deepUnwrap(wrappedValue)
+            if value != nil {
+                encoder.storage[String(label)] = wrappedValue
+            }
+        }
+    }
+    
+    fileprivate func decode<Label: StringProtocol>(from decoder: JSONMapper, label: Label) {
+        if let decode = decode {
+            if let value = decode(decoder) {
+                wrappedValue = value
+            }
+        } else {
+            if let value = decoder.storage[String(label)] as? Value {
+                wrappedValue = value
+            }
+        }
+    }
+}
+
 // MARK: - JSONModelPlugin
 @_spi(FW) public protocol JSONModelPlugin {
     
