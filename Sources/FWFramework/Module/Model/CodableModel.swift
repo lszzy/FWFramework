@@ -19,15 +19,15 @@ extension CodableModel where Self: AnyObject {
     }
 }
 
-// MARK: - CodableMappable
-/// 通用Codable映射编码协议，需至少实现一种映射方法
-public protocol CodableMappable: Codable, ObjectType {
-    associatedtype Root = Self where Root: CodableMappable
+// MARK: - KeyMappable
+/// 通用Codable键名映射协议，需至少实现一种映射方法
+public protocol KeyMappable: Codable, ObjectType {
+    associatedtype Root = Self where Root: KeyMappable
     
     static var keyMapping: [KeyMapper<Root>] { get }
 }
 
-public extension CodableMappable where Root == Self {
+public extension KeyMappable where Root == Self {
     static var keyMapping: [KeyMapper<Root>] { [] }
     
     func encode(to encoder: Encoder) throws {
@@ -42,7 +42,7 @@ public extension CodableMappable where Root == Self {
     }
 }
 
-public extension CodableMappable {
+public extension KeyMappable {
     func encode(to encoder: Encoder, with keyMapping: [KeyMapper<Self>], nonnull: Bool = false, throws: Bool = false) throws {
         try keyMapping.forEach { try $0.encode(self, encoder, nonnull, `throws`) }
     }
@@ -178,12 +178,12 @@ public extension KeyMapper {
     }
 }
 
-// MARK: - CodableValue
+// MARK: - MappableValue
 /// Codable属性注解，解析成功且不为nil时才会覆盖默认值
 ///
 /// https://github.com/iwill/ExCodable
 @propertyWrapper
-public final class CodableValue<Value> {
+public final class MappableValue<Value> {
     fileprivate let stringKeys: [String]?
     fileprivate let nonnull, `throws`: Bool?
     fileprivate let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?
@@ -206,13 +206,13 @@ public final class CodableValue<Value> {
     }
 }
 
-extension CodableValue: Equatable where Value: Equatable {
-    public static func == (lhs: CodableValue<Value>, rhs: CodableValue<Value>) -> Bool {
+extension MappableValue: Equatable where Value: Equatable {
+    public static func == (lhs: MappableValue<Value>, rhs: MappableValue<Value>) -> Bool {
         return lhs.wrappedValue == rhs.wrappedValue
     }
 }
 
-extension CodableValue: CustomStringConvertible, CustomDebugStringConvertible {
+extension MappableValue: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String { String(describing: wrappedValue) }
     public var debugDescription: String { description }
 }
@@ -221,7 +221,7 @@ fileprivate protocol EncodablePropertyWrapper {
     func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws
 }
 
-extension CodableValue: EncodablePropertyWrapper where Value: Encodable {
+extension MappableValue: EncodablePropertyWrapper where Value: Encodable {
     fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws {
         if encode != nil { try encode!(encoder, wrappedValue) }
         else {
@@ -237,7 +237,7 @@ fileprivate protocol EncodableAnyPropertyWrapper {
     func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws
 }
 
-extension CodableValue: EncodableAnyPropertyWrapper {
+extension MappableValue: EncodableAnyPropertyWrapper {
     fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label, nonnull: Bool, throws: Bool) throws {
         if encode != nil { try encode!(encoder, wrappedValue) }
         else {
@@ -254,7 +254,7 @@ fileprivate protocol DecodablePropertyWrapper {
     func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws
 }
 
-extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
+extension MappableValue: DecodablePropertyWrapper where Value: Decodable {
     fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws {
         let value = decode != nil ? try decode!(decoder) : try decoder.decode(stringKeys ?? [String(label)], nonnull: self.nonnull ?? nonnull, throws: self.throws ?? `throws`)
         if let value = value {
@@ -267,7 +267,7 @@ fileprivate protocol DecodableAnyPropertyWrapper {
     func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws
 }
 
-extension CodableValue: DecodableAnyPropertyWrapper {
+extension MappableValue: DecodableAnyPropertyWrapper {
     fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label, nonnull: Bool, throws: Bool) throws {
         if let decode = decode {
             if let value = try decode(decoder) {
