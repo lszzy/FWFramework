@@ -350,8 +350,7 @@ public extension Encoder {
         let codingKey = keys.last!
         do {
             try container.encodeIfPresent(value, forKey: codingKey)
-        }
-        catch {}
+        } catch {}
     }
     
     func encodeAny<T>(_ value: T?, for stringKey: String) throws {
@@ -370,24 +369,21 @@ public extension Encoder {
         let codingKey = keys.last!
         do {
             try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey)
-        }
-        catch {}
+        } catch {}
     }
     
     func encode<T: Encodable, K: CodingKey>(_ value: T?, for codingKey: K) throws {
         var container = self.container(keyedBy: K.self)
         do {
             try container.encodeIfPresent(value, forKey: codingKey)
-        }
-        catch {}
+        } catch {}
     }
     
     func encodeAny<T, K: CodingKey>(_ value: T?, for codingKey: K) throws {
         var container = self.container(keyedBy: K.self)
         do {
             try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey)
-        }
-        catch {}
+        } catch {}
     }
 }
 
@@ -415,9 +411,8 @@ public extension Decoder {
     func decode<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
         do {
             let container = try self.container(keyedBy: K.self)
-            return try container.decodeForAlternativeKeys(codingKeys, as: type)
-        }
-        catch {}
+            return container.decodeForAlternativeKeys(codingKeys, as: type)
+        } catch {}
         return nil
     }
     
@@ -428,57 +423,47 @@ public extension Decoder {
     func decodeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
         do {
             let container = try self.container(keyedBy: K.self)
-            return try container.decodeAnyForAlternativeKeys(codingKeys, as: type)
-        }
-        catch {}
+            return container.decodeAnyForAlternativeKeys(codingKeys, as: type)
+        } catch {}
         return nil
     }
 }
 
 fileprivate extension KeyedDecodingContainer {
-    func decodeForAlternativeKeys<T: Decodable>(_ codingKeys: [Self.Key], as type: T.Type = T.self) throws -> T? {
-        do {
-            let codingKey = codingKeys.first!
-            if let value = try decodeForNestedKeys(codingKey, as: type) {
-                return value
-            }
+    func decodeForAlternativeKeys<T: Decodable>(_ codingKeys: [Self.Key], as type: T.Type = T.self) -> T? {
+        let codingKey = codingKeys.first!
+        if let value = decodeForNestedKeys(codingKey, as: type) {
+            return value
         }
-        catch {}
         
         let codingKeys = Array(codingKeys.dropFirst())
         if !codingKeys.isEmpty,
-           let value = try? decodeForAlternativeKeys(codingKeys, as: type) {
+           let value = decodeForAlternativeKeys(codingKeys, as: type) {
             return value
         }
         
         return nil
     }
     
-    func decodeAnyForAlternativeKeys<T>(_ codingKeys: [Self.Key], as type: T.Type = T.self) throws -> T? {
-        do {
-            let codingKey = codingKeys.first!
-            if let value = try decodeAnyForNestedKeys(codingKey, as: type) {
-                return value
-            }
+    func decodeAnyForAlternativeKeys<T>(_ codingKeys: [Self.Key], as type: T.Type = T.self) -> T? {
+        let codingKey = codingKeys.first!
+        if let value = decodeAnyForNestedKeys(codingKey, as: type) {
+            return value
         }
-        catch {}
         
         let codingKeys = Array(codingKeys.dropFirst())
         if !codingKeys.isEmpty,
-           let value = try? decodeAnyForAlternativeKeys(codingKeys, as: type) {
+           let value = decodeAnyForAlternativeKeys(codingKeys, as: type) {
             return value
         }
         
         return nil
     }
     
-    func decodeForNestedKeys<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
-        do {
-            if let value = try decodeForValue(codingKey, as: type) {
-                return value
-            }
+    func decodeForNestedKeys<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
+        if let value = decodeForValue(codingKey, as: type) {
+            return value
         }
-        catch {}
         
         let dot: Character = "."
         if let exCodingKey = codingKey as? AnyCodingKey,
@@ -487,7 +472,7 @@ fileprivate extension KeyedDecodingContainer {
             if !keys.isEmpty,
                let container = nestedContainer(with: keys.dropLast()),
                let codingKey = keys.last,
-               let value = try? container.decodeForNestedKeys(codingKey as! Self.Key, as: type) {
+               let value = container.decodeForNestedKeys(codingKey as! Self.Key, as: type) {
                 return value
             }
         }
@@ -495,13 +480,10 @@ fileprivate extension KeyedDecodingContainer {
         return nil
     }
     
-    func decodeAnyForNestedKeys<T>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
-        do {
-            if let value = try decodeAnyForValue(codingKey, as: type) {
-                return value
-            }
+    func decodeAnyForNestedKeys<T>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
+        if let value = decodeAnyForValue(codingKey, as: type) {
+            return value
         }
-        catch {}
         
         let dot: Character = "."
         if let exCodingKey = codingKey as? AnyCodingKey,
@@ -510,7 +492,7 @@ fileprivate extension KeyedDecodingContainer {
             if !keys.isEmpty,
                let container = nestedContainer(with: keys.dropLast()),
                let codingKey = keys.last,
-               let value = try? container.decodeAnyForNestedKeys(codingKey as! Self.Key, as: type) {
+               let value = container.decodeAnyForNestedKeys(codingKey as! Self.Key, as: type) {
                 return value
             }
         }
@@ -527,7 +509,7 @@ fileprivate extension KeyedDecodingContainer {
         return container
     }
     
-    func decodeForValue<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+    func decodeForValue<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
         if let value = try? decodeIfPresent(type, forKey: codingKey) {
             return value
         }
@@ -540,7 +522,7 @@ fileprivate extension KeyedDecodingContainer {
         return nil
     }
     
-    func decodeAnyForValue<T>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+    func decodeAnyForValue<T>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
         if let value = try? decodeAnyIfPresent(type, forKey: codingKey) {
             return value
         }
