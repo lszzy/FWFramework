@@ -638,6 +638,8 @@ public protocol MappableCodable: Codable, ObjectType {
 }
 
 public extension MappableCodable where Root == Self {
+    static var keyMapping: [KeyMapper<Root>] { [] }
+    
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, with: Self.keyMapping)
     }
