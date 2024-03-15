@@ -344,29 +344,8 @@ enum TestJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
-// MARK: - TestCodableParameter
-class TestCodableParameter: ObjectParameter, CodableModel {
-    var id: Int = 0
-    var name: String = ""
-    var block: BlockVoid?
-    
-    required init() {}
-    
-    required init(from decoder: Decoder) throws {
-        id = try decoder.decode("id")
-        name = try decoder.decode("name")
-        block = try decoder.decodeAnyIf("block", as: Any.self) as? BlockVoid
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        try encoder.encode(id, for: "id")
-        try encoder.encode(name, for: "name")
-        try encoder.encodeAnyIf(block, for: "block")
-    }
-}
-
-// MARK: - TestJSONParameter
-class TestJSONParameter: ObjectParameter, JSONModel {
+// MARK: - TestObjectParameter
+class TestObjectParameter: ObjectParameter, JSONModel {
     var id: Int = 0
     var name: String = ""
     var block: BlockVoid?
@@ -409,8 +388,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["CodableModel+AutoCodable", "onAutoCodableModel"],
             ["CodableModel+MappableCodable", "onMappableCodableModel"],
             ["JSONModel", "onJSONModel"],
-            ["ObjectParameter+CodableModel", "onCodableParameter"],
-            ["ObjectParameter+JSONModel", "onJSONParameter"],
+            ["ObjectParameter", "onObjectParameter"],
         ])
     }
     
@@ -645,7 +623,7 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    @objc func onCodableParameter() {
+    @objc func onObjectParameter() {
         var block: BlockVoid = {}
         let dict: [AnyHashable: Any] = [
             "id": 1,
@@ -653,7 +631,7 @@ extension TestCodableController {
             "block": block,
         ]
         
-        func testModel(_ model: TestCodableParameter, encode: Bool = false) -> [Bool] {
+        func testModel(_ model: TestObjectParameter, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model.id == 1),
                 (model.name == "name"),
@@ -662,33 +640,9 @@ extension TestCodableController {
             return results
         }
         
-        var model = TestCodableParameter(dictionaryValue: dict)
+        var model = TestObjectParameter(dictionaryValue: dict)
         var tests = testModel(model)
-        model = TestCodableParameter.decodeSafeModel(from: model.encodeObject())
-        tests += testModel(model, encode: true)
-        showResults(tests)
-    }
-    
-    @objc func onJSONParameter() {
-        var block: BlockVoid = {}
-        let dict: [AnyHashable: Any] = [
-            "id": 1,
-            "name": "name",
-            "block": block,
-        ]
-        
-        func testModel(_ model: TestJSONParameter, encode: Bool = false) -> [Bool] {
-            let results: [Bool] = [
-                (model.id == 1),
-                (model.name == "name"),
-                (model.block != nil),
-            ]
-            return results
-        }
-        
-        var model = TestJSONParameter(dictionaryValue: dict)
-        var tests = testModel(model)
-        model = TestJSONParameter.decodeSafeModel(from: model.encodeObject())
+        model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
