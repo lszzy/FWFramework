@@ -202,30 +202,30 @@ enum TestJSONCodableEnum: String, Codable {
 
 // MARK: - TestAutoCodableModel
 struct TestAutoCodableModel: CodableModel, KeyMappable {
-    @MappableValue var id: Int = 0
-    @MappableValue var name: String = ""
-    @MappableValue var age: Int?
-    @MappableValue var amount: Float = 0
-    @MappableValue("alias_key")
+    @CodableValue var id: Int = 0
+    @CodableValue var name: String = ""
+    @CodableValue var age: Int?
+    @CodableValue var amount: Float = 0
+    @CodableValue("alias_key")
     var alias: String = ""
     var except: String = ""
-    @MappableValue("camel_name")
+    @CodableValue("camel_name")
     var camelName: String = ""
-    @MappableValue var any: Any?
-    @MappableValue var dict: [AnyHashable: Any]?
-    @MappableValue var array: [Any]?
-    @MappableValue var optional1: String = ""
-    @MappableValue var optional2: String = ""
-    @MappableValue var optional3: String? = "default"
-    @MappableValue var optional4: Int?
-    @MappableValue var optional5: Int? = 0
-    @MappableValue var sub: TestAutoCodableSubModel?
-    @MappableValue var sub2: TestAutoCodableSubModel = .init()
-    @MappableValue var subs: [TestAutoCodableSubModel] = []
-    @MappableValue var subdict: [String: TestAutoCodableSubModel] = [:]
-    @MappableValue var enum1: TestAutoCodableModelEnum = .unknown
-    @MappableValue var enum2: TestAutoCodableModelEnum = .unknown
-    @MappableValue var enum3: TestAutoCodableModelEnum?
+    @CodableValue var any: Any?
+    @CodableValue var dict: [AnyHashable: Any]?
+    @CodableValue var array: [Any]?
+    @CodableValue var optional1: String = ""
+    @CodableValue var optional2: String = ""
+    @CodableValue var optional3: String? = "default"
+    @CodableValue var optional4: Int?
+    @CodableValue var optional5: Int? = 0
+    @CodableValue var sub: TestAutoCodableSubModel?
+    @CodableValue var sub2: TestAutoCodableSubModel = .init()
+    @CodableValue var subs: [TestAutoCodableSubModel] = []
+    @CodableValue var subdict: [String: TestAutoCodableSubModel] = [:]
+    @CodableValue var enum1: TestAutoCodableModelEnum = .unknown
+    @CodableValue var enum2: TestAutoCodableModelEnum = .unknown
+    @CodableValue var enum3: TestAutoCodableModelEnum?
 }
 
 struct TestAutoCodableSubModel: CodableModel {
@@ -263,28 +263,28 @@ struct TestMappableCodableModel: CodableModel, KeyMappable {
     var enum2: TestMappableCodableModelEnum = .unknown
     var enum3: TestMappableCodableModelEnum?
     
-    static let keyMapping: [KeyMapper<Self>] = [
-        KeyMapper(\.id, to: "id"),
-        KeyMapper(\.name, to: "name"),
-        KeyMapper(\.age, to: "age"),
-        KeyMapper(\.amount, to: "amount"),
-        KeyMapper(\.alias, to: "alias_key"),
-        KeyMapper(\.camelName, to: "camel_name"),
-        KeyMapper(\.any, to: "any"),
-        KeyMapper(\.dict, to: "dict"),
-        KeyMapper(\.array, to: "array"),
-        KeyMapper(\.optional1, to: "optional1"),
-        KeyMapper(\.optional2, to: "optional2"),
-        KeyMapper(\.optional3, to: "optional3"),
-        KeyMapper(\.optional4, to: "optional4"),
-        KeyMapper(\.optional5, to: "optional5"),
-        KeyMapper(\.sub, to: "sub"),
-        KeyMapper(\.sub2, to: "sub2"),
-        KeyMapper(\.subs, to: "subs"),
-        KeyMapper(\.subdict, to: "subdict"),
-        KeyMapper(\.enum1, to: "enum1"),
-        KeyMapper(\.enum2, to: "enum2"),
-        KeyMapper(\.enum3, to: "enum3"),
+    static let keyMapping: [KeyMap<Self>] = [
+        KeyMap(\.id, to: "id"),
+        KeyMap(\.name, to: "name"),
+        KeyMap(\.age, to: "age"),
+        KeyMap(\.amount, to: "amount"),
+        KeyMap(\.alias, to: "alias_key"),
+        KeyMap(\.camelName, to: "camel_name"),
+        KeyMap(\.any, to: "any"),
+        KeyMap(\.dict, to: "dict"),
+        KeyMap(\.array, to: "array"),
+        KeyMap(\.optional1, to: "optional1"),
+        KeyMap(\.optional2, to: "optional2"),
+        KeyMap(\.optional3, to: "optional3"),
+        KeyMap(\.optional4, to: "optional4"),
+        KeyMap(\.optional5, to: "optional5"),
+        KeyMap(\.sub, to: "sub"),
+        KeyMap(\.sub2, to: "sub2"),
+        KeyMap(\.subs, to: "subs"),
+        KeyMap(\.subdict, to: "subdict"),
+        KeyMap(\.enum1, to: "enum1"),
+        KeyMap(\.enum2, to: "enum2"),
+        KeyMap(\.enum3, to: "enum3"),
     ]
 }
 
@@ -624,7 +624,7 @@ extension TestCodableController {
     }
     
     @objc func onObjectParameter() {
-        var block: BlockVoid = {}
+        let block: BlockVoid = {}
         let dict: [AnyHashable: Any] = [
             "id": 1,
             "name": "name",
