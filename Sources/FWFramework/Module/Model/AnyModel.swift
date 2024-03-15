@@ -109,7 +109,11 @@ extension AnyModel where Self: CodableModel {
             if let string = object as? String {
                 data = string.data(using: .utf8)
             } else {
-                data = Data.fw_jsonEncode(object)
+                do {
+                    data = try Data.fw_jsonEncode(object)
+                } catch {
+                    InternalLogger.logError(error.localizedDescription)
+                }
             }
         }
         guard let data = data else { return nil }
