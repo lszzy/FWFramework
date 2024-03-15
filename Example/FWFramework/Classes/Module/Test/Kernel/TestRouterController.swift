@@ -393,25 +393,24 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
 }
 
-@objcMembers
-class TestRouter: NSObject, AutoloadProtocol {
+class TestRouter: NSObject {
     
-    static let testUrl = "app://tests/:id"
-    static let homeUrl = "app://tab/home"
-    static let wildcardUrl = "wildcard://*"
-    static let wildcardTestUrl = "wildcard://test1"
-    static let objectUrl = "object://test2"
-    static let objectUnmatchUrl = "object://test"
-    static let loaderUrl = "app://loader"
-    static let pageUrl = "app://page/*id"
-    static let shopUrl = "app://shops/:id"
-    static let itemUrl = "app://shops/:id/items/:itemId"
-    static let htmlUrl = "app://pages/:id.html"
-    static let javascriptUrl = "app://javascript"
-    static let closeUrl = "app://close"
-    static let multiUrl = "app://multi"
+    @objc static let testUrl = "app://tests/:id"
+    @objc static let homeUrl = "app://tab/home"
+    @objc static let wildcardUrl = "wildcard://*"
+    @objc static let wildcardTestUrl = "wildcard://test1"
+    @objc static let objectUrl = "object://test2"
+    @objc static let objectUnmatchUrl = "object://test"
+    @objc static let loaderUrl = "app://loader"
+    @objc static let pageUrl = "app://page/*id"
+    @objc static let shopUrl = "app://shops/:id"
+    @objc static let itemUrl = "app://shops/:id/items/:itemId"
+    @objc static let htmlUrl = "app://pages/:id.html"
+    @objc static let javascriptUrl = "app://javascript"
+    @objc static let closeUrl = "app://close"
+    @objc static let multiUrl = "app://multi"
     
-    class func testRouter(_ context: Router.Context) -> Any? {
+    @objc static func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = testUrl
         vc.context = context
@@ -419,12 +418,12 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func homeRouter(_ context: Router.Context) -> Any? {
+    @objc static func homeRouter(_ context: Router.Context) -> Any? {
         UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
     
-    class func wildcardTestRouter(_ context: Router.Context) -> Any? {
+    @objc static func wildcardTestRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = wildcardTestUrl
         vc.context = context
@@ -432,7 +431,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func pageRouter(_ context: Router.Context) -> Any? {
+    @objc static func pageRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = pageUrl
         vc.context = context
@@ -440,7 +439,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func shopRouter(_ context: Router.Context) -> Any? {
+    @objc static func shopRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = shopUrl
         vc.context = context
@@ -448,7 +447,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func itemRouter(_ context: Router.Context) -> Any? {
+    @objc static func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = itemUrl
         vc.context = context
@@ -456,7 +455,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func htmlRouter(_ context: Router.Context) -> Any? {
+    @objc static func htmlRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = htmlUrl
         vc.context = context
@@ -464,14 +463,14 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func objectRouter(_ context: Router.Context) -> Any? {
+    @objc static func objectRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = objectUrl
         vc.context = context
         return vc
     }
     
-    class func objectUnmatchRouter(_ context: Router.Context) -> Any? {
+    @objc static func objectUnmatchRouter(_ context: Router.Context) -> Any? {
         if context.isOpening {
             return "OBJECT UNMATCH"
         } else {
@@ -480,7 +479,7 @@ class TestRouter: NSObject, AutoloadProtocol {
         }
     }
     
-    class func javascriptRouter(_ context: Router.Context) -> Any? {
+    @objc static func javascriptRouter(_ context: Router.Context) -> Any? {
         guard let webVC = Navigator.topViewController as? WebController,
               webVC.isViewLoaded else { return nil }
         
@@ -495,13 +494,13 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func closeRouter(_ context: Router.Context) -> Any? {
+    @objc static func closeRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
         return nil
     }
     
-    class func multiRouter(_ context: Router.Context) -> Any? {
+    @objc static func multiRouter(_ context: Router.Context) -> Any? {
         guard context.isOpening else { return nil }
         guard let nav = Navigator.topNavigationController else { return nil }
         
@@ -525,12 +524,16 @@ class TestRouter: NSObject, AutoloadProtocol {
         return nil
     }
     
-    class func loaderRouter(_ context: Router.Context) -> Any? {
+    @objc static func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = loaderUrl
         vc.context = context
         return vc
     }
+    
+}
+
+extension TestRouter: AutoloadProtocol {
     
     static func autoload() {
         registerFilters()
