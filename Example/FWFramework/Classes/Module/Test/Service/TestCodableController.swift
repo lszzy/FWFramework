@@ -385,8 +385,8 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
             ["CodableModel+JSON", "onJSONCodableModel"],
-            ["CodableModel+AutoCodable", "onAutoCodableModel"],
-            ["CodableModel+MappableCodable", "onMappableCodableModel"],
+            ["CodableModel+CodableValue", "onAutoCodableModel"],
+            ["CodableModel+KeyMappable", "onMappableCodableModel"],
             ["JSONModel", "onJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
         ])

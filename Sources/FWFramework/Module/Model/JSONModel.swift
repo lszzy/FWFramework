@@ -819,7 +819,7 @@ public protocol _ExtendCustomBasicType: _Transformable {
 struct PropertyInfo {
     let key: String
     let type: Any.Type
-    let address: UnsafeMutableRawPointer
+    let address: UnsafeMutableRawPointer!
     let bridged: Bool
 }
 
