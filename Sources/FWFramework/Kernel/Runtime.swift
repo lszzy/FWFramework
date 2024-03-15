@@ -363,7 +363,7 @@ extension Wrapper where Base: WrapperObject {
     }
     
     // MARK: - Mirror
-    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public var mirrorDictionary: [String: Any] {
         return base.fw_mirrorDictionary
     }
@@ -415,7 +415,12 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Mirror
-    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 执行任意对象的反射属性句柄(含父类)
+    public static func mirrorMap(_ object: Any, block: (String, Any) throws -> Void) rethrows -> Void {
+        try Base.fw_mirrorMap(object, block: block)
+    }
+    
+    /// 获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
         return Base.fw_mirrorDictionary(object)
     }
@@ -817,7 +822,7 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Mirror
-    /// 非递归方式获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public var fw_mirrorDictionary: [String: Any] {
         return NSObject.fw_mirrorDictionary(self)
     }
@@ -974,7 +979,18 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Mirror
-    /// 非递归方式获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 执行任意对象的反射属性句柄(含父类)
+    public static func fw_mirrorMap(_ object: Any, block: (String, Any) throws -> Void) rethrows -> Void {
+        var mirror: Mirror! = Mirror(reflecting: object)
+        while mirror != nil {
+            for child in mirror.children where child.label != nil {
+                try block(child.label!, child.value)
+            }
+            mirror = mirror.superclassMirror
+        }
+    }
+    
+    /// 获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
     public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
         guard let object = object else { return [:] }
         var mirror = Mirror(reflecting: object)
