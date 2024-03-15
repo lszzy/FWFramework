@@ -637,7 +637,7 @@ extension Optional: _OptionalProtocol {
     }
 }
 
-private func deepUnwrap(_ any: Any) -> Any? {
+internal func deepUnwrap(_ any: Any) -> Any? {
     if let any = any as? _OptionalProtocol {
         return any.deepWrapped
     }
