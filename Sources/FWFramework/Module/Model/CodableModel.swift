@@ -44,7 +44,7 @@ public extension KeyMappable where Root == Self {
 
 public extension KeyMappable {
     func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.encode(self, encoder) }
+        try keyMapping.forEach { try $0.encode?(self, encoder) }
     }
     
     mutating func decode(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
@@ -86,7 +86,7 @@ public extension KeyMappable {
 
 // MARK: - KeyMap
 public final class KeyMap<Root: Codable> {
-    fileprivate let encode: (_ root: Root, _ encoder: Encoder) throws -> Void
+    fileprivate let encode: ((_ root: Root, _ encoder: Encoder) throws -> Void)?
     fileprivate let decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?
     fileprivate let decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?
     private init(encode: @escaping (_ root: Root, _ encoder: Encoder) throws -> Void,
