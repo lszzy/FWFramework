@@ -208,8 +208,7 @@ public final class CodableValue<Value> {
     fileprivate func resetOptionalValue() {
         guard Optional<Any>.isOptional(wrappedValue) else { return }
         var value: Value?
-        // 注意：忽略此处警告且不能修改为`value!`，否则crash
-        wrappedValue = value as! Value
+        wrappedValue = (value as Any) as! Value
     }
 }
 
