@@ -1840,7 +1840,7 @@ extension JSONValue: JSONPropertyWrapper {
     fileprivate func encode<Label: StringProtocol>(to encoder: JSONMapper, label: Label) {
         if encode != nil { encode!(encoder, wrappedValue) }
         else {
-            let value = deepUnwrap(wrappedValue)
+            let value = Optional<Any>.deepUnwrap(wrappedValue)
             if value != nil {
                 encoder.storage[String(label)] = wrappedValue
             }

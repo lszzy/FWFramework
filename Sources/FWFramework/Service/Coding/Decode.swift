@@ -140,9 +140,30 @@ extension Optional {
     public static func isNil(_ value: Wrapped?) -> Bool {
         return value == nil || value._plainValue() == nil
     }
+    public static func isOptional(_ value: Any) -> Bool {
+        return value is _OptionalProtocol
+    }
+    public static func deepUnwrap(_ value: Any) -> Any? {
+        if let value = value as? _OptionalProtocol {
+            return value.deepWrapped
+        }
+        return value
+    }
     public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
         guard let this = self else { return nil }
         return try block(this)
+    }
+}
+
+private protocol _OptionalProtocol {
+    var deepWrapped: Any? { get }
+}
+
+extension Optional: _OptionalProtocol {
+    var deepWrapped: Any? {
+        guard case let .some(wrapped) = self else { return nil }
+        guard let wrapped = wrapped as? _OptionalProtocol else { return wrapped }
+        return wrapped.deepWrapped
     }
 }
 
