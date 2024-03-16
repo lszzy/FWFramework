@@ -101,8 +101,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: { root, decoder in
-            if let value: Value = try decoder.decode(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decode(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         }, decodeReference: nil)
     }
@@ -111,8 +119,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: { root, decoder in
-            if let value: Value = try decoder.decode(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decode(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         }, decodeReference: nil)
     }
@@ -121,8 +137,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: nil, decodeReference: { root, decoder in
-            if let value: Value = try decoder.decode(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decode(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         })
     }
@@ -131,8 +155,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: nil, decodeReference: { root, decoder in
-            if let value: Value = try decoder.decode(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decode(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         })
     }
@@ -141,8 +173,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: { root, decoder in
-            if let value: Value = try decoder.decodeAny(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decodeAny(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         }, decodeReference: nil)
     }
@@ -151,8 +191,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: { root, decoder in
-            if let value: Value = try decoder.decodeAny(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decodeAny(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         }, decodeReference: nil)
     }
@@ -161,8 +209,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: nil, decodeReference: { root, decoder in
-            if let value: Value = try decoder.decodeAny(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decodeAny(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         })
     }
@@ -171,8 +227,16 @@ public extension KeyMap {
         self.init(encode: { root, encoder in
             try encoder.encodeAny(root[keyPath: keyPath], for: codingKeys.first!)
         }, decode: nil, decodeReference: { root, decoder in
-            if let value: Value = try decoder.decodeAny(codingKeys) {
-                root[keyPath: keyPath] = value
+            do {
+                if let value = try decoder.decodeAny(codingKeys, as: Value.self, throws: true) {
+                    root[keyPath: keyPath] = value
+                }
+            } catch {
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(root[keyPath: keyPath]) {
+                    let value: Value? = nil
+                    root[keyPath: keyPath] = (value as Any) as! Value
+                }
             }
         })
     }
@@ -202,13 +266,6 @@ public final class CodableValue<Value> {
     
     public convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, encode: encode, decode: decode)
-    }
-    
-    /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
-    fileprivate func resetOptionalValue() {
-        guard Optional<Any>.isOptional(wrappedValue) else { return }
-        var value: Value?
-        wrappedValue = (value as Any) as! Value
     }
 }
 
@@ -272,7 +329,11 @@ extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
                     wrappedValue = value
                 }
             } catch {
-                resetOptionalValue()
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(wrappedValue) {
+                    let value: Value? = nil
+                    wrappedValue = (value as Any) as! Value
+                }
             }
         }
     }
@@ -290,11 +351,15 @@ extension CodableValue: DecodableAnyPropertyWrapper {
             }
         } else {
             do {
-                if let value = try decoder.decodeAny(stringKeys ?? [String(label)], as: type(of: wrappedValue)) {
+                if let value = try decoder.decodeAny(stringKeys ?? [String(label)], as: type(of: wrappedValue), throws: true) {
                     wrappedValue = value
                 }
             } catch {
-                resetOptionalValue()
+                /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
+                if Optional<Any>.isOptional(wrappedValue) {
+                    let value: Value? = nil
+                    wrappedValue = (value as Any) as! Value
+                }
             }
         }
     }
