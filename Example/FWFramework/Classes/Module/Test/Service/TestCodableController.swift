@@ -23,7 +23,7 @@ struct TestCodableModel: CodableModel {
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
-    var optional4: Int?
+    var optional4: Int? = 4
     var optional5: Int? = 0
     var sub: TestCodableSubModel?
     var sub2: TestCodableSubModel = .init()
@@ -56,7 +56,14 @@ struct TestCodableModel: CodableModel {
         if let value3 = try decoder.decodeIf("optional3", as: String.self) {
             optional3 = value3
         }
-        optional4 = try? decoder.decodeIf("optional4", as: Int?.self) ?? nil
+        // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
+        do {
+            if let value4 = try decoder.decodeIf("optional4", as: Int?.self) {
+                optional4 = value4
+            }
+        } catch {
+            optional4 = nil
+        }
         optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
         sub = try decoder.decodeIf("sub")
         if let val2 = try decoder.decodeIf("sub2", as: TestCodableSubModel.self) {
@@ -121,7 +128,7 @@ struct TestJSONCodableModel: CodableModel {
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
-    var optional4: Int?
+    var optional4: Int? = 4
     var optional5: Int? = 0
     var sub: TestJSONCodableSubModel?
     var sub2: TestJSONCodableSubModel = .init()
@@ -150,7 +157,14 @@ struct TestJSONCodableModel: CodableModel {
         if let value3 = try decoder.valueIf("optional3", as: String.self) {
             optional3 = value3
         }
-        optional4 = try? decoder.valueIf("optional4", as: Int?.self) ?? nil
+        // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
+        do {
+            if let value4 = try decoder.valueIf("optional4", as: Int?.self) {
+                optional4 = value4
+            }
+        } catch {
+            optional4 = nil
+        }
         optional5 = try decoder.valueIf("optional5", as: Int?.self) ?? nil
         sub = try decoder.valueIf("sub")
         if let val2 = try decoder.valueIf("sub2", as: TestJSONCodableSubModel.self) {
@@ -217,7 +231,7 @@ struct TestAutoCodableModel: CodableModel, KeyMappable {
     @CodableValue var optional1: String = ""
     @CodableValue var optional2: String = ""
     @CodableValue var optional3: String? = "default"
-    @CodableValue var optional4: Int?
+    @CodableValue var optional4: Int? = 4
     @CodableValue var optional5: Int? = 0
     @CodableValue var sub: TestAutoCodableSubModel?
     @CodableValue var sub2: TestAutoCodableSubModel = .init()
@@ -253,7 +267,7 @@ struct TestMappableCodableModel: CodableModel, KeyMappable {
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
-    var optional4: Int?
+    var optional4: Int? = 4
     var optional5: Int? = 0
     var sub: TestMappableCodableSubModel?
     var sub2: TestMappableCodableSubModel = .init()
@@ -313,7 +327,7 @@ struct TestJSONModel: JSONModel {
     var optional1: String = ""
     var optional2: String = ""
     var optional3: String? = "default"
-    var optional4: Int?
+    var optional4: Int? = 4
     var optional5: Int? = 0
     var sub: TestJSONSubModel?
     var sub2: TestJSONSubModel = .init()
@@ -455,7 +469,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == nil),
+                (model?.optional4 == (encode ? 4 : nil)),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
@@ -492,7 +506,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == nil),
+                (model?.optional4 == (encode ? 4 : nil)),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
@@ -529,7 +543,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == nil),
+                (model?.optional4 == (encode ? 4 : nil)),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
@@ -566,7 +580,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == nil),
+                (model?.optional4 == (encode ? 4 : nil)),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
@@ -603,7 +617,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == nil),
+                (model?.optional4 == (encode ? 4 : nil)),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
