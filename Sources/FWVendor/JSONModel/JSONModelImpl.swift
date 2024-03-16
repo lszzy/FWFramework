@@ -19,19 +19,20 @@ import Foundation
     public static let shared = JSONModelImpl()
     
     // MARK: - JSONModelPlugin
-    public func getPropertyKey(_ property: PropertyInfo) -> Int {
+    public func getPropertyKey(_ property: PropertyInfo) -> String {
         let address = Int(bitPattern: property.address)
-        return address
+        return "\(address)"
     }
     
     public func getHeadPointer<T>(_ instance: inout T) -> UnsafeMutablePointer<Int8> where T : _Measurable {
-        let rawPointer = instance.headPointer()
-        return rawPointer
+        let headPointer = instance.headPointer()
+        return headPointer
     }
     
-    public func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: Int) {
-        let propAddr = rawPointer.advanced(by: offset)
-        return (address: propAddr, key: Int(bitPattern: propAddr))
+    public func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: String) {
+        let address = rawPointer.advanced(by: offset)
+        let key = "\(Int(bitPattern: address))"
+        return (address: address, key: key)
     }
     
     public func getProperties(for type: Any.Type) -> [Property.Description]? {
@@ -108,17 +109,14 @@ extension HelpingMapper {
     
     public func specify<T>(property: inout T, name: String?, converter: ((String) -> T)?) {
         let pointer = withUnsafePointer(to: &property, { return $0 })
-        let key = Int(bitPattern: pointer)
+        let key = "\(Int(bitPattern: pointer))"
         self.specify(property: &property, key: key, name: name, converter: converter)
     }
     
     public func exclude<T>(property: inout T) {
-        self._exclude(property: &property)
-    }
-    
-    fileprivate func _exclude<T>(property: inout T) {
         let pointer = withUnsafePointer(to: &property, { return $0 })
-        self._exclude(property: &property, key: Int(bitPattern: pointer))
+        let key = "\(Int(bitPattern: pointer))"
+        self.exclude(property: &property, key: key)
     }
 }
 
@@ -130,7 +128,7 @@ public func <-- <T>(property: inout T, name: String) -> CustomMappingKeyValueTup
 
 public func <-- <T>(property: inout T, names: [String]) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     return (key, MappingPropertyHandler(rawPaths: names, assignmentClosure: nil, takeValueClosure: nil))
 }
 
@@ -146,7 +144,7 @@ public func <-- <Transform: TransformType>(property: inout Transform.Object, tra
 
 public func <-- <Transform: TransformType>(property: inout Transform.Object, transformer: ([String], Transform?)) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     let assignmentClosure = { (jsonValue: Any?) -> Transform.Object? in
         return transformer.1?.transformFromJSON(jsonValue)
     }
@@ -171,7 +169,7 @@ public func <-- <Transform: TransformType>(property: inout Transform.Object?, tr
 
 public func <-- <Transform: TransformType>(property: inout Transform.Object?, transformer: ([String], Transform?)) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     let assignmentClosure = { (jsonValue: Any?) -> Any? in
         return transformer.1?.transformFromJSON(jsonValue)
     }
@@ -199,7 +197,7 @@ public func <<< (mapper: HelpingMapper, mappings: [CustomMappingKeyValueTuple]) 
 infix operator >>> : AssignmentPrecedence
 
 public func >>> <T> (mapper: HelpingMapper, property: inout T) {
-    mapper._exclude(property: &property)
+    mapper.exclude(property: &property)
 }
 
 // MARK: - FieldDescriptor

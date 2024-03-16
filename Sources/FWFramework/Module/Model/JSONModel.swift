@@ -481,7 +481,7 @@ fileprivate func convertKeyIfNeeded(dict: [String: Any]) -> [String: Any] {
 }
 
 fileprivate func getRawValueFrom(dict: [String: Any], property: PropertyInfo, mapper: HelpingMapper) -> Any? {
-    let key = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(property) ?? property.key.hash
+    let key = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(property) ?? property.key
     if let mappingHandler = mapper.getMappingHandler(key: key) {
         if let mappingPaths = mappingHandler.mappingPaths, mappingPaths.count > 0 {
             for mappingPath in mappingPaths {
@@ -500,7 +500,7 @@ fileprivate func getRawValueFrom(dict: [String: Any], property: PropertyInfo, ma
 
 fileprivate func convertValue(rawValue: Any, property: PropertyInfo, mapper: HelpingMapper) -> Any? {
     if rawValue is NSNull { return nil }
-    let key = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(property) ?? property.key.hash
+    let key = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(property) ?? property.key
     if let mappingHandler = mapper.getMappingHandler(key: key), let transformer = mappingHandler.assignmentClosure {
         return transformer(rawValue)
     }
@@ -650,13 +650,13 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(rawPointer, offset: property.offset)
-            if mapper.propertyExcluded(key: propAddrs?.key ?? property.key.hash) {
+            let propAddr = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(rawPointer, offset: property.offset)
+            if mapper.propertyExcluded(key: propAddr?.key ?? property.key) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
                 continue
             }
 
-            let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: propAddrs?.address, bridged: isBridgedProperty)
+            let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: propAddr?.address, bridged: isBridgedProperty)
             InternalLogger.logVerbose("field: ", property.key, "  offset: ", property.offset, "  isBridgeProperty: ", isBridgedProperty)
 
             if let rawValue = getRawValueFrom(dict: _dict, property: propertyDetail, mapper: mapper) {
@@ -733,7 +733,7 @@ extension _ExtendCustomModelType {
                     realValue = _value
                 }
 
-                let address = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(info) ?? info.key.hash
+                let address = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyKey(info) ?? info.key
                 if mapper.propertyExcluded(key: address) {
                     continue
                 }
@@ -1161,7 +1161,7 @@ public extension JSONModel where Self: AnyObject {
 }
 
 // MARK: - HelpingMapper
-public typealias CustomMappingKeyValueTuple = (Int, MappingPropertyHandler)
+public typealias CustomMappingKeyValueTuple = (String, MappingPropertyHandler)
 
 struct MappingPath {
     var segments: [String]
@@ -1225,14 +1225,14 @@ public class MappingPropertyHandler {
 
 public class HelpingMapper {
     
-    private var mappingHandlers = [Int: MappingPropertyHandler]()
-    private var excludeProperties = [Int]()
+    private var mappingHandlers = [String: MappingPropertyHandler]()
+    private var excludeProperties = [String]()
     
-    internal func getMappingHandler(key: Int) -> MappingPropertyHandler? {
+    internal func getMappingHandler(key: String) -> MappingPropertyHandler? {
         return self.mappingHandlers[key]
     }
     
-    internal func propertyExcluded(key: Int) -> Bool {
+    internal func propertyExcluded(key: String) -> Bool {
         return self.excludeProperties.contains(key)
     }
     
@@ -1245,14 +1245,6 @@ public class HelpingMapper {
     }
     
     public func specify<T>(property: inout T, key: String, name: String?, converter: ((String) -> T)?) {
-        self.specify(property: &property, key: key.hash, name: name, converter: converter)
-    }
-    
-    public func exclude<T>(property: inout T, key: String) {
-        self._exclude(property: &property, key: key.hash)
-    }
-    
-    @_spi(FW) public func specify<T>(property: inout T, key: Int, name: String?, converter: ((String) -> T)?) {
         let names = (name == nil ? nil : [name!])
         
         if let _converter = converter {
@@ -1272,11 +1264,11 @@ public class HelpingMapper {
         }
     }
     
-    @_spi(FW) public func addCustomMapping(key: Int, mappingInfo: MappingPropertyHandler) {
+    public func addCustomMapping(key: String, mappingInfo: MappingPropertyHandler) {
         self.mappingHandlers[key] = mappingInfo
     }
     
-    @_spi(FW) public func _exclude<T>(property: inout T, key: Int) {
+    public func exclude<T>(property: inout T, key: String) {
         self.excludeProperties.append(key)
     }
 }
@@ -1870,8 +1862,8 @@ extension JSONValue: JSONPropertyWrapper {
 
 // MARK: - JSONModelPlugin
 @_spi(FW) public protocol JSONModelPlugin {
-    func getPropertyKey(_ property: PropertyInfo) -> Int
+    func getPropertyKey(_ property: PropertyInfo) -> String
     func getHeadPointer<T: _Measurable>(_ instance: inout T) -> UnsafeMutablePointer<Int8>
-    func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: Int)
+    func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: String)
     func getProperties(for type: Any.Type) -> [Property.Description]?
 }
