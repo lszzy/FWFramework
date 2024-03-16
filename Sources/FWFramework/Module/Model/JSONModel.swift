@@ -1754,7 +1754,7 @@ public extension JSONMappable where Root == Self {
 public extension JSONMappable {
     mutating func write(_ value: Any, forKey key: String, with keyMapping: [JSONMap<Self>]) -> Bool {
         for keyMap in keyMapping {
-            if keyMap.match(self, key) {
+            if keyMap.match?(self, key) ?? false {
                 keyMap.write?(&self, value)
                 return true
             }
@@ -1764,7 +1764,7 @@ public extension JSONMappable {
     
     func writeReference(_ value: Any, forKey key: String, with keyMapping: [JSONMap<Self>]) -> Bool {
         for keyMap in keyMapping {
-            if keyMap.match(self, key) {
+            if keyMap.match?(self, key) ?? false {
                 keyMap.writeReference?(self, value)
                 return true
             }
@@ -1789,7 +1789,7 @@ public extension JSONMappable {
 
 // MARK: - JSONMap
 public final class JSONMap<Root: JSONMappable> {
-    fileprivate let match: (_ root: Root, _ property: String) -> Bool
+    fileprivate let match: ((_ root: Root, _ property: String) -> Bool)?
     fileprivate let write: ((_ root: inout Root, _ value: Any) -> Void)?
     fileprivate let writeReference: ((_ root: Root, _ value: Any) -> Void)?
     private init(match: @escaping (_ root: Root, _ property: String) -> Bool,
