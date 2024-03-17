@@ -639,7 +639,7 @@ extension _ExtendCustomModelType {
         instance.mapping(mapper: mapper)
 
         // get head addr
-        let rawPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getHeadPointer(&instance)
+        let headPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyHead(&instance)
 
         // process dictionary
         let _dict = convertKeyIfNeeded(dict: dict)
@@ -650,7 +650,7 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let propAddr = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(rawPointer, offset: property.offset)
+            let propAddr = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(headPointer, property: property)
             if mapper.propertyExcluded(key: propAddr?.key ?? property.key) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
                 continue
@@ -703,10 +703,10 @@ extension _ExtendCustomModelType {
             }
             
             let instanceIsNsObject = mutableObject.isNSObjectType()
-            let head: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getHeadPointer(&mutableObject)
+            let headPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyHead(&mutableObject)
             let bridgedProperty = mutableObject.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
-                let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(head, offset: desc.offset)
+                let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(headPointer, property: desc)
                 return PropertyInfo(key: desc.key, type: desc.type, address: propAddrs?.address,
                                         bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
@@ -1866,7 +1866,7 @@ extension JSONValue: JSONPropertyWrapper {
 // MARK: - JSONModelPlugin
 @_spi(FW) public protocol JSONModelPlugin {
     func getPropertyKey(_ property: PropertyInfo) -> String
-    func getHeadPointer<T: _Measurable>(_ instance: inout T) -> UnsafeMutablePointer<Int8>
-    func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: String)
+    func getPropertyHead<T: _Measurable>(_ instance: inout T) -> UnsafeMutablePointer<Int8>
+    func getPropertyAddress(_ headPointer: UnsafeMutablePointer<Int8>, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>, key: String)
     func getProperties(for type: Any.Type) -> [Property.Description]?
 }

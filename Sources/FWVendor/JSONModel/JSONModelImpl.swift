@@ -24,13 +24,13 @@ import Foundation
         return "\(address)"
     }
     
-    public func getHeadPointer<T>(_ instance: inout T) -> UnsafeMutablePointer<Int8> where T : _Measurable {
+    public func getPropertyHead<T>(_ instance: inout T) -> UnsafeMutablePointer<Int8> where T : _Measurable {
         let headPointer = instance.headPointer()
         return headPointer
     }
     
-    public func getPropertyAddress(_ rawPointer: UnsafeMutablePointer<Int8>, offset: Int) -> (address: UnsafeMutablePointer<Int8>, key: String) {
-        let address = rawPointer.advanced(by: offset)
+    public func getPropertyAddress(_ headPointer: UnsafeMutablePointer<Int8>, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>, key: String) {
+        let address = headPointer.advanced(by: property.offset)
         let key = "\(Int(bitPattern: address))"
         return (address: address, key: key)
     }
@@ -49,51 +49,31 @@ import Foundation
 }
 
 // MARK: - JSONModel
-typealias Byte = Int8
-
 extension _Measurable {
     
     // locate the head of a struct type object in memory
-    mutating func headPointerOfStruct() -> UnsafeMutablePointer<Byte> {
+    mutating func headPointerOfStruct() -> UnsafeMutablePointer<Int8> {
 
         return withUnsafeMutablePointer(to: &self) {
-            return UnsafeMutableRawPointer($0).bindMemory(to: Byte.self, capacity: MemoryLayout<Self>.stride)
+            return UnsafeMutableRawPointer($0).bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
         }
     }
 
     // locating the head of a class type object in memory
-    mutating func headPointerOfClass() -> UnsafeMutablePointer<Byte> {
+    mutating func headPointerOfClass() -> UnsafeMutablePointer<Int8> {
 
         let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
-        let mutableTypedPointer = opaquePointer.bindMemory(to: Byte.self, capacity: MemoryLayout<Self>.stride)
-        return UnsafeMutablePointer<Byte>(mutableTypedPointer)
+        let mutableTypedPointer = opaquePointer.bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
+        return UnsafeMutablePointer<Int8>(mutableTypedPointer)
     }
 
     // locating the head of an object
-    mutating func headPointer() -> UnsafeMutablePointer<Byte> {
+    mutating func headPointer() -> UnsafeMutablePointer<Int8> {
         if Self.self is AnyClass {
             return self.headPointerOfClass()
         } else {
             return self.headPointerOfStruct()
         }
-    }
-    
-    // memory size occupy by self object
-    static func size() -> Int {
-        return MemoryLayout<Self>.size
-    }
-
-    // align
-    static func align() -> Int {
-        return MemoryLayout<Self>.alignment
-    }
-
-    // Returns the offset to the next integer that is greater than
-    // or equal to Value and is a multiple of Align. Align must be
-    // non-zero.
-    static func offsetToAlignment(value: Int, align: Int) -> Int {
-        let m = value % align
-        return m == 0 ? 0 : (align - m)
     }
 }
 
@@ -287,11 +267,6 @@ struct _FieldRecord {
     var fieldRecordFlags: Int32
     var mangledTypeNameOffset: Int32
     var fieldNameOffset: Int32
-}
-
-/// Tests equality of any two existential types
-func == (lhs: Any.Type, rhs: Any.Type) -> Bool {
-    return Metadata(type: lhs) == Metadata(type: rhs)
 }
 
 // MARK: - OtherExtension
@@ -698,15 +673,6 @@ extension ContextDescriptorType {
         return UnsafeRawPointer(bitPattern: base.pointee)
     }
 
-//    var genericArgumentVector: UnsafeRawPointer? {
-//        let pointer = UnsafePointer<Int>(self.pointer)
-//        let base = pointer.advanced(by: 19)
-//        if base.pointee == 0 {
-//            return nil
-//        }
-//        return UnsafeRawPointer(base)
-//    }
-
     var mangledName: String {
         let pointer = UnsafePointer<Int>(self.pointer)
         let base = pointer.advanced(by: contextDescriptorOffsetLocation)
@@ -835,29 +801,6 @@ extension PointerType {
     }
 }
 
-func == <T: PointerType>(lhs: T, rhs: T) -> Bool {
-    return lhs.pointer == rhs.pointer
-}
-
-// MARK: - ReflectionHelper
-struct ReflectionHelper {
-
-    static func mutableStorage<T>(instance: inout T) -> UnsafeMutableRawPointer {
-        return UnsafeMutableRawPointer(mutating: storage(instance: &instance))
-    }
-
-    static func storage<T>(instance: inout T) -> UnsafeRawPointer {
-        if type(of: instance) is AnyClass {
-            let opaquePointer = Unmanaged.passUnretained(instance as AnyObject).toOpaque()
-            return UnsafeRawPointer(opaquePointer)
-        } else {
-            return withUnsafePointer(to: &instance) { pointer in
-                return UnsafeRawPointer(pointer)
-            }
-        }
-    }
-}
-
 // MARK: - CBridge
 @_silgen_name("swift_getTypeByMangledNameInContext")
 public func _getTypeByMangledNameInContext(
@@ -866,10 +809,6 @@ public func _getTypeByMangledNameInContext(
     genericContext: UnsafeRawPointer?,
     genericArguments: UnsafeRawPointer?)
     -> Any.Type?
-
-
-@_silgen_name("swift_getTypeContextDescriptor")
-public func _swift_getTypeContextDescriptor(_ metadata: UnsafeRawPointer?) -> UnsafeRawPointer?
 
 // MARK: - MangledName
 // mangled name might contain 0 but it is not the end, do not just use strlen
