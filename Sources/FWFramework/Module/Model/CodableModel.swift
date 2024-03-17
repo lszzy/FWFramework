@@ -20,16 +20,8 @@ extension CodableModel where Self: AnyObject {
 }
 
 // MARK: - KeyMappable
-/// 通用Codable键名映射协议，需至少实现一种映射方法
-public protocol KeyMappable: Codable, ObjectType {
-    associatedtype Root = Self where Root: KeyMappable
-    
-    static var keyMapping: [KeyMap<Root>] { get }
-}
-
-public extension KeyMappable where Root == Self {
-    static var keyMapping: [KeyMap<Root>] { [] }
-    
+/// [ExCodable](https://github.com/iwill/ExCodable)
+public extension KeyMappable where Root == Self, Self: CodableModel {
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, with: Self.keyMapping)
         try encodeWrapper(to: encoder)
@@ -42,7 +34,7 @@ public extension KeyMappable where Root == Self {
     }
 }
 
-public extension KeyMappable {
+public extension KeyMappable where Root == Self, Self: CodableModel {
     func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
         try keyMapping.forEach { try $0.encode?(self, encoder) }
     }
@@ -59,10 +51,10 @@ public extension KeyMappable {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                if let wrapper = (child.value as? EncodablePropertyWrapper) {
+                if let wrapper = (child.value as? EncodableMappedValue) {
                     try wrapper.encode(to: encoder, label: child.label!.dropFirst())
                 } else {
-                    try (child.value as? EncodableAnyPropertyWrapper)?.encode(to: encoder, label: child.label!.dropFirst())
+                    try (child.value as? EncodableAnyMappedValue)?.encode(to: encoder, label: child.label!.dropFirst())
                 }
             }
             mirror = mirror.superclassMirror
@@ -73,10 +65,10 @@ public extension KeyMappable {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                if let wrapper = (child.value as? DecodablePropertyWrapper) {
+                if let wrapper = (child.value as? DecodableMappedValue) {
                     try wrapper.decode(from: decoder, label: child.label!.dropFirst())
                 } else {
-                    try (child.value as? DecodableAnyPropertyWrapper)?.decode(from: decoder, label: child.label!.dropFirst())
+                    try (child.value as? DecodableAnyMappedValue)?.decode(from: decoder, label: child.label!.dropFirst())
                 }
             }
             mirror = mirror.superclassMirror
@@ -85,18 +77,7 @@ public extension KeyMappable {
 }
 
 // MARK: - KeyMap
-public final class KeyMap<Root: Codable> {
-    fileprivate let encode: ((_ root: Root, _ encoder: Encoder) throws -> Void)?
-    fileprivate let decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?
-    fileprivate let decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?
-    private init(encode: @escaping (_ root: Root, _ encoder: Encoder) throws -> Void,
-                 decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?,
-                 decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?) {
-        (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
-    }
-}
-
-public extension KeyMap {
+public extension KeyMap where Root: CodableModel {
     convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ...) {
         self.init(encode: { root, encoder in
             try encoder.encode(root[keyPath: keyPath], for: codingKeys.first!)
@@ -242,49 +223,26 @@ public extension KeyMap {
     }
 }
 
-// MARK: - CodableValue
-/// Codable属性注解，解析成功且不为nil时才会覆盖默认值
-///
-/// https://github.com/iwill/ExCodable
-@propertyWrapper
-public final class CodableValue<Value> {
-    fileprivate let stringKeys: [String]?
-    fileprivate let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?
-    public var wrappedValue: Value
-    
-    private init(wrappedValue: Value, stringKeys: [String]? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
-        (self.wrappedValue, self.stringKeys, self.encode, self.decode) = (wrappedValue, stringKeys, encode, decode)
-    }
-    
-    public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+// MARK: - MappedValue
+public extension MappedValue {
+    convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] }, encode: encode, decode: decode)
     }
     
-    public convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+    convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKeys, encode: encode, decode: decode)
     }
     
-    public convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+    convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, encode: encode, decode: decode)
     }
 }
 
-extension CodableValue: Equatable where Value: Equatable {
-    public static func == (lhs: CodableValue<Value>, rhs: CodableValue<Value>) -> Bool {
-        return lhs.wrappedValue == rhs.wrappedValue
-    }
-}
-
-extension CodableValue: CustomStringConvertible, CustomDebugStringConvertible {
-    public var description: String { String(describing: wrappedValue) }
-    public var debugDescription: String { description }
-}
-
-fileprivate protocol EncodablePropertyWrapper {
+fileprivate protocol EncodableMappedValue {
     func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws
 }
 
-extension CodableValue: EncodablePropertyWrapper where Value: Encodable {
+extension MappedValue: EncodableMappedValue where Value: Encodable {
     fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
         if encode != nil { try encode!(encoder, wrappedValue) }
         else {
@@ -296,28 +254,11 @@ extension CodableValue: EncodablePropertyWrapper where Value: Encodable {
     }
 }
 
-fileprivate protocol EncodableAnyPropertyWrapper {
-    func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws
-}
-
-extension CodableValue: EncodableAnyPropertyWrapper {
-    fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
-        if encode != nil { try encode!(encoder, wrappedValue) }
-        else {
-            let value = Optional<Any>.deepUnwrap(wrappedValue)
-            if value != nil {
-                var container = encoder.container(keyedBy: AnyCodingKey.self)
-                try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
-            }
-        }
-    }
-}
-
-fileprivate protocol DecodablePropertyWrapper {
+fileprivate protocol DecodableMappedValue {
     func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws
 }
 
-extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
+extension MappedValue: DecodableMappedValue where Value: Decodable {
     fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
         if let decode = decode {
             if let value = try decode(decoder) {
@@ -339,11 +280,28 @@ extension CodableValue: DecodablePropertyWrapper where Value: Decodable {
     }
 }
 
-fileprivate protocol DecodableAnyPropertyWrapper {
+fileprivate protocol EncodableAnyMappedValue {
+    func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws
+}
+
+extension MappedValue: EncodableAnyMappedValue {
+    fileprivate func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
+        if encode != nil { try encode!(encoder, wrappedValue) }
+        else {
+            let value = Optional<Any>.deepUnwrap(wrappedValue)
+            if value != nil {
+                var container = encoder.container(keyedBy: AnyCodingKey.self)
+                try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
+            }
+        }
+    }
+}
+
+fileprivate protocol DecodableAnyMappedValue {
     func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws
 }
 
-extension CodableValue: DecodableAnyPropertyWrapper {
+extension MappedValue: DecodableAnyMappedValue {
     fileprivate func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
         if let decode = decode {
             if let value = try decode(decoder) {
@@ -365,6 +323,7 @@ extension CodableValue: DecodableAnyPropertyWrapper {
     }
 }
 
+// MARK: - Codable
 public extension Encoder {
     subscript<T: Encodable>(stringKey: String) -> T? { get { return nil }
         nonmutating set { try? encode(newValue, for: stringKey) }

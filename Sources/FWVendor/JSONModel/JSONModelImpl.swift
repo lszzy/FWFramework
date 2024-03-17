@@ -11,7 +11,7 @@ import Foundation
 #endif
 
 // MARK: - JSONModelImpl
-/// 可选JSONModel读写内存插件，不推荐使用，建议迁移至JSONMappable协议
+/// 可选JSONModel读写内存插件，不推荐使用，建议迁移至KeyMappable协议
 @_spi(FW) public class JSONModelImpl: NSObject, JSONModelPlugin {
     
     /// 单例模式

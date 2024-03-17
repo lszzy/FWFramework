@@ -1735,24 +1735,9 @@ open class CustomDateFormatTransform: DateFormatterTransform {
     }
 }
 
-// MARK: - JSONMappable
-/// 通用JSON键名映射协议，需至少实现一种映射方法，推荐使用，启用之后自动禁用内存读写
-public protocol JSONMappable {
-    associatedtype Root = Self where Root: JSONMappable
-    
-    static var keyMapping: [JSONMap<Root>] { get }
-    
-    func mappingValue(_ value: Any, forKey key: String) -> Bool
-}
-
-public extension JSONMappable where Root == Self {
-    static var keyMapping: [JSONMap<Root>] { [] }
-    
-    func mappingValue(_ value: Any, forKey key: String) -> Bool { false }
-}
-
-public extension JSONMappable {
-    mutating func write(_ value: Any, forKey key: String, with keyMapping: [JSONMap<Self>]) -> Bool {
+// MARK: - KeyMappable
+public extension KeyMappable {
+    mutating func write(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
             if keyMap.match?(self, key) ?? false {
                 keyMap.write?(&self, value)
@@ -1762,7 +1747,7 @@ public extension JSONMappable {
         return false
     }
     
-    func writeReference(_ value: Any, forKey key: String, with keyMapping: [JSONMap<Self>]) -> Bool {
+    func writeReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
             if keyMap.match?(self, key) ?? false {
                 keyMap.writeReference?(self, value)
@@ -1776,7 +1761,7 @@ public extension JSONMappable {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                if let wrapper = child.value as? JSONPropertyWrapper,
+                if let wrapper = child.value as? JSONMappedValue,
                    wrapper.write(value, forKey: key, label: child.label!.dropFirst()) {
                     return true
                 }
@@ -1787,19 +1772,8 @@ public extension JSONMappable {
     }
 }
 
-// MARK: - JSONMap
-public final class JSONMap<Root: JSONMappable> {
-    fileprivate let match: ((_ root: Root, _ property: String) -> Bool)?
-    fileprivate let write: ((_ root: inout Root, _ value: Any) -> Void)?
-    fileprivate let writeReference: ((_ root: Root, _ value: Any) -> Void)?
-    private init(match: @escaping (_ root: Root, _ property: String) -> Bool,
-                 write: ((_ root: inout Root, _ value: Any) -> Void)?,
-                 writeReference: ((_ root: Root, _ value: Any) -> Void)?) {
-        (self.match, self.write, self.writeReference) = (match, write, writeReference)
-    }
-}
-
-public extension JSONMap {
+// MARK: - KeyMap
+public extension KeyMap where Root: JSONModel {
     convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to mappingKeys: String ...) {
         self.init(match: { root, property in
             return mappingKeys.contains(property)
@@ -1817,42 +1791,12 @@ public extension JSONMap {
     }
 }
 
-// MARK: - JSONValue
-/// JSON属性注解，解析键存在时才会覆盖默认值
-@propertyWrapper
-public final class JSONValue<Value> {
-    fileprivate let stringKeys: [String]?
-    public var wrappedValue: Value
-    
-    private init(wrappedValue: Value, stringKeys: [String]? = nil) {
-        (self.wrappedValue, self.stringKeys) = (wrappedValue, stringKeys)
-    }
-    
-    public convenience init(wrappedValue: Value, _ stringKey: String? = nil) {
-        self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] })
-    }
-    
-    public convenience init(wrappedValue: Value, _ stringKeys: String...) {
-        self.init(wrappedValue: wrappedValue, stringKeys: stringKeys)
-    }
-}
-
-extension JSONValue: Equatable where Value: Equatable {
-    public static func == (lhs: JSONValue<Value>, rhs: JSONValue<Value>) -> Bool {
-        return lhs.wrappedValue == rhs.wrappedValue
-    }
-}
-
-extension JSONValue: CustomStringConvertible, CustomDebugStringConvertible {
-    public var description: String { String(describing: wrappedValue) }
-    public var debugDescription: String { description }
-}
-
-fileprivate protocol JSONPropertyWrapper {
+// MARK: - MappedValue
+fileprivate protocol JSONMappedValue {
     func write<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool
 }
 
-extension JSONValue: JSONPropertyWrapper {
+extension MappedValue: JSONMappedValue {
     fileprivate func write<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
         let mappingKeys = stringKeys ?? [String(label)]
         if mappingKeys.contains(key) {
