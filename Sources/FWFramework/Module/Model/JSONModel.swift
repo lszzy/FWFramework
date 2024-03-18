@@ -638,12 +638,8 @@ extension _ExtendCustomModelType {
         let mapper = HelpingMapper()
         instance.mapping(mapper: mapper)
 
-        // get head addr
         let headPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyHead(&instance)
-
-        // process dictionary
         let _dict = convertKeyIfNeeded(dict: dict)
-
         let instanceIsNsObject = instance.isNSObjectType()
         let bridgedPropertyList = instance.getBridgedPropertyList()
 
@@ -1100,7 +1096,6 @@ public extension JSONModel {
     }
 
     func toJSONString(prettyPrint: Bool = false) -> String? {
-
         if let anyObject = self.toJSON() {
             if JSONSerialization.isValidJSONObject(anyObject) {
                 do {
@@ -1123,13 +1118,11 @@ public extension JSONModel {
 }
 
 public extension Collection where Iterator.Element: JSONModel {
-
     func toJSON() -> [[String: Any]?] {
         return self.map{ $0.toJSON() }
     }
 
     func toJSONString(prettyPrint: Bool = false) -> String? {
-
         let anyArray = self.toJSON()
         if JSONSerialization.isValidJSONObject(anyArray) {
             do {
@@ -1152,12 +1145,10 @@ public extension Collection where Iterator.Element: JSONModel {
 
 // MARK: - HashString
 public extension JSONModel where Self: AnyObject {
-    
     var hashString: String {
         let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
         return String(describing: opaquePointer)
     }
-    
 }
 
 // MARK: - HelpingMapper
@@ -1189,7 +1180,6 @@ struct MappingPath {
 }
 
 extension Dictionary where Key == String, Value: Any {
-
     func findValueBy(path: MappingPath) -> Any? {
         var currentDict: [String: Any]? = self
         var lastValue: Any?
@@ -1268,7 +1258,7 @@ public class HelpingMapper {
         self.mappingHandlers[key] = mappingInfo
     }
     
-    public func exclude<T>(property: inout T, key: String) {
+    public func exclude(key: String) {
         self.excludeProperties.append(key)
     }
 }
@@ -1277,19 +1267,19 @@ public class HelpingMapper {
 struct InternalLogger {
 
     static func logError(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.error.rawValue {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.error.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
 
     static func logDebug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.debug.rawValue {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.debug.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
 
     static func logVerbose(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.verbose.rawValue {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.verbose.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
@@ -1314,14 +1304,13 @@ public struct DeserializeOptions: OptionSet {
     }
 }
 
-public enum DebugMode: Int {
-    case verbose = 0
-    case debug = 1
-    case error = 2
-    case none = 3
-}
-
 public struct JSONModelConfiguration {
+    public enum DebugMode: Int {
+        case verbose = 0
+        case debug = 1
+        case error = 2
+        case none = 3
+    }
 
     private static var _mode = DebugMode.error
     public static var debugMode: DebugMode {
@@ -1337,38 +1326,18 @@ public struct JSONModelConfiguration {
 }
 
 // MARK: - AnyExtensions
-@_spi(FW) public protocol AnyExtensions {}
+protocol AnyExtensions {}
 
 extension AnyExtensions {
-    
-    public static func isValueTypeOrSubtype(_ value: Any) -> Bool {
-        return value is Self
-    }
-
-    public static func value(from storage: UnsafeRawPointer) -> Any {
-        return storage.assumingMemoryBound(to: self).pointee
-    }
-
-    public static func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
+    static func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
         guard let this = value as? Self else {
             return
         }
         storage.assumingMemoryBound(to: self).pointee = this
     }
 
-    public static func takeValue(from anyValue: Any) -> Self? {
+    static func takeValue(from anyValue: Any) -> Self? {
         return anyValue as? Self
-    }
-    
-    mutating func storage() -> UnsafeRawPointer {
-        if type(of: self) is AnyClass {
-            let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
-            return UnsafeRawPointer(opaquePointer)
-        } else {
-            return withUnsafePointer(to: &self) { pointer in
-                return UnsafeRawPointer(pointer)
-            }
-        }
     }
 }
 
@@ -1379,11 +1348,6 @@ func extensions(of type: Any.Type) -> AnyExtensions.Type {
         UnsafeMutableRawPointer(mutating: pointer).assumingMemoryBound(to: Any.Type.self).pointee = type
     }
     return extensions
-}
-
-/// Tests if `value` is `type` or a subclass of `type`
-func value(_ value: Any, is type: Any.Type) -> Bool {
-    return extensions(of: type).isValueTypeOrSubtype(value)
 }
 
 // MARK: - Properties
@@ -1736,33 +1700,33 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 }
 
 // MARK: - KeyMappable
-public extension KeyMappable {
-    mutating func write(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+public extension KeyMappable where Root == Self, Self: JSONModel {
+    mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
             if keyMap.match?(self, key) ?? false {
-                keyMap.write?(&self, value)
+                keyMap.mapping?(&self, value)
                 return true
             }
         }
         return false
     }
     
-    func writeReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+    func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
             if keyMap.match?(self, key) ?? false {
-                keyMap.writeReference?(self, value)
+                keyMap.mappingReference?(self, value)
                 return true
             }
         }
         return false
     }
     
-    func writeWrapper(_ value: Any, forKey key: String) -> Bool {
+    func mappingMirror(_ value: Any, forKey key: String) -> Bool {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
                 if let wrapper = child.value as? JSONMappedValue,
-                   wrapper.write(value, forKey: key, label: child.label!.dropFirst()) {
+                   wrapper.mappingValue(value, forKey: key, label: child.label!.dropFirst()) {
                     return true
                 }
             }
@@ -1777,27 +1741,27 @@ public extension KeyMap where Root: JSONModel {
     convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to mappingKeys: String ...) {
         self.init(match: { root, property in
             return mappingKeys.contains(property)
-        }, write: { root, value in
+        }, mapping: { root, value in
             root[keyPath: keyPath] = value as! Value
-        }, writeReference: nil)
+        }, mappingReference: nil)
     }
     
     convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to mappingKeys: String ...) {
         self.init(match: { root, property in
             return mappingKeys.contains(property)
-        }, write: nil, writeReference: { root, value in
+        }, mapping: nil, mappingReference: { root, value in
             root[keyPath: keyPath] = value as! Value
         })
     }
 }
 
 // MARK: - MappedValue
-fileprivate protocol JSONMappedValue {
-    func write<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool
+public protocol JSONMappedValue {
+    func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool
 }
 
 extension MappedValue: JSONMappedValue {
-    fileprivate func write<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
+    public func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
         let mappingKeys = stringKeys ?? [String(label)]
         if mappingKeys.contains(key) {
             wrappedValue = value as! Value

@@ -8,8 +8,15 @@
 import Foundation
 
 // MARK: - CodableModel
-/// 通用Codable编码模型协议，使用方法类似Codable
-public protocol CodableModel: Codable, AnyModel {}
+/// 通用安全编解码Codable模型协议，默认实现KeyMappable
+///
+/// 功能及使用方式：
+/// 1. 支持Codable类型字段自动映射，无需声明CodingKeys
+/// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
+/// 3. 支持忽略指定字段，使用方式：@MappedValue(ignored: true)
+/// 4. 支持Any类型，默认未开启，开启方式同上：@MappedValue
+/// 5. 支持映射白名单(兼容MappedValue)，注意开启后会关闭1自动映射，开启方式：static let keyMapping: [KeyMap<Self>] = [...]
+public protocol CodableModel: Codable, KeyMappable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串
@@ -20,7 +27,25 @@ extension CodableModel where Self: AnyObject {
 }
 
 // MARK: - KeyMappable
+/// 通用Key键名映射协议，推荐使用
+///
 /// [ExCodable](https://github.com/iwill/ExCodable)
+public protocol KeyMappable {
+    associatedtype Root = Self where Root: KeyMappable
+    
+    /// 模型Key键名映射声明，默认为空不生效
+    static var keyMapping: [KeyMap<Root>] { get }
+    
+    /// 映射值到指定Key，仅JSONModel支持
+    func mappingValue(_ value: Any, forKey key: String) -> Bool
+}
+
+public extension KeyMappable where Root == Self {
+    static var keyMapping: [KeyMap<Root>] { [] }
+    
+    func mappingValue(_ value: Any, forKey key: String) -> Bool { false }
+}
+
 public extension KeyMappable where Root == Self, Self: CodableModel {
     func encode(to encoder: Encoder) throws {
         try encode(to: encoder, with: Self.keyMapping)
@@ -32,9 +57,7 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
         try decode(from: decoder, with: Self.keyMapping)
         try decodeMirror(from: decoder)
     }
-}
-
-public extension KeyMappable where Root == Self, Self: CodableModel {
+    
     func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
         try keyMapping.forEach { try $0.encode?(self, encoder) }
     }
@@ -77,6 +100,29 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
 }
 
 // MARK: - KeyMap
+/// 模型Key键名映射类
+public final class KeyMap<Root: KeyMappable> {
+    let encode: ((_ root: Root, _ encoder: Encoder) throws -> Void)?
+    let decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?
+    let decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?
+    init(encode: @escaping (_ root: Root, _ encoder: Encoder) throws -> Void,
+         decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?,
+         decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?) {
+        (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
+        (self.match, self.mapping, self.mappingReference) = (nil, nil, nil)
+    }
+    
+    let match: ((_ root: Root, _ property: String) -> Bool)?
+    let mapping: ((_ root: inout Root, _ value: Any) -> Void)?
+    let mappingReference: ((_ root: Root, _ value: Any) -> Void)?
+    init(match: @escaping (_ root: Root, _ property: String) -> Bool,
+         mapping: ((_ root: inout Root, _ value: Any) -> Void)?,
+         mappingReference: ((_ root: Root, _ value: Any) -> Void)?) {
+        (self.match, self.mapping, self.mappingReference) = (match, mapping, mappingReference)
+        (self.encode, self.decode, self.decodeReference) = (nil, nil, nil)
+    }
+}
+
 public extension KeyMap where Root: CodableModel {
     convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ...) {
         self.init(encode: { root, encoder in
@@ -224,18 +270,46 @@ public extension KeyMap where Root: CodableModel {
 }
 
 // MARK: - MappedValue
-public extension MappedValue {
-    convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+/// 映射属性注解
+@propertyWrapper
+public final class MappedValue<Value> {
+    let stringKeys: [String]?
+    let ignored: Bool
+    public var wrappedValue: Value
+    
+    let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?
+    let decode: ((_ decoder: Decoder) throws -> Value?)?
+    
+    init(wrappedValue: Value, stringKeys: [String]?, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
+    }
+    
+    public init(wrappedValue: Value, ignored: Bool) {
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, nil, ignored, nil, nil)
+    }
+    
+    public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] }, encode: encode, decode: decode)
     }
     
-    convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+    public convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKeys, encode: encode, decode: decode)
     }
     
-    convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
+    public convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, encode: encode, decode: decode)
     }
+}
+
+extension MappedValue: Equatable where Value: Equatable {
+    public static func == (lhs: MappedValue<Value>, rhs: MappedValue<Value>) -> Bool {
+        return lhs.wrappedValue == rhs.wrappedValue
+    }
+}
+
+extension MappedValue: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String { String(describing: wrappedValue) }
+    public var debugDescription: String { description }
 }
 
 public protocol EncodableMappedValue {

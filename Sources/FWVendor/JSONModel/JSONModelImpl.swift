@@ -96,7 +96,7 @@ extension HelpingMapper {
     public func exclude<T>(property: inout T) {
         let pointer = withUnsafePointer(to: &property, { return $0 })
         let key = "\(Int(bitPattern: pointer))"
-        self.exclude(property: &property, key: key)
+        self.exclude(key: key)
     }
 }
 
