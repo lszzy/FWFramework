@@ -7,6 +7,17 @@
 
 import Foundation
 
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 注册自定义Codable解码转换器
+    /// - Parameter decodingConverter: 解码转换器
+    public static func register(_ decodingConverter: CodableDecodingConverter) {
+        _codableDecodingConverters.append(decodingConverter)
+    }
+    
+    fileprivate static var _codableDecodingConverters: [CodableDecodingConverter] = []
+}
+
 // MARK: - AnyEncoder
 /// https://github.com/JohnSundell/Codextended
 public protocol AnyEncoder {
@@ -612,6 +623,384 @@ private extension UnkeyedEncodingContainer {
         var container = self.nestedContainer(keyedBy: AnyCodingKey.self)
         try container.encodeAnyDictionary(value)
     }
+}
+
+// MARK: - SafeCodable
+public extension Encoder {
+    // MARK: - Subscript
+    subscript<T: Encodable>(stringKey: String) -> T? { get { return nil }
+        nonmutating set { try? encodeSafe(newValue, for: stringKey) }
+    }
+    
+    subscript<T: Encodable, K: CodingKey>(codingKey: K) -> T? { get { return nil }
+        nonmutating set { try? encodeSafe(newValue, for: codingKey) }
+    }
+    
+    subscript<T>(stringKey: String) -> T? { get { return nil }
+        nonmutating set { try? encodeSafeAny(newValue, for: stringKey) }
+    }
+    
+    subscript<T, K: CodingKey>(codingKey: K) -> T? { get { return nil }
+        nonmutating set { try? encodeSafeAny(newValue, for: codingKey) }
+    }
+    
+    // MARK: - Safe
+    func encodeSafe<T: Encodable>(_ value: T?, for stringKey: String) throws {
+        let dot: Character = "."
+        guard stringKey.contains(dot), stringKey.count > 1 else {
+            try encodeSafe(value, for: AnyCodingKey(stringKey))
+            return
+        }
+        
+        let keys = stringKey.split(separator: dot).map { AnyCodingKey($0) }
+        var container = self.container(keyedBy: AnyCodingKey.self)
+        for key in keys.dropLast() {
+            container = container.nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+        }
+        
+        let codingKey = keys.last!
+        do {
+            try container.encodeIfPresent(value, forKey: codingKey)
+        } catch {}
+    }
+    
+    func encodeSafe<T: Encodable, K: CodingKey>(_ value: T?, for codingKey: K) throws {
+        var container = self.container(keyedBy: K.self)
+        do {
+            try container.encodeIfPresent(value, forKey: codingKey)
+        } catch {}
+    }
+    
+    // MARK: - SafeAny
+    func encodeSafeAny<T>(_ value: T?, for stringKey: String) throws {
+        let dot: Character = "."
+        guard stringKey.contains(dot), stringKey.count > 1 else {
+            try encodeSafeAny(value, for: AnyCodingKey(stringKey))
+            return
+        }
+        
+        let keys = stringKey.split(separator: dot).map { AnyCodingKey($0) }
+        var container = self.container(keyedBy: AnyCodingKey.self)
+        for key in keys.dropLast() {
+            container = container.nestedContainer(keyedBy: AnyCodingKey.self, forKey: key)
+        }
+        
+        let codingKey = keys.last!
+        do {
+            try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey)
+        } catch {}
+    }
+    
+    func encodeSafeAny<T, K: CodingKey>(_ value: T?, for codingKey: K) throws {
+        var container = self.container(keyedBy: K.self)
+        do {
+            try container.encodeAnyIfPresent(value, as: T.self, forKey: codingKey)
+        } catch {}
+    }
+}
+
+public extension Decoder {
+    // MARK: - Subscript
+    subscript<T: Decodable>(stringKeys: [String]) -> T? {
+        return try? decodeSafe(stringKeys, as: T.self)
+    }
+    
+    subscript<T: Decodable>(stringKeys: String ...) -> T? {
+        return try? decodeSafe(stringKeys, as: T.self)
+    }
+    
+    subscript<T: Decodable, K: CodingKey>(codingKeys: [K]) -> T? {
+        return try? decodeSafe(codingKeys, as: T.self)
+    }
+    
+    subscript<T: Decodable, K: CodingKey>(codingKeys: K ...) -> T? {
+        return try? decodeSafe(codingKeys, as: T.self)
+    }
+    
+    subscript<T>(stringKeys: [String]) -> T? {
+        return try? decodeSafeAny(stringKeys, as: T.self)
+    }
+    
+    subscript<T>(stringKeys: String ...) -> T? {
+        return try? decodeSafeAny(stringKeys, as: T.self)
+    }
+    
+    subscript<T, K: CodingKey>(codingKeys: [K]) -> T? {
+        return try? decodeSafeAny(codingKeys, as: T.self)
+    }
+    
+    subscript<T, K: CodingKey>(codingKeys: K ...) -> T? {
+        return try? decodeSafeAny(codingKeys, as: T.self)
+    }
+    
+    // MARK: - Safe
+    func decodeSafe<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeSafe(stringKeys, as: type)
+    }
+    
+    func decodeSafe<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
+        return try decodeSafe(stringKeys, as: type, throws: false)
+    }
+    
+    internal func decodeSafe<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool) throws -> T? {
+        return try decodeSafe(stringKeys.map { AnyCodingKey($0) }, as: type, throws: `throws`)
+    }
+    
+    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeSafe(codingKeys, as: type)
+    }
+    
+    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
+        return try decodeSafe(codingKeys, as: type, throws: false)
+    }
+    
+    internal func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool) throws -> T? {
+        do {
+            let container = try self.container(keyedBy: K.self)
+            return try container.decodeForAlternativeKeys(codingKeys, as: type)
+        } catch { if `throws` { throw error } }
+        return nil
+    }
+    
+    // MARK: - SafeAny
+    func decodeSafeAny<T>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeSafeAny(stringKeys, as: type)
+    }
+    
+    func decodeSafeAny<T>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
+        return try decodeSafeAny(stringKeys, as: type, throws: false)
+    }
+    
+    internal func decodeSafeAny<T>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool) throws -> T? {
+        return try decodeSafeAny(stringKeys.map { AnyCodingKey($0) }, as: type, throws: `throws`)
+    }
+    
+    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
+        return try decodeSafeAny(codingKeys, as: type)
+    }
+    
+    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
+        return try decodeSafeAny(codingKeys, as: type, throws: false)
+    }
+    
+    internal func decodeSafeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool) throws -> T? {
+        do {
+            let container = try self.container(keyedBy: K.self)
+            return try container.decodeAnyForAlternativeKeys(codingKeys, as: type)
+        } catch { if `throws` { throw error } }
+        return nil
+    }
+}
+
+fileprivate extension KeyedDecodingContainer {
+    func decodeForAlternativeKeys<T: Decodable>(_ codingKeys: [Self.Key], as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            let codingKey = codingKeys.first!
+            if let value = try decodeForNestedKeys(codingKey, as: type) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        let codingKeys = Array(codingKeys.dropFirst())
+        if !codingKeys.isEmpty,
+           let value = try? decodeForAlternativeKeys(codingKeys, as: type) {
+            return value
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    func decodeAnyForAlternativeKeys<T>(_ codingKeys: [Self.Key], as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            let codingKey = codingKeys.first!
+            if let value = try decodeAnyForNestedKeys(codingKey, as: type) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        let codingKeys = Array(codingKeys.dropFirst())
+        if !codingKeys.isEmpty,
+           let value = try? decodeAnyForAlternativeKeys(codingKeys, as: type) {
+            return value
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    func decodeForNestedKeys<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            if let value = try decodeForValue(codingKey, as: type) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        let dot: Character = "."
+        if let exCodingKey = codingKey as? AnyCodingKey,
+           exCodingKey.intValue == nil && exCodingKey.stringValue.contains(dot) {
+            let keys = exCodingKey.stringValue.split(separator: dot).map { AnyCodingKey($0) }
+            if !keys.isEmpty,
+               let container = nestedContainer(with: keys.dropLast()),
+               let codingKey = keys.last,
+               let value = try? container.decodeForNestedKeys(codingKey as! Self.Key, as: type) {
+                return value
+            }
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    func decodeAnyForNestedKeys<T>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            if let value = try decodeAnyForValue(codingKey, as: type) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        let dot: Character = "."
+        if let exCodingKey = codingKey as? AnyCodingKey,
+           exCodingKey.intValue == nil && exCodingKey.stringValue.contains(dot) {
+            let keys = exCodingKey.stringValue.split(separator: dot).map { AnyCodingKey($0) }
+            if !keys.isEmpty,
+               let container = nestedContainer(with: keys.dropLast()),
+               let codingKey = keys.last,
+               let value = try? container.decodeAnyForNestedKeys(codingKey as! Self.Key, as: type) {
+                return value
+            }
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    private func nestedContainer(with keys: [AnyCodingKey]) -> Self? {
+        var container: Self? = self
+        for key in keys {
+            container = try? container?.nestedContainer(keyedBy: Self.Key.self, forKey: key as! Self.Key)
+            if container == nil { return nil }
+        }
+        return container
+    }
+    
+    func decodeForValue<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            if let value = try decodeIfPresent(type, forKey: codingKey) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        if contains(codingKey),
+           let value = decodeForTypeConversion(codingKey, as: type) {
+            return value
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    func decodeAnyForValue<T>(_ codingKey: Self.Key, as type: T.Type = T.self) throws -> T? {
+        var firstError: Error?
+        do {
+            if let value = try decodeAnyIfPresent(type, forKey: codingKey) {
+                return value
+            }
+        } catch { firstError = error }
+        
+        if contains(codingKey),
+           let value = try? decodeAnyIfPresent(type, forKey: codingKey) {
+            return value
+        }
+        
+        if let firstError = firstError { throw firstError }
+        return nil
+    }
+    
+    func decodeForTypeConversion<T: Decodable>(_ codingKey: Self.Key, as type: T.Type = T.self) -> T? {
+        if type is Bool.Type || type is Bool?.Type {
+            if let int = try? decodeIfPresent(Int.self, forKey: codingKey) {
+                return (int != 0) as? T
+            } else if let string = try? decodeIfPresent(String.self, forKey: codingKey) {
+                switch string.lowercased() {
+                    case "true", "t", "yes", "y":
+                        return true as? T
+                    case "false", "f", "no", "n", "":
+                        return false as? T
+                    default:
+                        if let int = Int(string) { return (int != 0) as? T }
+                        else if let double = Double(string) { return (Int(double) != 0) as? T }
+                }
+            }
+        } else if type is Int.Type || type is Int?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int(double) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int(string) { return value as? T }
+        } else if type is Int8.Type || type is Int8?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int8(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int8(double) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int8(string) { return value as? T }
+        } else if type is Int16.Type || type is Int16?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int16(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int16(double) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int16(string) { return value as? T }
+        } else if type is Int32.Type || type is Int32?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int32(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int32(double) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int32(string) { return value as? T }
+        } else if type is Int64.Type || type is Int64?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return Int64(bool ? 1 : 0) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return Int64(double) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Int64(string) { return value as? T }
+        } else if type is UInt.Type || type is UInt?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt(string) { return value as? T }
+        } else if type is UInt8.Type || type is UInt8?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt8(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt8(string) { return value as? T }
+        } else if type is UInt16.Type || type is UInt16?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt16(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt16(string) { return value as? T }
+        } else if type is UInt32.Type || type is UInt32?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt32(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt32(string) { return value as? T }
+        } else if type is UInt64.Type || type is UInt64?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return UInt64(bool ? 1 : 0) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = UInt64(string) { return value as? T }
+        } else if type is Double.Type || type is Double?.Type {
+            if      let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Double(int64) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Double(string) { return value as? T }
+        } else if type is Float.Type || type is Float?.Type {
+            if      let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return Float(int64) as? T }
+            else if let string = try? decodeIfPresent(String.self, forKey: codingKey), let value = Float(string) { return value as? T }
+        } else if type is String.Type || type is String?.Type {
+            if      let bool   = try? decodeIfPresent(Bool.self,   forKey: codingKey) { return String(describing: bool) as? T }
+            else if let int64  = try? decodeIfPresent(Int64.self,  forKey: codingKey) { return String(describing: int64) as? T }
+            else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T }
+        }
+        
+        for converter in WrapperGlobal._codableDecodingConverters {
+            if let value = try? converter.decode(self, codingKey: codingKey, as: type) {
+                return value
+            }
+        }
+        if let converter = self as? CodableDecodingConverter,
+           let value = try? converter.decode(self, codingKey: codingKey, as: type) {
+            return value
+        }
+        
+        return nil
+    }
+}
+
+// MARK: - CodableDecodingConverter
+public protocol CodableDecodingConverter {
+    func decode<T: Decodable, K: CodingKey>(_ container: KeyedDecodingContainer<K>, codingKey: K, as type: T.Type) throws -> T?
 }
 
 // MARK: - DefaultCaseCodable
