@@ -1701,6 +1701,16 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 
 // MARK: - KeyMappable
 public extension KeyMappable where Root == Self, Self: JSONModel {
+    mutating func mappingModel(_ value: Any, forKey key: String) -> Bool {
+        if mappingValue(value, forKey: key, with: Self.keyMapping) {
+            return true
+        }
+        if mappingMirror(value, forKey: key) {
+            return true
+        }
+        return false
+    }
+    
     mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
             if keyMap.match?(self, key) ?? false {
@@ -1762,6 +1772,8 @@ public protocol JSONMappedValue {
 
 extension MappedValue: JSONMappedValue {
     public func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
+        guard !ignored else { return false }
+        
         let mappingKeys = stringKeys ?? [String(label)]
         if mappingKeys.contains(key) {
             wrappedValue = value as! Value

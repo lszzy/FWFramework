@@ -222,6 +222,7 @@ struct TestAutoCodableModel: CodableModel, KeyMappable {
     @MappedValue var amount: Float = 0
     @MappedValue("alias_key")
     var alias: String = ""
+    @MappedValue(ignored: true)
     var except: String = ""
     @MappedValue("camel_name")
     var camelName: String = ""

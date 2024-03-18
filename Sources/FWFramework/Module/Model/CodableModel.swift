@@ -8,14 +8,19 @@
 import Foundation
 
 // MARK: - CodableModel
-/// 通用安全编解码Codable模型协议，默认实现KeyMappable
+/// 通用安全编解码Codable模型协议，默认实现KeyMappable，可任选一种模式使用
 ///
-/// 功能及使用方式：
+/// 模式一：MappedValue模式，与KeyMapping模式冲突
 /// 1. 支持Codable类型字段自动映射，无需声明CodingKeys
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持忽略指定字段，使用方式：@MappedValue(ignored: true)
-/// 4. 支持Any类型，默认未开启，开启方式同上：@MappedValue
-/// 5. 支持映射白名单(兼容MappedValue)，注意开启后会关闭1自动映射，开启方式：static let keyMapping: [KeyMap<Self>] = [...]
+/// 4. 支持Any类型，默认未开启，开启方式：@MappedValue
+///
+/// 模式二：KeyMapping模式，与MappedValue模式冲突
+/// 1. 完整自定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
+/// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
+/// 3. 未加入keyMapping的字段自动忽略
+/// 4. 支持Any类型，使用方式同上，加入keyMapping即可
 public protocol CodableModel: Codable, KeyMappable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
@@ -48,21 +53,35 @@ public extension KeyMappable where Root == Self {
 
 public extension KeyMappable where Root == Self, Self: CodableModel {
     func encode(to encoder: Encoder) throws {
-        try encode(to: encoder, with: Self.keyMapping)
-        try encodeMirror(to: encoder)
+        try encodeModel(to: encoder)
     }
     
     init(from decoder: Decoder) throws {
         self.init()
-        try decode(from: decoder, with: Self.keyMapping)
+        try decodeModel(from: decoder)
+    }
+    
+    func encodeModel(to encoder: Encoder) throws {
+        // 模式一：KeyMapping模式
+        let keyMapping = Self.keyMapping
+        if !keyMapping.isEmpty {
+            try encodeValue(to: encoder, with: keyMapping)
+        // 模式二：MappedValue模式
+        } else {
+            try encodeMirror(to: encoder)
+        }
+    }
+    
+    mutating func decodeModel(from decoder: Decoder) throws {
+        try decodeValue(from: decoder, with: Self.keyMapping)
         try decodeMirror(from: decoder)
     }
     
-    func encode(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
+    func encodeValue(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
         try keyMapping.forEach { try $0.encode?(self, encoder) }
     }
     
-    mutating func decode(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
+    mutating func decodeValue(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
         try keyMapping.forEach { try $0.decode?(&self, decoder) }
     }
     
@@ -74,10 +93,12 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                if let wrapper = (child.value as? EncodableMappedValue) {
+                if let wrapper = child.value as? EncodableMappedValue {
+                    try wrapper.encode(to: encoder, label: child.label!.dropFirst())
+                } else if let wrapper = child.value as? EncodableAnyMappedValue {
                     try wrapper.encode(to: encoder, label: child.label!.dropFirst())
                 } else {
-                    try (child.value as? EncodableAnyMappedValue)?.encode(to: encoder, label: child.label!.dropFirst())
+                    try encodeMirror(to: encoder, label: child.label!.dropFirst(), value: child.value)
                 }
             }
             mirror = mirror.superclassMirror
@@ -88,14 +109,24 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
-                if let wrapper = (child.value as? DecodableMappedValue) {
+                if let wrapper = child.value as? DecodableMappedValue {
+                    try wrapper.decode(from: decoder, label: child.label!.dropFirst())
+                } else if let wrapper = child.value as? DecodableAnyMappedValue {
                     try wrapper.decode(from: decoder, label: child.label!.dropFirst())
                 } else {
-                    try (child.value as? DecodableAnyMappedValue)?.decode(from: decoder, label: child.label!.dropFirst())
+                    try decodeMirror(from: decoder, label: child.label!.dropFirst())
                 }
             }
             mirror = mirror.superclassMirror
         }
+    }
+    
+    private func encodeMirror<Label: StringProtocol>(to encoder: Encoder, label: Label, value: Any) throws {
+        
+    }
+    
+    private func decodeMirror<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
+        
     }
 }
 
@@ -318,6 +349,8 @@ public protocol EncodableMappedValue {
 
 extension MappedValue: EncodableMappedValue where Value: Encodable {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -335,6 +368,8 @@ public protocol DecodableMappedValue {
 
 extension MappedValue: DecodableMappedValue where Value: Decodable {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
@@ -361,6 +396,8 @@ public protocol EncodableAnyMappedValue {
 
 extension MappedValue: EncodableAnyMappedValue {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -378,6 +415,8 @@ public protocol DecodableAnyMappedValue {
 
 extension MappedValue: DecodableAnyMappedValue {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
