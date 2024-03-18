@@ -366,8 +366,7 @@ extension MappedValue: EncodableAnyMappedValue {
         } else {
             let value = Optional<Any>.deepUnwrap(wrappedValue)
             if value != nil {
-                var container = encoder.container(keyedBy: AnyCodingKey.self)
-                try container.encodeAnyIfPresent(wrappedValue, as: type(of: wrappedValue), forKey: AnyCodingKey(label))
+                try encoder.encodeSafeAny(wrappedValue, for: stringKeys?.first ?? String(label))
             }
         }
     }
