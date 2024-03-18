@@ -363,7 +363,7 @@ extension Wrapper where Base: WrapperObject {
     }
     
     // MARK: - Mirror
-    /// 获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取当前对象的反射字典(含父类直至NSObject)，不含nil值
     public var mirrorDictionary: [String: Any] {
         return base.fw_mirrorDictionary
     }
@@ -420,7 +420,7 @@ extension Wrapper where Base: NSObject {
         try Base.fw_mirrorMap(object, block: block)
     }
     
-    /// 获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
     public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
         return Base.fw_mirrorDictionary(object)
     }
@@ -822,7 +822,7 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Mirror
-    /// 获取当前对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取当前对象的反射字典(含父类直至NSObject)，不含nil值
     public var fw_mirrorDictionary: [String: Any] {
         return NSObject.fw_mirrorDictionary(self)
     }
@@ -990,7 +990,7 @@ extension Wrapper where Base: NSObject {
         }
     }
     
-    /// 获取任意对象的反射字典(含父类直至NSObject，自动过滤_开头属性)，不含nil值
+    /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
     public static func fw_mirrorDictionary(_ object: Any?) -> [String: Any] {
         guard let object = object else { return [:] }
         var mirror = Mirror(reflecting: object)
@@ -1004,7 +1004,7 @@ extension Wrapper where Base: NSObject {
         
         var result: [String: Any] = [:]
         children.forEach { child in
-            if let label = child.label, !label.isEmpty, !label.hasPrefix("_"),
+            if let label = child.label, !label.isEmpty,
                !Optional<Any>.isNil(child.value) {
                 result[label] = child.value
             }

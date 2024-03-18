@@ -98,7 +98,7 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
                 } else if let wrapper = child.value as? EncodableAnyMappedValue {
                     try wrapper.encode(to: encoder, label: child.label!.dropFirst())
                 } else {
-                    try encodeMirror(to: encoder, label: child.label!.dropFirst(), value: child.value)
+                    try encodeMirror(to: encoder, label: child.label!, value: child.value)
                 }
             }
             mirror = mirror.superclassMirror
@@ -114,7 +114,7 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
                 } else if let wrapper = child.value as? DecodableAnyMappedValue {
                     try wrapper.decode(from: decoder, label: child.label!.dropFirst())
                 } else {
-                    try decodeMirror(from: decoder, label: child.label!.dropFirst())
+                    try decodeMirror(from: decoder, label: child.label!)
                 }
             }
             mirror = mirror.superclassMirror
