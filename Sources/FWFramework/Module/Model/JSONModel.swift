@@ -1772,8 +1772,6 @@ public protocol JSONMappedValue {
 
 extension MappedValue: JSONMappedValue {
     public func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
-        guard !ignored else { return false }
-        
         let mappingKeys = stringKeys ?? [String(label)]
         if mappingKeys.contains(key) {
             wrappedValue = value as! Value

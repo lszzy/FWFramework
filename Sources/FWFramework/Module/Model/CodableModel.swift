@@ -8,19 +8,24 @@
 import Foundation
 
 // MARK: - CodableModel
-/// 通用安全编解码Codable模型协议，默认实现KeyMappable，可任选一种模式使用
+/// 通用安全编解码Codable模型协议，需实现KeyMappable，可任选一种模式使用
 ///
 /// 模式一：MappedValue模式，与KeyMapping模式冲突
-/// 1. 支持Codable类型字段自动映射，无需声明CodingKeys
+/// 1. 支持Codable类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
-/// 3. 支持忽略指定字段，使用方式：@MappedValue(ignored: true)
-/// 4. 支持Any类型，默认未开启，开启方式：@MappedValue
+/// 3. 支持Any类型字段，使用方式：@MappedValue
+/// 4. 未标记MappedValue的字段自动忽略
 ///
 /// 模式二：KeyMapping模式，与MappedValue模式冲突
 /// 1. 完整自定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
 /// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
-/// 3. 未加入keyMapping的字段自动忽略
-/// 4. 支持Any类型，使用方式同上，加入keyMapping即可
+/// 3. 支持Any类型，使用方式同上，加入keyMapping即可
+/// 4. 未加入keyMapping的字段自动忽略
+///
+/// 模式三：自定义模式
+/// 1. 需完整实现Codable协议的encode和decode方法
+/// 2. 实现方法体内可调用MappedValue、KeyMapping等解析方法
+/// 3. 也可调用Codable协议相关解析方法，如encodeSafe|decodeSafe等
 public protocol CodableModel: Codable, KeyMappable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
@@ -32,7 +37,7 @@ extension CodableModel where Self: AnyObject {
 }
 
 // MARK: - KeyMappable
-/// 通用Key键名映射协议，推荐使用
+/// 通用Key键名映射协议，兼容Codable和CodableModel，推荐使用
 ///
 /// [ExCodable](https://github.com/iwill/ExCodable)
 public protocol KeyMappable {
@@ -51,7 +56,7 @@ public extension KeyMappable where Root == Self {
     func mappingValue(_ value: Any, forKey key: String) -> Bool { false }
 }
 
-public extension KeyMappable where Root == Self, Self: CodableModel {
+public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
     func encode(to encoder: Encoder) throws {
         try encodeModel(to: encoder)
     }
@@ -97,8 +102,6 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
                     try wrapper.encode(to: encoder, label: child.label!.dropFirst())
                 } else if let wrapper = child.value as? EncodableAnyMappedValue {
                     try wrapper.encode(to: encoder, label: child.label!.dropFirst())
-                } else {
-                    try encodeMirror(to: encoder, label: child.label!, value: child.value)
                 }
             }
             mirror = mirror.superclassMirror
@@ -113,20 +116,10 @@ public extension KeyMappable where Root == Self, Self: CodableModel {
                     try wrapper.decode(from: decoder, label: child.label!.dropFirst())
                 } else if let wrapper = child.value as? DecodableAnyMappedValue {
                     try wrapper.decode(from: decoder, label: child.label!.dropFirst())
-                } else {
-                    try decodeMirror(from: decoder, label: child.label!)
                 }
             }
             mirror = mirror.superclassMirror
         }
-    }
-    
-    private func encodeMirror<Label: StringProtocol>(to encoder: Encoder, label: Label, value: Any) throws {
-        
-    }
-    
-    private func decodeMirror<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
-        
     }
 }
 
@@ -154,7 +147,7 @@ public final class KeyMap<Root: KeyMappable> {
     }
 }
 
-public extension KeyMap where Root: CodableModel {
+public extension KeyMap where Root: Codable & ObjectType {
     convenience init<Value: Codable>(_ keyPath: WritableKeyPath<Root, Value>, to codingKeys: String ...) {
         self.init(encode: { root, encoder in
             try encoder.encodeSafe(root[keyPath: keyPath], for: codingKeys.first!)
@@ -305,18 +298,13 @@ public extension KeyMap where Root: CodableModel {
 @propertyWrapper
 public final class MappedValue<Value> {
     let stringKeys: [String]?
-    let ignored: Bool
     public var wrappedValue: Value
     
     let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?
     let decode: ((_ decoder: Decoder) throws -> Value?)?
     
     init(wrappedValue: Value, stringKeys: [String]?, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
-        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
-    }
-    
-    public init(wrappedValue: Value, ignored: Bool) {
-        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, nil, ignored, nil, nil)
+        (self.wrappedValue, self.stringKeys, self.encode, self.decode) = (wrappedValue, stringKeys, encode, decode)
     }
     
     public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
@@ -349,8 +337,6 @@ public protocol EncodableMappedValue {
 
 extension MappedValue: EncodableMappedValue where Value: Encodable {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
-        guard !ignored else { return }
-        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -368,8 +354,6 @@ public protocol DecodableMappedValue {
 
 extension MappedValue: DecodableMappedValue where Value: Decodable {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
-        guard !ignored else { return }
-        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
@@ -396,8 +380,6 @@ public protocol EncodableAnyMappedValue {
 
 extension MappedValue: EncodableAnyMappedValue {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
-        guard !ignored else { return }
-        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -415,8 +397,6 @@ public protocol DecodableAnyMappedValue {
 
 extension MappedValue: DecodableAnyMappedValue {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
-        guard !ignored else { return }
-        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
