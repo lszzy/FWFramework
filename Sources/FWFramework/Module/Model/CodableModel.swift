@@ -24,7 +24,7 @@ import Foundation
 ///
 /// 模式三：自定义模式
 /// 1. 需完整实现Codable协议的encode和decode方法
-/// 2. 实现方法体内可调用MappedValue、KeyMapping等解析方法
+/// 2. 实现时可调用MappedValue模式、KeyMapping模式相关解析方法
 /// 3. 也可调用Codable协议相关解析方法，如encodeSafe|decodeSafe等
 public protocol CodableModel: Codable, KeyMappable, AnyModel {}
 
@@ -65,7 +65,7 @@ public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
         // 模式一：KeyMapping模式
         let keyMapping = Self.keyMapping
         if !keyMapping.isEmpty {
-            try encodeValue(to: encoder, with: keyMapping)
+            try keyMapping.forEach { try $0.encode(self, to: encoder) }
         // 模式二：MappedValue模式
         } else {
             try encodeMirror(to: encoder)
@@ -73,20 +73,14 @@ public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
     }
     
     mutating func decodeModel(from decoder: Decoder) throws {
-        try decodeValue(from: decoder, with: Self.keyMapping)
-        try decodeMirror(from: decoder)
-    }
-    
-    func encodeValue(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.encode?(self, encoder) }
-    }
-    
-    mutating func decodeValue(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.decode?(&self, decoder) }
-    }
-    
-    func decodeReference(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.decodeReference?(self, decoder) }
+        // 模式一：KeyMapping模式
+        let keyMapping = Self.keyMapping
+        if !keyMapping.isEmpty {
+            try keyMapping.forEach { try $0.decode(&self, from: decoder) }
+        // 模式二：MappedValue模式
+        } else {
+            try decodeMirror(from: decoder)
+        }
     }
     
     func encodeMirror(to encoder: Encoder) throws {
@@ -285,6 +279,18 @@ public extension KeyMap where Root: Codable & ObjectType {
                 }
             }
         })
+    }
+    
+    func encode(_ root: Root, to encoder: Encoder) throws {
+        try encode?(root, encoder)
+    }
+    
+    func decode(_ root: inout Root, from decoder: Decoder) throws {
+        try decode?(&root, decoder)
+    }
+    
+    func decodeReference(_ root: Root, from decoder: Decoder) throws {
+        try decodeReference?(root, decoder)
     }
 }
 
