@@ -215,14 +215,13 @@ enum TestJSONCodableEnum: String, Codable {
 }
 
 // MARK: - TestAutoCodableModel
-struct TestAutoCodableModel: CodableModel, KeyMappable {
+struct TestAutoCodableModel: CodableModel {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var age: Int?
     @MappedValue var amount: Float = 0
     @MappedValue("alias_key")
     var alias: String = ""
-    @MappedValue(ignored: true)
     var except: String = ""
     @MappedValue("camel_name")
     var camelName: String = ""
@@ -244,8 +243,8 @@ struct TestAutoCodableModel: CodableModel, KeyMappable {
 }
 
 struct TestAutoCodableSubModel: CodableModel {
-    var id: Int = 0
-    var name: String?
+    @MappedValue var id: Int = 0
+    @MappedValue var name: String?
 }
 
 enum TestAutoCodableModelEnum: String, Codable {
@@ -254,7 +253,7 @@ enum TestAutoCodableModelEnum: String, Codable {
 }
 
 // MARK: - TestMappableCodableModel
-struct TestMappableCodableModel: CodableModel, KeyMappable {
+struct TestMappableCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -306,6 +305,11 @@ struct TestMappableCodableModel: CodableModel, KeyMappable {
 struct TestMappableCodableSubModel: CodableModel {
     var id: Int = 0
     var name: String?
+    
+    static let keyMapping: [KeyMap<Self>] = [
+        KeyMap(\.id, to: "id"),
+        KeyMap(\.name, to: "name"),
+    ]
 }
 
 enum TestMappableCodableModelEnum: String, Codable {
