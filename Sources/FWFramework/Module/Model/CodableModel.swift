@@ -37,7 +37,7 @@ extension CodableModel where Self: AnyObject {
 }
 
 // MARK: - KeyMappable
-/// 通用Key键名映射协议，兼容Codable和CodableModel，推荐使用
+/// 通用Key键名映射协议，兼容Codable、CodableModel、JSONModel，推荐使用
 ///
 /// [ExCodable](https://github.com/iwill/ExCodable)
 public protocol KeyMappable {
@@ -45,15 +45,10 @@ public protocol KeyMappable {
     
     /// 模型Key键名映射声明，默认为空不生效
     static var keyMapping: [KeyMap<Root>] { get }
-    
-    /// 映射值到指定Key，仅JSONModel支持
-    func mappingValue(_ value: Any, forKey key: String) -> Bool
 }
 
 public extension KeyMappable where Root == Self {
     static var keyMapping: [KeyMap<Root>] { [] }
-    
-    func mappingValue(_ value: Any, forKey key: String) -> Bool { false }
 }
 
 public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
