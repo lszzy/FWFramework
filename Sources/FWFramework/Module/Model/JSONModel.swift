@@ -9,11 +9,28 @@ import Foundation
 import UIKit
 
 // MARK: - JSONModel
-/**
- JSON模型，解析键存在时才会覆盖默认值
- 
- - see: [HandyJSON](https://github.com/alibaba/HandyJSON)
- */
+/// 通用安全编解码JSON模型协议，需实现KeyMappable，可任选一种模式使用
+///
+/// 模式一：MappedValue模式，与其它模式互斥
+/// 1. 支持JSONModel类型字段，使用方式：@MappedValue
+/// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
+/// 3. 支持Any类型字段，使用方式：@MappedValue
+/// 4. 未标记MappedValue的字段自动忽略
+///
+/// 模式二：KeyMapping模式，与其它模式互斥
+/// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
+/// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
+/// 3. 支持Any类型，使用方式同上，加入keyMapping即可
+/// 4. 未加入keyMapping的字段自动忽略
+///
+/// 模式三：自定义模式
+/// 1. 需完整实现JSONModel协议的shouldMappingValue()和mappingValue(_:forKey:)协议方法
+///
+/// 模式四：HandyJSON内存读写模式，不稳定也不安全，不推荐使用，与其它模式互斥
+/// 1. CocoaPods或SPM引入JSONModel子模块即可，自动生效
+/// 2. 使用方式参考HandyJSON，无需实现模式一、二、三的相关方法
+///
+/// [HandyJSON](https://github.com/alibaba/HandyJSON)
 public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
 
 public protocol JSONModelCustomTransformable: _ExtendCustomBasicType {}
@@ -451,14 +468,16 @@ public protocol _ExtendCustomModelType: _Transformable, KeyMappable {
     mutating func willStartMapping()
     mutating func mapping(mapper: HelpingMapper)
     mutating func didFinishMapping()
-    mutating func mappingValue(_ value: Any, forKey key: String) -> Bool
+    static func shouldMappingValue() -> Bool
+    mutating func mappingValue(_ value: Any, forKey key: String)
 }
 
 extension _ExtendCustomModelType {
     public mutating func willStartMapping() {}
     public mutating func mapping(mapper: HelpingMapper) {}
     public mutating func didFinishMapping() {}
-    public mutating func mappingValue(_ value: Any, forKey key: String) -> Bool { false }
+    public static func shouldMappingValue() -> Bool { false }
+    public mutating func mappingValue(_ value: Any, forKey key: String) {}
 }
 
 extension NSObject {
@@ -548,7 +567,7 @@ extension _ExtendCustomModelType {
                 continue
             }
 
-            let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: propAddr?.address, bridged: isBridgedProperty)
+            let propertyDetail = PropertyInfo(mode: property.mode, key: property.key, type: property.type, address: propAddr?.address, bridged: isBridgedProperty)
             InternalLogger.logVerbose("field: ", property.key, "  offset: ", property.offset, "  isBridgeProperty: ", isBridgedProperty)
 
             if let rawValue = getRawValueFrom(dict: _dict, property: propertyDetail, mapper: mapper) {
@@ -567,9 +586,9 @@ extension _ExtendCustomModelType {
             dict.forEach({ (kvPair) in
                 var newKey = kvPair.key
                 if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                    newKey = newKey.fw.camelString
+                    newKey = newKey.fw_camelString
                 } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                    newKey = newKey.fw.underlineString
+                    newKey = newKey.fw_underlineString
                 }
                 if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
                     newKey = newKey.lowercased()
@@ -624,7 +643,11 @@ extension _ExtendCustomModelType {
         var result = [(String, Any)]()
         children.forEach { (child) in
             if let _label = child.label {
-                result.append((_label, child.value))
+                if child.value is JSONMappedValue {
+                    result.append((String(_label.dropFirst()), child.value))
+                } else {
+                    result.append((_label, child.value))
+                }
             }
         }
         return result
@@ -641,15 +664,23 @@ extension _ExtendCustomModelType {
             children.forEach { (child) in
                 var key = child.0
                 if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                    key = key.fw.underlineString
+                    key = key.fw_underlineString
                 } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                    key = key.fw.camelString
+                    key = key.fw_camelString
                 }
-                result[key] = (child.1, infoDict[child.0])
+                if let value = child.1 as? JSONMappedValue {
+                    result[key] = (value.mappingValue(), infoDict[child.0])
+                } else {
+                    result[key] = (child.1, infoDict[child.0])
+                }
             }
         } else {
             children.forEach { (child) in
-                result[child.0] = (child.1, infoDict[child.0])
+                if let value = child.1 as? JSONMappedValue {
+                    result[child.0] = (value.mappingValue(), infoDict[child.0])
+                } else {
+                    result[child.0] = (child.1, infoDict[child.0])
+                }
             }
         }
         return result
@@ -657,22 +688,24 @@ extension _ExtendCustomModelType {
     
     static func getProperties<T: _ExtendCustomModelType>(for instance: inout T, children: [(String, Any)]? = nil) -> [Property.Description]? {
         let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
-        let plugin = PluginManager.loadPlugin(JSONModelPlugin.self)
-        var usePlugin = plugin != nil
-        if usePlugin {
-            let keyMapping = type(of: instance).keyMapping
-            if !keyMapping.isEmpty {
-                usePlugin = false
-            } else {
-                usePlugin = children.first(where: { $0.1 is JSONMappedValue }) == nil
-            }
+        var mode: Property.Mode = .default
+        if type(of: instance).shouldMappingValue() {
+            mode = .custom
+        } else if !type(of: instance).keyMapping.isEmpty {
+            mode = .keyMapping
+        } else if children.first(where: { $0.1 is JSONMappedValue }) != nil {
+            mode = .mappedValue
         }
         
-        if usePlugin {
-            return plugin?.getProperties(for: type(of: instance))
+        if mode == .default, let plugin = PluginManager.loadPlugin(JSONModelPlugin.self) {
+            return plugin.getProperties(for: type(of: instance))
         } else {
             return children.map { child in
-                return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
+                if let value = child.1 as? JSONMappedValue {
+                    return Property.Description(mode: .mappedValue, key: child.0, type: type(of: value.mappingValue()), offset: 0)
+                } else {
+                    return Property.Description(mode: mode, key: child.0, type: type(of: child.1), offset: 0)
+                }
             }
         }
     }
@@ -681,12 +714,24 @@ extension _ExtendCustomModelType {
         if property.bridged {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
-            if instance.mappingValue(convertedValue, forKey: property.key) {
-            /*
-            } else if instance.mappingModel(convertedValue, forKey: property.key) {
-             */
-            } else if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
-                extensions(of: property.type).write(convertedValue, to: property.address)
+            switch property.mode {
+            case .custom:
+                instance.mappingValue(convertedValue, forKey: property.key)
+            case .keyMapping:
+                break
+                /*
+                let keyMapping = type(of: instance).keyMapping
+                for keyMap in keyMapping {
+                    if keyMap.mapping(&instance, value: convertedValue, forKey: property.key) {
+                        break
+                    }
+                }*/
+            case .mappedValue:
+                instance.mappingMirror(convertedValue, forKey: property.key)
+            default:
+                if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
+                    extensions(of: property.type).write(convertedValue, to: property.address)
+                }
             }
         }
     }
@@ -728,7 +773,7 @@ extension _ExtendCustomModelType {
             let bridgedProperty = mutableObject.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
                 let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(headPointer, property: desc)
-                return PropertyInfo(key: desc.key, type: desc.type, address: propAddrs?.address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
+                return PropertyInfo(mode: desc.mode, key: desc.key, type: desc.type, address: propAddrs?.address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
 
             mutableObject.mapping(mapper: mapper)
@@ -792,14 +837,6 @@ public protocol _ExtendCustomBasicType: _Transformable {
 
     static func _transform(from object: Any) -> Self?
     func _plainValue() -> Any?
-}
-
-// MARK: - PropertyInfo
-@_spi(FW) public struct PropertyInfo {
-    public let key: String
-    public let type: Any.Type
-    public let address: UnsafeMutableRawPointer!
-    public let bridged: Bool
 }
 
 // MARK: - Deserializer
@@ -1374,19 +1411,37 @@ func extensions(of type: Any.Type) -> AnyExtensions.Type {
     return extensions
 }
 
+// MARK: - PropertyInfo
+@_spi(FW) public struct PropertyInfo {
+    public let mode: Property.Mode
+    public let key: String
+    public let type: Any.Type
+    public let address: UnsafeMutableRawPointer!
+    public let bridged: Bool
+}
+
 // MARK: - Properties
 /// An instance property
 @_spi(FW) public struct Property {
     public let key: String
     public let value: Any
+    
+    public enum Mode: Int {
+        case `default`
+        case mappedValue
+        case keyMapping
+        case custom
+    }
 
     /// An instance property description
     public struct Description {
+        public let mode: Mode
         public let key: String
         public let type: Any.Type
         public let offset: Int
         
-        public init(key: String, type: Any.Type, offset: Int) {
+        public init(mode: Mode, key: String, type: Any.Type, offset: Int) {
+            self.mode = mode
             self.key = key
             self.type = type
             self.offset = offset
@@ -1711,37 +1766,8 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 }
 
 // MARK: - KeyMappable
-public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
-    mutating func mappingModel(_ value: Any, forKey key: String) -> Bool {
-        if mappingValue(value, forKey: key, with: Self.keyMapping) {
-            return true
-        }
-        if mappingMirror(value, forKey: key) {
-            return true
-        }
-        return false
-    }
-    
-    mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
-        for keyMap in keyMapping {
-            if keyMap.match?(self, key) ?? false {
-                keyMap.mapping?(&self, value)
-                return true
-            }
-        }
-        return false
-    }
-    
-    func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
-        for keyMap in keyMapping {
-            if keyMap.match?(self, key) ?? false {
-                keyMap.mappingReference?(self, value)
-                return true
-            }
-        }
-        return false
-    }
-    
+public extension KeyMappable where Self: _ExtendCustomModelType {
+    @discardableResult
     func mappingMirror(_ value: Any, forKey key: String) -> Bool {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
@@ -1774,14 +1800,35 @@ public extension KeyMap where Root: _ExtendCustomModelType {
             root[keyPath: keyPath] = value as! Value
         })
     }
+    
+    func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
+        if match?(root, key) ?? false {
+            mapping?(&root, value)
+            return true
+        }
+        return false
+    }
+    
+    func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
+        if match?(root, key) ?? false {
+            mappingReference?(root, value)
+            return true
+        }
+        return false
+    }
 }
 
 // MARK: - MappedValue
 public protocol JSONMappedValue {
+    func mappingValue() -> Any
     func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool
 }
 
 extension MappedValue: JSONMappedValue {
+    public func mappingValue() -> Any {
+        return wrappedValue
+    }
+    
     public func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
         let mappingKeys = stringKeys ?? [String(label)]
         if mappingKeys.contains(key) {
