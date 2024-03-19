@@ -287,124 +287,6 @@ extension Decoder {
     public func jsonIf<K: CodingKey>(_ key: K) throws -> JSON? {
         return try decodeIf(key, as: JSON.self)
     }
-    
-    // MARK: - Value
-    public func valueSingle<T: Decodable>(as type: T.Type = T.self) throws -> T {
-        if let value = value(with: try decodeSingle(as: JSON.self), as: type) {
-            return value
-        }
-        return try decodeSingle(as: type)
-    }
-    
-    public func value<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try value(AnyCodingKey(key), as: type)
-    }
-
-    public func value<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        if let json = try decodeIf(key, as: JSON.self), let value = value(with: json, as: type) {
-            return value
-        }
-        return try decode(key, as: type)
-    }
-
-    public func valueIf<T: Decodable>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try valueIf(AnyCodingKey(key), as: type)
-    }
-
-    public func valueIf<T: Decodable, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        if let json = try decodeIf(key, as: JSON.self), let value = value(with: json, as: type) {
-            return value
-        }
-        return try decodeIf(key, as: type)
-    }
-    
-    private func value<T>(with json: JSON, as type: T.Type) -> T? {
-        switch type {
-        case is Bool.Type:
-            return json.boolValue as? T
-        case is String.Type:
-            return json.stringValue as? T
-        case is Double.Type:
-            return json.doubleValue as? T
-        case is Float.Type:
-            return json.floatValue as? T
-        case is Int.Type:
-            return json.intValue as? T
-        case is Int8.Type:
-            return json.int8Value as? T
-        case is Int16.Type:
-            return json.int16Value as? T
-        case is Int32.Type:
-            return json.int32Value as? T
-        case is Int64.Type:
-            return json.int64Value as? T
-        case is UInt.Type:
-            return json.uIntValue as? T
-        case is UInt8.Type:
-            return json.uInt8Value as? T
-        case is UInt16.Type:
-            return json.uInt16Value as? T
-        case is UInt32.Type:
-            return json.uInt32Value as? T
-        case is UInt64.Type:
-            return json.uInt64Value as? T
-        case is Bool?.Type:
-            return json.bool as? T
-        case is String?.Type:
-            return json.string as? T
-        case is Double?.Type:
-            return json.double as? T
-        case is Float?.Type:
-            return json.float as? T
-        case is Int?.Type:
-            return json.int as? T
-        case is Int8?.Type:
-            return json.int8 as? T
-        case is Int16?.Type:
-            return json.int16 as? T
-        case is Int32?.Type:
-            return json.int32 as? T
-        case is Int64?.Type:
-            return json.int64 as? T
-        case is UInt?.Type:
-            return json.uInt as? T
-        case is UInt8?.Type:
-            return json.uInt8 as? T
-        case is UInt16?.Type:
-            return json.uInt16 as? T
-        case is UInt32?.Type:
-            return json.uInt32 as? T
-        case is UInt64?.Type:
-            return json.uInt64 as? T
-        default:
-            return nil
-        }
-    }
-    
-    // MARK: - ValueAny
-    public func valueAny<T>(_ key: String, as type: T.Type = T.self) throws -> T {
-        return try valueAny(AnyCodingKey(key), as: type)
-    }
-
-    public func valueAny<T, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T {
-        let value = (try decodeIf(key, as: JSON.self))?.object
-        if let value = value as? T, !(value is NSNull) {
-            return value
-        }
-        return try decodeAny(key, as: type)
-    }
-
-    public func valueAnyIf<T>(_ key: String, as type: T.Type = T.self) throws -> T? {
-        return try valueAnyIf(AnyCodingKey(key), as: type)
-    }
-
-    public func valueAnyIf<T, K: CodingKey>(_ key: K, as type: T.Type = T.self) throws -> T? {
-        let value = (try decodeIf(key, as: JSON.self))?.object
-        if let value = value as? T, !(value is NSNull) {
-            return value
-        }
-        return try decodeAnyIf(key, as: type)
-    }
 }
 
 // MARK: - AnyDateFormatter
@@ -734,27 +616,19 @@ public extension Decoder {
     }
     
     // MARK: - Safe
-    func decodeSafe<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
-        return try decodeSafe(stringKeys, as: type)
+    func decodeSafe<T: Decodable>(_ stringKeys: String ..., as type: T.Type = T.self, throws: Bool = false) throws -> T? {
+        return try decodeSafe(stringKeys, as: type, throws: `throws`)
     }
     
-    func decodeSafe<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
-        return try decodeSafe(stringKeys, as: type, throws: false)
-    }
-    
-    internal func decodeSafe<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool) throws -> T? {
+    func decodeSafe<T: Decodable>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool = false) throws -> T? {
         return try decodeSafe(stringKeys.map { AnyCodingKey($0) }, as: type, throws: `throws`)
     }
     
-    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
-        return try decodeSafe(codingKeys, as: type)
+    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self, throws: Bool = false) throws -> T? {
+        return try decodeSafe(codingKeys, as: type, throws: `throws`)
     }
     
-    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
-        return try decodeSafe(codingKeys, as: type, throws: false)
-    }
-    
-    internal func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool) throws -> T? {
+    func decodeSafe<T: Decodable, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool = false) throws -> T? {
         do {
             let container = try self.container(keyedBy: K.self)
             return try container.decodeForAlternativeKeys(codingKeys, as: type)
@@ -763,27 +637,19 @@ public extension Decoder {
     }
     
     // MARK: - SafeAny
-    func decodeSafeAny<T>(_ stringKeys: String ..., as type: T.Type = T.self) throws -> T? {
-        return try decodeSafeAny(stringKeys, as: type)
+    func decodeSafeAny<T>(_ stringKeys: String ..., as type: T.Type = T.self, throws: Bool = false) throws -> T? {
+        return try decodeSafeAny(stringKeys, as: type, throws: `throws`)
     }
     
-    func decodeSafeAny<T>(_ stringKeys: [String], as type: T.Type = T.self) throws -> T? {
-        return try decodeSafeAny(stringKeys, as: type, throws: false)
-    }
-    
-    internal func decodeSafeAny<T>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool) throws -> T? {
+    func decodeSafeAny<T>(_ stringKeys: [String], as type: T.Type = T.self, throws: Bool = false) throws -> T? {
         return try decodeSafeAny(stringKeys.map { AnyCodingKey($0) }, as: type, throws: `throws`)
     }
     
-    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self) throws -> T? {
-        return try decodeSafeAny(codingKeys, as: type)
+    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: K ..., as type: T.Type = T.self, throws: Bool = false) throws -> T? {
+        return try decodeSafeAny(codingKeys, as: type, throws: `throws`)
     }
     
-    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self) throws -> T? {
-        return try decodeSafeAny(codingKeys, as: type, throws: false)
-    }
-    
-    internal func decodeSafeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool) throws -> T? {
+    func decodeSafeAny<T, K: CodingKey>(_ codingKeys: [K], as type: T.Type = T.self, throws: Bool = false) throws -> T? {
         do {
             let container = try self.container(keyedBy: K.self)
             return try container.decodeAnyForAlternativeKeys(codingKeys, as: type)
