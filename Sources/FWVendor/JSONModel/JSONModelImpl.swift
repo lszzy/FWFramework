@@ -464,7 +464,7 @@ extension Metadata {
             // we should ignore the properties inside
             // Use metaclass.isSwiftClass to test if it is a swift class, if it is not return nil directly, or `superclass is JSONModel.Type` wil crash.
             if !metaclass.isSwiftClass
-                || (!(superclass is JSONModel.Type) && !(superclass is JSONModelEnum.Type)) {
+                || (!(superclass is any JSONModel.Type) && !(superclass is JSONModelEnum.Type)) {
                 return nil
             }
 

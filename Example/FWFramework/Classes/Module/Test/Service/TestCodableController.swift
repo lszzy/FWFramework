@@ -214,8 +214,8 @@ enum TestJSONCodableEnum: String, Codable {
     case unknown = ""
 }
 
-// MARK: - TestAutoCodableModel
-struct TestAutoCodableModel: CodableModel {
+// MARK: - TestMappedValueCodableModel
+struct TestMappedValueCodableModel: CodableModel {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var age: Int?
@@ -233,27 +233,27 @@ struct TestAutoCodableModel: CodableModel {
     @MappedValue var optional3: String? = "default"
     @MappedValue var optional4: Int? = 4
     @MappedValue var optional5: Int? = 0
-    @MappedValue var sub: TestAutoCodableSubModel?
-    @MappedValue var sub2: TestAutoCodableSubModel = .init()
-    @MappedValue var subs: [TestAutoCodableSubModel] = []
-    @MappedValue var subdict: [String: TestAutoCodableSubModel] = [:]
-    @MappedValue var enum1: TestAutoCodableModelEnum = .unknown
-    @MappedValue var enum2: TestAutoCodableModelEnum = .unknown
-    @MappedValue var enum3: TestAutoCodableModelEnum?
+    @MappedValue var sub: TestMappedValueCodableSubModel?
+    @MappedValue var sub2: TestMappedValueCodableSubModel = .init()
+    @MappedValue var subs: [TestMappedValueCodableSubModel] = []
+    @MappedValue var subdict: [String: TestMappedValueCodableSubModel] = [:]
+    @MappedValue var enum1: TestMappedValueCodableModelEnum = .unknown
+    @MappedValue var enum2: TestMappedValueCodableModelEnum = .unknown
+    @MappedValue var enum3: TestMappedValueCodableModelEnum?
 }
 
-struct TestAutoCodableSubModel: CodableModel {
+struct TestMappedValueCodableSubModel: CodableModel {
     @MappedValue var id: Int = 0
     @MappedValue var name: String?
 }
 
-enum TestAutoCodableModelEnum: String, Codable {
+enum TestMappedValueCodableModelEnum: String, Codable {
     case test = "test"
     case unknown = ""
 }
 
-// MARK: - TestMappableCodableModel
-struct TestMappableCodableModel: CodableModel {
+// MARK: - TestKeyMappingCodableModel
+struct TestKeyMappingCodableModel: CodableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -269,13 +269,13 @@ struct TestMappableCodableModel: CodableModel {
     var optional3: String? = "default"
     var optional4: Int? = 4
     var optional5: Int? = 0
-    var sub: TestMappableCodableSubModel?
-    var sub2: TestMappableCodableSubModel = .init()
-    var subs: [TestMappableCodableSubModel] = []
-    var subdict: [String: TestMappableCodableSubModel] = [:]
-    var enum1: TestMappableCodableModelEnum = .unknown
-    var enum2: TestMappableCodableModelEnum = .unknown
-    var enum3: TestMappableCodableModelEnum?
+    var sub: TestKeyMappingCodableSubModel?
+    var sub2: TestKeyMappingCodableSubModel = .init()
+    var subs: [TestKeyMappingCodableSubModel] = []
+    var subdict: [String: TestKeyMappingCodableSubModel] = [:]
+    var enum1: TestKeyMappingCodableModelEnum = .unknown
+    var enum2: TestKeyMappingCodableModelEnum = .unknown
+    var enum3: TestKeyMappingCodableModelEnum?
     
     static let keyMapping: [KeyMap<Self>] = [
         KeyMap(\.id, to: "id"),
@@ -302,7 +302,7 @@ struct TestMappableCodableModel: CodableModel {
     ]
 }
 
-struct TestMappableCodableSubModel: CodableModel {
+struct TestKeyMappingCodableSubModel: CodableModel {
     var id: Int = 0
     var name: String?
     
@@ -312,7 +312,7 @@ struct TestMappableCodableSubModel: CodableModel {
     ]
 }
 
-enum TestMappableCodableModelEnum: String, Codable {
+enum TestKeyMappingCodableModelEnum: String, Codable {
     case test = "test"
     case unknown = ""
 }
@@ -363,6 +363,109 @@ enum TestJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
+// MARK: - TestMappedValueJSONModel
+struct TestMappedValueJSONModel: JSONModel {
+    @MappedValue var id: Int = 0
+    @MappedValue var name: String = ""
+    @MappedValue var age: Int?
+    @MappedValue var amount: Float = 0
+    @MappedValue("alias_key")
+    var alias: String = ""
+    var except: String = ""
+    @MappedValue("camel_name")
+    var camelName: String = ""
+    @MappedValue var any: Any?
+    @MappedValue var dict: [AnyHashable: Any]?
+    @MappedValue var array: [Any]?
+    @MappedValue var optional1: String = ""
+    @MappedValue var optional2: String = ""
+    @MappedValue var optional3: String? = "default"
+    @MappedValue var optional4: Int? = 4
+    @MappedValue var optional5: Int? = 0
+    @MappedValue var sub: TestMappedValueJSONSubModel?
+    @MappedValue var sub2: TestMappedValueJSONSubModel = .init()
+    @MappedValue var subs: [TestMappedValueJSONSubModel] = []
+    @MappedValue var subdict: [String: TestMappedValueJSONSubModel] = [:]
+    @MappedValue var enum1: TestMappedValueJSONModelEnum = .unknown
+    @MappedValue var enum2: TestMappedValueJSONModelEnum = .unknown
+    @MappedValue var enum3: TestMappedValueJSONModelEnum?
+}
+
+struct TestMappedValueJSONSubModel: JSONModel {
+    @MappedValue var id: Int = 0
+    @MappedValue var name: String?
+}
+
+enum TestMappedValueJSONModelEnum: String, JSONModelEnum {
+    case test = "test"
+    case unknown = ""
+}
+
+// MARK: - TestKeyMappingJSONModel
+struct TestKeyMappingJSONModel: JSONModel {
+    var id: Int = 0
+    var name: String = ""
+    var age: Int?
+    var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
+    var any: Any?
+    var dict: [AnyHashable: Any]?
+    var array: [Any]?
+    var optional1: String = ""
+    var optional2: String = ""
+    var optional3: String? = "default"
+    var optional4: Int? = 4
+    var optional5: Int? = 0
+    var sub: TestKeyMappingJSONSubModel?
+    var sub2: TestKeyMappingJSONSubModel = .init()
+    var subs: [TestKeyMappingJSONSubModel] = []
+    var subdict: [String: TestKeyMappingJSONSubModel] = [:]
+    var enum1: TestKeyMappingJSONModelEnum = .unknown
+    var enum2: TestKeyMappingJSONModelEnum = .unknown
+    var enum3: TestKeyMappingJSONModelEnum?
+    
+    static let keyMapping: [KeyMap<Self>] = [
+        KeyMap(\.id, to: "id"),
+        KeyMap(\.name, to: "name"),
+        KeyMap(\.age, to: "age"),
+        KeyMap(\.amount, to: "amount"),
+        KeyMap(\.alias, to: "alias_key"),
+        KeyMap(\.camelName, to: "camel_name"),
+        KeyMap(\.any, to: "any"),
+        KeyMap(\.dict, to: "dict"),
+        KeyMap(\.array, to: "array"),
+        KeyMap(\.optional1, to: "optional1"),
+        KeyMap(\.optional2, to: "optional2"),
+        KeyMap(\.optional3, to: "optional3"),
+        KeyMap(\.optional4, to: "optional4"),
+        KeyMap(\.optional5, to: "optional5"),
+        KeyMap(\.sub, to: "sub"),
+        KeyMap(\.sub2, to: "sub2"),
+        KeyMap(\.subs, to: "subs"),
+        KeyMap(\.subdict, to: "subdict"),
+        KeyMap(\.enum1, to: "enum1"),
+        KeyMap(\.enum2, to: "enum2"),
+        KeyMap(\.enum3, to: "enum3"),
+    ]
+}
+
+struct TestKeyMappingJSONSubModel: JSONModel {
+    var id: Int = 0
+    var name: String?
+    
+    static let keyMapping: [KeyMap<Self>] = [
+        KeyMap(\.id, to: "id"),
+        KeyMap(\.name, to: "name"),
+    ]
+}
+
+enum TestKeyMappingJSONModelEnum: String, JSONModelEnum {
+    case test = "test"
+    case unknown = ""
+}
+
 // MARK: - TestObjectParameter
 class TestObjectParameter: ObjectParameter, JSONModel {
     var id: Int = 0
@@ -404,9 +507,11 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
             ["CodableModel+JSON", "onJSONCodableModel"],
-            ["CodableModel+MappedValue", "onAutoCodableModel"],
-            ["CodableModel+KeyMapping", "onMappableCodableModel"],
+            ["CodableModel+MappedValue", "onMappedValueCodableModel"],
+            ["CodableModel+KeyMapping", "onKeyMappingCodableModel"],
             ["JSONModel", "onJSONModel"],
+            ["JSONModel+MappedValue", "onMappedValueJSONModel"],
+            ["JSONModel+KeyMapping", "onKeyMappingJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
         ])
     }
@@ -531,8 +636,8 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    @objc func onAutoCodableModel() {
-        func testModel(_ model: TestAutoCodableModel?, encode: Bool = false) -> [Bool] {
+    @objc func onMappedValueCodableModel() {
+        func testModel(_ model: TestMappedValueCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
@@ -561,15 +666,15 @@ extension TestCodableController {
             return results
         }
         
-        var model: TestAutoCodableModel? = TestAutoCodableModel.decodeModel(from: testCodableData())
+        var model: TestMappedValueCodableModel? = TestMappedValueCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
-        model = TestAutoCodableModel.decodeModel(from: model?.encodeObject())
+        model = TestMappedValueCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
     
-    @objc func onMappableCodableModel() {
-        func testModel(_ model: TestMappableCodableModel?, encode: Bool = false) -> [Bool] {
+    @objc func onKeyMappingCodableModel() {
+        func testModel(_ model: TestKeyMappingCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
@@ -598,9 +703,9 @@ extension TestCodableController {
             return results
         }
         
-        var model: TestMappableCodableModel? = TestMappableCodableModel.decodeModel(from: testCodableData())
+        var model: TestKeyMappingCodableModel? = TestKeyMappingCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
-        model = TestMappableCodableModel.decodeModel(from: model?.encodeObject())
+        model = TestKeyMappingCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
@@ -638,6 +743,80 @@ extension TestCodableController {
         var model: TestJSONModel? = TestJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestJSONModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        showResults(tests)
+    }
+    
+    @objc func onMappedValueJSONModel() {
+        func testModel(_ model: TestMappedValueJSONModel?, encode: Bool = false) -> [Bool] {
+            let results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == (encode ? 4 : nil)),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
+        
+        var model: TestMappedValueJSONModel? = TestMappedValueJSONModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestMappedValueJSONModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        showResults(tests)
+    }
+    
+    @objc func onKeyMappingJSONModel() {
+        func testModel(_ model: TestKeyMappingJSONModel?, encode: Bool = false) -> [Bool] {
+            let results: [Bool] = [
+                (model != nil),
+                (model?.id == 1),
+                (model?.name == "name"),
+                (model?.age == 2),
+                (model?.amount == 100.0),
+                (model?.alias == "alias"),
+                (model?.except == ""),
+                (model?.camelName == "camelName"),
+                (String.app.safeString(model?.any) == "any"),
+                (model?.dict != nil),
+                ((model?.array as? [Int])?.first == 1),
+                (model?.optional1 == ""),
+                (model?.optional2 == ""),
+                (model?.optional3 == "default"),
+                (model?.optional4 == (encode ? 4 : nil)),
+                (model?.optional5 == 5),
+                (model?.sub?.name == "sub"),
+                (model?.sub2 != nil),
+                (model?.subs.first?.name == "subs"),
+                (model?.subdict["key"]?.name == "subdict"),
+                (model?.enum1 == .test),
+                (model?.enum2 == .unknown),
+                (model?.enum3 == nil),
+            ]
+            return results
+        }
+        
+        var model: TestKeyMappingJSONModel? = TestKeyMappingJSONModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestKeyMappingJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
