@@ -544,16 +544,15 @@ extension _ExtendCustomModelType {
     }
 
     static func _transform(dict: [String: Any], to instance: inout Self) {
-        guard let properties = getProperties(for: &instance) else {
+        // do user-specified mapping first
+        let mapper = HelpingMapper()
+        instance.mapping(mapper: mapper)
+        
+        guard let properties = getProperties(for: &instance, mapper: mapper) else {
             InternalLogger.logDebug("Failed when try to get properties from type: \(type(of: Self.self))")
             return
         }
 
-        // do user-specified mapping first
-        let mapper = HelpingMapper()
-        instance.mapping(mapper: mapper)
-
-        let headPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyHead(&instance)
         let _dict = convertKeyIfNeeded(dict: dict)
         let instanceIsNsObject = instance.isNSObjectType()
         let bridgedPropertyList = instance.getBridgedPropertyList()
@@ -561,7 +560,7 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let propAddr = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(headPointer, property: property)
+            let propAddr = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&instance, property: property)
             if mapper.propertyExcluded(key: propAddr?.key ?? property.key) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
                 continue
@@ -686,7 +685,7 @@ extension _ExtendCustomModelType {
         return result
     }
     
-    static func getProperties<T: _ExtendCustomModelType>(for instance: inout T, children: [(String, Any)]? = nil) -> [Property.Description]? {
+    static func getProperties<T: _ExtendCustomModelType>(for instance: inout T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
         let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
         var mode: Property.Mode = .default
         if type(of: instance).shouldMappingValue() {
@@ -702,6 +701,9 @@ extension _ExtendCustomModelType {
         } else {
             return children.map { child in
                 if let value = child.1 as? JSONMappedValue {
+                    if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
+                        mapper.specify(key: child.0, names: mappingKeys)
+                    }
                     return Property.Description(mode: .mappedValue, key: child.0, type: type(of: value.mappingValue()), offset: 0)
                 } else {
                     return Property.Description(mode: mode, key: child.0, type: type(of: child.1), offset: 0)
@@ -763,16 +765,15 @@ extension _ExtendCustomModelType {
 
             let children = readAllChildrenFrom(mirror: mirror)
             var mutableObject = object as! (any _ExtendCustomModelType)
-            guard let properties = getProperties(for: &mutableObject, children: children) else {
+            guard let properties = getProperties(for: &mutableObject, mapper: mapper, children: children) else {
                 InternalLogger.logError("Can not get properties info for type: \(type(of: object))")
                 return nil
             }
             
             let instanceIsNsObject = mutableObject.isNSObjectType()
-            let headPointer: UnsafeMutablePointer<Int8>! = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyHead(&mutableObject)
             let bridgedProperty = mutableObject.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
-                let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(headPointer, property: desc)
+                let propAddrs = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&mutableObject, property: desc)
                 return PropertyInfo(mode: desc.mode, key: desc.key, type: desc.type, address: propAddrs?.address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
 
@@ -1287,6 +1288,10 @@ public class HelpingMapper {
         return self.excludeProperties.contains(key)
     }
     
+    public func specify(key: String, names: [String]) {
+        self.mappingHandlers[key] = MappingPropertyHandler(rawPaths: names, assignmentClosure: nil, takeValueClosure: nil)
+    }
+    
     public func specify<T>(property: inout T, key: String, name: String) {
         self.specify(property: &property, key: key, name: name, converter: nil)
     }
@@ -1773,7 +1778,8 @@ public extension KeyMappable where Self: _ExtendCustomModelType {
         while mirror != nil {
             for child in mirror.children where child.label != nil {
                 if let wrapper = child.value as? JSONMappedValue,
-                   wrapper.mappingValue(value, forKey: key, label: child.label!.dropFirst()) {
+                   key == child.label!.dropFirst() {
+                    wrapper.mappingValue(value)
                     return true
                 }
             }
@@ -1820,29 +1826,20 @@ public extension KeyMap where Root: _ExtendCustomModelType {
 
 // MARK: - MappedValue
 public protocol JSONMappedValue {
+    func mappingKeys() -> [String]?
     func mappingValue() -> Any
-    func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool
+    func mappingValue(_ value: Any)
 }
 
 extension MappedValue: JSONMappedValue {
-    public func mappingValue() -> Any {
-        return wrappedValue
-    }
-    
-    public func mappingValue<Label: StringProtocol>(_ value: Any, forKey key: String, label: Label) -> Bool {
-        let mappingKeys = stringKeys ?? [String(label)]
-        if mappingKeys.contains(key) {
-            wrappedValue = value as! Value
-            return true
-        }
-        return false
-    }
+    public func mappingKeys() -> [String]? { stringKeys }
+    public func mappingValue() -> Any { wrappedValue }
+    public func mappingValue(_ value: Any) { wrappedValue = value as! Value }
 }
 
 // MARK: - JSONModelPlugin
 @_spi(FW) public protocol JSONModelPlugin {
     func getPropertyKey(_ property: PropertyInfo) -> String
-    func getPropertyHead<T: _Measurable>(_ instance: inout T) -> UnsafeMutablePointer<Int8>
-    func getPropertyAddress(_ headPointer: UnsafeMutablePointer<Int8>, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>, key: String)
+    func getPropertyAddress<T: _Measurable>(_ instance: inout T, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>?, key: String)
     func getProperties(for type: Any.Type) -> [Property.Description]?
 }
