@@ -504,7 +504,7 @@ extension Metadata {
                     if let cMangledTypeName = fieldRecords[i].mangledTypeName,
                         let fieldType = _getTypeByMangledNameInContext(cMangledTypeName, getMangledTypeNameSize(cMangledTypeName), genericContext: self.contextDescriptorPointer, genericArguments: self.genericArgumentVector) {
 
-                        result.append(Property.Description(key: name, type: fieldType, offset: fieldOffsets[i]))
+                        result.append(Property.Description(mode: .default, key: name, type: fieldType, offset: fieldOffsets[i]))
                     }
                 }
             }
@@ -525,7 +525,7 @@ extension Metadata {
                 let firstProperty = propsAndStp?.0.first?.offset {
                     return propsAndStp?.0.map({ (propertyDesc) -> Property.Description in
                         let offset = propertyDesc.offset - firstProperty + Int(firstInstanceStart)
-                        return Property.Description(key: propertyDesc.key, type: propertyDesc.type, offset: offset)
+                        return Property.Description(mode: .default, key: propertyDesc.key, type: propertyDesc.type, offset: offset)
                     })
             } else {
                 return propsAndStp?.0
@@ -603,7 +603,7 @@ extension Metadata {
                     "function": { _getTypeByMangledNameInContext(cMangledTypeName, UInt(getMangledTypeNameSize(cMangledTypeName)), genericContext: self.contextDescriptorPointer, genericArguments: self.genericArgumentVector) }
                 ]
                 if let function = functionMap["function"],let fieldType  = function() {
-                    result.append(Property.Description(key: name, type: fieldType, offset: fieldOffsets[i]))
+                    result.append(Property.Description(mode:.default, key: name, type: fieldType, offset: fieldOffsets[i]))
                 }
             }
             return result
