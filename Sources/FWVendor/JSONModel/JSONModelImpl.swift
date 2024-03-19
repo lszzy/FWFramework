@@ -20,17 +20,14 @@ import Foundation
     
     // MARK: - JSONModelPlugin
     public func getPropertyKey(_ property: PropertyInfo) -> String {
+        guard property.mode == .default else { return property.key }
         let address = Int(bitPattern: property.address)
         return "\(address)"
     }
     
-    public func getPropertyHead<T>(_ instance: inout T) -> UnsafeMutablePointer<Int8> where T : _Measurable {
-        let headPointer = instance.headPointer()
-        return headPointer
-    }
-    
-    public func getPropertyAddress(_ headPointer: UnsafeMutablePointer<Int8>, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>, key: String) {
-        let address = headPointer.advanced(by: property.offset)
+    public func getPropertyAddress<T>(_ instance: inout T, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>?, key: String) where T : _Measurable {
+        guard property.mode == .default else { return (address: nil, key: property.key) }
+        let address = instance.headPointer().advanced(by: property.offset)
         let key = "\(Int(bitPattern: address))"
         return (address: address, key: key)
     }
