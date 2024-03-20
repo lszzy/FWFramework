@@ -560,7 +560,7 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let address = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&instance, property: property)
+            let address = property.mode == .default ? PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&instance, property: property) : nil
             let propertyDetail = PropertyInfo(mode: property.mode, key: property.key, type: property.type, address: address, bridged: isBridgedProperty)
             if mapper.propertyExcluded(property: propertyDetail) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
@@ -770,7 +770,7 @@ extension _ExtendCustomModelType {
             let instanceIsNsObject = mutableObject.isNSObjectType()
             let bridgedProperty = mutableObject.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
-                let address = PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&mutableObject, property: desc)
+                let address = desc.mode == .default ? PluginManager.loadPlugin(JSONModelPlugin.self)?.getPropertyAddress(&mutableObject, property: desc) : nil
                 return PropertyInfo(mode: desc.mode, key: desc.key, type: desc.type, address: address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
 
@@ -1274,6 +1274,10 @@ public class MappingPropertyHandler {
 public class HelpingMapper {
     private var mappingHandlers = [String: MappingPropertyHandler]()
     private var excludeProperties = [String]()
+    
+    public func specify(key: String, names: String...) {
+        self.specify(key: key, names: names)
+    }
     
     public func specify(key: String, names: [String]) {
         self.mappingHandlers[key] = MappingPropertyHandler(rawPaths: names, assignmentClosure: nil, takeValueClosure: nil)
