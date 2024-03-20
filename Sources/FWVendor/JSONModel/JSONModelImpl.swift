@@ -19,17 +19,8 @@ import Foundation
     public static let shared = JSONModelImpl()
     
     // MARK: - JSONModelPlugin
-    public func getPropertyKey(_ property: PropertyInfo) -> String {
-        guard property.mode == .default else { return property.key }
-        let address = Int(bitPattern: property.address)
-        return "\(address)"
-    }
-    
-    public func getPropertyAddress<T>(_ instance: inout T, property: Property.Description) -> (address: UnsafeMutablePointer<Int8>?, key: String) where T : _Measurable {
-        guard property.mode == .default else { return (address: nil, key: property.key) }
-        let address = instance.headPointer().advanced(by: property.offset)
-        let key = "\(Int(bitPattern: address))"
-        return (address: address, key: key)
+    public func getPropertyAddress<T>(_ instance: inout T, property: Property.Description) -> UnsafeMutablePointer<Int8>? where T : _Measurable {
+        return instance.headPointer().advanced(by: property.offset)
     }
     
     public func getProperties(for type: Any.Type) -> [Property.Description]? {
@@ -50,7 +41,6 @@ extension _Measurable {
     
     // locate the head of a struct type object in memory
     mutating func headPointerOfStruct() -> UnsafeMutablePointer<Int8> {
-
         return withUnsafeMutablePointer(to: &self) {
             return UnsafeMutableRawPointer($0).bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
         }
@@ -58,7 +48,6 @@ extension _Measurable {
 
     // locating the head of a class type object in memory
     mutating func headPointerOfClass() -> UnsafeMutablePointer<Int8> {
-
         let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
         let mutableTypedPointer = opaquePointer.bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
         return UnsafeMutablePointer<Int8>(mutableTypedPointer)
@@ -80,11 +69,7 @@ extension HelpingMapper {
         self.specify(property: &property, name: name, converter: nil)
     }
     
-    public func specify<T>(property: inout T, converter: @escaping (String) -> T) {
-        self.specify(property: &property, name: nil, converter: converter)
-    }
-    
-    public func specify<T>(property: inout T, name: String?, converter: ((String) -> T)?) {
+    public func specify<T>(property: inout T, name: String? = nil, converter: ((String) -> T)?) {
         let pointer = withUnsafePointer(to: &property, { return $0 })
         let key = "\(Int(bitPattern: pointer))"
         self.specify(property: &property, key: key, name: name, converter: converter)
