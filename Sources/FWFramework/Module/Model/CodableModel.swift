@@ -131,18 +131,16 @@ public final class KeyMap<Root: KeyMappable> {
     init(encode: @escaping (_ root: Root, _ encoder: Encoder) throws -> Void,
          decode: ((_ root: inout Root, _ decoder: Decoder) throws -> Void)?,
          decodeReference: ((_ root: Root, _ decoder: Decoder) throws -> Void)?) {
-        (self.encode, self.decode, self.decodeReference) = (encode, decode, decodeReference)
-        (self.match, self.mapping, self.mappingReference) = (nil, nil, nil)
+        (self.encode, self.decode, self.decodeReference, self.mappingKeys, self.mapping, self.mappingReference) = (encode, decode, decodeReference, [], nil, nil)
     }
     
-    let match: ((_ root: Root, _ property: String) -> Bool)?
+    let mappingKeys: [String]
     let mapping: ((_ root: inout Root, _ value: Any) -> Void)?
     let mappingReference: ((_ root: Root, _ value: Any) -> Void)?
-    init(match: @escaping (_ root: Root, _ property: String) -> Bool,
+    init(mappingKeys: [String],
          mapping: ((_ root: inout Root, _ value: Any) -> Void)?,
          mappingReference: ((_ root: Root, _ value: Any) -> Void)?) {
-        (self.match, self.mapping, self.mappingReference) = (match, mapping, mappingReference)
-        (self.encode, self.decode, self.decodeReference) = (nil, nil, nil)
+        (self.encode, self.decode, self.decodeReference, self.mappingKeys, self.mapping, self.mappingReference) = (nil, nil, nil, mappingKeys, mapping, mappingReference)
     }
 }
 
