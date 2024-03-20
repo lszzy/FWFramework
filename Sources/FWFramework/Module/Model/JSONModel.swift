@@ -696,11 +696,17 @@ extension _ExtendCustomModelType {
     
     static func getProperties<T: _ExtendCustomModelType>(for instance: inout T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
         let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
+        let keyMapping = type(of: instance).keyMapping
         var mode: Property.Mode = .default
         if type(of: instance).shouldMappingValue() {
             mode = .custom
-        } else if !type(of: instance).keyMapping.isEmpty {
+        } else if !keyMapping.isEmpty {
             mode = .keyMapping
+            for keyMap in keyMapping {
+                if keyMap.mappingKeys.count > 1 {
+                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
+                }
+            }
         } else if children.first(where: { $0.1 is JSONMappedValue }) != nil {
             mode = .mappedValue
         }
@@ -1818,23 +1824,19 @@ public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
 // MARK: - KeyMap
 public extension KeyMap where Root: _ExtendCustomModelType {
     convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to mappingKeys: String ...) {
-        self.init(match: { root, property in
-            return mappingKeys.contains(property)
-        }, mapping: { root, value in
+        self.init(mappingKeys: mappingKeys, mapping: { root, value in
             root[keyPath: keyPath] = value as! Value
         }, mappingReference: nil)
     }
     
     convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to mappingKeys: String ...) {
-        self.init(match: { root, property in
-            return mappingKeys.contains(property)
-        }, mapping: nil, mappingReference: { root, value in
+        self.init(mappingKeys: mappingKeys, mapping: nil, mappingReference: { root, value in
             root[keyPath: keyPath] = value as! Value
         })
     }
     
     func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
-        if match?(root, key) ?? false {
+        if key == mappingKeys.first {
             mapping?(&root, value)
             return true
         }
@@ -1842,7 +1844,7 @@ public extension KeyMap where Root: _ExtendCustomModelType {
     }
     
     func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
-        if match?(root, key) ?? false {
+        if key == mappingKeys.first {
             mappingReference?(root, value)
             return true
         }
