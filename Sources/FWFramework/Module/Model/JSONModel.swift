@@ -1778,6 +1778,28 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 // MARK: - KeyMappable
 public extension KeyMappable where Self: _ExtendCustomModelType {
     @discardableResult
+    mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+        for keyMap in keyMapping {
+            if keyMap.match?(self, key) ?? false {
+                keyMap.mapping?(&self, value)
+                return true
+            }
+        }
+        return false
+    }
+    
+    @discardableResult
+    func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+        for keyMap in keyMapping {
+            if keyMap.match?(self, key) ?? false {
+                keyMap.mappingReference?(self, value)
+                return true
+            }
+        }
+        return false
+    }
+    
+    @discardableResult
     func mappingMirror(_ value: Any, forKey key: String) -> Bool {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
@@ -1810,22 +1832,6 @@ public extension KeyMap where Root: _ExtendCustomModelType {
         }, mapping: nil, mappingReference: { root, value in
             root[keyPath: keyPath] = value as! Value
         })
-    }
-    
-    func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
-        if match?(root, key) ?? false {
-            mapping?(&root, value)
-            return true
-        }
-        return false
-    }
-    
-    func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
-        if match?(root, key) ?? false {
-            mappingReference?(root, value)
-            return true
-        }
-        return false
     }
 }
 
