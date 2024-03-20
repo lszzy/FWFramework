@@ -347,16 +347,6 @@ extension ObjectParameter {
     }
 }
 
-extension ObjectParameter where Self: CodableModel {
-    public init(dictionaryValue: [AnyHashable: Any]) {
-        if let object = try? dictionaryValue.decoded() as Self {
-            self = object
-        } else {
-            self.init()
-        }
-    }
-}
-
 extension ObjectParameter where Self: JSONModel {
     public init(dictionaryValue: [AnyHashable: Any]) {
         self.init()
