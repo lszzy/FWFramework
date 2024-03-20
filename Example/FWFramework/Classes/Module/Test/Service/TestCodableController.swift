@@ -440,16 +440,16 @@ struct TestCustomJSONModel: JSONModel {
             dict = value as? [AnyHashable: Any]
         case "array":
             array = value as? [Any]
-        case "option1":
+        case "optional1":
             optional1 = value as? String ?? ""
-        case "option2":
+        case "optional2":
             optional2 = value as? String ?? ""
-        case "option3":
-            optional3 = value as? String
-        case "option4":
-            optional4 = value as? Int
-        case "option5":
-            optional5 = value as? Int
+        case "optional3":
+            optional3 = value as? String ?? "default"
+        case "optional4":
+            optional4 = value as? Int ?? 4
+        case "optional5":
+            optional5 = value as? Int ?? .zero
         case "sub":
             sub = value as? TestCustomJSONSubModel
         case "sub2":
@@ -869,7 +869,7 @@ extension TestCodableController {
                 (model?.optional1 == ""),
                 (model?.optional2 == ""),
                 (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
+                (model?.optional4 == 4),
                 (model?.optional5 == 5),
                 (model?.sub?.name == "sub"),
                 (model?.sub2 != nil),
