@@ -480,6 +480,18 @@ extension _ExtendCustomModelType {
     public mutating func mappingValue(_ value: Any, forKey key: String) {}
 }
 
+extension _ExtendCustomModelType where Root == Self {
+    public mutating func mappingValue(_ value: Any, forKey key: String) {
+        // 模式一：KeyMapping模式
+        if !Self.keyMapping.isEmpty {
+            mappingValue(value, forKey: key, with: Self.keyMapping)
+        // 模式二：MappedValue模式
+        } else {
+            mappingMirror(value, forKey: key)
+        }
+    }
+}
+
 extension NSObject {
     /// Finds the internal object in `object` as the `designatedPath` specified
     /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
@@ -714,19 +726,8 @@ extension _ExtendCustomModelType {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
             switch property.mode {
-            case .custom:
+            case .custom, .keyMapping, .mappedValue:
                 instance.mappingValue(convertedValue, forKey: property.key)
-            case .keyMapping:
-                break
-                /*
-                let keyMapping = type(of: instance).keyMapping
-                for keyMap in keyMapping {
-                    if keyMap.mapping(&instance, value: convertedValue, forKey: property.key) {
-                        break
-                    }
-                }*/
-            case .mappedValue:
-                instance.mappingMirror(convertedValue, forKey: property.key)
             default:
                 if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
                     extensions(of: property.type).write(convertedValue, to: property.address)
@@ -1776,12 +1777,11 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 }
 
 // MARK: - KeyMappable
-public extension KeyMappable where Self: _ExtendCustomModelType {
+public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
     @discardableResult
     mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
-            if keyMap.match?(self, key) ?? false {
-                keyMap.mapping?(&self, value)
+            if keyMap.mapping(&self, value: value, forKey: key) {
                 return true
             }
         }
@@ -1791,8 +1791,7 @@ public extension KeyMappable where Self: _ExtendCustomModelType {
     @discardableResult
     func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
-            if keyMap.match?(self, key) ?? false {
-                keyMap.mappingReference?(self, value)
+            if keyMap.mappingReference(self, value: value, forKey: key) {
                 return true
             }
         }
@@ -1832,6 +1831,22 @@ public extension KeyMap where Root: _ExtendCustomModelType {
         }, mapping: nil, mappingReference: { root, value in
             root[keyPath: keyPath] = value as! Value
         })
+    }
+    
+    func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
+        if match?(root, key) ?? false {
+            mapping?(&root, value)
+            return true
+        }
+        return false
+    }
+    
+    func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
+        if match?(root, key) ?? false {
+            mappingReference?(root, value)
+            return true
+        }
+        return false
     }
 }
 

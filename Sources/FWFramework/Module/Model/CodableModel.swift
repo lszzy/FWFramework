@@ -82,15 +82,15 @@ public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
     }
     
     func encodeValue(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.encode?(self, encoder) }
+        try keyMapping.forEach { try $0.encode(self, to: encoder) }
     }
     
     mutating func decodeValue(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.decode?(&self, decoder) }
+        try keyMapping.forEach { try $0.decode(&self, from: decoder) }
     }
     
     func decodeReference(from decoder: Decoder, with keyMapping: [KeyMap<Self>]) throws {
-        try keyMapping.forEach { try $0.decodeReference?(self, decoder) }
+        try keyMapping.forEach { try $0.decodeReference(self, from: decoder) }
     }
     
     func encodeMirror(to encoder: Encoder) throws {
@@ -289,6 +289,18 @@ public extension KeyMap where Root: Codable & ObjectType {
                 }
             }
         })
+    }
+    
+    func encode(_ root: Root, to encoder: Encoder) throws {
+        try encode?(root, encoder)
+    }
+    
+    func decode(_ root: inout Root, from decoder: Decoder) throws {
+        try decode?(&root, decoder)
+    }
+    
+    func decodeReference(_ root: Root, from decoder: Decoder) throws {
+        try decodeReference?(root, decoder)
     }
 }
 
