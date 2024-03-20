@@ -332,6 +332,7 @@ struct TestJSONModel: JSONModel {
     var enum2: TestJSONModelEnum = .unknown
     var enum3: TestJSONModelEnum?
     
+    // HandyJSON模式时，会去解析属性offset，因此也能使用<<<等infix符号方法
     mutating func mapping(mapper: HelpingMapper) {
         mapper >>> self.except
         
@@ -469,14 +470,11 @@ struct TestCustomJSONModel: JSONModel {
         }
     }
     
+    // 非HandyJSON模式时，不会去解析属性offset，因此也不能使用<<<等infix符号方法
     mutating func mapping(mapper: HelpingMapper) {
-        mapper >>> self.except
-        
-        mapper <<<
-            self.alias <-- "alias_key"
-        
-        mapper <<<
-            self.camelName <-- "camel_name"
+        mapper.exclude(key: "except")
+        mapper.specify(key: "alias", names: "alias_key")
+        mapper.specify(key: "camelName", names: "camel_name")
     }
 }
 
