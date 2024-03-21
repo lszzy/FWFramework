@@ -25,6 +25,7 @@ class TestController: UIViewController {
             ["Cache", "TestCacheController"],
             ["Database", "TestDatabaseController"],
             ["Encode", "TestEncodeController"],
+            ["Codable", "TestCodableController"],
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],

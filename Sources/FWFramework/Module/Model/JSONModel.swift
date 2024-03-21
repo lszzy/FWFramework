@@ -8,50 +8,37 @@
 import Foundation
 import UIKit
 
-// MARK: - Export
-/**
- HandyJSON
- 
- - see: [HandyJSON](https://github.com/alibaba/HandyJSON)
- */
-public protocol JSONModel: _ExtendCustomModelType, AnyCodableModel {}
+// MARK: - JSONModel
+/// 通用JSON模型协议，默认未实现KeyMappable，使用方式同HandyJSON(不推荐，直接读写内存模式，不稳定也不安全)；
+/// JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式
+///
+/// KeyMappable模式一：MappedValue模式
+/// 1. 支持JSONModel类型字段，使用方式：@MappedValue
+/// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
+/// 3. 支持Any类型字段，使用方式：@MappedValue
+/// 4. 未标记MappedValue的字段自动忽略
+///
+/// KeyMappable模式二：KeyMapping模式
+/// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
+/// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
+/// 3. 支持Any类型，使用方式同上，加入keyMapping即可
+/// 4. 未加入keyMapping的字段自动忽略
+///
+/// KeyMappable模式三：自定义模式
+/// 1. 需完整实现JSONModel协议的shouldMappingValue()和mappingValue(_:forKey:)协议方法
+///
+/// [HandyJSON](https://github.com/alibaba/HandyJSON)
+public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
 
 public protocol JSONModelCustomTransformable: _ExtendCustomBasicType {}
 
 public protocol JSONModelEnum: _RawEnumProtocol {}
 
 // MARK: - Measuable
-typealias Byte = Int8
-
 public protocol _Measurable {}
 
 extension _Measurable {
-
-    // locate the head of a struct type object in memory
-    mutating func headPointerOfStruct() -> UnsafeMutablePointer<Byte> {
-
-        return withUnsafeMutablePointer(to: &self) {
-            return UnsafeMutableRawPointer($0).bindMemory(to: Byte.self, capacity: MemoryLayout<Self>.stride)
-        }
-    }
-
-    // locating the head of a class type object in memory
-    mutating func headPointerOfClass() -> UnsafeMutablePointer<Byte> {
-
-        let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
-        let mutableTypedPointer = opaquePointer.bindMemory(to: Byte.self, capacity: MemoryLayout<Self>.stride)
-        return UnsafeMutablePointer<Byte>(mutableTypedPointer)
-    }
-
-    // locating the head of an object
-    mutating func headPointer() -> UnsafeMutablePointer<Byte> {
-        if Self.self is AnyClass {
-            return self.headPointerOfClass()
-        } else {
-            return self.headPointerOfStruct()
-        }
-    }
-
+    
     func isNSObjectType() -> Bool {
         return (type(of: self) as? NSObject.Type) != nil
     }
@@ -81,24 +68,6 @@ extension _Measurable {
         }
         count.deallocate()
         return propertyList
-    }
-
-    // memory size occupy by self object
-    static func size() -> Int {
-        return MemoryLayout<Self>.size
-    }
-
-    // align
-    static func align() -> Int {
-        return MemoryLayout<Self>.alignment
-    }
-
-    // Returns the offset to the next integer that is greater than
-    // or equal to Value and is a multiple of Align. Align must be
-    // non-zero.
-    static func offsetToAlignment(value: Int, align: Int) -> Int {
-        let m = value % align
-        return m == 0 ? 0 : (align - m)
     }
 }
 
@@ -496,114 +465,16 @@ public protocol _ExtendCustomModelType: _Transformable {
     mutating func willStartMapping()
     mutating func mapping(mapper: HelpingMapper)
     mutating func didFinishMapping()
+    static func shouldMappingValue() -> Bool
+    mutating func mappingValue(_ value: Any, forKey key: String)
 }
 
 extension _ExtendCustomModelType {
-
     public mutating func willStartMapping() {}
     public mutating func mapping(mapper: HelpingMapper) {}
     public mutating func didFinishMapping() {}
-}
-
-fileprivate func convertKeyIfNeeded(dict: [String: Any]) -> [String: Any] {
-    if !JSONModelConfiguration.deserializeOptions.isEmpty {
-        var newDict = [String: Any]()
-        dict.forEach({ (kvPair) in
-            var newKey = kvPair.key
-            if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                newKey = newKey.fw.camelString
-            } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                newKey = newKey.fw.underlineString
-            }
-            if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
-                newKey = newKey.lowercased()
-            }
-            newDict[newKey] = kvPair.value
-        })
-        return newDict
-    }
-    return dict
-}
-
-fileprivate func getRawValueFrom(dict: [String: Any], property: PropertyInfo, mapper: HelpingMapper) -> Any? {
-    let address = Int(bitPattern: property.address)
-    if let mappingHandler = mapper.getMappingHandler(key: address) {
-        if let mappingPaths = mappingHandler.mappingPaths, mappingPaths.count > 0 {
-            for mappingPath in mappingPaths {
-                if let _value = dict.findValueBy(path: mappingPath) {
-                    return _value
-                }
-            }
-            return nil
-        }
-    }
-    if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
-        return dict[property.key.lowercased()]
-    }
-    return dict[property.key]
-}
-
-fileprivate func convertValue(rawValue: Any, property: PropertyInfo, mapper: HelpingMapper) -> Any? {
-    if rawValue is NSNull { return nil }
-    if let mappingHandler = mapper.getMappingHandler(key: Int(bitPattern: property.address)), let transformer = mappingHandler.assignmentClosure {
-        return transformer(rawValue)
-    }
-    if let transformableType = property.type as? _Transformable.Type {
-        return transformableType.transform(from: rawValue)
-    } else {
-        return extensions(of: property.type).takeValue(from: rawValue)
-    }
-}
-
-fileprivate func assignProperty(convertedValue: Any, instance: _ExtendCustomModelType, property: PropertyInfo) {
-    if property.bridged {
-        (instance as! NSObject).setValue(convertedValue, forKey: property.key)
-    } else {
-        extensions(of: property.type).write(convertedValue, to: property.address)
-    }
-}
-
-fileprivate func readAllChildrenFrom(mirror: Mirror) -> [(String, Any)] {
-    var children = [(label: String?, value: Any)]()
-    children += mirror.children
-
-    var currentMirror = mirror
-    while let superclassChildren = currentMirror.superclassMirror?.children {
-        children += superclassChildren
-        currentMirror = currentMirror.superclassMirror!
-    }
-    var result = [(String, Any)]()
-    children.forEach { (child) in
-        if let _label = child.label {
-            result.append((_label, child.value))
-        }
-    }
-    return result
-}
-
-fileprivate func merge(children: [(String, Any)], propertyInfos: [PropertyInfo]) -> [String: (Any, PropertyInfo?)] {
-    var infoDict = [String: PropertyInfo]()
-    propertyInfos.forEach { (info) in
-        infoDict[info.key] = info
-    }
-
-    var result = [String: (Any, PropertyInfo?)]()
-    if JSONModelConfiguration.deserializeOptions.contains(.serializeReverse) {
-        children.forEach { (child) in
-            var key = child.0
-            if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                key = key.fw.underlineString
-            } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                key = key.fw.camelString
-            }
-            result[key] = (child.1, infoDict[child.0])
-        }
-    } else {
-        children.forEach { (child) in
-            result[child.0] = (child.1, infoDict[child.0])
-        }
-    }
-    return result
+    public static func shouldMappingValue() -> Bool { false }
+    public mutating func mappingValue(_ value: Any, forKey key: String) {}
 }
 
 extension NSObject {
@@ -670,45 +541,186 @@ extension _ExtendCustomModelType {
     }
 
     static func _transform(dict: [String: Any], to instance: inout Self) {
-        guard let properties = getProperties(forType: Self.self) else {
+        // do user-specified mapping first
+        let mapper = HelpingMapper()
+        guard let properties = getProperties(for: instance, mapper: mapper) else {
             InternalLogger.logDebug("Failed when try to get properties from type: \(type(of: Self.self))")
             return
         }
-
-        // do user-specified mapping first
-        let mapper = HelpingMapper()
+        
         instance.mapping(mapper: mapper)
-
-        // get head addr
-        let rawPointer = instance.headPointer()
-        InternalLogger.logVerbose("instance start at: ", Int(bitPattern: rawPointer))
-
-        // process dictionary
+        
         let _dict = convertKeyIfNeeded(dict: dict)
-
         let instanceIsNsObject = instance.isNSObjectType()
         let bridgedPropertyList = instance.getBridgedPropertyList()
 
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let propAddr = rawPointer.advanced(by: property.offset)
-            InternalLogger.logVerbose(property.key, "address at: ", Int(bitPattern: propAddr))
-            if mapper.propertyExcluded(key: Int(bitPattern: propAddr)) {
+            let address = !(instance is any KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: property) : nil
+            let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: address, bridged: isBridgedProperty)
+            if mapper.propertyExcluded(property: propertyDetail) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
                 continue
             }
 
-            let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: propAddr, bridged: isBridgedProperty)
-            InternalLogger.logVerbose("field: ", property.key, "  offset: ", property.offset, "  isBridgeProperty: ", isBridgedProperty)
-
             if let rawValue = getRawValueFrom(dict: _dict, property: propertyDetail, mapper: mapper) {
                 if let convertedValue = convertValue(rawValue: rawValue, property: propertyDetail, mapper: mapper) {
-                    assignProperty(convertedValue: convertedValue, instance: instance, property: propertyDetail)
+                    assignProperty(convertedValue: convertedValue, instance: &instance, property: propertyDetail)
                     continue
                 }
             }
             InternalLogger.logDebug("Property: \(property.key) hasn't been written in")
+        }
+    }
+    
+    static func convertKeyIfNeeded(dict: [String: Any]) -> [String: Any] {
+        if !JSONModelConfiguration.deserializeOptions.isEmpty {
+            var newDict = [String: Any]()
+            dict.forEach({ (kvPair) in
+                var newKey = kvPair.key
+                if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                    newKey = newKey.fw_camelString
+                } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                    newKey = newKey.fw_underlineString
+                }
+                if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+                    newKey = newKey.lowercased()
+                }
+                newDict[newKey] = kvPair.value
+            })
+            return newDict
+        }
+        return dict
+    }
+
+    static func getRawValueFrom(dict: [String: Any], property: PropertyInfo, mapper: HelpingMapper) -> Any? {
+        if let mappingHandler = mapper.getMappingHandler(property: property) {
+            if let mappingPaths = mappingHandler.mappingPaths, mappingPaths.count > 0 {
+                for mappingPath in mappingPaths {
+                    if let _value = dict.findValueBy(path: mappingPath) {
+                        return _value
+                    }
+                }
+                return nil
+            }
+        }
+        if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+            return dict[property.key.lowercased()]
+        }
+        return dict[property.key]
+    }
+
+    static func convertValue(rawValue: Any, property: PropertyInfo, mapper: HelpingMapper) -> Any? {
+        if rawValue is NSNull { return nil }
+        if let mappingHandler = mapper.getMappingHandler(property: property),
+           let transformer = mappingHandler.assignmentClosure {
+            return transformer(rawValue)
+        }
+        if let transformableType = property.type as? _Transformable.Type {
+            return transformableType.transform(from: rawValue)
+        } else {
+            return extensions(of: property.type).takeValue(from: rawValue)
+        }
+    }
+
+    static func readAllChildrenFrom(mirror: Mirror) -> [(String, Any)] {
+        var children = [(label: String?, value: Any)]()
+        children += mirror.children
+
+        var currentMirror = mirror
+        while let superclassChildren = currentMirror.superclassMirror?.children {
+            children += superclassChildren
+            currentMirror = currentMirror.superclassMirror!
+        }
+        var result = [(String, Any)]()
+        children.forEach { (child) in
+            if let _label = child.label {
+                if child.value is JSONMappedValue {
+                    result.append((String(_label.dropFirst()), child.value))
+                } else {
+                    result.append((_label, child.value))
+                }
+            }
+        }
+        return result
+    }
+
+    static func merge(children: [(String, Any)], propertyInfos: [PropertyInfo]) -> [String: (Any, PropertyInfo?)] {
+        var infoDict = [String: PropertyInfo]()
+        propertyInfos.forEach { (info) in
+            infoDict[info.key] = info
+        }
+
+        var result = [String: (Any, PropertyInfo?)]()
+        if JSONModelConfiguration.deserializeOptions.contains(.serializeReverse) {
+            children.forEach { (child) in
+                var key = child.0
+                if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                    key = key.fw_underlineString
+                } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                    key = key.fw_camelString
+                }
+                if let value = child.1 as? JSONMappedValue {
+                    result[key] = (value.mappingValue(), infoDict[child.0])
+                } else {
+                    result[key] = (child.1, infoDict[child.0])
+                }
+            }
+        } else {
+            children.forEach { (child) in
+                if let value = child.1 as? JSONMappedValue {
+                    result[child.0] = (value.mappingValue(), infoDict[child.0])
+                } else {
+                    result[child.0] = (child.1, infoDict[child.0])
+                }
+            }
+        }
+        return result
+    }
+    
+    static func getProperties<T: _ExtendCustomModelType>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        if let instance = instance as? any _ExtendCustomModelType & KeyMappable {
+            return getMappingProperties(for: instance, mapper: mapper, children: children)
+        } else {
+            if JSONModelConfiguration.memoryMode {
+                return getProperties(for: type(of: instance))
+            }
+            return nil
+        }
+    }
+    
+    static func getMappingProperties<T: _ExtendCustomModelType & KeyMappable>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        for keyMap in type(of: instance).keyMapping {
+            if keyMap.mappingKeys.count > 1 {
+                mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
+            }
+        }
+        
+        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
+        return children.map { child in
+            if let value = child.1 as? JSONMappedValue {
+                if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
+                    mapper.specify(key: child.0, names: mappingKeys)
+                }
+                return Property.Description(key: child.0, type: type(of: value.mappingValue()), offset: 0)
+            } else {
+                return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
+            }
+        }
+    }
+    
+    static func assignProperty(convertedValue: Any, instance: inout Self, property: PropertyInfo) {
+        if property.bridged {
+            (instance as! NSObject).setValue(convertedValue, forKey: property.key)
+        } else {
+            if instance is any KeyMappable {
+                instance.mappingValue(convertedValue, forKey: property.key)
+            } else {
+                if JSONModelConfiguration.memoryMode {
+                    extensions(of: property.type).write(convertedValue, to: property.address)
+                }
+            }
         }
     }
 }
@@ -738,26 +750,24 @@ extension _ExtendCustomModelType {
             }
 
             let children = readAllChildrenFrom(mirror: mirror)
-
-            guard let properties = getProperties(forType: type(of: object)) else {
+            var instance = object as! _ExtendCustomModelType
+            guard let properties = getProperties(for: instance, mapper: mapper, children: children) else {
                 InternalLogger.logError("Can not get properties info for type: \(type(of: object))")
                 return nil
             }
-
-            var mutableObject = object as! _ExtendCustomModelType
-            let instanceIsNsObject = mutableObject.isNSObjectType()
-            let head = mutableObject.headPointer()
-            let bridgedProperty = mutableObject.getBridgedPropertyList()
+            
+            let instanceIsNsObject = instance.isNSObjectType()
+            let bridgedProperty = instance.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
-                return PropertyInfo(key: desc.key, type: desc.type, address: head.advanced(by: desc.offset),
-                                        bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
+                let address = !(instance is any KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: desc) : nil
+                return PropertyInfo(key: desc.key, type: desc.type, address: address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
 
-            mutableObject.mapping(mapper: mapper)
+            instance.mapping(mapper: mapper)
 
             let requiredInfo = merge(children: children, propertyInfos: propertyInfos)
 
-            return _serializeModelObject(instance: mutableObject, properties: requiredInfo, mapper: mapper) as Any
+            return _serializeModelObject(instance: instance, properties: requiredInfo, mapper: mapper) as Any
         default:
             return object.plainValue()
         }
@@ -775,11 +785,11 @@ extension _ExtendCustomModelType {
                     realValue = _value
                 }
 
-                if mapper.propertyExcluded(key: Int(bitPattern: info.address)) {
+                if mapper.propertyExcluded(property: info) {
                     continue
                 }
 
-                if let mappingHandler = mapper.getMappingHandler(key: Int(bitPattern: info.address)) {
+                if let mappingHandler = mapper.getMappingHandler(property: info) {
                     // if specific key is set, replace the label
                     if let mappingPaths = mappingHandler.mappingPaths, mappingPaths.count > 0 {
                         // take the first path, last segment if more than one
@@ -813,14 +823,6 @@ public protocol _ExtendCustomBasicType: _Transformable {
 
     static func _transform(from object: Any) -> Self?
     func _plainValue() -> Any?
-}
-
-// MARK: - PropertyInfo
-struct PropertyInfo {
-    let key: String
-    let type: Any.Type
-    let address: UnsafeMutableRawPointer
-    let bridged: Bool
 }
 
 // MARK: - Deserializer
@@ -1141,7 +1143,6 @@ public extension JSONModel {
     }
 
     func toJSONString(prettyPrint: Bool = false) -> String? {
-
         if let anyObject = self.toJSON() {
             if JSONSerialization.isValidJSONObject(anyObject) {
                 do {
@@ -1164,13 +1165,11 @@ public extension JSONModel {
 }
 
 public extension Collection where Iterator.Element: JSONModel {
-
     func toJSON() -> [[String: Any]?] {
         return self.map{ $0.toJSON() }
     }
 
     func toJSONString(prettyPrint: Bool = false) -> String? {
-
         let anyArray = self.toJSON()
         if JSONSerialization.isValidJSONObject(anyArray) {
             do {
@@ -1193,16 +1192,14 @@ public extension Collection where Iterator.Element: JSONModel {
 
 // MARK: - HashString
 public extension JSONModel where Self: AnyObject {
-    
     var hashString: String {
         let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
         return String(describing: opaquePointer)
     }
-    
 }
 
 // MARK: - HelpingMapper
-public typealias CustomMappingKeyValueTuple = (Int, MappingPropertyHandler)
+public typealias CustomMappingKeyValueTuple = (String, MappingPropertyHandler)
 
 struct MappingPath {
     var segments: [String]
@@ -1230,7 +1227,6 @@ struct MappingPath {
 }
 
 extension Dictionary where Key == String, Value: Any {
-
     func findValueBy(path: MappingPath) -> Any? {
         var currentDict: [String: Any]? = self
         var lastValue: Any?
@@ -1265,29 +1261,18 @@ public class MappingPropertyHandler {
 }
 
 public class HelpingMapper {
+    private var mappingHandlers = [String: MappingPropertyHandler]()
+    private var excludeProperties = [String]()
     
-    private var mappingHandlers = [Int: MappingPropertyHandler]()
-    private var excludeProperties = [Int]()
-    
-    internal func getMappingHandler(key: Int) -> MappingPropertyHandler? {
-        return self.mappingHandlers[key]
+    public func specify(key: String, names: String...) {
+        self.specify(key: key, names: names)
     }
     
-    internal func propertyExcluded(key: Int) -> Bool {
-        return self.excludeProperties.contains(key)
+    public func specify(key: String, names: [String]) {
+        self.mappingHandlers[key] = MappingPropertyHandler(rawPaths: names, assignmentClosure: nil, takeValueClosure: nil)
     }
     
-    public func specify<T>(property: inout T, name: String) {
-        self.specify(property: &property, name: name, converter: nil)
-    }
-    
-    public func specify<T>(property: inout T, converter: @escaping (String) -> T) {
-        self.specify(property: &property, name: nil, converter: converter)
-    }
-    
-    public func specify<T>(property: inout T, name: String?, converter: ((String) -> T)?) {
-        let pointer = withUnsafePointer(to: &property, { return $0 })
-        let key = Int(bitPattern: pointer)
+    public func specify<T>(property: inout T, key: String, name: String? = nil, converter: ((String) -> T)?) {
         let names = (name == nil ? nil : [name!])
         
         if let _converter = converter {
@@ -1307,17 +1292,509 @@ public class HelpingMapper {
         }
     }
     
-    public func exclude<T>(property: inout T) {
-        self._exclude(property: &property)
-    }
-    
-    fileprivate func addCustomMapping(key: Int, mappingInfo: MappingPropertyHandler) {
+    public func addCustomMapping(key: String, mappingInfo: MappingPropertyHandler) {
         self.mappingHandlers[key] = mappingInfo
     }
     
-    fileprivate func _exclude<T>(property: inout T) {
+    public func exclude(key: String) {
+        self.excludeProperties.append(key)
+    }
+    
+    internal func getMappingHandler(property: PropertyInfo) -> MappingPropertyHandler? {
+        if let handler = self.mappingHandlers[property.key] {
+            return handler
+        }
+        if let address = property.address,
+           let handler = self.mappingHandlers["\(Int(bitPattern: address))"] {
+            return handler
+        }
+        return nil
+    }
+    
+    internal func propertyExcluded(property: PropertyInfo) -> Bool {
+        if self.excludeProperties.contains(property.key) {
+            return true
+        }
+        if let address = property.address,
+           self.excludeProperties.contains("\(Int(bitPattern: address))") {
+            return true
+        }
+        return false
+    }
+}
+
+// MARK: - Logger
+struct InternalLogger {
+
+    static func logError(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.error.rawValue {
+            print(items, separator: separator, terminator: terminator)
+        }
+    }
+
+    static func logDebug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.debug.rawValue {
+            print(items, separator: separator, terminator: terminator)
+        }
+    }
+
+    static func logVerbose(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.verbose.rawValue {
+            print(items, separator: separator, terminator: terminator)
+        }
+    }
+}
+
+// MARK: - Configuration
+public struct DeserializeOptions: OptionSet {
+    public let rawValue: Int
+
+    public static let caseInsensitive = DeserializeOptions(rawValue: 1 << 0)
+    
+    public static let snakeToCamel = DeserializeOptions(rawValue: 1 << 1)
+    
+    public static let camelToSnake = DeserializeOptions(rawValue: 1 << 2)
+    
+    public static let serializeReverse = DeserializeOptions(rawValue: 1 << 3)
+    
+    public static let defaultOptions: DeserializeOptions = []
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+public struct JSONModelConfiguration {
+    public enum DebugMode: Int {
+        case verbose = 0
+        case debug = 1
+        case error = 2
+        case none = 3
+    }
+
+    public static var memoryMode = true
+    public static var debugMode: DebugMode = .error
+    public static var deserializeOptions: DeserializeOptions = .defaultOptions
+}
+
+// MARK: - AnyExtensions
+protocol AnyExtensions {}
+
+extension AnyExtensions {
+    static func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
+        guard let this = value as? Self else {
+            return
+        }
+        storage.assumingMemoryBound(to: self).pointee = this
+    }
+
+    static func takeValue(from anyValue: Any) -> Self? {
+        return anyValue as? Self
+    }
+}
+
+func extensions(of type: Any.Type) -> AnyExtensions.Type {
+    struct Extensions : AnyExtensions {}
+    var extensions: AnyExtensions.Type = Extensions.self
+    withUnsafePointer(to: &extensions) { pointer in
+        UnsafeMutableRawPointer(mutating: pointer).assumingMemoryBound(to: Any.Type.self).pointee = type
+    }
+    return extensions
+}
+
+// MARK: - PropertyInfo
+struct PropertyInfo {
+    let key: String
+    let type: Any.Type
+    let address: UnsafeMutableRawPointer!
+    let bridged: Bool
+}
+
+// MARK: - Properties
+/// An instance property
+struct Property {
+    let key: String
+    let value: Any
+
+    /// An instance property description
+    struct Description {
+        let key: String
+        let type: Any.Type
+        let offset: Int
+        
+        func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
+            return extensions(of: type).write(value, to: storage.advanced(by: offset))
+        }
+    }
+}
+
+// MARK: - TransformOf
+open class TransformOf<ObjectType, JSONType>: TransformType {
+    public typealias Object = ObjectType
+    public typealias JSON = JSONType
+
+    private let fromJSON: (JSONType?) -> ObjectType?
+    private let toJSON: (ObjectType?) -> JSONType?
+
+    public init(fromJSON: @escaping(JSONType?) -> ObjectType?, toJSON: @escaping(ObjectType?) -> JSONType?) {
+        self.fromJSON = fromJSON
+        self.toJSON = toJSON
+    }
+
+    open func transformFromJSON(_ value: Any?) -> ObjectType? {
+        return fromJSON(value as? JSONType)
+    }
+
+    open func transformToJSON(_ value: ObjectType?) -> JSONType? {
+        return toJSON(value)
+    }
+}
+
+// MARK: - TransformType
+public protocol TransformType {
+    associatedtype Object
+    associatedtype JSON
+
+    func transformFromJSON(_ value: Any?) -> Object?
+    func transformToJSON(_ value: Object?) -> JSON?
+}
+
+// MARK: - URLTransform
+open class URLTransform: TransformType {
+    public typealias Object = URL
+    public typealias JSON = String
+    private let shouldEncodeURLString: Bool
+
+    /**
+    Initializes the URLTransform with an option to encode URL strings before converting them to an NSURL
+    - parameter shouldEncodeUrlString: when true (the default) the string is encoded before passing
+    to `NSURL(string:)`
+    - returns: an initialized transformer
+    */
+    public init(shouldEncodeURLString: Bool = true) {
+        self.shouldEncodeURLString = shouldEncodeURLString
+    }
+
+    open func transformFromJSON(_ value: Any?) -> URL? {
+        guard let URLString = value as? String else { return nil }
+
+        if !shouldEncodeURLString {
+            return URL(string: URLString)
+        }
+
+        guard let escapedURLString = URLString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        return URL(string: escapedURLString)
+    }
+
+    open func transformToJSON(_ value: URL?) -> String? {
+        if let URL = value {
+            return URL.absoluteString
+        }
+        return nil
+    }
+}
+
+// MARK: - EnumTransform
+open class EnumTransform<T: RawRepresentable>: TransformType {
+    public typealias Object = T
+    public typealias JSON = T.RawValue
+
+    public init() {}
+
+    open func transformFromJSON(_ value: Any?) -> T? {
+        if let raw = value as? T.RawValue {
+            return T(rawValue: raw)
+        }
+        return nil
+    }
+
+    open func transformToJSON(_ value: T?) -> T.RawValue? {
+        if let obj = value {
+            return obj.rawValue
+        }
+        return nil
+    }
+}
+
+// MARK: - NSDecimalNumberTransform
+open class NSDecimalNumberTransform: TransformType {
+    public typealias Object = NSDecimalNumber
+    public typealias JSON = String
+
+    public init() {}
+
+    open func transformFromJSON(_ value: Any?) -> NSDecimalNumber? {
+        if let string = value as? String {
+            return NSDecimalNumber(string: string)
+        }
+        if let double = value as? Double {
+            return NSDecimalNumber(value: double)
+        }
+        return nil
+    }
+
+    open func transformToJSON(_ value: NSDecimalNumber?) -> String? {
+        guard let value = value else { return nil }
+        return value.description
+    }
+}
+
+// MARK: - DataTransform
+open class DataTransform: TransformType {
+    public typealias Object = Data
+    public typealias JSON = String
+
+    public init() {}
+
+    open func transformFromJSON(_ value: Any?) -> Data? {
+        guard let string = value as? String else{
+            return nil
+        }
+        return Data(base64Encoded: string)
+    }
+
+    open func transformToJSON(_ value: Data?) -> String? {
+        guard let data = value else{
+            return nil
+        }
+        return data.base64EncodedString()
+    }
+}
+
+// MARK: - HexColorTransform
+open class HexColorTransform: TransformType {
+
+    public typealias Object = UIColor
+
+    public typealias JSON = String
+
+    var prefix: Bool = false
+
+    var alpha: Bool = false
+
+    public init(prefixToJSON: Bool = false, alphaToJSON: Bool = false) {
+        alpha = alphaToJSON
+        prefix = prefixToJSON
+    }
+
+    open func transformFromJSON(_ value: Any?) -> Object? {
+        if let rgba = value as? String {
+            if rgba.hasPrefix("#") {
+                let index = rgba.index(rgba.startIndex, offsetBy: 1)
+                let hex = String(rgba[index...])
+                return getColor(hex: hex)
+            } else {
+                return getColor(hex: rgba)
+            }
+        }
+        return nil
+    }
+
+    open func transformToJSON(_ value: Object?) -> JSON? {
+        if let value = value {
+            return hexString(color: value)
+        }
+        return nil
+    }
+
+    fileprivate func hexString(color: Object) -> String {
+        let comps = color.cgColor.components!
+        let r = Int(comps[0] * 255)
+        let g = Int(comps[1] * 255)
+        let b = Int(comps[2] * 255)
+        let a = Int(comps[3] * 255)
+        var hexString: String = ""
+        if prefix {
+            hexString = "#"
+        }
+        hexString += String(format: "%02X%02X%02X", r, g, b)
+
+        if alpha {
+            hexString += String(format: "%02X", a)
+        }
+        return hexString
+    }
+
+    fileprivate func getColor(hex: String) -> Object? {
+        var red: CGFloat   = 0.0
+        var green: CGFloat = 0.0
+        var blue: CGFloat  = 0.0
+        var alpha: CGFloat = 1.0
+
+        let scanner = Scanner(string: hex)
+        var hexValue: CUnsignedLongLong = 0
+        if scanner.scanHexInt64(&hexValue) {
+            switch (hex.count) {
+            case 3:
+                red   = CGFloat((hexValue & 0xF00) >> 8)       / 15.0
+                green = CGFloat((hexValue & 0x0F0) >> 4)       / 15.0
+                blue  = CGFloat(hexValue & 0x00F)              / 15.0
+            case 4:
+                red   = CGFloat((hexValue & 0xF000) >> 12)     / 15.0
+                green = CGFloat((hexValue & 0x0F00) >> 8)      / 15.0
+                blue  = CGFloat((hexValue & 0x00F0) >> 4)      / 15.0
+                alpha = CGFloat(hexValue & 0x000F)             / 15.0
+            case 6:
+                red   = CGFloat((hexValue & 0xFF0000) >> 16)   / 255.0
+                green = CGFloat((hexValue & 0x00FF00) >> 8)    / 255.0
+                blue  = CGFloat(hexValue & 0x0000FF)           / 255.0
+            case 8:
+                red   = CGFloat((hexValue & 0xFF000000) >> 24) / 255.0
+                green = CGFloat((hexValue & 0x00FF0000) >> 16) / 255.0
+                blue  = CGFloat((hexValue & 0x0000FF00) >> 8)  / 255.0
+                alpha = CGFloat(hexValue & 0x000000FF)         / 255.0
+            default:
+                // Invalid RGB string, number of characters after '#' should be either 3, 4, 6 or 8
+                return nil
+            }
+        } else {
+            // "Scan hex error
+            return nil
+        }
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+    }
+}
+
+// MARK: - DateTransform
+open class DateTransform: TransformType {
+    public typealias Object = Date
+    public typealias JSON = Double
+
+    public init() {}
+
+    open func transformFromJSON(_ value: Any?) -> Date? {
+        if let timeInt = value as? Double {
+            return Date(timeIntervalSince1970: TimeInterval(timeInt))
+        }
+
+        if let timeStr = value as? String {
+            return Date(timeIntervalSince1970: TimeInterval(atof(timeStr)))
+        }
+
+        return nil
+    }
+
+    open func transformToJSON(_ value: Date?) -> Double? {
+        if let date = value {
+            return Double(date.timeIntervalSince1970)
+        }
+        return nil
+    }
+}
+
+// MARK: - DateFormatterTransform
+open class DateFormatterTransform: TransformType {
+    public typealias Object = Date
+    public typealias JSON = String
+
+    public let dateFormatter: DateFormatter
+
+    public init(dateFormatter: DateFormatter) {
+        self.dateFormatter = dateFormatter
+    }
+
+    open func transformFromJSON(_ value: Any?) -> Date? {
+        if let dateString = value as? String {
+            return dateFormatter.date(from: dateString)
+        }
+        return nil
+    }
+
+    open func transformToJSON(_ value: Date?) -> String? {
+        if let date = value {
+            return dateFormatter.string(from: date)
+        }
+        return nil
+    }
+}
+
+// MARK: - ISO8601DateTransform
+open class ISO8601DateTransform: DateFormatterTransform {
+
+    public init() {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+
+        super.init(dateFormatter: formatter)
+    }
+
+}
+
+// MARK: - CustomDateFormatTransform
+open class CustomDateFormatTransform: DateFormatterTransform {
+
+    public init(formatString: String) {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = formatString
+
+        super.init(dateFormatter: formatter)
+    }
+}
+
+// MARK: - MemoryMode
+extension _ExtendCustomModelType {
+    static func getPropertyAddress<T>(_ instance: inout T, property: Property.Description) -> UnsafeMutablePointer<Int8>? where T : _Measurable {
+        return instance.headPointer().advanced(by: property.offset)
+    }
+    
+    static func getProperties(for type: Any.Type) -> [Property.Description]? {
+        if let structDescriptor = Metadata.Struct(anyType: type) {
+            return structDescriptor.propertyDescriptions()
+        } else if let classDescriptor = Metadata.Class(anyType: type) {
+            return classDescriptor.propertyDescriptions()
+        } else if let objcClassDescriptor = Metadata.ObjcClassWrapper(anyType: type),
+            let targetType = objcClassDescriptor.targetType {
+            return getProperties(for: targetType)
+        }
+        return nil
+    }
+}
+
+extension _Measurable {
+    // locate the head of a struct type object in memory
+    mutating func headPointerOfStruct() -> UnsafeMutablePointer<Int8> {
+        return withUnsafeMutablePointer(to: &self) {
+            return UnsafeMutableRawPointer($0).bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
+        }
+    }
+
+    // locating the head of a class type object in memory
+    mutating func headPointerOfClass() -> UnsafeMutablePointer<Int8> {
+        let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
+        let mutableTypedPointer = opaquePointer.bindMemory(to: Int8.self, capacity: MemoryLayout<Self>.stride)
+        return UnsafeMutablePointer<Int8>(mutableTypedPointer)
+    }
+
+    // locating the head of an object
+    mutating func headPointer() -> UnsafeMutablePointer<Int8> {
+        if Self.self is AnyClass {
+            return self.headPointerOfClass()
+        } else {
+            return self.headPointerOfStruct()
+        }
+    }
+}
+
+extension HelpingMapper {
+    
+    public func specify<T>(property: inout T, name: String) {
+        self.specify(property: &property, name: name, converter: nil)
+    }
+    
+    public func specify<T>(property: inout T, name: String? = nil, converter: ((String) -> T)?) {
         let pointer = withUnsafePointer(to: &property, { return $0 })
-        self.excludeProperties.append(Int(bitPattern: pointer))
+        let key = "\(Int(bitPattern: pointer))"
+        self.specify(property: &property, key: key, name: name, converter: converter)
+    }
+    
+    public func exclude<T>(property: inout T) {
+        let pointer = withUnsafePointer(to: &property, { return $0 })
+        let key = "\(Int(bitPattern: pointer))"
+        self.exclude(key: key)
     }
 }
 
@@ -1329,7 +1806,7 @@ public func <-- <T>(property: inout T, name: String) -> CustomMappingKeyValueTup
 
 public func <-- <T>(property: inout T, names: [String]) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     return (key, MappingPropertyHandler(rawPaths: names, assignmentClosure: nil, takeValueClosure: nil))
 }
 
@@ -1345,7 +1822,7 @@ public func <-- <Transform: TransformType>(property: inout Transform.Object, tra
 
 public func <-- <Transform: TransformType>(property: inout Transform.Object, transformer: ([String], Transform?)) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     let assignmentClosure = { (jsonValue: Any?) -> Transform.Object? in
         return transformer.1?.transformFromJSON(jsonValue)
     }
@@ -1370,7 +1847,7 @@ public func <-- <Transform: TransformType>(property: inout Transform.Object?, tr
 
 public func <-- <Transform: TransformType>(property: inout Transform.Object?, transformer: ([String], Transform?)) -> CustomMappingKeyValueTuple {
     let pointer = withUnsafePointer(to: &property, { return $0 })
-    let key = Int(bitPattern: pointer)
+    let key = "\(Int(bitPattern: pointer))"
     let assignmentClosure = { (jsonValue: Any?) -> Any? in
         return transformer.1?.transformFromJSON(jsonValue)
     }
@@ -1398,70 +1875,7 @@ public func <<< (mapper: HelpingMapper, mappings: [CustomMappingKeyValueTuple]) 
 infix operator >>> : AssignmentPrecedence
 
 public func >>> <T> (mapper: HelpingMapper, property: inout T) {
-    mapper._exclude(property: &property)
-}
-
-// MARK: - Logger
-struct InternalLogger {
-
-    static func logError(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.error.rawValue {
-            print(items, separator: separator, terminator: terminator)
-        }
-    }
-
-    static func logDebug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.debug.rawValue {
-            print(items, separator: separator, terminator: terminator)
-        }
-    }
-
-    static func logVerbose(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= DebugMode.verbose.rawValue {
-            print(items, separator: separator, terminator: terminator)
-        }
-    }
-}
-
-// MARK: - Configuration
-public struct DeserializeOptions: OptionSet {
-    public let rawValue: Int
-
-    public static let caseInsensitive = DeserializeOptions(rawValue: 1 << 0)
-    
-    public static let snakeToCamel = DeserializeOptions(rawValue: 1 << 1)
-    
-    public static let camelToSnake = DeserializeOptions(rawValue: 1 << 2)
-    
-    public static let serializeReverse = DeserializeOptions(rawValue: 1 << 3)
-    
-    public static let defaultOptions: DeserializeOptions = []
-
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-}
-
-public enum DebugMode: Int {
-    case verbose = 0
-    case debug = 1
-    case error = 2
-    case none = 3
-}
-
-public struct JSONModelConfiguration {
-
-    private static var _mode = DebugMode.error
-    public static var debugMode: DebugMode {
-        get {
-            return _mode
-        }
-        set {
-            _mode = newValue
-        }
-    }
-
-    public static var deserializeOptions: DeserializeOptions = .defaultOptions
+    mapper.exclude(property: &property)
 }
 
 // MARK: - FieldDescriptor
@@ -1551,74 +1965,6 @@ struct _FieldRecord {
     var fieldRecordFlags: Int32
     var mangledTypeNameOffset: Int32
     var fieldNameOffset: Int32
-}
-
-// MARK: - AnyExtensions
-protocol AnyExtensions {}
-
-extension AnyExtensions {
-
-    public static func isValueTypeOrSubtype(_ value: Any) -> Bool {
-        return value is Self
-    }
-
-    public static func value(from storage: UnsafeRawPointer) -> Any {
-        return storage.assumingMemoryBound(to: self).pointee
-    }
-
-    public static func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
-        guard let this = value as? Self else {
-            return
-        }
-        storage.assumingMemoryBound(to: self).pointee = this
-    }
-
-    public static func takeValue(from anyValue: Any) -> Self? {
-        return anyValue as? Self
-    }
-}
-
-func extensions(of type: Any.Type) -> AnyExtensions.Type {
-    struct Extensions : AnyExtensions {}
-    var extensions: AnyExtensions.Type = Extensions.self
-    withUnsafePointer(to: &extensions) { pointer in
-        UnsafeMutableRawPointer(mutating: pointer).assumingMemoryBound(to: Any.Type.self).pointee = type
-    }
-    return extensions
-}
-
-func extensions(of value: Any) -> AnyExtensions {
-    struct Extensions : AnyExtensions {}
-    var extensions: AnyExtensions = Extensions()
-    withUnsafePointer(to: &extensions) { pointer in
-        UnsafeMutableRawPointer(mutating: pointer).assumingMemoryBound(to: Any.self).pointee = value
-    }
-    return extensions
-}
-
-/// Tests if `value` is `type` or a subclass of `type`
-func value(_ value: Any, is type: Any.Type) -> Bool {
-    return extensions(of: type).isValueTypeOrSubtype(value)
-}
-
-/// Tests equality of any two existential types
-func == (lhs: Any.Type, rhs: Any.Type) -> Bool {
-    return Metadata(type: lhs) == Metadata(type: rhs)
-}
-
-// MARK: AnyExtension + Storage
-extension AnyExtensions {
-
-    mutating func storage() -> UnsafeRawPointer {
-        if type(of: self) is AnyClass {
-            let opaquePointer = Unmanaged.passUnretained(self as AnyObject).toOpaque()
-            return UnsafeRawPointer(opaquePointer)
-        } else {
-            return withUnsafePointer(to: &self) { pointer in
-                return UnsafeRawPointer(pointer)
-            }
-        }
-    }
 }
 
 // MARK: - OtherExtension
@@ -2025,15 +2371,6 @@ extension ContextDescriptorType {
         return UnsafeRawPointer(bitPattern: base.pointee)
     }
 
-//    var genericArgumentVector: UnsafeRawPointer? {
-//        let pointer = UnsafePointer<Int>(self.pointer)
-//        let base = pointer.advanced(by: 19)
-//        if base.pointee == 0 {
-//            return nil
-//        }
-//        return UnsafeRawPointer(base)
-//    }
-
     var mangledName: String {
         let pointer = UnsafePointer<Int>(self.pointer)
         let base = pointer.advanced(by: contextDescriptorOffsetLocation)
@@ -2162,78 +2499,6 @@ extension PointerType {
     }
 }
 
-func == <T: PointerType>(lhs: T, rhs: T) -> Bool {
-    return lhs.pointer == rhs.pointer
-}
-
-// MARK: - Properties
-/// An instance property
-struct Property {
-    let key: String
-    let value: Any
-
-    /// An instance property description
-    struct Description {
-        public let key: String
-        public let type: Any.Type
-        public let offset: Int
-        public func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
-            return extensions(of: type).write(value, to: storage.advanced(by: offset))
-        }
-    }
-}
-
-/// Retrieve properties for `instance`
-func getProperties(forInstance instance: Any) -> [Property]? {
-    if let props = getProperties(forType: type(of: instance)) {
-        var copy = extensions(of: instance)
-        let storage = copy.storage()
-        return props.map {
-            nextProperty(description: $0, storage: storage)
-        }
-    }
-    return nil
-}
-
-private func nextProperty(description: Property.Description, storage: UnsafeRawPointer) -> Property {
-    return Property(
-        key: description.key,
-        value: extensions(of: description.type).value(from: storage.advanced(by: description.offset))
-    )
-}
-
-/// Retrieve property descriptions for `type`
-func getProperties(forType type: Any.Type) -> [Property.Description]? {
-    if let structDescriptor = Metadata.Struct(anyType: type) {
-        return structDescriptor.propertyDescriptions()
-    } else if let classDescriptor = Metadata.Class(anyType: type) {
-        return classDescriptor.propertyDescriptions()
-    } else if let objcClassDescriptor = Metadata.ObjcClassWrapper(anyType: type),
-        let targetType = objcClassDescriptor.targetType {
-        return getProperties(forType: targetType)
-    }
-    return nil
-}
-
-// MARK: - ReflectionHelper
-struct ReflectionHelper {
-
-    static func mutableStorage<T>(instance: inout T) -> UnsafeMutableRawPointer {
-        return UnsafeMutableRawPointer(mutating: storage(instance: &instance))
-    }
-
-    static func storage<T>(instance: inout T) -> UnsafeRawPointer {
-        if type(of: instance) is AnyClass {
-            let opaquePointer = Unmanaged.passUnretained(instance as AnyObject).toOpaque()
-            return UnsafeRawPointer(opaquePointer)
-        } else {
-            return withUnsafePointer(to: &instance) { pointer in
-                return UnsafeRawPointer(pointer)
-            }
-        }
-    }
-}
-
 // MARK: - CBridge
 @_silgen_name("swift_getTypeByMangledNameInContext")
 public func _getTypeByMangledNameInContext(
@@ -2243,10 +2508,6 @@ public func _getTypeByMangledNameInContext(
     genericArguments: UnsafeRawPointer?)
     -> Any.Type?
 
-
-@_silgen_name("swift_getTypeContextDescriptor")
-public func _swift_getTypeContextDescriptor(_ metadata: UnsafeRawPointer?) -> UnsafeRawPointer?
-
 // MARK: - MangledName
 // mangled name might contain 0 but it is not the end, do not just use strlen
 func getMangledTypeNameSize(_ mangledName: UnsafePointer<UInt8>) -> Int {
@@ -2254,309 +2515,97 @@ func getMangledTypeNameSize(_ mangledName: UnsafePointer<UInt8>) -> Int {
    return 256
 }
 
-// MARK: - TransformOf
-open class TransformOf<ObjectType, JSONType>: TransformType {
-    public typealias Object = ObjectType
-    public typealias JSON = JSONType
-
-    private let fromJSON: (JSONType?) -> ObjectType?
-    private let toJSON: (ObjectType?) -> JSONType?
-
-    public init(fromJSON: @escaping(JSONType?) -> ObjectType?, toJSON: @escaping(ObjectType?) -> JSONType?) {
-        self.fromJSON = fromJSON
-        self.toJSON = toJSON
+// MARK: - KeyMappable
+public extension KeyMappable where Self: _ExtendCustomModelType {
+    mutating func mappingValue(_ value: Any, forKey key: String) {
+        mappingMirror(value, forKey: key)
     }
-
-    open func transformFromJSON(_ value: Any?) -> ObjectType? {
-        return fromJSON(value as? JSONType)
-    }
-
-    open func transformToJSON(_ value: ObjectType?) -> JSONType? {
-        return toJSON(value)
-    }
-}
-
-// MARK: - TransformType
-public protocol TransformType {
-    associatedtype Object
-    associatedtype JSON
-
-    func transformFromJSON(_ value: Any?) -> Object?
-    func transformToJSON(_ value: Object?) -> JSON?
-}
-
-// MARK: - URLTransform
-open class URLTransform: TransformType {
-    public typealias Object = URL
-    public typealias JSON = String
-    private let shouldEncodeURLString: Bool
-
-    /**
-    Initializes the URLTransform with an option to encode URL strings before converting them to an NSURL
-    - parameter shouldEncodeUrlString: when true (the default) the string is encoded before passing
-    to `NSURL(string:)`
-    - returns: an initialized transformer
-    */
-    public init(shouldEncodeURLString: Bool = true) {
-        self.shouldEncodeURLString = shouldEncodeURLString
-    }
-
-    open func transformFromJSON(_ value: Any?) -> URL? {
-        guard let URLString = value as? String else { return nil }
-
-        if !shouldEncodeURLString {
-            return URL(string: URLString)
-        }
-
-        guard let escapedURLString = URLString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        return URL(string: escapedURLString)
-    }
-
-    open func transformToJSON(_ value: URL?) -> String? {
-        if let URL = value {
-            return URL.absoluteString
-        }
-        return nil
-    }
-}
-
-// MARK: - EnumTransform
-open class EnumTransform<T: RawRepresentable>: TransformType {
-    public typealias Object = T
-    public typealias JSON = T.RawValue
-
-    public init() {}
-
-    open func transformFromJSON(_ value: Any?) -> T? {
-        if let raw = value as? T.RawValue {
-            return T(rawValue: raw)
-        }
-        return nil
-    }
-
-    open func transformToJSON(_ value: T?) -> T.RawValue? {
-        if let obj = value {
-            return obj.rawValue
-        }
-        return nil
-    }
-}
-
-// MARK: - NSDecimalNumberTransform
-open class NSDecimalNumberTransform: TransformType {
-    public typealias Object = NSDecimalNumber
-    public typealias JSON = String
-
-    public init() {}
-
-    open func transformFromJSON(_ value: Any?) -> NSDecimalNumber? {
-        if let string = value as? String {
-            return NSDecimalNumber(string: string)
-        }
-        if let double = value as? Double {
-            return NSDecimalNumber(value: double)
-        }
-        return nil
-    }
-
-    open func transformToJSON(_ value: NSDecimalNumber?) -> String? {
-        guard let value = value else { return nil }
-        return value.description
-    }
-}
-
-// MARK: - DataTransform
-open class DataTransform: TransformType {
-    public typealias Object = Data
-    public typealias JSON = String
-
-    public init() {}
-
-    open func transformFromJSON(_ value: Any?) -> Data? {
-        guard let string = value as? String else{
-            return nil
-        }
-        return Data(base64Encoded: string)
-    }
-
-    open func transformToJSON(_ value: Data?) -> String? {
-        guard let data = value else{
-            return nil
-        }
-        return data.base64EncodedString()
-    }
-}
-
-// MARK: - HexColorTransform
-open class HexColorTransform: TransformType {
-
-    public typealias Object = UIColor
-
-    public typealias JSON = String
-
-    var prefix: Bool = false
-
-    var alpha: Bool = false
-
-    public init(prefixToJSON: Bool = false, alphaToJSON: Bool = false) {
-        alpha = alphaToJSON
-        prefix = prefixToJSON
-    }
-
-    open func transformFromJSON(_ value: Any?) -> Object? {
-        if let rgba = value as? String {
-            if rgba.hasPrefix("#") {
-                let index = rgba.index(rgba.startIndex, offsetBy: 1)
-                let hex = String(rgba[index...])
-                return getColor(hex: hex)
-            } else {
-                return getColor(hex: rgba)
+    
+    @discardableResult
+    mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+        for keyMap in keyMapping {
+            if keyMap.mapping(&self, value: value, forKey: key) {
+                return true
             }
         }
-        return nil
+        return false
     }
-
-    open func transformToJSON(_ value: Object?) -> JSON? {
-        if let value = value {
-            return hexString(color: value)
-        }
-        return nil
-    }
-
-    fileprivate func hexString(color: Object) -> String {
-        let comps = color.cgColor.components!
-        let r = Int(comps[0] * 255)
-        let g = Int(comps[1] * 255)
-        let b = Int(comps[2] * 255)
-        let a = Int(comps[3] * 255)
-        var hexString: String = ""
-        if prefix {
-            hexString = "#"
-        }
-        hexString += String(format: "%02X%02X%02X", r, g, b)
-
-        if alpha {
-            hexString += String(format: "%02X", a)
-        }
-        return hexString
-    }
-
-    fileprivate func getColor(hex: String) -> Object? {
-        var red: CGFloat   = 0.0
-        var green: CGFloat = 0.0
-        var blue: CGFloat  = 0.0
-        var alpha: CGFloat = 1.0
-
-        let scanner = Scanner(string: hex)
-        var hexValue: CUnsignedLongLong = 0
-        if scanner.scanHexInt64(&hexValue) {
-            switch (hex.count) {
-            case 3:
-                red   = CGFloat((hexValue & 0xF00) >> 8)       / 15.0
-                green = CGFloat((hexValue & 0x0F0) >> 4)       / 15.0
-                blue  = CGFloat(hexValue & 0x00F)              / 15.0
-            case 4:
-                red   = CGFloat((hexValue & 0xF000) >> 12)     / 15.0
-                green = CGFloat((hexValue & 0x0F00) >> 8)      / 15.0
-                blue  = CGFloat((hexValue & 0x00F0) >> 4)      / 15.0
-                alpha = CGFloat(hexValue & 0x000F)             / 15.0
-            case 6:
-                red   = CGFloat((hexValue & 0xFF0000) >> 16)   / 255.0
-                green = CGFloat((hexValue & 0x00FF00) >> 8)    / 255.0
-                blue  = CGFloat(hexValue & 0x0000FF)           / 255.0
-            case 8:
-                red   = CGFloat((hexValue & 0xFF000000) >> 24) / 255.0
-                green = CGFloat((hexValue & 0x00FF0000) >> 16) / 255.0
-                blue  = CGFloat((hexValue & 0x0000FF00) >> 8)  / 255.0
-                alpha = CGFloat(hexValue & 0x000000FF)         / 255.0
-            default:
-                // Invalid RGB string, number of characters after '#' should be either 3, 4, 6 or 8
-                return nil
+    
+    @discardableResult
+    func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
+        for keyMap in keyMapping {
+            if keyMap.mappingReference(self, value: value, forKey: key) {
+                return true
             }
-        } else {
-            // "Scan hex error
-            return nil
         }
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        return false
+    }
+    
+    @discardableResult
+    func mappingMirror(_ value: Any, forKey key: String) -> Bool {
+        var mirror: Mirror! = Mirror(reflecting: self)
+        while mirror != nil {
+            for child in mirror.children where child.label != nil {
+                if let wrapper = child.value as? JSONMappedValue,
+                   key == child.label!.dropFirst() {
+                    wrapper.mappingValue(value)
+                    return true
+                }
+            }
+            mirror = mirror.superclassMirror
+        }
+        return false
     }
 }
 
-// MARK: - DateTransform
-open class DateTransform: TransformType {
-    public typealias Object = Date
-    public typealias JSON = Double
-
-    public init() {}
-
-    open func transformFromJSON(_ value: Any?) -> Date? {
-        if let timeInt = value as? Double {
-            return Date(timeIntervalSince1970: TimeInterval(timeInt))
+public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
+    mutating func mappingValue(_ value: Any, forKey key: String) {
+        if !mappingValue(value, forKey: key, with: Self.keyMapping) {
+            mappingMirror(value, forKey: key)
         }
-
-        if let timeStr = value as? String {
-            return Date(timeIntervalSince1970: TimeInterval(atof(timeStr)))
-        }
-
-        return nil
-    }
-
-    open func transformToJSON(_ value: Date?) -> Double? {
-        if let date = value {
-            return Double(date.timeIntervalSince1970)
-        }
-        return nil
     }
 }
 
-// MARK: - DateFormatterTransform
-open class DateFormatterTransform: TransformType {
-    public typealias Object = Date
-    public typealias JSON = String
-
-    public let dateFormatter: DateFormatter
-
-    public init(dateFormatter: DateFormatter) {
-        self.dateFormatter = dateFormatter
+// MARK: - KeyMap
+public extension KeyMap where Root: _ExtendCustomModelType {
+    convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to mappingKeys: String ...) {
+        self.init(mappingKeys: mappingKeys, mapping: { root, value in
+            root[keyPath: keyPath] = value as! Value
+        }, mappingReference: nil)
     }
-
-    open func transformFromJSON(_ value: Any?) -> Date? {
-        if let dateString = value as? String {
-            return dateFormatter.date(from: dateString)
-        }
-        return nil
+    
+    convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to mappingKeys: String ...) {
+        self.init(mappingKeys: mappingKeys, mapping: nil, mappingReference: { root, value in
+            root[keyPath: keyPath] = value as! Value
+        })
     }
-
-    open func transformToJSON(_ value: Date?) -> String? {
-        if let date = value {
-            return dateFormatter.string(from: date)
+    
+    func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
+        if key == mappingKeys.first {
+            mapping?(&root, value)
+            return true
         }
-        return nil
+        return false
+    }
+    
+    func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
+        if key == mappingKeys.first {
+            mappingReference?(root, value)
+            return true
+        }
+        return false
     }
 }
 
-// MARK: - ISO8601DateTransform
-open class ISO8601DateTransform: DateFormatterTransform {
-
-    public init() {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-
-        super.init(dateFormatter: formatter)
-    }
-
+// MARK: - MappedValue
+public protocol JSONMappedValue {
+    func mappingKeys() -> [String]?
+    func mappingValue() -> Any
+    func mappingValue(_ value: Any)
 }
 
-// MARK: - CustomDateFormatTransform
-open class CustomDateFormatTransform: DateFormatterTransform {
-
-    public init(formatString: String) {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = formatString
-
-        super.init(dateFormatter: formatter)
-    }
+extension MappedValue: JSONMappedValue {
+    public func mappingKeys() -> [String]? { stringKeys }
+    public func mappingValue() -> Any { wrappedValue }
+    public func mappingValue(_ value: Any) { wrappedValue = value as! Value }
 }

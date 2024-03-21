@@ -1,5 +1,16 @@
 # 更新日志
 
+## [5.1.0] - 2024-03-21
+
+### Changed
+* 新增KeyMappable协议，兼容CodableModel和JSONModel
+* 新增MappedValue属性注解，兼容CodableModel和JSONModel
+* 修改JSONModel，当实现KeyMappable协议之后不再直接读写内存，建议逐步迁移
+* 同步修改Router.Parameter，继承时新增属性需标记MappedValue
+* Codable支持解析Any、Any字典和Any数组类型数据
+* 重构BadgeView，统一并简化badgeOffset使用
+* 修改mirrorDictionary方法不再过滤下划线开头属性
+
 ## [5.0.3] - 2024-03-11
 
 ### Changed

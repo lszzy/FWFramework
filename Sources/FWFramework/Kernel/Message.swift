@@ -169,6 +169,9 @@ extension Wrapper where Base: WrapperObject {
 }
 
 // MARK: - Wrapper+NSObject
+/// Swift自带KeyPath监听(声明@objc dynamic)、didSet属性监听等；
+/// SwiftUI自带Combine订阅等方式，建议优先使用；
+/// 如不满足需求时，才考虑使用本KVO属性监听方式
 extension Wrapper where Base: NSObject {
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:

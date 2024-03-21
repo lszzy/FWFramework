@@ -24,9 +24,9 @@ extension Wrapper {
 
 // MARK: - Wrapper+Data
 extension Wrapper where Base == Data {
-    /// Foundation对象编码为json数据
-    public static func jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> Data? {
-        return Base.fw_jsonEncode(object, options: options)
+    /// Foundation对象编码为json数据，失败时抛异常
+    public static func jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) throws -> Data {
+        return try Base.fw_jsonEncode(object, options: options)
     }
     
     /// json数据解码为Foundation对象，失败时抛异常
@@ -318,10 +318,12 @@ extension Wrapper where Base == URL {
 
 // MARK: - Encode
 @_spi(FW) extension Data {
-    /// Foundation对象编码为json数据
-    public static func fw_jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> Data? {
-        guard JSONSerialization.isValidJSONObject(object) else { return nil }
-        return try? JSONSerialization.data(withJSONObject: object, options: options)
+    /// Foundation对象编码为json数据，失败时抛异常
+    public static func fw_jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) throws -> Data {
+        guard JSONSerialization.isValidJSONObject(object) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "JSON is invalid."))
+        }
+        return try JSONSerialization.data(withJSONObject: object, options: options)
     }
     
     /// json数据解码为Foundation对象，失败时抛异常
@@ -407,7 +409,7 @@ extension Wrapper where Base == URL {
 @_spi(FW) extension String {
     /// Foundation对象编码为json字符串
     public static func fw_jsonEncode(_ object: Any, options: JSONSerialization.WritingOptions = []) -> String? {
-        guard let data = Data.fw_jsonEncode(object, options: options) else { return nil }
+        guard let data = try? Data.fw_jsonEncode(object, options: options) else { return nil }
         return String(data: data, encoding: .utf8)
     }
     

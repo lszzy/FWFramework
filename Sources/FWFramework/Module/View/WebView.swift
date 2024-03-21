@@ -1285,7 +1285,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         evaluateJavaScript("window.sessionStorage.clear();", completionHandler: nil)
         configuration.userContentController.removeAllUserScripts()
-        load(URLRequest(url: NSURL() as URL))
+        load(URLRequest(url: URL()))
     }
     
     /// 即将重用视图，默认重用次数+1，必须调用super
