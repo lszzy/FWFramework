@@ -9,15 +9,15 @@ import Foundation
 
 // MARK: - CodableModel
 /// 通用Codable模型协议，默认未实现KeyMappable，使用方式同Codable一致；
-/// CodableModel可实现KeyMappable，并任选以下一种模式使用，推荐方式
+/// CodableModel可实现KeyMappable，并选择以下模式使用，推荐方式
 ///
-/// KeyMappable模式一：MappedValue模式，与其它模式互斥
+/// KeyMappable模式一：MappedValue模式
 /// 1. 支持Codable类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
 /// 4. 未标记MappedValue的字段自动忽略
 ///
-/// KeyMappable模式二：KeyMapping模式，与其它模式互斥
+/// KeyMappable模式二：KeyMapping模式
 /// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
 /// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
 /// 3. 支持Any类型，使用方式同上，加入keyMapping即可
@@ -61,25 +61,13 @@ public extension KeyMappable where Root == Self, Self: Codable & ObjectType {
     }
     
     func encodeModel(to encoder: Encoder) throws {
-        // 模式一：KeyMapping模式
-        let keyMapping = Self.keyMapping
-        if !keyMapping.isEmpty {
-            try encodeValue(to: encoder, with: keyMapping)
-        // 模式二：MappedValue模式
-        } else {
-            try encodeMirror(to: encoder)
-        }
+        try encodeValue(to: encoder, with: Self.keyMapping)
+        try encodeMirror(to: encoder)
     }
     
     mutating func decodeModel(from decoder: Decoder) throws {
-        // 模式一：KeyMapping模式
-        let keyMapping = Self.keyMapping
-        if !keyMapping.isEmpty {
-            try decodeValue(from: decoder, with: keyMapping)
-        // 模式二：MappedValue模式
-        } else {
-            try decodeMirror(from: decoder)
-        }
+        try decodeValue(from: decoder, with: Self.keyMapping)
+        try decodeMirror(from: decoder)
     }
     
     func encodeValue(to encoder: Encoder, with keyMapping: [KeyMap<Self>]) throws {
