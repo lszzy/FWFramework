@@ -8,23 +8,24 @@
 import Foundation
 
 // MARK: - CodableModel
-/// 通用安全编解码Codable模型协议，需实现KeyMappable，可任选一种模式使用
+/// 通用Codable模型协议，默认未实现KeyMappable，使用方式同Codable一致；
+/// CodableModel可实现KeyMappable，并任选以下一种模式使用，推荐方式
 ///
-/// 模式一：MappedValue模式，与其它模式互斥
+/// KeyMappable模式一：MappedValue模式，与其它模式互斥
 /// 1. 支持Codable类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
 /// 4. 未标记MappedValue的字段自动忽略
 ///
-/// 模式二：KeyMapping模式，与其它模式互斥
+/// KeyMappable模式二：KeyMapping模式，与其它模式互斥
 /// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
 /// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
 /// 3. 支持Any类型，使用方式同上，加入keyMapping即可
 /// 4. 未加入keyMapping的字段自动忽略
 ///
-/// 模式三：自定义模式
+/// KeyMappable模式三：自定义模式
 /// 1. 需完整实现Codable协议的encode和decode协议方法
-public protocol CodableModel: Codable, KeyMappable, AnyModel {}
+public protocol CodableModel: Codable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串

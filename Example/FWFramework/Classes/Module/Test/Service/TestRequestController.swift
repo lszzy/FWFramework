@@ -33,12 +33,12 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     /*
     // 兼容JSONModel协议
     struct TestModel: JSONModel {
-        @MappedValue var name: String = ""
+        var name: String = ""
     }*/
     
     // 也兼容CodableModel协议
     struct TestModel: CodableModel {
-        @MappedValue var name: String = ""
+        var name: String = ""
     }
     
     /*
@@ -94,8 +94,8 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
     typealias ResponseModel = [TestWeatherModel]
     
     struct TestWeatherModel: JSONModel {
-        @MappedValue var city: String = ""
-        @MappedValue var temp: String = ""
+        var city: String = ""
+        var temp: String = ""
     }
     
     // 后台预加载数据模型
