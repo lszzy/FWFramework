@@ -475,13 +475,6 @@ extension _ExtendCustomModelType {
     public mutating func didFinishMapping() {}
     public static func shouldMappingValue() -> Bool { false }
     public mutating func mappingValue(_ value: Any, forKey key: String) {}
-    
-    func getProperties(mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        if let plugin = PluginManager.loadPlugin(JSONModelPlugin.self) {
-            return plugin.getProperties(for: type(of: self))
-        }
-        return nil
-    }
 }
 
 extension _ExtendCustomModelType where Self: KeyMappable {
@@ -730,10 +723,13 @@ extension _ExtendCustomModelType {
     }
     
     static func getProperties<T: _ExtendCustomModelType>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        if let mappableInstance = instance as? any _ExtendCustomModelType & KeyMappable {
-            return mappableInstance.getProperties(mapper: mapper, children: children)
-        } else {
+        if let instance = instance as? any _ExtendCustomModelType & KeyMappable {
             return instance.getProperties(mapper: mapper, children: children)
+        } else {
+            if let plugin = PluginManager.loadPlugin(JSONModelPlugin.self) {
+                return plugin.getProperties(for: type(of: instance))
+            }
+            return nil
         }
     }
     
@@ -741,10 +737,9 @@ extension _ExtendCustomModelType {
         if property.bridged {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
-            switch property.mode {
-            case .custom, .keyMapping, .mappedValue:
+            if instance is any KeyMappable {
                 instance.mappingValue(convertedValue, forKey: property.key)
-            default:
+            } else {
                 if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
                     extensions(of: property.type).write(convertedValue, to: property.address)
                 }
