@@ -62,11 +62,6 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWVendor' do |ss|
-    ss.subspec 'JSONModel' do |sss|
-      sss.source_files = 'Sources/FWVendor/JSONModel/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
-    end
-    
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
