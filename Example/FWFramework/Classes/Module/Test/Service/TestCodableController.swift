@@ -570,9 +570,9 @@ enum TestKeyMappingJSONModelEnum: String, JSONModelEnum {
 
 // MARK: - TestObjectParameter
 class TestObjectParameter: ObjectParameter, JSONModel {
-    var id: Int = 0
-    var name: String = ""
-    var block: BlockVoid?
+    @MappedValue var id: Int = 0
+    @MappedValue var name: String = ""
+    @MappedValue var block: BlockVoid?
     
     required init() {}
 }

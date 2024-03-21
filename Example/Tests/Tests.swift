@@ -146,14 +146,14 @@ class Tests: XCTestCase {
         parameter.routerSource = "test"
         parameter.routerOptions = .embedInNavigation
         parameter.routerHandler = { _, _ in }
-        parameter._privateValue = 1
+        parameter.ignoreValue = 1
         parameter.merge(from: [
-            "routerSource": "test2"
+            "routerSource": "test2",
         ])
         XCTAssertEqual(parameter.routerSource, "test2")
         var dict = parameter.dictionaryValue
         XCTAssertEqual(dict["isTrue"] as? Bool, parameter.isTrue)
-        XCTAssertEqual(dict["_privateValue"] as? Int, nil)
+        XCTAssertEqual(dict["ignoreValue"] as? Int, nil)
         XCTAssertEqual(dict[Router.Parameter.routerSourceKey] as? String, parameter.routerSource)
         XCTAssertEqual(dict[Router.Parameter.routerOptionsKey] as? NavigatorOptions ?? [], parameter.routerOptions)
         XCTAssertTrue(dict[Router.Parameter.routerHandlerKey] != nil)
@@ -161,7 +161,7 @@ class Tests: XCTestCase {
         dict["isTrue"] = "true"
         let object = TestParameter(dictionaryValue: dict)
         XCTAssertTrue(object.isTrue)
-        XCTAssertEqual(object._privateValue, 0)
+        XCTAssertEqual(object.ignoreValue, 0)
         XCTAssertEqual(object.routerSource, parameter.routerSource)
         XCTAssertEqual(object.routerOptions, parameter.routerOptions)
         XCTAssertTrue(object.routerHandler != nil)
@@ -277,8 +277,8 @@ class Tests: XCTestCase {
 extension Tests {
     
     class TestParameter: Router.Parameter {
-        var isTrue: Bool = false
-        var _privateValue: Int = 0
+        @MappedValue var isTrue: Bool = false
+        var ignoreValue: Int = 0
     }
     
     enum TestEnum: Equatable {

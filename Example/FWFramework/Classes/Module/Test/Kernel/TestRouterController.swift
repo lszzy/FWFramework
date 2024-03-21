@@ -574,7 +574,7 @@ extension TestRouter: AutoloadProtocol {
                     if userInfo.routerHandler != nil {
                         userInfo.routerHandler?(context, vc)
                     } else {
-                        Navigator.open(vc, animated: true, options: userInfo.routerOptions)
+                        Navigator.open(vc, animated: true, options: userInfo.routerOptions ?? [])
                     }
                 } else {
                     Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
