@@ -10,15 +10,15 @@ import UIKit
 
 // MARK: - JSONModel
 /// 通用JSON模型协议，默认未实现KeyMappable，使用方式同HandyJSON(不推荐，直接读写内存模式，不稳定也不安全)；
-/// JSONModel可实现KeyMappable，并任选以下一种模式使用，推荐方式
+/// JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式
 ///
-/// KeyMappable模式一：MappedValue模式，与其它模式互斥
+/// KeyMappable模式一：MappedValue模式
 /// 1. 支持JSONModel类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
 /// 4. 未标记MappedValue的字段自动忽略
 ///
-/// KeyMappable模式二：KeyMapping模式，与其它模式互斥
+/// KeyMappable模式二：KeyMapping模式
 /// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
 /// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
 /// 3. 支持Any类型，使用方式同上，加入keyMapping即可
@@ -691,16 +691,13 @@ extension _ExtendCustomModelType {
     }
     
     static func getMappingProperties<T: _ExtendCustomModelType & KeyMappable>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
-        let keyMapping = type(of: instance).keyMapping
-        if !keyMapping.isEmpty {
-            for keyMap in keyMapping {
-                if keyMap.mappingKeys.count > 1 {
-                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
-                }
+        for keyMap in type(of: instance).keyMapping {
+            if keyMap.mappingKeys.count > 1 {
+                mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
             }
         }
         
+        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
         return children.map { child in
             if let value = child.1 as? JSONMappedValue {
                 if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
