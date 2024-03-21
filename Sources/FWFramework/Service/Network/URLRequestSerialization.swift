@@ -103,7 +103,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
             url = URL(string: encodeString)
         }
         
-        var urlRequest = URLRequest(url: url ?? NSURL() as URL)
+        var urlRequest = URLRequest(url: url ?? URL())
         urlRequest.httpMethod = method
         urlRequest.allowsCellularAccess = allowsCellularAccess
         urlRequest.cachePolicy = cachePolicy

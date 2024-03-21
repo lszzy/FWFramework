@@ -728,7 +728,7 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
     static func swizzleURLSessionTask() {
         let configuration = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: configuration)
-        let localDataTask = session.dataTask(with: URLRequest(url: NSURL() as URL))
+        let localDataTask = session.dataTask(with: URLRequest(url: URL()))
         var originalResumeIMP: IMP?
         if let method = class_getInstanceMethod(self, #selector(af_resume)) {
             originalResumeIMP = method_getImplementation(method)

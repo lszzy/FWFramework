@@ -73,7 +73,7 @@ public class Router: NSObject {
     public typealias Completion = (Any?) -> Void
     
     /// 默认路由参数类，可继承使用，也可完全自定义
-    open class Parameter: ObjectParameter, JSONModel {
+    open class Parameter: ObjectParameter, JSONModel, KeyMappable {
         
         /// 路由信息来源Key，兼容字典传参，默认未使用
         public static let routerSourceKey = "routerSource"
@@ -85,16 +85,15 @@ public class Router: NSObject {
         public static let routerHandlerKey = "routerHandler"
         
         /// 路由信息来源，默认未使用
-        open var routerSource: String?
+        @MappedValue open var routerSource: String?
         /// 路由信息选项，支持NavigationOptions
-        open var routerOptions: NavigatorOptions = []
+        @MappedValue open var routerOptions: NavigatorOptions?
         /// 路由动画选项，仅open生效
-        open var routerAnimated: Bool?
+        @MappedValue open var routerAnimated: Bool?
         /// 路由信息句柄，仅open生效
-        open var routerHandler: ((Context, UIViewController) -> Void)?
+        @MappedValue open var routerHandler: ((Context, UIViewController) -> Void)?
         
         public required init() {}
-        
     }
     
     // MARK: - Accessor
@@ -234,7 +233,7 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                UIWindow.fw_mainWindow?.fw_open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions, completion: nil)
+                UIWindow.fw_mainWindow?.fw_open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
             }
             return nil
         }

@@ -8,40 +8,39 @@
 
 import FWFramework
 
-@objcMembers class AppRouter: NSObject {
+class AppRouter: NSObject {
     
-    static let homeUrl = "app://home"
-    static let testUrl = "app://test"
-    static let settingsUrl = "app://settings"
+    @objc static let homeUrl = "app://home"
+    @objc static let testUrl = "app://test"
+    @objc static let settingsUrl = "app://settings"
     
-    static let httpUrl = "http://*"
-    static let httpsUrl = "https://*"
+    @objc static let httpUrl = "http://*"
+    @objc static let httpsUrl = "https://*"
     
 }
 
-// MARK: - Public
 extension AppRouter {
     
-    class func homeRouter(_ context: Router.Context) -> Any? {
+    @objc static func homeRouter(_ context: Router.Context) -> Any? {
         let viewController = HomeController()
         return viewController
     }
     
-    class func testRouter(_ context: Router.Context) -> Any? {
+    @objc static func testRouter(_ context: Router.Context) -> Any? {
         let viewController = TestController()
         return viewController
     }
     
-    class func settingsRouter(_ context: Router.Context) -> Any? {
+    @objc static func settingsRouter(_ context: Router.Context) -> Any? {
         let viewController = SettingsController()
         return viewController
     }
     
-    class func httpRouter(_ context: Router.Context) -> Any? {
+    @objc static func httpRouter(_ context: Router.Context) -> Any? {
         return httpsRouter(context)
     }
     
-    class func httpsRouter(_ context: Router.Context) -> Any? {
+    @objc static func httpsRouter(_ context: Router.Context) -> Any? {
         let viewController = WebController(requestUrl: context.url)
         return viewController
     }

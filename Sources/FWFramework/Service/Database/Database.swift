@@ -188,7 +188,7 @@ public class DatabaseManager: NSObject {
                         case SQLITE_TEXT:
                             let text = sqlite3_column_text(ppStmt, column)
                             if let text = text {
-                                let value = String(cString: UnsafePointer(text), encoding: .utf8) ?? ""
+                                let value = String(cString: UnsafePointer(text))
                                 rowResultArray.append(value)
                             }
                         case SQLITE_BLOB:
@@ -560,8 +560,8 @@ private extension DatabaseManager {
                 while sqlite3_step(ppStmt) == SQLITE_ROW {
                     let cols = sqlite3_column_count(ppStmt)
                     if cols > 1 {
-                        if let name = String(cString: UnsafePointer(sqlite3_column_text(ppStmt, 1)), encoding: .utf8) {
-                            fieldNames.append(name)
+                        if let text = sqlite3_column_text(ppStmt, 1) {
+                            fieldNames.append(String(cString: UnsafePointer(text)))
                         }
                     }
                 }
@@ -916,8 +916,7 @@ private extension DatabaseManager {
                     case .string:
                         let text = sqlite3_column_text(ppStmt, column)
                         if let text = text {
-                            let fieldValue = String(cString: UnsafePointer(text), encoding: .utf8) ?? ""
-                            currentModel.setValue(fieldValue, forKey: fieldName)
+                            currentModel.setValue(String(cString: UnsafePointer(text)), forKey: fieldName)
                         }
                     case .number:
                         let value = sqlite3_column_double(ppStmt, column)

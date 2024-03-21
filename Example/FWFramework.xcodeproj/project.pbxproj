@@ -77,6 +77,7 @@
 		2FDA141D28D2FC5800985FBD /* TestAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141C28D2FC5800985FBD /* TestAlertController.swift */; };
 		2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */; };
 		2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA142028D30F3600985FBD /* TestImageController.swift */; };
+		2FE1E9C82BA16C5200D2C230 /* TestCodableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -176,6 +177,7 @@
 		2FDA141C28D2FC5800985FBD /* TestAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAlertController.swift; sourceTree = "<group>"; };
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
 		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
+		2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCodableController.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				2FB9E30328C0A69B00C78850 /* TestCacheController.swift */,
 				2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */,
 				2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */,
+				2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */,
 				2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */,
 				2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */,
 				2F36CBB8298B833300444127 /* TestRequestController.swift */,
@@ -836,6 +839,7 @@
 				2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */,
 				2F6A411D28B5F84E003719E7 /* AppMediator.swift in Sources */,
 				2FF08B6228ADDD730074895A /* AppRouter.swift in Sources */,
+				2FE1E9C82BA16C5200D2C230 /* TestCodableController.swift in Sources */,
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
 				2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */,
