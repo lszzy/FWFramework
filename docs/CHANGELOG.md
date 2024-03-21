@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.1.0] - 2024-03-21
+
+### Changed
+* Added KeyMappable protocol, compatible with CodableModel and JSONModel
+* Added MappedValue attribute annotation, compatible with CodableModel and JSONModel
+* Modify JSONModel. After implementing the KeyMappable protocol, it will no longer directly read and write memory. It is recommended to migrate gradually.
+* Modify Router.Parameter synchronously. When inheriting, new properties must be marked with MappedValue.
+* Codable supports parsing Any, Any dictionary and Any array type data
+* Reconstruct BadgeView to unify and simplify the use of badgeOffset
+* Modify the mirrorDictionary method to no longer filter attributes starting with underscores
+
 ## [5.0.3] - 2024-03-11
 
 ### Changed
