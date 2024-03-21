@@ -482,13 +482,7 @@ extension _ExtendCustomModelType {
 
 extension _ExtendCustomModelType where Root == Self {
     public mutating func mappingValue(_ value: Any, forKey key: String) {
-        // 模式一：KeyMapping模式
-        if !Self.keyMapping.isEmpty {
-            mappingValue(value, forKey: key, with: Self.keyMapping)
-        // 模式二：MappedValue模式
-        } else {
-            mappingMirror(value, forKey: key)
-        }
+        mappingValue(value, forKey: key, with: Self.keyMapping)
     }
 }
 
@@ -732,8 +726,12 @@ extension _ExtendCustomModelType {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
             switch property.mode {
-            case .custom, .keyMapping, .mappedValue:
+            case .custom:
                 instance.mappingValue(convertedValue, forKey: property.key)
+            case .keyMapping:
+                instance.mappingValue(convertedValue, forKey: property.key)
+            case .mappedValue:
+                instance.mappingMirror(convertedValue, forKey: property.key)
             default:
                 if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
                     extensions(of: property.type).write(convertedValue, to: property.address)
@@ -1783,7 +1781,7 @@ open class CustomDateFormatTransform: DateFormatterTransform {
 }
 
 // MARK: - KeyMappable
-public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
+public extension KeyMappable where Self: _ExtendCustomModelType {
     @discardableResult
     mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
