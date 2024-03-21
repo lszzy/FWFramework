@@ -205,7 +205,7 @@ enum TestCustomCodableEnum: String, Codable {
 }
 
 // MARK: - TestMappedValueCodableModel
-struct TestMappedValueCodableModel: CodableModel {
+struct TestMappedValueCodableModel: CodableModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var age: Int?
@@ -232,7 +232,7 @@ struct TestMappedValueCodableModel: CodableModel {
     @MappedValue var enum3: TestMappedValueCodableModelEnum?
 }
 
-struct TestMappedValueCodableSubModel: CodableModel {
+struct TestMappedValueCodableSubModel: CodableModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String?
 }
@@ -243,7 +243,7 @@ enum TestMappedValueCodableModelEnum: String, Codable {
 }
 
 // MARK: - TestKeyMappingCodableModel
-struct TestKeyMappingCodableModel: CodableModel {
+struct TestKeyMappingCodableModel: CodableModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -292,7 +292,7 @@ struct TestKeyMappingCodableModel: CodableModel {
     ]
 }
 
-struct TestKeyMappingCodableSubModel: CodableModel {
+struct TestKeyMappingCodableSubModel: CodableModel, KeyMappable {
     var id: Int = 0
     var name: String?
     
@@ -355,7 +355,7 @@ enum TestJSONModelEnum: String, JSONModelEnum {
 }
 
 // MARK: - TestMappedValueJSONModel
-struct TestMappedValueJSONModel: JSONModel {
+struct TestMappedValueJSONModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var age: Int?
@@ -382,7 +382,7 @@ struct TestMappedValueJSONModel: JSONModel {
     @MappedValue var enum3: TestMappedValueJSONModelEnum?
 }
 
-struct TestMappedValueJSONSubModel: JSONModel {
+struct TestMappedValueJSONSubModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String?
 }
@@ -393,7 +393,7 @@ enum TestMappedValueJSONModelEnum: String, JSONModelEnum {
 }
 
 // MARK: - TestCustomJSONModel
-struct TestCustomJSONModel: JSONModel {
+struct TestCustomJSONModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -478,7 +478,7 @@ struct TestCustomJSONModel: JSONModel {
     }
 }
 
-struct TestCustomJSONSubModel: JSONModel {
+struct TestCustomJSONSubModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String?
     
@@ -504,7 +504,7 @@ enum TestCustomJSONModelEnum: String, JSONModelEnum {
 }
 
 // MARK: - TestKeyMappingJSONModel
-struct TestKeyMappingJSONModel: JSONModel {
+struct TestKeyMappingJSONModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -553,7 +553,7 @@ struct TestKeyMappingJSONModel: JSONModel {
     ]
 }
 
-struct TestKeyMappingJSONSubModel: JSONModel {
+struct TestKeyMappingJSONSubModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String?
     
@@ -569,7 +569,7 @@ enum TestKeyMappingJSONModelEnum: String, JSONModelEnum {
 }
 
 // MARK: - TestObjectParameter
-class TestObjectParameter: ObjectParameter, JSONModel {
+class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var block: BlockVoid?

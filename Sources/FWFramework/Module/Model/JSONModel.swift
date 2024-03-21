@@ -9,26 +9,23 @@ import Foundation
 import UIKit
 
 // MARK: - JSONModel
-/// 通用安全编解码JSON模型协议，需实现KeyMappable，可任选一种模式使用
+/// 通用JSON模型协议，默认未实现KeyMappable，使用方式同HandyJSON(不推荐，直接读写内存模式，不稳定也不安全)；
+/// JSONModel可实现KeyMappable，并任选以下一种模式使用，推荐方式
 ///
-/// 模式一：MappedValue模式，与其它模式互斥
+/// KeyMappable模式一：MappedValue模式，与其它模式互斥
 /// 1. 支持JSONModel类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
 /// 4. 未标记MappedValue的字段自动忽略
 ///
-/// 模式二：KeyMapping模式，与其它模式互斥
+/// KeyMappable模式二：KeyMapping模式，与其它模式互斥
 /// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
 /// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
 /// 3. 支持Any类型，使用方式同上，加入keyMapping即可
 /// 4. 未加入keyMapping的字段自动忽略
 ///
-/// 模式三：自定义模式
+/// KeyMappable模式三：自定义模式
 /// 1. 需完整实现JSONModel协议的shouldMappingValue()和mappingValue(_:forKey:)协议方法
-///
-/// 模式四：HandyJSON内存读写模式，不稳定也不安全，不推荐使用，与其它模式互斥
-/// 1. CocoaPods或SPM引入JSONModel子模块即可，自动生效
-/// 2. 使用方式参考HandyJSON，无需实现模式一、二、三的相关方法
 ///
 /// [HandyJSON](https://github.com/alibaba/HandyJSON)
 public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
@@ -54,7 +51,7 @@ extension _Measurable {
     }
 
     func _getBridgedPropertyList(anyClass: AnyClass) -> Set<String> {
-        if !(anyClass is any JSONModel.Type) {
+        if !(anyClass is JSONModel.Type) {
             return []
         }
         var propertyList = Set<String>()
@@ -92,7 +89,7 @@ extension _Transformable {
             return type._transform(from: object) as? Self
         case let type as _RawEnumProtocol.Type:
             return type._transform(from: object) as? Self
-        case let type as any _ExtendCustomModelType.Type:
+        case let type as _ExtendCustomModelType.Type:
             return type._transform(from: object) as? Self
         default:
             return nil
@@ -109,7 +106,7 @@ extension _Transformable {
             return rawValue._plainValue()
         case let rawValue as _RawEnumProtocol:
             return rawValue._plainValue()
-        case let rawValue as any _ExtendCustomModelType:
+        case let rawValue as _ExtendCustomModelType:
             return rawValue._plainValue()
         default:
             return nil
@@ -463,7 +460,7 @@ extension RawRepresentable where Self: _RawEnumProtocol {
 }
 
 // MARK: - ExtendCustomModelType
-public protocol _ExtendCustomModelType: _Transformable, KeyMappable {
+public protocol _ExtendCustomModelType: _Transformable {
     init()
     mutating func willStartMapping()
     mutating func mapping(mapper: HelpingMapper)
@@ -478,11 +475,55 @@ extension _ExtendCustomModelType {
     public mutating func didFinishMapping() {}
     public static func shouldMappingValue() -> Bool { false }
     public mutating func mappingValue(_ value: Any, forKey key: String) {}
+    
+    func getProperties(mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        if let plugin = PluginManager.loadPlugin(JSONModelPlugin.self) {
+            return plugin.getProperties(for: type(of: self))
+        }
+        return nil
+    }
 }
 
-extension _ExtendCustomModelType where Root == Self {
+extension _ExtendCustomModelType where Self: KeyMappable {
     public mutating func mappingValue(_ value: Any, forKey key: String) {
-        mappingValue(value, forKey: key, with: Self.keyMapping)
+        mappingMirror(value, forKey: key)
+    }
+    
+    func getProperties(mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        let children = children ?? Self.readAllChildrenFrom(mirror: Mirror(reflecting: self))
+        let keyMapping = Self.keyMapping
+        var mode: Property.Mode = .default
+        if Self.shouldMappingValue() {
+            mode = .custom
+        } else if !keyMapping.isEmpty {
+            mode = .keyMapping
+            for keyMap in keyMapping {
+                if keyMap.mappingKeys.count > 1 {
+                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
+                }
+            }
+        } else if children.first(where: { $0.1 is JSONMappedValue }) != nil {
+            mode = .mappedValue
+        }
+        
+        return children.map { child in
+            if let value = child.1 as? JSONMappedValue {
+                if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
+                    mapper.specify(key: child.0, names: mappingKeys)
+                }
+                return Property.Description(mode: .mappedValue, key: child.0, type: type(of: value.mappingValue()), offset: 0)
+            } else {
+                return Property.Description(mode: mode, key: child.0, type: type(of: child.1), offset: 0)
+            }
+        }
+    }
+}
+
+extension _ExtendCustomModelType where Self: KeyMappable, Root == Self {
+    public mutating func mappingValue(_ value: Any, forKey key: String) {
+        if !mappingValue(value, forKey: key, with: Self.keyMapping) {
+            mappingMirror(value, forKey: key)
+        }
     }
 }
 
@@ -535,7 +576,7 @@ extension _ExtendCustomModelType {
         return nil
     }
 
-    static func _transform(dict: [String: Any]) -> (any _ExtendCustomModelType)? {
+    static func _transform(dict: [String: Any]) -> _ExtendCustomModelType? {
 
         var instance: Self
         if let _nsType = Self.self as? NSObject.Type {
@@ -552,7 +593,7 @@ extension _ExtendCustomModelType {
     static func _transform(dict: [String: Any], to instance: inout Self) {
         // do user-specified mapping first
         let mapper = HelpingMapper()
-        guard let properties = getProperties(for: &instance, mapper: mapper) else {
+        guard let properties = getProperties(for: instance, mapper: mapper) else {
             InternalLogger.logDebug("Failed when try to get properties from type: \(type(of: Self.self))")
             return
         }
@@ -688,36 +729,11 @@ extension _ExtendCustomModelType {
         return result
     }
     
-    static func getProperties<T: _ExtendCustomModelType>(for instance: inout T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
-        let keyMapping = type(of: instance).keyMapping
-        var mode: Property.Mode = .default
-        if type(of: instance).shouldMappingValue() {
-            mode = .custom
-        } else if !keyMapping.isEmpty {
-            mode = .keyMapping
-            for keyMap in keyMapping {
-                if keyMap.mappingKeys.count > 1 {
-                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
-                }
-            }
-        } else if children.first(where: { $0.1 is JSONMappedValue }) != nil {
-            mode = .mappedValue
-        }
-        
-        if mode == .default, let plugin = PluginManager.loadPlugin(JSONModelPlugin.self) {
-            return plugin.getProperties(for: type(of: instance))
+    static func getProperties<T: _ExtendCustomModelType>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        if let mappableInstance = instance as? any _ExtendCustomModelType & KeyMappable {
+            return mappableInstance.getProperties(mapper: mapper, children: children)
         } else {
-            return children.map { child in
-                if let value = child.1 as? JSONMappedValue {
-                    if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
-                        mapper.specify(key: child.0, names: mappingKeys)
-                    }
-                    return Property.Description(mode: .mappedValue, key: child.0, type: type(of: value.mappingValue()), offset: 0)
-                } else {
-                    return Property.Description(mode: mode, key: child.0, type: type(of: child.1), offset: 0)
-                }
-            }
+            return instance.getProperties(mapper: mapper, children: children)
         }
     }
     
@@ -726,12 +742,8 @@ extension _ExtendCustomModelType {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
             switch property.mode {
-            case .custom:
+            case .custom, .keyMapping, .mappedValue:
                 instance.mappingValue(convertedValue, forKey: property.key)
-            case .keyMapping:
-                instance.mappingValue(convertedValue, forKey: property.key)
-            case .mappedValue:
-                instance.mappingMirror(convertedValue, forKey: property.key)
             default:
                 if PluginManager.loadPlugin(JSONModelPlugin.self) != nil {
                     extensions(of: property.type).write(convertedValue, to: property.address)
@@ -760,14 +772,14 @@ extension _ExtendCustomModelType {
         case .class, .struct:
             let mapper = HelpingMapper()
             // do user-specified mapping first
-            if !(object is (any _ExtendCustomModelType)) {
+            if !(object is _ExtendCustomModelType) {
                 InternalLogger.logDebug("This model of type: \(type(of: object)) is not mappable but is class/struct type")
                 return object
             }
 
             let children = readAllChildrenFrom(mirror: mirror)
-            var mutableObject = object as! (any _ExtendCustomModelType)
-            guard let properties = getProperties(for: &mutableObject, mapper: mapper, children: children) else {
+            var mutableObject = object as! _ExtendCustomModelType
+            guard let properties = getProperties(for: mutableObject, mapper: mapper, children: children) else {
                 InternalLogger.logError("Can not get properties info for type: \(type(of: object))")
                 return nil
             }
@@ -789,7 +801,7 @@ extension _ExtendCustomModelType {
         }
     }
 
-    static func _serializeModelObject(instance: any _ExtendCustomModelType, properties: [String: (Any, PropertyInfo?)], mapper: HelpingMapper) -> [String: Any] {
+    static func _serializeModelObject(instance: _ExtendCustomModelType, properties: [String: (Any, PropertyInfo?)], mapper: HelpingMapper) -> [String: Any] {
 
         var dict = [String: Any]()
         for (key, property) in properties {
