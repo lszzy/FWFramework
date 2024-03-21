@@ -93,7 +93,7 @@ open class RequestManager {
         if !baseUrl.isEmpty, !baseUrl.hasSuffix("/") {
             url = url?.appendingPathComponent("")
         }
-        return URL.fw_url(string: requestUrl, relativeTo: url) ?? NSURL() as URL
+        return URL.fw_url(string: requestUrl, relativeTo: url) ?? URL()
     }
     
     /// 过滤URL请求
