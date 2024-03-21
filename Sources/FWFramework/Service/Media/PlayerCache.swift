@@ -46,7 +46,7 @@ public class PlayerCacheLoaderManager: NSObject, AVAssetResourceLoaderDelegate, 
     public static func assetURL(url: URL) -> URL {
         if url.isFileURL { return url }
         let urlString = playerCacheScheme + url.absoluteString
-        return URL(string: urlString) ?? NSURL() as URL
+        return URL(string: urlString) ?? URL()
     }
     
     public func urlAsset(url: URL) -> AVURLAsset {
@@ -95,7 +95,7 @@ public class PlayerCacheLoaderManager: NSObject, AVAssetResourceLoaderDelegate, 
                 loader.addRequest(loadingRequest)
             } else {
                 let originStr = resourceUrl.absoluteString.replacingOccurrences(of: Self.playerCacheScheme, with: "")
-                let originUrl = URL(string: originStr) ?? NSURL() as URL
+                let originUrl = URL(string: originStr) ?? URL()
                 
                 let loader = PlayerCacheLoader(url: originUrl)
                 loader.delegate = self

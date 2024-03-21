@@ -100,10 +100,10 @@ extension WrapperGlobal {
 @_spi(FW) extension URL {
     /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func fw_safeURL(_ value: Any?) -> URL {
-        guard let value = value else { return NSURL() as URL }
+        guard let value = value else { return URL() }
         if let url = value as? URL { return url }
         if let url = URL.fw_url(string: String.fw_safeString(value)) { return url }
-        return NSURL() as URL
+        return URL()
     }
     
     /// 生成URL，中文自动URL编码
@@ -205,10 +205,7 @@ extension Double: BasicType {
     public var isValid: Bool { return !isNaN && !isInfinite }
 }
 extension URL: BasicType {
-    public init() {
-        self.init(string: " ")!
-        self = NSURL() as URL
-    }
+    public init() { self = (NSURL(string: "") ?? NSURL()) as URL }
 }
 extension Data: BasicType {}
 extension Date: BasicType {}
@@ -312,7 +309,7 @@ extension String: StringParameter, AttributedStringParameter, DataParameter, URL
     public var stringValue: String { self }
     public var attributedStringValue: NSAttributedString { NSAttributedString(string: self) }
     public var dataValue: Data { data(using: .utf8) ?? .init() }
-    public var urlValue: URL { URL.fw_url(string: self) ?? NSURL() as URL }
+    public var urlValue: URL { URL.fw_url(string: self) ?? URL() }
     public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
 }
 
@@ -329,7 +326,7 @@ extension URL: URLParameter, StringParameter, URLRequestParameter {
 
 extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
     public var urlRequestValue: URLRequest { self }
-    public var urlValue: URL { url ?? NSURL() as URL }
+    public var urlValue: URL { url ?? URL() }
     public var stringValue: String { url?.absoluteString ?? .init() }
 }
 

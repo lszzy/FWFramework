@@ -1797,7 +1797,7 @@ extension Wrapper where Base: UserDefaults {
      @return NSURL
      */
     public static func fw_appStoreURL(_ appId: String) -> URL {
-        return URL(string: "https://apps.apple.com/app/id\(appId)") ?? NSURL() as URL
+        return URL(string: "https://apps.apple.com/app/id\(appId)") ?? URL()
     }
 
     /**
