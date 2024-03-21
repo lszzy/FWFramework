@@ -477,43 +477,6 @@ extension _ExtendCustomModelType {
     public mutating func mappingValue(_ value: Any, forKey key: String) {}
 }
 
-extension _ExtendCustomModelType where Self: KeyMappable {
-    public mutating func mappingValue(_ value: Any, forKey key: String) {
-        mappingMirror(value, forKey: key)
-    }
-    
-    func getProperties(mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        let children = children ?? Self.readAllChildrenFrom(mirror: Mirror(reflecting: self))
-        let keyMapping = Self.keyMapping
-        if !keyMapping.isEmpty {
-            for keyMap in keyMapping {
-                if keyMap.mappingKeys.count > 1 {
-                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
-                }
-            }
-        }
-        
-        return children.map { child in
-            if let value = child.1 as? JSONMappedValue {
-                if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
-                    mapper.specify(key: child.0, names: mappingKeys)
-                }
-                return Property.Description(key: child.0, type: type(of: value.mappingValue()), offset: 0)
-            } else {
-                return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
-            }
-        }
-    }
-}
-
-extension _ExtendCustomModelType where Self: KeyMappable, Root == Self {
-    public mutating func mappingValue(_ value: Any, forKey key: String) {
-        if !mappingValue(value, forKey: key, with: Self.keyMapping) {
-            mappingMirror(value, forKey: key)
-        }
-    }
-}
-
 extension NSObject {
     /// Finds the internal object in `object` as the `designatedPath` specified
     /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
@@ -718,12 +681,35 @@ extension _ExtendCustomModelType {
     
     static func getProperties<T: _ExtendCustomModelType>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
         if let instance = instance as? any _ExtendCustomModelType & KeyMappable {
-            return instance.getProperties(mapper: mapper, children: children)
+            return getMappingProperties(for: instance, mapper: mapper, children: children)
         } else {
             if JSONModelConfiguration.memoryMode {
                 return getProperties(for: type(of: instance))
             }
             return nil
+        }
+    }
+    
+    static func getMappingProperties<T: _ExtendCustomModelType & KeyMappable>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
+        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
+        let keyMapping = type(of: instance).keyMapping
+        if !keyMapping.isEmpty {
+            for keyMap in keyMapping {
+                if keyMap.mappingKeys.count > 1 {
+                    mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
+                }
+            }
+        }
+        
+        return children.map { child in
+            if let value = child.1 as? JSONMappedValue {
+                if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
+                    mapper.specify(key: child.0, names: mappingKeys)
+                }
+                return Property.Description(key: child.0, type: type(of: value.mappingValue()), offset: 0)
+            } else {
+                return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
+            }
         }
     }
     
@@ -2534,6 +2520,10 @@ func getMangledTypeNameSize(_ mangledName: UnsafePointer<UInt8>) -> Int {
 
 // MARK: - KeyMappable
 public extension KeyMappable where Self: _ExtendCustomModelType {
+    mutating func mappingValue(_ value: Any, forKey key: String) {
+        mappingMirror(value, forKey: key)
+    }
+    
     @discardableResult
     mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
         for keyMap in keyMapping {
@@ -2568,6 +2558,14 @@ public extension KeyMappable where Self: _ExtendCustomModelType {
             mirror = mirror.superclassMirror
         }
         return false
+    }
+}
+
+public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
+    mutating func mappingValue(_ value: Any, forKey key: String) {
+        if !mappingValue(value, forKey: key, with: Self.keyMapping) {
+            mappingMirror(value, forKey: key)
+        }
     }
 }
 
