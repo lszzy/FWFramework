@@ -2605,7 +2605,45 @@ public protocol JSONMappedValue {
 }
 
 extension MappedValue: JSONMappedValue {
-    public func mappingKeys() -> [String]? { stringKeys }
-    public func mappingValue() -> Any { wrappedValue }
-    public func mappingValue(_ value: Any) { wrappedValue = value as! Value }
+    public func mappingKeys() -> [String]? {
+        stringKeys
+    }
+    
+    public func mappingValue() -> Any {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            return wrapped.mappingValue()
+        } else {
+            return wrappedValue
+        }
+    }
+    
+    public func mappingValue(_ value: Any) {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            wrapped.mappingValue(value)
+        } else {
+            wrappedValue = value as! Value
+        }
+    }
+}
+
+extension ValidatedValue: JSONMappedValue {
+    public func mappingKeys() -> [String]? {
+        nil
+    }
+    
+    public func mappingValue() -> Any {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            return wrapped.mappingValue()
+        } else {
+            return wrappedValue
+        }
+    }
+    
+    public func mappingValue(_ value: Any) {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            wrapped.mappingValue(value)
+        } else {
+            wrappedValue = value as! Value
+        }
+    }
 }

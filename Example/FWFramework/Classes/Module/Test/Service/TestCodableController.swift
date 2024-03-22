@@ -357,7 +357,9 @@ enum TestJSONModelEnum: String, JSONModelEnum {
 // MARK: - TestMappedValueJSONModel
 struct TestMappedValueJSONModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
-    @MappedValue var name: String = ""
+    @MappedValue
+    @ValidatedValue(.isWord)
+    var name: String = ""
     @MappedValue var age: Int?
     @MappedValue var amount: Float = 0
     @MappedValue("alias_key")

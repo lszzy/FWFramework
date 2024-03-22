@@ -14,14 +14,14 @@ import Foundation
 /// @StoredValue("userName")
 /// static var userName: String = ""
 @propertyWrapper
-public struct StoredValue<T> {
+public struct StoredValue<Value> {
     private let key: String
-    private let defaultValue: T
+    private let defaultValue: Value
     
     public init(
-        wrappedValue: T,
+        wrappedValue: Value,
         _ key: String,
-        defaultValue: T? = nil
+        defaultValue: Value? = nil
     ) {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
@@ -30,15 +30,15 @@ public struct StoredValue<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: T? = nil
-    ) where WrappedValue? == T {
+        defaultValue: Value? = nil
+    ) where WrappedValue? == Value {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
-            let value = UserDefaults.standard.object(forKey: key) as? T
+            let value = UserDefaults.standard.object(forKey: key) as? Value
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
@@ -59,15 +59,15 @@ public struct StoredValue<T> {
 /// @CachedValue("cacheKey")
 /// static var cacheValue: String = ""
 @propertyWrapper
-public struct CachedValue<T> {
+public struct CachedValue<Value> {
     private let key: String
-    private let defaultValue: T
+    private let defaultValue: Value
     private let type: CacheType
     
     public init(
-        wrappedValue: T,
+        wrappedValue: Value,
         _ key: String,
-        defaultValue: T? = nil,
+        defaultValue: Value? = nil,
         type: CacheType = .default
     ) {
         self.key = key
@@ -78,17 +78,17 @@ public struct CachedValue<T> {
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
-        defaultValue: T? = nil,
+        defaultValue: Value? = nil,
         type: CacheType = .default
-    ) where WrappedValue? == T {
+    ) where WrappedValue? == Value {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
-            let value = CacheManager.manager(type: type)?.object(forKey: key) as? T
+            let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
@@ -108,16 +108,16 @@ public struct CachedValue<T> {
 /// @ValidatedValue(.isEmail)
 /// var email: String = ""
 @propertyWrapper
-public struct ValidatedValue<T> {
-    private let validator: Validator<T>
-    private let defaultValue: T
-    private var value: T
+public class ValidatedValue<Value> {
+    private let validator: Validator<Value>
+    private let defaultValue: Value
+    private var value: Value
     private var isValid: Bool
     
     public init(
-        wrappedValue: T,
-        _ validator: Validator<T>,
-        defaultValue: T? = nil
+        wrappedValue: Value,
+        _ validator: Validator<Value>,
+        defaultValue: Value? = nil
     ) {
         self.validator = validator
         self.defaultValue = defaultValue ?? wrappedValue
@@ -125,11 +125,11 @@ public struct ValidatedValue<T> {
         self.isValid = validator.validate(wrappedValue)
     }
     
-    public init<WrappedValue>(
+    public convenience init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
-        defaultValue: T? = nil
-    ) where WrappedValue? == T {
+        defaultValue: Value? = nil
+    ) where WrappedValue? == Value {
         self.init(
             wrappedValue: wrappedValue,
             Validator(validator),
@@ -137,7 +137,7 @@ public struct ValidatedValue<T> {
         )
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
             isValid ? value : defaultValue
         }
@@ -155,12 +155,12 @@ public struct ValidatedValue<T> {
 /// @ModuleValue(UserModuleService.self)
 /// static var userModule: UserModuleService
 @propertyWrapper
-public struct ModuleValue<T> {
-    private let serviceProtocol: T.Type
-    private var module: T?
+public struct ModuleValue<Value> {
+    private let serviceProtocol: Value.Type
+    private var module: Value?
     
     public init(
-        _ serviceProtocol: T.Type,
+        _ serviceProtocol: Value.Type,
         module: ModuleProtocol.Type? = nil
     ) {
         self.serviceProtocol = serviceProtocol
@@ -169,7 +169,7 @@ public struct ModuleValue<T> {
         }
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
             if let value = module {
                 return value
@@ -190,12 +190,12 @@ public struct ModuleValue<T> {
 /// @PluginValue(TestPluginProtocol.self)
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
-public struct PluginValue<T> {
-    private let pluginProtocol: T.Type
-    private var plugin: T?
+public struct PluginValue<Value> {
+    private let pluginProtocol: Value.Type
+    private var plugin: Value?
     
     public init(
-        _ pluginProtocol: T.Type,
+        _ pluginProtocol: Value.Type,
         object: Any? = nil
     ) {
         self.pluginProtocol = pluginProtocol
@@ -204,7 +204,7 @@ public struct PluginValue<T> {
         }
     }
     
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
             if let value = plugin {
                 return value
