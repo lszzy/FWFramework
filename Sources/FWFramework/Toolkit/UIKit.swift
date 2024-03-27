@@ -420,9 +420,10 @@ extension Wrapper where Base: UILabel {
         textColor: UIColor?,
         text: String? = nil,
         textAlignment: NSTextAlignment? = nil,
-        numberOfLines: Int? = nil
+        numberOfLines: Int? = nil,
+        lineHeight: CGFloat? = nil
     ) {
-        base.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
+        base.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines, lineHeight: lineHeight)
     }
     
     /// 快速创建标签并指定文本
@@ -431,9 +432,10 @@ extension Wrapper where Base: UILabel {
         textColor: UIColor?,
         text: String? = nil,
         textAlignment: NSTextAlignment? = nil,
-        numberOfLines: Int? = nil
+        numberOfLines: Int? = nil,
+        lineHeight: CGFloat? = nil
     ) -> Base {
-        return Base.fw_label(font: font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
+        return Base.fw_label(font: font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines, lineHeight: lineHeight)
     }
     
     /// 自适应字体大小，可设置缩放因子等
@@ -2596,13 +2598,21 @@ extension Wrapper where Base: UIViewController {
         textColor: UIColor?,
         text: String? = nil,
         textAlignment: NSTextAlignment? = nil,
-        numberOfLines: Int? = nil
+        numberOfLines: Int? = nil,
+        lineHeight: CGFloat? = nil
     ) {
         if let font = font { self.font = font }
         if let textColor = textColor { self.textColor = textColor }
         if let text = text { self.text = text }
         if let textAlignment = textAlignment { self.textAlignment = textAlignment }
         if let numberOfLines = numberOfLines { self.numberOfLines = numberOfLines }
+        if let lineHeight = lineHeight { 
+            if let font = font {
+                self.fw_lineHeight = font.fw_lineHeight(expected: lineHeight)
+            } else {
+                self.fw_lineHeight = lineHeight
+            }
+        }
     }
     
     /// 快速创建标签并指定文本
@@ -2611,10 +2621,11 @@ extension Wrapper where Base: UIViewController {
         textColor: UIColor?,
         text: String? = nil,
         textAlignment: NSTextAlignment? = nil,
-        numberOfLines: Int? = nil
+        numberOfLines: Int? = nil,
+        lineHeight: CGFloat? = nil
     ) -> Self {
         let label = Self()
-        label.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
+        label.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines, lineHeight: lineHeight)
         return label
     }
     
