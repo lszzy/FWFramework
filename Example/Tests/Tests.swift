@@ -1,4 +1,7 @@
 import XCTest
+import SwiftSyntaxMacros
+import SwiftSyntaxMacrosTestSupport
+import FWMacro
 @_spi(FW) import FWFramework
 
 class Tests: XCTestCase {
@@ -279,6 +282,26 @@ extension Tests {
     class TestParameter: Router.Parameter {
         @MappedValue var isTrue: Bool = false
         var ignoreValue: Int = 0
+    }
+    
+    @MappedValueMacro
+    struct TestMappedValueModel {
+        var id: Int = 0
+        @MappedValue var name: String?
+        
+        var ignoreValue: String { "" }
+        static var staticId: Int = 0
+        func testMethod() {}
+    }
+    
+    @KeyMappingMacro
+    struct TestKeyMappingModel: KeyMappable {
+        var id: Int = 0
+        @MappedValue var name: String?
+        
+        var ignoreValue: String { "" }
+        static var staticId: Int = 0
+        func testMethod() {}
     }
     
     enum TestEnum: Equatable {

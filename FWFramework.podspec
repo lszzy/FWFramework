@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.1.0'
+  s.version               = '5.2.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
   s.ios.deployment_target = '13.0'
-  s.swift_version         = '5.7'
+  s.swift_version         = '5.9'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
@@ -32,6 +32,17 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWMacro' do |ss|
+    ss.subspec 'Macros' do |sss|
+      sss.source_files = 'Sources/FWMacro/**/*.swift'
+      sss.preserve_paths = ['Sources/macros/FWMacroMacros']
+      sss.pod_target_xcconfig = {
+        'OTHER_SWIFT_FLAGS' => '-load-plugin-executable ${PODS_ROOT}/FWFramework/Sources/macros/FWMacroMacros#FWMacroMacros'
+      }
+      sss.user_target_xcconfig = {
+        'OTHER_SWIFT_FLAGS' => '-load-plugin-executable ${PODS_ROOT}/FWFramework/Sources/macros/FWMacroMacros#FWMacroMacros'
+      }
+    end
+    
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {
