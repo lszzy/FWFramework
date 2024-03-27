@@ -436,6 +436,14 @@ extension Wrapper where Base: UILabel {
         return Base.fw_label(font: font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
     }
     
+    /// 自适应字体大小，可设置缩放因子等
+    public func adjustsFontSize(
+        minimumScaleFactor: CGFloat? = nil,
+        baselineAdjustment: UIBaselineAdjustment? = nil
+    ) {
+        base.fw_adjustsFontSize(minimumScaleFactor: minimumScaleFactor, baselineAdjustment: baselineAdjustment)
+    }
+    
     /// 获取当前标签是否非空，兼容attributedText|text
     public var isNotEmpty: Bool {
         return base.fw_isNotEmpty
@@ -2608,6 +2616,20 @@ extension Wrapper where Base: UIViewController {
         let label = Self()
         label.fw_setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines)
         return label
+    }
+    
+    /// 自适应字体大小，可设置缩放因子等
+    public func fw_adjustsFontSize(
+        minimumScaleFactor: CGFloat? = nil,
+        baselineAdjustment: UIBaselineAdjustment? = nil
+    ) {
+        self.adjustsFontSizeToFitWidth = true
+        if let minimumScaleFactor = minimumScaleFactor {
+            self.minimumScaleFactor = minimumScaleFactor
+        }
+        if let baselineAdjustment = baselineAdjustment {
+            self.baselineAdjustment = baselineAdjustment
+        }
     }
     
     /// 获取当前标签是否非空，兼容attributedText|text
