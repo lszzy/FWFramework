@@ -15,13 +15,12 @@ import Foundation
 /// 1. 支持Codable类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
-/// 4. 未标记MappedValue的字段自动忽略
+/// 4. 未标记MappedValue的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
 ///
-/// KeyMappable模式二：KeyMapping模式
-/// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
-/// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
-/// 3. 支持Any类型，使用方式同上，加入keyMapping即可
-/// 4. 未加入keyMapping的字段自动忽略
+/// KeyMappable模式二：MappedValueMacro模式(需引入FWMacro子模块)
+/// 1. 标记class或struct为自动映射存储属性宏，使用方式：@MappedValueMacro
+/// 2. 可自定义字段映射规则，使用方式：@MappedValue("name1", "name2")
+/// 3. 可忽略指定字段，使用方式：@MappedValue(ignored: true)
 ///
 /// KeyMappable模式三：自定义模式
 /// 1. 需完整实现Codable协议的encode和decode协议方法

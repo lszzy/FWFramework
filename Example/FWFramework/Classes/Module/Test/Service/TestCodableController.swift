@@ -429,10 +429,6 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
     var enum2: TestCustomJSONModelEnum = .unknown
     var enum3: TestCustomJSONModelEnum?
     
-    static func shouldMappingValue() -> Bool {
-        return true
-    }
-    
     mutating func mappingValue(_ value: Any, forKey key: String) {
         switch key {
         case "id":
@@ -494,10 +490,6 @@ class TestCustomJSONSuperModel: JSONModel, KeyMappable {
     var id: Int = 0
     
     required init() {}
-    
-    static func shouldMappingValue() -> Bool {
-        return true
-    }
     
     func mappingValue(_ value: Any, forKey key: String) {
         switch key {
