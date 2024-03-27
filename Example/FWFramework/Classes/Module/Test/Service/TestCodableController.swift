@@ -344,8 +344,13 @@ struct TestJSONModel: JSONModel {
     }
 }
 
-struct TestJSONSubModel: JSONModel {
+class TestJSONSuperModel: JSONModel {
     var id: Int = 0
+    
+    required init() {}
+}
+
+class TestJSONSubModel: TestJSONSuperModel {
     var name: String?
 }
 
@@ -384,8 +389,13 @@ struct TestMappedValueJSONModel: JSONModel, KeyMappable {
     @MappedValue var enum3: TestMappedValueJSONModelEnum?
 }
 
-struct TestMappedValueJSONSubModel: JSONModel, KeyMappable {
+class TestMappedValueJSONSuperModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
+    
+    required init() {}
+}
+
+class TestMappedValueJSONSubModel: TestMappedValueJSONSuperModel {
     @MappedValue var name: String?
 }
 
@@ -480,22 +490,34 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
     }
 }
 
-struct TestCustomJSONSubModel: JSONModel, KeyMappable {
+class TestCustomJSONSuperModel: JSONModel, KeyMappable {
     var id: Int = 0
-    var name: String?
+    
+    required init() {}
     
     static func shouldMappingValue() -> Bool {
         return true
     }
     
-    mutating func mappingValue(_ value: Any, forKey key: String) {
+    func mappingValue(_ value: Any, forKey key: String) {
         switch key {
         case "id":
             id = value as? Int ?? .zero
+        default:
+            break
+        }
+    }
+}
+
+class TestCustomJSONSubModel: TestCustomJSONSuperModel {
+    var name: String?
+    
+    override func mappingValue(_ value: Any, forKey key: String) {
+        switch key {
         case "name":
             name = value as? String
         default:
-            break
+            super.mappingValue(value, forKey: key)
         }
     }
 }
