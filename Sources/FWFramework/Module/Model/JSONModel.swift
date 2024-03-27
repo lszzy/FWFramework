@@ -2618,6 +2618,8 @@ extension MappedValue: JSONMappedValue {
     }
     
     public func mappingValue(_ value: Any) {
+        guard !ignored else { return }
+        
         if let wrapped = wrappedValue as? JSONMappedValue {
             wrapped.mappingValue(value)
         } else {

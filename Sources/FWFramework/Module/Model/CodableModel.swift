@@ -296,13 +296,18 @@ public extension KeyMap where Root: Codable & ObjectType {
 @propertyWrapper
 public final class MappedValue<Value> {
     let stringKeys: [String]?
+    let ignored: Bool
     public var wrappedValue: Value
     
     let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?
     let decode: ((_ decoder: Decoder) throws -> Value?)?
     
     init(wrappedValue: Value, stringKeys: [String]?, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
-        (self.wrappedValue, self.stringKeys, self.encode, self.decode) = (wrappedValue, stringKeys, encode, decode)
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
+    }
+    
+    public init(wrappedValue: Value, ignored: Bool) {
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, nil, ignored, nil, nil)
     }
     
     public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
@@ -335,6 +340,8 @@ public protocol EncodableMappedValue {
 
 extension MappedValue: EncodableMappedValue where Value: Encodable {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -352,6 +359,8 @@ public protocol DecodableMappedValue {
 
 extension MappedValue: DecodableMappedValue where Value: Decodable {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
@@ -378,6 +387,8 @@ public protocol EncodableAnyMappedValue {
 
 extension MappedValue: EncodableAnyMappedValue {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let encode = encode {
             try encode(encoder, wrappedValue)
         } else {
@@ -395,6 +406,8 @@ public protocol DecodableAnyMappedValue {
 
 extension MappedValue: DecodableAnyMappedValue {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
+        guard !ignored else { return }
+        
         if let decode = decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
