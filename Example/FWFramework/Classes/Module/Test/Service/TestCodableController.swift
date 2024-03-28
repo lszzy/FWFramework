@@ -7,7 +7,6 @@
 //
 
 import FWFramework
-import FWMacro
 
 // MARK: - TestCodableModel
 struct TestCodableModel: CodableModel {

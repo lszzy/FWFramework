@@ -6,7 +6,6 @@ target "FWFramework_Example" do
   project 'FWFramework', 'Staging' => :release, 'Testing' => :release
   
   pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWMacro', 'FWVendor']
-  pod 'FWMacro', :path => '../'
   pod 'FWDebug', :configurations => ['Debug', 'Testing']
   
   target 'FWFramework_Tests' do

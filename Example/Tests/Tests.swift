@@ -1,6 +1,8 @@
 import XCTest
 @_spi(FW) import FWFramework
+#if FWMacroSPM
 import FWMacro
+#endif
 
 class Tests: XCTestCase {
     
