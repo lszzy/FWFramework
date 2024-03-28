@@ -288,23 +288,27 @@ extension Tests {
     
     #if FWMacroSPM
     @MappedValueMacro
-    struct TestMappedValueModel {
+    class TestMappedValueModel {
         var id: Int = 0
         @MappedValue var name: String?
         
+        var _ignoreValue: String?
+        var ignoreValue_: String?
         var ignoreValue: String { "" }
         static var staticId: Int = 0
         func testMethod() {}
     }
     
-    @KeyMappingMacro
-    struct TestKeyMappingModel: KeyMappable {
-        var id: Int = 0
-        @MappedValue var name: String?
+    @MappedValueMacro
+    class TestSubMappedValueModel: TestMappedValueModel {
+        var childId: Int = 0
+        @MappedValue var childName: String?
         
-        var ignoreValue: String { "" }
-        static var staticId: Int = 0
-        func testMethod() {}
+        var _childIgnoreValue: String?
+        var childIgnoreValue_: String?
+        var childIgnoreValue: String { "" }
+        static var staticChildId: Int = 0
+        func childTestMethod() {}
     }
     #endif
     

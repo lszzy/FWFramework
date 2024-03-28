@@ -242,8 +242,9 @@ enum TestMappedValueCodableModelEnum: String, Codable {
     case unknown = ""
 }
 
-// MARK: - TestKeyMappingCodableModel
-struct TestKeyMappingCodableModel: CodableModel, KeyMappable {
+// MARK: - TestMappedValueMacroCodableModel
+@MappedValueMacro
+struct TestMappedValueMacroCodableModel: CodableModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -259,50 +260,22 @@ struct TestKeyMappingCodableModel: CodableModel, KeyMappable {
     var optional3: String? = "default"
     var optional4: Int? = 4
     var optional5: Int? = 0
-    var sub: TestKeyMappingCodableSubModel?
-    var sub2: TestKeyMappingCodableSubModel = .init()
-    var subs: [TestKeyMappingCodableSubModel] = []
-    var subdict: [String: TestKeyMappingCodableSubModel] = [:]
-    var enum1: TestKeyMappingCodableModelEnum = .unknown
-    var enum2: TestKeyMappingCodableModelEnum = .unknown
-    var enum3: TestKeyMappingCodableModelEnum?
-    
-    static let keyMapping: [KeyMap<Self>] = [
-        KeyMap(\.id, to: "id"),
-        KeyMap(\.name, to: "name"),
-        KeyMap(\.age, to: "age"),
-        KeyMap(\.amount, to: "amount"),
-        KeyMap(\.alias, to: "alias_key"),
-        KeyMap(\.camelName, to: "camel_name"),
-        KeyMap(\.any, to: "any"),
-        KeyMap(\.dict, to: "dict"),
-        KeyMap(\.array, to: "array"),
-        KeyMap(\.optional1, to: "optional1"),
-        KeyMap(\.optional2, to: "optional2"),
-        KeyMap(\.optional3, to: "optional3"),
-        KeyMap(\.optional4, to: "optional4"),
-        KeyMap(\.optional5, to: "optional5"),
-        KeyMap(\.sub, to: "sub"),
-        KeyMap(\.sub2, to: "sub2"),
-        KeyMap(\.subs, to: "subs"),
-        KeyMap(\.subdict, to: "subdict"),
-        KeyMap(\.enum1, to: "enum1"),
-        KeyMap(\.enum2, to: "enum2"),
-        KeyMap(\.enum3, to: "enum3"),
-    ]
+    var sub: TestMappedValueMacroCodableSubModel?
+    var sub2: TestMappedValueMacroCodableSubModel = .init()
+    var subs: [TestMappedValueMacroCodableSubModel] = []
+    var subdict: [String: TestMappedValueMacroCodableSubModel] = [:]
+    var enum1: TestMappedValueMacroCodableModelEnum = .unknown
+    var enum2: TestMappedValueMacroCodableModelEnum = .unknown
+    var enum3: TestMappedValueMacroCodableModelEnum?
 }
 
-struct TestKeyMappingCodableSubModel: CodableModel, KeyMappable {
+@MappedValueMacro
+struct TestMappedValueMacroCodableSubModel: CodableModel, KeyMappable {
     var id: Int = 0
     var name: String?
-    
-    static let keyMapping: [KeyMap<Self>] = [
-        KeyMap(\.id, to: "id"),
-        KeyMap(\.name, to: "name"),
-    ]
 }
 
-enum TestKeyMappingCodableModelEnum: String, Codable {
+enum TestMappedValueMacroCodableModelEnum: String, Codable {
     case test = "test"
     case unknown = ""
 }
@@ -519,8 +492,9 @@ enum TestCustomJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
-// MARK: - TestKeyMappingJSONModel
-struct TestKeyMappingJSONModel: JSONModel, KeyMappable {
+// MARK: - TestMappedValueMacroJSONModel
+@MappedValueMacro
+struct TestMappedValueMacroJSONModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -536,50 +510,22 @@ struct TestKeyMappingJSONModel: JSONModel, KeyMappable {
     var optional3: String? = "default"
     var optional4: Int? = 4
     var optional5: Int? = 0
-    var sub: TestKeyMappingJSONSubModel?
-    var sub2: TestKeyMappingJSONSubModel = .init()
-    var subs: [TestKeyMappingJSONSubModel] = []
-    var subdict: [String: TestKeyMappingJSONSubModel] = [:]
-    var enum1: TestKeyMappingJSONModelEnum = .unknown
-    var enum2: TestKeyMappingJSONModelEnum = .unknown
-    var enum3: TestKeyMappingJSONModelEnum?
-    
-    static let keyMapping: [KeyMap<Self>] = [
-        KeyMap(\.id, to: "id"),
-        KeyMap(\.name, to: "name"),
-        KeyMap(\.age, to: "age"),
-        KeyMap(\.amount, to: "amount"),
-        KeyMap(\.alias, to: "alias", "alias_key"),
-        KeyMap(\.camelName, to: "camelName", "camel_name"),
-        KeyMap(\.any, to: "any"),
-        KeyMap(\.dict, to: "dict"),
-        KeyMap(\.array, to: "array"),
-        KeyMap(\.optional1, to: "optional1"),
-        KeyMap(\.optional2, to: "optional2"),
-        KeyMap(\.optional3, to: "optional3"),
-        KeyMap(\.optional4, to: "optional4"),
-        KeyMap(\.optional5, to: "optional5"),
-        KeyMap(\.sub, to: "sub"),
-        KeyMap(\.sub2, to: "sub2"),
-        KeyMap(\.subs, to: "subs"),
-        KeyMap(\.subdict, to: "subdict"),
-        KeyMap(\.enum1, to: "enum1"),
-        KeyMap(\.enum2, to: "enum2"),
-        KeyMap(\.enum3, to: "enum3"),
-    ]
+    var sub: TestMappedValueMacroJSONSubModel?
+    var sub2: TestMappedValueMacroJSONSubModel = .init()
+    var subs: [TestMappedValueMacroJSONSubModel] = []
+    var subdict: [String: TestMappedValueMacroJSONSubModel] = [:]
+    var enum1: TestMappedValueMacroJSONModelEnum = .unknown
+    var enum2: TestMappedValueMacroJSONModelEnum = .unknown
+    var enum3: TestMappedValueMacroJSONModelEnum?
 }
 
-struct TestKeyMappingJSONSubModel: JSONModel, KeyMappable {
+@MappedValueMacro
+struct TestMappedValueMacroJSONSubModel: JSONModel, KeyMappable {
     var id: Int = 0
     var name: String?
-    
-    static let keyMapping: [KeyMap<Self>] = [
-        KeyMap(\.id, to: "id"),
-        KeyMap(\.name, to: "name"),
-    ]
 }
 
-enum TestKeyMappingJSONModelEnum: String, JSONModelEnum {
+enum TestMappedValueMacroJSONModelEnum: String, JSONModelEnum {
     case test = "test"
     case unknown = ""
 }
@@ -626,11 +572,11 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["CodableModel", "onCodableModel"],
             ["CodableModel+Custom", "onCustomCodableModel"],
             ["CodableModel+MappedValue", "onMappedValueCodableModel"],
-            ["CodableModel+KeyMapping", "onKeyMappingCodableModel"],
+            ["CodableModel+MappedValueMacro", "onMappedValueMacroCodableModel"],
             ["JSONModel", "onJSONModel"],
             ["JSONModel+Custom", "onCustomJSONModel"],
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
-            ["JSONModel+KeyMapping", "onKeyMappingJSONModel"],
+            ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
         ])
     }
@@ -792,8 +738,8 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    @objc func onKeyMappingCodableModel() {
-        func testModel(_ model: TestKeyMappingCodableModel?, encode: Bool = false) -> [Bool] {
+    @objc func onMappedValueMacroCodableModel() {
+        func testModel(_ model: TestMappedValueMacroCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
@@ -822,9 +768,9 @@ extension TestCodableController {
             return results
         }
         
-        var model: TestKeyMappingCodableModel? = TestKeyMappingCodableModel.decodeModel(from: testCodableData())
+        var model: TestMappedValueMacroCodableModel? = TestMappedValueMacroCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
-        model = TestKeyMappingCodableModel.decodeModel(from: model?.encodeObject())
+        model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
@@ -940,8 +886,8 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    @objc func onKeyMappingJSONModel() {
-        func testModel(_ model: TestKeyMappingJSONModel?, encode: Bool = false) -> [Bool] {
+    @objc func onMappedValueMacroJSONModel() {
+        func testModel(_ model: TestMappedValueMacroJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
                 (model != nil),
                 (model?.id == 1),
@@ -970,9 +916,9 @@ extension TestCodableController {
             return results
         }
         
-        var model: TestKeyMappingJSONModel? = TestKeyMappingJSONModel.decodeModel(from: testCodableData())
+        var model: TestMappedValueMacroJSONModel? = TestMappedValueMacroJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
-        model = TestKeyMappingJSONModel.decodeModel(from: model?.encodeObject())
+        model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
