@@ -71,7 +71,7 @@ Pod::Spec.new do |s|
       
       script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
-        "cp \\"$(PODS_TARGET_SRCROOT)/Package.FWMacro.swift\\" \\"$(PODS_TARGET_SRCROOT)/Package.swift\\" && swift build -c release --disable-sandbox
+        "cp \\"$PODS_TARGET_SRCROOT/Package.FWMacro.swift\\" \\"$PODS_TARGET_SRCROOT/Package.swift\\" && swift build -c release --disable-sandbox
         --package-path \\"$PODS_TARGET_SRCROOT\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
