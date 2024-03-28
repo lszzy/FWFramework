@@ -1042,6 +1042,14 @@ extension Wrapper where Base: UITableViewCell {
     public var indexPath: IndexPath? {
         return base.fw_indexPath
     }
+    
+    /// 执行所属tableView的批量更新
+    public func performBatchUpdates(
+        _ updates: ((UITableView, IndexPath?) -> Void)?,
+        completion: ((UITableView, IndexPath?, Bool) -> Void)? = nil
+    ) {
+        base.fw_performBatchUpdates(updates, completion: completion)
+    }
 }
 
 // MARK: - Wrapper+UICollectionView
@@ -1083,6 +1091,14 @@ extension Wrapper where Base: UICollectionViewCell {
     /// 获取当前显示indexPath
     public var indexPath: IndexPath? {
         return base.fw_indexPath
+    }
+    
+    /// 执行所属collectionView的批量更新
+    public func performBatchUpdates(
+        _ updates: ((UICollectionView, IndexPath?) -> Void)?,
+        completion: ((UICollectionView, IndexPath?, Bool) -> Void)? = nil
+    ) {
+        base.fw_performBatchUpdates(updates, completion: completion)
     }
 }
 
@@ -4216,6 +4232,22 @@ extension Wrapper where Base: UIViewController {
         return fw_tableView?.indexPath(for: self)
     }
     
+    /// 执行所属tableView的批量更新
+    public func fw_performBatchUpdates(
+        _ updates: ((UITableView, IndexPath?) -> Void)?,
+        completion: ((UITableView, IndexPath?, Bool) -> Void)? = nil
+    ) {
+        guard let tableView = fw_tableView else { return }
+        
+        tableView.performBatchUpdates(updates != nil ? { [weak self] in
+            let indexPath = self != nil ? tableView.indexPath(for: self!) : nil
+            updates?(tableView, indexPath)
+        } : nil, completion: completion != nil ? { [weak self] finished in
+            let indexPath = self != nil ? tableView.indexPath(for: self!) : nil
+            completion?(tableView, indexPath, finished)
+        } : nil)
+    }
+    
     private static var fw_staticTableViewCellSwizzled = false
     
     private static func fw_swizzleUIKitTableViewCell() {
@@ -4407,6 +4439,22 @@ extension Wrapper where Base: UIViewController {
     /// 获取当前显示indexPath
     public var fw_indexPath: IndexPath? {
         return fw_collectionView?.indexPath(for: self)
+    }
+    
+    /// 执行所属collectionView的批量更新
+    public func fw_performBatchUpdates(
+        _ updates: ((UICollectionView, IndexPath?) -> Void)?,
+        completion: ((UICollectionView, IndexPath?, Bool) -> Void)? = nil
+    ) {
+        guard let collectionView = fw_collectionView else { return }
+        
+        collectionView.performBatchUpdates(updates != nil ? { [weak self] in
+            let indexPath = self != nil ? collectionView.indexPath(for: self!) : nil
+            updates?(collectionView, indexPath)
+        } : nil, completion: completion != nil ? { [weak self] finished in
+            let indexPath = self != nil ? collectionView.indexPath(for: self!) : nil
+            completion?(collectionView, indexPath, finished)
+        } : nil)
     }
     
 }
