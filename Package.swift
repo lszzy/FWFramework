@@ -131,20 +131,12 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
-            path: "Sources/FWMacroMacros",
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
-            ]
+            path: "Macros/FWMacroMacros"
         ),
         .target(
             name: "FWMacro",
             dependencies: ["FWMacroMacros"],
-            path: "Sources/FWMacro",
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
-            ]
+            path: "Macros/FWMacro"
         ),
         .testTarget(
             name: "FWFrameworkTests",

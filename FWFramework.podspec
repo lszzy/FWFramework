@@ -61,25 +61,25 @@ Pod::Spec.new do |s|
     end
     
     ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Sources/FWMacro/**/*.swift'
+      sss.source_files = 'Macros/FWMacro/**/*.swift'
       sss.preserve_paths = [
-        'Package.FWMacro.swift',
-        'Sources/FWMacroMacros/**/*.swift'
+        'Macros/Package.swift',
+        'Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
       
       script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
-        "cp \\"$PODS_TARGET_SRCROOT/Package.FWMacro.swift\\" \\"$PODS_TARGET_SRCROOT/Package.swift\\" && swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT\\"
+        "swift build -c release --disable-sandbox
+        --package-path \\"$PODS_TARGET_SRCROOT/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
       
       sss.script_phase = {
         :name => 'Build FWFramework macro plugin',
         :script => script,
-        :input_files => Dir.glob("{Package.FWMacro.swift, Sources/FWMacroMacros/**/*}").map {
+        :input_files => Dir.glob("{Macros/Package.swift, Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
