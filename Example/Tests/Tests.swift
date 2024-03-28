@@ -290,7 +290,8 @@ extension Tests {
     @MappedValueMacro
     class TestMappedValueModel {
         var id: Int = 0
-        @MappedValue var name: String?
+        @MappedValue
+        var name: String?
         
         var _ignoreValue: String?
         var ignoreValue_: String?
@@ -302,7 +303,8 @@ extension Tests {
     @MappedValueMacro
     class TestSubMappedValueModel: TestMappedValueModel {
         var childId: Int = 0
-        @MappedValue var childName: String?
+        @MappedValue 
+        var childName: String?
         
         var _childIgnoreValue: String?
         var childIgnoreValue_: String?

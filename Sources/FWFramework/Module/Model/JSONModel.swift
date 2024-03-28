@@ -21,7 +21,7 @@ import UIKit
 /// KeyMappable模式二：MappedValueMacro模式(需引入FWMacro子模块)
 /// 1. 标记class或struct为自动映射存储属性宏，使用方式：@MappedValueMacro
 /// 2. 可自定义字段映射规则，使用方式：@MappedValue("name1", "name2")
-/// 3. 可忽略指定字段，使用方式：@MappedValue(ignored: true)
+/// 3. 以下划线开头或结尾的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
 ///
 /// KeyMappable模式三：自定义模式
 /// 1. 需完整实现JSONModel协议的mappingValue(_:forKey:)协议方法
