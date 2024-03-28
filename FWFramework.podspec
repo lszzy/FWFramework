@@ -59,6 +59,44 @@ Pod::Spec.new do |s|
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
       }
     end
+    
+    ss.subspec 'Macros' do |sss|
+      sss.source_files = 'Sources/FWMacro/**/*.swift'
+      sss.preserve_paths = [
+        'Package.swift',
+        'Sources/FWMacro/**/*.swift',
+        'Sources/FWMacroMacros/**/*.swift'
+      ]
+      
+      product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
+      
+      script = <<-SCRIPT.squish
+        env -i PATH="$PATH" "$SHELL" -l -c
+        "swift build -c release --target FWMacro --disable-sandbox
+        --package-path \\"$PODS_TARGET_SRCROOT\\"
+        --scratch-path \\"#{product_folder}\\""
+      SCRIPT
+      
+      sss.script_phase = {
+        :name => 'Build FWFramework macro plugin',
+        :script => script,
+        :input_files => Dir.glob("{Package.swift, Sources/FWMacro/**/*, Sources/FWMacroMacros/**/*}").map {
+          |path| "$(PODS_TARGET_SRCROOT)/#{path}"
+        },
+        :output_files => ["#{product_folder}/release/FWMacroMacros"],
+        :execution_position => :before_compile
+      }
+      
+      xcode_config = {
+        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
+        'OTHER_SWIFT_FLAGS' => <<-FLAGS.squish
+        -Xfrontend -load-plugin-executable
+        -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
+        FLAGS
+      }
+      sss.user_target_xcconfig = xcode_config
+      sss.pod_target_xcconfig = xcode_config
+    end
   end
   
   s.subspec 'FWVendor' do |ss|

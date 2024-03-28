@@ -151,8 +151,6 @@ let package = Package(
             dependencies: [
                 "FWFramework",
                 "FWMacro",
-                "FWMacroMacros",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             path: "Example/Tests",
             exclude: [
