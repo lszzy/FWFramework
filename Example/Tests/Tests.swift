@@ -1,10 +1,6 @@
 import XCTest
 @_spi(FW) import FWFramework
-#if FWMacroSPM
-import SwiftSyntaxMacros
-import SwiftSyntaxMacrosTestSupport
 import FWMacro
-#endif
 
 class Tests: XCTestCase {
     
@@ -286,7 +282,6 @@ extension Tests {
         var ignoreValue: Int = 0
     }
     
-    #if FWMacroSPM
     @MappedValueMacro
     class TestMappedValueModel {
         var id: Int = 0
@@ -312,7 +307,6 @@ extension Tests {
         static var staticChildId: Int = 0
         func childTestMethod() {}
     }
-    #endif
     
     enum TestEnum: Equatable {
         case none
