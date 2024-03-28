@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import FWMacro
 
 // MARK: - TestCodableModel
 struct TestCodableModel: CodableModel {
@@ -242,7 +243,6 @@ enum TestMappedValueCodableModelEnum: String, Codable {
     case unknown = ""
 }
 
-/*
 // MARK: - TestMappedValueMacroCodableModel
 @MappedValueMacro
 struct TestMappedValueMacroCodableModel: CodableModel, KeyMappable {
@@ -250,8 +250,11 @@ struct TestMappedValueMacroCodableModel: CodableModel, KeyMappable {
     var name: String = ""
     var age: Int?
     var amount: Float = 0
+    @MappedValue("alias_key")
     var alias: String = ""
+    @MappedValue(ignored: true)
     var except: String = ""
+    @MappedValue("camel_name")
     var camelName: String = ""
     var any: Any?
     var dict: [AnyHashable: Any]?
@@ -279,7 +282,7 @@ struct TestMappedValueMacroCodableSubModel: CodableModel, KeyMappable {
 enum TestMappedValueMacroCodableModelEnum: String, Codable {
     case test = "test"
     case unknown = ""
-}*/
+}
 
 // MARK: - TestJSONModel
 struct TestJSONModel: JSONModel {
@@ -493,7 +496,6 @@ enum TestCustomJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
-/*
 // MARK: - TestMappedValueMacroJSONModel
 @MappedValueMacro
 struct TestMappedValueMacroJSONModel: JSONModel, KeyMappable {
@@ -501,8 +503,11 @@ struct TestMappedValueMacroJSONModel: JSONModel, KeyMappable {
     var name: String = ""
     var age: Int?
     var amount: Float = 0
+    @MappedValue("alias_key")
     var alias: String = ""
+    @MappedValue(ignored: true)
     var except: String = ""
+    @MappedValue("camel_name")
     var camelName: String = ""
     var any: Any?
     var dict: [AnyHashable: Any]?
@@ -530,7 +535,7 @@ struct TestMappedValueMacroJSONSubModel: JSONModel, KeyMappable {
 enum TestMappedValueMacroJSONModelEnum: String, JSONModelEnum {
     case test = "test"
     case unknown = ""
-}*/
+}
 
 // MARK: - TestObjectParameter
 class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
@@ -574,11 +579,11 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["CodableModel", "onCodableModel"],
             ["CodableModel+Custom", "onCustomCodableModel"],
             ["CodableModel+MappedValue", "onMappedValueCodableModel"],
-            //["CodableModel+MappedValueMacro", "onMappedValueMacroCodableModel"],
+            ["CodableModel+MappedValueMacro", "onMappedValueMacroCodableModel"],
             ["JSONModel", "onJSONModel"],
             ["JSONModel+Custom", "onCustomJSONModel"],
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
-            //["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
+            ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
         ])
     }
@@ -740,7 +745,6 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    /*
     @objc func onMappedValueMacroCodableModel() {
         func testModel(_ model: TestMappedValueMacroCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -776,7 +780,7 @@ extension TestCodableController {
         model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
-    }*/
+    }
     
     @objc func onJSONModel() {
         func testModel(_ model: TestJSONModel?, encode: Bool = false) -> [Bool] {
@@ -889,7 +893,6 @@ extension TestCodableController {
         showResults(tests)
     }
     
-    /*
     @objc func onMappedValueMacroJSONModel() {
         func testModel(_ model: TestMappedValueMacroJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -925,7 +928,7 @@ extension TestCodableController {
         model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
-    }*/
+    }
     
     @objc func onObjectParameter() {
         let block: BlockVoid = {}

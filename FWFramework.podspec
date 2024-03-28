@@ -32,17 +32,6 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWMacro' do |ss|
-    ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Sources/FWMacro/**/*.swift'
-      sss.preserve_paths = ['Sources/macros/FWMacroMacros']
-      sss.pod_target_xcconfig = {
-        'OTHER_SWIFT_FLAGS' => '-load-plugin-executable ${PODS_ROOT}/FWFramework/Sources/macros/FWMacroMacros#FWMacroMacros'
-      }
-      sss.user_target_xcconfig = {
-        'OTHER_SWIFT_FLAGS' => '-load-plugin-executable ${PODS_ROOT}/FWFramework/Sources/macros/FWMacroMacros#FWMacroMacros'
-      }
-    end
-    
     ss.subspec 'Contacts' do |sss|
       sss.dependency 'FWFramework/FWFramework'
       sss.pod_target_xcconfig = {

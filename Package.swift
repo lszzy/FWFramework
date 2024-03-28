@@ -128,7 +128,6 @@ let package = Package(
         .macro(
             name: "FWMacroMacros",
             dependencies: [
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
@@ -152,6 +151,7 @@ let package = Package(
             dependencies: [
                 "FWFramework",
                 "FWMacro",
+                "FWMacroMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             path: "Example/Tests",
