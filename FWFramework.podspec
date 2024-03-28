@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWFramework macro plugin',
         :script => script,
-        :input_files => Dir.glob("{Package.swift, Sources/FWMacroMacros/**/*}").map {
+        :input_files => Dir.glob("{Package.FWMacro.swift, Sources/FWMacroMacros/**/*}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
