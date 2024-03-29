@@ -8,3 +8,11 @@ import Foundation
 /// 3. 以下划线开头或结尾的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
 @attached(memberAttribute)
 public macro MappedValueMacro() = #externalMacro(module: "FWMacroMacros", type: "MappedValueMacro")
+
+/// 通用PropertyWrapper宏，仅支持class或struct
+///
+/// 使用方法：
+/// 1. 标记class或struct为属性包装器宏，使用方式：@PropertyWrapperMacro("MappedValue")
+/// 2. 如果字段不包含该属性包装器且不以下划线开头或结尾，将自动添加属性包装器
+@attached(memberAttribute)
+public macro PropertyWrapperMacro(_ name: StaticString...) = #externalMacro(module: "FWMacroMacros", type: "PropertyWrapperMacro")
