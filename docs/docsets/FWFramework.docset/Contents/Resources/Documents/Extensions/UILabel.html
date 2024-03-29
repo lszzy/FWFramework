@@ -17,7 +17,7 @@
     <a title="UILabel Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.1.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -394,9 +394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/JSONResponseSerializer.html">JSONResponseSerializer</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/KeyMap.html">KeyMap</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/KeychainManager.html">KeychainManager</a>
@@ -802,6 +799,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes.html#/c:@M@FWFramework@objc(cs)UnsafeObject">UnsafeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/VersionManager.html">VersionManager</a>
@@ -2422,9 +2422,6 @@
                 <a href="../Structs/ToggleWithSwitchStyleType/Style.html">– Style</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/ValidatedValue.html">ValidatedValue</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs/Validator.html">Validator</a>
               </li>
               <li class="nav-group-task">
@@ -2756,9 +2753,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLinesySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_setFont(_:textColor:text:textAlignment:numberOfLines:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLinesySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSgtF">fw_setFont(_:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>)</a>
+                    <a name="/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLines10lineHeightySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fw_setFont(_:textColor:text:textAlignment:numberOfLines:lineHeight:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLines10lineHeightySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtF">fw_setFont(_:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>lineHeight:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2778,7 +2775,8 @@
     <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span>
     <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2789,9 +2787,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLinesABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/fw_label(font:textColor:text:textAlignment:numberOfLines:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLinesABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSgtFZ">fw_label(font:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>)</a>
+                    <a name="/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLines10lineHeightABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/fw_label(font:textColor:text:textAlignment:numberOfLines:lineHeight:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLines10lineHeightABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtFZ">fw_label(font:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>lineHeight:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2811,8 +2809,39 @@
     <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span>
     <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:So7UILabelC11FWFrameworkE18fw_adjustsFontSize18minimumScaleFactor18baselineAdjustmenty14CoreFoundation7CGFloatVSg_So010UIBaselineK0VSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fw_adjustsFontSize(minimumScaleFactor:baselineAdjustment:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE18fw_adjustsFontSize18minimumScaleFactor18baselineAdjustmenty14CoreFoundation7CGFloatVSg_So010UIBaselineK0VSgtF">fw_adjustsFontSize(minimumScaleFactor:<wbr>baselineAdjustment:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自适应字体大小，可设置缩放因子等</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_adjustsFontSize</span><span class="p">(</span>
+    <span class="nv">minimumScaleFactor</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">baselineAdjustment</span><span class="p">:</span> <span class="kt">UIBaselineAdjustment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3013,7 +3042,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -16,7 +16,7 @@
     <a title="FWFramework  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.1.0 Docs</a> (67% documented)</p>
+        <p><a href="index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -393,9 +393,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/JSONResponseSerializer.html">JSONResponseSerializer</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/KeyMap.html">KeyMap</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/KeychainManager.html">KeychainManager</a>
@@ -801,6 +798,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes.html#/c:@M@FWFramework@objc(cs)UnsafeObject">UnsafeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/VersionManager.html">VersionManager</a>
@@ -2421,9 +2421,6 @@
                 <a href="Structs/ToggleWithSwitchStyleType/Style.html">– Style</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/ValidatedValue.html">ValidatedValue</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs/Validator.html">Validator</a>
               </li>
               <li class="nav-group-task">
@@ -2546,7 +2543,7 @@
 
 <p>iOS development framework, mainly solves the routine and pain points in native development, and builds a modular project structure to facilitate iOS development. </p>
 <pre class="highlight plaintext"><code>* Modular architecture design, with built-in Mediator middleware, Router routing and other components
-* Supports advanced features such as Swift coroutine async, await, property annotation propertyWrapper, etc.
+* Supports advanced features such as Swift coroutine async, await, property annotation propertyWrapper, macro, etc.
 * Easily customizable UI plug-ins, including pop-up windows, toast, empty interface, pull-down refresh, image selection and other plug-ins
 * Completely replaceable network images and network request layer, compatible with SDWebImage, Alamofire, etc. by default
 * Automatically updated AutoLayout chain layout, commonly used UI view components are all available
@@ -2570,6 +2567,8 @@ target 'Example' do
   # Import the default subspecs
   pod 'FWFramework'
 
+  # Import the macro subspecs
+  # pod 'FWFramework', :subspecs =&gt; ['FWFramework', 'FWMacro/Macros']   
   # Import the specified subspecs, see the podspec file for the list of subspecs
   # pod 'FWFramework', :subspecs =&gt; ['FWFramework', 'FWSwiftUI']
 end
@@ -2582,6 +2581,8 @@ end
 # Check and import the default submodule
 import FWFramework
 
+# Check and import the macro submodule
+import FWMacro   
 # Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 import FWSwiftUI
 </code></pre>
@@ -2591,7 +2592,7 @@ import FWSwiftUI
 <h2 id='a-href-https-github-com-lszzy-fwframework-blob-master-changelog-md-changelog-a' class='heading'><a href="https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md">Changelog</a></h2>
 
 <p>As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:</p>
-<pre class="highlight plaintext"><code>1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.1.0'
+<pre class="highlight plaintext"><code>1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.2.0'
 2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
 </code></pre>
 <h3 id='swift' class='heading'>Swift</h3>
@@ -2613,7 +2614,7 @@ If you are the author of a third-party open source library, if this library viol
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

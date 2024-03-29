@@ -99,7 +99,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.app.height(cellClass: TestTableDynamicLayoutCell.self, cacheBy: indexPath) { [weak self] cell in
+        return tableView.app.height(cellClass: TestTableDynamicLayoutCell.self/*, cacheBy: indexPath*/) { [weak self] cell in
             cell.object = self?.tableData[indexPath.row]
         }
     }
@@ -269,7 +269,9 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
 class TestTableDynamicLayoutObject: NSObject {
     
     var title = ""
+    var oldTitle = ""
     var text = ""
+    var oldText = ""
     var imageUrl = ""
     var index: Int = 0
     
@@ -312,6 +314,8 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTitleClick(_:)))
         return result
     }()
     
@@ -320,6 +324,8 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
         result.textColor = AppTheme.textColor
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTextClick(_:)))
         return result
     }()
     
@@ -371,6 +377,40 @@ class TestTableDynamicLayoutCell: UITableViewCell {
     @objc func onImageClick(_ gesture: UIGestureRecognizer) {
         if let object = object {
             imageClicked?(object)
+        }
+    }
+    
+    @objc func onTitleClick(_ gesture: UIGestureRecognizer) {
+        guard let object = object else { return }
+        
+        if object.title != "收起标题，点击展开" {
+            object.oldTitle = object.title
+            object.title = "收起标题，点击展开"
+        } else {
+            object.title = object.oldTitle
+            object.oldTitle = ""
+        }
+        app.performBatchUpdates { tableView, indexPath in
+            guard let indexPath = indexPath else { return }
+            
+            tableView.reloadRows(at: [indexPath], with: .none)
+        }
+    }
+    
+    @objc func onTextClick(_ gesture: UIGestureRecognizer) {
+        guard let object = object else { return }
+        
+        if object.text != "收起内容，点击展开" {
+            object.oldText = object.text
+            object.text = "收起内容，点击展开"
+        } else {
+            object.text = object.oldText
+            object.oldText = ""
+        }
+        app.performBatchUpdates { tableView, indexPath in
+            guard let indexPath = indexPath else { return }
+            
+            tableView.reloadRows(at: [indexPath], with: .none)
         }
     }
     

@@ -11,7 +11,7 @@
 iOS development framework, mainly solves the routine and pain points in native development, and builds a modular project structure to facilitate iOS development. 
 
 	* Modular architecture design, with built-in Mediator middleware, Router routing and other components
-	* Supports advanced features such as Swift coroutine async, await, property annotation propertyWrapper, etc.
+	* Supports advanced features such as Swift coroutine async, await, property annotation propertyWrapper, macro, etc.
 	* Easily customizable UI plug-ins, including pop-up windows, toast, empty interface, pull-down refresh, image selection and other plug-ins
 	* Completely replaceable network images and network request layer, compatible with SDWebImage, Alamofire, etc. by default
 	* Automatically updated AutoLayout chain layout, commonly used UI view components are all available
@@ -35,6 +35,8 @@ This framework supports CocoaPods, Podfile example:
 	  # Import the default subspecs
 	  pod 'FWFramework'
 	  
+      # Import the macro subspecs
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWMacro/Macros']   
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -47,6 +49,8 @@ This framework supports Swift Package Manager, just add and check the required m
 	# Check and import the default submodule
 	import FWFramework
 	
+    # Check and import the macro submodule
+    import FWMacro   
 	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 	import FWSwiftUI
 
@@ -56,7 +60,7 @@ The document is located in the docs folder, just open index.html in the browser,
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.1.0'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.2.0'
 	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
 
 ### Swift

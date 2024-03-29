@@ -17,7 +17,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.1.0 Docs</a> (67% documented)</p>
+        <p><a href="index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -394,9 +394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/JSONResponseSerializer.html">JSONResponseSerializer</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/KeyMap.html">KeyMap</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/KeychainManager.html">KeychainManager</a>
@@ -802,6 +799,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes.html#/c:@M@FWFramework@objc(cs)UnsafeObject">UnsafeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/VersionManager.html">VersionManager</a>
@@ -2420,9 +2420,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/ToggleWithSwitchStyleType/Style.html">– Style</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/Validator.html">Validator</a>
@@ -4715,47 +4712,6 @@ MARK: UITabBarItem properties
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/KeyMap"></a>
-                <a name="//apple_ref/swift/Section/KeyMap" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/KeyMap"></a>
-                  <h3 class="section-name"><span>KeyMap</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework6KeyMapC"></a>
-                    <a name="//apple_ref/swift/Class/KeyMap" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework6KeyMapC">KeyMap</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>模型Key键名映射类</p>
-
-                        <a href="Classes/KeyMap.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">KeyMap</span><span class="o">&lt;</span><span class="kt">Root</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">Root</span> <span class="p">:</span> <span class="kt"><a href="Protocols/KeyMappable.html">KeyMappable</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/MappedValue"></a>
                 <a name="//apple_ref/swift/Section/MappedValue" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -5315,6 +5271,53 @@ MARK: UITabBarItem properties
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CustomDateFormatTransform</span> <span class="p">:</span> <span class="kt"><a href="Classes/DateFormatterTransform.html">DateFormatterTransform</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ValidatedValue"></a>
+                <a name="//apple_ref/swift/Section/ValidatedValue" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ValidatedValue"></a>
+                  <h3 class="section-name"><span>ValidatedValue</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework14ValidatedValueC"></a>
+                    <a name="//apple_ref/swift/Class/ValidatedValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework14ValidatedValueC">ValidatedValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>ValidatedValue属性包装器注解，默认为手工指定或初始值</p>
+
+<p>使用示例：
+@ValidatedValue(.isEmail)
+var email: String = &ldquo;&rdquo;</p>
+
+                        <a href="Classes/ValidatedValue.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@propertyWrapper</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">ValidatedValue</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ValidatedValue</span><span class="p">:</span> <span class="kt"><a href="Protocols/JSONMappedValue.html">JSONMappedValue</a></span></code></pre>
 
                         </div>
                       </div>
@@ -13322,7 +13325,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

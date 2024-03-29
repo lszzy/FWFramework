@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.2.0] - 2024-03-29
+
+### Changed
+* Added new macros such as MappedValueMacro to quickly write interface data models. FWMacro/Macros submodules need to be included.
+* Remove KeyMapping mode related methods from CodableModel and JSONModel because they are complex to use and do not support inheritance
+* MappedValue supports ignored configuration
+* JSONModel annotation MappedValue is compatible with ValidatedValue
+
 ## [5.1.0] - 2024-03-21
 
 ### Changed
