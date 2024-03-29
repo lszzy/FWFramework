@@ -11,7 +11,7 @@
 iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建模块化项目架构，方便iOS开发。
 
 	* 模块化架构设计，自带Mediator中间件、Router路由等组件
-	* 支持Swift协程async、await，属性注解propertyWrapper等高级特性
+	* 支持Swift协程async、await，属性注解propertyWrapper、宏等高级特性
 	* 轻松可定制的UI插件，自带弹窗、吐司、空界面、下拉刷新、图片选择等插件
 	* 完全可替换的网络图片、网络请求层，默认兼容SDWebImage、Alamofire等
 	* 自动更新的AutoLayout链式布局，常用的UI视图组件一应俱全
@@ -34,7 +34,9 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	target 'Example' do
 	  # 引入默认子模块
 	  pod 'FWFramework'
-	  
+   
+      # 引入宏子模块
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWMacro/Macros']   
 	  # 引入指定子模块，子模块列表详见podspec文件
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -46,7 +48,9 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	
 	# 勾选并引入默认子模块
 	import FWFramework
-	
+ 
+    # 勾选并引入宏子模块
+    import FWMacro   
 	# 勾选并引入指定子模块，子模块列表详见Package.swift文件
 	import FWSwiftUI
 
@@ -56,7 +60,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 ## [更新日志](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
-	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.1.0'
+	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.2.0'
 	2. 升级迁移到新版本，请留意版本更新日志。废弃Api会酌情迁移到Deprecated子模块，并在后续版本删除
 
 ### Swift

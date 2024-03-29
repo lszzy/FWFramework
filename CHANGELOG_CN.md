@@ -1,5 +1,13 @@
 # 更新日志
 
+## [5.2.0] - 2024-03-29
+
+### Changed
+* 新增MappedValueMacro等宏，快速编写接口数据模型，需引入FWMacro/Macros子模块
+* CodableModel和JSONModel移除KeyMapping模式相关方法，因为使用复杂且不支持继承
+* MappedValue支持ignored忽略配置
+* JSONModel注解MappedValue兼容ValidatedValue
+
 ## [5.1.0] - 2024-03-21
 
 ### Changed
