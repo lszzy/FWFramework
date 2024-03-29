@@ -297,7 +297,7 @@ extension Tests {
         func testMethod() {}
     }
     
-    @MappedValueMacro
+    @PropertyWrapperMacro("MappedValue")
     class TestSubMappedValueModel: TestMappedValueModel {
         var childId: Int = 0
         @MappedValue 
