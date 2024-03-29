@@ -17,7 +17,7 @@
     <a title="KeyMappable Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.1.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -394,9 +394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/JSONResponseSerializer.html">JSONResponseSerializer</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/KeyMap.html">KeyMap</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/KeychainManager.html">KeychainManager</a>
@@ -802,6 +799,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes.html#/c:@M@FWFramework@objc(cs)UnsafeObject">UnsafeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/VersionManager.html">VersionManager</a>
@@ -2422,9 +2422,6 @@
                 <a href="../Structs/ToggleWithSwitchStyleType/Style.html">– Style</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/ValidatedValue.html">ValidatedValue</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs/Validator.html">Validator</a>
               </li>
               <li class="nav-group-task">
@@ -2550,70 +2547,12 @@
           </section>
           <section class="section task-group-section">
             <div class="task-group">
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappableP4RootQa"></a>
-                    <a name="//apple_ref/swift/Alias/Root" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappableP4RootQa">Root</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">associatedtype</span> <span class="kt">Root</span> <span class="p">:</span> <span class="kt">KeyMappable</span> <span class="o">=</span> <span class="k">Self</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappableP10keyMappingSayAA0B3MapCy4RootQzGGvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/keyMapping" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappableP10keyMappingSayAA0B3MapCy4RootQzGGvpZ">keyMapping</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>模型Key键名映射声明，默认为空不生效</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="kt"><a href="../Protocols/KeyMappable.html#/s:11FWFramework11KeyMappableP4RootQa">Root</a></span><span class="o">&gt;</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
               <div class="task-name-container">
-                <a name="/Available%20where%20%60Root%60%20%3D%3D%20%60Self%60%2C%20%60Self%60%3A%20%60Codable%60%20%26%20%60ObjectType%60"></a>
-                <a name="//apple_ref/swift/Section/Available where `Root` == `Self`, `Self`: `Codable` &amp; `ObjectType`" class="dashAnchor"></a>
+                <a name="/Available%20where%20%60Self%60%3A%20%60Codable%60%20%26%20%60ObjectType%60"></a>
+                <a name="//apple_ref/swift/Section/Available where `Self`: `Codable` &amp; `ObjectType`" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Available%20where%20%60Root%60%20%3D%3D%20%60Self%60%2C%20%60Self%60%3A%20%60Codable%60%20%26%20%60ObjectType%60"></a>
-                  <h3 class="section-name"><span>Available where <code><a href="../Protocols/KeyMappable.html#/s:11FWFramework11KeyMappableP4RootQa">Root</a></code> == <code>Self</code>, <code>Self</code>: <code>Codable</code> &amp; <code><a href="../Protocols/ObjectType.html">ObjectType</a></code></span>
+                  <a class="section-name-link" href="#/Available%20where%20%60Self%60%3A%20%60Codable%60%20%26%20%60ObjectType%60"></a>
+                  <h3 class="section-name"><span>Available where <code>Self</code>: <code>Codable</code> &amp; <code><a href="../Protocols/ObjectType.html">ObjectType</a></code></span>
 </h3>
                 </div>
               </div>
@@ -2621,9 +2560,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE6encode2toys7Encoder_p_tKF"></a>
+                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE6encode2toys7Encoder_p_tKF"></a>
                     <a name="//apple_ref/swift/Method/encode(to:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE6encode2toys7Encoder_p_tKF">encode(to:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE6encode2toys7Encoder_p_tKF">encode(to:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2651,9 +2590,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE4fromxs7Decoder_p_tKcfc"></a>
+                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE4fromxs7Decoder_p_tKcfc"></a>
                     <a name="//apple_ref/swift/Method/init(from:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE4fromxs7Decoder_p_tKcfc">init(from:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE4fromxs7Decoder_p_tKcfc">init(from:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2681,159 +2620,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11encodeModel2toys7Encoder_p_tKF"></a>
-                    <a name="//apple_ref/swift/Method/encodeModel(to:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11encodeModel2toys7Encoder_p_tKF">encodeModel(to:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">encodeModel</span><span class="p">(</span><span class="n">to</span> <span class="nv">encoder</span><span class="p">:</span> <span class="kt">Encoder</span><span class="p">)</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11decodeModel4fromys7Decoder_p_tKF"></a>
-                    <a name="//apple_ref/swift/Method/decodeModel(from:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11decodeModel4fromys7Decoder_p_tKF">decodeModel(from:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">mutating</span> <span class="kd">func</span> <span class="nf">decodeModel</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11encodeValue2to4withys7Encoder_p_SayAA0B3MapCyxGGtKF"></a>
-                    <a name="//apple_ref/swift/Method/encodeValue(to:with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11encodeValue2to4withys7Encoder_p_SayAA0B3MapCyxGGtKF">encodeValue(to:<wbr>with:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">encodeValue</span><span class="p">(</span><span class="n">to</span> <span class="nv">encoder</span><span class="p">:</span> <span class="kt">Encoder</span><span class="p">,</span> <span class="n">with</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="k">Self</span><span class="o">&gt;</span><span class="p">])</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11decodeValue4from4withys7Decoder_p_SayAA0B3MapCyxGGtKF"></a>
-                    <a name="//apple_ref/swift/Method/decodeValue(from:with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE11decodeValue4from4withys7Decoder_p_SayAA0B3MapCyxGGtKF">decodeValue(from:<wbr>with:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">mutating</span> <span class="kd">func</span> <span class="nf">decodeValue</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">,</span> <span class="n">with</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="k">Self</span><span class="o">&gt;</span><span class="p">])</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE15decodeReference4from4withys7Decoder_p_SayAA0B3MapCyxGGtKF"></a>
-                    <a name="//apple_ref/swift/Method/decodeReference(from:with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE15decodeReference4from4withys7Decoder_p_SayAA0B3MapCyxGGtKF">decodeReference(from:<wbr>with:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">decodeReference</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">,</span> <span class="n">with</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="k">Self</span><span class="o">&gt;</span><span class="p">])</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE12encodeMirror2toys7Encoder_p_tKF"></a>
+                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE12encodeMirror2toys7Encoder_p_tKF"></a>
                     <a name="//apple_ref/swift/Method/encodeMirror(to:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE12encodeMirror2toys7Encoder_p_tKF">encodeMirror(to:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE12encodeMirror2toys7Encoder_p_tKF">encodeMirror(to:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2861,9 +2650,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE12decodeMirror4fromys7Decoder_p_tKF"></a>
+                    <a name="/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE12decodeMirror4fromys7Decoder_p_tKF"></a>
                     <a name="//apple_ref/swift/Method/decodeMirror(from:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERz4RootACQzRszrlE12decodeMirror4fromys7Decoder_p_tKF">decodeMirror(from:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A10ObjectTypeRzSeRzSERzrlE12decodeMirror4fromys7Decoder_p_tKF">decodeMirror(from:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2934,68 +2723,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE12mappingValue_03forB04withSbyp_SSSayAA0B3MapCyxGGtF"></a>
-                    <a name="//apple_ref/swift/Method/mappingValue(_:forKey:with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE12mappingValue_03forB04withSbyp_SSSayAA0B3MapCyxGGtF">mappingValue(_:<wbr>forKey:<wbr>with:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="k">mutating</span> <span class="kd">func</span> <span class="nf">mappingValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">with</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="k">Self</span><span class="o">&gt;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE16mappingReference_03forB04withSbyp_SSSayAA0B3MapCyxGGtF"></a>
-                    <a name="//apple_ref/swift/Method/mappingReference(_:forKey:with:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE16mappingReference_03forB04withSbyp_SSSayAA0B3MapCyxGGtF">mappingReference(_:<wbr>forKey:<wbr>with:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">func</span> <span class="nf">mappingReference</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">with</span> <span class="nv">keyMapping</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/KeyMap.html">KeyMap</a></span><span class="o">&lt;</span><span class="k">Self</span><span class="o">&gt;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE13mappingMirror_03forB0Sbyp_SStF"></a>
                     <a name="//apple_ref/swift/Method/mappingMirror(_:forKey:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRzrlE13mappingMirror_03forB0Sbyp_SStF">mappingMirror(_:<wbr>forKey:<wbr>)</a>
@@ -3026,53 +2753,10 @@
                 </li>
               </ul>
             </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Available%20where%20%60Root%60%20%3D%3D%20%60Self%60%2C%20%60Self%60%3A%20%60_ExtendCustomModelType%60"></a>
-                <a name="//apple_ref/swift/Section/Available where `Root` == `Self`, `Self`: `_ExtendCustomModelType`" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Available%20where%20%60Root%60%20%3D%3D%20%60Self%60%2C%20%60Self%60%3A%20%60_ExtendCustomModelType%60"></a>
-                  <h3 class="section-name"><span>Available where <code><a href="../Protocols/KeyMappable.html#/s:11FWFramework11KeyMappableP4RootQa">Root</a></code> == <code>Self</code>, <code>Self</code>: <code><a href="../Protocols/_ExtendCustomModelType.html">_ExtendCustomModelType</a></code></span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRz4RootACQzRszrlE12mappingValue_03forB0yyp_SStF"></a>
-                    <a name="//apple_ref/swift/Method/mappingValue(_:forKey:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11KeyMappablePA2A22_ExtendCustomModelTypeRz4RootACQzRszrlE12mappingValue_03forB0yyp_SStF">mappingValue(_:<wbr>forKey:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Extension method
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">mutating</span> <span class="kd">func</span> <span class="nf">mappingValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
