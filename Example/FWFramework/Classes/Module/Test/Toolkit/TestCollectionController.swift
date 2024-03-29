@@ -17,6 +17,9 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     var isWaterfall = false
     var pinHeader = false
     
+    @StoredValue("testCollectionRandomKey")
+    static var testRandomKey: String = ""
+    
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let result = UICollectionViewFlowLayout()
         result.minimumLineSpacing = 0
@@ -127,6 +130,9 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         let cell = TestCollectionDynamicLayoutCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        cell.imageClicked = { [weak self] object in
+            self?.onPhotoBrowser(cell, indexPath: indexPath)
+        }
         cell.object = collectionData[indexPath.row]
         return cell
     }
@@ -158,15 +164,15 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         if mode == 0 {
-            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (APP.screenWidth - 30) / 2.0 : APP.screenWidth, cacheBy: indexPath) { [weak self] cell in
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: isWaterfall ? (APP.screenWidth - 30) / 2.0 : APP.screenWidth/*, cacheBy: indexPath*/) { [weak self] cell in
                 cell.object = self?.collectionData[indexPath.row]
             }
         } else if mode == 1 {
-            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: APP.screenWidth - 30, cacheBy: indexPath) { [weak self] cell in
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, width: APP.screenWidth - 30/*, cacheBy: indexPath*/) { [weak self] cell in
                 cell.object = self?.collectionData[indexPath.row]
             }
         } else {
-            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, height: APP.screenHeight - APP.topBarHeight, cacheBy: indexPath) { [weak self] cell in
+            return collectionView.app.size(cellClass: TestCollectionDynamicLayoutCell.self, height: APP.screenHeight - APP.topBarHeight/*, cacheBy: indexPath*/) { [weak self] cell in
                 cell.object = self?.collectionData[indexPath.row]
             }
         }
@@ -312,12 +318,35 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
     }
     
+    func onPhotoBrowser(_ cell: TestCollectionDynamicLayoutCell, indexPath: IndexPath) {
+        var pictureUrls: [Any] = []
+        for object in self.collectionData {
+            if object.imageUrl.app.isValid(.isUrl) {
+                pictureUrls.append(object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(Self.testRandomKey)")
+            } else if object.imageUrl.isEmpty {
+                pictureUrls.append(object.imageUrl)
+            } else {
+                pictureUrls.append(ModuleBundle.imageNamed(object.imageUrl) as Any)
+            }
+        }
+        
+        app.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
+            let cell = self?.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? TestCollectionDynamicLayoutCell
+            return cell?.myImageView
+        } placeholderImage: { [weak self] index in
+            let cell = self?.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? TestCollectionDynamicLayoutCell
+            return cell?.myImageView.image
+        }
+    }
+    
 }
 
 class TestCollectionDynamicLayoutObject: NSObject {
     
     var title = ""
+    var oldTitle = ""
     var text = ""
+    var oldText = ""
     var imageUrl = ""
     var index: Int = 0
     
@@ -353,11 +382,15 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         }
     }
     
+    var imageClicked: ((TestCollectionDynamicLayoutObject) -> Void)?
+    
     lazy var myTitleLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
         result.textColor = AppTheme.textColor
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture(target: self, action: #selector(TestCollectionDynamicLayoutCell.onTitleClick(_:)))
         return result
     }()
     
@@ -366,12 +399,16 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
         result.textColor = AppTheme.textColor
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture(target: self, action: #selector(TestCollectionDynamicLayoutCell.onTextClick(_:)))
         return result
     }()
     
     lazy var myImageView: UIImageView = {
         let result = UIImageView()
         result.app.setContentModeAspectFill()
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture(target: self, action: #selector(TestCollectionDynamicLayoutCell.onImageClick(_:)))
         return result
     }()
     
@@ -408,6 +445,46 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func onImageClick(_ gesture: UIGestureRecognizer) {
+        if let object = object {
+            imageClicked?(object)
+        }
+    }
+    
+    @objc func onTitleClick(_ gesture: UIGestureRecognizer) {
+        guard let object = object else { return }
+        
+        if object.title != "收起标题，点击展开" {
+            object.oldTitle = object.title
+            object.title = "收起标题，点击展开"
+        } else {
+            object.title = object.oldTitle
+            object.oldTitle = ""
+        }
+        app.performBatchUpdates { collectionView, indexPath in
+            guard let indexPath = indexPath else { return }
+            
+            collectionView.reloadItems(at: [indexPath])
+        }
+    }
+    
+    @objc func onTextClick(_ gesture: UIGestureRecognizer) {
+        guard let object = object else { return }
+        
+        if object.text != "收起内容，点击展开" {
+            object.oldText = object.text
+            object.text = "收起内容，点击展开"
+        } else {
+            object.text = object.oldText
+            object.oldText = ""
+        }
+        app.performBatchUpdates { collectionView, indexPath in
+            guard let indexPath = indexPath else { return }
+            
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
 }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.1.0'
+  s.version               = '5.2.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
   s.ios.deployment_target = '13.0'
-  s.swift_version         = '5.7'
+  s.swift_version         = '5.9'
   s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
@@ -58,6 +58,43 @@ Pod::Spec.new do |s|
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
       }
+    end
+    
+    ss.subspec 'Macros' do |sss|
+      sss.source_files = 'Macros/FWMacro/**/*.swift'
+      sss.preserve_paths = [
+        'Macros/Package.swift',
+        'Macros/FWMacroMacros/**/*.swift'
+      ]
+      
+      product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
+      
+      script = <<-SCRIPT.squish
+        env -i PATH="$PATH" "$SHELL" -l -c
+        "swift build -c release --disable-sandbox
+        --package-path \\"$PODS_TARGET_SRCROOT/Macros\\"
+        --scratch-path \\"#{product_folder}\\""
+      SCRIPT
+      
+      sss.script_phase = {
+        :name => 'Build FWFramework macro plugin',
+        :script => script,
+        :input_files => Dir.glob("{Macros/Package.swift, Macros/FWMacroMacros/**/*.swift}").map {
+          |path| "$(PODS_TARGET_SRCROOT)/#{path}"
+        },
+        :output_files => ["#{product_folder}/release/FWMacroMacros"],
+        :execution_position => :before_compile
+      }
+      
+      xcode_config = {
+        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
+        'OTHER_SWIFT_FLAGS' => <<-FLAGS.squish
+        -Xfrontend -load-plugin-executable
+        -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
+        FLAGS
+      }
+      sss.user_target_xcconfig = xcode_config
+      sss.pod_target_xcconfig = xcode_config
     end
   end
   

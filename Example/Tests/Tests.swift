@@ -1,5 +1,8 @@
 import XCTest
 @_spi(FW) import FWFramework
+#if FWMacroSPM
+import FWMacro
+#endif
 
 class Tests: XCTestCase {
     
@@ -279,6 +282,32 @@ extension Tests {
     class TestParameter: Router.Parameter {
         @MappedValue var isTrue: Bool = false
         var ignoreValue: Int = 0
+    }
+    
+    @MappedValueMacro
+    class TestMappedValueModel {
+        var id: Int = 0
+        @MappedValue
+        var name: String?
+        
+        var _ignoreValue: String?
+        var ignoreValue_: String?
+        var ignoreValue: String { "" }
+        static var staticId: Int = 0
+        func testMethod() {}
+    }
+    
+    @PropertyWrapperMacro("MappedValue")
+    class TestSubMappedValueModel: TestMappedValueModel {
+        var childId: Int = 0
+        @MappedValue 
+        var childName: String?
+        
+        var _childIgnoreValue: String?
+        var childIgnoreValue_: String?
+        var childIgnoreValue: String { "" }
+        static var staticChildId: Int = 0
+        func childTestMethod() {}
     }
     
     enum TestEnum: Equatable {

@@ -16,16 +16,15 @@ import UIKit
 /// 1. 支持JSONModel类型字段，使用方式：@MappedValue
 /// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
 /// 3. 支持Any类型字段，使用方式：@MappedValue
-/// 4. 未标记MappedValue的字段自动忽略
+/// 4. 未标记MappedValue的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
 ///
-/// KeyMappable模式二：KeyMapping模式
-/// 1. 完整定义映射字段列表，使用方式：static let keyMapping: [KeyMap<Self>] = [...]
-/// 2. 支持多字段映射，使用方式：KeyMap(\.name, to: "name1", "name2")
-/// 3. 支持Any类型，使用方式同上，加入keyMapping即可
-/// 4. 未加入keyMapping的字段自动忽略
+/// KeyMappable模式二：MappedValueMacro模式(需引入FWMacro子模块)
+/// 1. 标记class或struct为自动映射存储属性宏，使用方式：@MappedValueMacro
+/// 2. 可自定义字段映射规则，使用方式：@MappedValue("name1", "name2")
+/// 3. 以下划线开头或结尾的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
 ///
 /// KeyMappable模式三：自定义模式
-/// 1. 需完整实现JSONModel协议的shouldMappingValue()和mappingValue(_:forKey:)协议方法
+/// 1. 需完整实现JSONModel协议的mappingValue(_:forKey:)协议方法
 ///
 /// [HandyJSON](https://github.com/alibaba/HandyJSON)
 public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
@@ -465,7 +464,6 @@ public protocol _ExtendCustomModelType: _Transformable {
     mutating func willStartMapping()
     mutating func mapping(mapper: HelpingMapper)
     mutating func didFinishMapping()
-    static func shouldMappingValue() -> Bool
     mutating func mappingValue(_ value: Any, forKey key: String)
 }
 
@@ -473,7 +471,6 @@ extension _ExtendCustomModelType {
     public mutating func willStartMapping() {}
     public mutating func mapping(mapper: HelpingMapper) {}
     public mutating func didFinishMapping() {}
-    public static func shouldMappingValue() -> Bool { false }
     public mutating func mappingValue(_ value: Any, forKey key: String) {}
 }
 
@@ -557,7 +554,7 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let address = !(instance is any KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: property) : nil
+            let address = !(instance is KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: property) : nil
             let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: address, bridged: isBridgedProperty)
             if mapper.propertyExcluded(property: propertyDetail) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
@@ -680,8 +677,18 @@ extension _ExtendCustomModelType {
     }
     
     static func getProperties<T: _ExtendCustomModelType>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        if let instance = instance as? any _ExtendCustomModelType & KeyMappable {
-            return getMappingProperties(for: instance, mapper: mapper, children: children)
+        if instance is KeyMappable {
+            let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
+            return children.map { child in
+                if let value = child.1 as? JSONMappedValue {
+                    if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
+                        mapper.specify(key: child.0, names: mappingKeys)
+                    }
+                    return Property.Description(key: child.0, type: type(of: value.mappingValue()), offset: 0)
+                } else {
+                    return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
+                }
+            }
         } else {
             if JSONModelConfiguration.memoryMode {
                 return getProperties(for: type(of: instance))
@@ -690,31 +697,11 @@ extension _ExtendCustomModelType {
         }
     }
     
-    static func getMappingProperties<T: _ExtendCustomModelType & KeyMappable>(for instance: T, mapper: HelpingMapper, children: [(String, Any)]? = nil) -> [Property.Description]? {
-        for keyMap in type(of: instance).keyMapping {
-            if keyMap.mappingKeys.count > 1 {
-                mapper.specify(key: keyMap.mappingKeys.first!, names: Array(keyMap.mappingKeys.dropFirst()))
-            }
-        }
-        
-        let children = children ?? readAllChildrenFrom(mirror: Mirror(reflecting: instance))
-        return children.map { child in
-            if let value = child.1 as? JSONMappedValue {
-                if let mappingKeys = value.mappingKeys(), !mappingKeys.isEmpty {
-                    mapper.specify(key: child.0, names: mappingKeys)
-                }
-                return Property.Description(key: child.0, type: type(of: value.mappingValue()), offset: 0)
-            } else {
-                return Property.Description(key: child.0, type: type(of: child.1), offset: 0)
-            }
-        }
-    }
-    
     static func assignProperty(convertedValue: Any, instance: inout Self, property: PropertyInfo) {
         if property.bridged {
             (instance as! NSObject).setValue(convertedValue, forKey: property.key)
         } else {
-            if instance is any KeyMappable {
+            if instance is KeyMappable {
                 instance.mappingValue(convertedValue, forKey: property.key)
             } else {
                 if JSONModelConfiguration.memoryMode {
@@ -759,7 +746,7 @@ extension _ExtendCustomModelType {
             let instanceIsNsObject = instance.isNSObjectType()
             let bridgedProperty = instance.getBridgedPropertyList()
             let propertyInfos = properties.map({ (desc) -> PropertyInfo in
-                let address = !(instance is any KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: desc) : nil
+                let address = !(instance is KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: desc) : nil
                 return PropertyInfo(key: desc.key, type: desc.type, address: address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             })
 
@@ -2522,26 +2509,6 @@ public extension KeyMappable where Self: _ExtendCustomModelType {
     }
     
     @discardableResult
-    mutating func mappingValue(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
-        for keyMap in keyMapping {
-            if keyMap.mapping(&self, value: value, forKey: key) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    @discardableResult
-    func mappingReference(_ value: Any, forKey key: String, with keyMapping: [KeyMap<Self>]) -> Bool {
-        for keyMap in keyMapping {
-            if keyMap.mappingReference(self, value: value, forKey: key) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    @discardableResult
     func mappingMirror(_ value: Any, forKey key: String) -> Bool {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
@@ -2558,45 +2525,6 @@ public extension KeyMappable where Self: _ExtendCustomModelType {
     }
 }
 
-public extension KeyMappable where Root == Self, Self: _ExtendCustomModelType {
-    mutating func mappingValue(_ value: Any, forKey key: String) {
-        if !mappingValue(value, forKey: key, with: Self.keyMapping) {
-            mappingMirror(value, forKey: key)
-        }
-    }
-}
-
-// MARK: - KeyMap
-public extension KeyMap where Root: _ExtendCustomModelType {
-    convenience init<Value>(_ keyPath: WritableKeyPath<Root, Value>, to mappingKeys: String ...) {
-        self.init(mappingKeys: mappingKeys, mapping: { root, value in
-            root[keyPath: keyPath] = value as! Value
-        }, mappingReference: nil)
-    }
-    
-    convenience init<Value>(ref keyPath: ReferenceWritableKeyPath<Root, Value>, to mappingKeys: String ...) {
-        self.init(mappingKeys: mappingKeys, mapping: nil, mappingReference: { root, value in
-            root[keyPath: keyPath] = value as! Value
-        })
-    }
-    
-    func mapping(_ root: inout Root, value: Any, forKey key: String) -> Bool {
-        if key == mappingKeys.first {
-            mapping?(&root, value)
-            return true
-        }
-        return false
-    }
-    
-    func mappingReference(_ root: Root, value: Any, forKey key: String) -> Bool {
-        if key == mappingKeys.first {
-            mappingReference?(root, value)
-            return true
-        }
-        return false
-    }
-}
-
 // MARK: - MappedValue
 public protocol JSONMappedValue {
     func mappingKeys() -> [String]?
@@ -2605,7 +2533,47 @@ public protocol JSONMappedValue {
 }
 
 extension MappedValue: JSONMappedValue {
-    public func mappingKeys() -> [String]? { stringKeys }
-    public func mappingValue() -> Any { wrappedValue }
-    public func mappingValue(_ value: Any) { wrappedValue = value as! Value }
+    public func mappingKeys() -> [String]? {
+        stringKeys
+    }
+    
+    public func mappingValue() -> Any {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            return wrapped.mappingValue()
+        } else {
+            return wrappedValue
+        }
+    }
+    
+    public func mappingValue(_ value: Any) {
+        guard !ignored else { return }
+        
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            wrapped.mappingValue(value)
+        } else {
+            wrappedValue = value as! Value
+        }
+    }
+}
+
+extension ValidatedValue: JSONMappedValue {
+    public func mappingKeys() -> [String]? {
+        nil
+    }
+    
+    public func mappingValue() -> Any {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            return wrapped.mappingValue()
+        } else {
+            return wrappedValue
+        }
+    }
+    
+    public func mappingValue(_ value: Any) {
+        if let wrapped = wrappedValue as? JSONMappedValue {
+            wrapped.mappingValue(value)
+        } else {
+            wrappedValue = value as! Value
+        }
+    }
 }
