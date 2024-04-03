@@ -200,24 +200,34 @@ open class PopupMenuDeviceOrientationManager: NSObject {
     
     open var deviceOrientationDidChangeHandler: ((UIInterfaceOrientation) -> Void)?
     
+    private var isGeneratingDeviceOrientationNotifications = false
+    
     /// 开始监听
     open func startMonitorDeviceOrientation() {
         guard autoRotateWhenDeviceOrientationChanged else { return }
-        NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
+        isGeneratingDeviceOrientationNotifications = UIDevice.current.isGeneratingDeviceOrientationNotifications
+        if !isGeneratingDeviceOrientationNotifications {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     /// 停止监听
     open func stopMonitorDeviceOrientation() {
         guard autoRotateWhenDeviceOrientationChanged else { return }
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+        if !isGeneratingDeviceOrientationNotifications {
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        }
     }
     
     @objc func deviceOrientationDidChange(_ notify: Notification) {
         guard autoRotateWhenDeviceOrientationChanged else { return }
-        let orientationNumber = notify.userInfo?[UIApplication.statusBarOrientationUserInfoKey] as? NSNumber
-        if let orientationValue = orientationNumber?.intValue,
-           let orientation = UIInterfaceOrientation(rawValue: orientationValue) {
-            deviceOrientationDidChangeHandler?(orientation)
+        let orientation = UIWindow.fw_mainScene?.interfaceOrientation
+        if let orientation = orientation, orientation != .unknown {
+            DispatchQueue.main.async { [weak self] in
+                self?.deviceOrientationDidChangeHandler?(orientation)
+            }
         }
     }
     
