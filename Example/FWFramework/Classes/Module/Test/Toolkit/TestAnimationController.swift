@@ -112,7 +112,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             animationView.app.addTransition(type: .push, subtype: .fromTop, timingFunction: .init(name: .easeInEaseOut), duration: 1.0)
         } else if animationIndex == 2 {
             title = "CurlUp"
-            animationView.app.addAnimation(curve: .easeInOut, transition: .curlUp, duration: 1.0)
+            animationView.app.addAnimation(curve: .curveEaseInOut, transition: .transitionCurlUp, duration: 1.0)
         } else if animationIndex == 3 {
             title = "transform.rotation.y"
             animationView.app.addAnimation(keyPath: "transform.rotation.y", fromValue: NSNumber(value: 0), toValue: NSNumber(value: CGFloat.pi), duration: 1.0)
