@@ -108,14 +108,9 @@ extension Wrapper where Base: UIDevice {
         return Base.fw_hostName
     }
     
-    /// 手机运营商名称
-    public static var carrierName: String? {
-        return Base.fw_carrierName
-    }
-    
-    /// 手机蜂窝网络类型，仅区分2G|3G|4G|5G
-    public static var networkType: String? {
-        return Base.fw_networkType
+    /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
+    public static var networkTypes: [String]? {
+        return Base.fw_networkTypes
     }
 }
 
@@ -1541,16 +1536,16 @@ extension Wrapper where Base: UIViewController {
         #endif
     }
     
-    /// 手机运营商名称
-    public static var fw_carrierName: String? {
-        return fw_networkInfo.subscriberCellularProvider?.carrierName
+    /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
+    public static var fw_networkTypes: [String]? {
+        guard let currentRadio = fw_networkInfo.serviceCurrentRadioAccessTechnology else {
+            return nil
+        }
+        
+        return currentRadio.values.compactMap { fw_networkType($0) }
     }
     
-    /// 手机蜂窝网络类型，仅区分2G|3G|4G|5G
-    public static var fw_networkType: String? {
-        var networkType: String?
-        guard let accessTechnology = fw_networkInfo.currentRadioAccessTechnology else { return networkType }
-        
+    private static func fw_networkType(_ accessTechnology: String) -> String? {
         let types2G = [
             CTRadioAccessTechnologyGPRS,
             CTRadioAccessTechnologyEdge,
@@ -1576,6 +1571,7 @@ extension Wrapper where Base: UIViewController {
             ]
         }
         
+        var networkType: String?
         if types5G.contains(accessTechnology) {
             networkType = "5G"
         } else if types4G.contains(accessTechnology) {
