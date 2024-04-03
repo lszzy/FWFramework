@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CommonCrypto
+import CryptoKit
 
 // MARK: - Wrapper
 /// 包装器安全转换，不为nil
@@ -178,11 +178,6 @@ extension Wrapper where Base == String {
     /// md5编码
     public var md5Encode: String {
         return base.fw_md5Encode
-    }
-    
-    /// 文件md5编码
-    public var md5EncodeFile: String? {
-        return base.fw_md5EncodeFile
     }
     
     /// 去掉首尾空白字符
@@ -561,31 +556,9 @@ extension Wrapper where Base == URL {
     
     /// md5编码
     public var fw_md5Encode: String {
-        let utf8 = self.cString(using: .utf8)
-        let length = CC_LONG(self.lengthOfBytes(using: .utf8))
-        var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        CC_MD5(utf8, length, &digest)
-        return digest.reduce("") { $0 + String(format: "%02x", $1) }
-    }
-    
-    /// 文件md5编码
-    public var fw_md5EncodeFile: String? {
-        guard let file = FileHandle(forReadingAtPath: self) else { return nil }
-        defer { file.closeFile() }
-        
-        var ctx = CC_MD5_CTX()
-        CC_MD5_Init(&ctx)
-        while case let data = file.readData(ofLength: 1024 * 64), data.count > 0 {
-            _ = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
-                CC_MD5_Update(&ctx, bytes.baseAddress, CC_LONG(data.count))
-            }
-        }
-        
-        var digest = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-        _ = digest.withUnsafeMutableBytes { (bytes: UnsafeMutableRawBufferPointer) in
-            CC_MD5_Final(bytes.bindMemory(to: UInt8.self).baseAddress, &ctx)
-        }
-        return digest.map { String(format: "%02hhx", $0) }.joined()
+        let data = self.data(using: .utf8) ?? .init()
+        let digest = Insecure.MD5.hash(data: data)
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
     
     /// 去掉首尾空白字符
