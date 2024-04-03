@@ -154,9 +154,8 @@ open class SecurityPolicy: NSObject {
     }
     
     private static func serverTrustIsValid(_ serverTrust: SecTrust) -> Bool {
-        var result: SecTrustResultType = .invalid
-        guard SecTrustEvaluate(serverTrust, &result) == errSecSuccess else { return false }
-        let isValid = result == .unspecified || result == .proceed
+        var error: CFError?
+        let isValid = SecTrustEvaluateWithError(serverTrust, &error)
         return isValid
     }
     
