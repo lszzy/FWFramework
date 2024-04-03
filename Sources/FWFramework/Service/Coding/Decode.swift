@@ -152,6 +152,23 @@ extension Optional {
         guard let this = self else { return nil }
         return try block(this)
     }
+    public func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
+        guard let value = self, predicate(value) else { return nil }
+        return value
+    }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: ((Wrapped) -> Wrapped)? = nil) -> Wrapped {
+        switch self {
+        case .some(let value):
+            if let block = block {
+                return block(value)
+            } else {
+                return value
+            }
+        case .none:
+            return defaultValue()
+        }
+    }
+    
 }
 
 private protocol _OptionalProtocol {
