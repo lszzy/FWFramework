@@ -47,6 +47,23 @@ open class LocationManager: NSObject, CLLocationManagerDelegate {
         return CLLocation(latitude: from.latitude, longitude: from.longitude).distance(from: CLLocation(latitude: to.latitude, longitude: to.longitude))
     }
     
+    /// 经纬度反解析为地址
+    @discardableResult
+    open class func reverseGeocode(_ coordinate: CLLocationCoordinate2D, locale: Locale? = nil, completionHandler: @escaping CLGeocodeCompletionHandler) -> CLGeocoder {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        geocoder.reverseGeocodeLocation(location, preferredLocale: locale, completionHandler: completionHandler)
+        return geocoder
+    }
+    
+    /// 地址解析为经纬度
+    @discardableResult
+    open class func geocode(_ address: String, region: CLRegion? = nil, locale: Locale? = nil, completionHandler: @escaping CLGeocodeCompletionHandler) -> CLGeocoder {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address, in: region, preferredLocale: locale, completionHandler: completionHandler)
+        return geocoder
+    }
+    
     /// 是否启用Always定位，默认NO，请求WhenInUse定位
     open var alwaysLocation: Bool = false
     
