@@ -460,7 +460,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 界面是否横屏
     public static var fw_isLandscape: Bool {
-        return UIApplication.shared.statusBarOrientation.isLandscape
+        return UIWindow.fw_mainScene?.interfaceOrientation.isLandscape ?? false
     }
     
     /// 设备是否横屏，无论支不支持横屏
@@ -655,8 +655,9 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
 
     /// 状态栏高度，与是否隐藏无关
     public static var fw_statusBarHeight: CGFloat {
-        if !UIApplication.shared.isStatusBarHidden {
-            return UIApplication.shared.statusBarFrame.height
+        if let statusBarManager = UIWindow.fw_mainScene?.statusBarManager,
+           !statusBarManager.isStatusBarHidden {
+            return statusBarManager.statusBarFrame.height
         }
         
         if UIDevice.fw_isIpad {
@@ -851,8 +852,9 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         }
         
         // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0
-        if UIApplication.shared.isStatusBarHidden { return 0 }
-        return UIApplication.shared.statusBarFrame.height
+        let statusBarManager = UIWindow.fw_mainScene?.statusBarManager
+        if statusBarManager?.isStatusBarHidden ?? false { return 0 }
+        return statusBarManager?.statusBarFrame.height ?? 0
     }
 
     /// 当前导航栏布局高度，隐藏时为0，推荐使用
