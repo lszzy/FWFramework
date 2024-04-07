@@ -289,7 +289,10 @@ public class ViewControllerManager: NSObject {
             }
             
             #if DEBUG
-            Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
+            let className = NSStringFromClass(selfObject.classForCoder).components(separatedBy: ".").last ?? ""
+            if !className.hasPrefix("_") && !className.hasSuffix("_") {
+                Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
+            }
             #endif
         }
     }
