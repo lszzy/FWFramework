@@ -16,9 +16,10 @@ extension Wrapper where Base: UIWindow {
         set { Base.fw_mainWindow = newValue }
     }
 
-    /// 获取当前主场景
+    /// 获取当前主场景，可自定义
     public static var mainScene: UIWindowScene? {
-        return Base.fw_mainScene
+        get { Base.fw_mainScene }
+        set { Base.fw_mainScene = newValue }
     }
     
     // MARK: - Public
@@ -188,7 +189,7 @@ extension Wrapper where Base: UINavigationController {
 
 // MARK: - NavigatorOptions
 /// 控制器导航选项定义
-public struct NavigatorOptions: OptionSet {
+public struct NavigatorOptions: OptionSet, JSONModelEnum {
     
     public let rawValue: Int
     
@@ -289,10 +290,7 @@ public class Navigator: NSObject {
             var mainWindow = UIWindow.fw_staticWindow
             if mainWindow != nil { return mainWindow }
             
-            mainWindow = UIApplication.shared.keyWindow
-            if mainWindow == nil {
-                mainWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
-            }
+            mainWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
             
             #if DEBUG
             // DEBUG模式时兼容FLEX、FWDebug等组件
@@ -313,18 +311,18 @@ public class Navigator: NSObject {
         }
     }
     
-    private static var fw_staticWindow: UIWindow?
-
-    /// 获取当前主场景
+    /// 获取当前主场景，可自定义
     public static var fw_mainScene: UIWindowScene? {
-        for scene in UIApplication.shared.connectedScenes {
-            if scene.activationState == .foregroundActive,
-               let windowScene = scene as? UIWindowScene {
-                return windowScene
-            }
+        get {
+            return fw_staticScene ?? fw_mainWindow?.windowScene
         }
-        return nil
+        set {
+            fw_staticScene = newValue
+        }
     }
+    
+    private static var fw_staticWindow: UIWindow?
+    private static var fw_staticScene: UIWindowScene?
     
     // MARK: - Public
     /// 获取最顶部的视图控制器

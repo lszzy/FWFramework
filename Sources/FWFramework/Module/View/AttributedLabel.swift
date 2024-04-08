@@ -485,12 +485,24 @@ open class AttributedLabel: UIView {
         var paragraphSpacing = self.paragraphSpacing
 
         let settings: [CTParagraphStyleSetting] = [
-            CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: &textAlignment),
-            CTParagraphStyleSetting(spec: .lineBreakMode, valueSize: MemoryLayout<CTLineBreakMode>.size, value: &lineBreakMode),
-            CTParagraphStyleSetting(spec: .maximumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
-            CTParagraphStyleSetting(spec: .minimumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
-            CTParagraphStyleSetting(spec: .paragraphSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &paragraphSpacing),
-            CTParagraphStyleSetting(spec: .minimumLineHeight, valueSize: MemoryLayout<CGFloat>.size, value: &fontLineHeight)
+            withUnsafePointer(to: &textAlignment) { ptr in
+                CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: ptr)
+            },
+            withUnsafePointer(to: &lineBreakMode) { ptr in
+                CTParagraphStyleSetting(spec: .lineBreakMode, valueSize: MemoryLayout<CTLineBreakMode>.size, value: ptr)
+            },
+            withUnsafePointer(to: &lineSpacing) { ptr in
+                CTParagraphStyleSetting(spec: .maximumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: ptr)
+            },
+            withUnsafePointer(to: &lineSpacing) { ptr in
+                CTParagraphStyleSetting(spec: .minimumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: ptr)
+            },
+            withUnsafePointer(to: &paragraphSpacing) { ptr in
+                CTParagraphStyleSetting(spec: .paragraphSpacing, valueSize: MemoryLayout<CGFloat>.size, value: ptr)
+            },
+            withUnsafePointer(to: &fontLineHeight) { ptr in
+                CTParagraphStyleSetting(spec: .minimumLineHeight, valueSize: MemoryLayout<CGFloat>.size, value: ptr)
+            }
         ]
         let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
         drawString.addAttribute(.init(kCTParagraphStyleAttributeName as String), value: paragraphStyle, range: NSMakeRange(0, drawString.length))

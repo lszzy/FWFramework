@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.2.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -4437,14 +4437,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>获取当前主场景</p>
+                        <p>获取当前主场景，可自定义</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">mainScene</span><span class="p">:</span> <span class="kt">UIWindowScene</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">mainScene</span><span class="p">:</span> <span class="kt">UIWindowScene</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -23361,33 +23361,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASSRszlE13md5EncodeFileSSSgvp"></a>
-                    <a name="//apple_ref/swift/Property/md5EncodeFile" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASSRszlE13md5EncodeFileSSSgvp">md5EncodeFile</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>文件md5编码</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">md5EncodeFile</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework7WrapperCAASSRszlE10trimStringSSvp"></a>
                     <a name="//apple_ref/swift/Property/trimString" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASSRszlE10trimStringSSvp">trimString</a>
@@ -39288,9 +39261,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5block8duration10completionyyyc_SdySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/addAnimation(block:duration:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5block8duration10completionyyyc_SdySbcSgtF">addAnimation(block:<wbr>duration:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5block8duration7options10completionyyyc_SdSo0cE7OptionsVSgySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/addAnimation(block:duration:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5block8duration7options10completionyyyc_SdSo0cE7OptionsVSgySbcSgtF">addAnimation(block:<wbr>duration:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -39301,8 +39274,9 @@
                         <p>添加UIView动画，使用默认动画参数
 @note 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同</p>
 
-<p>@param block      动画代码块
+<p>@param block       动画代码块
 @param duration   持续时间
+@param options    动画选项，默认7&lt;&lt;16
 @param completion 完成事件</p>
 
                       </div>
@@ -39310,7 +39284,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addAnimation</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addAnimation</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -39320,9 +39294,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5curve10transition8duration10completionySo0cE5CurveV_So0cE10TransitionVSdySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/addAnimation(curve:transition:duration:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5curve10transition8duration10completionySo0cE5CurveV_So0cE10TransitionVSdySbcSgtF">addAnimation(curve:<wbr>transition:<wbr>duration:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5curve10transition8duration10animations10completionySo0cE7OptionsV_AMSdyycSgySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/addAnimation(curve:transition:duration:animations:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12addAnimation5curve10transition8duration10animations10completionySo0cE7OptionsV_AMSdyycSgySbcSgtF">addAnimation(curve:<wbr>transition:<wbr>duration:<wbr>animations:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -39335,6 +39309,7 @@
 <p>@param curve      动画速度
 @param transition 动画类型
 @param duration   持续时间，默认0.2
+@param animations 动画句柄
 @param completion 完成事件</p>
 
                       </div>
@@ -39342,7 +39317,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addAnimation</span><span class="p">(</span><span class="nv">curve</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationCurve</span><span class="p">,</span> <span class="nv">transition</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationTransition</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addAnimation</span><span class="p">(</span><span class="nv">curve</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">,</span> <span class="nv">transition</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">animations</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -39387,9 +39362,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTransition6option5block8duration17animationsEnabled10completionySo0C16AnimationOptionsV_yycSdSbySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/addTransition(option:block:duration:animationsEnabled:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTransition6option5block8duration17animationsEnabled10completionySo0C16AnimationOptionsV_yycSdSbySbcSgtF">addTransition(option:<wbr>block:<wbr>duration:<wbr>animationsEnabled:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTransition7options5block8duration17animationsEnabled10completionySo0C16AnimationOptionsV_yycSdSbySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/addTransition(options:block:duration:animationsEnabled:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13addTransition7options5block8duration17animationsEnabled10completionySo0C16AnimationOptionsV_yycSdSbySbcSgtF">addTransition(options:<wbr>block:<wbr>duration:<wbr>animationsEnabled:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -39399,9 +39374,9 @@
                       <div class="abstract">
                         <p>添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController</p>
 
-<p>@param option     动画选项
+<p>@param options   动画选项
 @param block      动画代码块
-@param duration   持续时间
+@param duration  持续时间
 @param animationsEnabled 是否启用动画，默认true
 @param completion 完成事件</p>
 
@@ -39410,7 +39385,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTransition</span><span class="p">(</span><span class="nv">option</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">animationsEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addTransition</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span> <span class="o">=</span> <span class="p">[],</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">animationsEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -42102,33 +42077,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIFontCRbzlE11pointHeight8expected14CoreFoundation7CGFloatVAJ_tF"></a>
-                    <a name="//apple_ref/swift/Method/pointHeight(expected:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIFontCRbzlE11pointHeight8expected14CoreFoundation7CGFloatVAJ_tF">pointHeight(expected:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">pointHeight</span><span class="p">(</span><span class="nv">expected</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo6UIFontCRbzlE14baselineOffsety14CoreFoundation7CGFloatVAEF"></a>
                     <a name="//apple_ref/swift/Method/baselineOffset(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIFontCRbzlE14baselineOffsety14CoreFoundation7CGFloatVAEF">baselineOffset(_:<wbr>)</a>
@@ -44571,9 +44519,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11carrierNameSSSgvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/carrierName" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11carrierNameSSSgvpZ">carrierName</a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE12networkTypesSaySSGSgvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/networkTypes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE12networkTypesSaySSGSgvpZ">networkTypes</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -44581,41 +44529,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>手机运营商名称</p>
+                        <p>手机蜂窝网络类型列表，仅区分2G|3G|4G|5G</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">carrierName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11networkTypeSSSgvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/networkType" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11networkTypeSSSgvpZ">networkType</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>手机蜂窝网络类型，仅区分2G|3G|4G|5G</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">networkType</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">networkTypes</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -50070,7 +49991,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

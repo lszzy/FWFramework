@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.2.0'
+  s.version               = '5.2.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -62,39 +62,42 @@ Pod::Spec.new do |s|
     
     ss.subspec 'Macros' do |sss|
       sss.source_files = 'Macros/FWMacro/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework'
       sss.preserve_paths = [
         'Macros/Package.swift',
         'Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
-      
-      script = <<-SCRIPT.squish
+      build_script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
         --package-path \\"$PODS_TARGET_SRCROOT/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
+      swift_flags = <<-FLAGS.squish
+        -Xfrontend -load-plugin-executable
+        -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
+      FLAGS
       
       sss.script_phase = {
         :name => 'Build FWFramework macro plugin',
-        :script => script,
+        :script => build_script,
         :input_files => Dir.glob("{Macros/Package.swift, Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
         :execution_position => :before_compile
       }
-      
-      xcode_config = {
+      sss.user_target_xcconfig = {
         'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
-        'OTHER_SWIFT_FLAGS' => <<-FLAGS.squish
-        -Xfrontend -load-plugin-executable
-        -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
-        FLAGS
+        'OTHER_SWIFT_FLAGS' => swift_flags
       }
-      sss.user_target_xcconfig = xcode_config
-      sss.pod_target_xcconfig = xcode_config
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroMacros',
+        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
+        'OTHER_SWIFT_FLAGS' => swift_flags
+      }
     end
   end
   

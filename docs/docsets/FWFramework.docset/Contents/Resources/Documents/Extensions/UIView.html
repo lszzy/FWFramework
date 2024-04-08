@@ -17,7 +17,7 @@
     <a title="UIView Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.2.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -10601,9 +10601,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So6UIViewC11FWFrameworkE15fw_addAnimation5block8duration10completionyyyc_SdySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_addAnimation(block:duration:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE15fw_addAnimation5block8duration10completionyyyc_SdySbcSgtF">fw_addAnimation(block:<wbr>duration:<wbr>completion:<wbr>)</a>
+                    <a name="/s:So6UIViewC11FWFrameworkE15fw_addAnimation5block8duration7options10completionyyyc_SdSo0aE7OptionsVSgySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fw_addAnimation(block:duration:options:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE15fw_addAnimation5block8duration7options10completionyyyc_SdSo0aE7OptionsVSgySbcSgtF">fw_addAnimation(block:<wbr>duration:<wbr>options:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -10614,8 +10614,9 @@
                         <p>添加UIView动画，使用默认动画参数
 @note 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同</p>
 
-<p>@param block      动画代码块
+<p>@param block       动画代码块
 @param duration   持续时间
+@param options    动画选项，默认7&lt;&lt;16
 @param completion 完成事件</p>
 
                       </div>
@@ -10626,6 +10627,7 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_addAnimation</span><span class="p">(</span>
     <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span>
+    <span class="nv">options</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
 
@@ -10637,9 +10639,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So6UIViewC11FWFrameworkE15fw_addAnimation5curve10transition8duration10completionySo0aE5CurveV_So0aE10TransitionVSdySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_addAnimation(curve:transition:duration:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE15fw_addAnimation5curve10transition8duration10completionySo0aE5CurveV_So0aE10TransitionVSdySbcSgtF">fw_addAnimation(curve:<wbr>transition:<wbr>duration:<wbr>completion:<wbr>)</a>
+                    <a name="/s:So6UIViewC11FWFrameworkE15fw_addAnimation5curve10transition8duration10animations10completionySo0aE7OptionsV_AKSdyycSgySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fw_addAnimation(curve:transition:duration:animations:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE15fw_addAnimation5curve10transition8duration10animations10completionySo0aE7OptionsV_AKSdyycSgySbcSgtF">fw_addAnimation(curve:<wbr>transition:<wbr>duration:<wbr>animations:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -10652,6 +10654,7 @@
 <p>@param curve      动画速度
 @param transition 动画类型
 @param duration   持续时间，默认0.2
+@param animations 动画句柄
 @param completion 完成事件</p>
 
                       </div>
@@ -10660,9 +10663,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_addAnimation</span><span class="p">(</span>
-    <span class="nv">curve</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationCurve</span><span class="p">,</span>
-    <span class="nv">transition</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationTransition</span><span class="p">,</span>
+    <span class="nv">curve</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">,</span>
+    <span class="nv">transition</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span><span class="p">,</span>
     <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span>
+    <span class="nv">animations</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
 
@@ -10715,9 +10719,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So6UIViewC11FWFrameworkE16fw_addTransition6option5block8duration17animationsEnabled10completionySo0A16AnimationOptionsV_yycSdSbySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_addTransition(option:block:duration:animationsEnabled:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE16fw_addTransition6option5block8duration17animationsEnabled10completionySo0A16AnimationOptionsV_yycSdSbySbcSgtF">fw_addTransition(option:<wbr>block:<wbr>duration:<wbr>animationsEnabled:<wbr>completion:<wbr>)</a>
+                    <a name="/s:So6UIViewC11FWFrameworkE16fw_addTransition7options5block8duration17animationsEnabled10completionySo0A16AnimationOptionsV_yycSdSbySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/fw_addTransition(options:block:duration:animationsEnabled:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:So6UIViewC11FWFrameworkE16fw_addTransition7options5block8duration17animationsEnabled10completionySo0A16AnimationOptionsV_yycSdSbySbcSgtF">fw_addTransition(options:<wbr>block:<wbr>duration:<wbr>animationsEnabled:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -10727,9 +10731,9 @@
                       <div class="abstract">
                         <p>添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController</p>
 
-<p>@param option     动画选项
+<p>@param options   动画选项
 @param block      动画代码块
-@param duration   持续时间
+@param duration  持续时间
 @param animationsEnabled 是否启用动画，默认true
 @param completion 完成事件</p>
 
@@ -10739,7 +10743,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_addTransition</span><span class="p">(</span>
-    <span class="nv">option</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nv">options</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">.</span><span class="kt">AnimationOptions</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span>
     <span class="nv">animationsEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
@@ -12797,7 +12801,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
