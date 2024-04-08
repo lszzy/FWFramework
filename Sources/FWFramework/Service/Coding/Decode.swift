@@ -265,18 +265,6 @@ extension Dictionary: BasicType {
         keys.forEach { removeValue(forKey: $0) }
     }
 }
-extension CGFloat: BasicType {
-    public var isValid: Bool { return !isNaN && !isInfinite }
-}
-extension CGPoint: BasicType {
-    public var isValid: Bool { return x.isValid && y.isValid }
-}
-extension CGSize: BasicType {
-    public var isValid: Bool { return width.isValid && height.isValid }
-}
-extension CGRect: BasicType {
-    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
-}
 
 // MARK: - AnyParameter
 public protocol AnyParameter {}

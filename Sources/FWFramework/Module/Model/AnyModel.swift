@@ -57,10 +57,6 @@ extension String: AnyModel {}
 extension Array: AnyModel {}
 extension Set: AnyModel {}
 extension Dictionary: AnyModel {}
-extension CGFloat: AnyModel {}
-extension CGPoint: AnyModel {}
-extension CGSize: AnyModel {}
-extension CGRect: AnyModel {}
 
 extension AnyModel where Self: BasicType {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径

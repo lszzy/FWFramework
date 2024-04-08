@@ -127,8 +127,4 @@ extension URL: WrapperCompatible {}
 extension Array: WrapperCompatible {}
 extension Set: WrapperCompatible {}
 extension Dictionary: WrapperCompatible {}
-extension CGFloat: WrapperCompatible {}
-extension CGPoint: WrapperCompatible {}
-extension CGSize: WrapperCompatible {}
-extension CGRect: WrapperCompatible {}
 extension NSObject: WrapperCompatible {}
