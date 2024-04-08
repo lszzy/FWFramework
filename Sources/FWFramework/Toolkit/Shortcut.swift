@@ -10,10 +10,6 @@ import UIKit
 // MARK: - Adaptive+Shortcut
 extension CGFloat {
     
-    /// 判断是否有效值
-    public var isValid: Bool { return !isNaN && !isInfinite }
-    /// 判断是否非空值
-    public var isNotEmpty: Bool { return self != .zero }
     /// 获取相对设计图宽度等比例缩放值
     public var relative: CGFloat { UIScreen.fw_relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
@@ -27,10 +23,6 @@ extension CGFloat {
 
 extension CGSize {
     
-    /// 判断是否有效值
-    public var isValid: Bool { return width.isValid && height.isValid }
-    /// 判断是否非空值
-    public var isNotEmpty: Bool { return self != .zero }
     /// 获取相对设计图宽度等比例缩放size
     public var relative: CGSize { CGSize(width: width.relative, height: height.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定size
@@ -44,10 +36,6 @@ extension CGSize {
 
 extension CGPoint {
     
-    /// 判断是否有效值
-    public var isValid: Bool { return x.isValid && y.isValid }
-    /// 判断是否非空值
-    public var isNotEmpty: Bool { return self != .zero }
     /// 获取相对设计图宽度等比例缩放point
     public var relative: CGPoint { CGPoint(x: x.relative, y: y.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定point
@@ -61,10 +49,6 @@ extension CGPoint {
 
 extension CGRect {
     
-    /// 判断是否有效值
-    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
-    /// 判断是否非空值
-    public var isNotEmpty: Bool { return self != .zero }
     /// 获取相对设计图宽度等比例缩放rect
     public var relative: CGRect { CGRect(origin: origin.relative, size: size.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定rect
