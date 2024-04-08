@@ -152,6 +152,23 @@ extension Optional {
         guard let this = self else { return nil }
         return try block(this)
     }
+    public func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
+        guard let value = self, predicate(value) else { return nil }
+        return value
+    }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: ((Wrapped) -> Wrapped)? = nil) -> Wrapped {
+        switch self {
+        case .some(let value):
+            if let block = block {
+                return block(value)
+            } else {
+                return value
+            }
+        case .none:
+            return defaultValue()
+        }
+    }
+    
 }
 
 private protocol _OptionalProtocol {
@@ -248,17 +265,21 @@ extension Dictionary: BasicType {
         keys.forEach { removeValue(forKey: $0) }
     }
 }
-extension CGFloat: BasicType {
+extension CGFloat {
     public var isValid: Bool { return !isNaN && !isInfinite }
+    public var isNotEmpty: Bool { return self != .zero }
 }
-extension CGPoint: BasicType {
+extension CGPoint {
     public var isValid: Bool { return x.isValid && y.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
 }
-extension CGSize: BasicType {
+extension CGSize {
     public var isValid: Bool { return width.isValid && height.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
 }
-extension CGRect: BasicType {
+extension CGRect {
     public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
 }
 
 // MARK: - AnyParameter

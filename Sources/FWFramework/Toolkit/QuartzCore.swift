@@ -196,12 +196,13 @@ extension Wrapper where Base: UIView {
      添加UIView动画，使用默认动画参数
      @note 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同
      
-     @param block      动画代码块
+     @param block       动画代码块
      @param duration   持续时间
+     @param options    动画选项，默认7<<16
      @param completion 完成事件
      */
-    public func addAnimation(block: @escaping () -> Void, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.fw_addAnimation(block: block, duration: duration, completion: completion)
+    public func addAnimation(block: @escaping () -> Void, duration: TimeInterval, options: UIView.AnimationOptions? = nil, completion: ((Bool) -> Void)? = nil) {
+        base.fw_addAnimation(block: block, duration: duration, options: options, completion: completion)
     }
 
     /**
@@ -210,10 +211,11 @@ extension Wrapper where Base: UIView {
      @param curve      动画速度
      @param transition 动画类型
      @param duration   持续时间，默认0.2
+     @param animations 动画句柄
      @param completion 完成事件
      */
-    public func addAnimation(curve: UIView.AnimationCurve, transition: UIView.AnimationTransition, duration: TimeInterval, completion: ((Bool) -> Void)? = nil) {
-        base.fw_addAnimation(curve: curve, transition: transition, duration: duration, completion: completion)
+    public func addAnimation(curve: UIView.AnimationOptions, transition: UIView.AnimationOptions, duration: TimeInterval, animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil) {
+        base.fw_addAnimation(curve: curve, transition: transition, duration: duration, animations: animations, completion: completion)
     }
 
     /**
@@ -234,14 +236,14 @@ extension Wrapper where Base: UIView {
     /**
      添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController
      
-     @param option     动画选项
+     @param options   动画选项
      @param block      动画代码块
-     @param duration   持续时间
+     @param duration  持续时间
      @param animationsEnabled 是否启用动画，默认true
      @param completion 完成事件
      */
-    public func addTransition(option: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool = true, completion: ((Bool) -> Void)? = nil) {
-        base.fw_addTransition(option: option, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
+    public func addTransition(options: UIView.AnimationOptions = [], block: @escaping () -> Void, duration: TimeInterval, animationsEnabled: Bool = true, completion: ((Bool) -> Void)? = nil) {
+        base.fw_addTransition(options: options, block: block, duration: duration, animationsEnabled: animationsEnabled, completion: completion)
     }
 
     /**
@@ -884,20 +886,22 @@ extension Wrapper where Base: UIView {
      添加UIView动画，使用默认动画参数
      @note 如果动画过程中需要获取进度，可通过添加CADisplayLink访问self.layer.presentationLayer获取，下同
      
-     @param block      动画代码块
+     @param block       动画代码块
      @param duration   持续时间
+     @param options    动画选项，默认7<<16
      @param completion 完成事件
      */
     public func fw_addAnimation(
         block: @escaping () -> Void,
         duration: TimeInterval,
+        options: UIView.AnimationOptions? = nil,
         completion: ((Bool) -> Void)? = nil
     ) {
         // 注意：AutoLayout动画需要调用父视图(如控制器self.view)的layoutIfNeeded更新布局才能生效
         UIView.animate(
             withDuration: duration,
             delay: 0,
-            options: .init(rawValue: 7<<16),
+            options: options ?? .init(rawValue: 7<<16),
             animations: block,
             completion: completion
         )
@@ -909,37 +913,23 @@ extension Wrapper where Base: UIView {
      @param curve      动画速度
      @param transition 动画类型
      @param duration   持续时间，默认0.2
+     @param animations 动画句柄
      @param completion 完成事件
      */
     public func fw_addAnimation(
-        curve: UIView.AnimationCurve,
-        transition: UIView.AnimationTransition,
+        curve: UIView.AnimationOptions,
+        transition: UIView.AnimationOptions,
         duration: TimeInterval,
+        animations: (() -> Void)? = nil,
         completion: ((Bool) -> Void)? = nil
     ) {
-        UIView.beginAnimations("FWAnimation", context: nil)
-        UIView.setAnimationCurve(curve)
-        // 默认值0.2
-        UIView.setAnimationDuration(duration)
-        UIView.setAnimationTransition(transition, for: self, cache: false)
-        
-        // 设置完成事件
-        if completion != nil {
-            UIView.setAnimationDelegate(self)
-            UIView.setAnimationDidStop(#selector(UIView.fw_animationDidStop(_:finished:context:)))
-            fw_setPropertyCopy(completion, forName: "fw_animationDidStop")
-        }
-        
-        UIView.commitAnimations()
-    }
-    
-    @objc private func fw_animationDidStop(
-        _ animationId: String?,
-        finished: NSNumber,
-        context: UnsafeMutableRawPointer?
-    ) {
-        let completion = fw_property(forName: "fw_animationDidStop") as? (Bool) -> Void
-        completion?(finished.boolValue)
+        UIView.transition(
+            with: self,
+            duration: duration,
+            options: curve.union(transition),
+            animations: animations,
+            completion: completion
+        )
     }
 
     /**
@@ -984,14 +974,14 @@ extension Wrapper where Base: UIView {
     /**
      添加转场动画，可指定animationsEnabled，一般用于window切换rootViewController
      
-     @param option     动画选项
+     @param options   动画选项
      @param block      动画代码块
-     @param duration   持续时间
+     @param duration  持续时间
      @param animationsEnabled 是否启用动画，默认true
      @param completion 完成事件
      */
     public func fw_addTransition(
-        option: UIView.AnimationOptions = [],
+        options: UIView.AnimationOptions = [],
         block: @escaping () -> Void,
         duration: TimeInterval,
         animationsEnabled: Bool = true,
@@ -1000,7 +990,7 @@ extension Wrapper where Base: UIView {
         UIView.transition(
             with: self,
             duration: duration,
-            options: option,
+            options: options,
             animations: {
                 let wasEnabled = UIView.areAnimationsEnabled
                 UIView.setAnimationsEnabled(animationsEnabled)

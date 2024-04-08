@@ -545,4 +545,8 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
     static func loadMacro_Tracking() {}
     #endif
     
+    #if FWMacroMacros
+    static func loadMacro_Macros() {}
+    #endif
+    
 }

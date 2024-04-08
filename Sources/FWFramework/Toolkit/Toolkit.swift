@@ -463,11 +463,6 @@ extension Wrapper where Base: UIFont {
     public func lineHeight(expected: CGFloat) -> CGFloat {
         return base.fw_lineHeight(expected: expected)
     }
-    
-    /// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值
-    public func pointHeight(expected: CGFloat) -> CGFloat {
-        return base.fw_pointHeight(expected: expected)
-    }
 
     /// 计算当前字体与指定字体居中对齐的偏移值
     public func baselineOffset(_ font: UIFont) -> CGFloat {
@@ -1676,11 +1671,6 @@ extension Wrapper where Base: UINavigationController {
     /// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值
     public func fw_lineHeight(expected: CGFloat) -> CGFloat {
         return max(lineHeight, expected)
-    }
-    
-    /// 计算指定期望高度下字体的实际高度值，取期望值和高度值的较大值
-    public func fw_pointHeight(expected: CGFloat) -> CGFloat {
-        return max(pointSize, expected)
     }
 
     /// 计算当前字体与指定字体居中对齐的偏移值

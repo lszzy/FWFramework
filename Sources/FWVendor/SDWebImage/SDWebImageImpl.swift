@@ -147,7 +147,16 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
     }
     
     open func cancelImageRequest(for view: UIView) {
-        view.sd_cancelCurrentImageLoad()
+        var cancelSelecter = NSSelectorFromString("sd_cancelLatestImageLoad")
+        if view.responds(to: cancelSelecter) {
+            view.perform(cancelSelecter)
+            return
+        }
+        
+        cancelSelecter = NSSelectorFromString("sd_cancelCurrentImageLoad")
+        if view.responds(to: cancelSelecter) {
+            view.perform(cancelSelecter)
+        }
     }
     
     open func loadImageCache(_ imageURL: URL?) -> UIImage? {

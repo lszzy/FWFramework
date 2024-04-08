@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.1] - 2024-04-08
+
+### Changed
+* Fix Xcode compilation warnings, replace and remove deprecated methods
+* Remove the obsolete method of obtaining the operator and modify the method of obtaining the network type
+* Added Optional shortcut method, optimized CGFloat, etc. and no longer implement BasicType
+
 ## [5.2.0] - 2024-03-29
 
 ### Changed
@@ -62,6 +69,11 @@
 4. HTTPRequest network request API has changed and needs to be migrated and upgraded.
 5. Other compilation errors need to be fixed using the new API and tested to see if the relevant functions are normal.
 6. To use the sample code, please refer to the Example project
+
+## [4.18.3] - 2024-03-12
+
+### Fixed
+* Compatible with Xcode15.3, fix Archive failure problem
 
 ## [4.18.2] - 2023-10-27
 
