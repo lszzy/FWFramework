@@ -265,6 +265,22 @@ extension Dictionary: BasicType {
         keys.forEach { removeValue(forKey: $0) }
     }
 }
+extension CGFloat {
+    public var isValid: Bool { return !isNaN && !isInfinite }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGPoint {
+    public var isValid: Bool { return x.isValid && y.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGSize {
+    public var isValid: Bool { return width.isValid && height.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGRect {
+    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
 
 // MARK: - AnyParameter
 public protocol AnyParameter {}
