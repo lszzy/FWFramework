@@ -17,7 +17,7 @@
     <a title="LocationManager Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.2.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.2.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2661,6 +2661,62 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework15LocationManagerC14reverseGeocode_6locale17completionHandlerSo10CLGeocoderCSo22CLLocationCoordinate2DV_10Foundation6LocaleVSgySaySo11CLPlacemarkCGSg_s5Error_pSgtctFZ"></a>
+                    <a name="//apple_ref/swift/Method/reverseGeocode(_:locale:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15LocationManagerC14reverseGeocode_6locale17completionHandlerSo10CLGeocoderCSo22CLLocationCoordinate2DV_10Foundation6LocaleVSgySaySo11CLPlacemarkCGSg_s5Error_pSgtctFZ">reverseGeocode(_:<wbr>locale:<wbr>completionHandler:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>经纬度反解析为地址</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">reverseGeocode</span><span class="p">(</span><span class="n">_</span> <span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span> <span class="nv">locale</span><span class="p">:</span> <span class="kt">Locale</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">CLGeocodeCompletionHandler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CLGeocoder</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15LocationManagerC7geocode_6region6locale17completionHandlerSo10CLGeocoderCSS_So8CLRegionCSg10Foundation6LocaleVSgySaySo11CLPlacemarkCGSg_s5Error_pSgtctFZ"></a>
+                    <a name="//apple_ref/swift/Method/geocode(_:region:locale:completionHandler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15LocationManagerC7geocode_6region6locale17completionHandlerSo10CLGeocoderCSS_So8CLRegionCSg10Foundation6LocaleVSgySaySo11CLPlacemarkCGSg_s5Error_pSgtctFZ">geocode(_:<wbr>region:<wbr>locale:<wbr>completionHandler:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>地址解析为经纬度</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">geocode</span><span class="p">(</span><span class="n">_</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">region</span><span class="p">:</span> <span class="kt">CLRegion</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">locale</span><span class="p">:</span> <span class="kt">Locale</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">CLGeocodeCompletionHandler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CLGeocoder</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework15LocationManagerC06alwaysB0Sbvp"></a>
                     <a name="//apple_ref/swift/Property/alwaysLocation" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework15LocationManagerC06alwaysB0Sbvp">alwaysLocation</a>
@@ -3081,7 +3137,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-03-29)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-08)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
