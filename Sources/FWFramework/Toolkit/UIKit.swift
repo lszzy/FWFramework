@@ -640,6 +640,11 @@ extension Wrapper where Base: UIScrollView {
         set { base.fw_contentOffsetY = newValue }
     }
     
+    /// 滚动视图完整图片截图
+    public var contentSnapshot: UIImage? {
+        return base.fw_contentSnapshot
+    }
+    
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
     ///
     /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
@@ -1245,6 +1250,18 @@ extension Wrapper where Base: UIViewController {
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
     public func addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
         base.fw_addChild(viewController, in: view, layout: layout)
+    }
+    
+    /// 弹出popover控制器
+    public func presentPopover(
+        _ popover: UIViewController,
+        sourcePoint: CGPoint,
+        size: CGSize? = nil,
+        delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
+        animated: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        base.fw_presentPopover(popover, sourcePoint: sourcePoint, size: size, delegate: delegate, animated: animated, completion: completion)
     }
 }
 
@@ -3201,6 +3218,19 @@ extension Wrapper where Base: UIViewController {
         set { self.contentOffset = CGPoint(x: self.contentOffset.x, y: newValue) }
     }
     
+    /// 滚动视图完整图片截图
+    public var fw_contentSnapshot: UIImage? {
+        let size = contentSize
+        guard size != .zero else { return nil }
+
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let previousFrame = frame
+            frame = CGRect(origin: frame.origin, size: size)
+            layer.render(in: context.cgContext)
+            frame = previousFrame
+        }
+    }
+    
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
     ///
     /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
@@ -4832,6 +4862,29 @@ extension Wrapper where Base: UIViewController {
             viewController.view.fw_pinEdges()
         }
         viewController.didMove(toParent: self)
+    }
+    
+    /// 弹出popover控制器
+    public func fw_presentPopover(
+        _ popover: UIViewController,
+        sourcePoint: CGPoint,
+        size: CGSize? = nil,
+        delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
+        animated: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        popover.modalPresentationStyle = .popover
+        if let size = size {
+            popover.preferredContentSize = size
+        }
+        
+        if let presentation = popover.popoverPresentationController {
+            presentation.sourceView = view
+            presentation.sourceRect = CGRect(origin: sourcePoint, size: .zero)
+            presentation.delegate = delegate
+        }
+        
+        present(popover, animated: animated, completion: completion)
     }
     
 }
