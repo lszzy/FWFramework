@@ -995,6 +995,11 @@ extension Wrapper where Base: UITableView {
         base.fw_reloadDataWithoutAnimation()
     }
     
+    /// 判断indexPath是否有效
+    public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        return base.fw_isValidIndexPath(indexPath)
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
@@ -1062,6 +1067,11 @@ extension Wrapper where Base: UICollectionView {
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
         base.fw_reloadDataWithoutAnimation()
+    }
+    
+    /// 判断indexPath是否有效
+    public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        return base.fw_isValidIndexPath(indexPath)
     }
     
     /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
@@ -4153,6 +4163,13 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
+    /// 判断indexPath是否有效
+    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
+        guard indexPath.section < numberOfSections else { return false }
+        return indexPath.row < numberOfRows(inSection: indexPath.section)
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
@@ -4377,6 +4394,13 @@ extension Wrapper where Base: UIViewController {
         CATransaction.setDisableActions(true)
         self.reloadData()
         CATransaction.commit()
+    }
+    
+    /// 判断indexPath是否有效
+    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        guard indexPath.section >= 0, indexPath.item >= 0 else { return false }
+        guard indexPath.section < numberOfSections else { return false }
+        return indexPath.item < numberOfItems(inSection: indexPath.section)
     }
     
     /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
