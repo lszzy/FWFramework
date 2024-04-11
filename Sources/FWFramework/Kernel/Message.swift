@@ -116,6 +116,21 @@ extension Wrapper where Base: WrapperObject {
         return base.fw_observeNotification(name, object: object, target: target, action: action)
     }
     
+    /// 单次监听通知，触发后自动移除监听
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 通知对象，值为nil时表示所有
+    ///   - queue: 通知队列
+    ///   - block: 监听句柄
+    public static func observeOnce(
+        forName name: NSNotification.Name?,
+        object: Any? = nil,
+        queue: OperationQueue? = nil,
+        using block: @escaping (_ notification: Notification) -> Void
+    ) {
+        Base.fw_observeOnce(forName: name, object: object, queue: queue, using: block)
+    }
+    
     /// 手工移除某个广播通知指定监听，可指定对象
     /// - Parameters:
     ///   - name: 通知名称
@@ -437,6 +452,28 @@ extension Wrapper where Base: NSObject {
         array?.add(notificationTarget)
         NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NSObject.NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
+    }
+    
+    /// 单次监听通知，触发后自动移除监听
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 通知对象，值为nil时表示所有
+    ///   - queue: 通知队列
+    ///   - block: 监听句柄
+    public static func fw_observeOnce(
+        forName name: NSNotification.Name?,
+        object: Any? = nil,
+        queue: OperationQueue? = nil,
+        using block: @escaping (_ notification: Notification) -> Void
+    ) {
+        var handler: (any NSObjectProtocol)!
+        let removeObserver = {
+            NotificationCenter.default.removeObserver(handler!)
+        }
+        handler = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) {
+            removeObserver()
+            block($0)
+        }
     }
     
     /// 手工移除某个广播通知指定监听，可指定对象
