@@ -129,7 +129,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         APP.debug("string.queryEncode: %@", String(describing: String.app.queryEncode(url.app.queryDecode)))
         let nsurl = URL.app.url(string: url)
         APP.debug("query.queryDecode: %@", String(describing: nsurl?.query?.app.queryDecode))
-        APP.debug("url.queryDictionary: %@", String(describing: nsurl?.app.queryDictionary))
+        APP.debug("url.queryParameters: %@", String(describing: nsurl?.app.queryParameters))
     }
     
     func setupSubviews() {
