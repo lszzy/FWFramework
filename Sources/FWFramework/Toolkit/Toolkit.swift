@@ -255,9 +255,14 @@ extension Wrapper where Base: UIApplication {
         return Base.fw_isPirated
     }
     
-    /// 是否是Testflight版本
+    /// 是否是Testflight版本(非AppStore)
     public static var isTestflight: Bool {
         return Base.fw_isTestflight
+    }
+    
+    /// 是否是AppStore版本
+    public static var isAppStore: Bool {
+        return Base.fw_isAppStore
     }
     
     /// 开始后台任务，task必须调用completionHandler
@@ -1273,7 +1278,37 @@ extension Wrapper where Base: UINavigationController {
     
     /// 是否是Testflight版本
     public static var fw_isTestflight: Bool {
-        return Bundle.main.appStoreReceiptURL?.path.contains("sandboxReceipt") ?? false
+        return fw_inferredEnvironment == 1
+    }
+    
+    /// 是否是AppStore版本
+    public static var fw_isAppStore: Bool {
+        return fw_inferredEnvironment == 2
+    }
+    
+    /// 推测的运行环境，0=>Debug, 1=>Testflight, 2=>AppStore
+    private static var fw_inferredEnvironment: Int {
+        #if DEBUG
+        return 0
+
+        #elseif targetEnvironment(simulator)
+        return 0
+
+        #else
+        if Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil {
+            return 1
+        }
+        guard let appStoreReceiptUrl = Bundle.main.appStoreReceiptURL else {
+            return 0
+        }
+        if appStoreReceiptUrl.lastPathComponent.lowercased() == "sandboxreceipt" {
+            return 1
+        }
+        if appStoreReceiptUrl.path.lowercased().contains("simulator") {
+            return 0
+        }
+        return 2
+        #endif
     }
     
     /// 开始后台任务，task必须调用completionHandler
