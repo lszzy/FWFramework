@@ -54,6 +54,11 @@ extension Wrapper where Base == Data {
         return base.fw_utf8String
     }
     
+    /// 转换为bytes数组
+    public var bytesArray: [UInt8] {
+        return base.fw_bytesArray
+    }
+    
     /// 将对象归档为data数据
     public static func archivedData(_ object: Any?) -> Data? {
         return Base.fw_archivedData(object)
@@ -353,6 +358,11 @@ extension Wrapper where Base == URL {
     /// 转换为UTF8字符串
     public var fw_utf8String: String? {
         return String(data: self, encoding: .utf8)
+    }
+    
+    /// 转换为bytes数组
+    public var fw_bytesArray: [UInt8] {
+        return [UInt8](self)
     }
     
     /// 将对象归档为data数据
