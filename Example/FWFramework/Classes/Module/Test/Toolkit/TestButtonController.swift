@@ -12,8 +12,21 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
     
     var count: Int = 0
     
+    private var timer: Timer?
+    
+    @objc func timerAction() {
+        print("timerAction \(Date().app.string(format: "HH:mm:ss"))")
+    }
+    
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     func setupNavbar() {
         app.extendedLayoutEdge = .bottom
+        
+        timer = Timer.app.commonTimer(timeInterval: 1, target: WeakProxy(target: self), selector: #selector(timerAction), userInfo: nil, repeats: true)
     }
     
     func setupSubviews() {

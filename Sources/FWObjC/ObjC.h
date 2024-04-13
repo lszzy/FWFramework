@@ -10,18 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - WeakProxyBridge
-
-/// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-NS_SWIFT_NAME(WeakProxyBridge)
-@interface FWWeakProxyBridge : NSProxy
-
-@property (nonatomic, weak, readonly, nullable) id target;
-
-- (instancetype)initWithTarget:(nullable id)target;
-
-@end
-
 #pragma mark - DelegateProxyBridge
 
 /// 事件协议代理基类，可继承重写事件代理方法

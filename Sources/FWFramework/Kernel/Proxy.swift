@@ -12,7 +12,60 @@ import FWObjC
 
 // MARK: - WeakProxy
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-public class WeakProxy: WeakProxyBridge {}
+public class WeakProxy: NSObject {
+    
+    public weak var target: AnyObject?
+    
+    public init(target: NSObject) {
+        super.init()
+        self.target = target
+    }
+    
+    public override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        return target
+    }
+    
+    public override func responds(to aSelector: Selector!) -> Bool {
+        return target?.responds(to: aSelector) ?? false
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        return target?.isEqual(object) ?? false
+    }
+    
+    public override var hash: Int {
+        return target?.hash ?? 0
+    }
+    
+    public override var superclass: AnyClass? {
+        return target?.superclass
+    }
+    
+    public override func isProxy() -> Bool {
+        return true
+    }
+    
+    public override func isKind(of aClass: AnyClass) -> Bool {
+        return target?.isKind(of: aClass) ?? false
+    }
+    
+    public override func isMember(of aClass: AnyClass) -> Bool {
+        return target?.isMember(of: aClass) ?? false
+    }
+    
+    public override func conforms(to aProtocol: Protocol) -> Bool {
+        return target?.conforms(to: aProtocol) ?? false
+    }
+    
+    public override var description: String {
+        return target?.description ?? ""
+    }
+    
+    public override var debugDescription: String {
+        return target?.debugDescription ?? ""
+    }
+    
+}
 
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
