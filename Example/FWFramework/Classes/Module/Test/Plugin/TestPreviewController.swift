@@ -168,6 +168,9 @@ extension TestPreviewController: ViewControllerProtocol {
                 if state == .willDisappear {
                     let exitAtIndex = previewController.imagePreviewView.currentImageIndex
                     self?.tipsLabel.text = "浏览到第\(exitAtIndex + 1)张就退出了"
+                } else if state == .didDeinit {
+                    let exitAtIndex = previewController.imagePreviewView.currentImageIndex
+                    UIWindow.app.showMessage(text: "浏览到第\(exitAtIndex + 1)张就deinit了")
                 }
             }
         }

@@ -56,6 +56,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["外部safari", "onOpenUrl"],
         ["内部safari", "onOpenSafari"],
         ["打开两个界面", "onOpenMulti"],
+        ["控制器完成回调", "onOpenResult"],
         ["iOS14bug", "onOpen14"],
     ]
     
@@ -354,6 +355,27 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func onOpenMulti() {
         Router.openURL(TestRouter.multiUrl)
+    }
+    
+    func onOpenResult() {
+        let vc = UIViewController()
+        vc.title = "弹出框"
+        vc.view.backgroundColor = AppTheme.backgroundColor
+        vc.app.completionHandler = { [weak self] result in
+            let result = result != nil ? APP.safeString(result) : "deinit"
+            self?.app.showMessage(text: "界面已关闭，原因：\(result)")
+        }
+        vc.app.setLeftBarItem("关闭") { [weak vc] _ in
+            vc?.app.completionResult = "点击了关闭"
+            vc?.dismiss(animated: true)
+        }
+        vc.app.setRightBarItem("完成") { [weak vc] _ in
+            vc?.app.completionResult = "点击了完成"
+            vc?.dismiss(animated: true)
+        }
+        
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
     }
     
     func onOpen14() {
