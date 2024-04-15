@@ -2738,11 +2738,10 @@ public enum ViewControllerLifecycleState: Int {
             let valueChanged = self.fw_lifecycleState != newValue
             fw_setPropertyInt(newValue.rawValue, forName: "fw_lifecycleState")
             
-            if valueChanged, let targets = fw_lifecycleStateTargets(false) {
-                for (_, elem) in targets.enumerated() {
-                    if let target = elem as? LifecycleStateTarget {
-                        target.block?(self, newValue)
-                    }
+            if valueChanged, fw_issetLifecycleStateTargets {
+                let targets = fw_lifecycleStateTargets
+                for target in targets {
+                    target.block?(self, newValue)
                 }
             }
         }
@@ -2751,40 +2750,34 @@ public enum ViewControllerLifecycleState: Int {
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
     public func fw_observeLifecycleState(_ block: @escaping (UIViewController, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
-        let targets = fw_lifecycleStateTargets(true)
         let target = LifecycleStateTarget()
         target.block = block
-        targets?.add(target)
+        fw_lifecycleStateTargets.append(target)
         return target
     }
     
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
     public func fw_unobserveLifecycleState(observer: Any? = nil) -> Bool {
-        guard let targets = fw_lifecycleStateTargets(false) else { return false }
+        guard fw_issetLifecycleStateTargets else { return false }
         
         if let observer = observer as? LifecycleStateTarget {
-            var result = false
-            for (_, elem) in targets.enumerated() {
-                if let target = elem as? LifecycleStateTarget, observer == target {
-                    targets.remove(target)
-                    result = true
-                }
-            }
+            let result = fw_lifecycleStateTargets.contains(observer)
+            fw_lifecycleStateTargets.removeAll { $0 == observer }
             return result
         } else {
-            targets.removeAllObjects()
+            fw_lifecycleStateTargets.removeAll()
             return true
         }
     }
     
-    private func fw_lifecycleStateTargets(_ lazyload: Bool) -> NSMutableArray? {
-        var targets = fw_property(forName: "fw_lifecycleStateTargets") as? NSMutableArray
-        if targets == nil && lazyload {
-            targets = NSMutableArray()
-            fw_setProperty(targets, forName: "fw_lifecycleStateTargets")
-        }
-        return targets
+    private var fw_issetLifecycleStateTargets: Bool {
+        return fw_property(forName: "fw_lifecycleStateTargets") != nil
+    }
+    
+    private var fw_lifecycleStateTargets: [LifecycleStateTarget] {
+        get { return fw_property(forName: "fw_lifecycleStateTargets") as? [LifecycleStateTarget] ?? [] }
+        set { fw_setProperty(newValue, forName: "fw_lifecycleStateTargets") }
     }
 
     /// 自定义完成结果对象，默认nil
