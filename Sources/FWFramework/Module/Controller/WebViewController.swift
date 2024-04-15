@@ -97,9 +97,9 @@ internal extension ViewControllerManager {
         webView.delegate = viewController
         viewController.view.addSubview(webView)
         
-        webView.fw_observeProperty("title") { [weak viewController] _, _ in
+        webView.fw_addObservation(webView.observe(\.title) { [weak viewController] _, _ in
             viewController?.navigationItem.title = viewController?.webView.title
-        }
+        })
         viewController.fw_allowsPopGesture = { [weak viewController] in
             return !(viewController?.webView.canGoBack ?? false)
         }
