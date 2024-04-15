@@ -184,55 +184,58 @@ extension Wrapper where Base: WrapperObject {
 }
 
 // MARK: - Wrapper+NSObject
-/// Swift自带KeyPath监听(声明@objc dynamic)、didSet属性监听等；
-/// SwiftUI自带Combine订阅等方式，建议优先使用；
-/// 如不满足需求时，才考虑使用本KVO属性监听方式
 extension Wrapper where Base: NSObject {
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
-    ///   - property: 属性名称
-    ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
+    ///   - keyPath: 属性KeyPath
+    ///   - options: 监听选项
+    ///   - block: 目标句柄，block参数依次为object、change对象
     /// - Returns: 监听者
     @discardableResult
-    public func observeProperty(_ property: String, block: @escaping (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
-        return base.fw_observeProperty(property) { object, change in
-            block(object as! Base, change)
-        }
+    public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol {
+        let observation = base.observe(keyPath, options: options, changeHandler: block)
+        return base.fw_observeProperty(keyPath.hashValue, observation: observation)
     }
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
-    ///   - property: 属性名称
+    ///   - keyPath: 属性KeyPath
+    ///   - options: 监听选项
     ///   - target: 目标对象
-    ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
+    ///   - action: 目标动作，action参数依次为object、change对象
     /// - Returns: 监听者
     @discardableResult
-    public func observeProperty(_ property: String, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        return base.fw_observeProperty(property, target: target, action: action)
+    public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
+        let observation = base.observe(keyPath, options: options) { object, change in
+            if let target = target, target.responds(to: action) {
+                _ = target.perform(action, with: object, with: change)
+            }
+        }
+        return base.fw_observeProperty(keyPath.hashValue, observation: observation, target: target, action: action)
     }
     
     /// 手工移除某个属性指定监听
     /// - Parameters:
-    ///   - property: 属性名称
+    ///   - keyPath: 属性KeyPath
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
-        base.fw_unobserveProperty(property, target: target, action: action)
+    public func unobserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, target: AnyObject?, action: Selector?) {
+        base.fw_unobserveProperty(keyPath.hashValue, target: target, action: action)
     }
     
     /// 手工移除某个属性指定监听
     /// - Parameters:
-    ///   - property: 属性名称
+    ///   - keyPath: 属性KeyPath
     ///   - observer: 监听者
     @discardableResult
-    public func unobserveProperty(_ property: String, observer: Any) -> Bool {
-        return base.fw_unobserveProperty(property, observer: observer)
+    public func unobserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, observer: Any) -> Bool {
+        return base.fw_unobserveProperty(keyPath.hashValue, observer: observer)
     }
     
     /// 手工移除某个属性所有监听
-    /// - Parameter property: 属性名称
-    public func unobserveProperty(_ property: String) {
-        base.fw_unobserveProperty(property)
+    /// - Parameter keyPath: 属性KeyPath
+    public func unobserveProperty<Value>(_ keyPath: KeyPath<Base, Value>) {
+        base.fw_unobserveProperty(keyPath.hashValue)
     }
     
     /// 手工移除所有属性所有监听
@@ -620,116 +623,61 @@ extension Wrapper where Base: NSObject {
         }
     }
     
-    private class KvoTarget: NSObject {
-        unowned(unsafe) var object: AnyObject?
-        var keyPath: String?
+    private class PropertyTarget: NSObject {
+        var keyPath: Int?
         weak var target: AnyObject?
         var action: Selector?
-        var block: ((Any, [NSKeyValueChangeKey: Any]) -> Void)?
-        private var isObserving = false
+        var observation: NSKeyValueObservation?
         
         deinit {
             removeObserver()
         }
         
-        func addObserver() {
-            guard !isObserving, let object = object as? NSObject, let keyPath = keyPath else { return }
-            
-            isObserving = true
-            object.addObserver(self, forKeyPath: keyPath, options: [.old, .new], context: nil)
-        }
-        
         func removeObserver() {
-            guard isObserving, let object = object as? NSObject, let keyPath = keyPath else { return }
-            
-            isObserving = false
-            object.removeObserver(self, forKeyPath: keyPath)
-        }
-        
-        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-            guard let object = object else { return }
-            
-            var newChange = change ?? [:]
-            if newChange[.oldKey] is NSNull {
-                newChange.removeValue(forKey: .oldKey)
-            }
-            if newChange[.newKey] is NSNull {
-                newChange.removeValue(forKey: .newKey)
-            }
-            
-            if block != nil {
-                block?(object, newChange)
-                return
-            }
-            
-            if let target = target, let action = action, target.responds(to: action) {
-                _ = target.perform(action, with: object, with: newChange)
-            }
+            observation?.invalidate()
+            observation = nil
         }
     }
     
     // MARK: - Observer
-    /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
+    /// 手工添加某个属性指定监听，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
-    ///   - property: 属性名称
-    ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
-    /// - Returns: 监听者
-    @discardableResult
-    public func fw_observeProperty(_ property: String, block: @escaping (Any, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
-        let dict = fw_kvoTargets(true)
-        var array = dict?[property] as? NSMutableArray
-        if array == nil {
-            array = NSMutableArray()
-            dict?[property] = array
-        }
-        
-        let kvoTarget = KvoTarget()
-        kvoTarget.object = self
-        kvoTarget.keyPath = property
-        kvoTarget.block = block
-        array?.add(kvoTarget)
-        kvoTarget.addObserver()
-        return kvoTarget
-    }
-    
-    /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
-    /// - Parameters:
-    ///   - property: 属性名称
+    ///   - property: 属性keyPath哈希值
+    ///   - observation: 监听对象
     ///   - target: 目标对象
-    ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
+    ///   - action: 目标动作
     /// - Returns: 监听者
     @discardableResult
-    public func fw_observeProperty(_ property: String, target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let dict = fw_kvoTargets(true)
+    public func fw_observeProperty(_ property: Int, observation: NSKeyValueObservation, target: AnyObject? = nil, action: Selector? = nil) -> NSObjectProtocol {
+        let dict = fw_propertyTargets(true)
         var array = dict?[property] as? NSMutableArray
         if array == nil {
             array = NSMutableArray()
             dict?[property] = array
         }
         
-        let kvoTarget = KvoTarget()
-        kvoTarget.object = self
-        kvoTarget.keyPath = property
-        kvoTarget.target = target
-        kvoTarget.action = action
-        array?.add(kvoTarget)
-        kvoTarget.addObserver()
-        return kvoTarget
+        let propertyTarget = PropertyTarget()
+        propertyTarget.keyPath = property
+        propertyTarget.observation = observation
+        propertyTarget.target = target
+        propertyTarget.action = action
+        array?.add(propertyTarget)
+        return propertyTarget
     }
     
     /// 手工移除某个属性指定监听
     /// - Parameters:
-    ///   - property: 属性名称
+    ///   - property: 属性keyPath哈希值
     ///   - target: 目标对象，值为nil时移除所有对象(同UIControl)
     ///   - action: 目标动作，值为nil时移除所有动作(同UIControl)
-    public func fw_unobserveProperty(_ property: String, target: AnyObject?, action: Selector?) {
-        guard let dict = fw_kvoTargets(false) else { return }
+    public func fw_unobserveProperty(_ property: Int, target: AnyObject?, action: Selector?) {
+        guard let dict = fw_propertyTargets(false) else { return }
         
         // target为nil始终移除
         if target == nil {
             if let array = dict[property] as? NSMutableArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? KvoTarget {
+                    if let obj = elem as? PropertyTarget {
                         obj.removeObserver()
                     }
                 }
@@ -741,7 +689,7 @@ extension Wrapper where Base: NSObject {
         guard let array = dict[property] as? NSMutableArray else { return }
         // target相同且action为NULL或者action相同才移除
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? KvoTarget,
+            if let obj = elem as? PropertyTarget,
                target === obj.target && (action == nil || action == obj.action) {
                 obj.removeObserver()
                 array.remove(obj)
@@ -751,17 +699,17 @@ extension Wrapper where Base: NSObject {
     
     /// 手工移除某个属性指定监听
     /// - Parameters:
-    ///   - property: 属性名称
+    ///   - property: 属性keyPath哈希值
     ///   - observer: 监听者
     @discardableResult
-    public func fw_unobserveProperty(_ property: String, observer: Any) -> Bool {
-        guard let observer = observer as? KvoTarget,
-              let dict = fw_kvoTargets(false),
+    public func fw_unobserveProperty(_ property: Int, observer: Any) -> Bool {
+        guard let observer = observer as? PropertyTarget,
+              let dict = fw_propertyTargets(false),
               let array = dict[property] as? NSMutableArray else { return false }
         
         var result = false
         for (_, elem) in array.enumerated() {
-            if let obj = elem as? KvoTarget, obj == observer {
+            if let obj = elem as? PropertyTarget, obj == observer {
                 obj.removeObserver()
                 array.remove(obj)
                 result = true
@@ -771,19 +719,19 @@ extension Wrapper where Base: NSObject {
     }
     
     /// 手工移除某个属性所有监听
-    /// - Parameter property: 属性名称
-    public func fw_unobserveProperty(_ property: String) {
+    /// - Parameter property: 属性keyPath哈希值
+    public func fw_unobserveProperty(_ property: Int) {
         fw_unobserveProperty(property, target: nil, action: nil)
     }
     
     /// 手工移除所有属性所有监听
     public func fw_unobserveAllProperties() {
-        guard let dict = fw_kvoTargets(false) else { return }
+        guard let dict = fw_propertyTargets(false) else { return }
         
         for (_, value) in dict {
             if let array = value as? NSArray {
                 for (_, elem) in array.enumerated() {
-                    if let obj = elem as? KvoTarget {
+                    if let obj = elem as? PropertyTarget {
                         obj.removeObserver()
                     }
                 }
@@ -792,11 +740,11 @@ extension Wrapper where Base: NSObject {
         dict.removeAllObjects()
     }
     
-    private func fw_kvoTargets(_ lazyload: Bool) -> NSMutableDictionary? {
-        var targets = fw_property(forName: "fw_kvoTargets") as? NSMutableDictionary
+    private func fw_propertyTargets(_ lazyload: Bool) -> NSMutableDictionary? {
+        var targets = fw_property(forName: "fw_propertyTargets") as? NSMutableDictionary
         if targets == nil && lazyload {
             targets = NSMutableDictionary()
-            fw_setProperty(targets, forName: "fw_kvoTargets")
+            fw_setProperty(targets, forName: "fw_propertyTargets")
         }
         return targets
     }
