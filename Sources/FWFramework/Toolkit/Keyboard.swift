@@ -1429,15 +1429,14 @@ extension Wrapper where Base: UITextView {
         self.insertSubview(label, at: 0)
         
         self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("attributedText", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("text", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
-        self.fw_observeProperty("bounds", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("frame", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("textAlignment", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("textContainerInset", target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        self.fw_observeProperty("font") { textView, change in
-            guard let textView = textView as? UITextView else { return }
-            if change[.newKey] != nil {
+        self.fw.observeProperty(\.attributedText, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw.observeProperty(\.text, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw.observeProperty(\.bounds, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw.observeProperty(\.frame, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw.observeProperty(\.textAlignment, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw.observeProperty(\.textContainerInset, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
+        self.fw.observeProperty(\.font) { textView, _ in
+            if textView.font != nil {
                 textView.fw_placeholderLabel.font = textView.font
                 textView.fw_placeholderTarget.setNeedsUpdatePlaceholder()
             }
