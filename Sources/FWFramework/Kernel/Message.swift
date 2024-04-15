@@ -620,14 +620,15 @@ extension Wrapper where Base: NSObject {
         }
     }
     
-    private class KvoTarget: UnsafeObject {
+    private class KvoTarget: NSObject {
+        unowned(unsafe) var object: AnyObject?
         var keyPath: String?
         weak var target: AnyObject?
         var action: Selector?
         var block: ((Any, [NSKeyValueChangeKey: Any]) -> Void)?
         private var isObserving = false
         
-        override func deallocObject() {
+        deinit {
             removeObserver()
         }
         
