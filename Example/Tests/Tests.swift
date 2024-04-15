@@ -7,7 +7,7 @@ import FWMacro
 class Tests: XCTestCase {
     
     // MARK: - Accessor
-    dynamic var observeValue: Int = 0
+    @objc dynamic var observeValue: Int = 0
     
     @StoredValue("testKey")
     var defaultsValue = ""
@@ -116,8 +116,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(notificationValue, 2)
         
         var propertyValue: Int = 0
-        fw.observeProperty("observeValue") { _, change in
-            propertyValue += change[.newKey] as? Int ?? 0
+        fw.observeProperty(\.observeValue) { _, change in
+            propertyValue += change.newValue ?? 0
         }
         observeValue = 1
         observeValue = 2
