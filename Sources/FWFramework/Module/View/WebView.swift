@@ -521,12 +521,10 @@ open class WebView: WKWebView {
         addSubview(progressView)
         progressView.fw_pinEdges(excludingEdge: .bottom)
         progressView.fw_setDimension(.height, size: 2.0)
-        fw_observeProperty("estimatedProgress") { webView, _ in
-            guard let webView = webView as? WebView else { return }
+        fw.observeProperty(\.estimatedProgress) { webView, _ in
             webView.progressView.fw_webProgress = Float(webView.estimatedProgress)
         }
-        fw_observeProperty("loading") { webView, _ in
-            guard let webView = webView as? WebView else { return }
+        fw.observeProperty(\.isLoading) { webView, _ in
             if !webView.isLoading && webView.progressView.fw_webProgress < 1.0 {
                 webView.progressView.fw_webProgress = 1.0
             }
@@ -1476,8 +1474,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
             showClose = false
         }
         viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
-        fw_observeProperty("canGoBack") { [weak viewController] webView, _ in
-            guard let webView = webView as? WKWebView else { return }
+        fw.observeProperty(\.canGoBack) { [weak viewController] webView, _ in
             if webView.canGoBack {
                 viewController?.navigationItem.leftBarButtonItems = leftItems
             } else {

@@ -4660,15 +4660,14 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
-            let cancelButton = fw_cancelButton
+            guard let cancelButton = fw_cancelButton else { return }
             if newValue {
-                cancelButton?.isEnabled = true
-                cancelButton?.fw_observeProperty("enabled", block: { object, _ in
-                    guard let object = object as? UIButton else { return }
+                cancelButton.isEnabled = true
+                cancelButton.fw.observeProperty(\.isEnabled) { object, _ in
                     if !object.isEnabled { object.isEnabled = true }
-                })
+                }
             } else {
-                cancelButton?.fw_unobserveProperty("enabled")
+                cancelButton.fw.unobserveProperty(\.isEnabled)
             }
         }
     }

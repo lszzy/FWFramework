@@ -209,7 +209,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 监听者
     @discardableResult
     public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let observation = base.observe(keyPath, options: options) { object, change in
+        let observation = base.observe(keyPath, options: options) { [weak target] object, change in
             if let target = target, target.responds(to: action) {
                 _ = target.perform(action, with: object, with: change)
             }

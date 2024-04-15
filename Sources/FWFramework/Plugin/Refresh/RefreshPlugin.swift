@@ -477,7 +477,7 @@ extension RefreshPlugin {
                     self.removeObserver(pullRefreshView, forKeyPath: "contentOffset")
                     self.removeObserver(pullRefreshView, forKeyPath: "contentSize")
                     self.removeObserver(pullRefreshView, forKeyPath: "frame")
-                    self.panGestureRecognizer.fw_unobserveProperty("state", target: pullRefreshView, action: #selector(PullRefreshView.gestureRecognizer(_:stateChanged:)))
+                    self.panGestureRecognizer.fw.unobserveProperty(\.state, target: pullRefreshView, action: #selector(PullRefreshView.gestureRecognizerStateChanged(_:)))
                     pullRefreshView.resetScrollViewContentInset(animated: false)
                     pullRefreshView.isObserving = false
                 }
@@ -486,7 +486,7 @@ extension RefreshPlugin {
                     self.addObserver(pullRefreshView, forKeyPath: "contentOffset", options: .new, context: nil)
                     self.addObserver(pullRefreshView, forKeyPath: "contentSize", options: .new, context: nil)
                     self.addObserver(pullRefreshView, forKeyPath: "frame", options: .new, context: nil)
-                    self.panGestureRecognizer.fw_observeProperty("state", target: pullRefreshView, action: #selector(pullRefreshView.gestureRecognizer(_:stateChanged:)))
+                    self.panGestureRecognizer.fw.observeProperty(\.state, target: pullRefreshView, action: #selector(pullRefreshView.gestureRecognizerStateChanged(_:)))
                     pullRefreshView.isObserving = true
                     
                     pullRefreshView.setNeedsLayout()
@@ -554,7 +554,7 @@ extension RefreshPlugin {
                 if infiniteScrollView.isObserving {
                     self.removeObserver(infiniteScrollView, forKeyPath: "contentOffset")
                     self.removeObserver(infiniteScrollView, forKeyPath: "contentSize")
-                    self.panGestureRecognizer.fw_unobserveProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
+                    self.panGestureRecognizer.fw.unobserveProperty(\.state, target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizerStateChanged(_:)))
                     infiniteScrollView.resetScrollViewContentInset(animated: false)
                     infiniteScrollView.isObserving = false
                 }
@@ -562,7 +562,7 @@ extension RefreshPlugin {
                 if !infiniteScrollView.isObserving {
                     self.addObserver(infiniteScrollView, forKeyPath: "contentOffset", options: .new, context: nil)
                     self.addObserver(infiniteScrollView, forKeyPath: "contentSize", options: .new, context: nil)
-                    self.panGestureRecognizer.fw_observeProperty("state", target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizer(_:stateChanged:)))
+                    self.panGestureRecognizer.fw.observeProperty(\.state, target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizerStateChanged(_:)))
                     infiniteScrollView.setScrollViewContentInsetForInfiniteScrolling(animated: false)
                     infiniteScrollView.isObserving = true
                     
