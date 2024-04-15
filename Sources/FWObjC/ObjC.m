@@ -11,15 +11,6 @@
 
 #pragma mark - ObjCBridge
 
-typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
-static void (*FWCGSVGDocumentRelease)(CGSVGDocumentRef);
-static CGSVGDocumentRef (*FWCGSVGDocumentCreateFromData)(CFDataRef data, CFDictionaryRef options);
-static void (*FWCGSVGDocumentWriteToData)(CGSVGDocumentRef document, CFDataRef data, CFDictionaryRef options);
-static void (*FWCGContextDrawSVGDocument)(CGContextRef context, CGSVGDocumentRef document);
-static CGSize (*FWCGSVGDocumentGetCanvasSize)(CGSVGDocumentRef document);
-static SEL FWImageWithCGSVGDocumentSEL = NULL;
-static SEL FWCGSVGDocumentSEL = NULL;
-
 @implementation FWObjCBridge
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block {
@@ -375,16 +366,6 @@ static SEL FWCGSVGDocumentSEL = NULL;
     }
     free(classList);
     return resultClasses;
-}
-
-+ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException * _Nonnull))exceptionHandler {
-    @try {
-        if (block) block();
-        return YES;
-    } @catch (NSException *exception) {
-        exceptionHandler(exception);
-        return NO;
-    }
 }
 
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException * _Nonnull, Class  _Nonnull __unsafe_unretained, SEL _Nonnull, NSString * _Nonnull, NSInteger))exceptionHandler {
@@ -743,120 +724,6 @@ static SEL FWCGSVGDocumentSEL = NULL;
             };
         }];
     });
-}
-
-+ (UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize {
-    if (![self svgSupported]) return nil;
-    
-    BOOL prefersBitmap = NO;
-    CGSize imageSize = CGSizeZero;
-    if (!CGSizeEqualToSize(thumbnailSize, CGSizeZero)) {
-        prefersBitmap = YES;
-        imageSize = thumbnailSize;
-    }
-    
-    if (!prefersBitmap) {
-        CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
-        if (!document) return nil;
-        UIImage *image = ((UIImage *(*)(id,SEL,CGSVGDocumentRef))[UIImage.class methodForSelector:FWImageWithCGSVGDocumentSEL])(UIImage.class, FWImageWithCGSVGDocumentSEL, document);
-        FWCGSVGDocumentRelease(document);
-        
-        UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(1, 1)];
-        @try {
-            __unused UIImage *dummyImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
-                [image drawInRect:CGRectMake(0, 0, 1, 1)];
-            }];
-        } @catch (...) {
-            return nil;
-        }
-        return image;
-    } else {
-        CGSVGDocumentRef document = FWCGSVGDocumentCreateFromData((__bridge CFDataRef)data, NULL);
-        if (!document) {
-            return nil;
-        }
-        CGSize size = FWCGSVGDocumentGetCanvasSize(document);
-        if (size.width == 0 || size.height == 0) {
-            return nil;
-        }
-        
-        CGFloat xScale;
-        CGFloat yScale;
-        if (thumbnailSize.width <= 0 && thumbnailSize.height <= 0) {
-            thumbnailSize.width = size.width;
-            thumbnailSize.height = size.height;
-            xScale = 1;
-            yScale = 1;
-        } else {
-            CGFloat xRatio = thumbnailSize.width / size.width;
-            CGFloat yRatio = thumbnailSize.height / size.height;
-            if (thumbnailSize.width <= 0) {
-                yScale = yRatio;
-                xScale = yRatio;
-                thumbnailSize.width = size.width * xScale;
-            } else if (thumbnailSize.height <= 0) {
-                xScale = xRatio;
-                yScale = xRatio;
-                thumbnailSize.height = size.height * yScale;
-            } else {
-                xScale = MIN(xRatio, yRatio);
-                yScale = MIN(xRatio, yRatio);
-                thumbnailSize.width = size.width * xScale;
-                thumbnailSize.height = size.height * yScale;
-            }
-        }
-        CGRect rect = CGRectMake(0, 0, size.width, size.height);
-        CGRect targetRect = CGRectMake(0, 0, thumbnailSize.width, thumbnailSize.height);
-        
-        CGAffineTransform scaleTransform = CGAffineTransformMakeScale(xScale, yScale);
-        CGAffineTransform transform = CGAffineTransformMakeTranslation((targetRect.size.width / xScale - rect.size.width) / 2, (targetRect.size.height / yScale - rect.size.height) / 2);
-        
-        UIGraphicsBeginImageContextWithOptions(targetRect.size, NO, 0);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextTranslateCTM(context, 0, targetRect.size.height);
-        CGContextScaleCTM(context, 1, -1);
-        CGContextConcatCTM(context, scaleTransform);
-        CGContextConcatCTM(context, transform);
-        
-        FWCGContextDrawSVGDocument(context, document);
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        FWCGSVGDocumentRelease(document);
-        return image;
-    }
-}
-
-+ (NSData *)svgEncode:(UIImage *)image {
-    if (![self svgSupported]) return nil;
-    
-    NSMutableData *data = [NSMutableData data];
-    CGSVGDocumentRef document = ((CGSVGDocumentRef (*)(id,SEL))[image methodForSelector:FWCGSVGDocumentSEL])(image, FWCGSVGDocumentSEL);
-    if (!document) return nil;
-    FWCGSVGDocumentWriteToData(document, (__bridge CFDataRef)data, NULL);
-    return [data copy];
-}
-
-+ (BOOL)svgSupported {
-    static BOOL isSupported = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        FWCGSVGDocumentRelease = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFJlbGVhc2U="].UTF8String);
-        FWCGSVGDocumentCreateFromData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudENyZWF0ZUZyb21EYXRh"].UTF8String);
-        FWCGSVGDocumentWriteToData = dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudFdyaXRlVG9EYXRh"].UTF8String);
-        FWCGContextDrawSVGDocument = (void (*)(CGContextRef context, CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dDb250ZXh0RHJhd1NWR0RvY3VtZW50"].UTF8String);
-        FWCGSVGDocumentGetCanvasSize = (CGSize (*)(CGSVGDocumentRef document))dlsym(RTLD_DEFAULT, [self base64Decode:@"Q0dTVkdEb2N1bWVudEdldENhbnZhc1NpemU="].UTF8String);
-        FWImageWithCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X2ltYWdlV2l0aENHU1ZHRG9jdW1lbnQ6"]);
-        FWCGSVGDocumentSEL = NSSelectorFromString([self base64Decode:@"X0NHU1ZHRG9jdW1lbnQ="]);
-        
-        isSupported = [UIImage respondsToSelector:FWImageWithCGSVGDocumentSEL];
-    });
-    return isSupported;
-}
-
-+ (NSString *)base64Decode:(NSString *)base64String {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    if (!data) return nil;
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 @end

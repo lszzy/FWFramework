@@ -46,13 +46,7 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (NSArray<Class> *)getClasses:(Class)superClass;
 
-+ (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException *exception))exceptionHandler;
-
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;
-
-+ (nullable UIImage *)svgDecode:(NSData *)data thumbnailSize:(CGSize)thumbnailSize;
-
-+ (nullable NSData *)svgEncode:(UIImage *)image;
 
 @end
 
