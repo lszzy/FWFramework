@@ -377,10 +377,6 @@ static SEL FWCGSVGDocumentSEL = NULL;
     return resultClasses;
 }
 
-+ (void)logMessage:(NSString *)message {
-    NSLog(@"%@", message);
-}
-
 + (BOOL)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException * _Nonnull))exceptionHandler {
     @try {
         if (block) block();
