@@ -64,6 +64,8 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     // MARK: - UIApplicationDelegate
     @discardableResult
     open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        Autoloader.autoload()
+        
         Mediator.setupAllModules()
         Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:willFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         return true

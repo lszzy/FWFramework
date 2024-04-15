@@ -9,43 +9,6 @@
 #import <objc/runtime.h>
 #import <dlfcn.h>
 
-#pragma mark - DelegateProxyBridge
-
-@implementation FWDelegateProxyBridge
-
-- (BOOL)isProxy {
-    return YES;
-}
-
-- (BOOL)conformsToProtocol:(Protocol *)aProtocol {
-    if ([self.target conformsToProtocol:aProtocol]) {
-        return YES;
-    }
-    return [super conformsToProtocol:aProtocol];
-}
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    if ([self.target respondsToSelector:invocation.selector]) {
-        [invocation invokeWithTarget:self.target];
-    }
-}
-
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    if ([self.target respondsToSelector:selector]) {
-        return [self.target methodSignatureForSelector:selector];
-    }
-    return [super methodSignatureForSelector:selector];
-}
-
-- (BOOL)respondsToSelector:(SEL)selector {
-    if ([self.target respondsToSelector:selector]) {
-        return YES;
-    }
-    return [super respondsToSelector:selector];
-}
-
-@end
-
 #pragma mark - ObjCBridge
 
 typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;
@@ -58,15 +21,6 @@ static SEL FWImageWithCGSVGDocumentSEL = NULL;
 static SEL FWCGSVGDocumentSEL = NULL;
 
 @implementation FWObjCBridge
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if ([FWObjCBridge respondsToSelector:@selector(autoload)]) {
-            [FWObjCBridge performSelector:@selector(autoload)];
-        }
-    });
-}
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class, SEL, IMP (^)(void)))block {
     if (!originalClass) return NO;

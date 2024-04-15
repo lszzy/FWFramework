@@ -10,27 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - DelegateProxyBridge
-
-/// 事件协议代理基类，可继承重写事件代理方法
-NS_SWIFT_NAME(DelegateProxyBridge)
-@interface FWDelegateProxyBridge : NSObject
-
-@property (nonatomic, weak, nullable) id target;
-
-@end
-
-#pragma mark - ObjCBridge
-
-/// ObjC桥接协议，Swift扩展实现桥接协议即可
-NS_SWIFT_NAME(ObjCBridgeProtocol)
-@protocol FWObjCBridgeProtocol <NSObject>
-@optional
-
-+ (void)autoload;
-
-@end
-
 /// ObjC桥接类，用于桥接Swift不支持的ObjC特性
 NS_SWIFT_NAME(ObjCBridge)
 @interface FWObjCBridge : NSObject
