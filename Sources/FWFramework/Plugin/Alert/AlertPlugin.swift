@@ -1462,13 +1462,12 @@ public class AlertAppearance: NSObject {
             alertController.fw_attributedMessage = NSAttributedString(string: message, attributes: messageAttributes)
         }
         
-        alertController.fw_observeProperty("preferredAction") { object, _ in
-            guard let object = object as? UIAlertController else { return }
+        alertController.fw_addObservation(alertController.observe(\.preferredAction) { object, _ in
             for action in object.actions {
                 if action.fw_isPreferred { action.fw_isPreferred = false }
             }
             object.preferredAction?.fw_isPreferred = true
-        }
+        })
         
         return alertController
     }
