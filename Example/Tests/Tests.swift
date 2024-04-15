@@ -100,7 +100,7 @@ class Tests: XCTestCase {
             messageValue += 1
         }
         fw.sendMessage(messageName, toReceiver: self)
-        fw.unobserveMessage(messageName, observer: observer)
+        fw.unobserveMessage(observer: observer)
         fw.sendMessage(messageName, toReceiver: self)
         XCTAssertEqual(messageValue, 1)
         
