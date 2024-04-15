@@ -151,13 +151,3 @@ internal class FrameworkAutoloader: NSObject {
     }
     
 }
-
-// MARK: - ObjCBridge+Autoloader
-@objc extension ObjCBridge: ObjCBridgeProtocol {
-    
-    /// 自动加载Autoloader
-    public static func autoload() {
-        Autoloader.autoload()
-    }
-    
-}
