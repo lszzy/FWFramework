@@ -1118,15 +1118,8 @@ public class PlayerCacheWorker: NSObject {
             if #available(iOS 13.4, *) {
                 try writeFileHandle.write(contentsOf: data)
             } else {
-                var fileError: Error?
-                ObjCBridge.tryCatch {
-                    writeFileHandle.write(data)
-                } exceptionHandler: { exception in
-                    fileError = NSError(domain: exception.name.rawValue, code: 123, userInfo: [NSLocalizedDescriptionKey: exception.reason ?? "", "exception": exception])
-                }
-                if let fileError = fileError {
-                    throw fileError
-                }
+                // 暂未捕获iOS13.4以下ObjC代码异常
+                writeFileHandle.write(data)
             }
             writeBytes += data.count
             cacheConfiguration.addCacheFragment(range)
@@ -1225,15 +1218,8 @@ public class PlayerCacheWorker: NSObject {
         if #available(iOS 13.4, *) {
             data = try readFileHandle.read(upToCount: range.length)
         } else {
-            var fileError: Error?
-            ObjCBridge.tryCatch {
-                data = readFileHandle.readData(ofLength: range.length)
-            } exceptionHandler: { exception in
-                fileError = NSError(domain: exception.name.rawValue, code: 123, userInfo: [NSLocalizedDescriptionKey: exception.reason ?? "", "exception": exception])
-            }
-            if let fileError = fileError {
-                throw fileError
-            }
+            // 暂未捕获iOS13.4以下ObjC代码异常
+            data = readFileHandle.readData(ofLength: range.length)
         }
         return data
     }
