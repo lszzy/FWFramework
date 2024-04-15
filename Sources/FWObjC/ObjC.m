@@ -46,19 +46,6 @@
 
 @end
 
-#pragma mark - UnsafeObjectBridge
-
-@implementation FWUnsafeObjectBridge
-
-- (void)dealloc {
-    [self deallocObject];
-}
-
-- (void)deallocObject {
-}
-
-@end
-
 #pragma mark - ObjCBridge
 
 typedef struct CF_BRIDGED_TYPE(id) CGSVGDocument *CGSVGDocumentRef;

@@ -69,19 +69,38 @@ public class WeakProxy: NSObject {
 
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
-open class DelegateProxy<T>: DelegateProxyBridge {
+open class DelegateProxy<T>: NSObject {
     
-    /// 泛型事件代理对象
+    open weak var target: AnyObject?
+    
     open var delegate: T? {
         get { return target as? T }
         set { target = newValue as? AnyObject }
     }
     
+    open override func isProxy() -> Bool {
+        return true
+    }
+    
+    open override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        target
+    }
+    
+    open override func conforms(to aProtocol: Protocol) -> Bool {
+        if target?.conforms(to: aProtocol) ?? false {
+            return true
+        }
+        return super.conforms(to: aProtocol)
+    }
+    
+    open override func responds(to aSelector: Selector!) -> Bool {
+        if target?.responds(to: aSelector) ?? false {
+            return true
+        }
+        return super.responds(to: aSelector)
+    }
+    
 }
-
-// MARK: - UnsafeObject
-/// 非安全对象类，不同于weak和deinit，自动释放时仍可访问target，可用于自动解绑、释放监听等场景
-open class UnsafeObject: UnsafeObjectBridge {}
 
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等

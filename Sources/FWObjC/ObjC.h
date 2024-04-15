@@ -20,18 +20,6 @@ NS_SWIFT_NAME(DelegateProxyBridge)
 
 @end
 
-#pragma mark - UnsafeObjectBridge
-
-/// 非安全对象类，不同于weak和deinit，自动释放时仍可访问object，可用于自动解绑、释放监听等场景
-NS_SWIFT_NAME(UnsafeObjectBridge)
-@interface FWUnsafeObjectBridge : NSObject
-
-@property (nonatomic, unsafe_unretained, nullable) id object;
-
-- (void)deallocObject;
-
-@end
-
 #pragma mark - ObjCBridge
 
 /// ObjC桥接协议，Swift扩展实现桥接协议即可
