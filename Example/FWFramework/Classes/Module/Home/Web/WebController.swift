@@ -58,6 +58,10 @@ class WebController: UIViewController, WebViewControllerProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        ViewControllerManager.shared.recycleWebView(webView)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

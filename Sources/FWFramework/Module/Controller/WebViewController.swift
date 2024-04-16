@@ -12,9 +12,10 @@ import WebKit
 /// 网页视图控制器协议，可覆写
 ///
 /// WebViewControllerProtocol默认未开启WebView重用，如需开启，方式如下：
-/// 1. 只需配置WebView.reuseConfigurationBlock并设置ViewControllerManager.webViewReuseIdentifier不为nil即可
-/// 2. 其他初始化、预加载、回收等重用操作框架会自动处理，详见源码
-/// 3. 如果需要预缓存资源，配置WebView.reusePreloadUrlBlock后再设置webViewReuseIdentifier即可
+/// 1. 需配置WebView.reuseConfigurationBlock并设置ViewControllerManager.webViewReuseIdentifier不为nil
+/// 2. 在网页控制器deinit中回收webView，代码示例：ViewControllerManager.shared.recycleWebView(webView)
+/// 3. 其他初始化、预加载等重用操作框架会自动处理，详见源码
+/// 4. 如果需要预缓存资源，配置WebView.reusePreloadUrlBlock后再设置webViewReuseIdentifier即可
 public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
@@ -120,13 +121,6 @@ internal extension ViewControllerManager {
         }
         
         webView.webRequest = viewController.webRequest
-    }
-    
-    func webViewControllerDeinit(_ viewController: UIViewController) {
-        guard webViewReuseIdentifier != nil,
-              let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
-        
-        ReusableViewPool.shared.recycleReusableView(viewController.webView)
     }
     
 }

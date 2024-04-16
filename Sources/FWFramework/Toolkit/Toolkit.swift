@@ -2733,16 +2733,16 @@ public enum ViewControllerLifecycleState: Int {
         
         deinit {
             stateChanged(from: state, to: .didDeinit)
-            if let viewController = viewController, viewController is ViewControllerProtocol {
-                ViewControllerManager.shared.hookDeinit(viewController)
-            }
             if completionHandler != nil {
                 completionHandler?(completionResult)
             }
             
             #if DEBUG
             if let viewController = viewController {
-                Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(viewController.classForCoder))
+                let className = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last ?? ""
+                if !className.hasPrefix("_") && !className.hasSuffix("_") {
+                    Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(viewController.classForCoder))
+                }
             }
             #endif
         }
@@ -2810,7 +2810,7 @@ public enum ViewControllerLifecycleState: Int {
             return fw_lifecycleStateTarget.state
         }
         set {
-            guard fw_issetLifecycleStateTarget, let newValue = newValue else { return }
+            guard let newValue = newValue else { return }
             fw_lifecycleStateTarget.state = newValue
         }
     }
