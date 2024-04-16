@@ -234,7 +234,9 @@ open class RequestContextAccessory: RequestAccessory {
         guard let viewController = viewController else { return }
         
         viewController.fw_observeLifecycleDeinit(object: request) { _, request in
+            guard let request = request as? HTTPRequest else { return }
             guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
+            
             request.cancel()
         }
     }
