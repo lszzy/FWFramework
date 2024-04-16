@@ -53,13 +53,11 @@ extension TestPreviewController: ViewControllerProtocol {
             FileManager.app.pathResource.app.appendingPath("Video.mp4"),
         ]
         
-        app.observeLifecycleState { vc, state in
-            if state == .didDeinit {
-                if let exitAtIndex = vc.exitAtIndex {
-                    UIWindow.app.showMessage(text: "浏览到第\(exitAtIndex + 1)张就deinit了")
-                } else {
-                    UIWindow.app.showMessage(text: "还没浏览就deinit了")
-                }
+        app.observeLifecycleDeinit { vc in
+            if let exitAtIndex = vc.exitAtIndex {
+                UIWindow.app.showMessage(text: "浏览到第\(exitAtIndex + 1)张就deinit了")
+            } else {
+                UIWindow.app.showMessage(text: "还没浏览就deinit了")
             }
         }
     }

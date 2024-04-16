@@ -815,6 +815,22 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
+    /// 添加deinit监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
+    @discardableResult
+    public func observeLifecycleDeinit(_ block: @escaping (Base) -> Void) -> NSObjectProtocol {
+        return base.fw_observeLifecycleDeinit { viewController in
+            block(viewController as! Base)
+        }
+    }
+    
+    /// 添加deinit监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
+    @discardableResult
+    public func observeLifecycleDeinit<T>(object: T, block: @escaping (Base, T) -> Void) -> NSObjectProtocol {
+        return base.fw_observeLifecycleDeinit(object: object) { viewController, object in
+            block(viewController as! Base, object)
+        }
+    }
+    
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
     public func unobserveLifecycleState(observer: Any? = nil) -> Bool {
@@ -2704,8 +2720,6 @@ public enum ViewState: Equatable {
 
 // MARK: - UIViewController+Toolkit
 /// 视图控制器常用生命周期状态枚举
-///
-/// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)
 public enum ViewControllerLifecycleState: Int {
     case didInit = 0
     case didLoad = 1
@@ -2715,8 +2729,6 @@ public enum ViewControllerLifecycleState: Int {
     case didAppear = 5
     case willDisappear = 6
     case didDisappear = 7
-    /// 注意didDeinit时请勿使用runtime关联属性(可能已被释放)
-    case didDeinit = 8
 }
 
 /// 为提升性能，触发lifecycleState改变等的swizzle代码统一放到了ViewController
@@ -2728,11 +2740,19 @@ public enum ViewControllerLifecycleState: Int {
         var completionResult: Any?
         var completionHandler: ((Any?) -> Void)?
         var state: ViewControllerLifecycleState = .didInit {
-            didSet { stateChanged(from: oldValue, to: state) }
+            didSet {
+                if let viewController = viewController, state != oldValue {
+                    let blocks = handlers.filter { !$0.isDeinit }
+                    blocks.forEach { $0.block?(viewController, state) }
+                }
+            }
         }
         
         deinit {
-            stateChanged(from: state, to: .didDeinit)
+            if let viewController = viewController {
+                let blocks = handlers.filter { $0.isDeinit }
+                blocks.forEach { $0.deinitBlock?(viewController, $0.object) }
+            }
             if completionHandler != nil {
                 completionHandler?(completionResult)
             }
@@ -2746,15 +2766,13 @@ public enum ViewControllerLifecycleState: Int {
             }
             #endif
         }
-        
-        private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
-            guard let viewController = viewController, newState != oldState else { return }
-            handlers.forEach { $0.block?(viewController, newState) }
-        }
     }
     
     private class LifecycleStateHandler: NSObject {
         var block: ((UIViewController, ViewControllerLifecycleState) -> Void)?
+        var isDeinit: Bool = false
+        var object: Any?
+        var deinitBlock: ((UIViewController, Any?) -> Void)?
     }
 
     /// 添加生命周期变化监听句柄，返回监听者observer
@@ -2762,6 +2780,31 @@ public enum ViewControllerLifecycleState: Int {
     public func fw_observeLifecycleState(_ block: @escaping (UIViewController, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
         let target = LifecycleStateHandler()
         target.block = block
+        fw_lifecycleStateTarget.handlers.append(target)
+        return target
+    }
+    
+    /// 添加deinit监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
+    @discardableResult
+    public func fw_observeLifecycleDeinit(_ block: @escaping (UIViewController) -> Void) -> NSObjectProtocol {
+        let target = LifecycleStateHandler()
+        target.isDeinit = true
+        target.deinitBlock = { vc, _ in
+            block(vc)
+        }
+        fw_lifecycleStateTarget.handlers.append(target)
+        return target
+    }
+    
+    /// 添加deinit监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
+    @discardableResult
+    public func fw_observeLifecycleDeinit<T>(object: T, block: @escaping (UIViewController, T) -> Void) -> NSObjectProtocol {
+        let target = LifecycleStateHandler()
+        target.isDeinit = true
+        target.object = object
+        target.deinitBlock = { vc, obj in
+            block(vc, obj as! T)
+        }
         fw_lifecycleStateTarget.handlers.append(target)
         return target
     }

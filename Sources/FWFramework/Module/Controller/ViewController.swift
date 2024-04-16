@@ -106,12 +106,6 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    /// 回收WebView，开启重用后需在网页控制器deinit中手工调用
-    public func recycleWebView(_ webView: WebView) {
-        guard webViewReuseIdentifier != nil else { return }
-        ReusableViewPool.shared.recycleReusableView(webView)
-    }
-    
     // MARK: - Intercepter
     private var intercepters: [String: ViewControllerIntercepter] = [:]
     
