@@ -818,7 +818,7 @@ extension Wrapper where Base: UIViewController {
     /// 添加deinit监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleDeinit(_ block: @escaping (Base) -> Void) -> NSObjectProtocol {
-        return base.fw_observeLifecycleDeinit { viewController in
+        return base.fw_observeLifecycleDeinit { viewController, _ in
             block(viewController as! Base)
         }
     }
@@ -827,7 +827,7 @@ extension Wrapper where Base: UIViewController {
     @discardableResult
     public func observeLifecycleDeinit<T>(object: T, block: @escaping (Base, T) -> Void) -> NSObjectProtocol {
         return base.fw_observeLifecycleDeinit(object: object) { viewController, object in
-            block(viewController as! Base, object)
+            block(viewController as! Base, object as! T)
         }
     }
     
@@ -2784,27 +2784,13 @@ public enum ViewControllerLifecycleState: Int {
         return target
     }
     
-    /// 添加deinit监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
+    /// 添加deinit监听句柄，可携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
-    public func fw_observeLifecycleDeinit(_ block: @escaping (UIViewController) -> Void) -> NSObjectProtocol {
-        let target = LifecycleStateHandler()
-        target.isDeinit = true
-        target.deinitBlock = { vc, _ in
-            block(vc)
-        }
-        fw_lifecycleStateTarget.handlers.append(target)
-        return target
-    }
-    
-    /// 添加deinit监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
-    @discardableResult
-    public func fw_observeLifecycleDeinit<T>(object: T, block: @escaping (UIViewController, T) -> Void) -> NSObjectProtocol {
+    public func fw_observeLifecycleDeinit(object: Any? = nil, block: @escaping (UIViewController, Any?) -> Void) -> NSObjectProtocol {
         let target = LifecycleStateHandler()
         target.isDeinit = true
         target.object = object
-        target.deinitBlock = { vc, obj in
-            block(vc, obj as! T)
-        }
+        target.deinitBlock = block
         fw_lifecycleStateTarget.handlers.append(target)
         return target
     }
