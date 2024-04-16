@@ -328,10 +328,6 @@ class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
         
         webRequest = "http://kvm.wuyong.site/test.php"
     }
-    
-    deinit {
-        ViewControllerManager.shared.recycleWebView(webView)
-    }
 }
 
 class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {

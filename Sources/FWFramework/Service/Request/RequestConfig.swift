@@ -233,10 +233,8 @@ open class RequestContextAccessory: RequestAccessory {
         }
         guard let viewController = viewController else { return }
         
-        viewController.fw_observeLifecycleState { _, state in
-            guard state == .didDeinit else { return }
+        viewController.fw_observeLifecycleDeinit(object: request) { _, request in
             guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
-            
             request.cancel()
         }
     }
