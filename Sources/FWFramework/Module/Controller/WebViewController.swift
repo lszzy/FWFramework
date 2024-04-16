@@ -98,8 +98,9 @@ internal extension ViewControllerManager {
         viewController.view.addSubview(webView)
         
         if webViewReuseIdentifier != nil {
-            viewController.fw_observeLifecycleDeinit(object: webView) { [weak self] _, webView in
+            viewController.fw_observeLifecycleState(object: webView) { [weak self] _, state, webView in
                 guard self?.webViewReuseIdentifier != nil,
+                      state == .didDeinit,
                       let webView = webView as? WebView else { return }
                 
                 ReusableViewPool.shared.recycleReusableView(webView)
