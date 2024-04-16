@@ -56,7 +56,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["外部safari", "onOpenUrl"],
         ["内部safari", "onOpenSafari"],
         ["打开两个界面", "onOpenMulti"],
-        ["控制器完成回调", "onOpenResult"],
+        ["界面完成回调", "onOpenResult"],
         ["iOS14bug", "onOpen14"],
     ]
     
@@ -363,14 +363,14 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         vc.view.backgroundColor = AppTheme.backgroundColor
         vc.app.completionHandler = { [weak self] result in
             let result = result != nil ? APP.safeString(result) : "deinit"
-            self?.app.showMessage(text: "界面已关闭，原因：\(result)")
+            self?.app.showMessage(text: "完成回调：\(result)")
         }
         vc.app.setLeftBarItem("关闭") { [weak vc] _ in
-            vc?.app.completionResult = "点击了关闭"
+            vc?.app.completionResult = "点击关闭"
             vc?.dismiss(animated: true)
         }
         vc.app.setRightBarItem("完成") { [weak vc] _ in
-            vc?.app.completionResult = "点击了完成"
+            vc?.app.completionResult = "点击完成"
             vc?.dismiss(animated: true)
         }
         
