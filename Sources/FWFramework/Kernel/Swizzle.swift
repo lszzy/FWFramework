@@ -210,23 +210,6 @@ extension Wrapper where Base: NSObject {
     ) -> Bool {
         return base.fw_isSwizzleInstanceMethod(originalSelector, identifier: identifier)
     }
-    
-    /// 使用swizzle替换类实例dealloc方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
-    /// - Parameters:
-    ///   - originalClass: 原始类
-    ///   - identifier: 唯一标识，默认nil
-    ///   - block: 实现句柄，参数为实例对象
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func swizzleDeallocMethod<T: NSObject>(
-        _ originalClass: T.Type = T.self,
-        identifier: String? = nil,
-        block: @escaping (T) -> Void
-    ) -> Bool {
-        return Base.fw_swizzleDeallocMethod(originalClass, identifier: identifier) { object in
-            block(object as! T)
-        }
-    }
 }
 
 // MARK: - NSObject+Swizzle
@@ -446,21 +429,6 @@ extension Wrapper where Base: NSObject {
             classIdentifier = NSStringFromClass(objectClass)
         }
         return classIdentifier + "_" + NSStringFromSelector(selector) + "_" + identifier
-    }
-    
-    /// 使用swizzle替换类实例dealloc方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
-    /// - Parameters:
-    ///   - originalClass: 原始类
-    ///   - identifier: 唯一标识，默认nil
-    ///   - block: 实现句柄，参数为实例对象
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func fw_swizzleDeallocMethod(
-        _ originalClass: AnyClass,
-        identifier: String? = nil,
-        block: @escaping (NSObject) -> Void
-    ) -> Bool {
-        return ObjCBridge.swizzleDeallocMethod(originalClass, identifier: identifier, with: block)
     }
     
 }

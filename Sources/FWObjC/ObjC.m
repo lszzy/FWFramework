@@ -81,17 +81,6 @@
     }
 }
 
-+ (BOOL)swizzleDeallocMethod:(Class)originalClass identifier:(NSString *)identifier withBlock:(void (^)(__kindof NSObject *__unsafe_unretained _Nonnull))block {
-    return [self swizzleInstanceMethod:originalClass selector:NSSelectorFromString(@"dealloc") identifier:identifier withBlock:^id _Nonnull(__unsafe_unretained Class  _Nonnull targetClass, SEL  _Nonnull originalCMD, IMP  _Nonnull (^ _Nonnull originalIMP)(void)) {
-        return ^(__unsafe_unretained NSObject *selfObject) {
-            if (block) block(selfObject);
-            
-            void (*originalMSG)(id, SEL) = (void (*)(id, SEL))originalIMP();
-            originalMSG(selfObject, originalCMD);
-        };
-    }];
-}
-
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector {
     Method originalMethod = class_getInstanceMethod(originalClass, originalSelector);
     Method swizzleMethod = class_getInstanceMethod(originalClass, swizzleSelector);

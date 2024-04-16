@@ -1306,11 +1306,6 @@ public class StatisticalEvent: NSObject, NSCopying {
             return .none
         }
         
-        let lifecycleStates: [ViewControllerLifecycleState] = [.didLayoutSubviews, .didAppear]
-        if !lifecycleStates.contains(fw_lifecycleState) {
-            return .none
-        }
-        
         if let exposureBlock = fw_statisticalExposure?.exposureBlock,
            !exposureBlock(self) {
             return .none

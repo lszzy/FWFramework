@@ -807,11 +807,6 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIViewController
 extension Wrapper where Base: UIViewController {
-    /// 当前生命周期状态，默认Ready
-    public var lifecycleState: ViewControllerLifecycleState {
-        return base.fw_lifecycleState
-    }
-
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
     public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
@@ -832,7 +827,7 @@ extension Wrapper where Base: UIViewController {
         set { base.fw_completionResult = newValue }
     }
 
-    /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
+    /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
     public var completionHandler: ((Any?) -> Void)? {
         get { return base.fw_completionHandler }
         set { base.fw_completionHandler = newValue }
@@ -2709,6 +2704,8 @@ public enum ViewState: Equatable {
 
 // MARK: - UIViewController+Toolkit
 /// 视图控制器常用生命周期状态枚举
+///
+/// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)
 public enum ViewControllerLifecycleState: Int {
     case didInit = 0
     case didLoad = 1
@@ -2718,6 +2715,7 @@ public enum ViewControllerLifecycleState: Int {
     case didAppear = 5
     case willDisappear = 6
     case didDisappear = 7
+    /// 注意didDeinit时请勿使用runtime关联属性(可能已被释放)
     case didDeinit = 8
 }
 
@@ -2725,71 +2723,111 @@ public enum ViewControllerLifecycleState: Int {
 @_spi(FW) extension UIViewController {
     
     private class LifecycleStateTarget: NSObject {
-        var block: ((UIViewController, ViewControllerLifecycleState) -> Void)?
+        unowned(unsafe) var viewController: UIViewController?
+        var handlers: [LifecycleStateHandler] = []
+        var completionResult: Any?
+        var completionHandler: ((Any?) -> Void)?
+        var state: ViewControllerLifecycleState = .didInit {
+            didSet { stateChanged(from: oldValue, to: state) }
+        }
+        
+        deinit {
+            stateChanged(from: state, to: .didDeinit)
+            if let viewController = viewController, viewController is ViewControllerProtocol {
+                ViewControllerManager.shared.hookDeinit(viewController)
+            }
+            if completionHandler != nil {
+                completionHandler?(completionResult)
+            }
+            
+            #if DEBUG
+            if let viewController = viewController {
+                Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(viewController.classForCoder))
+            }
+            #endif
+        }
+        
+        private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
+            guard let viewController = viewController, newState != oldState else { return }
+            handlers.forEach { $0.block?(viewController, newState) }
+        }
     }
     
-    /// 当前生命周期状态，默认didInit
-    public internal(set) var fw_lifecycleState: ViewControllerLifecycleState {
-        get {
-            let value = fw_propertyInt(forName: "fw_lifecycleState")
-            return .init(rawValue: value) ?? .didInit
-        }
-        set {
-            let valueChanged = self.fw_lifecycleState != newValue
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_lifecycleState")
-            
-            if valueChanged, fw_issetLifecycleStateTargets {
-                let targets = fw_lifecycleStateTargets
-                for target in targets {
-                    target.block?(self, newValue)
-                }
-            }
-        }
+    private class LifecycleStateHandler: NSObject {
+        var block: ((UIViewController, ViewControllerLifecycleState) -> Void)?
     }
 
     /// 添加生命周期变化监听句柄，返回监听者observer
     @discardableResult
     public func fw_observeLifecycleState(_ block: @escaping (UIViewController, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
-        let target = LifecycleStateTarget()
+        let target = LifecycleStateHandler()
         target.block = block
-        fw_lifecycleStateTargets.append(target)
+        fw_lifecycleStateTarget.handlers.append(target)
         return target
     }
     
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
     public func fw_unobserveLifecycleState(observer: Any? = nil) -> Bool {
-        guard fw_issetLifecycleStateTargets else { return false }
+        guard fw_issetLifecycleStateTarget else { return false }
         
-        if let observer = observer as? LifecycleStateTarget {
-            let result = fw_lifecycleStateTargets.contains(observer)
-            fw_lifecycleStateTargets.removeAll { $0 == observer }
+        if let observer = observer as? LifecycleStateHandler {
+            let result = fw_lifecycleStateTarget.handlers.contains(observer)
+            fw_lifecycleStateTarget.handlers.removeAll { $0 == observer }
             return result
         } else {
-            fw_lifecycleStateTargets.removeAll()
+            fw_lifecycleStateTarget.handlers.removeAll()
             return true
         }
-    }
-    
-    private var fw_issetLifecycleStateTargets: Bool {
-        return fw_property(forName: "fw_lifecycleStateTargets") != nil
-    }
-    
-    private var fw_lifecycleStateTargets: [LifecycleStateTarget] {
-        get { return fw_property(forName: "fw_lifecycleStateTargets") as? [LifecycleStateTarget] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_lifecycleStateTargets") }
     }
 
     /// 自定义完成结果对象，默认nil
     public var fw_completionResult: Any? {
-        get { fw_property(forName: "fw_completionResult") }
-        set { fw_setProperty(newValue, forName: "fw_completionResult") }
+        get {
+            guard fw_issetLifecycleStateTarget else { return nil }
+            return fw_lifecycleStateTarget.completionResult
+        }
+        set {
+            fw_lifecycleStateTarget.completionResult = newValue
+        }
     }
 
-    /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为fwCompletionResult。支持提前调用，调用后需置为nil
+    /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
     public var fw_completionHandler: ((Any?) -> Void)? {
-        get { fw_property(forName: "fw_completionHandler") as? (Any?) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_completionHandler") }
+        get {
+            guard fw_issetLifecycleStateTarget else { return nil }
+            return fw_lifecycleStateTarget.completionHandler
+        }
+        set {
+            fw_lifecycleStateTarget.completionHandler = newValue
+        }
+    }
+    
+    /// 内部生命周期状态，需添加监听或设置完成回调才有值，默认nil
+    internal var fw_lifecycleState: ViewControllerLifecycleState? {
+        get {
+            guard fw_issetLifecycleStateTarget else { return nil }
+            return fw_lifecycleStateTarget.state
+        }
+        set {
+            guard fw_issetLifecycleStateTarget, let newValue = newValue else { return }
+            fw_lifecycleStateTarget.state = newValue
+        }
+    }
+    
+    private var fw_issetLifecycleStateTarget: Bool {
+        return fw_property(forName: "fw_lifecycleStateTarget") != nil
+    }
+    
+    private var fw_lifecycleStateTarget: LifecycleStateTarget {
+        if let target = fw_property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
+            return target
+        }
+        
+        let target = LifecycleStateTarget()
+        target.viewController = self
+        fw_setProperty(target, forName: "fw_lifecycleStateTarget")
+        return target
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil

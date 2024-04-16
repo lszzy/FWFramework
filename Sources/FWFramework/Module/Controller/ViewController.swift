@@ -274,27 +274,6 @@ public class ViewControllerManager: NSObject {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
-        
-        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
-            let viewController = selfObject as? UIViewController
-            viewController?.fw_lifecycleState = .didDeinit
-            if let viewController = viewController, viewController is ViewControllerProtocol {
-                ViewControllerManager.shared.hookDeinit(viewController)
-            }
-            
-            let completionHandler = viewController?.fw_completionHandler
-            if completionHandler != nil {
-                let completionResult = viewController?.fw_completionResult
-                completionHandler?(completionResult)
-            }
-            
-            #if DEBUG
-            let className = NSStringFromClass(selfObject.classForCoder).components(separatedBy: ".").last ?? ""
-            if !className.hasPrefix("_") && !className.hasSuffix("_") {
-                Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
-            }
-            #endif
-        }
     }
     
     fileprivate static func registerDefaultIntercepters() {
@@ -455,7 +434,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookDeinit(_ viewController: UIViewController) {
+    internal func hookDeinit(_ viewController: UIViewController) {
         // 1. 默认deinit
         hookDeinit?(viewController)
         
