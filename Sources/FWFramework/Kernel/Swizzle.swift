@@ -227,7 +227,7 @@ extension Wrapper where Base: NSObject {
         _ originalSelector: Selector,
         swizzleMethod: Selector
     ) -> Bool {
-        return ObjCBridge.exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return fw_exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类静态方法。复杂情况可能会冲突
@@ -241,7 +241,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector
     ) -> Bool {
         guard let metaClass = object_getClass(Self.self) else { return false }
-        return ObjCBridge.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return fw_exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
@@ -280,6 +280,25 @@ extension Wrapper where Base: NSObject {
     ) -> Bool {
         guard let metaClass = object_getClass(Self.self) else { return false }
         return fw_exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
+    }
+    
+    private static func fw_exchangeInstanceMethod(
+        _ originalClass: AnyClass,
+        originalSelector: Selector,
+        swizzleSelector: Selector
+    ) -> Bool {
+        let originalMethod = class_getInstanceMethod(originalClass, originalSelector)
+        guard let swizzleMethod = class_getInstanceMethod(originalClass, swizzleSelector) else { return false }
+        
+        if let originalMethod = originalMethod {
+            class_addMethod(originalClass, originalSelector, class_getMethodImplementation(originalClass, originalSelector)!, method_getTypeEncoding(originalMethod))
+        } else {
+            let impBlock: @convention(block) (AnyObject) -> Void = { _ in }
+            class_addMethod(originalClass, originalSelector, imp_implementationWithBlock(impBlock as Any), "v@:")
+        }
+        class_addMethod(originalClass, swizzleSelector, class_getMethodImplementation(originalClass, swizzleSelector)!, method_getTypeEncoding(swizzleMethod))
+        method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector)!, class_getInstanceMethod(originalClass, swizzleSelector)!)
+        return true
     }
     
     private static func fw_exchangeInstanceMethod(
