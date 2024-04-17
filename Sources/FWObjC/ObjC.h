@@ -20,8 +20,6 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector;
 
-+ (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector withBlock:(id)swizzleBlock;
-
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects;
 
 + (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(nullable NSArray *)arguments returnValue:(void *)result;

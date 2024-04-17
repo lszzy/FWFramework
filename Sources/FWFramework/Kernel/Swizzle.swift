@@ -262,7 +262,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector,
         block: Any
     ) -> Bool {
-        return ObjCBridge.exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
+        return fw_exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
     }
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
@@ -279,7 +279,23 @@ extension Wrapper where Base: NSObject {
         block: Any
     ) -> Bool {
         guard let metaClass = object_getClass(Self.self) else { return false }
-        return ObjCBridge.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
+        return fw_exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
+    }
+    
+    private static func fw_exchangeInstanceMethod(
+        _ originalClass: AnyClass,
+        originalSelector: Selector,
+        swizzleSelector: Selector,
+        block: Any
+    ) -> Bool {
+        guard let originalMethod = class_getInstanceMethod(originalClass, originalSelector) else { return false }
+        let swizzleMethod = class_getInstanceMethod(originalClass, swizzleSelector)
+        guard swizzleMethod == nil else { return false }
+        
+        class_addMethod(originalClass, originalSelector, class_getMethodImplementation(originalClass, originalSelector)!, method_getTypeEncoding(originalMethod))
+        class_addMethod(originalClass, swizzleSelector, imp_implementationWithBlock(block), method_getTypeEncoding(originalMethod))
+        method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector)!, class_getInstanceMethod(originalClass, swizzleSelector)!)
+        return true
     }
     
     /// 生成原始方法对应的随机交换方法
