@@ -227,7 +227,7 @@ extension Wrapper where Base: NSObject {
         _ originalSelector: Selector,
         swizzleMethod: Selector
     ) -> Bool {
-        return fw_exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return fw_exchangeClass(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类静态方法。复杂情况可能会冲突
@@ -241,7 +241,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector
     ) -> Bool {
         guard let metaClass = object_getClass(Self.self) else { return false }
-        return fw_exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return fw_exchangeClass(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类实例方法为block实现。复杂情况可能会冲突
@@ -262,7 +262,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector,
         block: Any
     ) -> Bool {
-        return fw_exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
+        return fw_exchangeClass(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
     }
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
@@ -279,10 +279,20 @@ extension Wrapper where Base: NSObject {
         block: Any
     ) -> Bool {
         guard let metaClass = object_getClass(Self.self) else { return false }
-        return fw_exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
+        return fw_exchangeClass(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
     }
     
-    private static func fw_exchangeInstanceMethod(
+    /// 生成原始方法对应的随机交换方法
+    ///
+    /// - Parameter selector: 原始方法
+    /// - Returns: 交换方法
+    public static func fw_exchangeSwizzleSelector(
+        _ selector: Selector
+    ) -> Selector {
+        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
+    }
+    
+    private static func fw_exchangeClass(
         _ originalClass: AnyClass,
         originalSelector: Selector,
         swizzleSelector: Selector
@@ -293,7 +303,7 @@ extension Wrapper where Base: NSObject {
         if let originalMethod = originalMethod {
             class_addMethod(originalClass, originalSelector, class_getMethodImplementation(originalClass, originalSelector)!, method_getTypeEncoding(originalMethod))
         } else {
-            let impBlock: @convention(block) (AnyObject) -> Void = { _ in }
+            let impBlock: @convention(block) (Any) -> Void = { _ in }
             class_addMethod(originalClass, originalSelector, imp_implementationWithBlock(impBlock as Any), "v@:")
         }
         class_addMethod(originalClass, swizzleSelector, class_getMethodImplementation(originalClass, swizzleSelector)!, method_getTypeEncoding(swizzleMethod))
@@ -301,7 +311,7 @@ extension Wrapper where Base: NSObject {
         return true
     }
     
-    private static func fw_exchangeInstanceMethod(
+    private static func fw_exchangeClass(
         _ originalClass: AnyClass,
         originalSelector: Selector,
         swizzleSelector: Selector,
@@ -315,16 +325,6 @@ extension Wrapper where Base: NSObject {
         class_addMethod(originalClass, swizzleSelector, imp_implementationWithBlock(block), method_getTypeEncoding(originalMethod))
         method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector)!, class_getInstanceMethod(originalClass, swizzleSelector)!)
         return true
-    }
-    
-    /// 生成原始方法对应的随机交换方法
-    ///
-    /// - Parameter selector: 原始方法
-    /// - Returns: 交换方法
-    public static func fw_exchangeSwizzleSelector(
-        _ selector: Selector
-    ) -> Selector {
-        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
     }
 
     // MARK: - Swizzle
@@ -359,12 +359,12 @@ extension Wrapper where Base: NSObject {
         guard let target = target else { return false }
 
         if object_isClass(target), let targetClass = target as? AnyClass {
-            return ObjCBridge.swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, with: block)
+            return fw_swizzleInstanceMethod(targetClass, selector: selector, identifier: identifier, block: block)
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
             NSObject.fw_setAssociatedObject(target, key: swizzleIdentifier, value: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            return ObjCBridge.swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", with: block)
+            return fw_swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", block: block)
         }
     }
     
@@ -396,7 +396,19 @@ extension Wrapper where Base: NSObject {
         identifier: String? = nil,
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
-        return ObjCBridge.swizzleInstanceMethod(originalClass, selector: selector, identifier: identifier, with: block)
+        guard let identifier = identifier, !identifier.isEmpty else {
+            return fw_swizzleClass(originalClass, selector: selector, block: block)
+        }
+        
+        objc_sync_enter(fw_swizzleIdentifiers)
+        defer { objc_sync_exit(fw_swizzleIdentifiers) }
+        
+        let swizzleIdentifier = String(format: "%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? "+" : "-", NSStringFromSelector(selector), identifier)
+        if !fw_swizzleIdentifiers.contains(swizzleIdentifier) {
+            fw_swizzleIdentifiers.add(swizzleIdentifier)
+            return fw_swizzleClass(originalClass, selector: selector, block: block)
+        }
+        return false
     }
 
     /// 使用swizzle替换类静态方法为block实现，identifier有值且相同时仅执行一次。复杂情况不会冲突，推荐使用
@@ -415,7 +427,7 @@ extension Wrapper where Base: NSObject {
         block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
     ) -> Bool {
         guard let metaClass = object_getClass(originalClass) else { return false }
-        return ObjCBridge.swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, with: block)
+        return fw_swizzleInstanceMethod(metaClass, selector: selector, identifier: identifier, block: block)
     }
     
     /// 使用swizzle替换对象实例方法为block实现，identifier相同时仅执行一次。结合isSwizzleInstanceMethod使用
@@ -434,12 +446,7 @@ extension Wrapper where Base: NSObject {
         guard let objectClass = object_getClass(self) else { return false }
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
         fw_setProperty(true, forName: swizzleIdentifier)
-        return ObjCBridge.swizzleInstanceMethod(
-            objectClass,
-            selector: originalSelector,
-            identifier: identifier,
-            with: block
-        )
+        return NSObject.fw_swizzleInstanceMethod(objectClass, selector: originalSelector, identifier: identifier, block: block)
     }
     
     /// 判断对象是否使用swizzle替换过指定identifier实例方法。结合swizzleInstanceMethod使用
@@ -458,12 +465,62 @@ extension Wrapper where Base: NSObject {
         return fw_property(forName: swizzleIdentifier) != nil
     }
     
+    private static var fw_swizzleIdentifiers = NSMutableSet()
+    
     private static func fw_swizzleIdentifier(_ object: Any, selector: Selector, identifier: String) -> String {
         var classIdentifier = ""
         if let objectClass = object_getClass(object) {
             classIdentifier = NSStringFromClass(objectClass)
         }
         return classIdentifier + "_" + NSStringFromSelector(selector) + "_" + identifier
+    }
+    
+    private static func fw_swizzleClass(
+        _ originalClass: AnyClass,
+        selector originalSelector: Selector,
+        block: @escaping (AnyClass, Selector, @escaping () -> IMP) -> Any
+    ) -> Bool {
+        let originalMethod = class_getInstanceMethod(originalClass, originalSelector)
+        let imp = originalMethod != nil ? method_getImplementation(originalMethod!) : nil
+        var isOverride = false
+        if let originalMethod = originalMethod {
+            let superclassMethod = class_getInstanceMethod(class_getSuperclass(originalClass), originalSelector)
+            if superclassMethod == nil {
+                isOverride = true
+            } else {
+                isOverride = (originalMethod != superclassMethod)
+            }
+        }
+        
+        let originalIMP: () -> IMP = {
+            var result: IMP?
+            if isOverride {
+                result = imp
+            } else {
+                let superclass: AnyClass? = class_getSuperclass(originalClass)
+                result = class_getMethodImplementation(superclass, originalSelector)
+            }
+            if result == nil {
+                let impBlock: @convention(block) (Any) -> Void = { _ in }
+                result = imp_implementationWithBlock(impBlock)
+            }
+            return result!
+        }
+        
+        if isOverride {
+            method_setImplementation(originalMethod!, imp_implementationWithBlock(block(originalClass, originalSelector, originalIMP)))
+        } else {
+            var typeEncoding = originalMethod != nil ? method_getTypeEncoding(originalMethod!) : nil
+            if typeEncoding == nil {
+                let methodSignature = originalClass.objcInstanceMethodSignature(for: originalSelector)
+                let typeSelector = NSSelectorFromString(String(format: "_%@String", "type"))
+                let typeString = methodSignature.responds(to: typeSelector) ? methodSignature.perform(typeSelector)?.takeUnretainedValue() as? NSString : nil
+                typeEncoding = typeString?.utf8String
+            }
+            
+            class_addMethod(originalClass, originalSelector, imp_implementationWithBlock(block(originalClass, originalSelector, originalIMP)), typeEncoding)
+        }
+        return true
     }
     
 }
