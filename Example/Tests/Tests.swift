@@ -62,7 +62,7 @@ class Tests: XCTestCase {
         fw.removeBinding(forKey: "testRuntime3")
         XCTAssertEqual(fw.boundInt(forKey: "testRuntime3"), 0)
         
-        XCTAssertEqual(fw.invokeMethod(#selector(loaderAction(_:)), object: "Hello ") as? String, "Hello Target")
+        XCTAssertEqual(perform(#selector(loaderAction(_:)), with: "Hello ")?.takeUnretainedValue() as? String, "Hello Target")
     }
     
     func testSwizzle() {

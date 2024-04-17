@@ -300,7 +300,7 @@ public class Navigator: NSObject {
                let flexWindow = mainWindow,
                flexWindow.isKind(of: flexClass),
                flexWindow.responds(to: flexSelector) {
-                mainWindow = flexWindow.fw_invokeMethod(flexSelector) as? UIWindow
+                mainWindow = flexWindow.perform(flexSelector)?.takeUnretainedValue() as? UIWindow
             }
             #endif
             

@@ -71,7 +71,7 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        app.invokeMethod(NSSelectorFromString(rowData[1]))
+        _ = self.perform(NSSelectorFromString(rowData[1]))
     }
     
     @objc func onPresent() {
