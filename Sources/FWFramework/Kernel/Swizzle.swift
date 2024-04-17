@@ -227,7 +227,7 @@ extension Wrapper where Base: NSObject {
         _ originalSelector: Selector,
         swizzleMethod: Selector
     ) -> Bool {
-        return ObjCBridge.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod)
+        return ObjCBridge.exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
     /// 交换类静态方法。复杂情况可能会冲突
@@ -240,7 +240,7 @@ extension Wrapper where Base: NSObject {
         _ originalSelector: Selector,
         swizzleMethod: Selector
     ) -> Bool {
-        guard let metaClass = object_getClass(Self.classForCoder()) else { return false }
+        guard let metaClass = object_getClass(Self.self) else { return false }
         return ObjCBridge.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
     }
     
@@ -262,7 +262,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector,
         block: Any
     ) -> Bool {
-        return ObjCBridge.exchangeInstanceMethod(Self.classForCoder(), originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
+        return ObjCBridge.exchangeInstanceMethod(Self.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
     }
 
     /// 交换类静态方法为block实现。复杂情况可能会冲突
@@ -278,7 +278,7 @@ extension Wrapper where Base: NSObject {
         swizzleMethod: Selector,
         block: Any
     ) -> Bool {
-        guard let metaClass = object_getClass(Self.classForCoder()) else { return false }
+        guard let metaClass = object_getClass(Self.self) else { return false }
         return ObjCBridge.exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, withBlock: block)
     }
     

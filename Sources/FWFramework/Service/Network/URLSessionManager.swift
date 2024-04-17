@@ -535,7 +535,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     
     // MARK: - NSObject
     open override var description: String {
-        return String(format: "<%@: %p, session: %@, operationQueue: %@>", NSStringFromClass(self.classForCoder), self, self.session, self.operationQueue)
+        return String(format: "<%@: %p, session: %@, operationQueue: %@>", NSStringFromClass(type(of: self)), self, self.session, self.operationQueue)
     }
     
     open override func responds(to selector: Selector!) -> Bool {
@@ -551,7 +551,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             return didFinishEventsForBackgroundURLSession != nil
         }
         
-        return self.classForCoder.instancesRespond(to: selector)
+        return type(of: self).instancesRespond(to: selector)
     }
 }
 
@@ -733,7 +733,7 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
         if let method = class_getInstanceMethod(self, #selector(af_resume)) {
             originalResumeIMP = method_getImplementation(method)
         }
-        var currentClass: AnyClass? = localDataTask.classForCoder
+        var currentClass: AnyClass? = type(of: localDataTask)
         
         while let classResumeMethod = class_getInstanceMethod(currentClass, NSSelectorFromString("resume")) {
             let superClass: AnyClass? = currentClass?.superclass()

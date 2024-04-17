@@ -2747,15 +2747,17 @@ public enum ViewControllerLifecycleState: Int {
             if let viewController = viewController {
                 handlers.forEach { $0.block?(viewController, .didDeinit, $0.object) }
             }
+            handlers.removeAll()
+            
             if completionHandler != nil {
                 completionHandler?(completionResult)
             }
             
             #if DEBUG
             if let viewController = viewController {
-                let className = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last ?? ""
+                let className = NSStringFromClass(type(of: viewController)).components(separatedBy: ".").last ?? ""
                 if !className.hasPrefix("_") && !className.hasSuffix("_") {
-                    Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(viewController.classForCoder))
+                    Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
                 }
             }
             #endif

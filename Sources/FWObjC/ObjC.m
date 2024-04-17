@@ -254,26 +254,6 @@
     #pragma clang diagnostic pop
 }
 
-+ (NSArray<Class> *)getClasses:(Class)superClass {
-    NSMutableArray<Class> *resultClasses = [[NSMutableArray<Class> alloc] init];
-    unsigned int classesCount = 0;
-    Class *classList = objc_copyClassList(&classesCount);
-    Class classType = Nil, parentType = Nil, rootClass = [NSObject class];
-    for (unsigned int i = 0; i < classesCount; ++i) {
-        classType = classList[i];
-        parentType = class_getSuperclass(classType);
-        while (parentType && parentType != rootClass) {
-            if (parentType == superClass) {
-                [resultClasses addObject:classType];
-                break;
-            }
-            parentType = class_getSuperclass(parentType);
-        }
-    }
-    free(classList);
-    return resultClasses;
-}
-
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException * _Nonnull, Class  _Nonnull __unsafe_unretained, SEL _Nonnull, NSString * _Nonnull, NSInteger))exceptionHandler {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

@@ -66,12 +66,12 @@ class Tests: XCTestCase {
     }
     
     func testSwizzle() {
-        NSObject.fw.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction), methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in {
+        NSObject.fw.swizzleInstanceMethod(Self.self, selector: #selector(originalAction), methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in {
             let value = store.original($0, store.selector)
             return value + " Action"
         }}
         
-        NSObject.fw.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { (store: SwizzleStore<@convention(c)(Tests.Type, Selector) -> String, @convention(block)(Tests.Type) -> String>) in {
+        NSObject.fw.swizzleClassMethod(Self.self, selector: #selector(Tests.classAction)) { (store: SwizzleStore<@convention(c)(Tests.Type, Selector) -> String, @convention(block)(Tests.Type) -> String>) in {
             let value = store.original($0, store.selector)
             return value + " Action"
         }}

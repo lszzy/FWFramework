@@ -127,7 +127,7 @@ public class ViewControllerManager: NSObject {
     
     private func intercepterNames(for viewController: UIViewController) -> [String] {
         // 同一个类只解析一次，优先加载类缓存
-        let className = NSStringFromClass(viewController.classForCoder)
+        let className = NSStringFromClass(type(of: viewController))
         if let intercepterNames = classIntercepters[className] {
             return intercepterNames
         }

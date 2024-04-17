@@ -32,8 +32,6 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (void)applyAppearance:(NSObject *)object;
 
-+ (NSArray<Class> *)getClasses:(Class)superClass;
-
 + (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;
 
 @end

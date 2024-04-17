@@ -688,7 +688,7 @@ public class PlayerCacheContentInfo: NSObject, NSSecureCoding {
     }
     
     public override var debugDescription: String {
-        return String(format: "%@\ncontentLength: %lld\ncontentType: %@\nbyteRangeAccessSupported:%@", NSStringFromClass(self.classForCoder), contentLength, contentType, "\(byteRangeAccessSupported)")
+        return String(format: "%@\ncontentLength: %lld\ncontentType: %@\nbyteRangeAccessSupported:%@", NSStringFromClass(type(of: self)), contentLength, contentType, "\(byteRangeAccessSupported)")
     }
 }
 

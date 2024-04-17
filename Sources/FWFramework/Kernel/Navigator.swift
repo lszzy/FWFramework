@@ -492,7 +492,7 @@ public class Navigator: NSObject {
                 return workflowName
             }
             
-            let className = NSStringFromClass(classForCoder)
+            let className = NSStringFromClass(type(of: self))
                 .components(separatedBy: ".").last ?? ""
             let workflowName = className
                 .replacingOccurrences(of: "ViewController", with: "")
