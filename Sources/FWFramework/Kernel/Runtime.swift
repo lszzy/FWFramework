@@ -388,7 +388,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
+        return NSObject.fw_invokeMethod(self, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -450,7 +450,29 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
     @discardableResult
     public static func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
+        return fw_invokeMethod(self, selector: selector, objects: objects)
+    }
+    
+    private static func fw_invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]) -> Any? {
+        guard let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector) else { return nil }
+        guard let invocationClass = NSClassFromString("NSInvocation") else { return nil }
+        
+        let invocation = invocationClass.objcInvocation(withMethodSignature: signature)
+        invocation.objcTarget = target
+        invocation.objcSelector = selector
+        let paramsCount = min(Int(signature.objcNumberOfArguments) - 2, objects.count)
+        for i in 0..<paramsCount {
+            var object = objects[i]
+            if object is NSNull { continue }
+            invocation.objcSetArgument(&object, at: i + 2)
+        }
+        invocation.objcInvoke()
+        
+        var returnValue: Any?
+        if signature.objcMethodReturnLength > 0 {
+            invocation.objcGetReturnValue(&returnValue)
+        }
+        return returnValue
     }
     
     // MARK: - Property
