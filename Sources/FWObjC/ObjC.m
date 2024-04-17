@@ -81,24 +81,6 @@
     }
 }
 
-+ (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector {
-    Method originalMethod = class_getInstanceMethod(originalClass, originalSelector);
-    Method swizzleMethod = class_getInstanceMethod(originalClass, swizzleSelector);
-    if (!swizzleMethod) {
-        return NO;
-    }
-    
-    if (originalMethod) {
-        class_addMethod(originalClass, originalSelector, class_getMethodImplementation(originalClass, originalSelector), method_getTypeEncoding(originalMethod));
-    } else {
-        class_addMethod(originalClass, originalSelector, imp_implementationWithBlock(^(id selfObject){}), "v@:");
-    }
-    class_addMethod(originalClass, swizzleSelector, class_getMethodImplementation(originalClass, swizzleSelector), method_getTypeEncoding(swizzleMethod));
-    
-    method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector), class_getInstanceMethod(originalClass, swizzleSelector));
-    return YES;
-}
-
 + (id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects {
     NSMethodSignature *signature = [object_getClass(target) instanceMethodSignatureForSelector:aSelector];
     if (!signature) return nil;

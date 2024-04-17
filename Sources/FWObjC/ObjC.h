@@ -18,8 +18,6 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
 
-+ (BOOL)exchangeInstanceMethod:(Class)originalClass originalSelector:(SEL)originalSelector swizzleSelector:(SEL)swizzleSelector;
-
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects;
 
 + (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(nullable NSArray *)arguments returnValue:(void *)result;
