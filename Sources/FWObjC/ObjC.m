@@ -13,32 +13,6 @@
 
 @implementation FWObjCBridge
 
-+ (id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects {
-    NSMethodSignature *signature = [object_getClass(target) instanceMethodSignatureForSelector:aSelector];
-    if (!signature) return nil;
-    
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-    invocation.target = target;
-    invocation.selector = aSelector;
-    NSInteger paramsCount = MIN(signature.numberOfArguments - 2, objects.count);
-    for (NSInteger i = 0; i < paramsCount; i++) {
-        id object = objects[i];
-        if ([object isKindOfClass:[NSNull class]]) continue;
-        [invocation setArgument:&object atIndex:i + 2];
-    }
-    @try {
-        [invocation invoke];
-    } @catch (NSException *exception) {
-        return nil;
-    }
-    
-    id returnValue = nil;
-    if (signature.methodReturnLength) {
-        [invocation getReturnValue:&returnValue];
-    }
-    return returnValue;
-}
-
 + (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(NSArray *)arguments returnValue:(void *)result {
     if (!target || ![target respondsToSelector:selector]) return NO;
     

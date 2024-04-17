@@ -8,6 +8,9 @@
 import Foundation
 
 @objc internal protocol ObjCObjectBridge {
+    @objc(class)
+    var objcClass: AnyClass { get }
+    
     @objc(methodSignatureForSelector:)
     func objcMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
     
@@ -53,4 +56,29 @@ import Foundation
 
     @objc(signatureWithObjCTypes:)
     static func objcSignature(withObjCTypes typeEncoding: UnsafePointer<Int8>) -> AnyObject
+}
+
+internal enum ObjCTypeEncodingBridge: Int8 {
+    case char = 99
+    case int = 105
+    case short = 115
+    case long = 108
+    case longLong = 113
+
+    case unsignedChar = 67
+    case unsignedInt = 73
+    case unsignedShort = 83
+    case unsignedLong = 76
+    case unsignedLongLong = 81
+
+    case float = 102
+    case double = 100
+
+    case bool = 66
+
+    case object = 64
+    case type = 35
+    case selector = 58
+
+    case undefined = -1
 }
