@@ -9,10 +9,10 @@ import Foundation
 
 @objc internal protocol ObjCObjectBridge {
     @objc(methodSignatureForSelector:)
-    func objcMethodSignature(for selector: Selector) -> ObjCMethodSignatureBridge
+    func objcMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
     
     @objc(instanceMethodSignatureForSelector:)
-    static func objcInstanceMethodSignature(for selector: Selector) -> ObjCMethodSignatureBridge
+    static func objcInstanceMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
 }
 
 @objc internal protocol ObjCInvocationBridge {

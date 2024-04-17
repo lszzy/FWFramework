@@ -14,10 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ObjCBridge)
 @interface FWObjCBridge : NSObject
 
-+ (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
-
-+ (BOOL)swizzleInstanceMethod:(Class)originalClass selector:(SEL)originalSelector identifier:(nullable NSString *)identifier withBlock:(id (^)(__unsafe_unretained Class targetClass, SEL originalCMD, IMP (^originalIMP)(void)))block;
-
 + (nullable id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects;
 
 + (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(nullable NSArray *)arguments returnValue:(void *)result;

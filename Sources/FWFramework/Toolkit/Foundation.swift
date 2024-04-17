@@ -13,9 +13,7 @@ extension WrapperGlobal {
     /// 通用互斥锁方法
     public static func synchronized(_ object: Any, closure: () -> Void) {
         objc_sync_enter(object)
-        defer {
-            objc_sync_exit(object)
-        }
+        defer { objc_sync_exit(object) }
         
         closure()
     }
@@ -23,9 +21,7 @@ extension WrapperGlobal {
     /// 通用互斥锁方法，返回指定对象
     public static func synchronized<T>(_ object: Any, closure: () -> T) -> T {
         objc_sync_enter(object)
-        defer {
-            objc_sync_exit(object)
-        }
+        defer { objc_sync_exit(object) }
         
         return closure()
     }
@@ -745,9 +741,7 @@ extension Wrapper where Base: UserDefaults {
     /// 通用互斥锁方法
     public static func fw_synchronized(_ closure: () -> Void) {
         objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
+        defer { objc_sync_exit(self) }
         
         closure()
     }
@@ -755,9 +749,7 @@ extension Wrapper where Base: UserDefaults {
     /// 通用互斥锁方法，返回指定对象
     public static func fw_synchronized<T>(_ closure: () -> T) -> T {
         objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
+        defer { objc_sync_exit(self) }
         
         return closure()
     }
@@ -765,9 +757,7 @@ extension Wrapper where Base: UserDefaults {
     /// 通用互斥锁方法
     public func fw_synchronized(_ closure: () -> Void) {
         objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
+        defer { objc_sync_exit(self) }
         
         closure()
     }
@@ -775,9 +765,7 @@ extension Wrapper where Base: UserDefaults {
     /// 通用互斥锁方法，返回指定对象
     public func fw_synchronized<T>(_ closure: () -> T) -> T {
         objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
+        defer { objc_sync_exit(self) }
         
         return closure()
     }
@@ -855,9 +843,7 @@ extension Wrapper where Base: UserDefaults {
         closure: @escaping () -> Void
     ) {
         objc_sync_enter(NSObject.self)
-        defer {
-            objc_sync_exit(NSObject.self)
-        }
+        defer { objc_sync_exit(NSObject.self) }
         
         guard !fw_staticTokens.contains(token) else { return }
         fw_staticTokens.append(token)
