@@ -143,7 +143,7 @@ extension TestCacheController {
     func refreshCache() {
         var statusStr = ""
         if let cacheClass = cache as? NSObject {
-            statusStr += NSStringFromClass(cacheClass.classForCoder)
+            statusStr += NSStringFromClass(type(of: cacheClass))
             statusStr += "\n"
         }
         

@@ -631,7 +631,7 @@ extension Wrapper where Base: UIToolbar {
     /// 导航栏内容视图，iOS11+才存在，显示item和titleView等
     public var fw_contentView: UIView? {
         for subview in self.subviews {
-            if NSStringFromClass(subview.classForCoder).hasSuffix("ContentView") {
+            if NSStringFromClass(type(of: subview)).hasSuffix("ContentView") {
                 return subview
             }
         }
@@ -641,7 +641,7 @@ extension Wrapper where Base: UIToolbar {
     /// 导航栏大标题视图，显示时才有值。如果要设置背景色，可使用fw_backgroundView.backgroundColor
     public var fw_largeTitleView: UIView? {
         for subview in self.subviews {
-            if NSStringFromClass(subview.classForCoder).hasSuffix("LargeTitleView") {
+            if NSStringFromClass(type(of: subview)).hasSuffix("LargeTitleView") {
                 return subview
             }
         }
@@ -693,7 +693,7 @@ extension Wrapper where Base: UIToolbar {
     /// 工具栏内容视图，iOS11+才存在，显示item等
     public var fw_contentView: UIView? {
         for subview in self.subviews {
-            if NSStringFromClass(subview.classForCoder).hasSuffix("ContentView") {
+            if NSStringFromClass(type(of: subview)).hasSuffix("ContentView") {
                 return subview
             }
         }

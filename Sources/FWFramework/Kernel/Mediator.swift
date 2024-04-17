@@ -201,7 +201,7 @@ public class Mediator: NSObject {
             var shouldInvoke = true
             var moduleClass = ""
             if let moduleObject = moduleInstance as? NSObject {
-                moduleClass = NSStringFromClass(moduleObject.classForCoder)
+                moduleClass = NSStringFromClass(type(of: moduleObject))
                 if moduleInvokePool[moduleClass] == nil {
                     for obj in modules {
                         if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
@@ -356,9 +356,10 @@ open class ModuleBundle: NSObject {
     /// 初始化模块Bundle，子类可重写，用于加载自定义Bundle
     open class func initializeBundle() -> Bundle? {
         // 1. ModuleBundle基类或主应用模块类只加载主Bundle
+        let bundleClass: AnyClass = self
         guard self != ModuleBundle.self,
-              Bundle(for: classForCoder()) != .main,
-              let moduleName = Bundle(for: classForCoder()).executableURL?.lastPathComponent else {
+              Bundle(for: bundleClass) != .main,
+              let moduleName = Bundle(for: bundleClass).executableURL?.lastPathComponent else {
             return nil
         }
         
@@ -367,7 +368,7 @@ open class ModuleBundle: NSObject {
             return appBundle.fw_localizedBundle()
         }
         /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
-        if let moduleBundle = Bundle.fw_bundle(with: classForCoder(), name: moduleName) {
+        if let moduleBundle = Bundle.fw_bundle(with: bundleClass, name: moduleName) {
             return moduleBundle.fw_localizedBundle()
         }
         /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle

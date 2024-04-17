@@ -319,6 +319,11 @@ extension Wrapper where Base: NSObject {
         return Base.fw_metaClass(clazz)
     }
     
+    /// 获取指定类的所有子类
+    public static func allSubclasses(_ clazz: AnyClass) -> [AnyClass] {
+        return Base.fw_allSubclasses(clazz)
+    }
+    
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -761,6 +766,31 @@ extension Wrapper where Base: NSObject {
         return metaClass
     }
     
+    /// 获取指定类的所有子类
+    public static func fw_allSubclasses(_ clazz: AnyClass) -> [AnyClass] {
+        var classesCount: UInt32 = 0
+        guard let classList = objc_copyClassList(&classesCount) else {
+            return []
+        }
+        
+        defer { free(UnsafeMutableRawPointer(classList)) }
+        let classes = UnsafeBufferPointer(start: classList, count: Int(classesCount))
+        guard classesCount > 0 else {
+            return []
+        }
+        
+        return classes.filter { fw_isSubclass($0, of: clazz) }
+    }
+    
+    private static func fw_isSubclass(_ subclass: AnyClass, of superclass: AnyClass) -> Bool {
+        var parentClass: AnyClass? = subclass
+        while parentClass != nil {
+            parentClass = class_getSuperclass(parentClass)
+            if parentClass == superclass { return true }
+        }
+        return false
+    }
+    
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -787,7 +817,7 @@ extension Wrapper where Base: NSObject {
             free(methodList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
@@ -822,7 +852,7 @@ extension Wrapper where Base: NSObject {
             free(propertyList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
@@ -858,7 +888,7 @@ extension Wrapper where Base: NSObject {
             free(ivarList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }

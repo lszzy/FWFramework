@@ -227,9 +227,9 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func renderData() {
         StatisticalManager.shared.eventHandler = { [weak self] event in
             if event.isExposure {
-                APP.debug("%@曝光%@: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), !event.isFinished ? "开始" : "结束", "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
+                APP.debug("%@曝光%@: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@\nduration: %@\ntotalDuration: %@", NSStringFromClass(event.view != nil ? type(of: event.view!) : Self.self), !event.isFinished ? "开始" : "结束", "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo), "\(event.triggerDuration)", "\(event.totalDuration)")
             } else {
-                self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(event.view?.classForCoder ?? Self.classForCoder()), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo)))
+                self?.showToast(String(format: "%@点击事件: \nindexPath: %@\ncount: %@\nname: %@\nobject: %@\nuserInfo: %@", NSStringFromClass(event.view != nil ? type(of: event.view!) : Self.self), "\(event.indexPath?.section ?? 0).\(event.indexPath?.row ?? 0)", "\(event.triggerCount)", APP.safeString(event.name), APP.safeString(event.object), APP.safeString(event.userInfo)))
             }
         }
         
