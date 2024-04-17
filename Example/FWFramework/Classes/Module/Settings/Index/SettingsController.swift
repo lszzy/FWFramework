@@ -116,7 +116,7 @@ extension SettingsController {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
         let action = APP.safeValue(rowData[1])
-        app.invokeMethod(Selector(action))
+        _ = self.perform(Selector(action))
     }
     
 }
@@ -188,7 +188,7 @@ private extension SettingsController {
         
         app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map({ $0[0] })) { [weak self] index in
             let action = plugins[index][1]
-            self?.app.invokeMethod(Selector(action))
+            _ = self?.perform(Selector(action))
         }
     }
     

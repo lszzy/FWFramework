@@ -110,57 +110,6 @@
     return YES;
 }
 
-+ (id)invokeMethod:(id)target selector:(SEL)aSelector {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
-        if (type && *type == 'v') {
-            free(type);
-            [target performSelector:aSelector];
-        } else {
-            free(type);
-            return [target performSelector:aSelector];
-        }
-    }
-#pragma clang diagnostic pop
-    return nil;
-}
-
-+ (id)invokeMethod:(id)target selector:(SEL)aSelector object:(id)object {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
-        if (type && *type == 'v') {
-            free(type);
-            [target performSelector:aSelector withObject:object];
-        } else {
-            free(type);
-            return [target performSelector:aSelector withObject:object];
-        }
-    }
-#pragma clang diagnostic pop
-    return nil;
-}
-
-+ (id)invokeMethod:(id)target selector:(SEL)aSelector object:(id)object1 object:(id)object2 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([target respondsToSelector:aSelector]) {
-        char *type = method_copyReturnType(class_getInstanceMethod(object_getClass(target), aSelector));
-        if (type && *type == 'v') {
-            free(type);
-            [target performSelector:aSelector withObject:object1 withObject:object2];
-        } else {
-            free(type);
-            return [target performSelector:aSelector withObject:object1 withObject:object2];
-        }
-    }
-#pragma clang diagnostic pop
-    return nil;
-}
-
 + (id)invokeMethod:(id)target selector:(SEL)aSelector objects:(NSArray *)objects {
     NSMethodSignature *signature = [object_getClass(target) instanceMethodSignatureForSelector:aSelector];
     if (!signature) return nil;
@@ -259,38 +208,6 @@
         }
     }
     return YES;
-}
-
-+ (id)invokeGetter:(id)target name:(NSString *)name {
-    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
-    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
-    
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"get%@", ucfirstName]);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
-    selector = NSSelectorFromString(name);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"is%@", ucfirstName]);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"_%@", name]);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector];
-    #pragma clang diagnostic pop
-    return nil;
-}
-
-+ (id)invokeSetter:(id)target name:(NSString *)name object:(id)object {
-    name = [name hasPrefix:@"_"] ? [name substringFromIndex:1] : name;
-    NSString *ucfirstName = name.length ? [NSString stringWithFormat:@"%@%@", [name substringToIndex:1].uppercaseString, [name substringFromIndex:1]] : nil;
-    
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"set%@:", ucfirstName]);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector object:object];
-    selector = NSSelectorFromString([NSString stringWithFormat:@"_set%@:", ucfirstName]);
-    if ([target respondsToSelector:selector]) return [self invokeMethod:target selector:selector object:object];
-    #pragma clang diagnostic pop
-    return nil;
 }
 
 + (id)appearanceForClass:(Class)aClass {
