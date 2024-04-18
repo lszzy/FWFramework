@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Wrapper+AnyObject
 extension Wrapper where Base: WrapperObject {
