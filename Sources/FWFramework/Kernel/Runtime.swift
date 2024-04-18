@@ -22,10 +22,10 @@ extension Wrapper where Base: WrapperObject {
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return base.fw_invokeMethod(selector, objects: objects)
     }
     
@@ -51,10 +51,10 @@ extension Wrapper where Base: WrapperObject {
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public static func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public static func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return Base.fw_invokeMethod(selector, objects: objects)
     }
     
@@ -384,10 +384,10 @@ extension Wrapper where Base: NSObject {
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public func fw_invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return NSObject.fw_invokeMethod(self, selector: selector, objects: objects)
     }
     
@@ -446,37 +446,138 @@ extension Wrapper where Base: NSObject {
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public static func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public static func fw_invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return fw_invokeMethod(self, selector: selector, objects: objects)
     }
     
-    private static func fw_invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]) -> Any? {
-        guard let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector) else { return nil }
-        guard let invocationClass = NSClassFromString("NSInvocation") else { return nil }
+    private static func fw_invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]?) -> Unmanaged<AnyObject>! {
+        guard target.responds(to: selector),
+              let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector),
+              let invocationClass = NSClassFromString("NSInvocation") else {
+            return nil
+        }
         
         let invocation = invocationClass.objcInvocation(withMethodSignature: signature)
         invocation.objcTarget = target
         invocation.objcSelector = selector
-        let paramsCount = min(Int(signature.objcNumberOfArguments) - 2, objects.count)
+        
+        let paramsCount = min(Int(signature.objcNumberOfArguments) - 2, objects?.count ?? 0)
         for i in 0..<paramsCount {
-            var object = objects[i]
-            if object is NSNull { continue }
+            let argIndex = i + 2
+            var object = objects?[i]
+            if let num = object as? NSNumber {
+                let argumentType = signature.objcGetArgumentType(at: UInt(argIndex))
+                let typeEncoding = ObjCTypeEncodingBridge(rawValue: argumentType.pointee) ?? .undefined
+                
+                switch typeEncoding {
+                case .char:
+                    object = num.int8Value
+                case .bool:
+                    object = num.boolValue
+                case .int, .short, .long:
+                    object = num.intValue
+                case .longLong:
+                    object = num.int64Value
+                case .unsignedChar:
+                    object = num.uint8Value
+                case .unsignedInt, .unsignedShort, .unsignedLong:
+                    object = num.uintValue
+                case .unsignedLongLong:
+                    object = num.uint64Value
+                case .float:
+                    object = num.floatValue
+                case .double:
+                    object = num.doubleValue
+                default:
+                    break
+                }
+            }
+            
+            if object is NSNull {
+                object = nil
+            }
             withUnsafeMutablePointer(to: &object) { pointer in
-                invocation.objcSetArgument(pointer, at: i + 2)
+                invocation.objcSetArgument(pointer, at: argIndex)
             }
         }
         invocation.objcInvoke()
         
-        var returnValue: Any?
-        if signature.objcMethodReturnLength > 0 {
-            withUnsafeMutablePointer(to: &returnValue) { pointer in
-                invocation.objcGetReturnValue(pointer)
+        let returnType = signature.objcMethodReturnType
+        let methodReturnType = String(utf8String: returnType)
+        if methodReturnType != "v" {
+            if methodReturnType == "@" {
+                var cfResult: CFTypeRef?
+                withUnsafeMutablePointer(to: &cfResult) { pointer in
+                    invocation.objcGetReturnValue(pointer)
+                }
+                if let cfResult = cfResult {
+                    return Unmanaged.passRetained(cfResult)
+                }
+            } else {
+                let encoding = ObjCTypeEncodingBridge(rawValue: returnType.pointee) ?? .undefined
+                
+                func extract<U>(_ type: U.Type) -> U {
+                    let pointer = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<U>.size, alignment: MemoryLayout<U>.alignment)
+                    defer { pointer.deallocate() }
+
+                    invocation.objcGetReturnValue(pointer)
+                    return pointer.assumingMemoryBound(to: type).pointee
+                }
+
+                let value: Any?
+
+                switch encoding {
+                case .char:
+                    value = NSNumber(value: extract(CChar.self))
+                case .int:
+                    value = NSNumber(value: extract(CInt.self))
+                case .short:
+                    value = NSNumber(value: extract(CShort.self))
+                case .long:
+                    value = NSNumber(value: extract(CLong.self))
+                case .longLong:
+                    value = NSNumber(value: extract(CLongLong.self))
+                case .unsignedChar:
+                    value = NSNumber(value: extract(CUnsignedChar.self))
+                case .unsignedInt:
+                    value = NSNumber(value: extract(CUnsignedInt.self))
+                case .unsignedShort:
+                    value = NSNumber(value: extract(CUnsignedShort.self))
+                case .unsignedLong:
+                    value = NSNumber(value: extract(CUnsignedLong.self))
+                case .unsignedLongLong:
+                    value = NSNumber(value: extract(CUnsignedLongLong.self))
+                case .float:
+                    value = NSNumber(value: extract(CFloat.self))
+                case .double:
+                    value = NSNumber(value: extract(CDouble.self))
+                case .bool:
+                    value = NSNumber(value: extract(CBool.self))
+                case .object:
+                    value = extract((AnyObject?).self)
+                case .type:
+                    value = extract((AnyClass?).self)
+                case .selector:
+                    value = extract((Selector?).self)
+                case .undefined:
+                    var size = 0, alignment = 0
+                    NSGetSizeAndAlignment(returnType, &size, &alignment)
+                    let buffer = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+                    defer { buffer.deallocate() }
+
+                    invocation.objcGetReturnValue(buffer)
+                    value = NSValue(bytes: buffer, objCType: returnType)
+                }
+                
+                if let value = value {
+                    return Unmanaged.passRetained(value as AnyObject)
+                }
             }
         }
-        return returnValue
+        return nil
     }
     
     // MARK: - Property

@@ -52,7 +52,7 @@ import Foundation
     var objcMethodReturnType: UnsafePointer<CChar> { get }
 
     @objc(getArgumentTypeAtIndex:)
-    func objcArgumentType(at index: UInt) -> UnsafePointer<CChar>
+    func objcGetArgumentType(at index: UInt) -> UnsafePointer<CChar>
 
     @objc(signatureWithObjCTypes:)
     static func objcSignature(withObjCTypes typeEncoding: UnsafePointer<Int8>) -> AnyObject
