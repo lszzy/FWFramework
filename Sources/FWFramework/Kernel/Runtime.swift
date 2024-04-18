@@ -464,120 +464,113 @@ extension Wrapper where Base: NSObject {
         invocation.objcTarget = target
         invocation.objcSelector = selector
         
-        let paramsCount = min(Int(signature.objcNumberOfArguments) - 2, objects?.count ?? 0)
-        for i in 0..<paramsCount {
+        // 转换为NSArray的原因：自动桥接Swift类型参数为ObjC参数
+        let arguments = objects as? NSArray
+        let argCount = min(Int(signature.objcNumberOfArguments) - 2, arguments?.count ?? 0)
+        for i in 0..<argCount {
             let argIndex = i + 2
-            var object = objects?[i]
-            if let num = object as? NSNumber {
+            var argument = arguments?[i]
+            if let number = argument as? NSNumber {
                 let argumentType = signature.objcGetArgumentType(at: UInt(argIndex))
                 let typeEncoding = ObjCTypeEncodingBridge(rawValue: argumentType.pointee) ?? .undefined
-                
                 switch typeEncoding {
                 case .char:
-                    object = num.int8Value
+                    argument = number.int8Value
                 case .bool:
-                    object = num.boolValue
+                    argument = number.boolValue
                 case .int, .short, .long:
-                    object = num.intValue
+                    argument = number.intValue
                 case .longLong:
-                    object = num.int64Value
+                    argument = number.int64Value
                 case .unsignedChar:
-                    object = num.uint8Value
+                    argument = number.uint8Value
                 case .unsignedInt, .unsignedShort, .unsignedLong:
-                    object = num.uintValue
+                    argument = number.uintValue
                 case .unsignedLongLong:
-                    object = num.uint64Value
+                    argument = number.uint64Value
                 case .float:
-                    object = num.floatValue
+                    argument = number.floatValue
                 case .double:
-                    object = num.doubleValue
+                    argument = number.doubleValue
                 default:
                     break
                 }
             }
             
-            if object is NSNull {
-                object = nil
-            }
-            withUnsafeMutablePointer(to: &object) { pointer in
+            if argument is NSNull { argument = nil }
+            withUnsafeMutablePointer(to: &argument) { pointer in
                 invocation.objcSetArgument(pointer, at: argIndex)
             }
         }
-        invocation.objcInvoke()
         
+        invocation.objcInvoke()
         let returnType = signature.objcMethodReturnType
-        let methodReturnType = String(utf8String: returnType)
-        if methodReturnType != "v" {
-            if methodReturnType == "@" {
-                var cfResult: CFTypeRef?
-                withUnsafeMutablePointer(to: &cfResult) { pointer in
-                    invocation.objcGetReturnValue(pointer)
-                }
-                if let cfResult = cfResult {
-                    return Unmanaged.passRetained(cfResult)
-                }
-            } else {
-                let encoding = ObjCTypeEncodingBridge(rawValue: returnType.pointee) ?? .undefined
-                
-                func extract<U>(_ type: U.Type) -> U {
-                    let pointer = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<U>.size, alignment: MemoryLayout<U>.alignment)
-                    defer { pointer.deallocate() }
-
-                    invocation.objcGetReturnValue(pointer)
-                    return pointer.assumingMemoryBound(to: type).pointee
-                }
-
-                let value: Any?
-
-                switch encoding {
-                case .char:
-                    value = NSNumber(value: extract(CChar.self))
-                case .int:
-                    value = NSNumber(value: extract(CInt.self))
-                case .short:
-                    value = NSNumber(value: extract(CShort.self))
-                case .long:
-                    value = NSNumber(value: extract(CLong.self))
-                case .longLong:
-                    value = NSNumber(value: extract(CLongLong.self))
-                case .unsignedChar:
-                    value = NSNumber(value: extract(CUnsignedChar.self))
-                case .unsignedInt:
-                    value = NSNumber(value: extract(CUnsignedInt.self))
-                case .unsignedShort:
-                    value = NSNumber(value: extract(CUnsignedShort.self))
-                case .unsignedLong:
-                    value = NSNumber(value: extract(CUnsignedLong.self))
-                case .unsignedLongLong:
-                    value = NSNumber(value: extract(CUnsignedLongLong.self))
-                case .float:
-                    value = NSNumber(value: extract(CFloat.self))
-                case .double:
-                    value = NSNumber(value: extract(CDouble.self))
-                case .bool:
-                    value = NSNumber(value: extract(CBool.self))
-                case .object:
-                    value = extract((AnyObject?).self)
-                case .type:
-                    value = extract((AnyClass?).self)
-                case .selector:
-                    value = extract((Selector?).self)
-                case .undefined:
-                    var size = 0, alignment = 0
-                    NSGetSizeAndAlignment(returnType, &size, &alignment)
-                    let buffer = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
-                    defer { buffer.deallocate() }
-
-                    invocation.objcGetReturnValue(buffer)
-                    value = NSValue(bytes: buffer, objCType: returnType)
-                }
-                
-                if let value = value {
-                    return Unmanaged.passRetained(value as AnyObject)
-                }
-            }
+        let typeEncoding = ObjCTypeEncodingBridge(rawValue: returnType.pointee) ?? .undefined
+        let returnTypeString = String(utf8String: returnType)
+        guard returnTypeString != "v" else {
+            return nil
         }
-        return nil
+        
+        if returnTypeString == "@" {
+            var cfResult: CFTypeRef?
+            withUnsafeMutablePointer(to: &cfResult) { pointer in
+                invocation.objcGetReturnValue(pointer)
+            }
+            return cfResult != nil ? Unmanaged.passRetained(cfResult!) : nil
+        }
+        
+        func extract<U>(_ type: U.Type) -> U {
+            let pointer = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<U>.size, alignment: MemoryLayout<U>.alignment)
+            defer { pointer.deallocate() }
+
+            invocation.objcGetReturnValue(pointer)
+            return pointer.assumingMemoryBound(to: type).pointee
+        }
+
+        let value: Any?
+        switch typeEncoding {
+        case .char:
+            value = NSNumber(value: extract(CChar.self))
+        case .int:
+            value = NSNumber(value: extract(CInt.self))
+        case .short:
+            value = NSNumber(value: extract(CShort.self))
+        case .long:
+            value = NSNumber(value: extract(CLong.self))
+        case .longLong:
+            value = NSNumber(value: extract(CLongLong.self))
+        case .unsignedChar:
+            value = NSNumber(value: extract(CUnsignedChar.self))
+        case .unsignedInt:
+            value = NSNumber(value: extract(CUnsignedInt.self))
+        case .unsignedShort:
+            value = NSNumber(value: extract(CUnsignedShort.self))
+        case .unsignedLong:
+            value = NSNumber(value: extract(CUnsignedLong.self))
+        case .unsignedLongLong:
+            value = NSNumber(value: extract(CUnsignedLongLong.self))
+        case .float:
+            value = NSNumber(value: extract(CFloat.self))
+        case .double:
+            value = NSNumber(value: extract(CDouble.self))
+        case .bool:
+            value = NSNumber(value: extract(CBool.self))
+        case .object:
+            value = extract((AnyObject?).self)
+        case .type:
+            value = extract((AnyClass?).self)
+        case .selector:
+            value = extract((Selector?).self)
+        case .undefined:
+            var size = 0, alignment = 0
+            NSGetSizeAndAlignment(returnType, &size, &alignment)
+            let buffer = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+            defer { buffer.deallocate() }
+            
+            invocation.objcGetReturnValue(buffer)
+            value = NSValue(bytes: buffer, objCType: returnType)
+        }
+        return value != nil ? Unmanaged.passRetained(value as AnyObject) : nil
     }
     
     // MARK: - Property
