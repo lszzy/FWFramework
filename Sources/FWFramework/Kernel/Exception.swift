@@ -36,12 +36,57 @@ public class ExceptionManager: NSObject {
         NSDictionary.self,
     ]
     
+    private static var captureStarted = false
+    
     /// 开启框架自带异常捕获功能，默认关闭
     public static func startCaptureExceptions() {
-        ObjCBridge.captureExceptions(captureClasses) { exception, clazz, selector, file, line in
-            let function = String(format: "%@[%@ %@]", class_isMetaClass(clazz) ? "+" : "-", NSStringFromClass(clazz), NSStringFromSelector(selector))
-            captureException(exception, remark: nil, function: function, file: file, line: line)
-        }
+        guard !captureStarted else { return }
+        captureStarted = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: NSSelectorFromString("methodSignatureForSelector:"),
+            methodSignature: (@convention(c) (NSObject, Selector, Selector) -> AnyObject?).self,
+            swizzleSignature: (@convention(block) (NSObject, Selector) -> AnyObject?).self
+        ) { store in { selfObject, selector in
+            var methodSignature = store.original(selfObject, store.selector, selector)
+            if methodSignature == nil {
+                var isCaptured = false
+                for captureClass in captureClasses {
+                    if selfObject.isKind(of: captureClass) {
+                        isCaptured = true
+                        break
+                    }
+                }
+                
+                if isCaptured, let signatureClass = NSClassFromString("NSMethodSignature") {
+                    methodSignature = signatureClass.objcSignature(withObjCTypes: "v@:@")
+                }
+            }
+            return methodSignature
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: NSSelectorFromString("forwardInvocation:"),
+            methodSignature: (@convention(c) (NSObject, Selector, ObjCInvocationBridge) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, ObjCInvocationBridge) -> Void).self
+        ) { store in { selfObject, invocation in
+            var isCaptured = false
+            for captureClass in captureClasses {
+                if selfObject.isKind(of: captureClass) {
+                    isCaptured = true
+                    break
+                }
+            }
+            
+            if isCaptured {
+                invocation.objcTarget = nil
+                invocation.objcInvoke()
+            } else {
+                store.original(selfObject, store.selector, invocation)
+            }
+        }}
     }
     
     /// 捕获自定义异常并发送通知，可设置备注
