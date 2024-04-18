@@ -63,9 +63,10 @@ extension Wrapper where Base: Bundle {
         return Base.fw_currentLanguage
     }
 
-    /// 读取应用系统语言，返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
+    /// 读取当前系统语言，不满足需求时可自定义，默认返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
     public static var systemLanguage: String? {
-        return Base.fw_systemLanguage
+        get { return Base.fw_systemLanguage }
+        set { Base.fw_systemLanguage = newValue }
     }
 
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
@@ -192,13 +193,26 @@ extension Notification.Name {
         return fw_localizedLanguage ?? fw_systemLanguage
     }
 
-    /// 读取应用系统语言，返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
+    /// 读取当前系统语言，不满足需求时可自定义，默认返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
     public static var fw_systemLanguage: String? {
-        // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans。注意localizedLanguage重置为nil后需下次启动才能获取到当前系统语言
-        // return Bundle.main.preferredLocalizations.first
-        // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN。注意localizedLanguage重置为nil后无需下次启动即可获取到当前系统语言
-        return Locale.preferredLanguages.first
+        get {
+            if let language = _fw_systemLanguage {
+                return language
+            }
+            
+            // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans;
+            // 注意localizedLanguage重置为nil后需下次启动才能获取到当前系统语言
+            // return Bundle.main.preferredLocalizations.first
+            
+            // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN；
+            // 注意localizedLanguage重置为nil后无需下次启动即可获取到当前系统语言
+            return Locale.preferredLanguages.first
+        }
+        set {
+            _fw_systemLanguage = newValue
+        }
     }
+    private static var _fw_systemLanguage: String?
 
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
     public static var fw_localizedLanguage: String? {
