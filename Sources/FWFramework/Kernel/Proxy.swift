@@ -159,22 +159,11 @@ public class MulticastDelegate<T> {
         return delegates.contains(delegate as AnyObject)
     }
     
-    /// 调用所有delegates代理方法，忽略返回结果
+    /// 调用所有delegates代理方法
     public func invoke(_ block: (T) -> Void) {
         for delegate in delegates.allObjects {
             block(delegate as! T)
         }
-    }
-    
-    /// 过滤并调用delegates代理方法，返回是否继续执行，为false时立即停止执行
-    @discardableResult
-    public func filter(_ filter: (T) -> Bool) -> Bool {
-        for delegate in delegates.allObjects {
-            if !filter(delegate as! T) {
-                return false
-            }
-        }
-        return true
     }
     
 }

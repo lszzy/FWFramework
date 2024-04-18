@@ -22,8 +22,6 @@ NS_SWIFT_NAME(ObjCBridge)
 
 + (void)applyAppearance:(NSObject *)object;
 
-+ (void)captureExceptions:(NSArray<Class> *)captureClasses exceptionHandler:(nullable void (^)(NSException *exception, Class clazz, SEL selector, NSString *file, NSInteger line))exceptionHandler;
-
 @end
 
 NS_ASSUME_NONNULL_END

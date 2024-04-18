@@ -1118,7 +1118,6 @@ public class PlayerCacheWorker: NSObject {
             if #available(iOS 13.4, *) {
                 try writeFileHandle.write(contentsOf: data)
             } else {
-                // 暂未捕获iOS13.4以下ObjC代码异常
                 writeFileHandle.write(data)
             }
             writeBytes += data.count
@@ -1218,7 +1217,6 @@ public class PlayerCacheWorker: NSObject {
         if #available(iOS 13.4, *) {
             data = try readFileHandle.read(upToCount: range.length)
         } else {
-            // 暂未捕获iOS13.4以下ObjC代码异常
             data = readFileHandle.readData(ofLength: range.length)
         }
         return data

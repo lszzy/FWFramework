@@ -464,13 +464,17 @@ extension Wrapper where Base: NSObject {
         for i in 0..<paramsCount {
             var object = objects[i]
             if object is NSNull { continue }
-            invocation.objcSetArgument(&object, at: i + 2)
+            withUnsafeMutablePointer(to: &object) { pointer in
+                invocation.objcSetArgument(pointer, at: i + 2)
+            }
         }
         invocation.objcInvoke()
         
         var returnValue: Any?
         if signature.objcMethodReturnLength > 0 {
-            invocation.objcGetReturnValue(&returnValue)
+            withUnsafeMutablePointer(to: &returnValue) { pointer in
+                invocation.objcGetReturnValue(pointer)
+            }
         }
         return returnValue
     }

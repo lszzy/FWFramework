@@ -35,7 +35,6 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
     
     func setupSubviews() {
         tableData.append(contentsOf: [
-            ["unsafe(Crash)", "onUnsafe"],
             ["safe", "onSafe"],
             ["-done", "onDone"],
             ["-then", "onThen"],
@@ -116,17 +115,6 @@ extension TestPromiseController {
                 UIWindow.app.hideLoading()
             }
         }
-    }
-    
-    @objc func onUnsafe() {
-        Self.isLoading = true
-        var values: [Int] = []
-        DispatchQueue.concurrentPerform(iterations: 10000) { index in
-            let last = values.last ?? 0
-            values.append(last + 1)
-        }
-        Self.isLoading = false
-        Self.showMessage("result: \(values.last.safeInt)")
     }
     
     @objc func onSafe() {
