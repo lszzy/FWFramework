@@ -15,6 +15,10 @@ class AppDelegate: AppResponder {
     var expirationHandler: (() -> Void)?
     
     // MARK: - Override
+    override func setupEnvironment() {
+        Mediator.delegateModeEnabled = true
+    }
+    
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.backgroundColor

@@ -87,7 +87,11 @@ extension ModuleProtocol where Self: NSObject {
 }
 
 // MARK: - Mediator
-/// iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
+/// iOS模块化架构中间件，结合Router可搭建模块化架构设计
+///
+/// 支持两种模块加载模式：
+/// 模式一：Delegate模式，推荐使用，详见方法：checkAllModules(_:)
+/// 模式二：Runtime模式，详见方法：checkAllModules(selector:arguments:)
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
 public class Mediator: NSObject {
@@ -97,6 +101,8 @@ public class Mediator: NSObject {
     
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
     public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
+    /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
+    public static var delegateModeEnabled = false
     
     /// 插件调试描述
     public override class func debugDescription() -> String {
@@ -188,7 +194,15 @@ public class Mediator: NSObject {
         #endif
     }
     
-    /// 在UIApplicationDelegate检查所有模块方法
+    /// 在UIApplicationDelegate检查所有模块方法，Delegate模式，推荐使用
+    public static func checkAllModules(_ block: (UIApplicationDelegate) -> Void) {
+        let modules = allRegisteredModules()
+        for moduleType in modules {
+            block(moduleType.shared)
+        }
+    }
+    
+    /// 在UIApplicationDelegate检查所有模块方法，Runtime模式
     @discardableResult
     public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
         var result = false
