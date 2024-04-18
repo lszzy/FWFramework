@@ -92,8 +92,8 @@ extension SettingsController {
         
         if "onLanguage" == action {
             var language = APP.localized("systemTitle")
-            if let localized = Bundle.app.localizedLanguage, localized.count > 0 {
-                language = localized.hasPrefix("zh") ? "中文" : "English"
+            if let localized = Bundle.app.localizedLanguage, !localized.isEmpty {
+                language = APP.safeString(AppLanguage(rawValue: localized)?.name)
             } else {
                 language = language.appending("(\(APP.safeString(Bundle.app.systemLanguage)))")
             }
@@ -147,8 +147,16 @@ private extension SettingsController {
     }
     
     @objc func onLanguage() {
-        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), "中文", "English"], currentIndex: -1) { (index) in
-            let language: String? = index == 1 ? "zh-Hans" : (index == 2 ? "en" : nil)
+        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), AppLanguage.zhHans.name, AppLanguage.zhHant.name, AppLanguage.en.name], currentIndex: -1) { (index) in
+            var language: String?
+            if index == 1 {
+                language = AppLanguage.zhHans.rawValue
+            } else if index == 2 {
+                language = AppLanguage.zhHant.rawValue
+            } else if index == 3 {
+                language = AppLanguage.en.rawValue
+            }
+            
             Bundle.app.localizedLanguage = language
             AppDelegate.shared.reloadController()
         }

@@ -63,7 +63,7 @@ extension Wrapper where Base: Bundle {
         return Base.fw_currentLanguage
     }
 
-    /// 读取应用系统语言，返回preferredLocalizations(支持应用设置，不含区域)，示例：zh-Hans|en
+    /// 读取应用系统语言，返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
     public static var systemLanguage: String? {
         return Base.fw_systemLanguage
     }
@@ -192,12 +192,12 @@ extension Notification.Name {
         return fw_localizedLanguage ?? fw_systemLanguage
     }
 
-    /// 读取应用系统语言，返回preferredLocalizations(支持应用设置，不含区域)，示例：zh-Hans|en
+    /// 读取应用系统语言，返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
     public static var fw_systemLanguage: String? {
-        // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN
-        // return Locale.preferredLanguages.first
-        // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans
-        return Bundle.main.preferredLocalizations.first
+        // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans，且localizedLanguage设置后再重置时获取到的语言可能不是当前系统语言
+        // return Bundle.main.preferredLocalizations.first
+        // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN，且localizedLanguage设置后再重置时获取到的语言是当前系统语言
+        return Locale.preferredLanguages.first
     }
 
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
