@@ -72,11 +72,11 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         case 10:
             viewController = TestObjcProtocolViewController()
         case 11:
-            let value = app.invokeMethod(#selector(self.onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), 1])?.takeUnretainedValue() as? String
+            let value = app.invokeMethod(#selector(self.onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), "3"])?.takeUnretainedValue() as? String
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
         case 12:
-            let value = app.invokeMethod(#selector(self.onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 1)])?.takeUnretainedValue() as? Int
+            let value = app.invokeMethod(#selector(self.onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 3)])?.takeUnretainedValue() as? Int
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
         default:
@@ -86,7 +86,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         navigationController?.pushViewController(viewController!, animated: true)
     }
     
-    @objc func onInvokeObject(param1: NSObject, param2: Any?, param3: Int) -> String {
+    @objc func onInvokeObject(param1: NSObject, param2: Any?, param3: String) -> String {
         return "\(param1.description)-\(String(describing: param2))-\(param3)"
     }
     
