@@ -91,11 +91,9 @@ extension SettingsController {
         cell.textLabel?.text = text
         
         if "onLanguage" == action {
-            var language = APP.localized("systemTitle")
-            if let localized = Bundle.app.localizedLanguage, !localized.isEmpty {
-                language = APP.safeString(AppLanguage(rawValue: localized)?.name)
-            } else {
-                language = language.appending("(\(APP.safeString(Bundle.app.systemLanguage)))")
+            var language = AppLanguage(rawValue: Bundle.app.currentLanguage ?? "")?.name ?? ""
+            if Bundle.app.localizedLanguage == nil {
+                language = APP.localized("systemTitle") + "(\(language))"
             }
             cell.detailTextLabel?.text = language
         } else if "onTheme" == action {
