@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ObjCBridge)
 @interface FWObjCBridge : NSObject
 
-+ (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(nullable NSArray *)arguments returnValue:(void *)result;
-
 + (id)appearanceForClass:(Class)aClass;
 
 + (Class)classForAppearance:(id)appearance;

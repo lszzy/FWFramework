@@ -194,23 +194,20 @@ public class Mediator: NSObject {
         var result = false
         let modules = allRegisteredModules()
         for moduleType in modules {
-            let moduleInstance = moduleType.shared
-            guard moduleInstance.responds(to: selector) else { continue }
+            guard let moduleInstance = moduleType.shared as? NSObject,
+                  moduleInstance.responds(to: selector) else { continue }
             
             // 如果当前模块类为某个模块类的父类，则不调用当前模块类方法
             var shouldInvoke = true
-            var moduleClass = ""
-            if let moduleObject = moduleInstance as? NSObject {
-                moduleClass = NSStringFromClass(type(of: moduleObject))
-                if moduleInvokePool[moduleClass] == nil {
-                    for obj in modules {
-                        if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
-                           moduleClass == NSStringFromClass(objSuperclass) {
-                            shouldInvoke = false
-                            break
-                        }
-                        
+            let moduleClass = NSStringFromClass(type(of: moduleInstance))
+            if moduleInvokePool[moduleClass] == nil {
+                for obj in modules {
+                    if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
+                       moduleClass == NSStringFromClass(objSuperclass) {
+                        shouldInvoke = false
+                        break
                     }
+                    
                 }
             }
             guard shouldInvoke else { continue }
@@ -219,8 +216,7 @@ public class Mediator: NSObject {
                 moduleInvokePool[moduleClass] = true
             }
             
-            var returnValue = false
-            ObjCBridge.invokeMethod(moduleInstance, selector: selector, arguments: arguments, returnValue: &returnValue)
+            let returnValue = moduleInstance.fw_invokeMethod(selector, objects: arguments)?.takeUnretainedValue() as? Bool ?? false
             if !result {
                 result = returnValue
             }

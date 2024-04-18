@@ -7,85 +7,10 @@
 
 #import "ObjC.h"
 #import <objc/runtime.h>
-#import <dlfcn.h>
 
 #pragma mark - ObjCBridge
 
 @implementation FWObjCBridge
-
-+ (BOOL)invokeMethod:(id)target selector:(SEL)selector arguments:(NSArray *)arguments returnValue:(void *)result {
-    if (!target || ![target respondsToSelector:selector]) return NO;
-    
-    NSMethodSignature *sig = [target methodSignatureForSelector:selector];
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
-    [invocation setTarget:target];
-    [invocation setSelector:selector];
-    for (NSUInteger i = 0; i< arguments.count; i++) {
-        NSUInteger argIndex = i + 2;
-        id argument = arguments[i];
-        if ([argument isKindOfClass:NSNumber.class]) {
-            BOOL shouldContinue = NO;
-            NSNumber *num = (NSNumber *)argument;
-            const char *type = [sig getArgumentTypeAtIndex:argIndex];
-            if (strcmp(type, @encode(BOOL)) == 0) {
-                BOOL rawNum = [num boolValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if (strcmp(type, @encode(int)) == 0
-                       || strcmp(type, @encode(short)) == 0
-                       || strcmp(type, @encode(long)) == 0) {
-                NSInteger rawNum = [num integerValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if(strcmp(type, @encode(long long)) == 0) {
-                long long rawNum = [num longLongValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if (strcmp(type, @encode(unsigned int)) == 0
-                       || strcmp(type, @encode(unsigned short)) == 0
-                       || strcmp(type, @encode(unsigned long)) == 0) {
-                NSUInteger rawNum = [num unsignedIntegerValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if(strcmp(type, @encode(unsigned long long)) == 0) {
-                unsigned long long rawNum = [num unsignedLongLongValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if (strcmp(type, @encode(float)) == 0) {
-                float rawNum = [num floatValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            } else if (strcmp(type, @encode(double)) == 0) {
-                double rawNum = [num doubleValue];
-                [invocation setArgument:&rawNum atIndex:argIndex];
-                shouldContinue = YES;
-            }
-            if (shouldContinue) {
-                continue;
-            }
-        }
-        if ([argument isKindOfClass:[NSNull class]]) {
-            argument = nil;
-        }
-        [invocation setArgument:&argument atIndex:argIndex];
-    }
-    [invocation invoke];
-    
-    NSString *methodReturnType = [NSString stringWithUTF8String:sig.methodReturnType];
-    if (result && ![methodReturnType isEqualToString:@"v"]) {
-        if ([methodReturnType isEqualToString:@"@"]) {
-            CFTypeRef cfResult = nil;
-            [invocation getReturnValue:&cfResult];
-            if (cfResult) {
-                CFRetain(cfResult);
-                *(void**)result = (__bridge_retained void *)((__bridge_transfer id)cfResult);
-            }
-        } else {
-            [invocation getReturnValue:result];
-        }
-    }
-    return YES;
-}
 
 + (id)appearanceForClass:(Class)aClass {
     #pragma clang diagnostic push
