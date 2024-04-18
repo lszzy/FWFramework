@@ -5,10 +5,7 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
+import UIKit
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {

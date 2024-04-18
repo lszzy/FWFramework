@@ -8,9 +8,6 @@
 import UIKit
 import MobileCoreServices
 import ImageIO
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Wrapper+UIImage
 extension Wrapper where Base: UIImage {

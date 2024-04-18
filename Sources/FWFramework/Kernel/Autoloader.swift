@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {

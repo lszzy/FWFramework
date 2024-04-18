@@ -11,10 +11,6 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "FWObjC",
-            targets: ["FWObjC"]
-        ),
-        .library(
             name: "FWFramework",
             targets: ["FWFramework"]
         ),
@@ -43,26 +39,8 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "FWObjC",
-            path: "Sources",
-            sources: ["FWObjC"],
-            publicHeadersPath: "include",
-            cSettings: [
-                .headerSearchPath("include/FWObjC"),
-                .define("FWMacroSPM", to: "1"),
-            ],
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
-            ]
-        ),
-        .target(
             name: "FWFramework",
-            dependencies: ["FWObjC"],
             path: "Sources/FWFramework",
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
-            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -72,9 +50,6 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
-            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -87,9 +62,6 @@ let package = Package(
                 "SDWebImage",
             ],
             path: "Sources/FWVendor/SDWebImage",
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
-            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -102,9 +74,6 @@ let package = Package(
                 .product(name: "Lottie", package: "lottie-ios"),
             ],
             path: "Sources/FWVendor/Lottie",
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
-            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -117,9 +86,6 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire"),
             ],
             path: "Sources/FWVendor/Alamofire",
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
-            ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -147,9 +113,6 @@ let package = Package(
             path: "Example/Tests",
             exclude: [
                 "Info.plist",
-            ],
-            cSettings: [
-                .define("FWMacroSPM", to: "1"),
             ],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
