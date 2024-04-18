@@ -194,9 +194,9 @@ extension Notification.Name {
 
     /// 读取应用系统语言，返回Locale.preferredLanguages第一个(含语言和区域)，示例：zh-Hans-CN
     public static var fw_systemLanguage: String? {
-        // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans，且localizedLanguage设置后再重置时获取到的语言可能不是当前系统语言
+        // preferredLocalizations只包含语言信息，只返回App支持的语言，示例：zh-Hans。注意localizedLanguage重置为nil后需下次启动才能获取到当前系统语言
         // return Bundle.main.preferredLocalizations.first
-        // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN，且localizedLanguage设置后再重置时获取到的语言是当前系统语言
+        // preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN。注意localizedLanguage重置为nil后无需下次启动即可获取到当前系统语言
         return Locale.preferredLanguages.first
     }
 
