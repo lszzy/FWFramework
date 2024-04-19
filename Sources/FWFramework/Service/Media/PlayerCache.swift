@@ -1115,7 +1115,7 @@ public class PlayerCacheWorker: NSObject {
             if #available(iOS 13.4, *) {
                 try writeFileHandle.write(contentsOf: data)
             } else {
-                writeFileHandle.write(data)
+                try ErrorManager.tryCatch { writeFileHandle.write(data) }
             }
             writeBytes += data.count
             cacheConfiguration.addCacheFragment(range)
@@ -1214,7 +1214,7 @@ public class PlayerCacheWorker: NSObject {
         if #available(iOS 13.4, *) {
             data = try readFileHandle.read(upToCount: range.length)
         } else {
-            data = readFileHandle.readData(ofLength: range.length)
+            try ErrorManager.tryCatch { data = readFileHandle.readData(ofLength: range.length) }
         }
         return data
     }

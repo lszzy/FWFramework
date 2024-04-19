@@ -10,9 +10,6 @@ import Foundation
 @objc internal protocol ObjCObjectBridge {
     @objc(instanceMethodSignatureForSelector:)
     static func objcInstanceMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
-    
-    @objc(tryCatch:exceptionHandler:)
-    static func objcTryCatch(_ block: () -> Void, exceptionHandler: (NSException) -> Void)
 }
 
 @objc internal protocol ObjCInvocationBridge {
@@ -52,11 +49,9 @@ import Foundation
 internal struct ObjCClassBridge {
     static let invocationClass: AnyClass? = NSClassFromString("NSInvocation")
     static let methodSignatureClass: AnyClass? = NSClassFromString("NSMethodSignature")
-    static let macroBridgeClass: AnyClass? = NSClassFromString("FWMacroBridge")
     
     static let forwardInvocationSelector = NSSelectorFromString("forwardInvocation:")
     static let methodSignatureSelector = NSSelectorFromString("methodSignatureForSelector:")
-    static let tryCatchSelector = NSSelectorFromString("tryCatch:exceptionHandler:")
 }
 
 internal enum ObjCTypeEncodingBridge: Int8 {
