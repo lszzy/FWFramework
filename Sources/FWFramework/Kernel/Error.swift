@@ -16,7 +16,7 @@ extension Notification.Name {
 }
 
 // MARK: - ErrorManager
-/// 错误异常捕获类，子模块FWMacroBridge引入后无需设置tryCatchHandler
+/// 错误异常捕获类
 ///
 /// [JJException](https://github.com/jezzmemo/JJException)
 /// [AvoidCrash](https://github.com/chenfanfang/AvoidCrash)
@@ -31,20 +31,37 @@ public class ErrorManager: NSObject {
         NSDictionary.self,
     ]
     
-    /// 自定义tryCatch句柄，FWMacroBridge子模块引入后无需设置，详见FWMacroBridge
+    /// 可选tryCatch句柄，需应用自行桥接ObjC实现，默认nil；
+    /// 目前仅startCapture方法可选使用、PlayerCache 13.4以下系统可选使用，可不处理
+    ///
+    /// ObjC桥接代码示例：
+    /// ```objc
+    /// // ObjCBridge.h
+    /// NS_ASSUME_NONNULL_BEGIN
+    /// @interface ObjCBridge : NSObject
+    /// + (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException *exception))exceptionHandler;
+    /// @end
+    /// NS_ASSUME_NONNULL_END
+    ///
+    /// // ObjCBridge.m
+    /// @implementation ObjCBridge
+    /// + (void)tryCatch:(void (NS_NOESCAPE ^)(void))block exceptionHandler:(void (NS_NOESCAPE ^)(NSException * _Nonnull))exceptionHandler {
+    ///     @try {
+    ///         if (block) block();
+    ///     } @catch (NSException *exception) {
+    ///         if (exceptionHandler) exceptionHandler(exception);
+    ///     }
+    /// }
+    /// @end
+    /// ```
+    ///
+    /// swift绑定代码示例：
+    /// ```swift
+    /// ErrorManager.tryCatchHandler = { ObjCBridge.tryCatch($0, exceptionHandler: $1) }
+    /// ```
     public static var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
     
     private static var isCaptureStarted = false
-    private static var isCaptureException: Bool {
-        if tryCatchHandler != nil {
-            return true
-        }
-        if let bridgeClass = ObjCClassBridge.macroBridgeClass,
-           bridgeClass.responds(to: ObjCClassBridge.tryCatchSelector) {
-            return true
-        }
-        return false
-    }
     
     /// 开启框架自带错误异常捕获功能，默认关闭
     public static func startCapture() {
@@ -89,7 +106,7 @@ public class ErrorManager: NSObject {
             }
             
             if isCaptured {
-                if isCaptureException {
+                if tryCatchHandler != nil {
                     do {
                         try tryCatch { store.original(selfObject, store.selector, invocation) }
                     } catch {
@@ -101,6 +118,58 @@ public class ErrorManager: NSObject {
                 }
             } else {
                 store.original(selfObject, store.selector, invocation)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: #selector(NSObject.setValue(_:forKey:)),
+            methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
+        ) { store in { selfObject, value, key in
+            do {
+                try tryCatch { store.original(selfObject, store.selector, value, key) }
+            } catch {
+                captureError(error)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: #selector(NSObject.setValue(_:forKeyPath:)),
+            methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
+        ) { store in { selfObject, value, keyPath in
+            do {
+                try tryCatch { store.original(selfObject, store.selector, value, keyPath) }
+            } catch {
+                captureError(error)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: #selector(NSObject.setValue(_:forUndefinedKey:)),
+            methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
+        ) { store in { selfObject, value, key in
+            do {
+                try tryCatch { store.original(selfObject, store.selector, value, key) }
+            } catch {
+                captureError(error)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSObject.self,
+            selector: #selector(NSObject.setValuesForKeys(_:)),
+            methodSignature: (@convention(c) (NSObject, Selector, [String : Any]) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject, [String : Any]) -> Void).self
+        ) { store in { selfObject, keyedValues in
+            do {
+                try tryCatch { store.original(selfObject, store.selector, keyedValues) }
+            } catch {
+                captureError(error)
             }
         }}
     }
@@ -155,12 +224,6 @@ public class ErrorManager: NSObject {
     public static func tryCatch(_ block: () -> Void, exceptionHandler: (NSException) -> Void) {
         if tryCatchHandler != nil {
             tryCatchHandler?(block, exceptionHandler)
-            return
-        }
-        
-        if let bridgeClass = ObjCClassBridge.macroBridgeClass,
-           bridgeClass.responds(to: ObjCClassBridge.tryCatchSelector) {
-            bridgeClass.objcTryCatch(block, exceptionHandler: exceptionHandler)
             return
         }
         
