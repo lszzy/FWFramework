@@ -91,7 +91,8 @@ extension SettingsController {
         cell.textLabel?.text = text
         
         if "onLanguage" == action {
-            var language = AppLanguage(rawValue: Bundle.app.currentLanguage ?? "")?.name ?? ""
+            let currentLanguage = Bundle.app.currentLanguage
+            var language = Bundle.app.languageName(for: currentLanguage, localeIdentifier: currentLanguage)
             if Bundle.app.localizedLanguage == nil {
                 language = APP.localized("systemTitle") + "(\(language))"
             }
@@ -145,14 +146,14 @@ private extension SettingsController {
     }
     
     @objc func onLanguage() {
-        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), AppLanguage.zhHans.name, AppLanguage.zhHant.name, AppLanguage.en.name], currentIndex: -1) { (index) in
+        var actions: [String] = [APP.localized("systemTitle")]
+        let languages = Bundle.app.availableLanguages
+        actions.append(contentsOf: languages.map({ Bundle.app.languageName(for: $0, localeIdentifier: $0) }))
+        
+        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { (index) in
             var language: String?
-            if index == 1 {
-                language = AppLanguage.zhHans.rawValue
-            } else if index == 2 {
-                language = AppLanguage.zhHant.rawValue
-            } else if index == 3 {
-                language = AppLanguage.en.rawValue
+            if index > 0 {
+                language = languages[index - 1]
             }
             
             Bundle.app.localizedLanguage = language
