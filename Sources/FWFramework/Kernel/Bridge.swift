@@ -8,14 +8,11 @@
 import Foundation
 
 @objc internal protocol ObjCObjectBridge {
-    @objc(class)
-    var objcClass: AnyClass { get }
-    
-    @objc(methodSignatureForSelector:)
-    func objcMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
-    
     @objc(instanceMethodSignatureForSelector:)
     static func objcInstanceMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
+    
+    @objc(tryCatch:exceptionHandler:)
+    static func objcTryCatch(_ block: () -> Void, exceptionHandler: (NSException) -> Void)
 }
 
 @objc internal protocol ObjCInvocationBridge {
@@ -34,9 +31,6 @@ import Foundation
     @objc(invoke)
     func objcInvoke()
     
-    @objc(invokeWithTarget:)
-    func objcInvoke(with target: AnyObject)
-    
     @objc(invocationWithMethodSignature:)
     static func objcInvocation(withMethodSignature signature: AnyObject) -> ObjCInvocationBridge
 }
@@ -44,9 +38,6 @@ import Foundation
 @objc internal protocol ObjCMethodSignatureBridge {
     @objc(numberOfArguments)
     var objcNumberOfArguments: UInt { get }
-    
-    @objc(methodReturnLength)
-    var objcMethodReturnLength: UInt { get }
     
     @objc(methodReturnType)
     var objcMethodReturnType: UnsafePointer<CChar> { get }
@@ -56,6 +47,16 @@ import Foundation
 
     @objc(signatureWithObjCTypes:)
     static func objcSignature(withObjCTypes typeEncoding: UnsafePointer<Int8>) -> AnyObject
+}
+
+internal struct ObjCClassBridge {
+    static let invocationClass: AnyClass? = NSClassFromString("NSInvocation")
+    static let methodSignatureClass: AnyClass? = NSClassFromString("NSMethodSignature")
+    static let macroBridgeClass: AnyClass? = NSClassFromString("FWMacroBridge")
+    
+    static let forwardInvocationSelector = NSSelectorFromString("forwardInvocation:")
+    static let methodSignatureSelector = NSSelectorFromString("methodSignatureForSelector:")
+    static let tryCatchSelector = NSSelectorFromString("tryCatch:exceptionHandler:")
 }
 
 internal enum ObjCTypeEncodingBridge: Int8 {

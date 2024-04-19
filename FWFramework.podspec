@@ -54,6 +54,14 @@ Pod::Spec.new do |s|
       }
     end
     
+    ss.subspec 'Bridge' do |sss|
+      sss.source_files = 'Macros/FWMacroBridge/**/*.{h,m}'
+      sss.dependency 'FWFramework/FWFramework'
+      sss.pod_target_xcconfig = {
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroBridge'
+      }
+    end
+    
     ss.subspec 'Macros' do |sss|
       sss.source_files = 'Macros/FWMacro/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'

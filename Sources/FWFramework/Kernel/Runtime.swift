@@ -453,7 +453,7 @@ extension Wrapper where Base: NSObject {
     private static func fw_invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]?) -> Unmanaged<AnyObject>! {
         guard target.responds(to: selector),
               let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector),
-              let invocationClass = NSClassFromString("NSInvocation") else {
+              let invocationClass = ObjCClassBridge.invocationClass else {
             return nil
         }
         
