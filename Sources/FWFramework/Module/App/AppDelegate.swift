@@ -23,6 +23,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     open func setupEnvironment() {
         /*
         Mediator.delegateModeEnabled = true
+        ErrorManager.startCapture()
          */
     }
     

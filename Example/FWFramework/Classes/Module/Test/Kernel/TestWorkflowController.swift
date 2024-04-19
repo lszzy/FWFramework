@@ -187,12 +187,11 @@ extension TestWorkflowController: ViewControllerProtocol {
     }
     
     func onException() {
-        ExceptionManager.startCaptureExceptions()
         NSNull().perform(NSSelectorFromString("onException"))
     }
     
     func onError() {
-        ExceptionManager.captureError(PromiseError.failed, remark: "Test error")
+        ErrorManager.captureError(PromiseError.failed, remark: "Test error")
     }
     
     func onBackground() {

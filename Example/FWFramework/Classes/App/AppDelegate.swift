@@ -17,6 +17,7 @@ class AppDelegate: AppResponder {
     // MARK: - Override
     override func setupEnvironment() {
         Mediator.delegateModeEnabled = true
+        ErrorManager.startCapture()
     }
     
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
