@@ -106,6 +106,14 @@ extension TestWorkflowController: ViewControllerProtocol {
             UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
         TestWorkflowController.kvoTargets.append(WeakObject(object: kvoTarget))
+        
+        app.observeNotification(.ErrorCaptured) { [weak self] notification in
+            guard let error = notification.object as? NSError else { return }
+            DispatchQueue.app.mainAsync {
+                let message = String(format: "domain: %@\ncode: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@", error.domain, error.code, error.localizedDescription, APP.safeString(notification.userInfo?["file"]), APP.safeValue(notification.userInfo?["line"].safeInt), APP.safeString(notification.userInfo?["function"]), notification.userInfo?["remark"].safeString ?? "-")
+                self?.app.showAlert(title: "ERROR", message: message)
+            }
+        }
     }
     
     func setupSubviews() {

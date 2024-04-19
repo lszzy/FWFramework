@@ -115,6 +115,10 @@ public class ErrorManager: NSObject {
                 } else {
                     invocation.objcTarget = nil
                     invocation.objcInvoke()
+                    
+                    let reason = String(format: "-[%@ %@]: unrecognized selector sent to instance %@", NSStringFromClass(type(of: selfObject)), NSStringFromSelector(invocation.objcSelector), String(describing: Unmanaged.passUnretained(selfObject).toOpaque()))
+                    let exception = NSException(name: .invalidArgumentException, reason: reason, userInfo: nil)
+                    captureError(error(with: exception))
                 }
             } else {
                 store.original(selfObject, store.selector, invocation)
@@ -174,7 +178,7 @@ public class ErrorManager: NSObject {
         }}
     }
     
-    /// 捕获自定义错误并发送通知，可设置备注
+    /// 捕获自定义错误并在当前线程发送通知，可设置备注
     public static func captureError(
         _ error: Error,
         remark: String? = nil,
