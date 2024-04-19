@@ -319,7 +319,8 @@ open class ModuleBundle: NSObject {
         if localized != bundleTarget.identifier { return localized }
         
         let tableKey = table ?? "Localizable"
-        let languageKey = Bundle.fw_currentLanguage ?? "en"
+        let language = Bundle.fw_currentLanguage
+        let languageKey = !language.isEmpty ? language : "en"
         let tableStrings = bundleTarget.strings[tableKey]
         let languageStrings = tableStrings?[languageKey] ?? tableStrings?["en"]
         return languageStrings?[key] ?? key

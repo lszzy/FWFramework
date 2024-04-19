@@ -19,34 +19,6 @@ extension WrapperCompatible {
     
 }
 
-// MARK: - AppLanguage
-enum AppLanguage: String {
-    case en = "en"
-    case zhHans = "zh-Hans"
-    case zhHant = "zh-Hant"
-    
-    var name: String {
-        switch self {
-        case .zhHans:
-            return "简体中文"
-        case .zhHant:
-            return "繁體中文"
-        default:
-            return "English"
-        }
-    }
-    
-    init?(rawValue: String) {
-        if rawValue.hasPrefix("zh-Hant") || rawValue.hasPrefix("zh-HK") {
-            self = .zhHant
-        } else if rawValue.hasPrefix("zh") {
-            self = .zhHans
-        } else {
-            self = .en
-        }
-    }
-}
-
 // MARK: - AppTheme
 extension NavigationBarStyle {
     
