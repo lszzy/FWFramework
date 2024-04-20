@@ -64,6 +64,7 @@ public class ErrorManager: NSObject {
     private static var isCaptureStarted = false
     private static var isExceptionCaptured = false
     private static var isSignalCaptured = false
+    private static var isCrashHandled = false
     private static var previousExceptionHandler: (@convention(c) (NSException) -> Void)?
     
     /// 开启框架错误捕获功能，默认仅处理captureClasses崩溃保护
@@ -272,7 +273,11 @@ public class ErrorManager: NSObject {
     private static func registerExceptionHandler() {
         previousExceptionHandler = NSGetUncaughtExceptionHandler()
         NSSetUncaughtExceptionHandler { exception in
-            ErrorManager.captureError(ErrorManager.error(with: exception), crash: true)
+            // NSException异常导致的Crash也会产生Signal错误，此处只记录一次
+            if !ErrorManager.isCrashHandled {
+                ErrorManager.isCrashHandled = true
+                ErrorManager.captureError(ErrorManager.error(with: exception), crash: true)
+            }
             ErrorManager.previousExceptionHandler?(exception)
         }
     }
@@ -299,7 +304,10 @@ public class ErrorManager: NSObject {
     }
     
     private static func signalErrorHandler(_ signal: Int32, _ name: String) {
-        captureError(NSError(domain: name, code: Int(signal), userInfo: nil), crash: true)
+        if !isCrashHandled {
+            isCrashHandled = true
+            captureError(NSError(domain: name, code: Int(signal), userInfo: nil), crash: true)
+        }
         exit(signal)
     }
     
