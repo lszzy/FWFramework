@@ -13,7 +13,7 @@ import FWFramework
     @objc optional func testMethod2()
 }
 
-class TestWorkflowController: UIViewController {
+class TestWorkflowController: UIViewController, TableViewControllerProtocol {
     
     // MARK: - Accessor
     var step: Int = 1
@@ -27,74 +27,7 @@ class TestWorkflowController: UIViewController {
     @objc dynamic private var kvoValue: Int = 0
     private static var kvoTargets: [WeakObject] = []
     
-    // MARK: - Subviews
-    private lazy var delegateButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Optional delegate method", for: .normal)
-        button.addTarget(self, action: #selector(onDelegate), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var notificationButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Test notification", for: .normal)
-        button.addTarget(self, action: #selector(onNotification), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var kvoButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Test kvo", for: .normal)
-        button.addTarget(self, action: #selector(onKvo), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var exceptionButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Capture exception", for: .normal)
-        button.addTarget(self, action: #selector(onException), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var errorButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Capture error", for: .normal)
-        button.addTarget(self, action: #selector(onError), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var uncaughtExceptionButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Uncaught exception (Crash)", for: .normal)
-        button.addTarget(self, action: #selector(onUncaughtException), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var uncaughtErrorButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Uncaught signal (Crash)", for: .normal)
-        button.addTarget(self, action: #selector(onUncaughtError), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var taskButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Background task", for: .normal)
-        button.addTarget(self, action: #selector(onBackground), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var requestButton: UIButton = {
-        let button = AppTheme.largeButton()
-        button.setTitle("Background request", for: .normal)
-        button.addTarget(self, action: #selector(onRequest), for: .touchUpInside)
-        return button
-    }()
-    
-}
-
-// MARK: - Setup
-extension TestWorkflowController: ViewControllerProtocol {
+    typealias TableElement = [String]
     
     func setupNavbar() {
         app.workflowName = "workflow.\(step)"
@@ -124,53 +57,38 @@ extension TestWorkflowController: ViewControllerProtocol {
     
     func setupSubviews() {
         self.delegate = self
-        view.addSubview(delegateButton)
-        view.addSubview(notificationButton)
-        view.addSubview(kvoButton)
-        view.addSubview(exceptionButton)
-        view.addSubview(errorButton)
-        view.addSubview(uncaughtExceptionButton)
-        view.addSubview(uncaughtErrorButton)
-        view.addSubview(taskButton)
-        view.addSubview(requestButton)
+        tableData.append(contentsOf: [
+            ["Optional delegate method", "onDelegate"],
+            ["Test notification", "onNotification"],
+            ["Test kvo", "onKvo"],
+            ["Capture exception", "onException"],
+            ["Capture error", "onError"],
+            ["Uncaught exception (Crash)", "onUncaughtException"],
+            ["Uncaught signal (Crash)", "onUncaughtError"],
+            ["Background task", "onBackground"],
+            ["Background request", "onRequest"],
+        ])
     }
     
-    func setupLayout() {
-        delegateButton.app.layoutChain
-            .centerX()
-            .top(toSafeArea: 20)
-        
-        notificationButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: delegateButton, offset: 20)
-        
-        kvoButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: notificationButton, offset: 20)
-        
-        exceptionButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: kvoButton, offset: 20)
-        
-        errorButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: exceptionButton, offset: 20)
-        
-        uncaughtExceptionButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: errorButton, offset: 20)
-        
-        uncaughtErrorButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: uncaughtExceptionButton, offset: 20)
-        
-        taskButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: uncaughtErrorButton, offset: 20)
-        
-        requestButton.app.layoutChain
-            .centerX()
-            .top(toViewBottom: taskButton, offset: 20)
+    func setupTableStyle() -> UITableView.Style {
+        .grouped
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tableData.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell.app.cell(tableView: tableView)
+        let rowData = tableData[indexPath.row]
+        cell.textLabel?.text = rowData[0]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let rowData = tableData[indexPath.row]
+        _ = self.perform(NSSelectorFromString(rowData[1]))
     }
     
 }
