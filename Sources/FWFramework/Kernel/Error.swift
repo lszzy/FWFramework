@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Notification+Exception
 extension Notification.Name {
     
-    /// 错误捕获通知，object为Error对象，userInfo为附加信息(function|file|line|remark|crash|symbols)
+    /// 错误捕获通知，object为Error对象，userInfo为附加信息(function|file|line|remark|crashed|symbols)
     public static let ErrorCaptured = Notification.Name("FWErrorCapturedNotification")
     
 }
@@ -125,7 +125,7 @@ public class ErrorManager: NSObject {
     /// 捕获自定义错误并在当前线程发送通知，可设置备注
     public static func captureError(
         _ error: Error,
-        crash: Bool = false,
+        crashed: Bool = false,
         remark: String? = nil,
         function: String = #function,
         file: String = #file,
@@ -137,13 +137,13 @@ public class ErrorManager: NSObject {
             "file": fileName,
             "line": line,
             "remark": remark ?? "",
-            "crash": crash,
+            "crashed": crashed,
             "symbols": Thread.callStackSymbols,
         ]
         
         #if DEBUG
         let nserror = error as NSError
-        Logger.debug(group: Logger.fw_moduleName, "\n========== ERROR ==========\ndomain: %@\n  code: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrash: %@\n========== ERROR ==========", nserror.domain, nserror.code, nserror.localizedDescription, fileName, line, function, remark ?? "", String(describing: crash))
+        Logger.debug(group: Logger.fw_moduleName, "\n========== ERROR ==========\ndomain: %@\n  code: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrashed: %@\n========== ERROR ==========", nserror.domain, nserror.code, nserror.localizedDescription, fileName, line, function, remark ?? "", String(describing: crashed))
         #endif
         
         NotificationCenter.default.post(name: .ErrorCaptured, object: error, userInfo: userInfo)
@@ -305,7 +305,7 @@ public class ErrorManager: NSObject {
         // NSException异常导致的Crash也会产生Signal错误，此处只记录一次
         if isExceptionStarted, !isCrashHandled {
             isCrashHandled = true
-            captureError(ErrorManager.error(with: exception), crash: true)
+            captureError(ErrorManager.error(with: exception), crashed: true)
         }
         
         previousExceptionHandler?(exception)
@@ -314,7 +314,7 @@ public class ErrorManager: NSObject {
     private static func signalHandler(_ signal: Int32) {
         if isSignalStarted, !isCrashHandled {
             isCrashHandled = true
-            captureError(NSError(domain: captureSignals[signal] ?? "\(signal)", code: Int(signal), userInfo: nil), crash: true)
+            captureError(NSError(domain: captureSignals[signal] ?? "\(signal)", code: Int(signal), userInfo: nil), crashed: true)
         }
         
         exit(signal)
