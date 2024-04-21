@@ -27,6 +27,15 @@ public class ErrorManager: NSObject {
         NSNull.self, NSNumber.self, NSString.self, NSArray.self, NSDictionary.self,
     ]
     
+    /// 自定义需要捕获的Signal字典，默认[SIGABRT, SIGSEGV, SIGBUS, SIGTRAP, SIGILL]
+    public static var captureSignals: [Int32: String] = [
+        SIGABRT: "SIGABRT",
+        SIGSEGV: "SIGSEGV",
+        SIGBUS: "SIGBUS",
+        SIGTRAP: "SIGTRAP",
+        SIGILL: "SIGILL",
+    ]
+    
     /// 可选tryCatch句柄，需应用自行桥接ObjC实现，默认nil；
     /// 目前仅startCapture方法可选使用、PlayerCache 13.4以下系统可选使用，可不处理
     ///
@@ -63,11 +72,8 @@ public class ErrorManager: NSObject {
     
     private static var isRegistered = false
     private static var isExceptionRegistered = false
-    private static var isSignalRegistered = false
     private static var isCrashHandled = false
-    
     private static var previousExceptionHandler: (@convention(c) (NSException) -> Void)?
-    private static var previousSignalHandlers: [Int32: @convention(c) (Int32) -> Void] = [:]
     
     /// 开启框架错误捕获功能，默认仅处理captureClasses崩溃保护
     /// - Parameters:
@@ -82,27 +88,38 @@ public class ErrorManager: NSObject {
         
         if !isRegistered {
             isRegistered = true
+            
             registerHandler()
         }
         if isExceptionStarted, !isExceptionRegistered {
             isExceptionRegistered = true
-            registerExceptionHandler()
+            
+            previousExceptionHandler = NSGetUncaughtExceptionHandler()
+            NSSetUncaughtExceptionHandler { ErrorManager.exceptionHandler($0) }
         }
-        if isSignalStarted, !isSignalRegistered {
-            isSignalRegistered = true
-            registerSignalHandler()
+        if isSignalStarted {
+            for (captureSignal, _) in captureSignals {
+                signal(captureSignal, { ErrorManager.signalHandler($0) })
+            }
         }
     }
     
     /// 停止框架错误捕获功能
-    ///
-    /// 注意停止捕获时无需取消注册全局异常和Signal句柄，因为保存的previous句柄可能已经不是最新的句柄，可以更好的兼容三方SDK等注册全局异常和Signal句柄
     public static func stopCapture() {
         guard isStarted else { return }
         
         isStarted = false
-        isExceptionStarted = false
-        isSignalStarted = false
+        // 此处为了更好的兼容三方SDK无需还原异常句柄，因为保存的previous句柄可能不是最新的
+        if isExceptionStarted {
+            isExceptionStarted = false
+        }
+        if isSignalStarted {
+            isSignalStarted = false
+            
+            for (captureSignal, _) in captureSignals {
+                signal(captureSignal, SIG_DFL)
+            }
+        }
     }
     
     /// 捕获自定义错误并在当前线程发送通知，可设置备注
@@ -284,19 +301,6 @@ public class ErrorManager: NSObject {
         }}
     }
     
-    private static func registerExceptionHandler() {
-        previousExceptionHandler = NSGetUncaughtExceptionHandler()
-        NSSetUncaughtExceptionHandler { ErrorManager.exceptionHandler($0) }
-    }
-    
-    private static func registerSignalHandler() {
-        previousSignalHandlers[SIGABRT] = signal(SIGABRT, { ErrorManager.signalHandler($0, "SIGABRT", ErrorManager.previousSignalHandlers[SIGABRT]) })
-        previousSignalHandlers[SIGSEGV] = signal(SIGSEGV, { ErrorManager.signalHandler($0, "SIGSEGV", ErrorManager.previousSignalHandlers[SIGSEGV]) })
-        previousSignalHandlers[SIGBUS] = signal(SIGBUS, { ErrorManager.signalHandler($0, "SIGBUS", ErrorManager.previousSignalHandlers[SIGBUS]) })
-        previousSignalHandlers[SIGTRAP] = signal(SIGTRAP, { ErrorManager.signalHandler($0, "SIGTRAP", ErrorManager.previousSignalHandlers[SIGTRAP]) })
-        previousSignalHandlers[SIGILL] = signal(SIGILL, { ErrorManager.signalHandler($0, "SIGILL", ErrorManager.previousSignalHandlers[SIGILL]) })
-    }
-    
     private static func exceptionHandler(_ exception: NSException) {
         // NSException异常导致的Crash也会产生Signal错误，此处只记录一次
         if isExceptionStarted, !isCrashHandled {
@@ -307,13 +311,13 @@ public class ErrorManager: NSObject {
         previousExceptionHandler?(exception)
     }
     
-    private static func signalHandler(_ signal: Int32, _ name: String, _ previousSignalHandler: (@convention(c) (Int32) -> Void)?) {
+    private static func signalHandler(_ signal: Int32) {
         if isSignalStarted, !isCrashHandled {
             isCrashHandled = true
-            captureError(NSError(domain: name, code: Int(signal), userInfo: nil), crash: true)
+            captureError(NSError(domain: captureSignals[signal] ?? "\(signal)", code: Int(signal), userInfo: nil), crash: true)
         }
         
-        previousSignalHandler?(signal)
+        exit(signal)
     }
     
 }
