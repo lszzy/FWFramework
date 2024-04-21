@@ -48,9 +48,9 @@ class AppDelegate: AppResponder {
         app.observeNotification(.ErrorCaptured) { [weak self] notification in
             guard let error = notification.object as? NSError else { return }
             
-            let crash = notification.userInfo?["crash"].safeBool ?? false
-            let message = String(format: "domain: %@\ncode: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrash: %@", error.domain, error.code, error.localizedDescription, APP.safeString(notification.userInfo?["file"]), APP.safeValue(notification.userInfo?["line"].safeInt), APP.safeString(notification.userInfo?["function"]), notification.userInfo?["remark"].safeString ?? "", String(describing: crash))
-            if crash {
+            let crashed = notification.userInfo?["crashed"].safeBool ?? false
+            let message = String(format: "domain: %@\ncode: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrashed: %@", error.domain, error.code, error.localizedDescription, APP.safeString(notification.userInfo?["file"]), APP.safeValue(notification.userInfo?["line"].safeInt), APP.safeString(notification.userInfo?["function"]), notification.userInfo?["remark"].safeString ?? "", String(describing: crashed))
+            if crashed {
                 self?.latestCrashLog = message
             } else {
                 self?.latestCrashLog = nil
