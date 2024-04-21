@@ -24,11 +24,7 @@ public class ErrorManager: NSObject {
     
     /// 自定义需要捕获未定义方法异常的类，默认[NSNull, NSNumber, NSString, NSArray, NSDictionary]
     public static var captureClasses: [AnyClass] = [
-        NSNull.self,
-        NSNumber.self,
-        NSString.self,
-        NSArray.self,
-        NSDictionary.self,
+        NSNull.self, NSNumber.self, NSString.self, NSArray.self, NSDictionary.self,
     ]
     
     /// 可选tryCatch句柄，需应用自行桥接ObjC实现，默认nil；
@@ -61,34 +57,52 @@ public class ErrorManager: NSObject {
     /// ```
     public static var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
     
-    private static var isCaptureStarted = false
-    private static var isExceptionCaptured = false
-    private static var isSignalCaptured = false
+    private static var isStarted = false
+    private static var isExceptionStarted = false
+    private static var isSignalStarted = false
+    
+    private static var isRegistered = false
+    private static var isExceptionRegistered = false
+    private static var isSignalRegistered = false
     private static var isCrashHandled = false
+    
     private static var previousExceptionHandler: (@convention(c) (NSException) -> Void)?
+    private static var previousSignalHandlers: [Int32: @convention(c) (Int32) -> Void] = [:]
     
     /// 开启框架错误捕获功能，默认仅处理captureClasses崩溃保护
     /// - Parameters:
     ///   - captureException: 是否捕获全局Exception错误
     ///   - captureSignal: 是否捕获全局Signal错误
     public static func startCapture(captureException: Bool = false, captureSignal: Bool = false) {
-        guard !isCaptureStarted else { return }
-        isCaptureStarted = true
-        isExceptionCaptured = captureException
-        isSignalCaptured = captureSignal
+        guard !isStarted else { return }
         
-        registerDefaultHandler()
-        if isExceptionCaptured { registerExceptionHandler() }
-        if isSignalCaptured { registerSignalHandler() }
+        isStarted = true
+        isExceptionStarted = captureException
+        isSignalStarted = captureSignal
+        
+        if !isRegistered {
+            isRegistered = true
+            registerHandler()
+        }
+        if isExceptionStarted, !isExceptionRegistered {
+            isExceptionRegistered = true
+            registerExceptionHandler()
+        }
+        if isSignalStarted, !isSignalRegistered {
+            isSignalRegistered = true
+            registerSignalHandler()
+        }
     }
     
     /// 停止框架错误捕获功能
+    ///
+    /// 注意停止捕获时无需取消注册全局异常和Signal句柄，因为保存的previous句柄可能已经不是最新的句柄，可以更好的兼容三方SDK等注册全局异常和Signal句柄
     public static func stopCapture() {
-        guard isCaptureStarted else { return }
-        isCaptureStarted = false
+        guard isStarted else { return }
         
-        if isExceptionCaptured { unregisterExceptionHandler() }
-        if isSignalCaptured { unregisterSignalHandler() }
+        isStarted = false
+        isExceptionStarted = false
+        isSignalStarted = false
     }
     
     /// 捕获自定义错误并在当前线程发送通知，可设置备注
@@ -150,14 +164,14 @@ public class ErrorManager: NSObject {
     }
     
     // MARK: - Private
-    private static func registerDefaultHandler() {
+    private static func registerHandler() {
         NSObject.fw_swizzleInstanceMethod(
             NSObject.self,
             selector: ObjCClassBridge.methodSignatureSelector,
             methodSignature: (@convention(c) (NSObject, Selector, Selector) -> AnyObject?).self,
             swizzleSignature: (@convention(block) (NSObject, Selector) -> AnyObject?).self
         ) { store in { selfObject, selector in
-            let isCaptured = isCaptureStarted && captureClasses.contains(where: { selfObject.isKind(of: $0) })
+            let isCaptured = isStarted && captureClasses.contains(where: { selfObject.isKind(of: $0) })
             guard isCaptured else {
                 return store.original(selfObject, store.selector, selector)
             }
@@ -175,7 +189,7 @@ public class ErrorManager: NSObject {
             methodSignature: (@convention(c) (NSObject, Selector, ObjCInvocationBridge) -> Void).self,
             swizzleSignature: (@convention(block) (NSObject, ObjCInvocationBridge) -> Void).self
         ) { store in { selfObject, invocation in
-            let isCaptured = isCaptureStarted && captureClasses.contains(where: { selfObject.isKind(of: $0) })
+            let isCaptured = isStarted && captureClasses.contains(where: { selfObject.isKind(of: $0) })
             guard isCaptured else {
                 store.original(selfObject, store.selector, invocation)
                 return
@@ -203,7 +217,7 @@ public class ErrorManager: NSObject {
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
             swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
         ) { store in { selfObject, value, key in
-            guard isCaptureStarted else {
+            guard isStarted else {
                 store.original(selfObject, store.selector, value, key)
                 return
             }
@@ -221,7 +235,7 @@ public class ErrorManager: NSObject {
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
             swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
         ) { store in { selfObject, value, keyPath in
-            guard isCaptureStarted else {
+            guard isStarted else {
                 store.original(selfObject, store.selector, value, keyPath)
                 return
             }
@@ -239,7 +253,7 @@ public class ErrorManager: NSObject {
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
             swizzleSignature: (@convention(block) (NSObject, Any?, String) -> Void).self
         ) { store in { selfObject, value, key in
-            guard isCaptureStarted else {
+            guard isStarted else {
                 store.original(selfObject, store.selector, value, key)
                 return
             }
@@ -257,7 +271,7 @@ public class ErrorManager: NSObject {
             methodSignature: (@convention(c) (NSObject, Selector, [String : Any]) -> Void).self,
             swizzleSignature: (@convention(block) (NSObject, [String : Any]) -> Void).self
         ) { store in { selfObject, keyedValues in
-            guard isCaptureStarted else {
+            guard isStarted else {
                 store.original(selfObject, store.selector, keyedValues)
                 return
             }
@@ -272,43 +286,34 @@ public class ErrorManager: NSObject {
     
     private static func registerExceptionHandler() {
         previousExceptionHandler = NSGetUncaughtExceptionHandler()
-        NSSetUncaughtExceptionHandler { exception in
-            // NSException异常导致的Crash也会产生Signal错误，此处只记录一次
-            if !ErrorManager.isCrashHandled {
-                ErrorManager.isCrashHandled = true
-                ErrorManager.captureError(ErrorManager.error(with: exception), crash: true)
-            }
-            ErrorManager.previousExceptionHandler?(exception)
-        }
-    }
-    
-    private static func unregisterExceptionHandler() {
-        NSSetUncaughtExceptionHandler(previousExceptionHandler)
-        previousExceptionHandler = nil
+        NSSetUncaughtExceptionHandler { ErrorManager.exceptionHandler($0) }
     }
     
     private static func registerSignalHandler() {
-        signal(SIGABRT, { ErrorManager.signalErrorHandler($0, "SIGABRT") })
-        signal(SIGSEGV, { ErrorManager.signalErrorHandler($0, "SIGSEGV") })
-        signal(SIGBUS, { ErrorManager.signalErrorHandler($0, "SIGBUS") })
-        signal(SIGTRAP, { ErrorManager.signalErrorHandler($0, "SIGTRAP") })
-        signal(SIGILL, { ErrorManager.signalErrorHandler($0, "SIGILL") })
+        previousSignalHandlers[SIGABRT] = signal(SIGABRT, { ErrorManager.signalHandler($0, "SIGABRT", ErrorManager.previousSignalHandlers[SIGABRT]) })
+        previousSignalHandlers[SIGSEGV] = signal(SIGSEGV, { ErrorManager.signalHandler($0, "SIGSEGV", ErrorManager.previousSignalHandlers[SIGSEGV]) })
+        previousSignalHandlers[SIGBUS] = signal(SIGBUS, { ErrorManager.signalHandler($0, "SIGBUS", ErrorManager.previousSignalHandlers[SIGBUS]) })
+        previousSignalHandlers[SIGTRAP] = signal(SIGTRAP, { ErrorManager.signalHandler($0, "SIGTRAP", ErrorManager.previousSignalHandlers[SIGTRAP]) })
+        previousSignalHandlers[SIGILL] = signal(SIGILL, { ErrorManager.signalHandler($0, "SIGILL", ErrorManager.previousSignalHandlers[SIGILL]) })
     }
     
-    private static func unregisterSignalHandler() {
-        signal(SIGINT, SIG_DFL);
-        signal(SIGSEGV, SIG_DFL);
-        signal(SIGTRAP, SIG_DFL);
-        signal(SIGABRT, SIG_DFL);
-        signal(SIGILL, SIG_DFL);
+    private static func exceptionHandler(_ exception: NSException) {
+        // NSException异常导致的Crash也会产生Signal错误，此处只记录一次
+        if isExceptionStarted, !isCrashHandled {
+            isCrashHandled = true
+            captureError(ErrorManager.error(with: exception), crash: true)
+        }
+        
+        previousExceptionHandler?(exception)
     }
     
-    private static func signalErrorHandler(_ signal: Int32, _ name: String) {
-        if !isCrashHandled {
+    private static func signalHandler(_ signal: Int32, _ name: String, _ previousSignalHandler: (@convention(c) (Int32) -> Void)?) {
+        if isSignalStarted, !isCrashHandled {
             isCrashHandled = true
             captureError(NSError(domain: name, code: Int(signal), userInfo: nil), crash: true)
         }
-        exit(signal)
+        
+        previousSignalHandler?(signal)
     }
     
 }
