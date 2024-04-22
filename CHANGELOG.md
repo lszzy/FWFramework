@@ -6,9 +6,9 @@
 * Complete implementation in pure Swift, removing FWObjC submodule
 * Autoloader's autoload method is changed to Swift calling mechanism
 * Reconstruct attribute KVO monitoring and add swift native observation method
-* Reconstruct UIViewController life cycle monitoring, pure Swift implementation
 * Reconstruct error capture ErrorManager, pure Swift implementation
 * Mediator adds Delegate mode, AppResponder can be used optionally
+* Reconstruct UIViewController life cycle monitoring and add ViewControllerLifecycleObservable protocol
 * Added commonly used UIKit tool methods
 
 ### Migrate

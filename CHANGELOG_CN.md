@@ -6,9 +6,9 @@
 * 纯Swift完整功能实现，移除FWObjC子模块
 * Autoloader的autoload方法改为Swift调用机制
 * 重构属性KVO监听，新增swift原生observe方式
-* 重构UIViewController生命周期监听，纯Swift实现
 * 重构错误捕获ErrorManager，纯Swift实现
 * Mediator新增Delegate模式，AppResponder可选使用
+* 重构UIViewController生命周期监听，新增ViewControllerLifecycleObservable协议
 * 新增常用UIKit工具方法
 
 ### Migrate
