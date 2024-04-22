@@ -807,6 +807,11 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIViewController
 extension Wrapper where Base: UIViewController {
+    /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
+    public var lifecycleState: ViewControllerLifecycleState? {
+        return base.fw_lifecycleState
+    }
+    
     /// 添加生命周期变化监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
@@ -2711,6 +2716,9 @@ public enum ViewState: Equatable {
 }
 
 // MARK: - UIViewController+Toolkit
+/// 视图控制器生命周期监听协议
+public protocol ViewControllerLifecycleObservable {}
+
 /// 视图控制器常用生命周期状态枚举
 ///
 /// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)，请使用object参数
@@ -2736,18 +2744,14 @@ public enum ViewControllerLifecycleState: Int {
         var completionResult: Any?
         var completionHandler: ((Any?) -> Void)?
         var state: ViewControllerLifecycleState = .didInit {
-            didSet {
-                if let viewController = viewController, state != oldValue {
-                    handlers.forEach { $0.block?(viewController, state, $0.object) }
-                }
-            }
+            didSet { stateChanged(from: oldValue, to: state) }
         }
         
         deinit {
-            if let viewController = viewController {
-                handlers.forEach { $0.block?(viewController, .didDeinit, $0.object) }
-            }
-            handlers.removeAll()
+            // 注意deinit不会触发属性的didSet，需手工调用stateChanged
+            let oldState = state
+            state = .didDeinit
+            stateChanged(from: oldState, to: state)
             
             if completionHandler != nil {
                 completionHandler?(completionResult)
@@ -2755,18 +2759,36 @@ public enum ViewControllerLifecycleState: Int {
             
             #if DEBUG
             if let viewController = viewController {
-                let className = NSStringFromClass(type(of: viewController)).components(separatedBy: ".").last ?? ""
-                if !className.hasPrefix("_") && !className.hasSuffix("_") {
-                    Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
-                }
+                Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
             }
             #endif
+        }
+        
+        private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
+            if let viewController = viewController, newState != oldState {
+                handlers.forEach { $0.block?(viewController, newState, $0.object) }
+            }
+            if newState == .didDeinit {
+                handlers.removeAll()
+            }
         }
     }
     
     private class LifecycleStateHandler: NSObject {
         var object: Any?
         var block: ((UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
+    }
+    
+    /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
+    public internal(set) var fw_lifecycleState: ViewControllerLifecycleState? {
+        get {
+            guard fw_issetLifecycleStateTarget else { return nil }
+            return fw_lifecycleStateTarget.state
+        }
+        set {
+            guard let newValue = newValue else { return }
+            fw_lifecycleStateTarget.state = newValue
+        }
     }
 
     /// 添加生命周期变化监听句柄，可携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
@@ -2813,18 +2835,6 @@ public enum ViewControllerLifecycleState: Int {
         }
         set {
             fw_lifecycleStateTarget.completionHandler = newValue
-        }
-    }
-    
-    /// 内部生命周期状态，需添加监听或设置完成回调才有值，默认nil
-    internal var fw_lifecycleState: ViewControllerLifecycleState? {
-        get {
-            guard fw_issetLifecycleStateTarget else { return nil }
-            return fw_lifecycleStateTarget.state
-        }
-        set {
-            guard let newValue = newValue else { return }
-            fw_lifecycleStateTarget.state = newValue
         }
     }
     
