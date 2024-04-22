@@ -24,7 +24,7 @@ extension View {
             textField.fw_setPropertyBool(true, forName: "textFieldInitialize")
             
             if let viewController = viewContext?.viewController {
-                viewController.fw_observeLifecycleState { [weak textField] vc, state in
+                viewController.fw_observeLifecycleState { [weak textField] vc, state, _ in
                     if state == .didAppear {
                         textField?.becomeFirstResponder()
                     } else if state == .willDisappear {
@@ -56,7 +56,7 @@ extension View {
             textView.fw_setPropertyBool(true, forName: "textViewInitialize")
             
             if let viewController = viewContext?.viewController {
-                viewController.fw_observeLifecycleState { [weak textView] vc, state in
+                viewController.fw_observeLifecycleState { [weak textView] vc, state, _ in
                     if state == .didAppear {
                         textView?.becomeFirstResponder()
                     } else if state == .willDisappear {

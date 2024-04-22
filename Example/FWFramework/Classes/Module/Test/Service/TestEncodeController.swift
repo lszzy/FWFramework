@@ -59,7 +59,7 @@ class TestEncodeController: UIViewController, TableViewControllerProtocol {
             ["Struct", "TestEncodeStruct()", TestEncodeStruct()],
             ["Class", "TestEncodeClass()", TestEncodeClass()],
             ["NSObject", "TestEncodeObject()", TestEncodeObject()],
-            ["AnyClass", "TestEncodeObject.classForCoder()", TestEncodeObject.classForCoder()],
+            ["AnyClass", "TestEncodeObject.self", TestEncodeObject.self],
             ["Function", "TestEncodeObject.testFunction", TestEncodeObject.testFunction],
             ["Closure", "TestEncodeObject().closure", TestEncodeObject().closure],
             ["Selector", "#selector(TestEncodeObject.testFunction)", #selector(TestEncodeObject.testFunction)],

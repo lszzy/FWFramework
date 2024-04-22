@@ -14,7 +14,15 @@ class AppDelegate: AppResponder {
     var backgroundTask: ((@escaping () -> Void) -> Void)?
     var expirationHandler: (() -> Void)?
     
+    @StoredValue("latestCrashLog")
+    private var latestCrashLog: String?
+    
     // MARK: - Override
+    override func setupEnvironment() {
+        Mediator.delegateModeEnabled = true
+        ErrorManager.startCapture(captureException: true, captureSignal: true)
+    }
+    
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = AppTheme.backgroundColor
@@ -34,6 +42,32 @@ class AppDelegate: AppResponder {
     
     override func setupController() {
         window?.rootViewController = TabController()
+    }
+    
+    override func setupService(options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
+        app.observeNotification(.ErrorCaptured) { [weak self] notification in
+            guard let error = notification.object as? NSError else { return }
+            
+            let crashed = notification.userInfo?["crashed"].safeBool ?? false
+            let message = String(format: "domain: %@\ncode: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrashed: %@", error.domain, error.code, error.localizedDescription, APP.safeString(notification.userInfo?["file"]), APP.safeValue(notification.userInfo?["line"].safeInt), APP.safeString(notification.userInfo?["function"]), notification.userInfo?["remark"].safeString ?? "", String(describing: crashed))
+            if crashed {
+                self?.latestCrashLog = message
+            } else {
+                self?.latestCrashLog = nil
+                
+                DispatchQueue.app.mainAsync {
+                    Navigator.topViewController?.app.showAlert(title: "ERROR", message: message)
+                }
+            }
+        }
+        
+        if let message = latestCrashLog {
+            latestCrashLog = nil
+            
+            DispatchQueue.app.mainAsync {
+                Navigator.topViewController?.app.showAlert(title: "CRASH", message: message)
+            }
+        }
     }
     
     override func reloadController() {

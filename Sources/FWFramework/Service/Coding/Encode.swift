@@ -54,6 +54,11 @@ extension Wrapper where Base == Data {
         return base.fw_utf8String
     }
     
+    /// 转换为bytes数组
+    public var bytesArray: [UInt8] {
+        return base.fw_bytesArray
+    }
+    
     /// 将对象归档为data数据
     public static func archivedData(_ object: Any?) -> Data? {
         return Base.fw_archivedData(object)
@@ -296,8 +301,8 @@ extension Wrapper where Base == URL {
     }
     
     /// 获取当前query的参数字典，不含空值
-    public var queryDictionary: [String: String] {
-        return base.fw_queryDictionary
+    public var queryParameters: [String: String] {
+        return base.fw_queryParameters
     }
     
     /// 获取基准URI字符串，不含path|query|fragment等，包含scheme|host|port等
@@ -308,6 +313,16 @@ extension Wrapper where Base == URL {
     /// 获取路径URI字符串，不含host|port等，包含path|query|fragment等
     public var pathURI: String? {
         return base.fw_pathURI
+    }
+    
+    /// 添加query参数字典并返回新的URL
+    public func appendingQueryParameters(_ parameters: [String: String]) -> URL {
+        return base.fw_appendingQueryParameters(parameters)
+    }
+    
+    /// 获取指定query参数值
+    public func queryValue(for key: String) -> String? {
+        return base.fw_queryValue(for: key)
     }
 }
 
@@ -353,6 +368,11 @@ extension Wrapper where Base == URL {
     /// 转换为UTF8字符串
     public var fw_utf8String: String? {
         return String(data: self, encoding: .utf8)
+    }
+    
+    /// 转换为bytes数组
+    public var fw_bytesArray: [UInt8] {
+        return [UInt8](self)
     }
     
     /// 将对象归档为data数据
@@ -703,7 +723,7 @@ extension Wrapper where Base == URL {
 
 @_spi(FW) extension URL {
     /// 获取当前query的参数字典，不含空值
-    public var fw_queryDictionary: [String: String] {
+    public var fw_queryParameters: [String: String] {
         var components = URLComponents(string: self.absoluteString)
         if components == nil, let string = self.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             components = URLComponents(string: string)
@@ -731,5 +751,20 @@ extension Wrapper where Base == URL {
         guard let components = URLComponents(string: string),
               let range = components.rangeOfPath else { return nil }
         return String(string[range])
+    }
+    
+    /// 添加query参数字典并返回新的URL
+    public func fw_appendingQueryParameters(_ parameters: [String: String]) -> URL {
+        var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true) ?? .init()
+        urlComponents.queryItems = (urlComponents.queryItems ?? []) + parameters.map { URLQueryItem(name: $0, value: $1) }
+        return urlComponents.url ?? URL()
+    }
+    
+    /// 获取指定query参数值
+    public func fw_queryValue(for key: String) -> String? {
+        URLComponents(url: self, resolvingAgainstBaseURL: false)?
+            .queryItems?
+            .first { $0.name == key }?
+            .value
     }
 }

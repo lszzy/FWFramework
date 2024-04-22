@@ -274,6 +274,11 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         return true
     }
     
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        print("textViewShouldBeginEditing")
+        return true
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
         if string == "\n" {
             return true

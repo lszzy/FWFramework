@@ -640,21 +640,20 @@ public class ThemeObject<T>: NSObject {
     @discardableResult
     public func fw_addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String {
         let identifier = UUID().uuidString
-        let listeners = fw_themeListeners(true)
-        listeners?.setObject(listener, forKey: identifier as NSString)
+        fw_themeListeners[identifier] = listener
         return identifier
     }
 
     /// iOS13根据订阅唯一标志移除主题通知回调
     public func fw_removeThemeListener(_ identifier: String) {
-        let listeners = fw_themeListeners(false)
-        listeners?.removeObject(forKey: identifier)
+        guard fw_issetThemeListeners else { return }
+        fw_themeListeners.removeValue(forKey: identifier)
     }
 
     /// iOS13移除所有主题通知回调，一般用于cell重用
     public func fw_removeAllThemeListeners() {
-        let listeners = fw_themeListeners(false)
-        listeners?.removeAllObjects()
+        guard fw_issetThemeListeners else { return }
+        fw_themeListeners.removeAll()
     }
     
     private var fw_themeContextIdentifier: String? {
@@ -662,13 +661,13 @@ public class ThemeObject<T>: NSObject {
         set { fw_setPropertyCopy(newValue, forName: "fw_themeContextIdentifier") }
     }
     
-    private func fw_themeListeners(_ lazyload: Bool) -> NSMutableDictionary? {
-        var listeners = fw_property(forName: "fw_themeListeners") as? NSMutableDictionary
-        if listeners == nil && lazyload {
-            listeners = NSMutableDictionary()
-            fw_setProperty(listeners, forName: "fw_themeListeners")
-        }
-        return listeners
+    private var fw_issetThemeListeners: Bool {
+        return fw_property(forName: "fw_themeListeners") != nil
+    }
+    
+    private var fw_themeListeners: [String: (ThemeStyle) -> Void] {
+        get { return fw_property(forName: "fw_themeListeners") as? [String: (ThemeStyle) -> Void] ?? [:] }
+        set { fw_setProperty(newValue, forName: "fw_themeListeners") }
     }
     
     fileprivate func fw_notifyThemeChanged(_ style: ThemeStyle) {
@@ -676,10 +675,9 @@ public class ThemeObject<T>: NSObject {
         self.themeChanged(style)
         
         // 2. 调用themeListeners句柄
-        if let listeners = fw_themeListeners(false) {
-            listeners.enumerateKeysAndObjects { _, obj, _ in
-                let listener = obj as? (ThemeStyle) -> Void
-                listener?(style)
+        if fw_issetThemeListeners {
+            fw_themeListeners.forEach { (_, listener) in
+                listener(style)
             }
         }
         

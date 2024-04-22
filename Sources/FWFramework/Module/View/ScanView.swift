@@ -190,7 +190,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     
     #if DEBUG
     deinit {
-        Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(self.classForCoder))
+        Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
     }
     #endif
     

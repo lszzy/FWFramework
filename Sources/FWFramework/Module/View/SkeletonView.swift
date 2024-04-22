@@ -436,7 +436,7 @@ open class SkeletonLayout: SkeletonView {
         if scrollView.contentOffset.y <= 0 && superview != nil {
             block?(scrollView.contentOffset.y)
         }
-        scrollView.fw_observeProperty("contentOffset") { [weak self] (_, _) in
+        scrollView.fw.observeProperty(\.contentOffset) { [weak self] scrollView, _ in
             if scrollView.contentOffset.y <= 0 && self?.superview != nil {
                 block?(scrollView.contentOffset.y)
             }

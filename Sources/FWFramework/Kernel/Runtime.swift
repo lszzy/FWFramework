@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Wrapper+AnyObject
 extension Wrapper where Base: WrapperObject {
@@ -19,42 +16,13 @@ extension Wrapper where Base: WrapperObject {
     }
     
     // MARK: - Runtime
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameter selector: 要执行的方法
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func invokeMethod(_ selector: Selector) -> Any? {
-        return base.fw_invokeMethod(selector)
-    }
-    
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return base.fw_invokeMethod(selector, object: object)
-    }
-    
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return base.fw_invokeMethod(selector, object: object1, object: object2)
-    }
-    
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return base.fw_invokeMethod(selector, objects: objects)
     }
     
@@ -73,48 +41,17 @@ extension Wrapper where Base: WrapperObject {
     /// - Parameters:
     ///   - name: 内部属性名称
     ///   - object: 传递的方法参数
-    /// - Returns: 方法执行后返回的值
-    @discardableResult
-    public func invokeSetter(_ name: String, object: Any?) -> Any? {
-        return base.fw_invokeSetter(name, object: object)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameter selector: 要执行的方法
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func invokeMethod(_ selector: Selector) -> Any? {
-        return Base.fw_invokeMethod(selector)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return Base.fw_invokeMethod(selector, object: object)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return Base.fw_invokeMethod(selector, object: object1, object: object2)
+    public func invokeSetter(_ name: String, object: Any?) {
+        base.fw_invokeSetter(name, object: object)
     }
     
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public static func invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
+    public static func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         return Base.fw_invokeMethod(selector, objects: objects)
     }
     
@@ -379,6 +316,11 @@ extension Wrapper where Base: NSObject {
         return Base.fw_metaClass(clazz)
     }
     
+    /// 获取指定类的所有子类
+    public static func allSubclasses(_ clazz: AnyClass) -> [AnyClass] {
+        return Base.fw_allSubclasses(clazz)
+    }
+    
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -436,43 +378,14 @@ extension Wrapper where Base: NSObject {
     }
     
     // MARK: - Runtime
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameter selector: 要执行的方法
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector)
-    }
-    
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, object: object)
-    }
-    
-    /// 安全调用方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, object: object1, object: object2)
-    }
-    
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
+    public func fw_invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
+        return NSObject.fw_invokeMethod(self, selector: selector, objects: objects)
     }
     
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
@@ -481,7 +394,25 @@ extension Wrapper where Base: NSObject {
     /// - Parameter name: 内部属性名称
     /// - Returns: 属性值
     public func fw_invokeGetter(_ name: String) -> Any? {
-        return ObjCBridge.invokeGetter(self, name: name)
+        let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
+        guard !name.isEmpty else { return nil }
+        
+        let ucfirstName = String(name.prefix(1).uppercased() + name.dropFirst())
+        let selectors = [
+            NSSelectorFromString("get\(ucfirstName)"),
+            NSSelectorFromString(name),
+            NSSelectorFromString("is\(ucfirstName)"),
+            NSSelectorFromString("_\(name)"),
+        ]
+        
+        let target = self as AnyObject
+        for selector in selectors {
+            if target.responds(to: selector) {
+                let result = target.perform(selector)?.takeUnretainedValue()
+                return result as Any?
+            }
+        }
+        return nil
     }
     
     /// 安全调用内部属性设置方法，如果属性不存在，则忽略之
@@ -490,49 +421,153 @@ extension Wrapper where Base: NSObject {
     /// - Parameters:
     ///   - name: 内部属性名称
     ///   - object: 传递的方法参数
-    /// - Returns: 方法执行后返回的值
-    @discardableResult
-    public func fw_invokeSetter(_ name: String, object: Any?) -> Any? {
-        return ObjCBridge.invokeSetter(self, name: name, object: object)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameter selector: 要执行的方法
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func fw_invokeMethod(_ selector: Selector) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object: 传递的方法参数，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func fw_invokeMethod(_ selector: Selector, object: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, object: object)
-    }
-    
-    /// 安全调用类方法，如果不能响应，则忽略之
-    /// - Parameters:
-    ///   - selector: 要执行的方法
-    ///   - object1: 传递的方法参数1，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    ///   - object2: 传递的方法参数2，非id类型可使用桥接，如int a = 1;(__bridge id)(void *)a
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
-    @discardableResult
-    public static func fw_invokeMethod(_ selector: Selector, object object1: Any?, object object2: Any?) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, object: object1, object: object2)
+    public func fw_invokeSetter(_ name: String, object: Any?) {
+        let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
+        guard !name.isEmpty else { return }
+        
+        let ucfirstName = String(name.prefix(1).uppercased() + name.dropFirst())
+        let selectors = [
+            NSSelectorFromString("set\(ucfirstName):"),
+            NSSelectorFromString("_set\(ucfirstName):"),
+        ]
+        
+        let target = self as AnyObject
+        for selector in selectors {
+            if target.responds(to: selector) {
+                _ = target.perform(selector, with: object)
+                return
+            }
+        }
     }
     
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
-    ///   - objects: 传递的参数数组
-    /// - Returns: 方法执行后返回的值。如果无返回值，则为nil
+    ///   - objects: 传递的参数数组，默认空
+    /// - Returns: 方法返回值
     @discardableResult
-    public static func fw_invokeMethod(_ selector: Selector, objects: [Any]) -> Any? {
-        return ObjCBridge.invokeMethod(self, selector: selector, objects: objects)
+    public static func fw_invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
+        return fw_invokeMethod(self, selector: selector, objects: objects)
+    }
+    
+    private static func fw_invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]?) -> Unmanaged<AnyObject>! {
+        guard target.responds(to: selector),
+              let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector),
+              let invocationClass = ObjCClassBridge.invocationClass else {
+            return nil
+        }
+        
+        let invocation = invocationClass.objcInvocation(withMethodSignature: signature)
+        invocation.objcTarget = target
+        invocation.objcSelector = selector
+        
+        // 转换为NSArray的原因：自动桥接Swift类型参数为ObjC参数
+        let arguments = objects as? NSArray
+        let argCount = min(Int(signature.objcNumberOfArguments) - 2, arguments?.count ?? 0)
+        for i in 0..<argCount {
+            let argIndex = i + 2
+            var argument = arguments?[i]
+            if let number = argument as? NSNumber {
+                let argumentType = signature.objcGetArgumentType(at: UInt(argIndex))
+                let typeEncoding = ObjCTypeEncodingBridge(rawValue: argumentType.pointee) ?? .undefined
+                switch typeEncoding {
+                case .char:
+                    argument = number.int8Value
+                case .bool:
+                    argument = number.boolValue
+                case .int, .short, .long:
+                    argument = number.intValue
+                case .longLong:
+                    argument = number.int64Value
+                case .unsignedChar:
+                    argument = number.uint8Value
+                case .unsignedInt, .unsignedShort, .unsignedLong:
+                    argument = number.uintValue
+                case .unsignedLongLong:
+                    argument = number.uint64Value
+                case .float:
+                    argument = number.floatValue
+                case .double:
+                    argument = number.doubleValue
+                default:
+                    break
+                }
+            }
+            
+            if argument is NSNull { argument = nil }
+            withUnsafeMutablePointer(to: &argument) { pointer in
+                invocation.objcSetArgument(pointer, at: argIndex)
+            }
+        }
+        
+        invocation.objcInvoke()
+        let returnType = signature.objcMethodReturnType
+        let typeEncoding = ObjCTypeEncodingBridge(rawValue: returnType.pointee) ?? .undefined
+        let returnTypeString = String(utf8String: returnType)
+        guard returnTypeString != "v" else {
+            return nil
+        }
+        
+        if returnTypeString == "@" {
+            var cfResult: CFTypeRef?
+            withUnsafeMutablePointer(to: &cfResult) { pointer in
+                invocation.objcGetReturnValue(pointer)
+            }
+            return cfResult != nil ? Unmanaged.passRetained(cfResult!) : nil
+        }
+        
+        func extract<U>(_ type: U.Type) -> U {
+            let pointer = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<U>.size, alignment: MemoryLayout<U>.alignment)
+            defer { pointer.deallocate() }
+
+            invocation.objcGetReturnValue(pointer)
+            return pointer.assumingMemoryBound(to: type).pointee
+        }
+
+        let value: Any?
+        switch typeEncoding {
+        case .char:
+            value = NSNumber(value: extract(CChar.self))
+        case .int:
+            value = NSNumber(value: extract(CInt.self))
+        case .short:
+            value = NSNumber(value: extract(CShort.self))
+        case .long:
+            value = NSNumber(value: extract(CLong.self))
+        case .longLong:
+            value = NSNumber(value: extract(CLongLong.self))
+        case .unsignedChar:
+            value = NSNumber(value: extract(CUnsignedChar.self))
+        case .unsignedInt:
+            value = NSNumber(value: extract(CUnsignedInt.self))
+        case .unsignedShort:
+            value = NSNumber(value: extract(CUnsignedShort.self))
+        case .unsignedLong:
+            value = NSNumber(value: extract(CUnsignedLong.self))
+        case .unsignedLongLong:
+            value = NSNumber(value: extract(CUnsignedLongLong.self))
+        case .float:
+            value = NSNumber(value: extract(CFloat.self))
+        case .double:
+            value = NSNumber(value: extract(CDouble.self))
+        case .bool:
+            value = NSNumber(value: extract(CBool.self))
+        case .object:
+            value = extract((AnyObject?).self)
+        case .type:
+            value = extract((AnyClass?).self)
+        case .selector:
+            value = extract((Selector?).self)
+        case .undefined:
+            var size = 0, alignment = 0
+            NSGetSizeAndAlignment(returnType, &size, &alignment)
+            let buffer = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+            defer { buffer.deallocate() }
+            
+            invocation.objcGetReturnValue(buffer)
+            value = NSValue(bytes: buffer, objCType: returnType)
+        }
+        return value != nil ? Unmanaged.passRetained(value as AnyObject) : nil
     }
     
     // MARK: - Property
@@ -848,6 +883,31 @@ extension Wrapper where Base: NSObject {
         return metaClass
     }
     
+    /// 获取指定类的所有子类
+    public static func fw_allSubclasses(_ clazz: AnyClass) -> [AnyClass] {
+        var classesCount: UInt32 = 0
+        guard let classList = objc_copyClassList(&classesCount) else {
+            return []
+        }
+        
+        defer { free(UnsafeMutableRawPointer(classList)) }
+        let classes = UnsafeBufferPointer(start: classList, count: Int(classesCount))
+        guard classesCount > 0 else {
+            return []
+        }
+        
+        return classes.filter { fw_isSubclass($0, of: clazz) }
+    }
+    
+    private static func fw_isSubclass(_ subclass: AnyClass, of superclass: AnyClass) -> Bool {
+        var parentClass: AnyClass? = subclass
+        while parentClass != nil {
+            parentClass = class_getSuperclass(parentClass)
+            if parentClass == superclass { return true }
+        }
+        return false
+    }
+    
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -874,7 +934,7 @@ extension Wrapper where Base: NSObject {
             free(methodList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
@@ -909,7 +969,7 @@ extension Wrapper where Base: NSObject {
             free(propertyList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
@@ -945,7 +1005,7 @@ extension Wrapper where Base: NSObject {
             free(ivarList)
             
             targetClass = class_getSuperclass(targetClass)
-            if targetClass == nil || targetClass == NSObject.classForCoder() {
+            if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }

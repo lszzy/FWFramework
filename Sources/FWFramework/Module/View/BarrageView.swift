@@ -370,7 +370,7 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
                 var availableTrackInfos = [BarrageTrackInfo]()
                 for info in trackNextAvailableTime.values {
                     // 只在同类弹幕中判断是否有可用的轨道
-                    if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(barrageCell.classForCoder)) {
+                    if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(type(of: barrageCell))) {
                         availableTrackInfos.append(info)
                     }
                 }
@@ -424,7 +424,7 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
                     var availableTrackInfos = [BarrageTrackInfo]()
                     for info in trackNextAvailableTime.values {
                         // 只在同类弹幕中判断是否有可用的轨道
-                        if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(barrageCell.classForCoder)) {
+                        if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(type(of: barrageCell))) {
                             availableTrackInfos.append(info)
                         }
                     }
@@ -538,7 +538,7 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
     }
     
     private func nextAvailableTimeKey(_ barrageCell: BarrageCell, index: Int) -> String {
-        return "\(NSStringFromClass(barrageCell.classForCoder))_\(index)"
+        return "\(NSStringFromClass(type(of: barrageCell)))_\(index)"
     }
 }
 

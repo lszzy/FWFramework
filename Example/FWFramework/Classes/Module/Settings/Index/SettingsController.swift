@@ -91,11 +91,10 @@ extension SettingsController {
         cell.textLabel?.text = text
         
         if "onLanguage" == action {
-            var language = APP.localized("systemTitle")
-            if let localized = Bundle.app.localizedLanguage, localized.count > 0 {
-                language = localized.hasPrefix("zh") ? "中文" : "English"
-            } else {
-                language = language.appending("(\(APP.safeString(Bundle.app.systemLanguage)))")
+            let currentLanguage = Bundle.app.currentLanguage ?? ""
+            var language = Bundle.app.languageName(for: currentLanguage, localeIdentifier: currentLanguage)
+            if Bundle.app.localizedLanguage == nil {
+                language = APP.localized("systemTitle") + "(\(language))"
             }
             cell.detailTextLabel?.text = language
         } else if "onTheme" == action {
@@ -116,7 +115,7 @@ extension SettingsController {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
         let action = APP.safeValue(rowData[1])
-        app.invokeMethod(Selector(action))
+        _ = self.perform(Selector(action))
     }
     
 }
@@ -147,8 +146,16 @@ private extension SettingsController {
     }
     
     @objc func onLanguage() {
-        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: [APP.localized("systemTitle"), "中文", "English"], currentIndex: -1) { (index) in
-            let language: String? = index == 1 ? "zh-Hans" : (index == 2 ? "en" : nil)
+        var actions: [String] = [APP.localized("systemTitle")]
+        let languages = Bundle.app.availableLanguages
+        actions.append(contentsOf: languages.map({ Bundle.app.languageName(for: $0, localeIdentifier: $0) }))
+        
+        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { (index) in
+            var language: String?
+            if index > 0 {
+                language = languages[index - 1]
+            }
+            
             Bundle.app.localizedLanguage = language
             AppDelegate.shared.reloadController()
         }
@@ -188,7 +195,7 @@ private extension SettingsController {
         
         app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map({ $0[0] })) { [weak self] index in
             let action = plugins[index][1]
-            self?.app.invokeMethod(Selector(action))
+            _ = self?.perform(Selector(action))
         }
     }
     

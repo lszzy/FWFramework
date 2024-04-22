@@ -41,7 +41,7 @@ class TestNotificationController: UIViewController, TableViewControllerProtocol 
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
         let selector = NSSelectorFromString(rowData[1])
-        app.invokeMethod(selector)
+        _ = self.perform(selector)
     }
     
 }

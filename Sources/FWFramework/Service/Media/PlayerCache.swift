@@ -9,9 +9,6 @@ import Foundation
 import UIKit
 import AVFoundation
 import MobileCoreServices
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - PlayerCacheLoaderManager
 public protocol PlayerCacheLoaderManagerDelegate: AnyObject {
@@ -688,7 +685,7 @@ public class PlayerCacheContentInfo: NSObject, NSSecureCoding {
     }
     
     public override var debugDescription: String {
-        return String(format: "%@\ncontentLength: %lld\ncontentType: %@\nbyteRangeAccessSupported:%@", NSStringFromClass(self.classForCoder), contentLength, contentType, "\(byteRangeAccessSupported)")
+        return String(format: "%@\ncontentLength: %lld\ncontentType: %@\nbyteRangeAccessSupported:%@", NSStringFromClass(type(of: self)), contentLength, contentType, "\(byteRangeAccessSupported)")
     }
 }
 
@@ -1118,15 +1115,7 @@ public class PlayerCacheWorker: NSObject {
             if #available(iOS 13.4, *) {
                 try writeFileHandle.write(contentsOf: data)
             } else {
-                var fileError: Error?
-                ObjCBridge.tryCatch {
-                    writeFileHandle.write(data)
-                } exceptionHandler: { exception in
-                    fileError = NSError(domain: exception.name.rawValue, code: 123, userInfo: [NSLocalizedDescriptionKey: exception.reason ?? "", "exception": exception])
-                }
-                if let fileError = fileError {
-                    throw fileError
-                }
+                try ErrorManager.tryCatch { writeFileHandle.write(data) }
             }
             writeBytes += data.count
             cacheConfiguration.addCacheFragment(range)
@@ -1225,15 +1214,7 @@ public class PlayerCacheWorker: NSObject {
         if #available(iOS 13.4, *) {
             data = try readFileHandle.read(upToCount: range.length)
         } else {
-            var fileError: Error?
-            ObjCBridge.tryCatch {
-                data = readFileHandle.readData(ofLength: range.length)
-            } exceptionHandler: { exception in
-                fileError = NSError(domain: exception.name.rawValue, code: 123, userInfo: [NSLocalizedDescriptionKey: exception.reason ?? "", "exception": exception])
-            }
-            if let fileError = fileError {
-                throw fileError
-            }
+            try ErrorManager.tryCatch { data = readFileHandle.readData(ofLength: range.length) }
         }
         return data
     }

@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // 调试环境开启，正式环境关闭
 #if DEBUG
@@ -99,7 +96,7 @@ fileprivate class UnitTest: NSObject {
     }
     
     private func testSuite() -> [AnyClass] {
-        let testCases = ObjCBridge.getClasses(TestCase.classForCoder())
+        let testCases = NSObject.fw_allSubclasses(TestCase.self)
             .sorted { obj1, obj2 in
                 return NSStringFromClass(obj1) < NSStringFromClass(obj2)
             }

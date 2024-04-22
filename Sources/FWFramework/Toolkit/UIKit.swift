@@ -640,6 +640,11 @@ extension Wrapper where Base: UIScrollView {
         set { base.fw_contentOffsetY = newValue }
     }
     
+    /// 滚动视图完整图片截图
+    public var contentSnapshot: UIImage? {
+        return base.fw_contentSnapshot
+    }
+    
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
     ///
     /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
@@ -990,6 +995,11 @@ extension Wrapper where Base: UITableView {
         base.fw_reloadDataWithoutAnimation()
     }
     
+    /// 判断indexPath是否有效
+    public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        return base.fw_isValidIndexPath(indexPath)
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
@@ -1057,6 +1067,11 @@ extension Wrapper where Base: UICollectionView {
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
         base.fw_reloadDataWithoutAnimation()
+    }
+    
+    /// 判断indexPath是否有效
+    public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        return base.fw_isValidIndexPath(indexPath)
     }
     
     /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
@@ -1245,6 +1260,18 @@ extension Wrapper where Base: UIViewController {
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
     public func addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
         base.fw_addChild(viewController, in: view, layout: layout)
+    }
+    
+    /// 弹出popover控制器
+    public func presentPopover(
+        _ popover: UIViewController,
+        sourcePoint: CGPoint,
+        size: CGSize? = nil,
+        delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
+        animated: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        base.fw_presentPopover(popover, sourcePoint: sourcePoint, size: size, delegate: delegate, animated: animated, completion: completion)
     }
 }
 
@@ -3201,6 +3228,19 @@ extension Wrapper where Base: UIViewController {
         set { self.contentOffset = CGPoint(x: self.contentOffset.x, y: newValue) }
     }
     
+    /// 滚动视图完整图片截图
+    public var fw_contentSnapshot: UIImage? {
+        let size = contentSize
+        guard size != .zero else { return nil }
+
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let previousFrame = frame
+            frame = CGRect(origin: frame.origin, size: size)
+            layer.render(in: context.cgContext)
+            frame = previousFrame
+        }
+    }
+    
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
     ///
     /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
@@ -4123,6 +4163,13 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
+    /// 判断indexPath是否有效
+    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
+        guard indexPath.section < numberOfSections else { return false }
+        return indexPath.row < numberOfRows(inSection: indexPath.section)
+    }
+    
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
@@ -4347,6 +4394,13 @@ extension Wrapper where Base: UIViewController {
         CATransaction.setDisableActions(true)
         self.reloadData()
         CATransaction.commit()
+    }
+    
+    /// 判断indexPath是否有效
+    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
+        guard indexPath.section >= 0, indexPath.item >= 0 else { return false }
+        guard indexPath.section < numberOfSections else { return false }
+        return indexPath.item < numberOfItems(inSection: indexPath.section)
     }
     
     /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
@@ -4606,15 +4660,14 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
-            let cancelButton = fw_cancelButton
+            guard let cancelButton = fw_cancelButton else { return }
             if newValue {
-                cancelButton?.isEnabled = true
-                cancelButton?.fw_observeProperty("enabled", block: { object, _ in
-                    guard let object = object as? UIButton else { return }
+                cancelButton.isEnabled = true
+                cancelButton.fw.observeProperty(\.isEnabled) { object, _ in
                     if !object.isEnabled { object.isEnabled = true }
-                })
+                }
             } else {
-                cancelButton?.fw_unobserveProperty("enabled")
+                cancelButton.fw.unobserveProperty(\.isEnabled)
             }
         }
     }
@@ -4832,6 +4885,29 @@ extension Wrapper where Base: UIViewController {
             viewController.view.fw_pinEdges()
         }
         viewController.didMove(toParent: self)
+    }
+    
+    /// 弹出popover控制器
+    public func fw_presentPopover(
+        _ popover: UIViewController,
+        sourcePoint: CGPoint,
+        size: CGSize? = nil,
+        delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
+        animated: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        popover.modalPresentationStyle = .popover
+        if let size = size {
+            popover.preferredContentSize = size
+        }
+        
+        if let presentation = popover.popoverPresentationController {
+            presentation.sourceView = view
+            presentation.sourceRect = CGRect(origin: sourcePoint, size: .zero)
+            presentation.delegate = delegate
+        }
+        
+        present(popover, animated: animated, completion: completion)
     }
     
 }

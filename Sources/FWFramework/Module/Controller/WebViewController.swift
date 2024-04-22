@@ -97,7 +97,17 @@ internal extension ViewControllerManager {
         webView.delegate = viewController
         viewController.view.addSubview(webView)
         
-        webView.fw_observeProperty("title") { [weak viewController] _, _ in
+        if webViewReuseIdentifier != nil {
+            viewController.fw_observeLifecycleState(object: webView) { [weak self] _, state, webView in
+                guard self?.webViewReuseIdentifier != nil,
+                      state == .didDeinit,
+                      let webView = webView as? WebView else { return }
+                
+                ReusableViewPool.shared.recycleReusableView(webView)
+            }
+        }
+        
+        webView.fw.observeProperty(\.title) { [weak viewController] _, _ in
             viewController?.navigationItem.title = viewController?.webView.title
         }
         viewController.fw_allowsPopGesture = { [weak viewController] in
@@ -120,13 +130,6 @@ internal extension ViewControllerManager {
         }
         
         webView.webRequest = viewController.webRequest
-    }
-    
-    func webViewControllerDeinit(_ viewController: UIViewController) {
-        guard webViewReuseIdentifier != nil,
-              let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
-        
-        ReusableViewPool.shared.recycleReusableView(viewController.webView)
     }
     
 }

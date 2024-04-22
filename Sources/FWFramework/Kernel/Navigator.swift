@@ -300,7 +300,7 @@ public class Navigator: NSObject {
                let flexWindow = mainWindow,
                flexWindow.isKind(of: flexClass),
                flexWindow.responds(to: flexSelector) {
-                mainWindow = flexWindow.fw_invokeMethod(flexSelector) as? UIWindow
+                mainWindow = flexWindow.perform(flexSelector)?.takeUnretainedValue() as? UIWindow
             }
             #endif
             
@@ -492,7 +492,7 @@ public class Navigator: NSObject {
                 return workflowName
             }
             
-            let className = NSStringFromClass(classForCoder)
+            let className = NSStringFromClass(type(of: self))
                 .components(separatedBy: ".").last ?? ""
             let workflowName = className
                 .replacingOccurrences(of: "ViewController", with: "")

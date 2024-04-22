@@ -5,10 +5,7 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
+import UIKit
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
@@ -87,7 +84,11 @@ extension ModuleProtocol where Self: NSObject {
 }
 
 // MARK: - Mediator
-/// iOS模块化架构中间件，结合FWRouter可搭建模块化架构设计
+/// iOS模块化架构中间件，结合Router可搭建模块化架构设计
+///
+/// 支持两种模块加载模式：
+/// 模式一：Delegate模式，推荐使用，详见方法：checkAllModules(_:)
+/// 模式二：Runtime模式，详见方法：checkAllModules(selector:arguments:)
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
 public class Mediator: NSObject {
@@ -97,6 +98,8 @@ public class Mediator: NSObject {
     
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
     public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
+    /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
+    public static var delegateModeEnabled = false
     
     /// 插件调试描述
     public override class func debugDescription() -> String {
@@ -188,29 +191,34 @@ public class Mediator: NSObject {
         #endif
     }
     
-    /// 在UIApplicationDelegate检查所有模块方法
+    /// 在UIApplicationDelegate检查所有模块方法，Delegate模式，推荐使用
+    public static func checkAllModules(_ block: (UIApplicationDelegate) -> Void) {
+        let modules = allRegisteredModules()
+        for moduleType in modules {
+            block(moduleType.shared)
+        }
+    }
+    
+    /// 在UIApplicationDelegate检查所有模块方法，Runtime模式
     @discardableResult
     public static func checkAllModules(selector: Selector, arguments: [Any]?) -> Bool {
         var result = false
         let modules = allRegisteredModules()
         for moduleType in modules {
-            let moduleInstance = moduleType.shared
-            guard moduleInstance.responds(to: selector) else { continue }
+            guard let moduleInstance = moduleType.shared as? NSObject,
+                  moduleInstance.responds(to: selector) else { continue }
             
             // 如果当前模块类为某个模块类的父类，则不调用当前模块类方法
             var shouldInvoke = true
-            var moduleClass = ""
-            if let moduleObject = moduleInstance as? NSObject {
-                moduleClass = NSStringFromClass(moduleObject.classForCoder)
-                if moduleInvokePool[moduleClass] == nil {
-                    for obj in modules {
-                        if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
-                           moduleClass == NSStringFromClass(objSuperclass) {
-                            shouldInvoke = false
-                            break
-                        }
-                        
+            let moduleClass = NSStringFromClass(type(of: moduleInstance))
+            if moduleInvokePool[moduleClass] == nil {
+                for obj in modules {
+                    if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
+                       moduleClass == NSStringFromClass(objSuperclass) {
+                        shouldInvoke = false
+                        break
                     }
+                    
                 }
             }
             guard shouldInvoke else { continue }
@@ -219,8 +227,7 @@ public class Mediator: NSObject {
                 moduleInvokePool[moduleClass] = true
             }
             
-            var returnValue = false
-            ObjCBridge.invokeMethod(moduleInstance, selector: selector, arguments: arguments, returnValue: &returnValue)
+            let returnValue = moduleInstance.fw_invokeMethod(selector, objects: arguments)?.takeUnretainedValue() as? Bool ?? false
             if !result {
                 result = returnValue
             }
@@ -356,9 +363,10 @@ open class ModuleBundle: NSObject {
     /// 初始化模块Bundle，子类可重写，用于加载自定义Bundle
     open class func initializeBundle() -> Bundle? {
         // 1. ModuleBundle基类或主应用模块类只加载主Bundle
+        let bundleClass: AnyClass = self
         guard self != ModuleBundle.self,
-              Bundle(for: classForCoder()) != .main,
-              let moduleName = Bundle(for: classForCoder()).executableURL?.lastPathComponent else {
+              Bundle(for: bundleClass) != .main,
+              let moduleName = Bundle(for: bundleClass).executableURL?.lastPathComponent else {
             return nil
         }
         
@@ -367,7 +375,7 @@ open class ModuleBundle: NSObject {
             return appBundle.fw_localizedBundle()
         }
         /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
-        if let moduleBundle = Bundle.fw_bundle(with: classForCoder(), name: moduleName) {
+        if let moduleBundle = Bundle.fw_bundle(with: bundleClass, name: moduleName) {
             return moduleBundle.fw_localizedBundle()
         }
         /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle

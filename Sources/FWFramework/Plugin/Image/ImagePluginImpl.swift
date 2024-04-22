@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 /// 默认图片插件
 open class ImagePluginImpl: NSObject, ImagePlugin {

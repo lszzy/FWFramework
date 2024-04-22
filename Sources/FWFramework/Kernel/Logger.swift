@@ -7,9 +7,6 @@
 
 import Foundation
 import os
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
@@ -354,26 +351,52 @@ public protocol LoggerPlugin {
     
 }
 
-/// NSLog日志插件，兼容FLEX、FWDebug等组件(使用OC版本NSLog实现)
+/// NSLog日志插件，兼容FWDebug等组件
 public class LoggerPluginNSLog: NSObject, LoggerPlugin {
     
     @objc(sharedInstance)
     public static let shared = LoggerPluginNSLog()
     
+    /// 自定义日志处理句柄
+    public var logHandler: ((String) -> Void)?
+    
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
         switch type {
         case .error:
-            ObjCBridge.logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
+            logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
         case .warn:
-            ObjCBridge.logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
+            logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
         case .info:
-            ObjCBridge.logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
+            logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
         case .debug:
-            ObjCBridge.logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
+            logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
         default:
-            ObjCBridge.logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
+            logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
         }
+    }
+    
+    private func logMessage(_ message: String) {
+        if logHandler != nil {
+            logHandler?(message)
+            return
+        }
+        
+        #if DEBUG
+        // DEBUG模式时兼容FWDebug等组件
+        let debugClass = NSClassFromString("FWDebugManager") as? NSObject.Type
+        let instanceSelector = NSSelectorFromString("sharedInstance")
+        let logSelector = NSSelectorFromString("systemLog:")
+        if let debugClass = debugClass,
+           debugClass.responds(to: instanceSelector),
+           let debugManager = debugClass.perform(instanceSelector)?.takeUnretainedValue(),
+           debugManager.responds(to: logSelector) {
+            _ = debugManager.perform(logSelector, with: message)
+            return
+        }
+        #endif
+        
+        NSLog("%@", message)
     }
     
 }

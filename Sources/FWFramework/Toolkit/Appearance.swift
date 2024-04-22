@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Wrapper+NSObject
 extension Wrapper where Base: NSObject {
@@ -26,23 +23,44 @@ extension Wrapper where Base: NSObject {
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
 public class Appearance: NSObject {
     
-    private static var appearances: [String: Any] = [:]
+    private static var appearances: [String: AnyObject] = [:]
     
     /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
-    public static func appearance(for aClass: AnyClass) -> Any {
+    public static func appearance(for aClass: AnyClass) -> AnyObject? {
         let className = NSStringFromClass(aClass)
         if let appearance = appearances[className] {
             return appearance
         }
         
-        let appearance = ObjCBridge.appearance(for: aClass)
+        let selector = NSSelectorFromString(String(format: "_%@:%@:", "appearanceForClass", "withContainerList"))
+        guard let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
+              appearanceClass.responds(to: selector),
+              let appearance = (appearanceClass as AnyObject).perform(selector, with: aClass, with: nil)?.takeUnretainedValue() else {
+            return nil
+        }
+        
         appearances[className] = appearance
         return appearance
     }
 
     /// 获取指定 appearance 对象的关联 Class，通过解析_UIAppearance对象获取
-    public static func `class`(for appearance: Any) -> AnyClass {
-        return ObjCBridge.class(forAppearance: appearance)
+    public static func `class`(for appearance: AnyObject) -> AnyClass {
+        var selector = NSSelectorFromString(String(format: "_%@%@", "customizable", "ClassInfo"))
+        guard appearance.responds(to: selector) else {
+            return type(of: appearance)
+        }
+        
+        let classInfo = appearance.perform(selector)?.takeUnretainedValue() as? AnyObject
+        selector = NSSelectorFromString(String(format: "_%@%@", "customizable", "ViewClass"))
+        guard let classInfo = classInfo, classInfo.responds(to: selector) else {
+            return type(of: appearance)
+        }
+        
+        let viewClass: AnyClass? = classInfo.perform(selector)?.takeUnretainedValue() as? AnyClass
+        if let viewClass = viewClass, object_isClass(viewClass) {
+            return viewClass
+        }
+        return type(of: appearance)
     }
     
 }
@@ -52,7 +70,21 @@ public class Appearance: NSObject {
     
     /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
     public func fw_applyAppearance() {
-        ObjCBridge.applyAppearance(self)
+        let aClass: AnyClass = type(of: self)
+        guard aClass.responds(to: NSSelectorFromString("appearance")) else { return }
+        
+        let appearanceGuideClassSelector = NSSelectorFromString(String(format: "%@%@%@", "_a", "ppearanceG", "uideClass"))
+        if !class_respondsToSelector(aClass, appearanceGuideClassSelector) {
+            let typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.self, appearanceGuideClassSelector)!)
+            let impBlock: @convention(block) () -> AnyClass? = { nil }
+            class_addMethod(aClass, appearanceGuideClassSelector, imp_implementationWithBlock(impBlock), typeEncoding)
+        }
+        
+        let selector = NSSelectorFromString(String(format: "_%@:%@:", "applyInvocationsTo", "window"))
+        if let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
+           appearanceClass.responds(to: selector) {
+            _ = (appearanceClass as AnyObject).perform(selector, with: self, with: nil)
+        }
     }
     
 }

@@ -7,7 +7,7 @@ import FWMacro
 class Tests: XCTestCase {
     
     // MARK: - Accessor
-    dynamic var observeValue: Int = 0
+    @objc dynamic var observeValue: Int = 0
     
     @StoredValue("testKey")
     var defaultsValue = ""
@@ -62,16 +62,16 @@ class Tests: XCTestCase {
         fw.removeBinding(forKey: "testRuntime3")
         XCTAssertEqual(fw.boundInt(forKey: "testRuntime3"), 0)
         
-        XCTAssertEqual(fw.invokeMethod(#selector(loaderAction(_:)), object: "Hello ") as? String, "Hello Target")
+        XCTAssertEqual(perform(#selector(loaderAction(_:)), with: "Hello ")?.takeUnretainedValue() as? String, "Hello Target")
     }
     
     func testSwizzle() {
-        NSObject.fw.swizzleInstanceMethod(classForCoder, selector: #selector(originalAction), methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in {
+        NSObject.fw.swizzleInstanceMethod(Self.self, selector: #selector(originalAction), methodSignature: (@convention(c)(Tests, Selector) -> String).self, swizzleSignature: (@convention(block)(Tests) -> String).self) { store in {
             let value = store.original($0, store.selector)
             return value + " Action"
         }}
         
-        NSObject.fw.swizzleClassMethod(classForCoder, selector: #selector(Tests.classAction)) { (store: SwizzleStore<@convention(c)(Tests.Type, Selector) -> String, @convention(block)(Tests.Type) -> String>) in {
+        NSObject.fw.swizzleClassMethod(Self.self, selector: #selector(Tests.classAction)) { (store: SwizzleStore<@convention(c)(Tests.Type, Selector) -> String, @convention(block)(Tests.Type) -> String>) in {
             let value = store.original($0, store.selector)
             return value + " Action"
         }}
@@ -100,7 +100,7 @@ class Tests: XCTestCase {
             messageValue += 1
         }
         fw.sendMessage(messageName, toReceiver: self)
-        fw.unobserveMessage(messageName, observer: observer)
+        fw.unobserveMessage(observer: observer)
         fw.sendMessage(messageName, toReceiver: self)
         XCTAssertEqual(messageValue, 1)
         
@@ -116,8 +116,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(notificationValue, 2)
         
         var propertyValue: Int = 0
-        fw.observeProperty("observeValue") { _, change in
-            propertyValue += change[.newKey] as? Int ?? 0
+        fw.observeProperty(\.observeValue) { _, change in
+            propertyValue += change.newValue ?? 0
         }
         observeValue = 1
         observeValue = 2

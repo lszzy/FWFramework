@@ -11,7 +11,7 @@ import UIKit
 /// 视图控制器挂钩协议，可覆写
 ///
 /// 如果需要支持继承，建议基类在非extension中实现该协议的所有方法，从而忽略协议扩展的默认实现
-public protocol ViewControllerProtocol {
+public protocol ViewControllerProtocol: ViewControllerLifecycleObservable {
     
     /// 初始化完成方法，init自动调用，默认空实现
     func didInitialize()
@@ -55,7 +55,6 @@ public class ViewControllerIntercepter: NSObject {
     public var viewDidAppearIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewWillDisappearIntercepter: ((UIViewController, Bool) -> Void)?
     public var viewDidDisappearIntercepter: ((UIViewController, Bool) -> Void)?
-    public var deinitIntercepter: ((UIViewController) -> Void)?
     
     fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
     
@@ -87,8 +86,6 @@ public class ViewControllerManager: NSObject {
     public var hookViewWillDisappear: ((UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidDisappear钩子句柄，viewDidDisappear优先自动调用
     public var hookViewDidDisappear: ((UIViewController, Bool) -> Void)?
-    /// 默认全局控制器deinit钩子句柄，dealloc优先自动调用
-    public var hookDeinit: ((UIViewController) -> Void)?
     
     // MARK: - ViewController
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
@@ -130,7 +127,7 @@ public class ViewControllerManager: NSObject {
     
     private func intercepterNames(for viewController: UIViewController) -> [String] {
         // 同一个类只解析一次，优先加载类缓存
-        let className = NSStringFromClass(viewController.classForCoder)
+        let className = NSStringFromClass(type(of: viewController))
         if let intercepterNames = classIntercepters[className] {
             return intercepterNames
         }
@@ -158,6 +155,11 @@ public class ViewControllerManager: NSObject {
             swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
             if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
@@ -170,8 +172,13 @@ public class ViewControllerManager: NSObject {
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
             swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
-            let viewController = store.original(selfObject, store.selector, coder)
-            if let viewController = viewController, viewController is ViewControllerProtocol {
+            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
+            if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
@@ -185,7 +192,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_lifecycleState = .didLoad
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLoad
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
@@ -199,7 +209,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_lifecycleState = .willAppear
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willAppear
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
@@ -213,7 +226,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_lifecycleState = .isAppearing
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .isAppearing
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
             }
@@ -227,7 +243,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            selfObject.fw_lifecycleState = .didLayoutSubviews
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLayoutSubviews
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
@@ -241,7 +260,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_lifecycleState = .didAppear
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didAppear
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
@@ -255,7 +277,10 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_lifecycleState = .willDisappear
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willDisappear
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
@@ -269,32 +294,14 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            selfObject.fw_lifecycleState = .didDisappear
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didDisappear
+            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
-        
-        NSObject.fw_swizzleDeallocMethod(UIViewController.self) { selfObject in
-            let viewController = selfObject as? UIViewController
-            viewController?.fw_lifecycleState = .didDeinit
-            if let viewController = viewController, viewController is ViewControllerProtocol {
-                ViewControllerManager.shared.hookDeinit(viewController)
-            }
-            
-            let completionHandler = viewController?.fw_completionHandler
-            if completionHandler != nil {
-                let completionResult = viewController?.fw_completionResult
-                completionHandler?(completionResult)
-            }
-            
-            #if DEBUG
-            let className = NSStringFromClass(selfObject.classForCoder).components(separatedBy: ".").last ?? ""
-            if !className.hasPrefix("_") && !className.hasSuffix("_") {
-                Logger.debug(group: Logger.fw_moduleName, "%@ did dealloc", NSStringFromClass(selfObject.classForCoder))
-            }
-            #endif
-        }
     }
     
     fileprivate static func registerDefaultIntercepters() {
@@ -319,9 +326,6 @@ public class ViewControllerManager: NSObject {
         let webIntercepter = ViewControllerIntercepter()
         webIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
-        }
-        webIntercepter.deinitIntercepter = { viewController in
-            ViewControllerManager.shared.webViewControllerDeinit(viewController)
         }
         ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
     }
@@ -451,19 +455,6 @@ public class ViewControllerManager: NSObject {
         for intercepterName in intercepterNames {
             if let intercepter = intercepters[intercepterName] {
                 intercepter.viewDidDisappearIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-    private func hookDeinit(_ viewController: UIViewController) {
-        // 1. 默认deinit
-        hookDeinit?(viewController)
-        
-        // 2. 拦截器deinit
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.deinitIntercepter?(viewController)
             }
         }
     }
