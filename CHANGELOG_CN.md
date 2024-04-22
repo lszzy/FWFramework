@@ -13,8 +13,9 @@
 
 ### Migrate
 1. Autoloader.autoload不再自动调用，可启动时手工调用或继承AppResponder，需迁移升级
-2. UIViewController监听didDeinit方式变更，需迁移升级
-3. ErrorManager错误捕获相关API变更，需迁移升级
+2. UIViewController默认lifecyleState修改为nil，需实现LifecycleObservable或开启监听后才有值，需迁移升级
+3. 由于Swift实现机制，UIViewController生命周期didDeinit时不可再访问关联属性，需迁移升级
+4. ExceptionManager错误捕获相关API变更为ErrorManager，需迁移升级
 
 ## [5.2.1] - 2024-04-08
 
