@@ -1,0 +1,30 @@
+/*
+  Localizable.strings
+  FWFramework
+
+  Created by wuyong on 2022/8/18.
+  Copyright © 2022 CocoaPods. All rights reserved.
+*/
+
+"mediatorLogin" = "登入";
+"mediatorLogout" = "退出登入";
+"homeTitle" = "首頁";
+"testTitle" = "測試";
+"settingTitle" = "設定";
+"debugButton" = "調試";
+"languageTitle" = "多語言";
+"themeTitle" = "主題";
+"systemTitle" = "系統";
+"themeLight" = "淺色";
+"themeDark" = "深色";
+"themeGray" = "灰色";
+"welcomeTitle" = "你知道我在等你嗎？";
+"backTitle" = "歡迎回來，親";
+"logoutConfirm" = "確定要退出目前帳號嗎?";
+"envDevelopment" = "開發";
+"envTesting" = "測試";
+"envStaging" = "模擬";
+"envProduction" = "正式";
+"pluginTitle" = "插件";
+"pluginDetail" = "客製化";
+"pluginDemo" = "示範";

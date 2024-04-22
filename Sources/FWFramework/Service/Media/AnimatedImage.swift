@@ -8,9 +8,6 @@
 import UIKit
 import MobileCoreServices
 import ImageIO
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - Wrapper+UIImage
 extension Wrapper where Base: UIImage {
@@ -264,7 +261,7 @@ open class ImageCoder: NSObject {
         let count = CGImageSourceGetCount(source)
         let format = ImageCoder.imageFormat(for: data)
         if format == .svg {
-            animatedImage = ObjCBridge.svgDecode(data, thumbnailSize: thumbnailSize)
+            animatedImage = createFrame(at: 0, source: source, scale: scale, thumbnailSize: thumbnailSize)
         } else if format == .pdf {
             animatedImage = createBitmapPDF(data: data, thumbnailSize: thumbnailSize)
         } else if !isAnimated(format, forDecode: true) || count <= 1 {
@@ -298,10 +295,6 @@ open class ImageCoder: NSObject {
         if format == .undefined {
             format = image.fw_hasAlpha ? .png : .jpeg
         }
-        if format == .svg {
-            return ObjCBridge.svgEncode(image)
-        }
-        
         guard let imageRef = image.cgImage else {
             return nil
         }

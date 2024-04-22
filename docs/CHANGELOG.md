@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.3.0] - 2024-04-22
+
+### Changed
+* Complete implementation in pure Swift, removing FWObjC submodule
+* Autoloader's autoload method is changed to Swift calling mechanism
+* Reconstruct attribute KVO monitoring and add swift native observation method
+* Reconstruct error capture ErrorManager, pure Swift implementation
+* Mediator adds Delegate mode, AppResponder can be used optionally
+* Reconstruct UIViewController life cycle monitoring and add ViewControllerLifecycleObservable protocol
+* Added commonly used UIKit tool methods
+
+### Migrate
+1. Autoloader.autoload is no longer automatically called. It can be manually called at startup or inherited from AppResponder. Migration and upgrade are required.
+2. The default lifecyleState of UIViewController is changed to nil. It needs to implement LifecycleObservable or enable monitoring to have a value. It needs to be migrated and upgraded.
+3. Due to the Swift implementation mechanism, the associated properties can no longer be accessed during didDeinit of the UIViewController life cycle and need to be migrated and upgraded.
+4. The API related to ExceptionManager error capture has been changed to ErrorManager, which needs to be migrated and upgraded.
+
 ## [5.2.1] - 2024-04-08
 
 ### Changed

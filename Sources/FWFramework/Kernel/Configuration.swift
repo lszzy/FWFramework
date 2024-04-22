@@ -45,7 +45,7 @@ open class Configuration: NSObject {
     /// 初始化配置，无需手工调用，子类可重写
     open func initializeConfiguration() {
         // 1. 当前模块.[配置类]+Template
-        let className = NSStringFromClass(classForCoder)
+        let className = NSStringFromClass(type(of: self))
         let classSuffix = className.components(separatedBy: ".").last ?? ""
         let applicationName = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String ?? ""
         var templateClass: AnyClass? = NSClassFromString(className + "Template")

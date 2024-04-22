@@ -20,6 +20,7 @@ class TestPreviewController: UIViewController {
     var dismissTappedVideo = true
     var imagePreviewController: ImagePreviewController?
     var images: [Any] = []
+    var exitAtIndex: Int?
     
     lazy var floatLayoutView: FloatLayoutView = {
         let result = FloatLayoutView()
@@ -51,6 +52,16 @@ extension TestPreviewController: ViewControllerProtocol {
             "http://via.placeholder.com/100x100.jpg",
             FileManager.app.pathResource.app.appendingPath("Video.mp4"),
         ]
+        
+        app.observeLifecycleState { vc, state in
+            guard state == .didDeinit else { return }
+            
+            if let exitAtIndex = vc.exitAtIndex {
+                UIWindow.app.showMessage(text: "浏览到第\(exitAtIndex + 1)张就deinit了")
+            } else {
+                UIWindow.app.showMessage(text: "还没浏览就deinit了")
+            }
+        }
     }
     
     func setupNavbar() {
@@ -167,6 +178,7 @@ extension TestPreviewController: ViewControllerProtocol {
             imagePreviewController.app.observeLifecycleState { [weak self] previewController, state in
                 if state == .willDisappear {
                     let exitAtIndex = previewController.imagePreviewView.currentImageIndex
+                    self?.exitAtIndex = exitAtIndex
                     self?.tipsLabel.text = "浏览到第\(exitAtIndex + 1)张就退出了"
                 }
             }

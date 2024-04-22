@@ -1160,13 +1160,13 @@ public class StatisticalEvent: NSObject, NSCopying {
             guard !exposureObserved else { return }
             exposureObserved = true
             
-            viewController?.fw_observeLifecycleState({ vc, state in
+            viewController?.fw_observeLifecycleState { vc, state, _ in
                 if state == .didAppear {
                     vc.fw_statisticalCheckExposure()
                 } else if state == .didDisappear {
                     vc.fw_statisticalCheckExposure()
                 }
-            })
+            }
             
             if StatisticalManager.shared.exposureBecomeActive ||
                 StatisticalManager.shared.exposureTime {
@@ -1303,11 +1303,6 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     fileprivate var fw_statisticalExposureState: UIView.StatisticalState {
         if !fw_isVisible {
-            return .none
-        }
-        
-        let lifecycleStates: [ViewControllerLifecycleState] = [.didLayoutSubviews, .didAppear]
-        if !lifecycleStates.contains(fw_lifecycleState) {
             return .none
         }
         

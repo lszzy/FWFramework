@@ -315,7 +315,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         
         for subview in superview.subviews {
             // iOS10及以后，imageView都是用UITabBarSwappableImageView实现的，所以遇到这个class就直接拿
-            if NSStringFromClass(subview.classForCoder) == "UITabBarSwappableImageView" {
+            if NSStringFromClass(type(of: subview)) == "UITabBarSwappableImageView" {
                 return subview as? UIImageView
             }
         }

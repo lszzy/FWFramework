@@ -123,7 +123,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        app.invokeMethod(NSSelectorFromString(rowData[1]), object: indexPath)
+        _ = self.perform(NSSelectorFromString(rowData[1]), with: indexPath)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -158,7 +158,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     // MARK: - Private
     private func showingAlertController(_ viewController: UIViewController) -> UIViewController? {
         var alertController: UIViewController?
-        let alertClasses = (customAlertClasses?.count ?? 0) > 0 ? customAlertClasses! : [UIAlertController.classForCoder(), AlertController.classForCoder()]
+        let alertClasses = (customAlertClasses?.count ?? 0) > 0 ? customAlertClasses! : [UIAlertController.self, AlertController.self]
         
         var presentedController = viewController.presentedViewController
         while presentedController != nil {

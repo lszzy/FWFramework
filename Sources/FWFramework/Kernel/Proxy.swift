@@ -6,29 +6,98 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WeakProxy
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-public class WeakProxy: WeakProxyBridge {}
+public class WeakProxy: NSObject {
+    
+    public weak var target: AnyObject?
+    
+    public init(target: NSObject) {
+        super.init()
+        self.target = target
+    }
+    
+    public override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        return target
+    }
+    
+    public override func responds(to aSelector: Selector!) -> Bool {
+        return target?.responds(to: aSelector) ?? false
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        return target?.isEqual(object) ?? false
+    }
+    
+    public override var hash: Int {
+        return target?.hash ?? 0
+    }
+    
+    public override var superclass: AnyClass? {
+        return target?.superclass
+    }
+    
+    public override func isProxy() -> Bool {
+        return true
+    }
+    
+    public override func isKind(of aClass: AnyClass) -> Bool {
+        return target?.isKind(of: aClass) ?? false
+    }
+    
+    public override func isMember(of aClass: AnyClass) -> Bool {
+        return target?.isMember(of: aClass) ?? false
+    }
+    
+    public override func conforms(to aProtocol: Protocol) -> Bool {
+        return target?.conforms(to: aProtocol) ?? false
+    }
+    
+    public override var description: String {
+        return target?.description ?? ""
+    }
+    
+    public override var debugDescription: String {
+        return target?.debugDescription ?? ""
+    }
+    
+}
 
 // MARK: - DelegateProxy
 /// 事件协议代理基类，可继承重写事件代理方法
-open class DelegateProxy<T>: DelegateProxyBridge {
+open class DelegateProxy<T>: NSObject {
     
-    /// 泛型事件代理对象
+    open weak var target: AnyObject?
+    
     open var delegate: T? {
         get { return target as? T }
         set { target = newValue as? AnyObject }
     }
     
+    open override func isProxy() -> Bool {
+        return true
+    }
+    
+    open override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        target
+    }
+    
+    open override func conforms(to aProtocol: Protocol) -> Bool {
+        if target?.conforms(to: aProtocol) ?? false {
+            return true
+        }
+        return super.conforms(to: aProtocol)
+    }
+    
+    open override func responds(to aSelector: Selector!) -> Bool {
+        if target?.responds(to: aSelector) ?? false {
+            return true
+        }
+        return super.responds(to: aSelector)
+    }
+    
 }
-
-// MARK: - UnsafeObject
-/// 非安全对象类，不同于weak和deinit，自动释放时仍可访问target，可用于自动解绑、释放监听等场景
-open class UnsafeObject: UnsafeObjectBridge {}
 
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等
@@ -87,22 +156,11 @@ public class MulticastDelegate<T> {
         return delegates.contains(delegate as AnyObject)
     }
     
-    /// 调用所有delegates代理方法，忽略返回结果
+    /// 调用所有delegates代理方法
     public func invoke(_ block: (T) -> Void) {
         for delegate in delegates.allObjects {
             block(delegate as! T)
         }
-    }
-    
-    /// 过滤并调用delegates代理方法，返回是否继续执行，为false时立即停止执行
-    @discardableResult
-    public func filter(_ filter: (T) -> Bool) -> Bool {
-        for delegate in delegates.allObjects {
-            if !filter(delegate as! T) {
-                return false
-            }
-        }
-        return true
     }
     
 }

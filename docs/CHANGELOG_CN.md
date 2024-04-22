@@ -1,5 +1,22 @@
 # 更新日志
 
+## [5.3.0] - 2024-04-22
+
+### Changed
+* 纯Swift完整功能实现，移除FWObjC子模块
+* Autoloader的autoload方法改为Swift调用机制
+* 重构属性KVO监听，新增swift原生observe方式
+* 重构错误捕获ErrorManager，纯Swift实现
+* Mediator新增Delegate模式，AppResponder可选使用
+* 重构UIViewController生命周期监听，新增ViewControllerLifecycleObservable协议
+* 新增常用UIKit工具方法
+
+### Migrate
+1. Autoloader.autoload不再自动调用，可启动时手工调用或继承AppResponder，需迁移升级
+2. UIViewController默认lifecyleState修改为nil，需实现LifecycleObservable或开启监听后才有值，需迁移升级
+3. 由于Swift实现机制，UIViewController生命周期didDeinit时不可再访问关联属性，需迁移升级
+4. ExceptionManager错误捕获相关API变更为ErrorManager，需迁移升级
+
 ## [5.2.1] - 2024-04-08
 
 ### Changed

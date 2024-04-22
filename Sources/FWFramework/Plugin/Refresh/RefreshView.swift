@@ -255,7 +255,7 @@ open class PullRefreshView: UIView {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
                 scrollView.removeObserver(self, forKeyPath: "frame")
-                scrollView.panGestureRecognizer.fw_unobserveProperty("state", target: self, action: #selector(gestureRecognizer(_:stateChanged:)))
+                scrollView.panGestureRecognizer.fw.unobserveProperty(\.state, target: self, action: #selector(gestureRecognizerStateChanged(_:)))
                 isObserving = false
             }
         }
@@ -376,9 +376,8 @@ open class PullRefreshView: UIView {
 
     // MARK: - Public
     /// 拖动手势状态监听回调方法
-    @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
-        let gestureState = change[NSKeyValueChangeKey.newKey] as? Int ?? 0
-        if gestureState == UIGestureRecognizer.State.began.rawValue {
+    @objc open func gestureRecognizerStateChanged(_ gestureRecognizer: UIPanGestureRecognizer) {
+        if gestureRecognizer.state == .began {
             isActive = false
             scrollView?.fw_infiniteScrollView?.isActive = false
         }
@@ -815,7 +814,7 @@ open class InfiniteScrollView: UIView {
             if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
-                scrollView.panGestureRecognizer.fw_unobserveProperty("state", target: self, action: #selector(gestureRecognizer(_:stateChanged:)))
+                scrollView.panGestureRecognizer.fw.unobserveProperty(\.state, target: self, action: #selector(gestureRecognizerStateChanged(_:)))
                 isObserving = false
             }
         }
@@ -855,14 +854,13 @@ open class InfiniteScrollView: UIView {
     
     // MARK: - Public
     /// 拖动手势状态监听回调方法
-    @objc open func gestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer, stateChanged change: [AnyHashable: Any]) {
+    @objc open func gestureRecognizerStateChanged(_ gestureRecognizer: UIPanGestureRecognizer) {
         if finished { return }
 
-        let gestureState = (change[NSKeyValueChangeKey.newKey] as? Int) ?? 0
-        if gestureState == UIGestureRecognizer.State.began.rawValue {
+        if gestureRecognizer.state == .began {
             isActive = false
             scrollView?.fw_pullRefreshView?.isActive = false
-        } else if gestureState == UIGestureRecognizer.State.ended.rawValue && state == .triggered {
+        } else if gestureRecognizer.state == .ended && state == .triggered {
             if let scrollView = scrollView, (scrollView.contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) >= 0 {
                 state = .loading
             } else {

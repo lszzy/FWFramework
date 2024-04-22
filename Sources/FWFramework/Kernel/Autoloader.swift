@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if FWMacroSPM
-import FWObjC
-#endif
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
@@ -148,16 +145,6 @@ internal class FrameworkAutoloader: NSObject {
             debugDescription.append(String(format: "%@. %@\n", NSNumber(value: debugCount), formatName))
         }
         return String(format: "\n========== FRAMEWORK ==========\n%@========== FRAMEWORK ==========", debugDescription)
-    }
-    
-}
-
-// MARK: - ObjCBridge+Autoloader
-@objc extension ObjCBridge: ObjCBridgeProtocol {
-    
-    /// 自动加载Autoloader
-    public static func autoload() {
-        Autoloader.autoload()
     }
     
 }

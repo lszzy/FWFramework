@@ -200,6 +200,6 @@ open class HTTPSessionManager: URLSessionManager {
     }
     
     open override var description: String {
-        return String(format: "<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass(self.classForCoder), self, baseURL?.absoluteString ?? "", session, operationQueue)
+        return String(format: "<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass(type(of: self)), self, baseURL?.absoluteString ?? "", session, operationQueue)
     }
 }

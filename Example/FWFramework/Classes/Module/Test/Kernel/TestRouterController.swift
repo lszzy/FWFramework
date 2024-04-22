@@ -56,6 +56,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["外部safari", "onOpenUrl"],
         ["内部safari", "onOpenSafari"],
         ["打开两个界面", "onOpenMulti"],
+        ["界面完成回调", "onOpenResult"],
         ["iOS14bug", "onOpen14"],
     ]
     
@@ -129,7 +130,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         APP.debug("string.queryEncode: %@", String(describing: String.app.queryEncode(url.app.queryDecode)))
         let nsurl = URL.app.url(string: url)
         APP.debug("query.queryDecode: %@", String(describing: nsurl?.query?.app.queryDecode))
-        APP.debug("url.queryDictionary: %@", String(describing: nsurl?.app.queryDictionary))
+        APP.debug("url.queryParameters: %@", String(describing: nsurl?.app.queryParameters))
     }
     
     func setupSubviews() {
@@ -165,7 +166,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        app.invokeMethod(NSSelectorFromString(rowData[1]))
+        _ = self.perform(NSSelectorFromString(rowData[1]))
     }
     
 }
@@ -354,6 +355,27 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     func onOpenMulti() {
         Router.openURL(TestRouter.multiUrl)
+    }
+    
+    func onOpenResult() {
+        let vc = UIViewController()
+        vc.title = "弹出框"
+        vc.view.backgroundColor = AppTheme.backgroundColor
+        vc.app.completionHandler = { [weak self] result in
+            let result = result != nil ? APP.safeString(result) : "deinit"
+            self?.app.showMessage(text: "完成回调：\(result)")
+        }
+        vc.app.setLeftBarItem("关闭") { [weak vc] _ in
+            vc?.app.completionResult = "点击关闭"
+            vc?.dismiss(animated: true)
+        }
+        vc.app.setRightBarItem("完成") { [weak vc] _ in
+            vc?.app.completionResult = "点击完成"
+            vc?.dismiss(animated: true)
+        }
+        
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
     }
     
     func onOpen14() {

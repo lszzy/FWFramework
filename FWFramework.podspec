@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.2.1'
+  s.version               = '5.3.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -9,17 +9,11 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '13.0'
   s.swift_version         = '5.9'
-  s.requires_arc          = true
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
   
-  s.subspec 'FWObjC' do |ss|
-    ss.source_files = 'Sources/FWObjC/**/*.{h,m}'
-  end
-  
   s.subspec 'FWFramework' do |ss|
     ss.source_files = 'Sources/FWFramework/**/*.swift'
-    ss.dependency 'FWFramework/FWObjC'
     ss.pod_target_xcconfig = {
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
     }

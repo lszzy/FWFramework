@@ -8,7 +8,6 @@
 import Foundation
 import Alamofire
 #if FWMacroSPM
-import FWObjC
 @_spi(FW) import FWFramework
 #endif
 
