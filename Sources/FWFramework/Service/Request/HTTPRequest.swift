@@ -64,7 +64,7 @@ extension RequestDelegate {
 /// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: CustomStringConvertible {
+open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible {
     
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void
@@ -606,11 +606,22 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求构建器，从构建器初始化时才有值
     open private(set) var builder: Builder?
     
-    // MARK: - Accessor+Private
-    private lazy var _contextAccessory: RequestContextAccessory = {
-        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
-        return result
-    }()
+    /// 请求上下文控件，可自定义
+    open var contextAccessory: RequestContextAccessory {
+        get {
+            if let accessory = _contextAccessory {
+                return accessory
+            }
+            
+            let accessory = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+            _contextAccessory = accessory
+            return accessory
+        }
+        set {
+            _contextAccessory = newValue
+        }
+    }
+    private var _contextAccessory: RequestContextAccessory?
     
     fileprivate var _cacheResponseModel: Any?
     private var _responseModelBlock: Completion?
@@ -956,27 +967,6 @@ open class HTTPRequest: CustomStringConvertible {
         toggleAccessoriesDidStopCallBack()
     }
     
-    /// 开始请求并指定成功、失败句柄
-    @discardableResult
-    open func start<T: HTTPRequest>(success: ((T) -> Void)?, failure: ((T) -> Void)?) -> Self {
-        successCompletionBlock = success != nil ? { success?($0 as! T) } : nil
-        failureCompletionBlock = failure != nil ? { failure?($0 as! T) } : nil
-        return start()
-    }
-    
-    /// 开始请求并指定完成句柄
-    @discardableResult
-    open func start<T: HTTPRequest>(completion: ((T) -> Void)?) -> Self {
-        return start(success: completion, failure: completion)
-    }
-    
-    /// 请求取消句柄，不一定主线程调用
-    @discardableResult
-    open func requestCancelledBlock<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
-        requestCancelledBlock = block != nil ? { block?($0 as! T) } : nil
-        return self
-    }
-    
     /// 断点续传进度句柄
     @discardableResult
     open func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
@@ -1007,17 +997,17 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 显示加载条，默认显示加载插件，context必须存在
     open func showLoading() {
-        _contextAccessory.showLoading(for: self)
+        contextAccessory.showLoading(for: self)
     }
     
     /// 隐藏加载条，默认隐藏加载插件，context必须存在
     open func hideLoading() {
-        _contextAccessory.hideLoading(for: self)
+        contextAccessory.hideLoading(for: self)
     }
     
     /// 显示网络错误，默认显示Toast提示，context可不存在
     open func showError() {
-        _contextAccessory.showError(for: self)
+        contextAccessory.showError(for: self)
     }
     
     /// 清理完成句柄
@@ -1037,47 +1027,27 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     func toggleAccessoriesWillStartCallBack() {
-        _contextAccessory.requestWillStart(self)
+        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
     }
     
     func toggleAccessoriesWillStopCallBack() {
-        _contextAccessory.requestWillStop(self)
+        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
     }
     
     func toggleAccessoriesDidStopCallBack() {
-        _contextAccessory.requestDidStop(self)
+        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
     }
     
     // MARK: - Response
-    /// 自定义响应完成句柄
-    @discardableResult
-    open func response<T: HTTPRequest>(_ completion: ((T) -> Void)?) -> Self {
-        return responseSuccess(completion).responseFailure(completion)
-    }
-    
-    /// 自定义响应成功句柄
-    @discardableResult
-    open func responseSuccess<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
-        successCompletionBlock = block != nil ? { block?($0 as! T) } : nil
-        return self
-    }
-    
-    /// 自定义响应失败句柄
-    @discardableResult
-    open func responseFailure<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
-        failureCompletionBlock = block != nil ? { block?($0 as! T) } : nil
-        return self
-    }
-    
     /// 快捷设置响应失败句柄
     @discardableResult
     open func responseError(_ block: ((Error) -> Void)?) -> Self {
@@ -1125,13 +1095,6 @@ open class HTTPRequest: CustomStringConvertible {
     @discardableResult
     open func preloadCacheModel(_ preloadCacheModel: Bool) -> Self {
         self.preloadCacheModel = preloadCacheModel
-        return self
-    }
-    
-    /// 解析缓存响应句柄，必须主线程且在start之前调用生效
-    @discardableResult
-    open func responseCache<T: HTTPRequest>(_ block: ((T) -> Void)?) -> Self {
-        try? loadCacheResponse(completion: { block?($0 as! T) })
         return self
     }
     
@@ -1292,6 +1255,67 @@ open class HTTPRequest: CustomStringConvertible {
         _cacheResponseModel = nil
         _responseModelBlock = nil
         isDataFromCache = false
+    }
+    
+    // MARK: - Equatable
+    public static func == (lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
+        return lhs.requestIdentifier == rhs.requestIdentifier
+    }
+    
+}
+
+// MARK: - HTTPRequestProtocol
+/// HTTP请求协议，主要用于处理方法中Self参数
+public protocol HTTPRequestProtocol {}
+
+extension HTTPRequestProtocol where Self: HTTPRequest {
+    
+    /// 开始请求并指定成功、失败句柄
+    @discardableResult
+    public func start(success: ((Self) -> Void)?, failure: ((Self) -> Void)?) -> Self {
+        successCompletionBlock = success != nil ? { success?($0 as! Self) } : nil
+        failureCompletionBlock = failure != nil ? { failure?($0 as! Self) } : nil
+        return start()
+    }
+    
+    /// 开始请求并指定完成句柄
+    @discardableResult
+    public func start(completion: ((Self) -> Void)?) -> Self {
+        return start(success: completion, failure: completion)
+    }
+    
+    /// 请求取消句柄，不一定主线程调用
+    @discardableResult
+    public func requestCancelledBlock(_ block: ((Self) -> Void)?) -> Self {
+        requestCancelledBlock = block != nil ? { block?($0 as! Self) } : nil
+        return self
+    }
+    
+    /// 自定义响应完成句柄
+    @discardableResult
+    public func response(_ completion: ((Self) -> Void)?) -> Self {
+        return responseSuccess(completion).responseFailure(completion)
+    }
+    
+    /// 自定义响应成功句柄
+    @discardableResult
+    public func responseSuccess(_ block: ((Self) -> Void)?) -> Self {
+        successCompletionBlock = block != nil ? { block?($0 as! Self) } : nil
+        return self
+    }
+    
+    /// 自定义响应失败句柄
+    @discardableResult
+    public func responseFailure(_ block: ((Self) -> Void)?) -> Self {
+        failureCompletionBlock = block != nil ? { block?($0 as! Self) } : nil
+        return self
+    }
+    
+    /// 解析缓存响应句柄，必须主线程且在start之前调用生效
+    @discardableResult
+    public func responseCache(_ block: ((Self) -> Void)?) -> Self {
+        try? loadCacheResponse(completion: { block?($0 as! Self) })
+        return self
     }
     
 }

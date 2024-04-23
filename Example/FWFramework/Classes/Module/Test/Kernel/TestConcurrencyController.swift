@@ -185,7 +185,7 @@ extension TestConcurrencyController {
             request.autoShowError = true
             request.testFailed = true
             
-            let result: TestModelRequest = await request.response()
+            let result = await request.response()
             DispatchQueue.app.mainAsync {
                 if result.error == nil {
                     self.app.showMessage(text: result.safeResponseModel.name)
@@ -203,7 +203,7 @@ extension TestConcurrencyController {
             do {
                 try Task.checkCancellation()
                 
-                let result: TestModelRequest = try await request.responseSuccess()
+                let result = try await request.responseSuccess()
                 DispatchQueue.app.mainAsync {
                     self.app.showMessage(text: result.safeResponseModel.name)
                 }
@@ -229,7 +229,7 @@ extension TestConcurrencyController {
             request.addAccessory(accessory)
             
             do {
-                let result: TestModelRequest = try await request.responseSuccess()
+                let result = try await request.responseSuccess()
                 DispatchQueue.app.mainAsync {
                     self.app.showMessage(text: result.safeResponseModel.name)
                 }

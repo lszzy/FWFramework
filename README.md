@@ -60,8 +60,8 @@ The document is located in the docs folder, just open index.html in the browser,
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.3.0'
-	2. Upgrade to the new version, please pay attention to the version update log. Obsolete Api will be migrated to the Deprecated submodule as appropriate, and will be deleted in subsequent versions
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.3.1'
+	2. Upgrade to the new version, please pay attention to the version update log
 
 ### Swift
 From version 5.0, only compatible with Swift, compatible with iOS 13+. The 5.x version is completely refactored using Swift and is incompatible with some APIs of the 4.x version. When migrating, old users not only use the new API to fix compilation errors, but also need to test whether the relevant functions are normal. We apologize for the inconvenience caused to you.
