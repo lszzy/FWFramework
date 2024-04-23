@@ -413,7 +413,7 @@ extension TestRequestController: ViewControllerProtocol {
 private extension TestRequestController {
     
     @objc func onSucceed() {
-        let request: AppRequest = AppRequest.Builder()
+        let request = AppRequest.Builder()
             .requestUrl("http://kvm.wuyong.site/test.json")
             .responseSerializerType(.JSON)
             .requestTimeoutInterval(30)
@@ -460,7 +460,7 @@ private extension TestRequestController {
         request.testFailed = true
         request.context = self
         request.autoShowLoading = true
-        request.start { [weak self] (req: TestModelRequest) in
+        request.start { [weak self] req in
             let message = "json请求成功: \n\(req.safeResponseModel.name)"
             self?.app.showMessage(text: message)
         } failure: { [weak self] req in
@@ -479,7 +479,7 @@ private extension TestRequestController {
             .context(self)
             .autoShowLoading(true)
             .preloadCacheModel(true)
-            .responseSuccess { [weak self] (req: TestCacheRequest) in
+            .responseSuccess { [weak self] req in
                 self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
             }
             .responseFailure { [weak self] req in
@@ -493,7 +493,7 @@ private extension TestRequestController {
             .context(self)
             .autoShowLoading(true)
             .autoShowError(true)
-            .responseSuccess { [weak self] (req: TestCacheRequest) in
+            .responseSuccess { [weak self] req in
                 self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
             }
             .start()
@@ -505,7 +505,7 @@ private extension TestRequestController {
         request.autoShowLoading = true
         request.autoShowError = true
         request.testFailed = true
-        request.start { [weak self] (req: TestWeatherRequest) in
+        request.start { [weak self] req in
             guard req.isFinished else { return }
             
             self?.app.showMessage(text: "天气请求成功: \n\(req.safeResponseModel.first?.city ?? "") - \(req.safeResponseModel.first?.temp ?? "")℃")
