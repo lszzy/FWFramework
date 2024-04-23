@@ -153,7 +153,7 @@ open class BatchRequest: RequestDelegate {
         failedRequestArray.append(request)
         if stoppedOnFailure {
             for req in requestArray {
-                req.cancel()
+                if req != request { req.cancel() }
             }
             requestCompleted()
             return
