@@ -67,18 +67,18 @@ extension Promise {
 }
 
 // MARK: - Concurrency+Request
-extension HTTPRequest {
+extension HTTPRequestProtocol where Self: HTTPRequest {
     
     /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
-    public func response<T: HTTPRequest>() async -> T {
+    public func response() async -> Self {
         await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
-                requestCancelledBlock { (request: T) in
+                requestCancelledBlock { request in
                     if !Task.isCancelled {
                         continuation.resume(returning: request)
                     }
                 }
-                .response { (request: T) in
+                .response { request in
                     continuation.resume(returning: request)
                 }
                 .start()
@@ -89,7 +89,7 @@ extension HTTPRequest {
     }
     
     /// 异步获取成功响应，注意非Task取消也会触发(Continuation流程)
-    public func responseSuccess<T: HTTPRequest>() async throws -> T {
+    public func responseSuccess() async throws -> Self {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 requestCancelledBlock { _ in
@@ -97,7 +97,7 @@ extension HTTPRequest {
                         continuation.resume(throwing: CancellationError())
                     }
                 }
-                .responseSuccess { (request: T) in
+                .responseSuccess { request in
                     continuation.resume(returning: request)
                 }
                 .responseError { error in
