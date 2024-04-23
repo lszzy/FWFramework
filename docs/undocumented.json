@@ -16641,14 +16641,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 216,
+      "line": 221,
       "symbol": "BatchRequestManager.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 221,
+      "line": 226,
       "symbol": "BatchRequestManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -17068,77 +17068,77 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1423,
+      "line": 1447,
       "symbol": "UnderlyingErrorProtocol.underlyingError",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1428,
+      "line": 1452,
       "symbol": "RequestError.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1429,
+      "line": 1453,
       "symbol": "RequestError.cacheExpired",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1430,
+      "line": 1454,
       "symbol": "RequestError.cacheVersionMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1431,
+      "line": 1455,
       "symbol": "RequestError.cacheSensitiveDataMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1432,
+      "line": 1456,
       "symbol": "RequestError.cacheAppVersionMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1433,
+      "line": 1457,
       "symbol": "RequestError.cacheInvalidCacheTime",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1434,
+      "line": 1458,
       "symbol": "RequestError.cacheInvalidMetadata",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1435,
+      "line": 1459,
       "symbol": "RequestError.cacheInvalidCacheData",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1436,
+      "line": 1460,
       "symbol": "RequestError.validationInvalidStatusCode(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1437,
+      "line": 1461,
       "symbol": "RequestError.validationInvalidJSONFormat",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"

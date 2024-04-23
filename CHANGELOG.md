@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.1] - 2024-04-23
+
+### Changed
+* HTTPRequest method handle parameter supports Self, no type conversion is required
+* HTTPRequest opens the contextAccessory attribute and can be customized
+* When a BatchRequest request fails and stops, only other requests are canceled. Add the addRequest method.
+
 ## [5.3.0] - 2024-04-22
 
 ### Changed

@@ -83,6 +83,11 @@ open class BatchRequest: RequestDelegate {
     }
     
     // MARK: - Public
+    /// 添加单个请求，start之前调用
+    open func addRequest(_ request: HTTPRequest) {
+        requestArray.append(request)
+    }
+    
     /// 开始请求，仅能调用一次
     @discardableResult
     open func start() -> Self {
@@ -153,7 +158,7 @@ open class BatchRequest: RequestDelegate {
         failedRequestArray.append(request)
         if stoppedOnFailure {
             for req in requestArray {
-                req.cancel()
+                if req != request { req.cancel() }
             }
             requestCompleted()
             return
