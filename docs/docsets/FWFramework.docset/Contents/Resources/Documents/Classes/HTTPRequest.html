@@ -17,7 +17,7 @@
     <a title="HTTPRequest Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.3.0 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.3.1 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1754,6 +1754,9 @@
                 <a href="../Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/ImageAlbumControllerDelegate.html">ImageAlbumControllerDelegate</a>
               </li>
               <li class="nav-group-task">
@@ -2521,7 +2524,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPRequest</span> <span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPRequest</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                 </div>
               </div>
@@ -3706,6 +3709,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">builder</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest/Builder.html">Builder</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework11HTTPRequestC16contextAccessoryAA014RequestContextD0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/contextAccessory" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11HTTPRequestC16contextAccessoryAA014RequestContextD0Cvp">contextAccessory</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>请求上下文控件，可自定义</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">contextAccessory</span><span class="p">:</span> <span class="kt"><a href="../Classes/RequestContextAccessory.html">RequestContextAccessory</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -4958,90 +4988,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC5start7success7failureACXDyxcSg_AGtACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/start(success:failure:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC5start7success7failureACXDyxcSg_AGtACRbzlF">start(success:<wbr>failure:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>开始请求并指定成功、失败句柄</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">start</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">failure</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC5start10completionACXDyxcSg_tACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/start(completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC5start10completionACXDyxcSg_tACRbzlF">start(completion:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>开始请求并指定完成句柄</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">start</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC21requestCancelledBlockyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/requestCancelledBlock(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC21requestCancelledBlockyACXDyxcSgACRbzlF">requestCancelledBlock(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>请求取消句柄，不一定主线程调用</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n"><a href="../Classes/HTTPRequest.html#/s:11FWFramework11HTTPRequestC21requestCancelledBlockyACcSgvp">requestCancelledBlock</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework11HTTPRequestC21downloadProgressBlockyACXDySo10NSProgressCcSgF"></a>
                     <a name="//apple_ref/swift/Method/downloadProgressBlock(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework11HTTPRequestC21downloadProgressBlockyACXDySo10NSProgressCcSgF">downloadProgressBlock(_:<wbr>)</a>
@@ -5303,90 +5249,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC8responseyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/response(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC8responseyACXDyxcSgACRbzlF">response(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义响应完成句柄</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">response</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC15responseSuccessyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/responseSuccess(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC15responseSuccessyACXDyxcSgACRbzlF">responseSuccess(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义响应成功句柄</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseSuccess</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC15responseFailureyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/responseFailure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC15responseFailureyACXDyxcSgACRbzlF">responseFailure(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义响应失败句柄</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseFailure</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework11HTTPRequestC13responseErroryACXDys0D0_pcSgF"></a>
                     <a name="//apple_ref/swift/Method/responseError(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework11HTTPRequestC13responseErroryACXDys0D0_pcSgF">responseError(_:<wbr>)</a>
@@ -5540,34 +5402,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC13responseCacheyACXDyxcSgACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/responseCache(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC13responseCacheyACXDyxcSgACRbzlF">responseCache(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>解析缓存响应句柄，必须主线程且在start之前调用生效</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="n">responseCache</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework11HTTPRequestC18responseCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA03AnyE0RzlF"></a>
                     <a name="//apple_ref/swift/Method/responseCacheModel(of:designatedPath:success:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework11HTTPRequestC18responseCacheModel2of14designatedPath7successACXDxm_SSSgyxSgcSgtAA03AnyE0RzlF">responseCacheModel(of:<wbr>designatedPath:<wbr>success:<wbr>)</a>
@@ -5707,11 +5541,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Concurrency%2BRequest"></a>
-                <a name="//apple_ref/swift/Section/Concurrency+Request" class="dashAnchor"></a>
+                <a name="/Equatable"></a>
+                <a name="//apple_ref/swift/Section/Equatable" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Concurrency%2BRequest"></a>
-                  <h3 class="section-name"><span>Concurrency+Request</span>
+                  <a class="section-name-link" href="#/Equatable"></a>
+                  <h3 class="section-name"><span>Equatable</span>
 </h3>
                 </div>
               </div>
@@ -5719,117 +5553,23 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11HTTPRequestC8responsexyYaACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/response()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC8responsexyYaACRbzlF">response()</a>
+                    <a name="/s:SQ2eeoiySbx_xtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SQ2eeoiySbx_xtFZ">==(_:<wbr>_:<wbr>)</a>
                     </code>
-                      <span class="declaration-note">
-                        Asynchronous
-                      </span>
                   </div>
                   <div class="height-container">
                     <div class="pointer-container"></div>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>异步获取完成响应，注意非Task取消也会触发(Continuation流程)</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">response</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC15responseSuccessxyYaKACRbzlF"></a>
-                    <a name="//apple_ref/swift/Method/responseSuccess()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC15responseSuccessxyYaKACRbzlF">responseSuccess()</a>
-                    </code>
-                      <span class="declaration-note">
-                        Asynchronous
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>异步获取成功响应，注意非Task取消也会触发(Continuation流程)</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">responseSuccess</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">HTTPRequest</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC13responseModel2of14designatedPathxSgxm_SSSgtYaKAA03AnyD0RzlF"></a>
-                    <a name="//apple_ref/swift/Method/responseModel(of:designatedPath:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC13responseModel2of14designatedPathxSgxm_SSSgtYaKAA03AnyD0RzlF">responseModel(of:<wbr>designatedPath:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Asynchronous
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>异步获取响应模型，注意非Task取消也会触发(Continuation流程)</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">responseModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyModel.html">AnyModel</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11HTTPRequestC17safeResponseModel2of14designatedPathxxm_SSSgtYaKAA03AnyE0RzlF"></a>
-                    <a name="//apple_ref/swift/Method/safeResponseModel(of:designatedPath:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11HTTPRequestC17safeResponseModel2of14designatedPathxxm_SSSgtYaKAA03AnyE0RzlF">safeResponseModel(of:<wbr>designatedPath:<wbr>)</a>
-                    </code>
-                      <span class="declaration-note">
-                        Asynchronous
-                      </span>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>异步获取安全响应模型，注意非Task取消也会触发(Continuation流程)</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">safeResponseModel</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">designatedPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyModel.html">AnyModel</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">HTTPRequest</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">HTTPRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -5841,7 +5581,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-22)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-23)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

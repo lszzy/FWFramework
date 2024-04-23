@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.3.1] - 2024-04-23
+
+### Changed
+* HTTPRequest方法句柄参数支持Self，无需类型转换
+* HTTPRequest开放contextAccessory属性，可自定义
+* BatchRequest某个请求失败导致停止时只取消其他请求，新增addRequest方法
+
 ## [5.3.0] - 2024-04-22
 
 ### Changed
