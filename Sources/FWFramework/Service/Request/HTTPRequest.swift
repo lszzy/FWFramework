@@ -64,7 +64,7 @@ extension RequestDelegate {
 /// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: CustomStringConvertible {
+open class HTTPRequest: Equatable, CustomStringConvertible {
     
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void
@@ -606,12 +606,24 @@ open class HTTPRequest: CustomStringConvertible {
     /// 请求构建器，从构建器初始化时才有值
     open private(set) var builder: Builder?
     
-    // MARK: - Accessor+Private
-    private lazy var _contextAccessory: RequestContextAccessory = {
-        let result = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
-        return result
-    }()
+    /// 请求上下文控件，可自定义
+    open var contextAccessory: RequestContextAccessory {
+        get {
+            if let accessory = _contextAccessory {
+                return accessory
+            }
+            
+            let accessory = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+            _contextAccessory = accessory
+            return accessory
+        }
+        set {
+            _contextAccessory = newValue
+        }
+    }
+    private var _contextAccessory: RequestContextAccessory?
     
+    // MARK: - Accessor+Private
     fileprivate var _cacheResponseModel: Any?
     private var _responseModelBlock: Completion?
     private var _preloadResponseModel: Bool?
@@ -1007,17 +1019,17 @@ open class HTTPRequest: CustomStringConvertible {
     
     /// 显示加载条，默认显示加载插件，context必须存在
     open func showLoading() {
-        _contextAccessory.showLoading(for: self)
+        contextAccessory.showLoading(for: self)
     }
     
     /// 隐藏加载条，默认隐藏加载插件，context必须存在
     open func hideLoading() {
-        _contextAccessory.hideLoading(for: self)
+        contextAccessory.hideLoading(for: self)
     }
     
     /// 显示网络错误，默认显示Toast提示，context可不存在
     open func showError() {
-        _contextAccessory.showError(for: self)
+        contextAccessory.showError(for: self)
     }
     
     /// 清理完成句柄
@@ -1037,21 +1049,21 @@ open class HTTPRequest: CustomStringConvertible {
     }
     
     func toggleAccessoriesWillStartCallBack() {
-        _contextAccessory.requestWillStart(self)
+        contextAccessory.requestWillStart(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStart(self)
         })
     }
     
     func toggleAccessoriesWillStopCallBack() {
-        _contextAccessory.requestWillStop(self)
+        contextAccessory.requestWillStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestWillStop(self)
         })
     }
     
     func toggleAccessoriesDidStopCallBack() {
-        _contextAccessory.requestDidStop(self)
+        contextAccessory.requestDidStop(self)
         requestAccessories?.forEach({ accessory in
             accessory.requestDidStop(self)
         })
@@ -1292,6 +1304,11 @@ open class HTTPRequest: CustomStringConvertible {
         _cacheResponseModel = nil
         _responseModelBlock = nil
         isDataFromCache = false
+    }
+    
+    // MARK: - Equatable
+    public static func == (lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
+        return lhs.requestIdentifier == rhs.requestIdentifier
     }
     
 }
