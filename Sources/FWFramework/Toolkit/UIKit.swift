@@ -3033,7 +3033,7 @@ extension Wrapper where Base: UIViewController {
             UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
             let context = UIGraphicsGetCurrentContext()
             context?.setFillColor(backgroundColor.cgColor)
-            context?.fill([rect])
+            context?.fill(rect)
             image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
         }
