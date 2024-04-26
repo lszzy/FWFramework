@@ -15,38 +15,26 @@ import UserNotifications
 /// 可扩展权限类型
 public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
     
-    public typealias RawValue = Int
+    public typealias RawValue = String
     
     /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
-    public static let locationWhenInUse: AuthorizeType = .init(1)
+    public static let locationWhenInUse: AuthorizeType = .init("locationWhenInUse")
     /// 后台定位，Info.plist需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription
-    public static let locationAlways: AuthorizeType = .init(2)
-    /// 麦克风，需启用Microphone子模块，Info.plist需配置NSMicrophoneUsageDescription
-    public static let microphone: AuthorizeType = .init(3)
+    public static let locationAlways: AuthorizeType = .init("locationAlways")
     /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription|NSPhotoLibraryAddUsageDescription
-    public static let photoLibrary: AuthorizeType = .init(4)
+    public static let photoLibrary: AuthorizeType = .init("photoLibrary")
     /// 照相机，Info.plist需配置NSCameraUsageDescription
-    public static let camera: AuthorizeType = .init(5)
-    /// 联系人，需启用Contacts子模块，Info.plist需配置NSContactsUsageDescription
-    public static let contacts: AuthorizeType = .init(6)
-    /// 日历，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsFullAccessUsageDescription
-    public static let calendars: AuthorizeType = .init(7)
-    /// 日历仅写入，需启用Calendar子模块，Info.plist需配置NSCalendarsUsageDescription|NSCalendarsWriteOnlyAccessUsageDescription
-    public static let calendarsWriteOnly: AuthorizeType = .init(8)
-    /// 提醒，需启用Calendar子模块，Info.plist需配置NSRemindersUsageDescription|NSRemindersFullAccessUsageDescription
-    public static let reminders: AuthorizeType = .init(9)
+    public static let camera: AuthorizeType = .init("camera")
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
-    public static let notifications: AuthorizeType = .init(10)
-    /// 广告跟踪，需启用Tracking子模块，Info.plist需配置NSUserTrackingUsageDescription
-    public static let tracking: AuthorizeType = .init(11)
+    public static let notifications: AuthorizeType = .init("notifications")
     
-    public var rawValue: Int
+    public var rawValue: String
     
-    public init(rawValue: Int) {
+    public init(rawValue: String) {
         self.rawValue = rawValue
     }
     
-    public init(_ rawValue: Int) {
+    public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
     
@@ -88,12 +76,25 @@ extension AuthorizeProtocol {
 // MARK: - AuthorizeManager
 /// 权限管理器。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
 ///
-/// 开启指定权限方法：
-/// Pod项目：添加pod时同时指定
-/// pod 'FWFramework', :subspecs => ['Contacts']
+/// 开启指定权限方法示例：
+/// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWExtension/Contacts']
+/// 2. SPM项目勾选并引入指定子模块：import FWExtensionContacts
 public class AuthorizeManager: NSObject {
     private static var managers: [AuthorizeType: AuthorizeProtocol] = [:]
     private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
+    
+    /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
+    public static func registerAuthorize(_ type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
+        blocks[type] = block
+    }
+    
+    /// 预置指定类型的权限管理器创建句柄，已注册时不生效，用于动态扩展权限类型
+    @discardableResult
+    public static func presetAuthorize(_ type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) -> Bool {
+        guard blocks[type] == nil else { return false }
+        blocks[type] = block
+        return true
+    }
     
     /// 获取指定类型的权限管理器单例，部分权限未启用时返回nil
     public static func manager(type: AuthorizeType) -> AuthorizeProtocol? {
@@ -101,11 +102,6 @@ public class AuthorizeManager: NSObject {
         guard let manager = factory(type: type) else { return nil }
         managers[type] = manager
         return manager
-    }
-    
-    /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
-    public static func register(type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
-        blocks[type] = block
     }
     
     private static func factory(type: AuthorizeType) -> AuthorizeProtocol? {
@@ -124,26 +120,6 @@ public class AuthorizeManager: NSObject {
             return AuthorizeCamera()
         case .notifications:
             return AuthorizeNotifications()
-        #if FWMacroCalendar
-        case .calendars:
-            return AuthorizeCalendar(type: .event)
-        case .calendarsWriteOnly:
-            return AuthorizeCalendar(type: .event, writeOnly: true)
-        case .reminders:
-            return AuthorizeCalendar(type: .reminder)
-        #endif
-        #if FWMacroContacts
-        case .contacts:
-            return AuthorizeContacts()
-        #endif
-        #if FWMacroMicrophone
-        case .microphone:
-            return AuthorizeMicrophone()
-        #endif
-        #if FWMacroTracking
-        case .tracking:
-            return AuthorizeTracking()
-        #endif
         default:
             return nil
         }
@@ -343,210 +319,4 @@ internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         }
         UIApplication.shared.registerForRemoteNotifications()
     }
-}
-
-// MARK: - AuthorizeCalendar
-#if FWMacroCalendar
-import EventKit
-
-/// 日历授权
-private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
-    private var type: EKEntityType = .event
-    private var writeOnly: Bool = false
-    
-    init(type: EKEntityType, writeOnly: Bool = false) {
-        super.init()
-        self.type = type
-        self.writeOnly = writeOnly
-    }
-    
-    func authorizeStatus() -> AuthorizeStatus {
-        let status = EKEventStore.authorizationStatus(for: type)
-        switch status {
-        case .restricted:
-            return .restricted
-        case .denied:
-            return .denied
-        case .authorized:
-            return .authorized
-        #if swift(>=5.9)
-        case .fullAccess:
-            return .authorized
-        case .writeOnly:
-            if #available(iOS 17.0, *) {
-                if type == .event && !writeOnly {
-                    return .denied
-                }
-            }
-            return .authorized
-        #endif
-        default:
-            return .notDetermined
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
-            let status: AuthorizeStatus = granted ? .authorized : .denied
-            if completion != nil {
-                DispatchQueue.main.async {
-                    completion?(status)
-                }
-            }
-        }
-        
-        #if swift(>=5.9)
-        if #available(iOS 17.0, *) {
-            let eventStore = EKEventStore()
-            if type == .event {
-                if writeOnly {
-                    eventStore.requestWriteOnlyAccessToEvents(completion: completionHandler)
-                } else {
-                    eventStore.requestFullAccessToEvents(completion: completionHandler)
-                }
-            } else {
-                eventStore.requestFullAccessToReminders(completion: completionHandler)
-            }
-            return
-        }
-        #endif
-        
-        let eventStore = EKEventStore()
-        eventStore.requestAccess(to: type, completion: completionHandler)
-    }
-}
-#endif
-
-// MARK: - AuthorizeContacts
-#if FWMacroContacts
-import Contacts
-
-/// 通讯录授权
-private class AuthorizeContacts: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
-        let status = CNContactStore.authorizationStatus(for: .contacts)
-        switch status {
-        case .restricted:
-            return .restricted
-        case .denied:
-            return .denied
-        case .authorized:
-            return .authorized
-        default:
-            return .notDetermined
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        CNContactStore().requestAccess(for: .contacts) { granted, error in
-            let status: AuthorizeStatus = granted ? .authorized : .denied
-            if completion != nil {
-                DispatchQueue.main.async {
-                    completion?(status)
-                }
-            }
-        }
-    }
-}
-#endif
-
-// MARK: - AuthorizeMicrophone
-#if FWMacroMicrophone
-import AVFoundation
-
-/// 麦克风授权
-private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
-        let status = AVAudioSession.sharedInstance().recordPermission
-        switch status {
-        case .denied:
-            return .denied
-        case .granted:
-            return .authorized
-        default:
-            return .notDetermined
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
-            let status: AuthorizeStatus = granted ? .authorized : .denied
-            if completion != nil {
-                DispatchQueue.main.async {
-                    completion?(status)
-                }
-            }
-        }
-    }
-}
-#endif
-
-// MARK: - AuthorizeTracking
-#if FWMacroTracking
-import AdSupport
-import AppTrackingTransparency
-
-/// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
-private class AuthorizeTracking: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
-        if #available(iOS 14.0, *) {
-            let status = ATTrackingManager.trackingAuthorizationStatus
-            switch status {
-            case .restricted:
-                return .restricted
-            case .denied:
-                return .denied
-            case .authorized:
-                return .authorized
-            default:
-                return .notDetermined
-            }
-        } else {
-            return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .authorized : .denied
-        }
-    }
-    
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        if #available(iOS 14.0, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                if completion != nil {
-                    DispatchQueue.main.async {
-                        completion?(self.authorizeStatus())
-                    }
-                }
-            }
-        } else {
-            if completion != nil {
-                DispatchQueue.main.async {
-                    completion?(self.authorizeStatus())
-                }
-            }
-        }
-    }
-}
-#endif
-
-// MARK: - Autoloader+Authorize
-@objc extension Autoloader {
-    
-    #if FWMacroContacts
-    static func loadMacro_Contacts() {}
-    #endif
-    
-    #if FWMacroMicrophone
-    static func loadMacro_Microphone() {}
-    #endif
-    
-    #if FWMacroCalendar
-    static func loadMacro_Calendar() {}
-    #endif
-        
-    #if FWMacroTracking
-    static func loadMacro_Tracking() {}
-    #endif
-    
-    #if FWMacroMacros
-    static func loadMacro_Macros() {}
-    #endif
-    
 }

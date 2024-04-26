@@ -7,9 +7,6 @@
 
 import UIKit
 import CoreTelephony
-#if FWMacroTracking
-import AdSupport
-#endif
 
 // MARK: - Wrapper+UIBezierPath
 extension Wrapper where Base: UIBezierPath {
@@ -80,11 +77,6 @@ extension Wrapper where Base: UIDevice {
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
         return Base.fw_deviceIDFV
-    }
-
-    /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
-    public static var deviceIDFA: String? {
-        return Base.fw_deviceIDFA
     }
     
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
@@ -1452,15 +1444,6 @@ extension Wrapper where Base: UIViewController {
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var fw_deviceIDFV: String? {
         return UIDevice.current.identifierForVendor?.uuidString
-    }
-
-    /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限，启用Tracking子模块后生效
-    public static var fw_deviceIDFA: String? {
-        #if FWMacroTracking
-        return ASIdentifierManager.shared().advertisingIdentifier.uuidString
-        #else
-        return nil
-        #endif
     }
     
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
