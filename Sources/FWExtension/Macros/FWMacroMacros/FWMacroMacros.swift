@@ -2,7 +2,7 @@ import SwiftCompilerPlugin
 import SwiftSyntaxMacros
 
 @main
-struct FWMacroPlugin: CompilerPlugin {
+struct FWMacroMacros: CompilerPlugin {
     
     let providingMacros: [Macro.Type] = [
         MappedValueMacro.self,
