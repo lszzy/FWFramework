@@ -19,17 +19,36 @@ let package = Package(
             targets: ["FWSwiftUI"]
         ),
         .library(
-            name: "FWExtension",
-            targets: [
-                "FWExtensionCalendar",
-                "FWExtensionContacts",
-                "FWExtensionMicrophone",
-                "FWExtensionTracking",
-                "FWExtensionMacros",
-                "FWExtensionSDWebImage",
-                "FWExtensionLottie",
-                "FWExtensionAlamofire",
-            ]
+            name: "FWExtensionCalendar",
+            targets: ["FWExtensionCalendar"]
+        ),
+        .library(
+            name: "FWExtensionContacts",
+            targets: ["FWExtensionContacts"]
+        ),
+        .library(
+            name: "FWExtensionMicrophone",
+            targets: ["FWExtensionMicrophone"]
+        ),
+        .library(
+            name: "FWExtensionTracking",
+            targets: ["FWExtensionTracking"]
+        ),
+        .library(
+            name: "FWExtensionMacros",
+            targets: ["FWExtensionMacros"]
+        ),
+        .library(
+            name: "FWExtensionSDWebImage",
+            targets: ["FWExtensionSDWebImage"]
+        ),
+        .library(
+            name: "FWExtensionLottie",
+            targets: ["FWExtensionLottie"]
+        ),
+        .library(
+            name: "FWExtensionAlamofire",
+            targets: ["FWExtensionAlamofire"]
         ),
     ],
     dependencies: [

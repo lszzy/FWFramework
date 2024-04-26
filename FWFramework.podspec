@@ -11,10 +11,10 @@ Pod::Spec.new do |s|
   s.swift_version         = '5.9'
   s.frameworks            = 'Foundation', 'UIKit'
   s.default_subspecs      = ['FWFramework']
-  s.resource_bundles      = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
   
   s.subspec 'FWFramework' do |ss|
     ss.source_files = 'Sources/FWFramework/**/*.swift'
+    ss.resource_bundles = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
     ss.pod_target_xcconfig = {
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
     }
