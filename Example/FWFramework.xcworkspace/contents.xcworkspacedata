@@ -5,6 +5,9 @@
       location = "group:FWFramework.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:FWSwiftUI.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

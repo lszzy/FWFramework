@@ -14,10 +14,6 @@
 		2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D15E28D805DE007E53EC /* TestRefreshController.swift */; };
 		2F06D16128D955B6007E53EC /* TestAdaptiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */; };
 		2F06D16328D965C9007E53EC /* TestButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F06D16228D965C9007E53EC /* TestButtonController.swift */; };
-		2F0884D52BDB43D300C9741F /* FWFramework_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0884D42BDB43D300C9741F /* FWFramework_SwiftUIApp.swift */; };
-		2F0884D72BDB43D300C9741F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0884D62BDB43D300C9741F /* ContentView.swift */; };
-		2F0884D92BDB43D400C9741F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F0884D82BDB43D400C9741F /* Assets.xcassets */; };
-		2F0884DC2BDB43D400C9741F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F0884DB2BDB43D400C9741F /* Preview Assets.xcassets */; };
 		2F0F09252B3186F4000C3F5E /* Audio1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09212B3186F4000C3F5E /* Audio1.mp3 */; };
 		2F0F09262B3186F4000C3F5E /* Audio3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09222B3186F4000C3F5E /* Audio3.m4a */; };
 		2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09232B3186F4000C3F5E /* Video.mp4 */; };
@@ -94,13 +90,10 @@
 		2FF08B7728ADE7690074895A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B6D28ADE7690074895A /* HomeController.swift */; };
 		2FF08B7828ADE7690074895A /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7128ADE7690074895A /* TestController.swift */; };
 		2FF08B7928ADE7690074895A /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7528ADE7690074895A /* UserService.swift */; };
-		B920716B99FE77197798EB69 /* Pods_FWFramework_SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C19F9198778EA1650F450CC /* Pods_FWFramework_SwiftUI.framework */; };
 		B9719F10F5B17714B420B90A /* Pods_FWFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A68A0DC98917451912D4A06 /* Pods-FWFramework_SwiftUI.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.testing.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.testing.xcconfig"; sourceTree = "<group>"; };
-		18F7B70147CFA563ECF1000C /* Pods-FWFramework_SwiftUI.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.staging.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.staging.xcconfig"; sourceTree = "<group>"; };
 		2F06D15628D31E52007E53EC /* TestToastController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestToastController.swift; sourceTree = "<group>"; };
 		2F06D15828D44934007E53EC /* TestPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPickerController.swift; sourceTree = "<group>"; };
 		2F06D15A28D451E8007E53EC /* TestPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPreviewController.swift; sourceTree = "<group>"; };
@@ -108,11 +101,6 @@
 		2F06D15E28D805DE007E53EC /* TestRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRefreshController.swift; sourceTree = "<group>"; };
 		2F06D16028D955B6007E53EC /* TestAdaptiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdaptiveController.swift; sourceTree = "<group>"; };
 		2F06D16228D965C9007E53EC /* TestButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestButtonController.swift; sourceTree = "<group>"; };
-		2F0884D22BDB43D300C9741F /* FWFramework_SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_SwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F0884D42BDB43D300C9741F /* FWFramework_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWFramework_SwiftUIApp.swift; sourceTree = "<group>"; };
-		2F0884D62BDB43D300C9741F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2F0884D82BDB43D400C9741F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2F0884DB2BDB43D400C9741F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2F0F09212B3186F4000C3F5E /* Audio1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Audio1.mp3; sourceTree = "<group>"; };
 		2F0F09222B3186F4000C3F5E /* Audio3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Audio3.m4a; sourceTree = "<group>"; };
 		2F0F09232B3186F4000C3F5E /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
@@ -193,13 +181,10 @@
 		2FF08B6D28ADE7690074895A /* HomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		2FF08B7128ADE7690074895A /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		2FF08B7528ADE7690074895A /* UserService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
-		5A5EBD89B2425D78B5FF6C76 /* Pods-FWFramework_SwiftUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* FWFramework_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A72EA107313090F52B58E48 /* Pods-FWFramework_Example.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.testing.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.testing.xcconfig"; sourceTree = "<group>"; };
-		7C19F9198778EA1650F450CC /* Pods_FWFramework_SwiftUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_SwiftUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		894F9EFB46FE2777B54B5F13 /* Pods-FWFramework_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		8A330C3806B41619353D6216 /* Pods-FWFramework_SwiftUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.release.xcconfig"; sourceTree = "<group>"; };
 		8EB5F58C73F2C8AFAAED3254 /* Pods-FWFramework_Example.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.staging.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.staging.xcconfig"; sourceTree = "<group>"; };
 		9A618471107F1D6CF1E47FF0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D478E69E86FD0C491E56F20A /* Pods-FWFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -209,14 +194,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2F0884CF2BDB43D300C9741F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B920716B99FE77197798EB69 /* Pods_FWFramework_SwiftUI.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACCD1AFB9204008FA782 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,26 +205,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F0884D32BDB43D300C9741F /* SwiftUI for FWFramework */ = {
-			isa = PBXGroup;
-			children = (
-				2F0884D42BDB43D300C9741F /* FWFramework_SwiftUIApp.swift */,
-				2F0884D62BDB43D300C9741F /* ContentView.swift */,
-				2F0884D82BDB43D400C9741F /* Assets.xcassets */,
-				2F0884DA2BDB43D400C9741F /* Preview Content */,
-			);
-			name = "SwiftUI for FWFramework";
-			path = "FWFramework-SwiftUI";
-			sourceTree = "<group>";
-		};
-		2F0884DA2BDB43D400C9741F /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2F0884DB2BDB43D400C9741F /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		2F6A411B28B5F80A003719E7 /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -542,7 +499,6 @@
 			children = (
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for FWFramework */,
-				2F0884D32BDB43D300C9741F /* SwiftUI for FWFramework */,
 				607FACD11AFB9204008FA782 /* Products */,
 				F15C1F2012471EC6D365909F /* Pods */,
 				CC290B93FD55144897997DA5 /* Frameworks */,
@@ -553,7 +509,6 @@
 			isa = PBXGroup;
 			children = (
 				607FACD01AFB9204008FA782 /* FWFramework_Example.app */,
-				2F0884D22BDB43D300C9741F /* FWFramework_SwiftUI.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -591,7 +546,6 @@
 			isa = PBXGroup;
 			children = (
 				F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */,
-				7C19F9198778EA1650F450CC /* Pods_FWFramework_SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -603,10 +557,6 @@
 				D478E69E86FD0C491E56F20A /* Pods-FWFramework_Example.release.xcconfig */,
 				7A72EA107313090F52B58E48 /* Pods-FWFramework_Example.testing.xcconfig */,
 				8EB5F58C73F2C8AFAAED3254 /* Pods-FWFramework_Example.staging.xcconfig */,
-				5A5EBD89B2425D78B5FF6C76 /* Pods-FWFramework_SwiftUI.debug.xcconfig */,
-				8A330C3806B41619353D6216 /* Pods-FWFramework_SwiftUI.release.xcconfig */,
-				0A68A0DC98917451912D4A06 /* Pods-FWFramework_SwiftUI.testing.xcconfig */,
-				18F7B70147CFA563ECF1000C /* Pods-FWFramework_SwiftUI.staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -614,25 +564,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2F0884D12BDB43D300C9741F /* FWFramework_SwiftUI */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2F0884E12BDB43D400C9741F /* Build configuration list for PBXNativeTarget "FWFramework_SwiftUI" */;
-			buildPhases = (
-				3D9521CB0F4634E1FCDDD8B0 /* [CP] Check Pods Manifest.lock */,
-				2F0884CE2BDB43D300C9741F /* Sources */,
-				2F0884CF2BDB43D300C9741F /* Frameworks */,
-				2F0884D02BDB43D300C9741F /* Resources */,
-				05C15C35BFEBC3FAE4CC89D1 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = FWFramework_SwiftUI;
-			productName = "FWFramework-SwiftUI";
-			productReference = 2F0884D22BDB43D300C9741F /* FWFramework_SwiftUI.app */;
-			productType = "com.apple.product-type.application";
-		};
 		607FACCF1AFB9204008FA782 /* FWFramework_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "FWFramework_Example" */;
@@ -663,9 +594,6 @@
 				LastUpgradeCheck = 1530;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					2F0884D12BDB43D300C9741F = {
-						CreatedOnToolsVersion = 15.3;
-					};
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 3SPQYAJQY3;
@@ -689,21 +617,11 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* FWFramework_Example */,
-				2F0884D12BDB43D300C9741F /* FWFramework_SwiftUI */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2F0884D02BDB43D300C9741F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2F0884DC2BDB43D400C9741F /* Preview Assets.xcassets in Resources */,
-				2F0884D92BDB43D400C9741F /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACCE1AFB9204008FA782 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -754,54 +672,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		05C15C35BFEBC3FAE4CC89D1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/FWDebug/FWDebug.framework",
-				"${BUILT_PRODUCTS_DIR}/FWFramework/FWFramework.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWDebug.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FWFramework.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3D9521CB0F4634E1FCDDD8B0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FWFramework_SwiftUI-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		52B43255B82D4D14A6195DF4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -827,15 +697,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2F0884CE2BDB43D300C9741F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2F0884D72BDB43D300C9741F /* ContentView.swift in Sources */,
-				2F0884D52BDB43D300C9741F /* FWFramework_SwiftUIApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACCC1AFB9204008FA782 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -938,177 +799,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		2F0884DD2BDB43D400C9741F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A5EBD89B2425D78B5FF6C76 /* Pods-FWFramework_SwiftUI.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"FWFramework-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 3SPQYAJQY3;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "site.wuyong.FWFramework.SwiftUI.FWFramework-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2F0884DE2BDB43D400C9741F /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A330C3806B41619353D6216 /* Pods-FWFramework_SwiftUI.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"FWFramework-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 3SPQYAJQY3;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "site.wuyong.FWFramework.SwiftUI.FWFramework-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		2F0884DF2BDB43D400C9741F /* Testing */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0A68A0DC98917451912D4A06 /* Pods-FWFramework_SwiftUI.testing.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"FWFramework-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 3SPQYAJQY3;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "site.wuyong.FWFramework.SwiftUI.FWFramework-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Testing;
-		};
-		2F0884E02BDB43D400C9741F /* Staging */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18F7B70147CFA563ECF1000C /* Pods-FWFramework_SwiftUI.staging.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "$(inherited)";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"FWFramework-SwiftUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 3SPQYAJQY3;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "site.wuyong.FWFramework.SwiftUI.FWFramework-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Staging;
-		};
 		2FF08B0628ADDA710074895A /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1446,17 +1136,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2F0884E12BDB43D400C9741F /* Build configuration list for PBXNativeTarget "FWFramework_SwiftUI" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2F0884DD2BDB43D400C9741F /* Debug */,
-				2F0884DE2BDB43D400C9741F /* Release */,
-				2F0884DF2BDB43D400C9741F /* Testing */,
-				2F0884E02BDB43D400C9741F /* Staging */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "FWFramework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

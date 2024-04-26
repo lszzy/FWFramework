@@ -1,9 +1,8 @@
 //
 //  ContentView.swift
-//  FWFramework-SwiftUI
+//  FWSwiftUI
 //
 //  Created by wuyong on 2024/4/26.
-//  Copyright © 2024 CocoaPods. All rights reserved.
 //
 
 import SwiftUI
