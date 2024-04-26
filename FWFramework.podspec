@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.3.1'
+  s.version               = '5.3.2'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -55,18 +55,18 @@ Pod::Spec.new do |s|
     end
     
     ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Macros/FWMacro/**/*.swift'
+      sss.source_files = 'Sources/FWMacro/Macros/FWMacro/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
       sss.preserve_paths = [
-        'Macros/Package.swift',
-        'Macros/FWMacroMacros/**/*.swift'
+        'Sources/FWMacro/Macros/Package.swift',
+        'Sources/FWMacro/Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
       build_script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT/Macros\\"
+        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWMacro/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
       swift_flags = <<-FLAGS.squish
@@ -77,7 +77,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWFramework macro plugin',
         :script => build_script,
-        :input_files => Dir.glob("{Macros/Package.swift, Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWMacro/Macros/Package.swift, Sources/FWMacro/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],

@@ -97,12 +97,12 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
-            path: "Macros/FWMacroMacros"
+            path: "Sources/FWMacro/Macros/FWMacroMacros"
         ),
         .target(
             name: "FWMacro",
             dependencies: ["FWMacroMacros"],
-            path: "Macros/FWMacro"
+            path: "Sources/FWMacro/Macros/FWMacro"
         ),
     ]
 )
