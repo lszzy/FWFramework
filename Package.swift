@@ -104,20 +104,5 @@ let package = Package(
             dependencies: ["FWMacroMacros"],
             path: "Macros/FWMacro"
         ),
-        .testTarget(
-            name: "FWFrameworkTests",
-            dependencies: [
-                "FWFramework",
-                "FWMacro",
-            ],
-            path: "Example/Tests",
-            exclude: [
-                "Info.plist",
-            ],
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
-            ]
-        ),
     ]
 )
