@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F731D782BDBF4C300C7CBB3 /* FWDebugPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 2F731D772BDBF4C300C7CBB3 /* FWDebugPackage */; };
 		2F96AB082BDB8E4F007A0767 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB072BDB8E4F007A0767 /* ExampleApp.swift */; };
 		2F96AB0A2BDB8E4F007A0767 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB092BDB8E4F007A0767 /* ContentView.swift */; };
 		2F96AB0C2BDB8E50007A0767 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F731D782BDBF4C300C7CBB3 /* FWDebugPackage in Frameworks */,
 				2FB4777D2BDBAB8600A6C1B1 /* FWExtensionTracking in Frameworks */,
 				2FB4776F2BDBAB8600A6C1B1 /* FWExtensionAlamofire in Frameworks */,
 				2FB477772BDBAB8600A6C1B1 /* FWExtensionMacros in Frameworks */,
@@ -123,6 +125,7 @@
 				2FB477782BDBAB8600A6C1B1 /* FWExtensionMicrophone */,
 				2FB4777A2BDBAB8600A6C1B1 /* FWExtensionSDWebImage */,
 				2FB4777C2BDBAB8600A6C1B1 /* FWExtensionTracking */,
+				2F731D772BDBF4C300C7CBB3 /* FWDebugPackage */,
 			);
 			productName = FWSwiftUI;
 			productReference = 2F96AB042BDB8E4F007A0767 /* FWFramework_SwiftUI.app */;
@@ -154,6 +157,7 @@
 			mainGroup = 2F96AAFB2BDB8E4F007A0767;
 			packageReferences = (
 				2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */,
+				2F731D762BDBF4C300C7CBB3 /* XCRemoteSwiftPackageReference "FWDebug" */,
 			);
 			productRefGroup = 2F96AB052BDB8E4F007A0767 /* Products */;
 			projectDirPath = "";
@@ -392,6 +396,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2F731D762BDBF4C300C7CBB3 /* XCRemoteSwiftPackageReference "FWDebug" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lszzy/FWDebug";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.3.0;
+			};
+		};
 		2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lszzy/FWFramework.git";
@@ -403,6 +415,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2F731D772BDBF4C300C7CBB3 /* FWDebugPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F731D762BDBF4C300C7CBB3 /* XCRemoteSwiftPackageReference "FWDebug" */;
+			productName = FWDebugPackage;
+		};
 		2FB4774F2BDBA1CE00A6C1B1 /* FWFramework */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */;
