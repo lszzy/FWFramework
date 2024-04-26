@@ -137,7 +137,7 @@ let package = Package(
             name: "FWExtensionSDWebImage",
             dependencies: [
                 "FWFramework",
-                "SDWebImage",
+                .product(name: "SDWebImage", package: "SDWebImage"),
             ],
             path: "Sources/FWExtension/SDWebImage",
             swiftSettings: [
