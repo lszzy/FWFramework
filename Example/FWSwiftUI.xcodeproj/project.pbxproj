@@ -7,15 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F96AB082BDB8E4F007A0767 /* FWSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB072BDB8E4F007A0767 /* FWSwiftUIApp.swift */; };
+		2F96AB082BDB8E4F007A0767 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB072BDB8E4F007A0767 /* ExampleApp.swift */; };
 		2F96AB0A2BDB8E4F007A0767 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB092BDB8E4F007A0767 /* ContentView.swift */; };
 		2F96AB0C2BDB8E50007A0767 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */; };
 		2F96AB0F2BDB8E50007A0767 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */; };
+		2FB4774E2BDBA1CE00A6C1B1 /* FWExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 2FB4774D2BDBA1CE00A6C1B1 /* FWExtension */; };
+		2FB477502BDBA1CE00A6C1B1 /* FWFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 2FB4774F2BDBA1CE00A6C1B1 /* FWFramework */; };
+		2FB477522BDBA1CE00A6C1B1 /* FWSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2FB477512BDBA1CE00A6C1B1 /* FWSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2F96AB042BDB8E4F007A0767 /* FWFramework_SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_SwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F96AB072BDB8E4F007A0767 /* FWSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FWSwiftUIApp.swift; sourceTree = "<group>"; };
+		2F96AB072BDB8E4F007A0767 /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
 		2F96AB092BDB8E4F007A0767 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -26,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB477502BDBA1CE00A6C1B1 /* FWFramework in Frameworks */,
+				2FB477522BDBA1CE00A6C1B1 /* FWSwiftUI in Frameworks */,
+				2FB4774E2BDBA1CE00A6C1B1 /* FWExtension in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -35,7 +41,7 @@
 		2F96AAFB2BDB8E4F007A0767 = {
 			isa = PBXGroup;
 			children = (
-				2F96AB062BDB8E4F007A0767 /* Example for FWSwiftUI */,
+				2F96AB062BDB8E4F007A0767 /* Example for FWFramework */,
 				2F96AB052BDB8E4F007A0767 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,15 +54,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2F96AB062BDB8E4F007A0767 /* Example for FWSwiftUI */ = {
+		2F96AB062BDB8E4F007A0767 /* Example for FWFramework */ = {
 			isa = PBXGroup;
 			children = (
-				2F96AB072BDB8E4F007A0767 /* FWSwiftUIApp.swift */,
+				2F96AB072BDB8E4F007A0767 /* ExampleApp.swift */,
 				2F96AB092BDB8E4F007A0767 /* ContentView.swift */,
 				2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */,
 				2F96AB0D2BDB8E50007A0767 /* Preview Content */,
 			);
-			name = "Example for FWSwiftUI";
+			name = "Example for FWFramework";
 			path = FWSwiftUI;
 			sourceTree = "<group>";
 		};
@@ -84,6 +90,11 @@
 			dependencies = (
 			);
 			name = FWFramework_SwiftUI;
+			packageProductDependencies = (
+				2FB4774D2BDBA1CE00A6C1B1 /* FWExtension */,
+				2FB4774F2BDBA1CE00A6C1B1 /* FWFramework */,
+				2FB477512BDBA1CE00A6C1B1 /* FWSwiftUI */,
+			);
 			productName = FWSwiftUI;
 			productReference = 2F96AB042BDB8E4F007A0767 /* FWFramework_SwiftUI.app */;
 			productType = "com.apple.product-type.application";
@@ -112,6 +123,9 @@
 				Base,
 			);
 			mainGroup = 2F96AAFB2BDB8E4F007A0767;
+			packageReferences = (
+				2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */,
+			);
 			productRefGroup = 2F96AB052BDB8E4F007A0767 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -139,7 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F96AB0A2BDB8E4F007A0767 /* ContentView.swift in Sources */,
-				2F96AB082BDB8E4F007A0767 /* FWSwiftUIApp.swift in Sources */,
+				2F96AB082BDB8E4F007A0767 /* ExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,6 +361,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lszzy/FWFramework.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2FB4774D2BDBA1CE00A6C1B1 /* FWExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */;
+			productName = FWExtension;
+		};
+		2FB4774F2BDBA1CE00A6C1B1 /* FWFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */;
+			productName = FWFramework;
+		};
+		2FB477512BDBA1CE00A6C1B1 /* FWSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2FB4774C2BDBA1CE00A6C1B1 /* XCRemoteSwiftPackageReference "FWFramework" */;
+			productName = FWSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2F96AAFC2BDB8E4F007A0767 /* Project object */;
 }
