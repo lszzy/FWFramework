@@ -1,6 +1,153 @@
 {
   "warnings": [
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 74,
+      "symbol": "LottiePluginView.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 79,
+      "symbol": "LottiePluginView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 84,
+      "symbol": "LottiePluginView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 153,
+      "symbol": "LottiePluginView.frame",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 157,
+      "symbol": "LottiePluginView.bounds",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 161,
+      "symbol": "LottiePluginView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 166,
+      "symbol": "LottiePluginView.intrinsicContentSize",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/Lottie/LottiePluginView.swift",
+      "line": 170,
+      "symbol": "LottiePluginView.sizeThatFits(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 225,
+      "symbol": "SDWebImagePluginIndicator.indicatorView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 239,
+      "symbol": "SDWebImagePluginIndicator.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 245,
+      "symbol": "SDWebImagePluginIndicator.init(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 256,
+      "symbol": "SDWebImagePluginIndicator.startAnimatingIndicator()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 263,
+      "symbol": "SDWebImagePluginIndicator.stopAnimatingIndicator()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 273,
+      "symbol": "SDWebImageProgressPluginIndicator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 275,
+      "symbol": "SDWebImageProgressPluginIndicator.indicatorView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 284,
+      "symbol": "SDWebImageProgressPluginIndicator.animated",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 288,
+      "symbol": "SDWebImageProgressPluginIndicator.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 294,
+      "symbol": "SDWebImageProgressPluginIndicator.init(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 305,
+      "symbol": "SDWebImageProgressPluginIndicator.startAnimatingIndicator()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 312,
+      "symbol": "SDWebImageProgressPluginIndicator.stopAnimatingIndicator()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWExtension/SDWebImage/SDWebImageImpl.swift",
+      "line": 319,
+      "symbol": "SDWebImageProgressPluginIndicator.updateProgress(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Logger.swift",
       "line": 191,
       "symbol": "LogLevel.init(_:)",
@@ -10803,7 +10950,7 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Basic/Authorize.swift",
-      "line": 49,
+      "line": 37,
       "symbol": "AuthorizeType.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -19994,14 +20141,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/UIKit.swift",
-      "line": 484,
+      "line": 476,
       "symbol": "Wrapper.touchEventInterval",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/UIKit.swift",
-      "line": 2890,
+      "line": 2873,
       "symbol": "UIControl.fw_touchEventInterval",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -23244,153 +23391,6 @@
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/View+Toolkit.swift",
       "line": 46,
       "symbol": "RemovableModifier.init(removable:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 74,
-      "symbol": "LottiePluginView.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 79,
-      "symbol": "LottiePluginView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 84,
-      "symbol": "LottiePluginView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 153,
-      "symbol": "LottiePluginView.frame",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 157,
-      "symbol": "LottiePluginView.bounds",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 161,
-      "symbol": "LottiePluginView.layoutSubviews()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 166,
-      "symbol": "LottiePluginView.intrinsicContentSize",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/Lottie/LottiePluginImpl.swift",
-      "line": 170,
-      "symbol": "LottiePluginView.sizeThatFits(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 225,
-      "symbol": "SDWebImagePluginIndicator.indicatorView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 239,
-      "symbol": "SDWebImagePluginIndicator.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 245,
-      "symbol": "SDWebImagePluginIndicator.init(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 256,
-      "symbol": "SDWebImagePluginIndicator.startAnimatingIndicator()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 263,
-      "symbol": "SDWebImagePluginIndicator.stopAnimatingIndicator()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 273,
-      "symbol": "SDWebImageProgressPluginIndicator",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 275,
-      "symbol": "SDWebImageProgressPluginIndicator.indicatorView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 284,
-      "symbol": "SDWebImageProgressPluginIndicator.animated",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 288,
-      "symbol": "SDWebImageProgressPluginIndicator.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 294,
-      "symbol": "SDWebImageProgressPluginIndicator.init(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 305,
-      "symbol": "SDWebImageProgressPluginIndicator.startAnimatingIndicator()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 312,
-      "symbol": "SDWebImageProgressPluginIndicator.stopAnimatingIndicator()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWVendor/SDWebImage/SDWebImageImpl.swift",
-      "line": 319,
-      "symbol": "SDWebImageProgressPluginIndicator.updateProgress(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }

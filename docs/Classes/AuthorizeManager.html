@@ -17,7 +17,7 @@
     <a title="AuthorizeManager Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.3.1 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.3.2 Docs</a> (67% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2530,14 +2530,72 @@
               </div>
             <p>权限管理器。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明</p>
 
-<p>开启指定权限方法：
-Pod项目：添加pod时同时指定
-pod &lsquo;FWFramework&rsquo;, :subspecs =&gt; [&lsquo;Contacts&rsquo;]</p>
+<p>开启指定权限方法示例：</p>
+
+<ol>
+<li>Pod项目添加pod时指定子模块：pod &lsquo;FWFramework&rsquo;, :subspecs =&gt; [&lsquo;FWExtension/Contacts&rsquo;]</li>
+<li>SPM项目勾选并引入指定子模块：import FWExtensionContacts</li>
+</ol>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework16AuthorizeManagerC08registerB0_5blockyAA0B4TypeV_AA0B8Protocol_pyctFZ"></a>
+                    <a name="//apple_ref/swift/Method/registerAuthorize(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework16AuthorizeManagerC08registerB0_5blockyAA0B4TypeV_AA0B8Protocol_pyctFZ">registerAuthorize(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>注册指定类型的权限管理器创建句柄，用于动态扩展权限类型</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">registerAuthorize</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/AuthorizeType.html">AuthorizeType</a></span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework16AuthorizeManagerC06presetB0_5blockSbAA0B4TypeV_AA0B8Protocol_pyctFZ"></a>
+                    <a name="//apple_ref/swift/Method/presetAuthorize(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework16AuthorizeManagerC06presetB0_5blockSbAA0B4TypeV_AA0B8Protocol_pyctFZ">presetAuthorize(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>预置指定类型的权限管理器创建句柄，已注册时不生效，用于动态扩展权限类型</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">presetAuthorize</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/AuthorizeType.html">AuthorizeType</a></span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -2565,39 +2623,12 @@ pod &lsquo;FWFramework&rsquo;, :subspecs =&gt; [&lsquo;Contacts&rsquo;]</p>
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework16AuthorizeManagerC8register4type5blockyAA0B4TypeV_AA0B8Protocol_pyctFZ"></a>
-                    <a name="//apple_ref/swift/Method/register(type:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework16AuthorizeManagerC8register4type5blockyAA0B4TypeV_AA0B8Protocol_pyctFZ">register(type:<wbr>block:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>注册指定类型的权限管理器创建句柄，用于动态扩展权限类型</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">register</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/AuthorizeType.html">AuthorizeType</a></span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-28)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

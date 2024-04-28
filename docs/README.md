@@ -36,7 +36,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
       # Import the macro subspecs
-      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWMacro/Macros']   
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWExtension/Macros']   
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -50,7 +50,7 @@ This framework supports Swift Package Manager, just add and check the required m
 	import FWFramework
 	
     # Check and import the macro submodule
-    import FWMacro   
+    import FWExtensionMacros
 	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 	import FWSwiftUI
 
@@ -60,7 +60,7 @@ The document is located in the docs folder, just open index.html in the browser,
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.3.1'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.3.2'
 	2. Upgrade to the new version, please pay attention to the version update log
 
 ### Swift
