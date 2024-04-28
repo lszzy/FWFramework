@@ -1,5 +1,9 @@
 import Foundation
+#if FWMacroSPM
+import FWFramework
+#endif
 
+// MARK: - FWExtensionMacros
 /// MappedValue宏，仅支持class或struct
 ///
 /// 使用方法：
@@ -16,3 +20,10 @@ public macro MappedValueMacro() = #externalMacro(module: "FWMacroMacros", type: 
 /// 2. 如果字段不包含该属性包装器且不以下划线开头或结尾，将自动添加属性包装器
 @attached(memberAttribute)
 public macro PropertyWrapperMacro(_ name: StaticString...) = #externalMacro(module: "FWMacroMacros", type: "PropertyWrapperMacro")
+
+// MARK: - Autoloader+Macros
+#if FWExtensionMacros
+@objc extension Autoloader {
+    static func loadExtension_Macros() {}
+}
+#endif

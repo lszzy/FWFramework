@@ -158,7 +158,7 @@ open class Icon: NSObject {
         var attributedString = mutableAttributedString
         if let color = self.backgroundColor {
             color.setFill()
-            context.fill([CGRect(x: 0, y: 0, width: size.width, height: size.height)])
+            context.fill(CGRect(x: 0, y: 0, width: size.width, height: size.height))
             attributedString = mutableAttributedString.mutableCopy() as! NSMutableAttributedString
             attributedString.removeAttribute(.backgroundColor, range: NSMakeRange(0, attributedString.length))
         }

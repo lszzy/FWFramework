@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.3.2] - 2024-04-29
+
+### Changed
+* 重构FWExtension子模块，兼容CocoaPods和SPM使用，需迁移FWMacro相关子模块到FWExtension
+* 集成PrivicyInfo.xcprivacy文件
+* 修复addColor混合颜色未生效问题
+
 ## [5.3.1] - 2024-04-23
 
 ### Changed

@@ -239,11 +239,9 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
 }
 
 @objc extension Autoloader {
-    
     static func loadApp_ViewPlugin() {
         if TestPluginController.viewPluginSection >= 0 {
             TestPluginController.onSettings(IndexPath(row: TestPluginController.viewPluginRow, section: TestPluginController.viewPluginSection))
         }
     }
-    
 }

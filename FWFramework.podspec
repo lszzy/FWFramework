@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.3.1'
+  s.version               = '5.3.2'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
   
   s.subspec 'FWFramework' do |ss|
     ss.source_files = 'Sources/FWFramework/**/*.swift'
+    ss.resource_bundles = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
     ss.pod_target_xcconfig = {
       'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
     }
@@ -25,48 +26,40 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/FWFramework'
   end
   
-  s.subspec 'FWMacro' do |ss|
+  s.subspec 'FWExtension' do |ss|
     ss.subspec 'Contacts' do |sss|
+      sss.source_files = 'Sources/FWExtension/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroContacts'
-      }
     end
 
     ss.subspec 'Microphone' do |sss|
+      sss.source_files = 'Sources/FWExtension/Microphone/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroMicrophone'
-      }
     end
 
     ss.subspec 'Calendar' do |sss|
+      sss.source_files = 'Sources/FWExtension/Calendar/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroCalendar'
-      }
     end
 
     ss.subspec 'Tracking' do |sss|
+      sss.source_files = 'Sources/FWExtension/Tracking/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroTracking'
-      }
     end
     
     ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Macros/FWMacro/**/*.swift'
+      sss.source_files = 'Sources/FWExtension/Macros/FWExtensionMacros/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
       sss.preserve_paths = [
-        'Macros/Package.swift',
-        'Macros/FWMacroMacros/**/*.swift'
+        'Sources/FWExtension/Macros/Package.swift',
+        'Sources/FWExtension/Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
       build_script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT/Macros\\"
+        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWExtension/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
       swift_flags = <<-FLAGS.squish
@@ -75,9 +68,9 @@ Pod::Spec.new do |s|
       FLAGS
       
       sss.script_phase = {
-        :name => 'Build FWFramework macro plugin',
+        :name => 'Build FWMacroMacros',
         :script => build_script,
-        :input_files => Dir.glob("{Macros/Package.swift, Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWExtension/Macros/Package.swift, Sources/FWExtension/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
@@ -88,28 +81,26 @@ Pod::Spec.new do |s|
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
       sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWMacroMacros',
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWExtensionMacros',
         'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
     end
-  end
-  
-  s.subspec 'FWVendor' do |ss|
+    
     ss.subspec 'SDWebImage' do |sss|
-      sss.source_files = 'Sources/FWVendor/SDWebImage/**/*.swift'
+      sss.source_files = 'Sources/FWExtension/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
       sss.dependency 'FWFramework/FWFramework'
     end
     
     ss.subspec 'Alamofire' do |sss|
-      sss.source_files = 'Sources/FWVendor/Alamofire/**/*.swift'
+      sss.source_files = 'Sources/FWExtension/Alamofire/**/*.swift'
       sss.dependency 'Alamofire'
       sss.dependency 'FWFramework/FWFramework'
     end
       
     ss.subspec 'Lottie' do |sss|
-      sss.source_files = 'Sources/FWVendor/Lottie/**/*.swift'
+      sss.source_files = 'Sources/FWExtension/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
       sss.dependency 'FWFramework/FWFramework'
     end

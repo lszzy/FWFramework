@@ -404,7 +404,6 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 }
 
 @objc extension Autoloader {
-    
     @StoredValue("routerStrictMode")
     static var routerStrictMode: Bool = false
     
@@ -412,7 +411,6 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         APP.autoload(TestRouter.self)
         Router.strictMode = Autoloader.routerStrictMode
     }
-    
 }
 
 class TestRouter: NSObject {

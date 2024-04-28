@@ -373,7 +373,6 @@ private extension SettingsController {
 }
 
 @objc extension Autoloader {
-    
     @StoredValue("alertPluginImpl")
     static var alertPluginImpl = alertPlugins[0]
     static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]
@@ -453,5 +452,4 @@ private extension SettingsController {
         PluginManager.unloadPlugin(RequestPlugin.self)
         PluginManager.registerPlugin(RequestPlugin.self, object: Autoloader.requestPluginImpl == Autoloader.requestPlugins[0] ? RequestPluginImpl.self : AlamofireImpl.self)
     }
-    
 }
