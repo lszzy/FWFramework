@@ -1500,13 +1500,13 @@ extension Wrapper where Base: UINavigationController {
     public func fw_addColor(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIColor {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
-        var pixel = Array<UInt32>(repeating: 0, count: 4)
+        var pixel = [UInt8](repeating: 0, count: 4)
         let context = CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: bitmapInfo)
         context?.setFillColor(self.cgColor)
-        context?.fill([CGRect(x: 0, y: 0, width: 1, height: 1)])
+        context?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
         context?.setBlendMode(blendMode)
         context?.setFillColor(color.cgColor)
-        context?.fill([CGRect(x: 0, y: 0, width: 1, height: 1)])
+        context?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
         return UIColor(red: CGFloat(pixel[0]) / 255.0, green: CGFloat(pixel[1]) / 255.0, blue: CGFloat(pixel[2]) / 255.0, alpha: CGFloat(pixel[3]) / 255.0)
     }
     
@@ -2155,7 +2155,7 @@ extension Wrapper where Base: UINavigationController {
             path.addClip()
             path.fill()
         } else {
-            context.fill([rect])
+            context.fill(rect)
         }
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

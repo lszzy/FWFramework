@@ -5,12 +5,8 @@ use_frameworks!
 target "FWFramework_Example" do
   project 'FWFramework', 'Staging' => :release, 'Testing' => :release
   
-  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWMacro', 'FWVendor']
+  pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWExtension']
   pod 'FWDebug', :configurations => ['Debug', 'Testing']
-  
-  target 'FWFramework_Tests' do
-    inherit! :search_paths
-  end
 end
 
 post_install do |installer|

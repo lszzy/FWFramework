@@ -324,11 +324,9 @@ open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
     
 }
 
-// MARK: - Autoloader+SDWebImageImpl
+// MARK: - Autoloader+SDWebImage
 @objc extension Autoloader {
-    
-    static func loadVendor_SDWebImage() {
+    static func loadExtension_SDWebImage() {
         PluginManager.presetPlugin(ImagePlugin.self, object: SDWebImageImpl.self)
     }
-    
 }

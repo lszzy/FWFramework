@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.2] - 2024-04-29
+
+### Changed
+* Reconstruct the FWExtension submodule to be compatible with CocoaPods and SPM. It is necessary to migrate the FWMacro related submodules to FWExtension.
+* Integrate PrivacyInfo.xcprivacy file
+* Fixed the issue that addColor mixed color does not take effect
+
 ## [5.3.1] - 2024-04-23
 
 ### Changed
