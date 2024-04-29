@@ -113,7 +113,7 @@ public class Mediator: NSObject {
         var debugCount = 0
         for (moduleId, moduleType) in sortedModules {
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleId, String.fw_safeString(moduleType)))
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleId, NSStringFromClass(moduleType)))
         }
         return String(format: "\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription)
     }
@@ -131,7 +131,7 @@ public class Mediator: NSObject {
     }
     
     private static func registerService<T>(_ type: T.Type, module: ModuleProtocol.Type, isPreset: Bool) -> Bool {
-        let moduleId = String.fw_safeString(type)
+        let moduleId = String(describing: type as AnyObject)
         if isPreset && modulePool[moduleId] != nil {
             return false
         }
@@ -142,13 +142,13 @@ public class Mediator: NSObject {
     
     /// 取消注册指定模块服务
     public static func unregisterService<T>(_ type: T.Type) {
-        let moduleId = String.fw_safeString(type)
+        let moduleId = String(describing: type as AnyObject)
         modulePool.removeValue(forKey: moduleId)
     }
     
     /// 通过服务协议获取指定模块实例
     public static func loadModule<T>(_ type: T.Type) -> T? {
-        let moduleId = String.fw_safeString(type)
+        let moduleId = String(describing: type as AnyObject)
         var moduleType = modulePool[moduleId]
         if moduleType == nil {
             guard let module = sharedLoader.load(type) else { return nil }

@@ -215,12 +215,7 @@ public class Logger: NSObject {
         // 过滤不支持的级别
         if !check(type) { return }
         
-        var plugin: LoggerPlugin
-        if let loggerPlugin = PluginManager.loadPlugin(LoggerPlugin.self) {
-            plugin = loggerPlugin
-        } else {
-            plugin = LoggerPluginImpl.shared
-        }
+        let plugin = PluginManager.loadPlugin(LoggerPlugin.self) ?? LoggerPluginImpl.shared
         plugin.log(type, group: group, message: message)
     }
     
