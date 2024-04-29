@@ -72,7 +72,7 @@ public class Router: NSObject {
     /// 路由完成回调句柄
     public typealias Completion = (Any?) -> Void
     
-    /// 默认路由参数类，可继承使用，也可完全自定义
+    /// 路由参数类，可直接使用，也可完全自定义
     open class Parameter: ObjectParameter {
         
         /// 路由信息来源Key，兼容字典传参，默认未使用
@@ -85,15 +85,33 @@ public class Router: NSObject {
         public static let routerHandlerKey = "routerHandler"
         
         /// 路由信息来源，默认未使用
-        @MappedValue open var routerSource: String?
+        open var routerSource: String?
         /// 路由信息选项，支持NavigationOptions
-        @MappedValue open var routerOptions: NavigatorOptions?
+        open var routerOptions: NavigatorOptions?
         /// 路由动画选项，仅open生效
-        @MappedValue open var routerAnimated: Bool?
+        open var routerAnimated: Bool?
         /// 路由信息句柄，仅open生效
-        @MappedValue open var routerHandler: ((Context, UIViewController) -> Void)?
+        open var routerHandler: (@convention(block) (Context, UIViewController) -> Void)?
         
         public required init() {}
+        
+        public required init(dictionaryValue: [AnyHashable : Any]) {
+            routerSource = dictionaryValue[Self.routerSourceKey].string
+            if let options = dictionaryValue[Self.routerOptionsKey] {
+                routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw_safeNumber(options).intValue)
+            }
+            routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
+            routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) (Context, UIViewController) -> Void
+        }
+        
+        public var dictionaryValue: [AnyHashable: Any] {
+            var dictionary: [AnyHashable: Any] = [:]
+            dictionary[Self.routerSourceKey] = routerSource
+            dictionary[Self.routerOptionsKey] = routerOptions
+            dictionary[Self.routerAnimatedKey] = routerAnimated
+            dictionary[Self.routerHandlerKey] = routerHandler
+            return dictionary
+        }
     }
     
     // MARK: - Accessor
