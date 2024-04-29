@@ -7,6 +7,11 @@
 
 import Foundation
 
+// MARK: - Wrapper
+extension Wrapper {
+    public var safeJSON: JSON { return JSON(base) }
+}
+
 // MARK: - JSONError
 public enum JSONError: Int, Swift.Error {
     case unsupportedType = 999
