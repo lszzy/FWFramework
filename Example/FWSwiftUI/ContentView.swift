@@ -7,7 +7,6 @@
 
 import SwiftUI
 import FWFramework
-import FWSwiftUI
 
 struct ContentView: View {
     var body: some View {
