@@ -301,10 +301,6 @@ public protocol URLParameter: AnyParameter {
     var urlValue: URL { get }
 }
 
-public protocol URLRequestParameter: AnyParameter {
-    var urlRequestValue: URLRequest { get }
-}
-
 public protocol ArrayParameter<E>: AnyParameter {
     associatedtype E
     var arrayValue: Array<E> { get }
@@ -326,12 +322,11 @@ extension Data: DataParameter, StringParameter {
     public var stringValue: String { String(data: self, encoding: .utf8) ?? .init() }
 }
 
-extension String: StringParameter, AttributedStringParameter, DataParameter, URLParameter, URLRequestParameter {
+extension String: StringParameter, AttributedStringParameter, DataParameter, URLParameter {
     public var stringValue: String { self }
     public var attributedStringValue: NSAttributedString { NSAttributedString(string: self) }
     public var dataValue: Data { data(using: .utf8) ?? .init() }
     public var urlValue: URL { URL.fw_url(string: self) ?? URL() }
-    public var urlRequestValue: URLRequest { URLRequest(url: urlValue) }
 }
 
 extension NSAttributedString: AttributedStringParameter, StringParameter {
@@ -339,16 +334,9 @@ extension NSAttributedString: AttributedStringParameter, StringParameter {
     public var stringValue: String { string }
 }
 
-extension URL: URLParameter, StringParameter, URLRequestParameter {
+extension URL: URLParameter, StringParameter {
     public var urlValue: URL { self }
     public var stringValue: String { absoluteString }
-    public var urlRequestValue: URLRequest { URLRequest(url: self) }
-}
-
-extension URLRequest: URLRequestParameter, URLParameter, StringParameter {
-    public var urlRequestValue: URLRequest { self }
-    public var urlValue: URL { url ?? URL() }
-    public var stringValue: String { url?.absoluteString ?? .init() }
 }
 
 extension Array: ArrayParameter {
