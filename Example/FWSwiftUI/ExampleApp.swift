@@ -15,7 +15,10 @@ struct ExampleApp: App {
     @Environment(\.scenePhase) var scenePhase
     
     init() {
-        print("Application is starting...")
+        Autoloader.autoload()
+        Mediator.setupAllModules()
+        
+        print("App is starting")
     }
     
     var body: some Scene {
@@ -25,8 +28,8 @@ struct ExampleApp: App {
                 print("Received URL: \(url)")
             }
         }
-        .onChange(of: scenePhase) { newScenePhase in
-            switch newScenePhase {
+        .onChange(of: scenePhase) { phase in
+            switch phase {
             case .active:
                 print("App is active")
             case .inactive:
@@ -34,10 +37,10 @@ struct ExampleApp: App {
             case .background:
                 print("App is in background")
             @unknown default:
-                print("Oh - interesting: I received an unexpected new value.")
+                print("App is \(phase)")
             }
         }
     }
 }
 
-class AppDelegate: AppResponder {}
+class AppDelegate: NSObject, UIApplicationDelegate {}

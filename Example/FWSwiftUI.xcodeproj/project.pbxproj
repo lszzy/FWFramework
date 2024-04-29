@@ -11,17 +11,7 @@
 		2F96AB0A2BDB8E4F007A0767 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB092BDB8E4F007A0767 /* ContentView.swift */; };
 		2F96AB0C2BDB8E50007A0767 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */; };
 		2F96AB0F2BDB8E50007A0767 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */; };
-		2FE6E81E2BDE279600F0CC00 /* FWFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E81D2BDE279600F0CC00 /* FWFramework */; };
-		2FE6E8202BDE279600F0CC00 /* FWSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E81F2BDE279600F0CC00 /* FWSwiftUI */; };
-		2FE6E8222BDE27AA00F0CC00 /* FWDebug in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8212BDE27AA00F0CC00 /* FWDebug */; };
-		2FE6E8242BDE27B200F0CC00 /* FWExtensionAlamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8232BDE27B200F0CC00 /* FWExtensionAlamofire */; };
-		2FE6E8262BDE27B200F0CC00 /* FWExtensionCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8252BDE27B200F0CC00 /* FWExtensionCalendar */; };
-		2FE6E8282BDE27B200F0CC00 /* FWExtensionContacts in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8272BDE27B200F0CC00 /* FWExtensionContacts */; };
-		2FE6E82A2BDE27B200F0CC00 /* FWExtensionLottie in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8292BDE27B200F0CC00 /* FWExtensionLottie */; };
-		2FE6E82C2BDE27B200F0CC00 /* FWExtensionMacros in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E82B2BDE27B200F0CC00 /* FWExtensionMacros */; };
-		2FE6E82E2BDE27B200F0CC00 /* FWExtensionMicrophone in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E82D2BDE27B200F0CC00 /* FWExtensionMicrophone */; };
-		2FE6E8302BDE27B200F0CC00 /* FWExtensionSDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E82F2BDE27B200F0CC00 /* FWExtensionSDWebImage */; };
-		2FE6E8322BDE27B200F0CC00 /* FWExtensionTracking in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8312BDE27B200F0CC00 /* FWExtensionTracking */; };
+		806A57AC62939A6072FF2B96 /* Pods_FWFramework_SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E54E42CA04EEB160B37267C /* Pods_FWFramework_SwiftUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +20,9 @@
 		2F96AB092BDB8E4F007A0767 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9E54E42CA04EEB160B37267C /* Pods_FWFramework_SwiftUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_SwiftUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA67880652C470919EFCA211 /* Pods-FWFramework_SwiftUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.release.xcconfig"; sourceTree = "<group>"; };
+		E018BC327D3316D5AB171C68 /* Pods-FWFramework_SwiftUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_SwiftUI.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,17 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FE6E8322BDE27B200F0CC00 /* FWExtensionTracking in Frameworks */,
-				2FE6E82C2BDE27B200F0CC00 /* FWExtensionMacros in Frameworks */,
-				2FE6E8222BDE27AA00F0CC00 /* FWDebug in Frameworks */,
-				2FE6E81E2BDE279600F0CC00 /* FWFramework in Frameworks */,
-				2FE6E8302BDE27B200F0CC00 /* FWExtensionSDWebImage in Frameworks */,
-				2FE6E8282BDE27B200F0CC00 /* FWExtensionContacts in Frameworks */,
-				2FE6E82A2BDE27B200F0CC00 /* FWExtensionLottie in Frameworks */,
-				2FE6E8242BDE27B200F0CC00 /* FWExtensionAlamofire in Frameworks */,
-				2FE6E8262BDE27B200F0CC00 /* FWExtensionCalendar in Frameworks */,
-				2FE6E8202BDE279600F0CC00 /* FWSwiftUI in Frameworks */,
-				2FE6E82E2BDE27B200F0CC00 /* FWExtensionMicrophone in Frameworks */,
+				806A57AC62939A6072FF2B96 /* Pods_FWFramework_SwiftUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +43,7 @@
 				2F96AB062BDB8E4F007A0767 /* Example for FWFramework */,
 				2F96AB052BDB8E4F007A0767 /* Products */,
 				2FB4776D2BDBAB8600A6C1B1 /* Frameworks */,
+				6264B03E7DFE19203A80C584 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,8 +78,18 @@
 		2FB4776D2BDBAB8600A6C1B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E54E42CA04EEB160B37267C /* Pods_FWFramework_SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6264B03E7DFE19203A80C584 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E018BC327D3316D5AB171C68 /* Pods-FWFramework_SwiftUI.debug.xcconfig */,
+				CA67880652C470919EFCA211 /* Pods-FWFramework_SwiftUI.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -105,9 +99,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2F96AB122BDB8E50007A0767 /* Build configuration list for PBXNativeTarget "FWFramework_SwiftUI" */;
 			buildPhases = (
+				3F4E6B90F403137AC700666E /* [CP] Check Pods Manifest.lock */,
 				2F96AB002BDB8E4F007A0767 /* Sources */,
 				2F96AB012BDB8E4F007A0767 /* Frameworks */,
 				2F96AB022BDB8E4F007A0767 /* Resources */,
+				B7453044D570FABB976F85A3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -115,17 +111,6 @@
 			);
 			name = FWFramework_SwiftUI;
 			packageProductDependencies = (
-				2FE6E81D2BDE279600F0CC00 /* FWFramework */,
-				2FE6E81F2BDE279600F0CC00 /* FWSwiftUI */,
-				2FE6E8212BDE27AA00F0CC00 /* FWDebug */,
-				2FE6E8232BDE27B200F0CC00 /* FWExtensionAlamofire */,
-				2FE6E8252BDE27B200F0CC00 /* FWExtensionCalendar */,
-				2FE6E8272BDE27B200F0CC00 /* FWExtensionContacts */,
-				2FE6E8292BDE27B200F0CC00 /* FWExtensionLottie */,
-				2FE6E82B2BDE27B200F0CC00 /* FWExtensionMacros */,
-				2FE6E82D2BDE27B200F0CC00 /* FWExtensionMicrophone */,
-				2FE6E82F2BDE27B200F0CC00 /* FWExtensionSDWebImage */,
-				2FE6E8312BDE27B200F0CC00 /* FWExtensionTracking */,
 			);
 			productName = FWSwiftUI;
 			productReference = 2F96AB042BDB8E4F007A0767 /* FWFramework_SwiftUI.app */;
@@ -156,8 +141,6 @@
 			);
 			mainGroup = 2F96AAFB2BDB8E4F007A0767;
 			packageReferences = (
-				2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */,
-				2FE6E81A2BDE277000F0CC00 /* XCRemoteSwiftPackageReference "FWDebug" */,
 			);
 			productRefGroup = 2F96AB052BDB8E4F007A0767 /* Products */;
 			projectDirPath = "";
@@ -179,6 +162,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3F4E6B90F403137AC700666E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FWFramework_SwiftUI-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B7453044D570FABB976F85A3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FWFramework_SwiftUI/Pods-FWFramework_SwiftUI-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2F96AB002BDB8E4F007A0767 /* Sources */ = {
@@ -314,6 +339,7 @@
 		};
 		2F96AB132BDB8E50007A0767 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E018BC327D3316D5AB171C68 /* Pods-FWFramework_SwiftUI.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -344,6 +370,7 @@
 		};
 		2F96AB142BDB8E50007A0767 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA67880652C470919EFCA211 /* Pods-FWFramework_SwiftUI.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -394,83 +421,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lszzy/FWFramework.git";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-		2FE6E81A2BDE277000F0CC00 /* XCRemoteSwiftPackageReference "FWDebug" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lszzy/FWDebug.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.3.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2FE6E81D2BDE279600F0CC00 /* FWFramework */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWFramework;
-		};
-		2FE6E81F2BDE279600F0CC00 /* FWSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWSwiftUI;
-		};
-		2FE6E8212BDE27AA00F0CC00 /* FWDebug */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E81A2BDE277000F0CC00 /* XCRemoteSwiftPackageReference "FWDebug" */;
-			productName = FWDebug;
-		};
-		2FE6E8232BDE27B200F0CC00 /* FWExtensionAlamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionAlamofire;
-		};
-		2FE6E8252BDE27B200F0CC00 /* FWExtensionCalendar */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionCalendar;
-		};
-		2FE6E8272BDE27B200F0CC00 /* FWExtensionContacts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionContacts;
-		};
-		2FE6E8292BDE27B200F0CC00 /* FWExtensionLottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionLottie;
-		};
-		2FE6E82B2BDE27B200F0CC00 /* FWExtensionMacros */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionMacros;
-		};
-		2FE6E82D2BDE27B200F0CC00 /* FWExtensionMicrophone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionMicrophone;
-		};
-		2FE6E82F2BDE27B200F0CC00 /* FWExtensionSDWebImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionSDWebImage;
-		};
-		2FE6E8312BDE27B200F0CC00 /* FWExtensionTracking */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E8192BDE275D00F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionTracking;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2F96AAFC2BDB8E4F007A0767 /* Project object */;
 }
