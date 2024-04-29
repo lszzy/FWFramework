@@ -2578,9 +2578,6 @@ extension ValidatedValue: JSONMappedValue {
     }
 }
 
-// MARK: - NavigatorOptions
-extension NavigatorOptions: JSONModelEnum {}
-
 // MARK: - ObjectParameter
 extension ObjectParameter where Self: JSONModel {
     public init(dictionaryValue: [AnyHashable: Any]) {
@@ -2601,6 +2598,3 @@ extension ObjectParameter where Self: JSONModel {
         return result
     }
 }
-
-// MARK: - Router.Parameter
-extension Router.Parameter: JSONModel, KeyMappable {}

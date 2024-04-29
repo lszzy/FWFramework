@@ -18,6 +18,26 @@ extension WrapperGlobal {
     public static func safeNumber(_ value: Any?) -> NSNumber {
         return NSNumber.fw_safeNumber(value)
     }
+    
+    /// 安全Int，不为nil
+    public static func safeInt(_ value: Any?) -> Int {
+        return NSNumber.fw_safeNumber(value).intValue
+    }
+    
+    /// 安全Bool，不为nil
+    public static func safeBool(_ value: Any?) -> Bool {
+        return NSNumber.fw_safeNumber(value).boolValue
+    }
+    
+    /// 安全Float，不为nil
+    public static func safeFloat(_ value: Any?) -> Float {
+        return NSNumber.fw_safeNumber(value).floatValue
+    }
+    
+    /// 安全Double，不为nil
+    public static func safeDouble(_ value: Any?) -> Double {
+        return NSNumber.fw_safeNumber(value).doubleValue
+    }
 
     /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func safeURL(_ value: Any?) -> URL {
@@ -94,6 +114,26 @@ extension Wrapper where Base: NSNumber {
     /// 安全数字，不为nil
     public static func safeNumber(_ value: Any?) -> NSNumber {
         return Base.fw_safeNumber(value)
+    }
+    
+    /// 安全Int，不为nil
+    public static func safeInt(_ value: Any?) -> Int {
+        return Base.fw_safeNumber(value).intValue
+    }
+    
+    /// 安全Bool，不为nil
+    public static func safeBool(_ value: Any?) -> Bool {
+        return Base.fw_safeNumber(value).boolValue
+    }
+    
+    /// 安全Float，不为nil
+    public static func safeFloat(_ value: Any?) -> Float {
+        return Base.fw_safeNumber(value).floatValue
+    }
+    
+    /// 安全Double，不为nil
+    public static func safeDouble(_ value: Any?) -> Double {
+        return Base.fw_safeNumber(value).doubleValue
     }
 }
 
@@ -218,6 +258,21 @@ extension Optional {
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
     
+    public var int: Int? { return number?.intValue }
+    public var bool: Bool? { return number?.boolValue }
+    public var float: Float? { return number?.floatValue }
+    public var double: Double? { return number?.doubleValue }
+    public var string: String? {
+        guard let value = self else { return nil }
+        return String.fw_safeString(value)
+    }
+    public var number: NSNumber? {
+        guard let value = self else { return nil }
+        return NSNumber.fw_safeNumber(value)
+    }
+    public var array: [Any]? { return self as? [Any] }
+    public var dictionary: [AnyHashable: Any]? { return self as? [AnyHashable: Any] }
+    
     public var isNil: Bool { return self == nil }
     public static func isNil(_ value: Wrapped?) -> Bool {
         if let value = value { return deepUnwrap(value) == nil }
@@ -231,8 +286,8 @@ extension Optional {
         return value
     }
     public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
-        guard let this = self else { return nil }
-        return try block(this)
+        guard let value = self else { return nil }
+        return try block(value)
     }
     public func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
         guard let value = self, predicate(value) else { return nil }
