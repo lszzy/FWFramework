@@ -1,0 +1,365 @@
+//
+//  Stdlib.swift
+//  FWFramework
+//
+//  Created by wuyong on 2024/4/15.
+//
+
+import Foundation
+
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 安全字符串，不为nil
+    public static func safeString(_ value: Any?) -> String {
+        return String.fw_safeString(value)
+    }
+
+    /// 安全数字，不为nil
+    public static func safeNumber(_ value: Any?) -> NSNumber {
+        return NSNumber.fw_safeNumber(value)
+    }
+
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
+    public static func safeURL(_ value: Any?) -> URL {
+        return URL.fw_safeURL(value)
+    }
+    
+    /// 获取安全值
+    public static func safeValue<T: BasicType>(_ value: T?) -> T {
+        return value.safeValue
+    }
+
+    /// 判断是否不为空
+    public static func isNotEmpty<T: BasicType>(_ value: T?) -> Bool {
+        return value.isNotEmpty
+    }
+    
+    /// 判断是否为nil，兼容嵌套Optional
+    public static func isNil(_ value: Any?) -> Bool {
+        return Optional<Any>.isNil(value)
+    }
+}
+
+// MARK: - Wrapper
+/// 包装器安全转换，不为nil
+extension Wrapper {
+    public var safeInt: Int { return safeNumber.intValue }
+    public var safeBool: Bool { return safeNumber.boolValue }
+    public var safeFloat: Float { return safeNumber.floatValue }
+    public var safeDouble: Double { return safeNumber.doubleValue }
+    public var safeString: String { return String.fw_safeString(base) }
+    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(base) }
+    public var safeArray: [Any] { return (base as? [Any]) ?? [] }
+    public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
+}
+
+// MARK: - Wrapper+Data
+extension Wrapper where Base == Data {
+    /// 转换为UTF8字符串
+    public var utf8String: String? {
+        return base.fw_utf8String
+    }
+}
+
+// MARK: - Wrapper+String
+extension Wrapper where Base == String {
+    /// 安全字符串，不为nil
+    public static func safeString(_ value: Any?) -> String {
+        return Base.fw_safeString(value)
+    }
+    
+    /// 转换为UTF8数据
+    public var utf8Data: Data? {
+        return base.fw_utf8Data
+    }
+    
+    /// 转换为URL
+    public var url: URL? {
+        return base.fw_url
+    }
+    
+    /// 转换为文件URL
+    public var fileURL: URL {
+        return base.fw_fileURL
+    }
+    
+    /// 转换为NSNumber
+    public var number: NSNumber? {
+        return base.fw_number
+    }
+}
+
+// MARK: - Wrapper+NSNumber
+extension Wrapper where Base: NSNumber {
+    /// 安全数字，不为nil
+    public static func safeNumber(_ value: Any?) -> NSNumber {
+        return Base.fw_safeNumber(value)
+    }
+}
+
+// MARK: - Wrapper+URL
+extension Wrapper where Base == URL {
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
+    public static func safeURL(_ value: Any?) -> URL {
+        return Base.fw_safeURL(value)
+    }
+    
+    /// 生成URL，中文自动URL编码
+    public static func url(string: String?) -> URL? {
+        return Base.fw_url(string: string)
+    }
+    
+    /// 生成URL，中文自动URL编码，支持基准URL
+    public static func url(string: String?, relativeTo baseURL: URL?) -> URL? {
+        return Base.fw_url(string: string, relativeTo: baseURL)
+    }
+}
+
+// MARK: - Stdlib+Extension
+@_spi(FW) extension Data {
+    /// 转换为UTF8字符串
+    public var fw_utf8String: String? {
+        return String(data: self, encoding: .utf8)
+    }
+}
+
+@_spi(FW) extension String {
+    /// 安全字符串，不为nil
+    public static func fw_safeString(_ value: Any?) -> String {
+        guard let value = value, !(value is NSNull) else { return "" }
+        if let string = value as? String { return string }
+        if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
+        if let url = value as? URL { return url.absoluteString }
+        if let object = value as? NSObject { return object.description }
+        if let clazz = value as? AnyClass { return NSStringFromClass(clazz) }
+        if let proto = value as? Protocol { return NSStringFromProtocol(proto) }
+        return String(describing: value)
+    }
+    
+    /// 转换为UTF8数据
+    public var fw_utf8Data: Data? {
+        return self.data(using: .utf8)
+    }
+    
+    /// 转换为URL
+    public var fw_url: URL? {
+        return URL.fw_url(string: self)
+    }
+    
+    /// 转换为文件URL
+    public var fw_fileURL: URL {
+        return URL(fileURLWithPath: self)
+    }
+    
+    /// 转换为NSNumber
+    public var fw_number: NSNumber? {
+        let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]
+        let nilNumbers = ["nil", "null", "(null)", "<null>"]
+        let lowerStr = self.lowercased()
+        if let value = boolNumbers[lowerStr] { return NSNumber(value: value) }
+        if nilNumbers.contains(lowerStr) { return nil }
+        
+        guard let cstring = self.cString(using: .utf8) else { return nil }
+        if self.rangeOfCharacter(from: CharacterSet(charactersIn: ".")) != nil {
+            let cnumber = atof(cstring)
+            if cnumber.isNaN || cnumber.isInfinite { return nil }
+            return NSNumber(value: cnumber)
+        } else {
+            return NSNumber(value: atoll(cstring))
+        }
+    }
+}
+
+@_spi(FW) extension NSNumber {
+    /// 安全数字，不为nil
+    public static func fw_safeNumber(_ value: Any?) -> NSNumber {
+        guard let value = value else { return NSNumber(value: 0) }
+        if let number = value as? NSNumber { return number }
+        return String.fw_safeString(value).fw_number ?? NSNumber(value: 0)
+    }
+}
+
+@_spi(FW) extension URL {
+    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
+    public static func fw_safeURL(_ value: Any?) -> URL {
+        guard let value = value else { return URL() }
+        if let url = value as? URL { return url }
+        if let url = URL.fw_url(string: String.fw_safeString(value)) { return url }
+        return URL()
+    }
+    
+    /// 生成URL，中文自动URL编码
+    public static func fw_url(string: String?) -> URL? {
+        guard let string = string else { return nil }
+        if let url = URL(string: string) { return url }
+        // 如果生成失败，自动URL编码再试
+        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: encodeString)
+    }
+    
+    /// 生成URL，中文自动URL编码，支持基准URL
+    public static func fw_url(string: String?, relativeTo baseURL: URL?) -> URL? {
+        guard let string = string else { return nil }
+        if let url = URL(string: string, relativeTo: baseURL) { return url }
+        // 如果生成失败，自动URL编码再试
+        guard let encodeString = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: encodeString, relativeTo: baseURL)
+    }
+}
+
+/// 可选类安全转换，不为nil
+extension Optional {
+    public var safeInt: Int { return safeNumber.intValue }
+    public var safeBool: Bool { return safeNumber.boolValue }
+    public var safeFloat: Float { return safeNumber.floatValue }
+    public var safeDouble: Double { return safeNumber.doubleValue }
+    public var safeString: String { return String.fw_safeString(self) }
+    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
+    public var safeArray: [Any] { return (self as? [Any]) ?? [] }
+    public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
+    
+    public var isNil: Bool { return self == nil }
+    public static func isNil(_ value: Wrapped?) -> Bool {
+        if let value = value { return deepUnwrap(value) == nil }
+        return true
+    }
+    public static func isOptional(_ value: Any) -> Bool {
+        return value is _OptionalProtocol
+    }
+    public static func deepUnwrap(_ value: Any) -> Any? {
+        if let value = value as? _OptionalProtocol { return value.deepWrapped }
+        return value
+    }
+    public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
+        guard let this = self else { return nil }
+        return try block(this)
+    }
+    public func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
+        guard let value = self, predicate(value) else { return nil }
+        return value
+    }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: ((Wrapped) -> Wrapped)? = nil) -> Wrapped {
+        switch self {
+        case .some(let value):
+            if let block = block {
+                return block(value)
+            } else {
+                return value
+            }
+        case .none:
+            return defaultValue()
+        }
+    }
+    
+}
+
+private protocol _OptionalProtocol {
+    var deepWrapped: Any? { get }
+}
+
+extension Optional: _OptionalProtocol {
+    var deepWrapped: Any? {
+        guard case let .some(wrapped) = self else { return nil }
+        guard let wrapped = wrapped as? _OptionalProtocol else { return wrapped }
+        return wrapped.deepWrapped
+    }
+}
+
+// MARK: - ObjectType
+public protocol ObjectType {
+    init()
+}
+
+public protocol BasicType: ObjectType {
+    var isNotEmpty: Bool { get }
+}
+
+extension BasicType where Self: Equatable {
+    public var isNotEmpty: Bool { return self != .init() }
+}
+
+extension Optional where Wrapped: ObjectType {
+    public var safeValue: Wrapped { if let value = self { return value } else { return .init() } }
+}
+extension Optional where Wrapped: BasicType {
+    public var isNotEmpty: Bool { if let value = self { return value.isNotEmpty } else { return false } }
+}
+
+// MARK: - ObjectType+Extension
+extension Int: BasicType {}
+extension Int8: BasicType {}
+extension Int16: BasicType {}
+extension Int32: BasicType {}
+extension Int64: BasicType {}
+extension UInt: BasicType {}
+extension UInt8: BasicType {}
+extension UInt16: BasicType {}
+extension UInt32: BasicType {}
+extension UInt64: BasicType {}
+extension Bool: BasicType {}
+extension Float: BasicType {
+    public var isValid: Bool { return !isNaN && !isInfinite }
+}
+extension Double: BasicType {
+    public var isValid: Bool { return !isNaN && !isInfinite }
+}
+extension URL: BasicType {
+    public init() { self = (NSURL(string: "") ?? NSURL()) as URL }
+}
+extension Data: BasicType {}
+extension Date: BasicType {}
+extension String: BasicType {}
+extension Array: BasicType {
+    public var isNotEmpty: Bool { return !isEmpty }
+    public func safeElement(_ index: Int) -> Element? {
+        return index >= 0 && index < endIndex ? self[index] : nil
+    }
+    public subscript(safe index: Int) -> Element? {
+        return safeElement(index)
+    }
+    public mutating func safeSwap(from index: Index, to otherIndex: Index) {
+        guard index != otherIndex else { return }
+        guard startIndex..<endIndex ~= index else { return }
+        guard startIndex..<endIndex ~= otherIndex else { return }
+        swapAt(index, otherIndex)
+    }
+}
+extension Array where Element: Equatable {
+    @discardableResult
+    public mutating func removeAll(_ item: Element) -> [Element] {
+        removeAll(where: { $0 == item })
+        return self
+    }
+    @discardableResult
+    public mutating func removeAll(_ items: [Element]) -> [Element] {
+        guard !items.isEmpty else { return self }
+        removeAll(where: { items.contains($0) })
+        return self
+    }
+}
+extension Set: BasicType {}
+extension Dictionary: BasicType {
+    public var isNotEmpty: Bool { return !isEmpty }
+    public func has(key: Key) -> Bool {
+        return index(forKey: key) != nil
+    }
+    public mutating func removeAll<S: Sequence>(keys: S) where S.Element == Key {
+        keys.forEach { removeValue(forKey: $0) }
+    }
+}
+extension CGFloat {
+    public var isValid: Bool { return !isNaN && !isInfinite }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGPoint {
+    public var isValid: Bool { return x.isValid && y.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGSize {
+    public var isValid: Bool { return width.isValid && height.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
+extension CGRect {
+    public var isValid: Bool { return !isNull && !isInfinite && origin.isValid && size.isValid }
+    public var isNotEmpty: Bool { return self != .zero }
+}
