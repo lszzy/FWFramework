@@ -73,7 +73,7 @@ public class Router: NSObject {
     public typealias Completion = (Any?) -> Void
     
     /// 默认路由参数类，可继承使用，也可完全自定义
-    open class Parameter: ObjectParameter, JSONModel, KeyMappable {
+    open class Parameter: ObjectParameter {
         
         /// 路由信息来源Key，兼容字典传参，默认未使用
         public static let routerSourceKey = "routerSource"

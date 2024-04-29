@@ -82,23 +82,3 @@ extension ObjectParameter {
         NSObject.fw_mirrorDictionary(self)
     }
 }
-
-extension ObjectParameter where Self: JSONModel {
-    public init(dictionaryValue: [AnyHashable: Any]) {
-        self.init()
-        merge(from: dictionaryValue)
-    }
-    
-    public var dictionaryValue: [AnyHashable: Any] {
-        let mirror = NSObject.fw_mirrorDictionary(self)
-        var result: [AnyHashable: Any] = [:]
-        for (key, value) in mirror {
-            if let wrapper = value as? JSONMappedValue {
-                result[String(key.dropFirst())] = wrapper.mappingValue()
-            } else {
-                result[key] = value
-            }
-        }
-        return result
-    }
-}

@@ -189,7 +189,7 @@ extension Wrapper where Base: UINavigationController {
 
 // MARK: - NavigatorOptions
 /// 控制器导航选项定义
-public struct NavigatorOptions: OptionSet, JSONModelEnum {
+public struct NavigatorOptions: OptionSet {
     
     public let rawValue: Int
     
