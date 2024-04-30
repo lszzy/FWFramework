@@ -200,9 +200,9 @@ open class PullRefreshView: UIView {
     }()
     
     private var titles: [String] = [
-        AppBundle.localizedString("fw.refreshIdle"),
-        AppBundle.localizedString("fw.refreshTriggered"),
-        AppBundle.localizedString("fw.refreshLoading"),
+        FrameworkBundle.localizedString("fw.refreshIdle"),
+        FrameworkBundle.localizedString("fw.refreshTriggered"),
+        FrameworkBundle.localizedString("fw.refreshLoading"),
     ]
     private var subtitles: [String] = ["", "", ""]
     private var viewForState: [Any] = ["", "", ""]
@@ -776,7 +776,7 @@ open class InfiniteScrollView: UIView {
         result.font = UIFont.systemFont(ofSize: 14)
         result.textAlignment = .center
         result.textColor = .gray
-        result.text = AppBundle.localizedString("fw.refreshFinished")
+        result.text = FrameworkBundle.localizedString("fw.refreshFinished")
         result.sizeToFit()
         return result
     }()

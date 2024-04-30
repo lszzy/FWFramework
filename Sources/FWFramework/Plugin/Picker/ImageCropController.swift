@@ -627,8 +627,8 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         }
         
         let verticalCropBox = cropView.cropBoxAspectRatioIsPortrait
-        let cancelButtonTitle = self.cancelButtonTitle ?? AppBundle.cancelButton
-        let originalButtonTitle = self.originalAspectRatioName ?? AppBundle.originalButton
+        let cancelButtonTitle = self.cancelButtonTitle ?? FrameworkBundle.cancelButton
+        let originalButtonTitle = self.originalAspectRatioName ?? FrameworkBundle.originalButton
         
         let portraitRatioTitles = [originalButtonTitle, "1:1", "2:3", "3:5", "3:4", "4:5", "5:7", "9:16"]
         let landscapeRatioTitles = [originalButtonTitle, "1:1", "3:2", "5:3", "4:3", "5:4", "7:5", "16:9"]
@@ -1010,7 +1010,7 @@ open class ImageCropToolbar: UIView {
     
     open lazy var doneTextButton: UIButton = {
         let result = UIButton(type: .system)
-        result.setTitle(doneTextButtonTitle ?? AppBundle.doneButton, for: .normal)
+        result.setTitle(doneTextButtonTitle ?? FrameworkBundle.doneButton, for: .normal)
         result.setTitleColor(.white, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -1028,7 +1028,7 @@ open class ImageCropToolbar: UIView {
     
     open lazy var cancelTextButton: UIButton = {
         let result = UIButton(type: .system)
-        result.setTitle(cancelTextButtonTitle ?? AppBundle.cancelButton, for: .normal)
+        result.setTitle(cancelTextButtonTitle ?? FrameworkBundle.cancelButton, for: .normal)
         result.setTitleColor(.white, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)

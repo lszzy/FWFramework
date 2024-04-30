@@ -152,15 +152,15 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     
     private func didInitialize() {
         extendedLayoutIncludesOpaqueBars = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: AppBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: FrameworkBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
     }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.fw_backImage = AppBundle.navBackImage
-        if title == nil { title = AppBundle.pickerAlbumTitle }
+        navigationController?.navigationBar.fw_backImage = FrameworkBundle.navBackImage
+        if title == nil { title = FrameworkBundle.pickerAlbumTitle }
         
         view.addSubview(backgroundView)
         view.addSubview(tableView)
@@ -308,7 +308,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         } else {
             if albumControllerDelegate?.albumControllerWillShowEmpty?(self) != nil {
             } else {
-                fw_showEmptyView(text: AppBundle.pickerEmptyTitle)
+                fw_showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
             }
         }
         
@@ -325,7 +325,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         if albumControllerDelegate?.albumControllerWillShowDenied?(self) != nil {
         } else {
             let appName = UIApplication.fw_appDisplayName
-            let tipText = String(format: AppBundle.pickerDeniedTitle, appName)
+            let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
             fw_showEmptyView(text: tipText)
         }
         
@@ -360,7 +360,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
             // 清空imagePickerController导航栏左侧按钮并添加默认按钮
             if pickerController.navigationItem.leftBarButtonItem != nil {
                 pickerController.navigationItem.leftBarButtonItem = nil
-                pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: AppBundle.cancelButton, style: .plain, target: pickerController, action: #selector(ImagePickerController.handleCancelButtonClick(_:)))
+                pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: FrameworkBundle.cancelButton, style: .plain, target: pickerController, action: #selector(ImagePickerController.handleCancelButtonClick(_:)))
             }
             // 此处需要强引用imagePickerController，防止weak属性释放imagePickerController
             fw_setProperty(pickerController, forName: "imagePickerController")
@@ -555,14 +555,14 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     }
     private var _bottomToolbarHeight: CGFloat = 0
     
-    open var checkboxImage: UIImage? = AppBundle.pickerCheckImage
-    open var checkboxCheckedImage: UIImage? = AppBundle.pickerCheckedImage
+    open var checkboxImage: UIImage? = FrameworkBundle.pickerCheckImage
+    open var checkboxCheckedImage: UIImage? = FrameworkBundle.pickerCheckedImage
     
     open var originImageCheckboxImage: UIImage? = {
-        return AppBundle.pickerCheckImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+        return FrameworkBundle.pickerCheckImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
     }()
     open var originImageCheckboxCheckedImage: UIImage? = {
-        return AppBundle.pickerCheckedImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+        return FrameworkBundle.pickerCheckedImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
     }()
     /// 是否使用原图，默认NO
     open var shouldUseOriginImage: Bool = false
@@ -617,7 +617,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     
     open lazy var backButton: UIButton = {
         let result = UIButton()
-        result.setImage(AppBundle.navBackImage, for: .normal)
+        result.setImage(FrameworkBundle.navBackImage, for: .normal)
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleCancelButtonClick(_:)), for: .touchUpInside)
         result.fw_touchInsets = UIEdgeInsets(top: 30, left: 20, bottom: 50, right: 80)
@@ -652,7 +652,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open lazy var sendButton: UIButton = {
         let result = UIButton()
         result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        result.setTitle(AppBundle.doneButton, for: .normal)
+        result.setTitle(FrameworkBundle.doneButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
@@ -665,7 +665,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         let result = UIButton()
         result.isHidden = !showsEditButton
         result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        result.setTitle(AppBundle.editButton, for: .normal)
+        result.setTitle(FrameworkBundle.editButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
@@ -681,7 +681,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.setImage(originImageCheckboxImage, for: .normal)
         result.setImage(originImageCheckboxCheckedImage, for: .selected)
         result.setImage(originImageCheckboxCheckedImage, for: .highlighted)
-        result.setTitle(AppBundle.originalButton, for: .normal)
+        result.setTitle(FrameworkBundle.originalButton, for: .normal)
         result.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 5)
         result.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         result.sizeToFit()
@@ -1097,7 +1097,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             if selectedImageAssetArray.count >= maximumSelectImageCount {
                 if delegate?.imagePickerPreviewControllerWillShowExceed?(self) != nil {
                 } else {
-                    fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+                    fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
                 }
                 return
             }
@@ -1206,7 +1206,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     @objc private func handleOriginImageCheckboxButtonClick(_ button: UIButton) {
         if button.isSelected {
             button.isSelected = false
-            button.setTitle(AppBundle.originalButton, for: .normal)
+            button.setTitle(FrameworkBundle.originalButton, for: .normal)
             button.sizeToFit()
             bottomToolbarView.setNeedsLayout()
         } else {
@@ -1274,10 +1274,10 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             let selectedCount = selectedImageAssetArray.count
             if selectedCount > 0 {
                 sendButton.isEnabled = selectedCount >= minimumSelectImageCount
-                sendButton.setTitle("\(AppBundle.doneButton)(\(selectedCount))", for: .normal)
+                sendButton.setTitle("\(FrameworkBundle.doneButton)(\(selectedCount))", for: .normal)
             } else {
                 sendButton.isEnabled = minimumSelectImageCount <= 1
-                sendButton.setTitle(AppBundle.doneButton, for: .normal)
+                sendButton.setTitle(FrameworkBundle.doneButton, for: .normal)
             }
             delegate?.imagePickerPreviewController?(self, willChangeCheckedCount: selectedCount)
             updateSendButtonLayout()
@@ -1752,7 +1752,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.contentHorizontalAlignment = .right
         result.setTitleColor(toolbarTintColor, for: .normal)
-        result.setTitle(AppBundle.doneButton, for: .normal)
+        result.setTitle(FrameworkBundle.doneButton, for: .normal)
         result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
@@ -1766,7 +1766,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.isEnabled = false
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.setTitleColor(toolbarTintColor, for: .normal)
-        result.setTitle(AppBundle.previewButton, for: .normal)
+        result.setTitle(FrameworkBundle.previewButton, for: .normal)
         result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
@@ -1797,7 +1797,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     private func didInitialize() {
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.titleView = titleView
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: AppBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: FrameworkBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
     }
     
     open override func viewDidLoad() {
@@ -2048,7 +2048,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         if !selectedImageAssetArray.contains(imageAsset) && selectedImageAssetArray.count >= maximumSelectImageCount {
             if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
             } else {
-                fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+                fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
             }
             return
         }
@@ -2102,13 +2102,13 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowDenied?(self) != nil {
                 } else {
                     let appName = UIApplication.fw_appDisplayName
-                    let tipText = String(format: AppBundle.pickerDeniedTitle, appName)
+                    let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
                     fw_showEmptyView(text: tipText)
                 }
             } else {
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowEmpty?(self) != nil {
                 } else {
-                    fw_showEmptyView(text: AppBundle.pickerEmptyTitle)
+                    fw_showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
                 }
             }
         }
@@ -2302,11 +2302,11 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if selectedCount > 0 {
                 previewButton.isEnabled = selectedCount >= minimumSelectImageCount
                 sendButton.isEnabled = selectedCount >= minimumSelectImageCount
-                sendButton.setTitle("\(AppBundle.doneButton)(\(selectedCount))", for: .normal)
+                sendButton.setTitle("\(FrameworkBundle.doneButton)(\(selectedCount))", for: .normal)
             } else {
                 previewButton.isEnabled = false
                 sendButton.isEnabled = false
-                sendButton.setTitle(AppBundle.doneButton, for: .normal)
+                sendButton.setTitle(FrameworkBundle.doneButton, for: .normal)
             }
             imagePickerControllerDelegate?.imagePickerController?(self, willChangeCheckedCount: selectedCount)
             updateSendButtonLayout()
@@ -2401,7 +2401,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if selectedImageAssetArray.count >= maximumSelectImageCount {
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
                 } else {
-                    fw_showAlert(title: nil, message: String(format: AppBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: AppBundle.closeButton)
+                    fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
                 }
                 return
             }
@@ -2447,7 +2447,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
 open class ImagePickerCollectionCell: UICollectionViewCell {
     
     /// checkbox 未被选中时显示的图片
-    open var checkboxImage: UIImage? = AppBundle.pickerCheckImage {
+    open var checkboxImage: UIImage? = FrameworkBundle.pickerCheckImage {
         didSet {
             checkboxButton.setImage(checkboxImage, for: .normal)
             checkboxButton.sizeToFit()
@@ -2456,7 +2456,7 @@ open class ImagePickerCollectionCell: UICollectionViewCell {
     }
     
     /// checkbox 被选中时显示的图片
-    open var checkboxCheckedImage: UIImage? = AppBundle.pickerCheckedImage {
+    open var checkboxCheckedImage: UIImage? = FrameworkBundle.pickerCheckedImage {
         didSet {
             checkboxButton.setImage(checkboxCheckedImage, for: .selected)
             checkboxButton.setImage(checkboxCheckedImage, for: .highlighted)

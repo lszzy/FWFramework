@@ -458,8 +458,8 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func didInitialize() {
-        videoPlayButtonImage = AppBundle.videoPlayImage
-        videoCloseButtonImage = AppBundle.navCloseImage
+        videoPlayButtonImage = FrameworkBundle.videoPlayImage
+        videoCloseButtonImage = FrameworkBundle.navCloseImage
         fw_hidesImageIndicator = true
         
         addSubview(scrollView)
@@ -1093,8 +1093,8 @@ open class ZoomImageVideoToolbar: UIView {
     }
     
     private func didInitialize() {
-        playButtonImage = AppBundle.videoStartImage
-        pauseButtonImage = AppBundle.videoPauseImage
+        playButtonImage = FrameworkBundle.videoStartImage
+        pauseButtonImage = FrameworkBundle.videoPauseImage
         
         addSubview(playButton)
         addSubview(pauseButton)

@@ -170,7 +170,6 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var shouldCacheResponseData = false
     
     private static var imageLock = NSLock()
-    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
     
     public override init() {
         super.init()
@@ -196,8 +195,8 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         
         var image: UIImage?
         imageLock.lock()
-        if imageDecodeBlock != nil {
-            image = imageDecodeBlock?(data, scale, options)
+        if FrameworkBundle.imageDecodeBlock != nil {
+            image = FrameworkBundle.imageDecodeBlock?(data, scale, options)
         } else {
             image = UIImage(data: data)
             if image?.images == nil, let cgImage = image?.cgImage {
