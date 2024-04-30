@@ -4,15 +4,15 @@ import PackageDescription
 import CompilerPluginSupport
 
 let package = Package(
-    name: "FWComponentMacros",
+    name: "FWPluginMacros",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v13),
     ],
     products: [
         .library(
-            name: "FWComponentMacros",
-            targets: ["FWComponentMacros"]
+            name: "FWPluginMacros",
+            targets: ["FWPluginMacros"]
         ),
     ],
     dependencies: [
@@ -28,9 +28,9 @@ let package = Package(
             path: "FWMacroMacros"
         ),
         .target(
-            name: "FWComponentMacros",
+            name: "FWPluginMacros",
             dependencies: ["FWMacroMacros"],
-            path: "FWComponentMacros"
+            path: "FWPluginMacros"
         ),
     ]
 )

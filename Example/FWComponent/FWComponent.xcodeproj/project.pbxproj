@@ -13,12 +13,12 @@
 		2FE6E8772BE0B37300F0CC00 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2FE6E8762BE0B37300F0CC00 /* Base */; };
 		2FE6E8792BE0B37400F0CC00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FE6E8782BE0B37400F0CC00 /* Assets.xcassets */; };
 		2FE6E87C2BE0B37400F0CC00 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2FE6E87B2BE0B37400F0CC00 /* Base */; };
-		395EAE993097C8D38CF20AC5 /* Pods_FWFramework_Component.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E852AB4969E8D68DB80D873 /* Pods_FWFramework_Component.framework */; };
+		320BAC868CA285380601CF65 /* Pods_FWFramework_Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C46677D5B4782A9604BF6A45 /* Pods_FWFramework_Plugin.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1E852AB4969E8D68DB80D873 /* Pods_FWFramework_Component.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_Component.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2FE6E86C2BE0B37300F0CC00 /* FWFramework_Component.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_Component.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		11B1F3542319B17DBA4DC0F9 /* Pods-FWFramework_Plugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Plugin.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_Plugin/Pods-FWFramework_Plugin.debug.xcconfig"; sourceTree = "<group>"; };
+		2FE6E86C2BE0B37300F0CC00 /* FWFramework_Plugin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_Plugin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FE6E86F2BE0B37300F0CC00 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2FE6E8712BE0B37300F0CC00 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2FE6E8732BE0B37300F0CC00 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -34,7 +34,9 @@
 		2FE6E88D2BE0BB7000F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../../CHANGELOG_CN.md; sourceTree = "<group>"; };
 		2FE6E88E2BE0BB9700F0CC00 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../../Package.swift; sourceTree = "<group>"; };
 		6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Component.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component.release.xcconfig"; sourceTree = "<group>"; };
+		9209E8474A0B67D351986B05 /* Pods-FWFramework_Plugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Plugin.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Plugin/Pods-FWFramework_Plugin.release.xcconfig"; sourceTree = "<group>"; };
 		C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Component.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component.debug.xcconfig"; sourceTree = "<group>"; };
+		C46677D5B4782A9604BF6A45 /* Pods_FWFramework_Plugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_Plugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				395EAE993097C8D38CF20AC5 /* Pods_FWFramework_Component.framework in Frameworks */,
+				320BAC868CA285380601CF65 /* Pods_FWFramework_Plugin.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +65,7 @@
 		2FE6E86D2BE0B37300F0CC00 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2FE6E86C2BE0B37300F0CC00 /* FWFramework_Component.app */,
+				2FE6E86C2BE0B37300F0CC00 /* FWFramework_Plugin.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,7 +102,7 @@
 		6BF3F749E381B1C0111C4A99 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1E852AB4969E8D68DB80D873 /* Pods_FWFramework_Component.framework */,
+				C46677D5B4782A9604BF6A45 /* Pods_FWFramework_Plugin.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,6 +112,8 @@
 			children = (
 				C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */,
 				6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */,
+				11B1F3542319B17DBA4DC0F9 /* Pods-FWFramework_Plugin.debug.xcconfig */,
+				9209E8474A0B67D351986B05 /* Pods-FWFramework_Plugin.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -117,9 +121,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2FE6E86B2BE0B37300F0CC00 /* FWFramework_Component */ = {
+		2FE6E86B2BE0B37300F0CC00 /* FWFramework_Plugin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2FE6E8802BE0B37400F0CC00 /* Build configuration list for PBXNativeTarget "FWFramework_Component" */;
+			buildConfigurationList = 2FE6E8802BE0B37400F0CC00 /* Build configuration list for PBXNativeTarget "FWFramework_Plugin" */;
 			buildPhases = (
 				77D5639BB6281F7E73F95845 /* [CP] Check Pods Manifest.lock */,
 				2FE6E8682BE0B37300F0CC00 /* Sources */,
@@ -131,9 +135,9 @@
 			);
 			dependencies = (
 			);
-			name = FWFramework_Component;
+			name = FWFramework_Plugin;
 			productName = FWComponent;
-			productReference = 2FE6E86C2BE0B37300F0CC00 /* FWFramework_Component.app */;
+			productReference = 2FE6E86C2BE0B37300F0CC00 /* FWFramework_Plugin.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -164,7 +168,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2FE6E86B2BE0B37300F0CC00 /* FWFramework_Component */,
+				2FE6E86B2BE0B37300F0CC00 /* FWFramework_Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -189,15 +193,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Plugin/Pods-FWFramework_Plugin-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Plugin/Pods-FWFramework_Plugin-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FWFramework_Plugin/Pods-FWFramework_Plugin-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		77D5639BB6281F7E73F95845 /* [CP] Check Pods Manifest.lock */ = {
@@ -215,7 +219,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FWFramework_Component-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-FWFramework_Plugin-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -378,7 +382,7 @@
 		};
 		2FE6E8812BE0B37400F0CC00 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */;
+			baseConfigurationReference = 11B1F3542319B17DBA4DC0F9 /* Pods-FWFramework_Plugin.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
@@ -408,7 +412,7 @@
 		};
 		2FE6E8822BE0B37400F0CC00 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */;
+			baseConfigurationReference = 9209E8474A0B67D351986B05 /* Pods-FWFramework_Plugin.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
@@ -448,7 +452,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2FE6E8802BE0B37400F0CC00 /* Build configuration list for PBXNativeTarget "FWFramework_Component" */ = {
+		2FE6E8802BE0B37400F0CC00 /* Build configuration list for PBXNativeTarget "FWFramework_Plugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2FE6E8812BE0B37400F0CC00 /* Debug */,

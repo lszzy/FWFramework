@@ -2,7 +2,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '13.0'
 use_frameworks!
 
-target "FWFramework_Component" do
+target "FWFramework_Plugin" do
   pod 'FWFramework/FWFramework/Kernel', :path => '../../'
   pod 'FWFramework/FWFramework/Toolkit', :path => '../../'
   pod 'FWFramework/FWFramework/Service', :path => '../../'
@@ -11,14 +11,14 @@ target "FWFramework_Component" do
   pod 'FWFramework/FWSwiftUI/Toolkit', :path => '../../'
   pod 'FWFramework/FWSwiftUI/Plugin', :path => '../../'
   pod 'FWFramework/FWSwiftUI/Module', :path => '../../'
-  pod 'FWFramework/FWComponent/Contacts', :path => '../../'
-  pod 'FWFramework/FWComponent/Microphone', :path => '../../'
-  pod 'FWFramework/FWComponent/Calendar', :path => '../../'
-  pod 'FWFramework/FWComponent/Tracking', :path => '../../'
-  pod 'FWFramework/FWComponent/Macros', :path => '../../'
-  pod 'FWFramework/FWComponent/SDWebImage', :path => '../../'
-  pod 'FWFramework/FWComponent/Alamofire', :path => '../../'
-  pod 'FWFramework/FWComponent/Lottie', :path => '../../'
+  pod 'FWFramework/FWPlugin/Contacts', :path => '../../'
+  pod 'FWFramework/FWPlugin/Microphone', :path => '../../'
+  pod 'FWFramework/FWPlugin/Calendar', :path => '../../'
+  pod 'FWFramework/FWPlugin/Tracking', :path => '../../'
+  pod 'FWFramework/FWPlugin/Macros', :path => '../../'
+  pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
+  pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
+  pod 'FWFramework/FWPlugin/Lottie', :path => '../../'
 
   pod 'FWDebug', :configurations => ['Debug']
 end

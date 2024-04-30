@@ -36,7 +36,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
       # Import the macro subspecs
-      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWExtension/Macros']   
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWPlugin/Macros']   
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -50,7 +50,7 @@ This framework supports Swift Package Manager, just add and check the required m
 	import FWFramework
 	
     # Check and import the macro submodule
-    import FWExtensionMacros
+    import FWPluginMacros
 	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 	import FWSwiftUI
 
