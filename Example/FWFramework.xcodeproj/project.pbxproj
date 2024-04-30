@@ -170,6 +170,7 @@
 		2FE6E8832BE0B97700F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../README_CN.md; sourceTree = "<group>"; };
 		2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../CHANGELOG_CN.md; sourceTree = "<group>"; };
 		2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		2FE6E88F2BE0BBCC00F0CC00 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -192,7 +193,7 @@
 		9A618471107F1D6CF1E47FF0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D478E69E86FD0C491E56F20A /* Pods-FWFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		E91AE76AA686014704EDE554 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FWFramework.podspec; path = ../FWFramework.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FWFramework.podspec; path = ../FWFramework.podspec; sourceTree = "<group>"; };
 		F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -539,6 +540,7 @@
 			isa = PBXGroup;
 			children = (
 				EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */,
+				2FE6E88F2BE0BBCC00F0CC00 /* Package.swift */,
 				9A618471107F1D6CF1E47FF0 /* README.md */,
 				2FE6E8832BE0B97700F0CC00 /* README_CN.md */,
 				2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */,

@@ -26,6 +26,13 @@
 		2FE6E8782BE0B37400F0CC00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FE6E87B2BE0B37400F0CC00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FE6E87D2BE0B37400F0CC00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2FE6E8882BE0BB6F00F0CC00 /* FWFramework.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FWFramework.podspec; path = ../../FWFramework.podspec; sourceTree = "<group>"; };
+		2FE6E8892BE0BB7000F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../../CHANGELOG.md; sourceTree = "<group>"; };
+		2FE6E88A2BE0BB7000F0CC00 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE; path = ../../LICENSE; sourceTree = "<group>"; };
+		2FE6E88B2BE0BB7000F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../../README_CN.md; sourceTree = "<group>"; };
+		2FE6E88C2BE0BB7000F0CC00 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		2FE6E88D2BE0BB7000F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../../CHANGELOG_CN.md; sourceTree = "<group>"; };
+		2FE6E88E2BE0BB9700F0CC00 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../../Package.swift; sourceTree = "<group>"; };
 		6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Component.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component.release.xcconfig"; sourceTree = "<group>"; };
 		C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Component.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_Component/Pods-FWFramework_Component.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,7 +52,8 @@
 		2FE6E8632BE0B37300F0CC00 = {
 			isa = PBXGroup;
 			children = (
-				2FE6E86E2BE0B37300F0CC00 /* FWComponent */,
+				2FE6E8872BE0BB5600F0CC00 /* Podspec Metadata */,
+				2FE6E86E2BE0B37300F0CC00 /* Example for FWFramework */,
 				2FE6E86D2BE0B37300F0CC00 /* Products */,
 				E5DDC3622362BFE4E7BB9EEC /* Pods */,
 				6BF3F749E381B1C0111C4A99 /* Frameworks */,
@@ -60,7 +68,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2FE6E86E2BE0B37300F0CC00 /* FWComponent */ = {
+		2FE6E86E2BE0B37300F0CC00 /* Example for FWFramework */ = {
 			isa = PBXGroup;
 			children = (
 				2FE6E86F2BE0B37300F0CC00 /* AppDelegate.swift */,
@@ -71,7 +79,22 @@
 				2FE6E87A2BE0B37400F0CC00 /* LaunchScreen.storyboard */,
 				2FE6E87D2BE0B37400F0CC00 /* Info.plist */,
 			);
+			name = "Example for FWFramework";
 			path = FWComponent;
+			sourceTree = "<group>";
+		};
+		2FE6E8872BE0BB5600F0CC00 /* Podspec Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				2FE6E8882BE0BB6F00F0CC00 /* FWFramework.podspec */,
+				2FE6E88E2BE0BB9700F0CC00 /* Package.swift */,
+				2FE6E88C2BE0BB7000F0CC00 /* README.md */,
+				2FE6E88B2BE0BB7000F0CC00 /* README_CN.md */,
+				2FE6E8892BE0BB7000F0CC00 /* CHANGELOG.md */,
+				2FE6E88D2BE0BB7000F0CC00 /* CHANGELOG_CN.md */,
+				2FE6E88A2BE0BB7000F0CC00 /* LICENSE */,
+			);
+			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
 		6BF3F749E381B1C0111C4A99 /* Frameworks */ = {
