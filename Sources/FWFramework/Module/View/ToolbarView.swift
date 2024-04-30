@@ -563,12 +563,6 @@ open class ToolbarMenuView: UIView {
 }
 
 // MARK: - ToolbarTitleView
-/// 自定义titleView协议
-@objc public protocol TitleViewProtocol {
-    /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
-    var title: String? { get set }
-}
-
 /// 自定义titleView事件代理
 @objc public protocol ToolbarTitleViewDelegate {
     /// 点击 titleView 后的回调，只需设置 titleView.isUserInteractionEnabled = true 后即可使用
@@ -1256,78 +1250,6 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
         refreshLayout()
     }
     
-    fileprivate static func swizzleToolbarTitleView() {
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationBar.self,
-            selector: #selector(UINavigationBar.layoutSubviews),
-            methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
-        ) { store in { selfObject in
-            guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
-                store.original(selfObject, store.selector)
-                return
-            }
-            
-            let titleMaximumWidth = titleView.bounds.width
-            var titleViewSize = titleView.sizeThatFits(CGSize(width: titleMaximumWidth, height: CGFloat.greatestFiniteMagnitude))
-            titleViewSize.height = ceil(titleViewSize.height)
-            
-            if titleView.bounds.height != titleViewSize.height {
-                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
-                titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
-            }
-            
-            if titleView.bounds.width != titleViewSize.width {
-                var titleFrame = titleView.frame
-                titleFrame.size.width = titleViewSize.width
-                titleView.frame = titleFrame
-            }
-            
-            store.original(selfObject, store.selector)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(setter: UIViewController.title),
-            methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.navigationItem.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.title),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.titleView),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
-        ) { store in { selfObject, titleView in
-            store.original(selfObject, store.selector, titleView)
-            
-            if let titleView = titleView as? TitleViewProtocol {
-                if (titleView.title?.count ?? 0) <= 0 {
-                    titleView.title = selfObject.title
-                }
-            }
-        }}
-    }
-    
 }
 
 // MARK: - ToolbarButton
@@ -1579,15 +1501,6 @@ open class ExpandedTitleView: UIView {
         guard let parent = child.superview else { return nil }
         if let navigationBar = parent as? UINavigationBar { return navigationBar }
         return searchNavigationBar(parent)
-    }
-    
-}
-
-// MARK: - FrameworkAutoloader+ToolbarView
-@objc extension FrameworkAutoloader {
-    
-    static func loadModule_ToolbarView() {
-        ToolbarTitleView.swizzleToolbarTitleView()
     }
     
 }
