@@ -229,6 +229,8 @@ public class FrameworkBundle: ModuleBundle {
     internal static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
     internal static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
     
+    internal static var barStyleChanged: ((UIViewController) -> Void)?
+    
     // MARK: - Override
     public override class func didInitialize() {
         addImage("fw.navBack") {

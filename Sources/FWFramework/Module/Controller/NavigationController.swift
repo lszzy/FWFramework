@@ -556,7 +556,7 @@ extension Wrapper where Base: UIToolbar {
     }
     
     /// 标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法
-    internal func fw_barTransitionNeedsUpdate() {
+    fileprivate func fw_barTransitionNeedsUpdate() {
         guard let navigationBar = navigationController?.navigationBar,
               let transitionNavigationBar = fw_transitionNavigationBar else { return }
         transitionNavigationBar.fw_replaceStyle(navigationBar: navigationBar)
@@ -707,6 +707,10 @@ extension Wrapper where Base: UIToolbar {
     
     static func loadModule_NavigationController() {
         UINavigationController.fw_swizzleNavigationController()
+        
+        FrameworkBundle.barStyleChanged = { viewController in
+            viewController.fw_barTransitionNeedsUpdate()
+        }
     }
     
 }
