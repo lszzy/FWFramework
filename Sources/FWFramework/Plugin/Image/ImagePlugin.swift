@@ -452,11 +452,11 @@ extension ImagePlugin {
 @objc extension FrameworkAutoloader {
     
     static func loadPlugin_ImagePlugin() {
-        ModuleBundle.imageNamedBlock = { name, bundle in
+        FrameworkBundle.imageNamedBlock = { name, bundle in
             return UIImage.fw_imageNamed(name, bundle: bundle)
         }
         
-        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
+        FrameworkBundle.imageDecodeBlock = { data, scale, options in
             return UIImage.fw_image(data: data, scale: scale, options: options)
         }
     }

@@ -1,5 +1,5 @@
 //
-//  AppBundle.swift
+//  Bundle.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -7,11 +7,166 @@
 
 import UIKit
 
+// MARK: - ModuleBundle
+/// 业务模块Bundle基类，各模块可继承
+///
+/// 资源查找规则如下：
+/// 1. ModuleBundle基类或主应用模块类只加载主Bundle
+/// 2. ModuleBundle子模块类优先加载主应用的{模块名称}.bundle(可替换模块)，如主应用内FWFramework.bundle
+/// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
+/// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
+open class ModuleBundle: NSObject {
+    
+    private class Target {
+        let identifier = UUID().uuidString
+        var bundle: Bundle?
+        var images: [String: Any] = [:]
+        var colors: [String: Any] = [:]
+        var strings: [String: [String: [String: String]]] = [:]
+    }
+    
+    /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
+    open class func bundle() -> Bundle {
+        if let bundle = bundleTarget.bundle {
+            return bundle
+        } else {
+            let bundle = initializeBundle() ?? .main
+            bundleTarget.bundle = bundle
+            didInitialize()
+            return bundle
+        }
+    }
+    
+    /// 获取当前模块图片
+    open class func imageNamed(_ name: String) -> UIImage? {
+        if let image = FrameworkBundle.imageNamedBlock?(name, bundle()) {
+            return image
+        } else if let image = UIImage(named: name, in: bundle(), compatibleWith: nil) {
+            return image
+        }
+        
+        let value = bundleTarget.images[name]
+        if let image = value as? UIImage {
+            return image
+        } else if let block = value as? () -> UIImage? {
+            return block()
+        }
+        return nil
+    }
+    
+    /// 设置当前模块动态图片
+    open class func addImage(_ name: String, image: UIImage?) {
+        bundleTarget.images[name] = image
+    }
+    
+    /// 设置当前模块动态图片句柄
+    open class func addImage(_ name: String, block: (() -> UIImage?)?) {
+        bundleTarget.images[name] = block
+    }
+    
+    /// 获取当前模块颜色，不存在时默认clear
+    open class func colorNamed(_ name: String) -> UIColor {
+        if let color = UIColor(named: name, in: bundle(), compatibleWith: nil) { return color }
+        
+        let value = bundleTarget.colors[name]
+        if let color = value as? UIColor {
+            return color
+        } else if let block = value as? () -> UIColor {
+            return block()
+        }
+        return .clear
+    }
+    
+    /// 设置当前模块动态颜色
+    open class func addColor(_ name: String, color: UIColor?) {
+        bundleTarget.colors[name] = color
+    }
+    
+    /// 设置当前模块动态颜色句柄
+    open class func addColor(_ name: String, block: (() -> UIColor)?) {
+        bundleTarget.colors[name] = block
+    }
+    
+    /// 获取当前模块多语言，可指定文件
+    open class func localizedString(_ key: String, table: String? = nil) -> String {
+        let localized = bundle().localizedString(forKey: key, value: bundleTarget.identifier, table: table)
+        if localized != bundleTarget.identifier { return localized }
+        
+        let tableKey = table ?? "Localizable"
+        let languageKey = Bundle.fw_currentLanguage ?? "en"
+        let tableStrings = bundleTarget.strings[tableKey]
+        let languageStrings = tableStrings?[languageKey] ?? tableStrings?["en"]
+        return languageStrings?[key] ?? key
+    }
+    
+    /// 设置当前模块动态多语言
+    open class func addStrings(_ language: String? = nil, table: String? = nil, strings: [String: String]) {
+        let languageKey = language ?? "en"
+        let tableKey = table ?? "Localizable"
+        if bundleTarget.strings[tableKey] == nil {
+            bundleTarget.strings[tableKey] = [:]
+        }
+        if bundleTarget.strings[tableKey]?[languageKey] == nil {
+            bundleTarget.strings[tableKey]?[languageKey] = strings
+        } else {
+            bundleTarget.strings[tableKey]?[languageKey]?.merge(strings) { _, last in last }
+        }
+    }
+    
+    /// 获取当前模块资源文件路径
+    open class func resourcePath(_ name: String, type: String? = nil) -> String? {
+        return bundle().path(forResource: name, ofType: type)
+    }
+    
+    /// 获取当前模块资源文件URL
+    open class func resourceURL(_ name: String, type: String? = nil) -> URL? {
+        return bundle().url(forResource: name, withExtension: type)
+    }
+    
+    private class var bundleTarget: Target {
+        if let target = self.fw_property(forName: "bundleTarget") as? Target {
+            return target
+        } else {
+            let target = Target()
+            self.fw_setProperty(target, forName: "bundleTarget")
+            return target
+        }
+    }
+    
+    // MARK: - Override
+    /// 初始化模块Bundle，子类可重写，用于加载自定义Bundle
+    open class func initializeBundle() -> Bundle? {
+        // 1. ModuleBundle基类或主应用模块类只加载主Bundle
+        let bundleClass: AnyClass = self
+        guard self != ModuleBundle.self,
+              Bundle(for: bundleClass) != .main,
+              let moduleName = Bundle(for: bundleClass).executableURL?.lastPathComponent else {
+            return nil
+        }
+        
+        // 2. ModuleBundle子模块类优先加载主应用的{模块名称}.bundle(可替换模块)，如主应用内FWFramework.bundle
+        if let appBundle = Bundle.fw_bundle(name: moduleName) {
+            return appBundle.fw_localizedBundle()
+        }
+        /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
+        if let moduleBundle = Bundle.fw_bundle(with: bundleClass, name: moduleName) {
+            return moduleBundle.fw_localizedBundle()
+        }
+        /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
+        return nil
+    }
+    
+    /// 初始化完成钩子，bundle方法自动调用一次，子类可重写，用于加载动态资源等
+    open class func didInitialize() {}
+    
+}
+
+// MARK: - FrameworkBundle
 /// 框架内置应用Bundle类，应用可替换
 ///
 /// 如果主应用存在FWFramework.bundle或主Bundle内包含对应图片|多语言，则优先使用；否则使用框架默认实现。
-/// FWFramework所需本地化翻译如下：完成|关闭|确定|取消|原有，配置同App本地化一致即可，如zh-Hans|en等
-open class AppBundle: ModuleBundle {
+/// FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
+public class FrameworkBundle: ModuleBundle {
     
     // MARK: - Image
     /// 图片，导航栏返回，fw.navBack
@@ -65,8 +220,17 @@ open class AppBundle: ModuleBundle {
     /// 多语言，已经全部加载完毕，fw.refreshFinished
     public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
     
+    // MARK: - Block
+    /// 框架内部配置句柄，处理子模块间依赖问题
+    internal static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
+    internal static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
+    
+    internal static var showErrorBlock: ((_ context: AnyObject?, _ error: Error) -> Void)?
+    internal static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    internal static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    
     // MARK: - Override
-    open override class func didInitialize() {
+    public override class func didInitialize() {
         addImage("fw.navBack") {
             let size = CGSize(width: 12, height: 20)
             return UIImage.fw_image(size: size) { context in
