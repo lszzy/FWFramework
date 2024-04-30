@@ -65,27 +65,27 @@ Pod::Spec.new do |s|
   s.subspec 'FWComponent' do |ss|
     ss.subspec 'Contacts' do |sss|
       sss.source_files = 'Sources/FWComponent/Contacts/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Microphone' do |sss|
       sss.source_files = 'Sources/FWComponent/Microphone/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Calendar' do |sss|
       sss.source_files = 'Sources/FWComponent/Calendar/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Tracking' do |sss|
       sss.source_files = 'Sources/FWComponent/Tracking/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Macros' do |sss|
       sss.source_files = 'Sources/FWComponent/Macros/FWComponentMacros/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
       sss.preserve_paths = [
         'Sources/FWComponent/Macros/Package.swift',
         'Sources/FWComponent/Macros/FWMacroMacros/**/*.swift'
@@ -126,19 +126,19 @@ Pod::Spec.new do |s|
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWComponent/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Alamofire' do |sss|
       sss.source_files = 'Sources/FWComponent/Alamofire/**/*.swift'
       sss.dependency 'Alamofire'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
       
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWComponent/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
   end
 end
