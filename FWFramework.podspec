@@ -13,17 +13,53 @@ Pod::Spec.new do |s|
   s.default_subspecs      = ['FWFramework']
   
   s.subspec 'FWFramework' do |ss|
-    ss.source_files = 'Sources/FWFramework/**/*.swift'
-    ss.resource_bundles = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
-    ss.pod_target_xcconfig = {
-      'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
-    }
+    ss.subspec 'Kernel' do |sss|
+      sss.source_files = 'Sources/FWFramework/Kernel/**/*.swift'
+      sss.resource_bundles = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
+      sss.pod_target_xcconfig = {
+          'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
+        }
+    end
+    
+    ss.subspec 'Toolkit' do |sss|
+      sss.source_files = 'Sources/FWFramework/Toolkit/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Kernel'
+    end
+    
+    ss.subspec 'Service' do |sss|
+      sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Kernel'
+    end
+    
+    ss.subspec 'Plugin' do |sss|
+      sss.source_files = 'Sources/FWFramework/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Kernel'
+    end
+    
+    ss.subspec 'Module' do |sss|
+      sss.source_files = 'Sources/FWFramework/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Kernel'
+    end
   end
   
   s.subspec 'FWSwiftUI' do |ss|
-    ss.weak_frameworks = 'SwiftUI', 'Combine'
-    ss.source_files = 'Sources/FWSwiftUI/**/*.swift'
-    ss.dependency 'FWFramework/FWFramework'
+    ss.subspec 'Toolkit' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Toolkit/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+    
+    ss.subspec 'Plugin' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework'
+    end
+    
+    ss.subspec 'Module' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework'
+    end
   end
   
   s.subspec 'FWComponent' do |ss|

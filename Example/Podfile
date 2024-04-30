@@ -2,21 +2,11 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '13.0'
 use_frameworks!
 
-workspace 'FWFramework'
 target "FWFramework_Example" do
   project 'FWFramework', 'Staging' => :release, 'Testing' => :release
   
   pod 'FWFramework', :path => '../', :subspecs => ['FWFramework', 'FWSwiftUI', 'FWComponent']
   pod 'FWDebug', :configurations => ['Debug', 'Testing']
-end
-
-target "FWFramework_SwiftUI" do
-  project 'FWSwiftUI'
-
-  pod 'FWFramework/FWFramework', :path => '../'
-  pod 'FWFramework/FWSwiftUI', :path => '../'
-  pod 'FWFramework/FWComponent', :path => '../'
-  pod 'FWDebug', :configurations => ['Debug']
 end
 
 post_install do |installer|
