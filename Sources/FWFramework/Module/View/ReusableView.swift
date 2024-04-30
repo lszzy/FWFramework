@@ -57,14 +57,15 @@ open class ReusableViewPool: NSObject {
     
     /// 单例模式对象，子类可直接调用
     public class var shared: Self {
-        return fw_synchronized {
-            if let instance = self.fw_property(forName: #function) as? Self {
-                return instance
-            } else {
-                let instance = self.init()
-                self.fw_setProperty(instance, forName: #function)
-                return instance
-            }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if let instance = self.fw_property(forName: #function) as? Self {
+            return instance
+        } else {
+            let instance = self.init()
+            self.fw_setProperty(instance, forName: #function)
+            return instance
         }
     }
     
