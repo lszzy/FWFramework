@@ -469,3 +469,35 @@ extension ImagePlugin {
     }
     
 }
+
+// MARK: - Concurrency+ImagePlugin
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension Wrapper where Base: UIImage {
+    /// 异步下载网络图片
+    public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil) async throws -> UIImage {
+        try await Base.fw_downloadImage(url, options: options, context: context)
+    }
+}
+
+@_spi(FW) extension UIImage {
+    
+    /// 异步下载网络图片
+    public static func fw_downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil) async throws -> UIImage {
+        let target = NSObject()
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                target.fw_tempObject = UIImage.fw_downloadImage(url, options: options, context: context) { image, _, error in
+                    if let image = image {
+                        continuation.resume(returning: image)
+                    } else {
+                        continuation.resume(throwing: error ?? RequestError.unknown)
+                    }
+                }
+            }
+        } onCancel: {
+            UIImage.fw_cancelImageDownload(target.fw_tempObject)
+        }
+    }
+    
+}
+#endif

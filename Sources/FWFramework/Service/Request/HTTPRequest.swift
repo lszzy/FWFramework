@@ -1578,3 +1578,147 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
         NSUserCancelledError,
     ]
 }
+
+// MARK: - Concurrency+HTTPRequest
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension HTTPRequestProtocol where Self: HTTPRequest {
+    
+    /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
+    public func response() async -> Self {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                requestCancelledBlock { request in
+                    if !Task.isCancelled {
+                        continuation.resume(returning: request)
+                    }
+                }
+                .response { request in
+                    continuation.resume(returning: request)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+    /// 异步获取成功响应，注意非Task取消也会触发(Continuation流程)
+    public func responseSuccess() async throws -> Self {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .responseSuccess { request in
+                    continuation.resume(returning: request)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+    /// 异步获取响应模型，注意非Task取消也会触发(Continuation流程)
+    public func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T? {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .responseModel(of: type, designatedPath: designatedPath) { responseModel in
+                    continuation.resume(returning: responseModel)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+    /// 异步获取安全响应模型，注意非Task取消也会触发(Continuation流程)
+    public func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .safeResponseModel(of: type, designatedPath: designatedPath) { responseModel in
+                    continuation.resume(returning: responseModel)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+}
+
+extension ResponseModelRequest where Self: HTTPRequest {
+    
+    /// 异步获取模型响应，注意非Task取消也会触发(Continuation流程)
+    public func responseModel() async throws -> ResponseModel? {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .responseModel() { responseModel in
+                    continuation.resume(returning: responseModel)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+}
+
+extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel {
+    
+    /// 异步获取安全模型响应，注意非Task取消也会触发(Continuation流程)
+    public func safeResponseModel() async throws -> ResponseModel {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .safeResponseModel() { responseModel in
+                    continuation.resume(returning: responseModel)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+    
+}
+#endif
