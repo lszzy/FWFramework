@@ -76,7 +76,7 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
 
 // MARK: - Autoloader+Tracking
 @objc extension Autoloader {
-    static func loadExtension_Tracking() {
+    static func loadComponent_Tracking() {
         AuthorizeManager.presetAuthorize(.tracking) { AuthorizeTracking() }
     }
 }

@@ -175,5 +175,5 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
 
 // MARK: - Autoloader+Lottie
 @objc extension Autoloader {
-    static func loadExtension_Lottie() {}
+    static func loadComponent_Lottie() {}
 }
