@@ -1,5 +1,5 @@
 //
-//  List+Toolkit.swift
+//  ViewConfigure.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/18.
@@ -11,7 +11,126 @@ import SwiftUI
 @_spi(FW) import FWFramework
 #endif
 
-// MARK: - List+Toolkit
+// MARK: - ScrollView+Configure
+extension View {
+    
+    /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
+    public func scrollViewInitialize(
+        _ initialization: @escaping (UIScrollView) -> Void
+    ) -> some View {
+        return scrollViewConfigure { scrollView in
+            guard !scrollView.fw_propertyBool(forName: "scrollViewInitialize") else { return }
+            scrollView.fw_setPropertyBool(true, forName: "scrollViewInitialize")
+            
+            initialization(scrollView)
+        }
+    }
+    
+    /// 配置ScrollView视图，可调用多次
+    public func scrollViewConfigure(
+        _ configuration: @escaping (UIScrollView) -> Void
+    ) -> some View {
+        return introspect(.scrollView, on: .iOS(.all)) { scrollView in
+            configuration(scrollView)
+        }
+    }
+    
+    /// 绑定ScrollView下拉刷新插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
+    public func scrollViewRefreshing(
+        shouldBegin: Binding<Bool>? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
+        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return scrollViewConfigure { scrollView in
+            if !scrollView.fw_propertyBool(forName: "scrollViewRefreshing") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewRefreshing")
+                
+                scrollView.fw_setRefreshing { [weak scrollView] in
+                    action({ finished in
+                        scrollView?.fw_endRefreshing()
+                        if let finished = finished {
+                            scrollView?.fw_loadingFinished = finished
+                        }
+                    })
+                }
+                customize?(scrollView)
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw_isRefreshing {
+                    scrollView.fw_beginRefreshing()
+                }
+            }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw_loadingFinished = finished
+            }
+        }
+    }
+    
+    /// 绑定ScrollView上拉追加插件，action必须调用completionHandler，可指定是否已加载完成不能继续追加
+    public func scrollViewLoading(
+        shouldBegin: Binding<Bool>? = nil,
+        loadingFinished: Binding<Bool?>? = nil,
+        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
+        customize: ((UIScrollView) -> Void)? = nil
+    ) -> some View {
+        return scrollViewConfigure { scrollView in
+            if !scrollView.fw_propertyBool(forName: "scrollViewLoading") {
+                scrollView.fw_setPropertyBool(true, forName: "scrollViewLoading")
+                
+                scrollView.fw_setLoading { [weak scrollView] in
+                    action({ finished in
+                        scrollView?.fw_endLoading()
+                        if let finished = finished {
+                            scrollView?.fw_loadingFinished = finished
+                        }
+                    })
+                }
+                customize?(scrollView)
+            }
+            
+            if shouldBegin?.wrappedValue == true {
+                shouldBegin?.wrappedValue = false
+                
+                if !scrollView.fw_isLoading {
+                    scrollView.fw_beginLoading()
+                }
+            }
+            
+            if let finished = loadingFinished?.wrappedValue {
+                loadingFinished?.wrappedValue = nil
+                
+                scrollView.fw_loadingFinished = finished
+            }
+        }
+    }
+    
+    /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
+    public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+        return scrollViewConfigure { scrollView in
+            if isShowing {
+                if let customize = customize {
+                    customize(scrollView)
+                } else {
+                    scrollView.fw_showEmptyView()
+                }
+            } else {
+                if scrollView.fw_hasEmptyView {
+                    scrollView.fw_hideEmptyView()
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK: - List+Configure
 extension View {
     
     /// 重置List样式，去除多余间距等，可指定背景色
@@ -222,6 +341,75 @@ extension View {
                     scrollView.fw_hideEmptyView()
                 }
             }
+        }
+    }
+    
+}
+
+// MARK: - TextField+Configure
+extension View {
+    
+    /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textFieldInitialize(
+        _ initialization: @escaping (UITextField) -> Void,
+        autoFocus viewContext: ViewContext? = nil
+    ) -> some View {
+        return textFieldConfigure { textField in
+            guard !textField.fw_propertyBool(forName: "textFieldInitialize") else { return }
+            textField.fw_setPropertyBool(true, forName: "textFieldInitialize")
+            
+            if let viewController = viewContext?.viewController {
+                viewController.fw_observeLifecycleState { [weak textField] vc, state, _ in
+                    if state == .didAppear {
+                        textField?.becomeFirstResponder()
+                    } else if state == .willDisappear {
+                        vc.view.endEditing(true)
+                    }
+                }
+            }
+            
+            initialization(textField)
+        }
+    }
+    
+    /// 配置TextField视图，可调用多次
+    public func textFieldConfigure(
+        _ configuration: @escaping (UITextField) -> Void
+    ) -> some View {
+        return introspect(.textField, on: .iOS(.all)) { textField in
+            configuration(textField)
+        }
+    }
+    
+    /// 初始化TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
+    public func textViewInitialize(
+        _ initialization: @escaping (UITextView) -> Void,
+        autoFocus viewContext: ViewContext? = nil
+    ) -> some View {
+        return textViewConfigure { textView in
+            guard !textView.fw_propertyBool(forName: "textViewInitialize") else { return }
+            textView.fw_setPropertyBool(true, forName: "textViewInitialize")
+            
+            if let viewController = viewContext?.viewController {
+                viewController.fw_observeLifecycleState { [weak textView] vc, state, _ in
+                    if state == .didAppear {
+                        textView?.becomeFirstResponder()
+                    } else if state == .willDisappear {
+                        vc.view.endEditing(true)
+                    }
+                }
+            }
+            
+            initialization(textView)
+        }
+    }
+    
+    /// 配置TextView视图，可调用多次
+    public func textViewConfigure(
+        _ configuration: @escaping (UITextView) -> Void
+    ) -> some View {
+        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16)) { textView in
+            configuration(textView)
         }
     }
     
