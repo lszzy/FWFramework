@@ -707,3 +707,36 @@ extension ToastPlugin {
     }
     
 }
+
+// MARK: - FrameworkAutoloader+ToastPlugin
+@objc extension FrameworkAutoloader {
+    
+    static func loadPlugin_ToastPlugin() {
+        RequestContextAccessory.showErrorBlock = { context, error in
+            if let viewController = context as? UIViewController {
+                viewController.fw_showMessage(error: error)
+            } else if let view = context as? UIView {
+                view.fw_showMessage(error: error)
+            } else {
+                UIWindow.fw_showMessage(error: error)
+            }
+        }
+        
+        RequestContextAccessory.showLoadingBlock = { context in
+            if let viewController = context as? UIViewController {
+                viewController.fw_showLoading()
+            } else if let view = context as? UIView {
+                view.fw_showLoading()
+            }
+        }
+        
+        RequestContextAccessory.hideLoadingBlock = { context in
+            if let viewController = context as? UIViewController {
+                viewController.fw_hideLoading()
+            } else if let view = context as? UIView {
+                view.fw_hideLoading()
+            }
+        }
+    }
+    
+}

@@ -178,6 +178,10 @@ open class RequestContextAccessory: RequestAccessory {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
+    static var showErrorBlock: ((AnyObject?, Error) -> Void)?
+    static var showLoadingBlock: ((AnyObject?) -> Void)?
+    static var hideLoadingBlock: ((AnyObject?) -> Void)?
+    
     public override init() {
         super.init()
         
@@ -251,13 +255,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_showMessage(error: error)
-            } else if let view = request.context as? UIView {
-                view.fw_showMessage(error: error)
-            } else {
-                UIWindow.fw_showMessage(error: error)
-            }
+            Self.showErrorBlock?(request.context, error)
         }
     }
     
@@ -272,11 +270,7 @@ open class RequestContextAccessory: RequestAccessory {
         
         guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_showLoading()
-            } else if let view = request.context as? UIView {
-                view.fw_showLoading()
-            }
+            Self.showLoadingBlock?(request.context)
         }
     }
     
@@ -289,11 +283,7 @@ open class RequestContextAccessory: RequestAccessory {
         
         guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_hideLoading()
-            } else if let view = request.context as? UIView {
-                view.fw_hideLoading()
-            }
+            Self.hideLoadingBlock?(request.context)
         }
     }
 }
