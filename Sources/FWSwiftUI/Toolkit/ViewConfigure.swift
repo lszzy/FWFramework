@@ -11,6 +11,89 @@ import SwiftUI
 @_spi(FW) import FWFramework
 #endif
 
+// MARK: - View+Configure
+extension View {
+    
+    /// 初始化当前顶部视图控制器，仅调用一次
+    public func viewControllerInitialize(
+        _ initialization: @escaping (UIViewController) -> Void,
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return viewControllerConfigure ({ viewController in
+            guard !viewController.fw_propertyBool(forName: "viewControllerInitialize") else { return }
+            viewController.fw_setPropertyBool(true, forName: "viewControllerInitialize")
+            
+            initialization(viewController)
+        }, viewContext: viewContext)
+    }
+    
+    /// 配置当前顶部视图控制器，可调用多次
+    public func viewControllerConfigure(
+        _ configuration: @escaping (UIViewController) -> (),
+        viewContext: ViewContext? = nil
+    ) -> some View {
+        return introspect(.view, on: .iOS(.all)) { view in
+            if let viewController = viewContext?.viewController {
+                configuration(viewController)
+                return
+            }
+            
+            var hostingView: UIView?
+            var superview = view.superview
+            while let s = superview {
+                if NSStringFromClass(type(of: s)).contains("HostingView") {
+                    hostingView = s
+                    break
+                }
+                superview = s.superview
+            }
+            guard let hostingView = hostingView else {
+                return
+            }
+            
+            var viewController: UIViewController?
+            if let superController = hostingView.superview?.fw_viewController,
+               !(superController is UINavigationController) && !(superController is UITabBarController) {
+                viewController = superController
+            } else {
+                viewController = hostingView.fw_viewController
+            }
+            guard let viewController = viewController else {
+                return
+            }
+            
+            if let visibleController = viewController.navigationController?.visibleViewController,
+               hostingView.isDescendant(of: visibleController.view) {
+                configuration(visibleController)
+            } else {
+                configuration(viewController)
+            }
+        }
+    }
+    
+    /// 初始化当前SwiftUI视图对应UIView，仅调用一次。仅适用于有对应UIView的视图(如Text等)，不支持Layer视图(如VStack等)
+    public func hostingViewInitialize(
+        _ initialization: @escaping (UIView) -> Void
+    ) -> some View {
+        return hostingViewConfigure { hostingView in
+            guard !hostingView.fw_propertyBool(forName: "hostingViewInitialize") else { return }
+            hostingView.fw_setPropertyBool(true, forName: "hostingViewInitialize")
+            
+            initialization(hostingView)
+        }
+    }
+    
+    /// 配置当前SwiftUI视图对应UIView，可调用多次。仅适用于有对应UIView的视图(如Text等)，不支持Layer视图(如VStack等)
+    public func hostingViewConfigure(
+        _ configuration: @escaping (UIView) -> ()
+    ) -> some View {
+        return introspect(.view, on: .iOS(.all)) { hostingView in
+            configuration(hostingView)
+        }
+    }
+    
+}
+
 // MARK: - ScrollView+Configure
 extension View {
     

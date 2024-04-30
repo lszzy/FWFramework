@@ -46,19 +46,19 @@ Pod::Spec.new do |s|
     ss.subspec 'Toolkit' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Toolkit/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Plugin' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Plugin/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWSwiftUI/Toolkit'
     end
     
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework'
+      sss.dependency 'FWFramework/FWSwiftUI/Toolkit'
     end
   end
   

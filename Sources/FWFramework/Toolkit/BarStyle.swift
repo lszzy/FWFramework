@@ -204,7 +204,7 @@ open class NavigationBarAppearance: NSObject {
 
 @_spi(FW) extension UIViewController {
     
-    fileprivate static func fw_swizzleNavigationStyle() {
+    fileprivate static func fw_swizzleBarStyle() {
         NSObject.fw_swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(getter: UIViewController.prefersStatusBarHidden),
@@ -386,7 +386,7 @@ open class NavigationBarAppearance: NSObject {
         
         // 标记转场导航栏样式需要刷新
         if isAppeared {
-            fw_barTransitionNeedsUpdate()
+            FrameworkBundle.barStyleChanged?(self)
         }
     }
 
@@ -443,11 +443,11 @@ open class NavigationBarAppearance: NSObject {
     
 }
 
-// MARK: - FrameworkAutoloader+NavigationStyle
+// MARK: - FrameworkAutoloader+BarStyle
 @objc extension FrameworkAutoloader {
     
-    static func loadModule_NavigationStyle() {
-        UIViewController.fw_swizzleNavigationStyle()
+    static func loadToolkit_BarStyle() {
+        UIViewController.fw_swizzleBarStyle()
     }
     
 }
