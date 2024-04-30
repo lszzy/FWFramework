@@ -2780,7 +2780,7 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
-    public internal(set) var fw_lifecycleState: ViewControllerLifecycleState? {
+    public private(set) var fw_lifecycleState: ViewControllerLifecycleState? {
         get {
             guard fw_issetLifecycleStateTarget else { return nil }
             return fw_lifecycleStateTarget.state
@@ -2863,6 +2863,136 @@ public enum ViewControllerLifecycleState: Int {
     public var fw_shouldPopController: (() -> Bool)? {
         get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
         set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
+    }
+    
+    fileprivate static func fw_swizzleToolkitViewController() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(nibName:bundle:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
+            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+        ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
+            let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
+            return viewController
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(coder:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+        ) { store in { selfObject, coder in
+            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
+            return viewController
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLoad
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willAppear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: NSSelectorFromString("viewIsAppearing:"),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .isAppearing
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLayoutSubviews),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLayoutSubviews
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didAppear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willDisappear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didDisappear
+            }
+        }}
     }
     
 }
@@ -3076,6 +3206,15 @@ public enum ViewControllerLifecycleState: Int {
                 return store.original(selfObject, store.selector)
             }
         }}
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+Toolkit
+@objc extension FrameworkAutoloader {
+    
+    static func loadToolkit_Toolkit() {
+        UIViewController.fw_swizzleToolkitViewController()
     }
     
 }
