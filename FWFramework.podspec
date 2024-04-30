@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
       sss.source_files = 'Sources/FWFramework/Kernel/**/*.swift'
       sss.resource_bundles = {'FWFramework' => ['Sources/PrivacyInfo.xcprivacy']}
       sss.pod_target_xcconfig = {
-          'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
-        }
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
+      }
     end
     
     ss.subspec 'Toolkit' do |sss|
@@ -28,17 +28,17 @@ Pod::Spec.new do |s|
     
     ss.subspec 'Service' do |sss|
       sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Kernel'
+      sss.dependency 'FWFramework/FWFramework/Toolkit'
     end
     
     ss.subspec 'Plugin' do |sss|
       sss.source_files = 'Sources/FWFramework/Plugin/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Kernel'
+      sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Module' do |sss|
       sss.source_files = 'Sources/FWFramework/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Kernel'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
   end
   

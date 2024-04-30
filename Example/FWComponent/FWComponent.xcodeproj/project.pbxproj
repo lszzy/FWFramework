@@ -26,7 +26,7 @@
 		2FE6E8782BE0B37400F0CC00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2FE6E87B2BE0B37400F0CC00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2FE6E87D2BE0B37400F0CC00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2FE6E8882BE0BB6F00F0CC00 /* FWFramework.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FWFramework.podspec; path = ../../FWFramework.podspec; sourceTree = "<group>"; };
+		2FE6E8882BE0BB6F00F0CC00 /* FWFramework.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FWFramework.podspec; path = ../../FWFramework.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		2FE6E8892BE0BB7000F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../../CHANGELOG.md; sourceTree = "<group>"; };
 		2FE6E88A2BE0BB7000F0CC00 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE; path = ../../LICENSE; sourceTree = "<group>"; };
 		2FE6E88B2BE0BB7000F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../../README_CN.md; sourceTree = "<group>"; };
