@@ -15,9 +15,6 @@ struct ExampleApp: App {
     @Environment(\.scenePhase) var scenePhase
     
     init() {
-        Autoloader.autoload()
-        Mediator.setupAllModules()
-        
         print("App is starting")
     }
     
@@ -43,4 +40,4 @@ struct ExampleApp: App {
     }
 }
 
-class AppDelegate: NSObject, UIApplicationDelegate {}
+class AppDelegate: AppResponder {}

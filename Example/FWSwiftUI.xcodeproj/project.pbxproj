@@ -11,14 +11,6 @@
 		2F96AB0A2BDB8E4F007A0767 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F96AB092BDB8E4F007A0767 /* ContentView.swift */; };
 		2F96AB0C2BDB8E50007A0767 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */; };
 		2F96AB0F2BDB8E50007A0767 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */; };
-		2FE6E84C2BE0AEF400F0CC00 /* FWExtensionAlamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E84B2BE0AEF400F0CC00 /* FWExtensionAlamofire */; };
-		2FE6E84E2BE0AEF400F0CC00 /* FWExtensionCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E84D2BE0AEF400F0CC00 /* FWExtensionCalendar */; };
-		2FE6E8502BE0AEF400F0CC00 /* FWExtensionContacts in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E84F2BE0AEF400F0CC00 /* FWExtensionContacts */; };
-		2FE6E8522BE0AEF400F0CC00 /* FWExtensionLottie in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8512BE0AEF400F0CC00 /* FWExtensionLottie */; };
-		2FE6E8542BE0AEF400F0CC00 /* FWExtensionMacros in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8532BE0AEF400F0CC00 /* FWExtensionMacros */; };
-		2FE6E8562BE0AEF400F0CC00 /* FWExtensionMicrophone in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8552BE0AEF400F0CC00 /* FWExtensionMicrophone */; };
-		2FE6E8582BE0AEF400F0CC00 /* FWExtensionSDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8572BE0AEF400F0CC00 /* FWExtensionSDWebImage */; };
-		2FE6E85A2BE0AEF400F0CC00 /* FWExtensionTracking in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8592BE0AEF400F0CC00 /* FWExtensionTracking */; };
 		2FE6E85C2BE0AEF400F0CC00 /* FWFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E85B2BE0AEF400F0CC00 /* FWFramework */; };
 		2FE6E85E2BE0AEF400F0CC00 /* FWSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E85D2BE0AEF400F0CC00 /* FWSwiftUI */; };
 		2FE6E8612BE0AF0100F0CC00 /* FWDebug in Frameworks */ = {isa = PBXBuildFile; productRef = 2FE6E8602BE0AF0100F0CC00 /* FWDebug */; };
@@ -30,6 +22,7 @@
 		2F96AB092BDB8E4F007A0767 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F96AB0E2BDB8E50007A0767 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2FE6E8622BE0B0E100F0CC00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,17 +30,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FE6E85A2BE0AEF400F0CC00 /* FWExtensionTracking in Frameworks */,
-				2FE6E8522BE0AEF400F0CC00 /* FWExtensionLottie in Frameworks */,
 				2FE6E8612BE0AF0100F0CC00 /* FWDebug in Frameworks */,
-				2FE6E84C2BE0AEF400F0CC00 /* FWExtensionAlamofire in Frameworks */,
 				2FE6E85C2BE0AEF400F0CC00 /* FWFramework in Frameworks */,
-				2FE6E84E2BE0AEF400F0CC00 /* FWExtensionCalendar in Frameworks */,
 				2FE6E85E2BE0AEF400F0CC00 /* FWSwiftUI in Frameworks */,
-				2FE6E8502BE0AEF400F0CC00 /* FWExtensionContacts in Frameworks */,
-				2FE6E8542BE0AEF400F0CC00 /* FWExtensionMacros in Frameworks */,
-				2FE6E8582BE0AEF400F0CC00 /* FWExtensionSDWebImage in Frameworks */,
-				2FE6E8562BE0AEF400F0CC00 /* FWExtensionMicrophone in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +61,7 @@
 				2F96AB072BDB8E4F007A0767 /* ExampleApp.swift */,
 				2F96AB092BDB8E4F007A0767 /* ContentView.swift */,
 				2F96AB0B2BDB8E50007A0767 /* Assets.xcassets */,
+				2FE6E8622BE0B0E100F0CC00 /* Info.plist */,
 				2F96AB0D2BDB8E50007A0767 /* Preview Content */,
 			);
 			name = "Example for FWFramework";
@@ -107,14 +93,6 @@
 			);
 			name = FWFramework_SwiftUI;
 			packageProductDependencies = (
-				2FE6E84B2BE0AEF400F0CC00 /* FWExtensionAlamofire */,
-				2FE6E84D2BE0AEF400F0CC00 /* FWExtensionCalendar */,
-				2FE6E84F2BE0AEF400F0CC00 /* FWExtensionContacts */,
-				2FE6E8512BE0AEF400F0CC00 /* FWExtensionLottie */,
-				2FE6E8532BE0AEF400F0CC00 /* FWExtensionMacros */,
-				2FE6E8552BE0AEF400F0CC00 /* FWExtensionMicrophone */,
-				2FE6E8572BE0AEF400F0CC00 /* FWExtensionSDWebImage */,
-				2FE6E8592BE0AEF400F0CC00 /* FWExtensionTracking */,
 				2FE6E85B2BE0AEF400F0CC00 /* FWFramework */,
 				2FE6E85D2BE0AEF400F0CC00 /* FWSwiftUI */,
 				2FE6E8602BE0AF0100F0CC00 /* FWDebug */,
@@ -315,6 +293,7 @@
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FWSwiftUI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FWSwiftUI;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -345,6 +324,7 @@
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FWSwiftUI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FWSwiftUI;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -407,46 +387,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2FE6E84B2BE0AEF400F0CC00 /* FWExtensionAlamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionAlamofire;
-		};
-		2FE6E84D2BE0AEF400F0CC00 /* FWExtensionCalendar */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionCalendar;
-		};
-		2FE6E84F2BE0AEF400F0CC00 /* FWExtensionContacts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionContacts;
-		};
-		2FE6E8512BE0AEF400F0CC00 /* FWExtensionLottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionLottie;
-		};
-		2FE6E8532BE0AEF400F0CC00 /* FWExtensionMacros */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionMacros;
-		};
-		2FE6E8552BE0AEF400F0CC00 /* FWExtensionMicrophone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionMicrophone;
-		};
-		2FE6E8572BE0AEF400F0CC00 /* FWExtensionSDWebImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionSDWebImage;
-		};
-		2FE6E8592BE0AEF400F0CC00 /* FWExtensionTracking */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
-			productName = FWExtensionTracking;
-		};
 		2FE6E85B2BE0AEF400F0CC00 /* FWFramework */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2FE6E84A2BE0AEF400F0CC00 /* XCRemoteSwiftPackageReference "FWFramework" */;
