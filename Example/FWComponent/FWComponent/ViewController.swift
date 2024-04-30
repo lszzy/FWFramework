@@ -6,14 +6,15 @@
 //
 
 import UIKit
+import FWFramework
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        navigationItem.title = "FWFramework"
     }
-
 
 }
 

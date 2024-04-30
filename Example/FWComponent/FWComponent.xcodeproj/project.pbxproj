@@ -88,7 +88,6 @@
 				C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */,
 				6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -359,7 +358,7 @@
 			baseConfigurationReference = C280237200C31AFA52F0A1B1 /* Pods-FWFramework_Component.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
@@ -388,7 +387,7 @@
 			baseConfigurationReference = 6C2AAB0FDF77901C404B21DE /* Pods-FWFramework_Component.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
