@@ -169,6 +169,9 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
     
+    private static var imageLock = NSLock()
+    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
+    
     public override init() {
         super.init()
         acceptableContentTypes = ["application/octet-stream", "application/pdf", "image/tiff", "image/jpeg", "image/gif", "image/png", "image/ico", "image/x-icon", "image/bmp", "image/x-bmp", "image/x-xbitmap", "image/x-ms-bmp", "image/x-win-bitmap", "image/heic", "image/heif", "image/webp", "image/svg+xml"]
@@ -186,8 +189,6 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         image.fw_setProperty(data, forName: "cachedResponseData")
     }
     
-    private static var imageLock = NSLock()
-    
     private static func image(data: Data?, scale: CGFloat, options: [ImageCoderOptions : Any]?) -> UIImage? {
         guard let data = data, data.count > 0 else {
             return nil
@@ -195,15 +196,15 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         
         var image: UIImage?
         imageLock.lock()
-        image = UIImage.fw_image(data: data, scale: scale, options: options)
+        if imageDecodeBlock != nil {
+            image = imageDecodeBlock?(data, scale, options)
+        } else {
+            image = UIImage(data: data)
+            if image?.images == nil, let cgImage = image?.cgImage {
+                image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
+            }
+        }
         imageLock.unlock()
-        
-        /*
-        image = UIImage(data: data)
-        if image?.images == nil, let cgImage = image?.cgImage {
-            image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
-        }*/
-        
         return image
     }
     
