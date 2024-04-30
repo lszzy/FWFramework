@@ -731,7 +731,7 @@ public class ThemeObject<T>: NSObject {
 // MARK: - FrameworkAutoloader+Theme
 @objc extension FrameworkAutoloader {
     
-    static func loadService_Theme() {
+    static func loadToolkit_Theme() {
         NSObject.fw_swizzleThemeClasses()
     }
     

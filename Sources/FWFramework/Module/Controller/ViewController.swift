@@ -156,10 +156,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
             
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
             if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
@@ -174,10 +170,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
             
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
             if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
@@ -192,10 +184,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLoad
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
@@ -209,10 +197,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willAppear
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
@@ -226,10 +210,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .isAppearing
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
             }
@@ -243,10 +223,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLayoutSubviews
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
@@ -260,10 +236,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didAppear
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
@@ -277,10 +249,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willDisappear
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
@@ -294,10 +262,6 @@ public class ViewControllerManager: NSObject {
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didDisappear
-            }
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
