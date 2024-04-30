@@ -35,11 +35,6 @@ extension Wrapper where Base == Data {
         return base.fw_base64Decode
     }
     
-    /// 转换为bytes数组
-    public var bytesArray: [UInt8] {
-        return base.fw_bytesArray
-    }
-    
     /// 将对象归档为data数据
     public static func archivedData(_ object: Any?) -> Data? {
         return Base.fw_archivedData(object)
@@ -92,16 +87,6 @@ extension Wrapper where Base == String {
     /// base64解码
     public var base64Decode: String? {
         return base.fw_base64Decode
-    }
-    
-    /// 计算长度，中文为1，英文为0.5，表情为2
-    public var unicodeLength: Int {
-        return base.fw_unicodeLength
-    }
-    
-    /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func unicodeSubstring(_ length: Int) -> String {
-        return base.fw_unicodeSubstring(length)
     }
     
     /// Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
@@ -161,31 +146,6 @@ extension Wrapper where Base == String {
         return base.fw_md5Encode
     }
     
-    /// 去掉首尾空白字符
-    public var trimString: String {
-        return base.fw_trimString
-    }
-    
-    /// 首字母大写
-    public var ucfirstString: String {
-        return base.fw_ucfirstString
-    }
-    
-    /// 首字母小写
-    public var lcfirstString: String {
-        return base.fw_lcfirstString
-    }
-    
-    /// 驼峰转下划线
-    public var underlineString: String {
-        return base.fw_underlineString
-    }
-    
-    /// 下划线转驼峰
-    public var camelString: String {
-        return base.fw_camelString
-    }
-    
     /// 中文转拼音
     public var pinyinString: String {
         return base.fw_pinyinString
@@ -208,26 +168,6 @@ extension Wrapper where Base == String {
     /// 参考：https://github.com/SBJson/SBJson/blob/trunk/Classes/SBJson5StreamTokeniser.m
     public var escapeJson: String {
         return base.fw_escapeJson
-    }
-    
-    /// 从指定位置截取子串
-    public func substring(from index: Int) -> String {
-        return base.fw_substring(from: index)
-    }
-    
-    /// 截取子串到指定位置
-    public func substring(to index: Int) -> String {
-        return base.fw_substring(to: index)
-    }
-    
-    /// 截取指定范围的子串
-    public func substring(with range: NSRange) -> String {
-        return base.fw_substring(with: range)
-    }
-    
-    /// 截取指定范围的子串
-    public func substring(with range: Range<Int>) -> String {
-        return base.fw_substring(with: range)
     }
 }
 
@@ -296,11 +236,6 @@ extension Wrapper where Base == URL {
     /// base64解码
     public var fw_base64Decode: Data? {
         return Data(base64Encoded: self, options: .ignoreUnknownCharacters)
-    }
-    
-    /// 转换为bytes数组
-    public var fw_bytesArray: [UInt8] {
-        return [UInt8](self)
     }
     
     /// 将对象归档为data数据
@@ -380,38 +315,6 @@ extension Wrapper where Base == URL {
         let padding = String(repeating: "=", count: 4 - remainder)
         guard let data = Data(base64Encoded: self + padding, options: .ignoreUnknownCharacters) else { return nil }
         return String(data: data, encoding: .utf8)
-    }
-    
-    /// 计算长度，中文为1，英文为0.5，表情为2
-    public var fw_unicodeLength: Int {
-        var length: Int = 0
-        let str = self as NSString
-        for i in 0 ..< str.length {
-            length += str.character(at: i) > 0xff ? 2 : 1
-        }
-        return Int(ceil(Double(length) / 2.0))
-    }
-    
-    /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func fw_unicodeSubstring(_ length: Int) -> String {
-        let length = length * 2
-        let str = self as NSString
-        
-        var i: Int = 0
-        var len: Int = 0
-        while i < str.length {
-            len += str.character(at: i) > 0xff ? 2 : 1
-            i += 1
-            if i >= str.length { return self }
-            
-            if len == length {
-                return str.substring(to: i)
-            } else if len > length {
-                if i - 1 <= 0 { return "" }
-                return str.substring(to: i - 1)
-            }
-        }
-        return self
     }
     
     /// Unicode中文编码，将中文转换成Unicode字符串(如\u7E8C)
@@ -509,58 +412,6 @@ extension Wrapper where Base == URL {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
     
-    /// 去掉首尾空白字符
-    public var fw_trimString: String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    /// 首字母大写
-    public var fw_ucfirstString: String {
-        return String(prefix(1).uppercased() + dropFirst())
-    }
-    
-    /// 首字母小写
-    public var fw_lcfirstString: String {
-        return String(prefix(1).lowercased() + dropFirst())
-    }
-    
-    /// 驼峰转下划线
-    public var fw_underlineString: String {
-        guard self.count > 0 else { return self }
-        var result = ""
-        let str = self as NSString
-        for i in 0 ..< str.length {
-            let cString = String(format: "%c", str.character(at: i))
-            let cStringLower = cString.lowercased()
-            if cString == cStringLower {
-                result.append(contentsOf: cStringLower)
-            } else {
-                result.append(contentsOf: "_")
-                result.append(contentsOf: cStringLower)
-            }
-        }
-        return result
-    }
-    
-    /// 下划线转驼峰
-    public var fw_camelString: String {
-        guard self.count > 0 else { return self }
-        var result = ""
-        let comps = self.components(separatedBy: "_")
-        for i in 0 ..< comps.count {
-            let comp = comps[i] as NSString
-            if i > 0 && comp.length > 0 {
-                result.append(String(format: "%c", comp.character(at: 0)).uppercased())
-                if comp.length > 1 {
-                    result.append(comp.substring(from: 1))
-                }
-            } else {
-                result.append(comp as String)
-            }
-        }
-        return result
-    }
-    
     /// 中文转拼音
     public var fw_pinyinString: String {
         if self.isEmpty { return self }
@@ -621,31 +472,6 @@ extension Wrapper where Base == URL {
             string = string.replacingCharacters(in: range, with: "") as NSString
         }
         return string as String
-    }
-    
-    /// 从指定位置截取子串
-    public func fw_substring(from index: Int) -> String {
-        return fw_substring(with: min(index, self.count) ..< self.count)
-    }
-    
-    /// 截取子串到指定位置
-    public func fw_substring(to index: Int) -> String {
-        return fw_substring(with: 0 ..< max(0, index))
-    }
-    
-    /// 截取指定范围的子串
-    public func fw_substring(with range: NSRange) -> String {
-        guard let range = Range<Int>(range) else { return "" }
-        return fw_substring(with: range)
-    }
-    
-    /// 截取指定范围的子串
-    public func fw_substring(with range: Range<Int>) -> String {
-        guard range.lowerBound >= 0, range.upperBound >= range.lowerBound else { return "" }
-        let range = Range(uncheckedBounds: (lower: max(0, min(range.lowerBound, self.count)), upper: max(0, min(range.upperBound, self.count))))
-        let start = self.index(self.startIndex, offsetBy: range.lowerBound)
-        let end = self.index(start, offsetBy: range.upperBound - range.lowerBound)
-        return String(self[start ..< end])
     }
 }
 

@@ -52,6 +52,53 @@ public struct StoredValue<Value> {
     }
 }
 
+// MARK: - ValidatedValue
+/// ValidatedValue属性包装器注解，默认为手工指定或初始值
+///
+/// 使用示例：
+/// @ValidatedValue(.isEmail)
+/// var email: String = ""
+@propertyWrapper
+public class ValidatedValue<Value> {
+    private let validator: Validator<Value>
+    private let defaultValue: Value
+    private var value: Value
+    private var isValid: Bool
+    
+    public init(
+        wrappedValue: Value,
+        _ validator: Validator<Value>,
+        defaultValue: Value? = nil
+    ) {
+        self.validator = validator
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.value = wrappedValue
+        self.isValid = validator.validate(wrappedValue)
+    }
+    
+    public convenience init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ validator: Validator<WrappedValue>,
+        defaultValue: Value? = nil
+    ) where WrappedValue? == Value {
+        self.init(
+            wrappedValue: wrappedValue,
+            Validator(validator),
+            defaultValue: defaultValue
+        )
+    }
+    
+    public var wrappedValue: Value {
+        get {
+            isValid ? value : defaultValue
+        }
+        set {
+            value = newValue
+            isValid = validator.validate(newValue)
+        }
+    }
+}
+
 // MARK: - ModuleValue
 /// 模块属性包装器注解
 ///
