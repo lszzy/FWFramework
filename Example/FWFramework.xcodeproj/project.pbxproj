@@ -167,6 +167,9 @@
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
 		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
 		2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCodableController.swift; sourceTree = "<group>"; };
+		2FE6E8832BE0B97700F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../README_CN.md; sourceTree = "<group>"; };
+		2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../CHANGELOG_CN.md; sourceTree = "<group>"; };
+		2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -537,6 +540,9 @@
 			children = (
 				EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */,
 				9A618471107F1D6CF1E47FF0 /* README.md */,
+				2FE6E8832BE0B97700F0CC00 /* README_CN.md */,
+				2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */,
+				2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */,
 				E91AE76AA686014704EDE554 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
