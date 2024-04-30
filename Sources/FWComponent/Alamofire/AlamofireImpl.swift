@@ -297,7 +297,7 @@ extension Alamofire.MultipartFormData: RequestMultipartFormData {
 
 // MARK: - Autoloader+Alamofire
 @objc extension Autoloader {
-    static func loadExtension_Alamofire() {
+    static func loadComponent_Alamofire() {
         PluginManager.presetPlugin(RequestPlugin.self, object: AlamofireImpl.self)
     }
 }

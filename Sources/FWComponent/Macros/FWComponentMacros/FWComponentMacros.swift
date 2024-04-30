@@ -3,7 +3,7 @@ import Foundation
 import FWFramework
 #endif
 
-// MARK: - FWExtensionMacros
+// MARK: - FWComponentMacros
 /// MappedValue宏，仅支持class或struct
 ///
 /// 使用方法：
@@ -22,8 +22,8 @@ public macro MappedValueMacro() = #externalMacro(module: "FWMacroMacros", type: 
 public macro PropertyWrapperMacro(_ name: StaticString...) = #externalMacro(module: "FWMacroMacros", type: "PropertyWrapperMacro")
 
 // MARK: - Autoloader+Macros
-#if FWExtensionMacros
+#if FWComponentMacros
 @objc extension Autoloader {
-    static func loadExtension_Macros() {}
+    static func loadComponent_Macros() {}
 }
 #endif

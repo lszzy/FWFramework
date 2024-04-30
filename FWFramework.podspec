@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.3.2'
+  s.version               = '5.4.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -26,40 +26,40 @@ Pod::Spec.new do |s|
     ss.dependency 'FWFramework/FWFramework'
   end
   
-  s.subspec 'FWExtension' do |ss|
+  s.subspec 'FWComponent' do |ss|
     ss.subspec 'Contacts' do |sss|
-      sss.source_files = 'Sources/FWExtension/Contacts/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.source_files = 'Sources/FWExtension/Microphone/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Microphone/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.source_files = 'Sources/FWExtension/Calendar/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Calendar/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.source_files = 'Sources/FWExtension/Tracking/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Tracking/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
     end
     
     ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Sources/FWExtension/Macros/FWExtensionMacros/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Macros/FWComponentMacros/**/*.swift'
       sss.dependency 'FWFramework/FWFramework'
       sss.preserve_paths = [
-        'Sources/FWExtension/Macros/Package.swift',
-        'Sources/FWExtension/Macros/FWMacroMacros/**/*.swift'
+        'Sources/FWComponent/Macros/Package.swift',
+        'Sources/FWComponent/Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
       build_script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWExtension/Macros\\"
+        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWComponent/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
       swift_flags = <<-FLAGS.squish
@@ -70,7 +70,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWMacroMacros',
         :script => build_script,
-        :input_files => Dir.glob("{Sources/FWExtension/Macros/Package.swift, Sources/FWExtension/Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWComponent/Macros/Package.swift, Sources/FWComponent/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
@@ -81,26 +81,26 @@ Pod::Spec.new do |s|
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
       sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWExtensionMacros',
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWComponentMacros',
         'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
     end
     
     ss.subspec 'SDWebImage' do |sss|
-      sss.source_files = 'Sources/FWExtension/SDWebImage/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
       sss.dependency 'FWFramework/FWFramework'
     end
     
     ss.subspec 'Alamofire' do |sss|
-      sss.source_files = 'Sources/FWExtension/Alamofire/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Alamofire/**/*.swift'
       sss.dependency 'Alamofire'
       sss.dependency 'FWFramework/FWFramework'
     end
       
     ss.subspec 'Lottie' do |sss|
-      sss.source_files = 'Sources/FWExtension/Lottie/**/*.swift'
+      sss.source_files = 'Sources/FWComponent/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
       sss.dependency 'FWFramework/FWFramework'
     end

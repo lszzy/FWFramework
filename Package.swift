@@ -19,36 +19,36 @@ let package = Package(
             targets: ["FWSwiftUI"]
         ),
         .library(
-            name: "FWExtensionCalendar",
-            targets: ["FWExtensionCalendar"]
+            name: "FWComponentCalendar",
+            targets: ["FWComponentCalendar"]
         ),
         .library(
-            name: "FWExtensionContacts",
-            targets: ["FWExtensionContacts"]
+            name: "FWComponentContacts",
+            targets: ["FWComponentContacts"]
         ),
         .library(
-            name: "FWExtensionMicrophone",
-            targets: ["FWExtensionMicrophone"]
+            name: "FWComponentMicrophone",
+            targets: ["FWComponentMicrophone"]
         ),
         .library(
-            name: "FWExtensionTracking",
-            targets: ["FWExtensionTracking"]
+            name: "FWComponentTracking",
+            targets: ["FWComponentTracking"]
         ),
         .library(
-            name: "FWExtensionMacros",
-            targets: ["FWExtensionMacros"]
+            name: "FWComponentMacros",
+            targets: ["FWComponentMacros"]
         ),
         .library(
-            name: "FWExtensionSDWebImage",
-            targets: ["FWExtensionSDWebImage"]
+            name: "FWComponentSDWebImage",
+            targets: ["FWComponentSDWebImage"]
         ),
         .library(
-            name: "FWExtensionLottie",
-            targets: ["FWExtensionLottie"]
+            name: "FWComponentLottie",
+            targets: ["FWComponentLottie"]
         ),
         .library(
-            name: "FWExtensionAlamofire",
-            targets: ["FWExtensionAlamofire"]
+            name: "FWComponentAlamofire",
+            targets: ["FWComponentAlamofire"]
         ),
     ],
     dependencies: [
@@ -77,36 +77,36 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FWExtensionCalendar",
+            name: "FWComponentCalendar",
             dependencies: ["FWFramework"],
-            path: "Sources/FWExtension/Calendar",
+            path: "Sources/FWComponent/Calendar",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
             ]
         ),
         .target(
-            name: "FWExtensionContacts",
+            name: "FWComponentContacts",
             dependencies: ["FWFramework"],
-            path: "Sources/FWExtension/Contacts",
+            path: "Sources/FWComponent/Contacts",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
             ]
         ),
         .target(
-            name: "FWExtensionMicrophone",
+            name: "FWComponentMicrophone",
             dependencies: ["FWFramework"],
-            path: "Sources/FWExtension/Microphone",
+            path: "Sources/FWComponent/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
             ]
         ),
         .target(
-            name: "FWExtensionTracking",
+            name: "FWComponentTracking",
             dependencies: ["FWFramework"],
-            path: "Sources/FWExtension/Tracking",
+            path: "Sources/FWComponent/Tracking",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
@@ -118,52 +118,52 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
-            path: "Sources/FWExtension/Macros/FWMacroMacros"
+            path: "Sources/FWComponent/Macros/FWMacroMacros"
         ),
         .target(
-            name: "FWExtensionMacros",
+            name: "FWComponentMacros",
             dependencies: [
                 "FWFramework",
                 "FWMacroMacros",
             ],
-            path: "Sources/FWExtension/Macros/FWExtensionMacros",
+            path: "Sources/FWComponent/Macros/FWComponentMacros",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
-                .define("FWExtensionMacros"),
+                .define("FWComponentMacros"),
             ]
         ),
         .target(
-            name: "FWExtensionSDWebImage",
+            name: "FWComponentSDWebImage",
             dependencies: [
                 "FWFramework",
                 .product(name: "SDWebImage", package: "SDWebImage"),
             ],
-            path: "Sources/FWExtension/SDWebImage",
+            path: "Sources/FWComponent/SDWebImage",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
             ]
         ),
         .target(
-            name: "FWExtensionLottie",
+            name: "FWComponentLottie",
             dependencies: [
                 "FWFramework",
                 .product(name: "Lottie", package: "lottie-ios"),
             ],
-            path: "Sources/FWExtension/Lottie",
+            path: "Sources/FWComponent/Lottie",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
             ]
         ),
         .target(
-            name: "FWExtensionAlamofire",
+            name: "FWComponentAlamofire",
             dependencies: [
                 "FWFramework",
                 .product(name: "Alamofire", package: "Alamofire"),
             ],
-            path: "Sources/FWExtension/Alamofire",
+            path: "Sources/FWComponent/Alamofire",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
