@@ -1607,7 +1607,7 @@ fileprivate extension Asset {
     
 }
 
-open class ImagePickerController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePickerPreviewControllerDelegate, ToolbarTitleViewDelegate {
+open class ImagePickerController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePickerPreviewControllerDelegate, ImagePickerTitleViewDelegate {
     
     open weak var imagePickerControllerDelegate: ImagePickerControllerDelegate?
     /// 自定义预览控制器句柄，优先级低于delegate
@@ -1709,8 +1709,8 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     open var shouldRequestImage: Bool = false
     
     /// 当前titleView，默认不可点击，contentType方式会自动切换点击状态
-    open lazy var titleView: ToolbarTitleView = {
-        let result = ToolbarTitleView()
+    open lazy var titleView: ImagePickerTitleView = {
+        let result = ImagePickerTitleView()
         result.delegate = self
         return result
     }()
@@ -1798,11 +1798,6 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.titleView = titleView
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: AppBundle.navCloseImage, style: .plain, target: self, action: #selector(handleCancelButtonClick(_:)))
-    }
-    
-    deinit {
-        collectionView.dataSource = nil
-        collectionView.delegate = nil
     }
     
     open override func viewDidLoad() {
@@ -2072,13 +2067,16 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         navigationController?.pushViewController(imagePickerPreviewController, animated: true)
     }
     
-    // MARK: - ToolbarTitleViewDelegate
-    open func didTouchTitleView(_ titleView: ToolbarTitleView, isActive: Bool) {
+    // MARK: - ImagePickerTitleViewDelegate
+    open func didTouchTitleView(_ titleView: ImagePickerTitleView, isActive: Bool) {
         if isActive {
             showAlbumControllerAnimated(true)
         } else {
             hideAlbumControllerAnimated(true)
         }
+    }
+    
+    open func didChangedActive(_ active: Bool, for titleView: ImagePickerTitleView) {
     }
     
     // MARK: - Private
@@ -2826,6 +2824,315 @@ open class ImagePickerCollectionCell: UICollectionViewCell {
         iconImageView.image = iconImage
         iconImageView.isHidden = iconImage == nil
         setNeedsLayout()
+    }
+    
+}
+
+// MARK: - ImagePickerTitleView
+public protocol ImagePickerTitleViewDelegate: AnyObject {
+    func didTouchTitleView(_ titleView: ImagePickerTitleView, isActive: Bool)
+    func didChangedActive(_ active: Bool, for titleView: ImagePickerTitleView)
+}
+
+open class ImagePickerTitleView: UIControl, TitleViewProtocol {
+    /// 事件代理
+    open weak var delegate: ImagePickerTitleViewDelegate?
+    
+    /// 标题栏是否是激活状态，主要针对accessoryImage生效
+    open var isActive: Bool {
+        get { return _isActive }
+        set { setActive(newValue, animated: false) }
+    }
+    private var _isActive: Bool = false
+    
+    /// 标题栏最大显示宽度，默认不限制
+    open var maximumWidth: CGFloat = CGFloat.greatestFiniteMagnitude {
+        didSet { refreshLayout() }
+    }
+    
+    /// 标题文字
+    open var title: String? {
+        didSet {
+            titleLabel.text = title
+            refreshLayout()
+        }
+    }
+    
+    /// 是否适应tintColor变化，影响titleLabel，默认YES
+    open var adjustsTintColor: Bool = true
+    
+    /// 水平布局下的标题字体，默认为 加粗17
+    open var horizontalTitleFont: UIFont? = UIFont.boldSystemFont(ofSize: 17) {
+        didSet {
+            titleLabel.font = horizontalTitleFont
+            refreshLayout()
+        }
+    }
+    
+    /// 标题的上下左右间距，标题不显示时不参与计算大小，默认为 UIEdgeInsets.zero
+    open var titleEdgeInsets: UIEdgeInsets = .zero {
+        didSet { refreshLayout() }
+    }
+    
+    /// 自定义accessoryView，设置后accessoryImage无效，默认nil
+    open var accessoryView: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let accessoryView = accessoryView {
+                accessoryImage = nil
+                accessoryView.sizeToFit()
+                contentView.addSubview(accessoryView)
+            }
+            refreshLayout()
+        }
+    }
+    
+    /// 自定义accessoryImage，accessoryView为空时才生效，默认nil
+    open var accessoryImage: UIImage? {
+        get {
+            return _accessoryImage
+        }
+        set {
+            let accessoryImage = accessoryView != nil ? nil : newValue
+            _accessoryImage = accessoryImage
+            
+            if accessoryImage == nil {
+                accessoryImageView?.removeFromSuperview()
+                accessoryImageView = nil
+                refreshLayout()
+                return
+            }
+            
+            if accessoryImageView == nil {
+                accessoryImageView = UIImageView()
+                accessoryImageView?.contentMode = .center
+            }
+            accessoryImageView?.image = accessoryImage
+            accessoryImageView?.sizeToFit()
+            if let accessoryImageView = accessoryImageView, accessoryImageView.superview == nil {
+                contentView.addSubview(accessoryImageView)
+            }
+            refreshLayout()
+        }
+    }
+    private var _accessoryImage: UIImage?
+    
+    /// 指定accessoryView偏移位置，默认(3, 0)
+    open var accessoryViewOffset: CGPoint = CGPoint(x: 3, y: 0) {
+        didSet { refreshLayout() }
+    }
+    
+    /// 值为YES则title居中，`accessoryView`放在title的左边或右边；如果为NO，`accessoryView`和title整体居中；默认NO
+    open var showsAccessoryPlaceholder: Bool = false {
+        didSet { refreshLayout() }
+    }
+    
+    /// 标题标签
+    open lazy var titleLabel: UILabel = {
+        let result = UILabel()
+        result.textAlignment = .center
+        result.lineBreakMode = .byTruncatingTail
+        result.accessibilityTraits = result.accessibilityTraits.union(.header)
+        result.font = horizontalTitleFont
+        return result
+    }()
+    
+    private lazy var contentView: UIView = {
+        let result = UIView()
+        result.isUserInteractionEnabled = false
+        return result
+    }()
+    
+    private var titleLabelSize: CGSize = .zero
+    private var accessoryImageView: UIImageView?
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        didInitialize()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        didInitialize()
+    }
+    
+    private func didInitialize() {
+        addTarget(self, action: #selector(titleViewTouched), for: .touchUpInside)
+        
+        addSubview(contentView)
+        contentView.addSubview(titleLabel)
+        
+        isUserInteractionEnabled = false
+        contentHorizontalAlignment = .center
+    }
+    
+    open override var contentHorizontalAlignment: UIControl.ContentHorizontalAlignment {
+        get {
+            super.contentHorizontalAlignment
+        }
+        set {
+            super.contentHorizontalAlignment = newValue
+            refreshLayout()
+        }
+    }
+    
+    open override var isHighlighted: Bool {
+        get {
+            super.isHighlighted
+        }
+        set {
+            super.isHighlighted = newValue
+            alpha = isHighlighted ? 0.5 : 1.0
+        }
+    }
+    
+    open override func setNeedsLayout() {
+        updateTitleLabelSize()
+        super.setNeedsLayout()
+    }
+    
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        var resultSize = contentSize
+        resultSize.width = min(resultSize.width, maximumWidth)
+        return resultSize
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        return sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+    }
+    
+    open override func tintColorDidChange() {
+        super.tintColorDidChange()
+        
+        if adjustsTintColor {
+            titleLabel.textColor = tintColor
+        }
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        if bounds.size.width <= 0 || bounds.size.height <= 0 { return }
+        contentView.frame = bounds
+        
+        let maxSize = bounds.size
+        var contentSize = self.contentSize
+        contentSize.width = min(maxSize.width, contentSize.width)
+        contentSize.height = min(maxSize.height, contentSize.height)
+        
+        let contentOffsetLeft = (maxSize.width - contentSize.width) / 2.0
+        let contentOffsetRight = contentOffsetLeft
+        
+        let accessoryView = self.accessoryView ?? self.accessoryImageView
+        let accessoryViewSpace = accessorySpacingSize.width
+        let isTitleLabelShowing = (titleLabel.text?.count ?? 0) > 0
+        let titleEdgeInsets = titleEdgeInsetsIfShowingTitleLabel
+        
+        var minX = contentOffsetLeft + (showsAccessoryPlaceholder ? accessoryViewSpace : 0)
+        var maxX = maxSize.width - contentOffsetRight
+        
+        if let accessoryView = accessoryView {
+            var accessoryFrame = accessoryView.frame
+            accessoryFrame.origin.x = maxX - accessoryView.bounds.width
+            accessoryFrame.origin.y = (maxSize.height - accessoryView.bounds.height) / 2.0 + accessoryViewOffset.y
+            accessoryView.frame = accessoryFrame
+            maxX = accessoryView.frame.minX - accessoryViewOffset.x
+        }
+        
+        if isTitleLabelShowing {
+            minX += titleEdgeInsets.left
+            maxX -= titleEdgeInsets.right
+            let shouldTitleLabelCenterVertically = titleLabelSize.height + (titleEdgeInsets.top + titleEdgeInsets.bottom) < contentSize.height
+            let titleLabelMinY = shouldTitleLabelCenterVertically ? (maxSize.height - titleLabelSize.height) / 2.0 + titleEdgeInsets.top - titleEdgeInsets.bottom : titleEdgeInsets.top
+            titleLabel.frame = CGRect(x: minX, y: titleLabelMinY, width: maxX - minX, height: titleLabelSize.height)
+        } else {
+            titleLabel.frame = CGRect.zero
+        }
+        
+        var offsetY: CGFloat = (maxSize.height - contentSize.height) / 2.0
+        if contentVerticalAlignment == .top {
+            offsetY = 0
+        } else if contentVerticalAlignment == .bottom {
+            offsetY = maxSize.height - contentSize.height
+        }
+        subviews.forEach { obj in
+            if !CGRectIsEmpty(obj.frame) {
+                var objFrame = obj.frame
+                objFrame.origin.y = obj.frame.minY + offsetY
+                obj.frame = objFrame
+            }
+        }
+    }
+    
+    /// 动画方式设置标题栏是否激活，主要针对accessoryImage生效
+    open func setActive(_ active: Bool, animated: Bool) {
+        guard _isActive != active else { return }
+        _isActive = active
+        delegate?.didChangedActive(active, for: self)
+        if accessoryImage != nil {
+            let rotationDegree: CGFloat = active ? -180 : -360
+            UIView.animate(withDuration: animated ? 0.25 : 0, delay: 0, options: .init(rawValue: 8<<16)) {
+                self.accessoryImageView?.transform = .init(rotationAngle: CGFloat.pi * rotationDegree / 180.0)
+            }
+        }
+    }
+    
+    private var accessorySpacingSize: CGSize {
+        if let view = accessoryView ?? accessoryImageView {
+            return CGSize(width: view.bounds.width + accessoryViewOffset.x, height: view.bounds.height)
+        }
+        return .zero
+    }
+    
+    private var accessorySpacingSizeIfNeedesPlaceholder: CGSize {
+        return CGSize(width: accessorySpacingSize.width * (showsAccessoryPlaceholder ? 2 : 1), height: accessorySpacingSize.height)
+    }
+    
+    private var titleEdgeInsetsIfShowingTitleLabel: UIEdgeInsets {
+        return (titleLabelSize.width <= 0 || titleLabelSize.height <= 0) ? .zero : titleEdgeInsets
+    }
+    
+    private var firstLineWidthInVerticalStyle: CGFloat {
+        var firstLineWidth: CGFloat = titleLabelSize.width + (titleEdgeInsetsIfShowingTitleLabel.left + titleEdgeInsetsIfShowingTitleLabel.right)
+        firstLineWidth += accessorySpacingSizeIfNeedesPlaceholder.width
+        return firstLineWidth
+    }
+    
+    private var contentSize: CGSize {
+        var size = CGSize.zero
+        size.width = titleLabelSize.width + (titleEdgeInsetsIfShowingTitleLabel.left + titleEdgeInsetsIfShowingTitleLabel.right)
+        size.width += accessorySpacingSizeIfNeedesPlaceholder.width
+        size.height = max(titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom), 0)
+        size.height = max(size.height, accessorySpacingSizeIfNeedesPlaceholder.height)
+        return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+    }
+    
+    private func refreshLayout() {
+        let navigationBar = searchNavigationBar(self)
+        navigationBar?.setNeedsLayout()
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
+    }
+    
+    private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
+        guard let parent = child.superview else { return nil }
+        if let navigationBar = parent as? UINavigationBar { return navigationBar }
+        return searchNavigationBar(parent)
+    }
+    
+    private func updateTitleLabelSize() {
+        if (titleLabel.text?.count ?? 0) > 0 {
+            let size = titleLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+            titleLabelSize = CGSize(width: ceil(size.width), height: ceil(size.height))
+        } else {
+            titleLabelSize = .zero
+        }
+    }
+    
+    @objc private func titleViewTouched() {
+        let active = !isActive
+        delegate?.didTouchTitleView(self, isActive: active)
+        setActive(active, animated: true)
+        refreshLayout()
     }
     
 }
