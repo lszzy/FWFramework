@@ -470,6 +470,15 @@ extension ImagePlugin {
     
 }
 
+// MARK: - FrameworkAutoloader+ImagePlugin
+@objc extension FrameworkAutoloader {
+    
+    static func loadPlugin_ImagePlugin() {
+        ModuleBundle.imageNamedBlock = { UIImage.fw_imageNamed($0, bundle: $1) }
+    }
+    
+}
+
 // MARK: - Concurrency+ImagePlugin
 #if compiler(>=5.6.0) && canImport(_Concurrency)
 extension Wrapper where Base: UIImage {
