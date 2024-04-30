@@ -36,7 +36,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	  pod 'FWFramework'
    
       # 引入宏子模块
-      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWExtension/Macros']   
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWPlugin/Macros']   
 	  # 引入指定子模块，子模块列表详见podspec文件
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -50,7 +50,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	import FWFramework
  
     # 勾选并引入宏子模块
-    import FWExtensionMacros 
+    import FWPluginMacros 
 	# 勾选并引入指定子模块，子模块列表详见Package.swift文件
 	import FWSwiftUI
 

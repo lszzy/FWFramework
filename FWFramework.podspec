@@ -62,40 +62,40 @@ Pod::Spec.new do |s|
     end
   end
   
-  s.subspec 'FWComponent' do |ss|
+  s.subspec 'FWPlugin' do |ss|
     ss.subspec 'Contacts' do |sss|
-      sss.source_files = 'Sources/FWComponent/Contacts/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.source_files = 'Sources/FWComponent/Microphone/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Microphone/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.source_files = 'Sources/FWComponent/Calendar/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Calendar/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.source_files = 'Sources/FWComponent/Tracking/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Tracking/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Sources/FWComponent/Macros/FWComponentMacros/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Macros/FWPluginMacros/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
       sss.preserve_paths = [
-        'Sources/FWComponent/Macros/Package.swift',
-        'Sources/FWComponent/Macros/FWMacroMacros/**/*.swift'
+        'Sources/FWPlugin/Macros/Package.swift',
+        'Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift'
       ]
       
       product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
       build_script = <<-SCRIPT.squish
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWComponent/Macros\\"
+        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWPlugin/Macros\\"
         --scratch-path \\"#{product_folder}\\""
       SCRIPT
       swift_flags = <<-FLAGS.squish
@@ -106,7 +106,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWMacroMacros',
         :script => build_script,
-        :input_files => Dir.glob("{Sources/FWComponent/Macros/Package.swift, Sources/FWComponent/Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
@@ -117,26 +117,26 @@ Pod::Spec.new do |s|
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
       sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWComponentMacros',
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWPluginMacros',
         'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
         'OTHER_SWIFT_FLAGS' => swift_flags
       }
     end
     
     ss.subspec 'SDWebImage' do |sss|
-      sss.source_files = 'Sources/FWComponent/SDWebImage/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Alamofire' do |sss|
-      sss.source_files = 'Sources/FWComponent/Alamofire/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Alamofire/**/*.swift'
       sss.dependency 'Alamofire'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
       
     ss.subspec 'Lottie' do |sss|
-      sss.source_files = 'Sources/FWComponent/Lottie/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end

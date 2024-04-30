@@ -1,30 +1,32 @@
 //
-//  AuthorizeMicrophone.swift
+//  AuthorizeContacts.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-import AVFoundation
+import Contacts
 #if FWMacroSPM
 import FWFramework
 #endif
 
-// MARK: - AuthorizeType+Microphone
+// MARK: - AuthorizeType+Contacts
 extension AuthorizeType {
-    /// 麦克风，Info.plist需配置NSMicrophoneUsageDescription
-    public static let microphone: AuthorizeType = .init("microphone")
+    /// 联系人，Info.plist需配置NSContactsUsageDescription
+    public static let contacts: AuthorizeType = .init("contacts")
 }
 
-// MARK: - AuthorizeMicrophone
-/// 麦克风授权
-private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
+// MARK: - AuthorizeContacts
+/// 通讯录授权
+private class AuthorizeContacts: NSObject, AuthorizeProtocol {
     func authorizeStatus() -> AuthorizeStatus {
-        let status = AVAudioSession.sharedInstance().recordPermission
+        let status = CNContactStore.authorizationStatus(for: .contacts)
         switch status {
+        case .restricted:
+            return .restricted
         case .denied:
             return .denied
-        case .granted:
+        case .authorized:
             return .authorized
         default:
             return .notDetermined
@@ -32,7 +34,7 @@ private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+        CNContactStore().requestAccess(for: .contacts) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
@@ -43,9 +45,9 @@ private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
     }
 }
 
-// MARK: - Autoloader+Microphone
+// MARK: - Autoloader+Contacts
 @objc extension Autoloader {
-    static func loadComponent_Microphone() {
-        AuthorizeManager.presetAuthorize(.microphone) { AuthorizeMicrophone() }
+    static func loadPlugin_Contacts() {
+        AuthorizeManager.presetAuthorize(.contacts) { AuthorizeContacts() }
     }
 }

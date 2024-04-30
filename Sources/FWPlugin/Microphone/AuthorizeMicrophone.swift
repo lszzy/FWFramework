@@ -1,32 +1,30 @@
 //
-//  AuthorizeContacts.swift
+//  AuthorizeMicrophone.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-import Contacts
+import AVFoundation
 #if FWMacroSPM
 import FWFramework
 #endif
 
-// MARK: - AuthorizeType+Contacts
+// MARK: - AuthorizeType+Microphone
 extension AuthorizeType {
-    /// 联系人，Info.plist需配置NSContactsUsageDescription
-    public static let contacts: AuthorizeType = .init("contacts")
+    /// 麦克风，Info.plist需配置NSMicrophoneUsageDescription
+    public static let microphone: AuthorizeType = .init("microphone")
 }
 
-// MARK: - AuthorizeContacts
-/// 通讯录授权
-private class AuthorizeContacts: NSObject, AuthorizeProtocol {
+// MARK: - AuthorizeMicrophone
+/// 麦克风授权
+private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
     func authorizeStatus() -> AuthorizeStatus {
-        let status = CNContactStore.authorizationStatus(for: .contacts)
+        let status = AVAudioSession.sharedInstance().recordPermission
         switch status {
-        case .restricted:
-            return .restricted
         case .denied:
             return .denied
-        case .authorized:
+        case .granted:
             return .authorized
         default:
             return .notDetermined
@@ -34,7 +32,7 @@ private class AuthorizeContacts: NSObject, AuthorizeProtocol {
     }
     
     func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        CNContactStore().requestAccess(for: .contacts) { granted, error in
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
@@ -45,9 +43,9 @@ private class AuthorizeContacts: NSObject, AuthorizeProtocol {
     }
 }
 
-// MARK: - Autoloader+Contacts
+// MARK: - Autoloader+Microphone
 @objc extension Autoloader {
-    static func loadComponent_Contacts() {
-        AuthorizeManager.presetAuthorize(.contacts) { AuthorizeContacts() }
+    static func loadPlugin_Microphone() {
+        AuthorizeManager.presetAuthorize(.microphone) { AuthorizeMicrophone() }
     }
 }

@@ -90,7 +90,7 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
 
 // MARK: - Autoloader+Calendar
 @objc extension Autoloader {
-    static func loadComponent_Calendar() {
+    static func loadPlugin_Calendar() {
         AuthorizeManager.presetAuthorize(.calendars) { AuthorizeCalendar(type: .event) }
         AuthorizeManager.presetAuthorize(.calendarsWriteOnly) { AuthorizeCalendar(type: .event, writeOnly: true) }
         AuthorizeManager.presetAuthorize(.reminders) { AuthorizeCalendar(type: .reminder) }
