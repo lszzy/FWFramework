@@ -149,7 +149,11 @@ open class ModuleBundle: NSObject {
     
     /// 获取当前模块图片
     open class func imageNamed(_ name: String) -> UIImage? {
-        if let image = UIImage.fw_imageNamed(name, bundle: bundle()) { return image }
+        if let image = imageNamedBlock?(name, bundle()) {
+            return image
+        } else if let image = UIImage(named: name, in: bundle(), compatibleWith: nil) {
+            return image
+        }
         
         let value = bundleTarget.images[name]
         if let image = value as? UIImage {
@@ -238,6 +242,8 @@ open class ModuleBundle: NSObject {
             return target
         }
     }
+    
+    static var imageNamedBlock: ((String, Bundle?) -> UIImage?)?
     
     // MARK: - Override
     /// 初始化模块Bundle，子类可重写，用于加载自定义Bundle
