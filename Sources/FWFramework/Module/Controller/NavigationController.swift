@@ -187,7 +187,7 @@ extension Wrapper where Base: UIToolbar {
         guard !fw_staticBarTransitionEnabled else { return }
         fw_staticBarTransitionEnabled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
@@ -202,7 +202,7 @@ extension Wrapper where Base: UIToolbar {
             }
         }}
         
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass(String(format: "%@%@%@", "_U", "IBarBack", "ground")),
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
@@ -223,7 +223,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector, hidden)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -244,7 +244,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -276,7 +276,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.pushViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> Void).self,
@@ -303,7 +303,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, viewController, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> UIViewController?).self,
@@ -328,7 +328,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popToViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
@@ -352,7 +352,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, viewController, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popToRootViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
@@ -377,7 +377,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.setViewControllers(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
@@ -405,7 +405,7 @@ extension Wrapper where Base: UIToolbar {
     fileprivate static func fw_swizzleNavigationController() {
         // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
         if #available(iOS 14.2, *) {} else if #available(iOS 14.0, *) {
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToViewController(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
@@ -431,7 +431,7 @@ extension Wrapper where Base: UIToolbar {
                 return result
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToRootViewController(animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
@@ -446,7 +446,7 @@ extension Wrapper where Base: UIToolbar {
                 return result
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.setViewControllers(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
@@ -469,7 +469,7 @@ extension Wrapper where Base: UIToolbar {
                 selfObject.fw_shouldBottomBarBeHidden = false
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
                 methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,

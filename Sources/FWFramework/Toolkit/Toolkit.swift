@@ -2872,7 +2872,7 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     fileprivate static func fw_swizzleToolkitViewController() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
@@ -2887,7 +2887,7 @@ public enum ViewControllerLifecycleState: Int {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
@@ -2902,7 +2902,7 @@ public enum ViewControllerLifecycleState: Int {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -2916,7 +2916,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -2930,7 +2930,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -2944,7 +2944,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -2958,7 +2958,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -2972,7 +2972,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -2986,7 +2986,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3002,7 +3002,7 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     fileprivate static func fw_swizzleToolkitTitleView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
@@ -3031,7 +3031,7 @@ public enum ViewControllerLifecycleState: Int {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(setter: UIViewController.title),
             methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
@@ -3044,7 +3044,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.title),
             methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
@@ -3057,7 +3057,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.titleView),
             methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
@@ -3225,7 +3225,7 @@ public enum ViewControllerLifecycleState: Int {
         guard !fw_staticPopProxySwizzled else { return }
         fw_staticPopProxySwizzled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
@@ -3242,7 +3242,7 @@ public enum ViewControllerLifecycleState: Int {
             return store.original(selfObject, store.selector, navigationBar, item)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
@@ -3259,7 +3259,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarHidden),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
@@ -3272,7 +3272,7 @@ public enum ViewControllerLifecycleState: Int {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarStyle),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,

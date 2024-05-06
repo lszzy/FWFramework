@@ -695,7 +695,7 @@ public class ThemeObject<T>: NSObject {
     }
     
     private static func fw_swizzleThemeClass(_ themeClass: AnyClass) {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,

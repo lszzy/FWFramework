@@ -182,7 +182,7 @@ public class ErrorManager: NSObject {
     
     // MARK: - Private
     private static func registerHandler() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: ObjCClassBridge.methodSignatureSelector,
             methodSignature: (@convention(c) (NSObject, Selector, Selector) -> AnyObject?).self,
@@ -200,7 +200,7 @@ public class ErrorManager: NSObject {
             return methodSignature
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: ObjCClassBridge.forwardInvocationSelector,
             methodSignature: (@convention(c) (NSObject, Selector, ObjCInvocationBridge) -> Void).self,
@@ -228,7 +228,7 @@ public class ErrorManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: #selector(NSObject.setValue(_:forKey:)),
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
@@ -246,7 +246,7 @@ public class ErrorManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: #selector(NSObject.setValue(_:forKeyPath:)),
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
@@ -264,7 +264,7 @@ public class ErrorManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: #selector(NSObject.setValue(_:forUndefinedKey:)),
             methodSignature: (@convention(c) (NSObject, Selector, Any?, String) -> Void).self,
@@ -282,7 +282,7 @@ public class ErrorManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSObject.self,
             selector: #selector(NSObject.setValuesForKeys(_:)),
             methodSignature: (@convention(c) (NSObject, Selector, [String : Any]) -> Void).self,

@@ -508,7 +508,7 @@ extension EmptyViewDelegate {
         guard !fw_staticEmptyPluginEnabled else { return }
         fw_staticEmptyPluginEnabled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
             selector: #selector(UITableView.reloadData),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
@@ -518,7 +518,7 @@ extension EmptyViewDelegate {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
             selector: #selector(UITableView.endUpdates),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
@@ -528,7 +528,7 @@ extension EmptyViewDelegate {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UICollectionView.self,
             selector: #selector(UICollectionView.reloadData),
             methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
