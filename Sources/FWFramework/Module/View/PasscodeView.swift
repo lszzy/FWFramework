@@ -281,7 +281,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         var currentPlaceholder: String?
         if (placeholderText?.count ?? 0) > indexPath.row {
-            currentPlaceholder = placeholderText?.fw_substring(with: NSMakeRange(indexPath.row, 1))
+            currentPlaceholder = placeholderText?.fw.substring(with: NSMakeRange(indexPath.row, 1))
             cellProperty.cellPlaceholderText = currentPlaceholder
         }
         
@@ -353,7 +353,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         valueText = filterInputContent(valueText)
         
         if valueText.count >= codeLength {
-            valueText = valueText.fw_substring(to: codeLength)
+            valueText = valueText.fw.substring(to: codeLength)
             if endEditWhenEditingFinished {
                 endEdit()
             }

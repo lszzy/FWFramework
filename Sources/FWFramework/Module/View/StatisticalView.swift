@@ -311,7 +311,7 @@ public class StatisticalManager: NSObject {
     }
     
     fileprivate static func statisticalIdentifier(event: StatisticalEvent?, indexPath: IndexPath? = nil, indexPaths: [IndexPath]? = nil) -> String {
-        var identifier = "\(String.fw_safeString(event?.name))-\(String.fw_safeString(event?.object))"
+        var identifier = "\(String.fw.safeString(event?.name))-\(String.fw.safeString(event?.object))"
         if let indexPaths = indexPaths {
             for indexPath in indexPaths {
                 identifier += "-\(indexPath.section).\(indexPath.row)"

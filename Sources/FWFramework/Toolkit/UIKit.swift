@@ -2459,7 +2459,7 @@ extension Wrapper where Base: UIViewController {
                     }
                     if !NSEqualRanges(range, fullRange) { return }
                     for (attr, value) in attrs {
-                        if String.fw_safeString(prevTextAttributes[attr]) == String.fw_safeString(value) {
+                        if String.fw.safeString(prevTextAttributes[attr]) == String.fw.safeString(value) {
                             removeAttributes.append(attr)
                         }
                     }
@@ -3616,13 +3616,13 @@ extension Wrapper where Base: UIViewController {
         func textLengthChanged() {
             if maxLength > 0, shouldCheckLength {
                 if (textValue?.count ?? 0) > maxLength {
-                    textValue = textValue?.fw_substring(to: maxLength)
+                    textValue = textValue?.fw.substring(to: maxLength)
                 }
             }
 
             if maxUnicodeLength > 0, shouldCheckLength {
-                if (textValue?.fw_unicodeLength ?? 0) > maxUnicodeLength {
-                    textValue = textValue?.fw_unicodeSubstring(maxUnicodeLength)
+                if (textValue?.fw.unicodeLength ?? 0) > maxUnicodeLength {
+                    textValue = textValue?.fw.unicodeSubstring(maxUnicodeLength)
                 }
             }
         }
@@ -3631,13 +3631,13 @@ extension Wrapper where Base: UIViewController {
             var filterText = text
             if maxLength > 0, shouldCheckLength {
                 if filterText.count > maxLength {
-                    filterText = filterText.fw_substring(to: maxLength)
+                    filterText = filterText.fw.substring(to: maxLength)
                 }
             }
 
             if maxUnicodeLength > 0, shouldCheckLength {
-                if filterText.fw_unicodeLength > maxUnicodeLength {
-                    filterText = filterText.fw_unicodeSubstring(maxUnicodeLength)
+                if filterText.fw.unicodeLength > maxUnicodeLength {
+                    filterText = filterText.fw.unicodeSubstring(maxUnicodeLength)
                 }
             }
             return filterText
@@ -4155,7 +4155,7 @@ extension Wrapper where Base: UIViewController {
     
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: (UITableViewCell) -> Void = { [weak self] cell in
             let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,
@@ -4431,7 +4431,7 @@ extension Wrapper where Base: UIViewController {
     
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: (UICollectionViewCell) -> Void = { [weak self] cell in
             let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,

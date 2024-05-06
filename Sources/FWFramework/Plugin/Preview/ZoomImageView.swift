@@ -604,7 +604,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             if (urlString as NSString).isAbsolutePath {
                 imageURL = URL(fileURLWithPath: urlString)
             } else {
-                imageURL = URL.fw_url(string: urlString)
+                imageURL = URL.fw.url(string: urlString)
             }
         } else if let urlRequest = imageURL as? URLRequest {
             imageURL = urlRequest.url

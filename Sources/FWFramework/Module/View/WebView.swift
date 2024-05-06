@@ -1345,7 +1345,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         
         var requestUrl = request as? URL
         if requestUrl == nil, let urlString = request as? String {
-            requestUrl = URL.fw_url(string: urlString)
+            requestUrl = URL.fw.url(string: urlString)
         }
         guard let requestUrl = requestUrl else { return nil }
         

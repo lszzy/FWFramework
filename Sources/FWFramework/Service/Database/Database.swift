@@ -1073,7 +1073,7 @@ private extension DatabaseManager {
                     let data = value as? NSData ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, data.bytes, Int32(data.length), nil)
                 case .string:
-                    let string = String.fw_safeString(value)
+                    let string = String.fw.safeString(value)
                     sqlite3_bind_text(ppStmt, index, (string as NSString).utf8String, -1, nil)
                 case .number, .double, .float:
                     sqlite3_bind_double(ppStmt, index, (value as? NSNumber)?.doubleValue ?? 0)

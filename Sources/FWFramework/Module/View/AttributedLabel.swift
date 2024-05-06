@@ -1074,7 +1074,7 @@ open class AttributedLabel: UIView {
         } else {
             var url: URL?
             if let linkString = linkData as? String {
-                url = URL.fw_url(string: linkString)
+                url = URL.fw.url(string: linkString)
             } else if let linkUrl = linkData as? URL {
                 url = linkUrl
             }

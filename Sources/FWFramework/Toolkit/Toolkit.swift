@@ -1171,7 +1171,7 @@ extension Wrapper where Base: UINavigationController {
             player = AVPlayer(playerItem: playerItem)
         } else if let url = url as? URL {
             player = AVPlayer(url: url)
-        } else if let videoUrl = URL.fw_url(string: url as? String) {
+        } else if let videoUrl = URL.fw.url(string: url as? String) {
             player = AVPlayer(url: videoUrl)
         }
         guard player != nil else { return nil }
@@ -1427,10 +1427,10 @@ extension Wrapper where Base: UINavigationController {
         // 处理参数
         var string = hexString.uppercased()
         if string.hasPrefix("0X") {
-            string = string.fw_substring(from: 2)
+            string = string.fw.substring(from: 2)
         }
         if string.hasPrefix("#") {
-            string = string.fw_substring(from: 1)
+            string = string.fw.substring(from: 1)
         }
         
         // 检查长度
@@ -1447,30 +1447,30 @@ extension Wrapper where Base: UINavigationController {
         if length < 5 {
             // ARGB
             if fw_colorStandardARGB && length == 4 {
-                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(1, 3)), string.fw_substring(with: NSMakeRange(0, 1)))
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
             }
             // RGB|RGBA
-            let tmpR = string.fw_substring(with: NSMakeRange(0, 1))
-            let tmpG = string.fw_substring(with: NSMakeRange(1, 1))
-            let tmpB = string.fw_substring(with: NSMakeRange(2, 1))
+            let tmpR = string.fw.substring(with: NSMakeRange(0, 1))
+            let tmpG = string.fw.substring(with: NSMakeRange(1, 1))
+            let tmpB = string.fw.substring(with: NSMakeRange(2, 1))
             strR = String(format: "%@%@", tmpR, tmpR)
             strG = String(format: "%@%@", tmpG, tmpG)
             strB = String(format: "%@%@", tmpB, tmpB)
             if length == 4 {
-                let tmpA = string.fw_substring(with: NSMakeRange(3, 1))
+                let tmpA = string.fw.substring(with: NSMakeRange(3, 1))
                 strA = String(format: "%@%@", tmpA, tmpA)
             }
         } else {
             // AARRGGBB
             if fw_colorStandardARGB && length == 8 {
-                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(2, 6)), string.fw_substring(with: NSMakeRange(0, 2)))
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
             }
             // RRGGBB|RRGGBBAA
-            strR = string.fw_substring(with: NSMakeRange(0, 2))
-            strG = string.fw_substring(with: NSMakeRange(2, 2))
-            strB = string.fw_substring(with: NSMakeRange(4, 2))
+            strR = string.fw.substring(with: NSMakeRange(0, 2))
+            strG = string.fw.substring(with: NSMakeRange(2, 2))
+            strB = string.fw.substring(with: NSMakeRange(4, 2))
             if length == 8 {
-                strA = string.fw_substring(with: NSMakeRange(6, 2))
+                strA = string.fw.substring(with: NSMakeRange(6, 2))
             }
         }
         

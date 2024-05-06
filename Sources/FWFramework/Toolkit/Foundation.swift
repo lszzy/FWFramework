@@ -1871,12 +1871,12 @@ extension Wrapper where Base: UserDefaults {
         var urlString = string + (string.contains("?") ? "&" : "?")
         let urlParams = params ?? [:]
         for (key, value) in urlParams {
-            let valueStr = String.fw_safeString(value)
+            let valueStr = String.fw.safeString(value)
                 .replacingOccurrences(of: " ", with: "+")
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            urlString += "\(String.fw_safeString(key))=\(valueStr ?? "")&"
+            urlString += "\(String.fw.safeString(key))=\(valueStr ?? "")&"
         }
-        return URL(string: urlString.fw_substring(to: urlString.count - 1))
+        return URL(string: urlString.fw.substring(to: urlString.count - 1))
     }
     
 }

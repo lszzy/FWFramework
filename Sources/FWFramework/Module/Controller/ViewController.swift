@@ -116,7 +116,7 @@ public class ViewControllerManager: NSObject {
     ///   - type: 控制器协议类型，必须继承ViewControllerProtocol
     ///   - intercepter: 控制器拦截器对象，传nil时取消注册
     public func registerProtocol<T>(_ type: T.Type, intercepter: ViewControllerIntercepter?) {
-        let intercepterId = String.fw_safeString(type)
+        let intercepterId = String.fw.safeString(type)
         if let intercepter = intercepter {
             intercepter.intercepterValidator = { $0 is T }
             intercepters[intercepterId] = intercepter
@@ -134,7 +134,7 @@ public class ViewControllerManager: NSObject {
         
         // 解析拦截器列表，ViewControllerProtocol始终位于第一位
         var intercepterNames: [String] = []
-        intercepterNames.append(String.fw_safeString(ViewControllerProtocol.self))
+        intercepterNames.append(String.fw.safeString(ViewControllerProtocol.self))
         for (intercepterName, intercepter) in intercepters {
             if intercepter.intercepterValidator?(viewController) ?? false,
                !intercepterNames.contains(intercepterName) {
