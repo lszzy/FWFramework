@@ -232,9 +232,9 @@ open class BadgeView: UIView, BadgeViewProtocol {
             if let view = self.fw_view {
                 newValue?(self, view)
             } else {
-                self.fw_observeProperty("view") { object, change in
-                    guard let object = object as? UIBarItem, change[.newKey] != nil else { return }
-                    object.fw_unobserveProperty("view")
+                self.fw.observeProperty("view") { object, change in
+                    guard change[.newKey] != nil else { return }
+                    object.fw.unobserveProperty("view")
                     
                     if let view = object.fw_view {
                         object.fw_viewLoadedBlock?(object, view)
