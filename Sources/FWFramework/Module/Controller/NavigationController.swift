@@ -708,7 +708,7 @@ extension Wrapper where Base: UIToolbar {
     static func loadModule_NavigationController() {
         UINavigationController.fw_swizzleNavigationController()
         
-        FrameworkBundle.barStyleChanged = { viewController in
+        NavigationBarAppearance.appearanceChanged = { viewController in
             viewController.fw_barTransitionNeedsUpdate()
         }
     }

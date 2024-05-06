@@ -178,6 +178,10 @@ open class RequestContextAccessory: RequestAccessory {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
+    static var showErrorBlock: ((_ context: AnyObject?, _ error: Error) -> Void)?
+    static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    
     public override init() {
         super.init()
         
@@ -251,7 +255,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         DispatchQueue.fw_mainAsync {
-            FrameworkBundle.showErrorBlock?(request.context, error)
+            RequestContextAccessory.showErrorBlock?(request.context, error)
         }
     }
     
@@ -266,7 +270,7 @@ open class RequestContextAccessory: RequestAccessory {
         
         guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
-            FrameworkBundle.showLoadingBlock?(request.context)
+            RequestContextAccessory.showLoadingBlock?(request.context)
         }
     }
     
@@ -279,7 +283,7 @@ open class RequestContextAccessory: RequestAccessory {
         
         guard request.context != nil else { return }
         DispatchQueue.fw_mainAsync {
-            FrameworkBundle.hideLoadingBlock?(request.context)
+            RequestContextAccessory.hideLoadingBlock?(request.context)
         }
     }
 }
