@@ -577,9 +577,9 @@ extension _ExtendCustomModelType {
             dict.forEach({ (kvPair) in
                 var newKey = kvPair.key
                 if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                    newKey = newKey.fw_camelString
+                    newKey = newKey.fw.camelString
                 } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                    newKey = newKey.fw_underlineString
+                    newKey = newKey.fw.underlineString
                 }
                 if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
                     newKey = newKey.lowercased()
@@ -654,9 +654,9 @@ extension _ExtendCustomModelType {
             children.forEach { (child) in
                 var key = child.0
                 if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
-                    key = key.fw_underlineString
+                    key = key.fw.underlineString
                 } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
-                    key = key.fw_camelString
+                    key = key.fw.camelString
                 }
                 if let value = child.1 as? JSONMappedValue {
                     result[key] = (value.mappingValue(), infoDict[child.0])

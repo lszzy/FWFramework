@@ -914,7 +914,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
 
@@ -1163,7 +1163,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         let cacheMetadata = RequestCacheMetadata()
         cacheMetadata.version = cacheVersion()
-        cacheMetadata.sensitiveDataString = String.fw_safeString(cacheSensitiveData())
+        cacheMetadata.sensitiveDataString = String.fw.safeString(cacheSensitiveData())
         cacheMetadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
         cacheMetadata.creationDate = Date()
         cacheMetadata.appVersionString = UIApplication.fw_appVersion
@@ -1187,7 +1187,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
             baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
         }
         let argument = cacheArgumentFilter(requestArgument())
-        let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
+        let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw.safeString(argument))
         return requestInfo.fw_md5Encode
     }
     
@@ -1198,7 +1198,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
         
@@ -1232,7 +1232,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         
         let metadataSensitive = cacheMetadata.sensitiveDataString ?? ""
-        let currentSensitive = String.fw_safeString(cacheSensitiveData())
+        let currentSensitive = String.fw.safeString(cacheSensitiveData())
         if metadataSensitive != currentSensitive {
             throw RequestError.cacheSensitiveDataMismatch
         }

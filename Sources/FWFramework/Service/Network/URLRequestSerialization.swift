@@ -133,11 +133,11 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 } else if pair.value is NSNull {
                     data = Data()
                 } else {
-                    data = String.fw_safeString(pair.value).data(using: stringEncoding)
+                    data = String.fw.safeString(pair.value).data(using: stringEncoding)
                 }
                 
                 if let data = data {
-                    formData.appendPart(formData: data, name: String.fw_safeString(pair.field))
+                    formData.appendPart(formData: data, name: String.fw.safeString(pair.field))
                 }
             }
         }
@@ -279,7 +279,7 @@ extension HTTPRequestSerializer {
         var queryStringComponents: [QueryStringPair] = []
         
         if let dictionary = value as? [AnyHashable: Any] {
-            let nestedKeys = dictionary.keys.map { String.fw_safeString($0) }.sorted { $0 < $1 }
+            let nestedKeys = dictionary.keys.map { String.fw.safeString($0) }.sorted { $0 < $1 }
             for nestedKey in nestedKeys {
                 if let nestedValue = dictionary[nestedKey] {
                     queryStringComponents.append(contentsOf: queryStringPairs(key: (key != nil) ? "\(key!)[\(nestedKey)]" : nestedKey, value: nestedValue))
@@ -290,7 +290,7 @@ extension HTTPRequestSerializer {
                 queryStringComponents.append(contentsOf: queryStringPairs(key: "\(key ?? "")[]", value: nestedValue))
             }
         } else if let set = value as? Set<AnyHashable> {
-            let objs = set.sorted { String.fw_safeString($0) < String.fw_safeString($1) }
+            let objs = set.sorted { String.fw.safeString($0) < String.fw.safeString($1) }
             for obj in objs {
                 queryStringComponents.append(contentsOf: queryStringPairs(key: key, value: obj))
             }
@@ -312,9 +312,9 @@ extension HTTPRequestSerializer {
         
         var urlEncodedStringValue: String {
             if value == nil || value is NSNull {
-                return HTTPRequestSerializer.percentEscapedString(from: String.fw_safeString(field))
+                return HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field))
             } else {
-                return String(format: "%@=%@", HTTPRequestSerializer.percentEscapedString(from: String.fw_safeString(field)), HTTPRequestSerializer.percentEscapedString(from: String.fw_safeString(value)))
+                return String(format: "%@=%@", HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field)), HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(value)))
             }
         }
     }

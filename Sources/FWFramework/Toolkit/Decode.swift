@@ -383,7 +383,7 @@ extension Wrapper where Base == URL {
         var result = ""
         for (key, value) in dict {
             if result.count > 0 { result.append("&") }
-            let string = String.fw_safeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
+            let string = String.fw.safeString(value).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted) ?? ""
             result.append("\(key)=\(string)")
         }
         return result
@@ -393,7 +393,7 @@ extension Wrapper where Base == URL {
     public var fw_queryDecode: [String: String] {
         var result: [String: String] = [:]
         var queryString = self
-        if let url = URL.fw_url(string: self), let scheme = url.scheme, scheme.count > 0 {
+        if let url = URL.fw.url(string: self), let scheme = url.scheme, scheme.count > 0 {
             queryString = url.query ?? ""
         }
         let parameters = queryString.components(separatedBy: "&")

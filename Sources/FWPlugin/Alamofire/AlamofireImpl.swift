@@ -125,7 +125,7 @@ open class AlamofireImpl: NSObject, RequestPlugin {
             dataRequest = session.upload(multipartFormData: { formData in
                 let parameters = request.requestArgument() as? [String: Any]
                 parameters?.forEach { (field, value) in
-                    if let data = (value as? Data) ?? String.fw_safeString(value).data(using: .utf8) {
+                    if let data = (value as? Data) ?? String.fw.safeString(value).data(using: .utf8) {
                         formData.append(data, name: field)
                     }
                 }
