@@ -2076,8 +2076,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         }
     }
     
-    open func didChangedActive(_ active: Bool, for titleView: ImagePickerTitleView) {
-    }
+    open func didChangedActive(_ active: Bool, for titleView: ImagePickerTitleView) {}
     
     // MARK: - Private
     private func refreshCollectionView() {
