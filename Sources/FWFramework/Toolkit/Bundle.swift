@@ -25,6 +25,8 @@ open class ModuleBundle: NSObject {
         var strings: [String: [String: [String: String]]] = [:]
     }
     
+    static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
+    
     /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {
         if let bundle = bundleTarget.bundle {
@@ -39,7 +41,7 @@ open class ModuleBundle: NSObject {
     
     /// 获取当前模块图片
     open class func imageNamed(_ name: String) -> UIImage? {
-        if let image = FrameworkBundle.imageNamedBlock?(name, bundle()) {
+        if let image = imageNamedBlock?(name, bundle()) {
             return image
         } else if let image = UIImage(named: name, in: bundle(), compatibleWith: nil) {
             return image
@@ -219,17 +221,6 @@ public class FrameworkBundle: ModuleBundle {
     public static var refreshLoadingTitle: String { localizedString("fw.refreshLoading") }
     /// 多语言，已经全部加载完毕，fw.refreshFinished
     public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
-    
-    // MARK: - Block
-    /// 框架内部配置句柄，处理子模块间依赖问题
-    internal static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
-    internal static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
-    
-    internal static var showErrorBlock: ((_ context: AnyObject?, _ error: Error) -> Void)?
-    internal static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
-    internal static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
-    
-    internal static var barStyleChanged: ((UIViewController) -> Void)?
     
     // MARK: - Override
     public override class func didInitialize() {
