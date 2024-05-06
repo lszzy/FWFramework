@@ -201,7 +201,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLayoutSubviews()
         
         backgroundView.frame = view.bounds
-        let contentInset = UIEdgeInsets(top: UIScreen.fw_topBarHeight, left: tableView.safeAreaInsets.left, bottom: tableView.safeAreaInsets.bottom, right: tableView.safeAreaInsets.right)
+        let contentInset = UIEdgeInsets(top: UIScreen.fw.topBarHeight, left: tableView.safeAreaInsets.left, bottom: tableView.safeAreaInsets.bottom, right: tableView.safeAreaInsets.right)
         if tableView.contentInset != contentInset {
             tableView.contentInset = contentInset
         }
@@ -296,7 +296,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         
         if maximumTableViewHeight > 0 {
             var tableFrame = tableView.frame
-            tableFrame.size.height = tableViewHeight + UIScreen.fw_topBarHeight
+            tableFrame.size.height = tableViewHeight + UIScreen.fw.topBarHeight
             tableView.frame = tableFrame
         }
         
@@ -318,7 +318,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     private func showDeniedView() {
         if maximumTableViewHeight > 0 {
             var tableFrame = tableView.frame
-            tableFrame.size.height = tableViewHeight + UIScreen.fw_topBarHeight
+            tableFrame.size.height = tableViewHeight + UIScreen.fw.topBarHeight
             tableView.frame = tableFrame
         }
         
@@ -550,7 +550,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open var toolbarPaddingHorizontal: CGFloat = 16
     /// 自定义底部工具栏高度，默认同系统
     open var bottomToolbarHeight: CGFloat {
-        get { return _bottomToolbarHeight > 0 ? _bottomToolbarHeight : UIScreen.fw_toolBarHeight }
+        get { return _bottomToolbarHeight > 0 ? _bottomToolbarHeight : UIScreen.fw.toolBarHeight }
         set { _bottomToolbarHeight = newValue }
     }
     private var _bottomToolbarHeight: CGFloat = 0
@@ -770,8 +770,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        topToolbarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: UIScreen.fw_topBarHeight)
-        let topToolbarContentHeight = UIScreen.fw_navigationBarHeight
+        topToolbarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: UIScreen.fw.topBarHeight)
+        let topToolbarContentHeight = UIScreen.fw.navigationBarHeight
         let topToolbarPaddingTop = topToolbarView.bounds.height - topToolbarContentHeight
         var backButtonFrame = backButton.frame
         backButtonFrame.origin = CGPoint(x: toolbarPaddingHorizontal + view.safeAreaInsets.left, y: topToolbarPaddingTop + (topToolbarContentHeight - backButton.frame.height) / 2.0)
@@ -1657,7 +1657,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     open var operationToolbarHeight: CGFloat {
         get {
             guard allowsMultipleSelection else { return 0 }
-            return _operationToolbarHeight > 0 ? _operationToolbarHeight : UIScreen.fw_toolBarHeight
+            return _operationToolbarHeight > 0 ? _operationToolbarHeight : UIScreen.fw.toolBarHeight
         }
         set {
             _operationToolbarHeight = newValue
@@ -1848,7 +1848,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         if collectionView.frame.size != view.bounds.size {
             collectionView.frame = view.bounds
         }
-        let contentInset = UIEdgeInsets(top: UIScreen.fw_topBarHeight, left: collectionView.safeAreaInsets.left, bottom: max(operationToolbarViewHeight, collectionView.safeAreaInsets.bottom), right: collectionView.safeAreaInsets.right)
+        let contentInset = UIEdgeInsets(top: UIScreen.fw.topBarHeight, left: collectionView.safeAreaInsets.left, bottom: max(operationToolbarViewHeight, collectionView.safeAreaInsets.bottom), right: collectionView.safeAreaInsets.right)
         if collectionView.contentInset != contentInset {
             collectionView.contentInset = contentInset
             // 放在这里是因为有时候会先走完 refreshWithAssetsGroup 里的 completion 再走到这里，此时前者不会导致 scollToInitialPosition 的滚动，所以在这里再调用一次保证一定会滚
@@ -2170,7 +2170,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         albumController.view.frame = view.bounds
         albumController.view.isHidden = false
         albumController.view.alpha = 0
-        let toFrame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: albumController.tableViewHeight + UIScreen.fw_topBarHeight)
+        let toFrame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: albumController.tableViewHeight + UIScreen.fw.topBarHeight)
         var fromFrame = toFrame
         fromFrame.origin.y = -toFrame.size.height
         albumController.tableView.frame = fromFrame
@@ -3102,7 +3102,7 @@ open class ImagePickerTitleView: UIControl, TitleViewProtocol {
         size.width += accessorySpacingSizeIfNeedesPlaceholder.width
         size.height = max(titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom), 0)
         size.height = max(size.height, accessorySpacingSizeIfNeedesPlaceholder.height)
-        return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+        return CGSize(width: UIScreen.fw.flatValue(size.width), height: UIScreen.fw.flatValue(size.height))
     }
     
     private func refreshLayout() {

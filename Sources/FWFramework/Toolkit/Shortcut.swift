@@ -11,11 +11,11 @@ import UIKit
 extension CGFloat {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw_relativeValue(self) }
+    public var relative: CGFloat { UIScreen.fw.relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw_fixedValue(self) }
+    public var fixed: CGFloat { UIScreen.fw.fixedValue(self) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw_flatValue(self) }
+    public var flat: CGFloat { UIScreen.fw.flatValue(self) }
     /// 获取向上取整值
     public var ceil: CGFloat { Darwin.ceil(self) }
     
@@ -76,11 +76,11 @@ extension UIEdgeInsets {
 extension Int {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
+    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
     public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
     
@@ -89,11 +89,11 @@ extension Int {
 extension Float {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
+    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
     public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
     
@@ -102,11 +102,11 @@ extension Float {
 extension Double {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw_relativeValue(CGFloat(self)) }
+    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw_fixedValue(CGFloat(self)) }
+    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw_flatValue(CGFloat(self)) }
+    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
     public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
     

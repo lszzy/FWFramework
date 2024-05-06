@@ -1097,7 +1097,7 @@ extension Wrapper where Base: UINavigationController {
         activityController.completionWithItemsHandler = completionHandler
         // 兼容iPad，默认居中显示
         let viewController = Navigator.topPresentedController
-        if UIDevice.fw_isIpad, let viewController = viewController,
+        if UIDevice.fw.isIpad, let viewController = viewController,
            let popoverController = activityController.popoverPresentationController {
             let ancestorView = viewController.fw_ancestorView
             popoverController.sourceView = ancestorView
@@ -1597,7 +1597,7 @@ extension Wrapper where Base: UINavigationController {
         }
         set {
             guard newValue != fw_autoScaleFont else { return }
-            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0, flat: fw_autoFlatFont) } : nil
+            fw_autoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: fw_autoFlatFont) } : nil
         }
     }
     
@@ -1632,7 +1632,7 @@ extension Wrapper where Base: UINavigationController {
     public static func fw_font(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         var fontSize = size
         if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
-            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlatFont)
+            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw_autoFlatFont)
         }
         
         if let font = fw_fontBlock?(fontSize, weight) { return font }
@@ -3018,7 +3018,7 @@ public enum ViewControllerLifecycleState: Int {
             titleViewSize.height = ceil(titleViewSize.height)
             
             if titleView.bounds.height != titleViewSize.height {
-                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
+                let titleViewMinY: CGFloat = UIScreen.fw.flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
                 titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
             }
             
