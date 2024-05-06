@@ -933,7 +933,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
                 self.navigationItem.leftBarButtonItem = UIBarButtonItem.fw_item(object: object, block: { [weak self] _ in
                     guard let this = self else { return }
                     if !this.shouldPopController { return }
-                    this.fw_close()
+                    this.fw.close()
                 })
             } else {
                 self.navigationItem.leftBarButtonItem = nil
@@ -953,7 +953,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem.fw_item(object: object, block: { [weak self] _ in
                     guard let this = self else { return }
                     if !this.shouldPopController { return }
-                    this.fw_close()
+                    this.fw.close()
                 })
             } else {
                 self.navigationItem.rightBarButtonItem = nil

@@ -251,7 +251,7 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                UIWindow.fw_mainWindow?.fw_open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
+                UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
             }
             return nil
         }

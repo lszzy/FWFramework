@@ -451,7 +451,7 @@ extension ImagePickerPlugin {
     public func fw_showImageCamera(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImageCamera(allowsEditing: allowsEditing, completion: completion)
     }
@@ -465,7 +465,7 @@ extension ImagePickerPlugin {
     public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
@@ -477,7 +477,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(allowsEditing: allowsEditing, completion: completion)
     }
@@ -490,7 +490,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(selectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
     }
@@ -505,7 +505,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }

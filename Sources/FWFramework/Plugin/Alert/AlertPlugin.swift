@@ -1005,7 +1005,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
     }
@@ -1026,7 +1026,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showAlert(title: title, message: message, style: style, cancel: cancel, cancelBlock: cancelBlock)
     }
@@ -1051,7 +1051,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, actionBlock: actionBlock, cancelBlock: cancelBlock)
     }
@@ -1070,7 +1070,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showConfirm(title: title, message: message, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
@@ -1093,7 +1093,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showConfirm(title: title, message: message, cancel: cancel, confirm: confirm, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
@@ -1118,7 +1118,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptBlock: promptBlock, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
@@ -1145,7 +1145,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
@@ -1176,7 +1176,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock)
     }
@@ -1195,7 +1195,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showSheet(title: title, message: message, cancel: cancel, cancelBlock: cancelBlock)
     }
@@ -1216,7 +1216,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showSheet(title: title, message: message, actions: actions, actionBlock: actionBlock, cancelBlock: cancelBlock)
     }
@@ -1241,7 +1241,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock)
     }
@@ -1268,7 +1268,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock)
     }
@@ -1283,7 +1283,7 @@ public class AlertAppearance: NSObject {
     ) {
         var ctrl = self.fw_viewController
         if ctrl == nil {
-            ctrl = UIWindow.fw_mainWindow?.rootViewController
+            ctrl = UIWindow.fw.main?.rootViewController
         }
         ctrl?.fw_hideAlert(animated: animated, completion: completion)
     }
@@ -1292,7 +1292,7 @@ public class AlertAppearance: NSObject {
     public var fw_isShowingAlert: Bool {
         var ctrl = self.fw_viewController
         if ctrl == nil {
-            ctrl = UIWindow.fw_mainWindow?.rootViewController
+            ctrl = UIWindow.fw.main?.rootViewController
         }
         return ctrl?.fw_isShowingAlert ?? false
     }

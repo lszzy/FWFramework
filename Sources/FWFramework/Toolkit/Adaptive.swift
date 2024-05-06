@@ -460,7 +460,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 界面是否横屏
     public static var fw_isLandscape: Bool {
-        return UIWindow.fw_mainScene?.interfaceOrientation.isLandscape ?? false
+        return UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
     }
     
     /// 设备是否横屏，无论支不支持横屏
@@ -491,7 +491,7 @@ extension Wrapper where Base: UIViewController {
                 break
             }
             
-            UIWindow.fw_mainScene?.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
+            UIWindow.fw.mainScene?.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
             return true
         }
         
@@ -641,7 +641,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     
     /// 屏幕安全区域距离
     public static var fw_safeAreaInsets: UIEdgeInsets {
-        var mainWindow = UIWindow.fw_mainWindow
+        var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
             if UIScreen.fw_staticWindow != nil { UIScreen.fw_staticWindow = nil }
         } else {
@@ -655,7 +655,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
 
     /// 状态栏高度，与是否隐藏无关
     public static var fw_statusBarHeight: CGFloat {
-        if let statusBarManager = UIWindow.fw_mainScene?.statusBarManager,
+        if let statusBarManager = UIWindow.fw.mainScene?.statusBarManager,
            !statusBarManager.isStatusBarHidden {
             return statusBarManager.statusBarFrame.height
         }
@@ -852,7 +852,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
         }
         
         // 4. 其他情况状态栏显示时布局高度固定，隐藏时布局高度为0
-        let statusBarManager = UIWindow.fw_mainScene?.statusBarManager
+        let statusBarManager = UIWindow.fw.mainScene?.statusBarManager
         if statusBarManager?.isStatusBarHidden ?? false { return 0 }
         return statusBarManager?.statusBarFrame.height ?? 0
     }

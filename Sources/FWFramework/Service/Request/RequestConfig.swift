@@ -222,7 +222,7 @@ open class RequestContextAccessory: RequestAccessory {
     open func setupContext(for request: HTTPRequest) {
         guard request.context == nil else { return }
         
-        request.context = UIWindow.fw_mainWindow?.fw_topViewController
+        request.context = UIWindow.fw.main?.fw.topViewController
     }
     
     /// 监听请求上下文，默认context控制器释放时自动停止请求

@@ -387,7 +387,7 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.allowsWindowClose {
-                webView.fw_viewController?.fw_close()
+                webView.fw.viewController?.fw.close()
             }
         }
         
