@@ -3865,7 +3865,7 @@ extension Wrapper where Base: UIViewController {
             return target
         } else if lazyload {
             let target = UITextField.InputTarget(textInput: self)
-            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
+            self.fw.observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
             fw_setProperty(target, forName: "fw_inputTarget")
             return target
         }

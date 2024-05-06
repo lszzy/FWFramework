@@ -1428,7 +1428,7 @@ extension Wrapper where Base: UITextView {
         self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         self.insertSubview(label, at: 0)
         
-        self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
+        self.fw.observeNotification(UITextView.textDidChangeNotification, object: self, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
         self.fw.observeProperty(\.attributedText, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
         self.fw.observeProperty(\.text, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdateText))
         self.fw.observeProperty(\.bounds, target: self.fw_placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
