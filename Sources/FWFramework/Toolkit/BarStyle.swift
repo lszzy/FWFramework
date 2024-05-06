@@ -303,7 +303,7 @@ open class NavigationBarAppearance: NSObject {
     /// 导航栏是否隐藏，默认isNavigationBarHidden，设置后才会在viewWillAppear:自动应用生效
     public var fw_navigationBarHidden: Bool {
         get {
-            if let hidden = fw.propertyNumber(forName: "fw_navigationBarHidden") {
+            if let hidden = fw.propertyNumber(forName: "navigationBarHidden") {
                 return hidden.boolValue
             }
             return navigationController?.isNavigationBarHidden ?? true
@@ -317,7 +317,7 @@ open class NavigationBarAppearance: NSObject {
 
     /// 动态隐藏导航栏，如果当前已经viewWillAppear:时立即执行
     public func fw_setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
-        fw.setPropertyNumber(NSNumber(value: hidden), forName: "fw_navigationBarHidden")
+        fw.setPropertyNumber(NSNumber(value: hidden), forName: "navigationBarHidden")
         if self.isViewLoaded && self.view.window != nil {
             self.fw_updateNavigationBarStyle(false, isAppeared: true)
         }
@@ -363,7 +363,7 @@ open class NavigationBarAppearance: NSObject {
         if !fw_allowsBarAppearance { return }
         
         // fw_navigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
-        if let hidden = fw.propertyNumber(forName: "fw_navigationBarHidden"),
+        if let hidden = fw.propertyNumber(forName: "navigationBarHidden"),
            navigationController.isNavigationBarHidden != hidden.boolValue {
             navigationController.setNavigationBarHidden(hidden.boolValue, animated: animated)
         }
