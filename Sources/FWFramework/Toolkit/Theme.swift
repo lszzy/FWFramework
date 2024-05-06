@@ -305,7 +305,7 @@ public class ThemeManager: NSObject {
             if newValue && self.mode != .system {
                 style = self.mode == .dark ? .dark : .light
             }
-            UIWindow.fw_mainWindow?.overrideUserInterfaceStyle = style
+            UIWindow.fw.main?.overrideUserInterfaceStyle = style
         }
     }
     private var _overrideWindow = false

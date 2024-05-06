@@ -148,7 +148,7 @@ extension ImagePreviewPlugin {
     public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView)
     }
@@ -165,7 +165,7 @@ extension ImagePreviewPlugin {
     public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock)
     }
