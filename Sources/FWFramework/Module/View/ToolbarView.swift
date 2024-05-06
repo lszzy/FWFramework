@@ -188,18 +188,18 @@ open class ToolbarView: UIView {
     private func updateHeight(_ isFirst: Bool) {
         switch type {
         case .navBar:
-            topHeight = UIScreen.fw_statusBarHeight
-            menuHeight = UIScreen.fw_navigationBarHeight
+            topHeight = UIScreen.fw.statusBarHeight
+            menuHeight = UIScreen.fw.navigationBarHeight
         case .tabBar:
-            menuHeight = UIScreen.fw_tabBarHeight - UIScreen.fw_safeAreaInsets.bottom
-            bottomHeight = UIScreen.fw_safeAreaInsets.bottom
+            menuHeight = UIScreen.fw.tabBarHeight - UIScreen.fw.safeAreaInsets.bottom
+            bottomHeight = UIScreen.fw.safeAreaInsets.bottom
         case .custom:
             if isFirst {
                 menuHeight = 44
             }
         default:
-            menuHeight = UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom
-            bottomHeight = UIScreen.fw_safeAreaInsets.bottom
+            menuHeight = UIScreen.fw.toolBarHeight - UIScreen.fw.safeAreaInsets.bottom
+            bottomHeight = UIScreen.fw.safeAreaInsets.bottom
         }
     }
     
@@ -217,7 +217,7 @@ open class ToolbarView: UIView {
     open override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         
-        let isLandscape = UIDevice.fw_isLandscape
+        let isLandscape = UIDevice.fw.isLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             updateHeight(false)
@@ -494,12 +494,12 @@ open class ToolbarMenuView: UIView {
                     constraints.append(subviewButton.fw_pinEdge(.left, toEdge: .right, ofView: previousButton))
                     constraints.append(subviewButton.fw_matchDimension(.width, toDimension: .width, ofView: previousButton))
                 } else {
-                    constraints.append(subviewButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left))
+                    constraints.append(subviewButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw.safeAreaInsets.left))
                 }
                 previousButton = subviewButton
             }
             if let previousButton = previousButton {
-                constraints.append(previousButton.fw_pinEdge(toSuperview: .right, inset: UIScreen.fw_safeAreaInsets.right))
+                constraints.append(previousButton.fw_pinEdge(toSuperview: .right, inset: UIScreen.fw.safeAreaInsets.right))
             }
             subviewConstraints = constraints
             return
@@ -511,12 +511,12 @@ open class ToolbarMenuView: UIView {
         let leftButton = self.leftButton ?? self.leftMoreButton
         let leftMoreButton = self.leftButton != nil && self.leftMoreButton != nil ? self.leftMoreButton : nil
         if let leftButton = leftButton {
-            constraints.append(leftButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left + horizontalSpacing))
+            constraints.append(leftButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw.safeAreaInsets.left + horizontalSpacing))
             constraints.append(leftButton.fw_alignAxis(toSuperview: .centerY))
             constraints.append(leftButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
             constraints.append(leftButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = leftButton.frame.size.width > 0 ? leftButton.frame.size.width : leftButton.sizeThatFits(fitsSize).width
-            leftWidth += UIScreen.fw_safeAreaInsets.left + horizontalSpacing + buttonWidth + buttonSpacing
+            leftWidth += UIScreen.fw.safeAreaInsets.left + horizontalSpacing + buttonWidth + buttonSpacing
         }
         if let leftButton = leftButton, let leftMoreButton = leftMoreButton {
             constraints.append(leftMoreButton.fw_pinEdge(.left, toEdge: .right, ofView: leftButton, offset: buttonSpacing))
@@ -531,12 +531,12 @@ open class ToolbarMenuView: UIView {
         let rightButton = self.rightButton ?? self.rightMoreButton
         let rightMoreButton = self.rightButton != nil && self.rightMoreButton != nil ? self.rightMoreButton : nil
         if let rightButton = rightButton {
-            constraints.append(rightButton.fw_pinEdge(toSuperview: .right, inset: horizontalSpacing + UIScreen.fw_safeAreaInsets.right))
+            constraints.append(rightButton.fw_pinEdge(toSuperview: .right, inset: horizontalSpacing + UIScreen.fw.safeAreaInsets.right))
             constraints.append(rightButton.fw_alignAxis(toSuperview: .centerY))
             constraints.append(rightButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
             constraints.append(rightButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = rightButton.frame.size.width > 0 ? rightButton.frame.size.width : rightButton.sizeThatFits(fitsSize).width
-            rightWidth += buttonSpacing + buttonWidth + horizontalSpacing + UIScreen.fw_safeAreaInsets.right
+            rightWidth += buttonSpacing + buttonWidth + horizontalSpacing + UIScreen.fw.safeAreaInsets.right
         }
         if let rightButton = rightButton, let rightMoreButton = rightMoreButton {
             constraints.append(rightMoreButton.fw_pinEdge(.right, toEdge: .left, ofView: rightButton, offset: -buttonSpacing))
@@ -1192,7 +1192,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
             let secondLineWidth = secondLineWidthInVerticalStyle
             size.width = max(firstLineWidth, secondLineWidth)
             size.height = titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom) + subtitleLabelSize.height + (subtitleEdgeInsetsIfShowingSubtitleLabel.top + subtitleEdgeInsetsIfShowingSubtitleLabel.bottom)
-            return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+            return CGSize(width: UIScreen.fw.flatValue(size.width), height: UIScreen.fw.flatValue(size.height))
         } else {
             var size = CGSize.zero
             size.width = titleLabelSize.width + (titleEdgeInsetsIfShowingTitleLabel.left + titleEdgeInsetsIfShowingTitleLabel.right) + subtitleLabelSize.width + (subtitleEdgeInsetsIfShowingSubtitleLabel.left + subtitleEdgeInsetsIfShowingSubtitleLabel.right)
@@ -1200,7 +1200,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
             size.height = max(titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom), subtitleLabelSize.height + (subtitleEdgeInsetsIfShowingSubtitleLabel.top + subtitleEdgeInsetsIfShowingSubtitleLabel.bottom))
             size.height = max(size.height, loadingViewSpacingSizeIfNeedsPlaceholder.height)
             size.height = max(size.height, accessorySpacingSizeIfNeedesPlaceholder.height)
-            return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+            return CGSize(width: UIScreen.fw.flatValue(size.width), height: UIScreen.fw.flatValue(size.height))
         }
     }
     
@@ -1383,7 +1383,7 @@ open class ToolbarButton: UIButton {
         super.layoutSubviews()
         
         // 横竖屏方向改变时才修改默认contentEdgeInsets，方便项目使用
-        let isLandscape = UIDevice.fw_isLandscape
+        let isLandscape = UIDevice.fw.isLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             var edgeInsets = self.contentEdgeInsets
@@ -1460,7 +1460,7 @@ open class ExpandedTitleView: UIView {
     
     /// 初始化，默认导航栏尺寸
     public required init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.fw_screenWidth, height: UIScreen.fw_navigationBarHeight))
+        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight))
     }
     
     /// 指定frame并初始化
@@ -1471,7 +1471,7 @@ open class ExpandedTitleView: UIView {
     /// 解码初始化，默认导航栏尺寸
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        frame = CGRect(x: 0, y: 0, width: UIScreen.fw_screenWidth, height: UIScreen.fw_navigationBarHeight)
+        frame = CGRect(x: 0, y: 0, width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight)
     }
     
     open override var intrinsicContentSize: CGSize {

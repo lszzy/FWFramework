@@ -232,7 +232,7 @@ extension View {
                         .eraseToAnyView()
                 }
             }
-            .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
+            .then(isPlainStyle && UIDevice.fw.iosVersion >= 16, body: { view in
                 view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
                     guard !collectionView.fw.propertyBool(forName: "resetListStyle") else { return }
                     collectionView.fw.setPropertyBool(true, forName: "resetListStyle")
@@ -248,7 +248,7 @@ extension View {
                     }
                 }
             })
-            .then(UIDevice.fw_iosVersion < 16) { view in
+            .then(UIDevice.fw.iosVersion < 16) { view in
                 view.introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
                     if !tableView.fw.propertyBool(forName: "resetListStyle") {
                         tableView.fw.setPropertyBool(true, forName: "resetListStyle")

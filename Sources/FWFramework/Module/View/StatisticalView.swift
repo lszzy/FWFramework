@@ -1089,7 +1089,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         if let containerInset = self.fw_statisticalExposure?.containerInset {
             containerRect = containerRect.inset(by: containerInset)
         } else if StatisticalManager.shared.exposureIgnoredBars, let viewController = viewController {
-            containerRect = containerRect.inset(by: UIEdgeInsets(top: viewController.fw_topBarHeight, left: 0, bottom: viewController.fw_bottomBarHeight, right: 0))
+            containerRect = containerRect.inset(by: UIEdgeInsets(top: viewController.fw.topBarHeight, left: 0, bottom: viewController.fw.bottomBarHeight, right: 0))
         }
         
         if !viewportRect.isValid {

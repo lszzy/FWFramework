@@ -512,7 +512,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         if let _videoCloseButton = _videoCloseButton {
             _videoCloseButton.sizeToFit()
-            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw_safeAreaInsets.left + 24, y: UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2)
+            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw.safeAreaInsets.left + 24, y: UIScreen.fw.statusBarHeight + UIScreen.fw.navigationBarHeight / 2)
             _videoCloseButton.center = videoCloseButtonCenter
         }
         

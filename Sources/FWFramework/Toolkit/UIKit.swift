@@ -69,11 +69,6 @@ extension Wrapper where Base: UIDevice {
         set { Base.fw_deviceToken = newValue }
     }
 
-    /// 获取设备模型，格式："iPhone6,1"
-    public static var deviceModel: String? {
-        return Base.fw_deviceModel
-    }
-
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
         return Base.fw_deviceIDFV
@@ -1425,22 +1420,6 @@ extension Wrapper where Base: UIViewController {
         }
     }
 
-    /// 获取设备模型，格式："iPhone6,1"
-    public static var fw_deviceModel: String? {
-        #if targetEnvironment(simulator)
-        return String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
-        #else
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let deviceModel = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        return deviceModel
-        #endif
-    }
-
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var fw_deviceIDFV: String? {
         return UIDevice.current.identifierForVendor?.uuidString
@@ -2562,7 +2541,7 @@ extension Wrapper where Base: UIViewController {
             return .zero
         }
         set {
-            let insets = UIEdgeInsets(top: UIScreen.fw_flatValue(newValue.top), left: UIScreen.fw_flatValue(newValue.left), bottom: UIScreen.fw_flatValue(newValue.bottom), right: UIScreen.fw_flatValue(newValue.right))
+            let insets = UIEdgeInsets(top: UIScreen.fw.flatValue(newValue.top), left: UIScreen.fw.flatValue(newValue.left), bottom: UIScreen.fw.flatValue(newValue.bottom), right: UIScreen.fw.flatValue(newValue.right))
             fw.setProperty(NSValue(uiEdgeInsets: insets), forName: "fw_contentInset")
             self.setNeedsDisplay()
         }

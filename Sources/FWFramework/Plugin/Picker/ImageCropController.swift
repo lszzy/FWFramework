@@ -60,7 +60,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         set { cropView.minimumAspectRatio = newValue }
     }
     open var toolbarHeight: CGFloat {
-        get { return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom }
+        get { return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw.toolBarHeight - UIScreen.fw.safeAreaInsets.bottom }
         set { _toolbarHeight = newValue }
     }
     private var _toolbarHeight: CGFloat = 0

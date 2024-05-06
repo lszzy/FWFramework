@@ -631,7 +631,7 @@ extension Wrapper where Base == Array<UIView> {
         }
         set {
             guard newValue != fw_autoScaleLayout else { return }
-            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0, flat: fw_autoFlatLayout) } : nil
+            fw_autoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: fw_autoFlatLayout) } : nil
         }
     }
     
@@ -1396,7 +1396,7 @@ extension UILayoutPriority {
             
             var offset = newValue
             if fw_autoScaleLayout {
-                offset = UIView.fw_autoScaleBlock?(newValue) ?? UIScreen.fw_relativeValue(newValue, flat: UIView.fw_autoFlatLayout)
+                offset = UIView.fw_autoScaleBlock?(newValue) ?? UIScreen.fw.relativeValue(newValue, flat: UIView.fw_autoFlatLayout)
             }
             self.constant = fw_isOpposite ? -offset : offset
         }
