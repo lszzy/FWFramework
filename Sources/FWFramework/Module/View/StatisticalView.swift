@@ -328,7 +328,7 @@ public class StatisticalManager: NSObject {
         guard !statisticalSwizzled else { return }
         statisticalSwizzled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.didMoveToSuperview),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
@@ -350,7 +350,7 @@ public class StatisticalManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.didMoveToWindow),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
@@ -541,7 +541,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
         guard let tableDelegate = self.delegate as? NSObject else { return false }
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             tableDelegate,
             selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
             identifier: "FWStatisticalManager",
@@ -550,7 +550,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         ) { store in { selfObject, tableView, indexPath in
             store.original(selfObject, store.selector, tableView, indexPath)
             
-            if !selfObject.fw_isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
+            if !selfObject.fw.isSwizzleInstanceMethod(#selector(UITableViewDelegate.tableView(_:didSelectRowAt:)), identifier: "FWStatisticalManager") { return }
             
             let cell = tableView.cellForRow(at: indexPath)
             let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false
@@ -571,7 +571,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
         guard let collectionDelegate = self.delegate as? NSObject else { return false }
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             collectionDelegate,
             selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
             identifier: "FWStatisticalManager",
@@ -580,7 +580,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         ) { store in { selfObject, collectionView, indexPath in
             store.original(selfObject, store.selector, collectionView, indexPath)
             
-            if !selfObject.fw_isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
+            if !selfObject.fw.isSwizzleInstanceMethod(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)), identifier: "FWStatisticalManager") { return }
             
             let cell = collectionView.cellForItem(at: indexPath)
             let isTracked = cell?.fw_statisticalTrackClick(indexPath: indexPath) ?? false

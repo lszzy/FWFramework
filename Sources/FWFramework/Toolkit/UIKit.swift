@@ -2097,7 +2097,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.point(inside:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
@@ -2122,7 +2122,7 @@ extension Wrapper where Base: UIViewController {
             return pointInside
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.hitTest(_:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
@@ -2799,7 +2799,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitLabel() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(UILabel.drawText(in:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
@@ -2822,7 +2822,7 @@ extension Wrapper where Base: UIViewController {
             store.original(selfObject, store.selector, rect)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(getter: UILabel.intrinsicContentSize),
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
@@ -2836,7 +2836,7 @@ extension Wrapper where Base: UIViewController {
             return store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(UILabel.sizeThatFits(_:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
@@ -2856,10 +2856,10 @@ extension Wrapper where Base: UIViewController {
             return store.original(selfObject, store.selector, size)
         }}
         
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
     }
     
 }
@@ -2881,7 +2881,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitControl() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIControl.self,
             selector: #selector(UIControl.sendAction(_:to:for:)),
             methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
@@ -3056,7 +3056,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitButton() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIButton.self,
             selector: #selector(setter: UIButton.isEnabled),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
@@ -3072,7 +3072,7 @@ extension Wrapper where Base: UIViewController {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIButton.self,
             selector: #selector(setter: UIButton.isHighlighted),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
@@ -3354,10 +3354,10 @@ extension Wrapper where Base: UIViewController {
         guard !fw_staticPanProxySwizzled else { return }
         fw_staticPanProxySwizzled = true
         
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
+        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
 }
@@ -3554,7 +3554,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitSwitch() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISwitch.self,
             selector: #selector(UISwitch.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
@@ -3783,7 +3783,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitTextField() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextField.self,
             selector: #selector(UITextField.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
@@ -3794,7 +3794,7 @@ extension Wrapper where Base: UIViewController {
             return store.original(selfObject, store.selector, action, sender)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextField.self,
             selector: #selector(UITextField.caretRect(for:)),
             methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
@@ -4055,7 +4055,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitTextView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextView.self,
             selector: #selector(UITextView.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
@@ -4066,7 +4066,7 @@ extension Wrapper where Base: UIViewController {
             return store.original(selfObject, store.selector, action, sender)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextView.self,
             selector: #selector(UITextView.caretRect(for:)),
             methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
@@ -4280,7 +4280,7 @@ extension Wrapper where Base: UIViewController {
         guard !fw_staticTableViewCellSwizzled else { return }
         fw_staticTableViewCellSwizzled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,
             selector: #selector(UITableViewCell.layoutSubviews),
             methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
@@ -4656,7 +4656,7 @@ extension Wrapper where Base: UIViewController {
     }
     
     fileprivate static func fw_swizzleUIKitSearchBar() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(UISearchBar.layoutSubviews),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
@@ -4684,7 +4684,7 @@ extension Wrapper where Base: UIViewController {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(setter: UISearchBar.placeholder),
             methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
@@ -4707,7 +4707,7 @@ extension Wrapper where Base: UIViewController {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(UISearchBar.didMoveToWindow),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
@@ -4722,7 +4722,7 @@ extension Wrapper where Base: UIViewController {
         }}
         
         // iOS13因为层级关系变化，兼容处理
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass("UISearchBarTextField"),
             selector: #selector(setter: UITextField.frame),
             methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
@@ -4749,7 +4749,7 @@ extension Wrapper where Base: UIViewController {
             store.original(selfObject, store.selector, frame)
         }}
         
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass("UINavigationButton"),
             selector: #selector(setter: UIButton.frame),
             methodSignature: (@convention(c) (UIButton, Selector, CGRect) -> Void).self,

@@ -1473,7 +1473,7 @@ public class AlertAppearance: NSObject {
     }
     
     fileprivate static func fw_swizzleAlertController() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIAlertController.self,
             selector: #selector(UIAlertController.viewDidLoad),
             methodSignature: (@convention(c) (UIAlertController, Selector) -> Void).self,

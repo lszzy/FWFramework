@@ -206,7 +206,7 @@ open class NavigationBarAppearance: NSObject {
 @_spi(FW) extension UIViewController {
     
     fileprivate static func fw_swizzleBarStyle() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(getter: UIViewController.prefersStatusBarHidden),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
@@ -219,7 +219,7 @@ open class NavigationBarAppearance: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(getter: UIViewController.preferredStatusBarStyle),
             methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
@@ -232,7 +232,7 @@ open class NavigationBarAppearance: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,

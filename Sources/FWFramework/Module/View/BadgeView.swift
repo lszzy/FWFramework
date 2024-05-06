@@ -282,7 +282,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         guard !fw_staticBadgeViewSwizzled else { return }
         fw_staticBadgeViewSwizzled = true
         
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass("UITabBarButton"),
             selector: #selector(UIView.layoutSubviews),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,

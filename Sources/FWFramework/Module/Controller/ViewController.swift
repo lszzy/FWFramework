@@ -148,7 +148,7 @@ public class ViewControllerManager: NSObject {
     }
     
     fileprivate static func swizzleViewController() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
@@ -162,7 +162,7 @@ public class ViewControllerManager: NSObject {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
@@ -176,7 +176,7 @@ public class ViewControllerManager: NSObject {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -189,7 +189,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -202,7 +202,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -215,7 +215,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -228,7 +228,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -241,7 +241,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -254,7 +254,7 @@ public class ViewControllerManager: NSObject {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,

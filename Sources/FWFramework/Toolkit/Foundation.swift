@@ -1905,7 +1905,7 @@ extension Wrapper where Base: UserDefaults {
         guard !fw_staticHttpProxySwizzled else { return }
         fw_staticHttpProxySwizzled = true
         
-        NSObject.fw_swizzleClassMethod(
+        NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
@@ -1917,7 +1917,7 @@ extension Wrapper where Base: UserDefaults {
             return store.original(selfObject, store.selector, configuration)
         }}
         
-        NSObject.fw_swizzleClassMethod(
+        NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,

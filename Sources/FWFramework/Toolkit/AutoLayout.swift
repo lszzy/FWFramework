@@ -1312,7 +1312,7 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     fileprivate static func fw_swizzleAutoLayoutView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.updateConstraints),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
@@ -1334,7 +1334,7 @@ extension Wrapper where Base == Array<UIView> {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
@@ -2307,7 +2307,7 @@ public class LayoutChain {
         guard !fw_staticAutoLayoutDebugSwizzled else { return }
         fw_staticAutoLayoutDebugSwizzled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             NSLayoutConstraint.self,
             selector: #selector(NSLayoutConstraint.description),
             methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
