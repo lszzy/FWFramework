@@ -262,12 +262,12 @@ extension Wrapper where Base: UIToolbar {
     
     /// 导航栏iOS13+样式对象，用于自定义样式，默认透明
     public var fw_appearance: UINavigationBarAppearance {
-        if let appearance = fw_property(forName: "fw_appearance") as? UINavigationBarAppearance {
+        if let appearance = fw.property(forName: "fw_appearance") as? UINavigationBarAppearance {
             return appearance
         } else {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithTransparentBackground()
-            fw_setProperty(appearance, forName: "fw_appearance")
+            fw.setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
@@ -285,10 +285,10 @@ extension Wrapper where Base: UIToolbar {
     /// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     @objc dynamic public var fw_isTranslucent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isTranslucent")
+            return fw.propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            fw.setPropertyBool(newValue, forName: "fw_isTranslucent")
             if UINavigationBar.fw_appearanceEnabled {
                 if newValue {
                     fw_appearance.configureWithDefaultBackground()
@@ -321,10 +321,10 @@ extension Wrapper where Base: UIToolbar {
     /// 单独设置标题颜色，nil时显示前景颜色
     @objc dynamic public var fw_titleAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return fw_property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
+            return fw.property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            fw_setProperty(newValue, forName: "fw_titleAttributes")
+            fw.setProperty(newValue, forName: "fw_titleAttributes")
             fw_updateTitleAttributes()
         }
     }
@@ -332,10 +332,10 @@ extension Wrapper where Base: UIToolbar {
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
     @objc dynamic public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
+            return fw.property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            fw_setProperty(newValue, forName: "fw_buttonAttributes")
+            fw.setProperty(newValue, forName: "fw_buttonAttributes")
             fw_updateButtonAttributes()
         }
     }
@@ -393,11 +393,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
     @objc dynamic public var fw_backgroundColor: UIColor? {
         get {
-            return fw_property(forName: "fw_backgroundColor") as? UIColor
+            return fw.property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setProperty(newValue, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled {
                 if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
@@ -430,11 +430,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
     @objc dynamic public var fw_backgroundImage: UIImage? {
         get {
-            return fw_property(forName: "fw_backgroundImage") as? UIImage
+            return fw.property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(newValue, forName: "fw_backgroundImage")
             let image = newValue?.fw_image ?? UIImage()
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
@@ -450,12 +450,12 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景是否全透明，默认NO，后设置生效
     @objc dynamic public var fw_backgroundTransparent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_backgroundTransparent")
+            return fw.propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
@@ -471,11 +471,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效。注意iOS13、14切换阴影图片时需保持图片高度一致，否则不生效
     @objc dynamic public var fw_shadowColor: UIColor? {
         get {
-            return fw_property(forName: "fw_shadowColor") as? UIColor
+            return fw.property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowColor")
-            fw_setProperty(nil, forName: "fw_shadowImage")
+            fw.setProperty(newValue, forName: "fw_shadowColor")
+            fw.setProperty(nil, forName: "fw_shadowImage")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = newValue
                 fw_appearance.shadowImage = nil
@@ -493,11 +493,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效。注意iOS13、14切换阴影图片时需保持图片高度一致，否则不生效
     @objc dynamic public var fw_shadowImage: UIImage? {
         get {
-            return fw_property(forName: "fw_shadowImage") as? UIImage
+            return fw.property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowImage")
-            fw_setProperty(nil, forName: "fw_shadowColor")
+            fw.setProperty(newValue, forName: "fw_shadowImage")
+            fw.setProperty(nil, forName: "fw_shadowColor")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = nil
                 fw_appearance.shadowImage = newValue?.fw_image
@@ -596,12 +596,12 @@ extension Wrapper where Base: UIToolbar {
     
     /// 标签栏iOS13+样式对象，用于自定义样式，默认透明
     public var fw_appearance: UITabBarAppearance {
-        if let appearance = fw_property(forName: "fw_appearance") as? UITabBarAppearance {
+        if let appearance = fw.property(forName: "fw_appearance") as? UITabBarAppearance {
             return appearance
         } else {
             let appearance = UITabBarAppearance()
             appearance.configureWithTransparentBackground()
-            fw_setProperty(appearance, forName: "fw_appearance")
+            fw.setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
@@ -617,10 +617,10 @@ extension Wrapper where Base: UIToolbar {
     /// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     @objc dynamic public var fw_isTranslucent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isTranslucent")
+            return fw.propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            fw.setPropertyBool(newValue, forName: "fw_isTranslucent")
             if UINavigationBar.fw_appearanceEnabled {
                 if newValue {
                     fw_appearance.configureWithDefaultBackground()
@@ -647,11 +647,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景颜色，兼容主题颜色，后设置生效
     @objc dynamic public var fw_backgroundColor: UIColor? {
         get {
-            return fw_property(forName: "fw_backgroundColor") as? UIColor
+            return fw.property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setProperty(newValue, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled {
                 if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
@@ -684,11 +684,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景图片，兼容主题图片，后设置生效
     @objc dynamic public var fw_backgroundImage: UIImage? {
         get {
-            return fw_property(forName: "fw_backgroundImage") as? UIImage
+            return fw.property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(newValue, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
                 fw_appearance.backgroundImage = newValue?.fw_image
@@ -703,12 +703,12 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景是否全透明，默认NO，后设置生效
     @objc dynamic public var fw_backgroundTransparent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_backgroundTransparent")
+            return fw.propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
@@ -724,11 +724,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
     @objc dynamic public var fw_shadowColor: UIColor? {
         get {
-            return fw_property(forName: "fw_shadowColor") as? UIColor
+            return fw.property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowColor")
-            fw_setProperty(nil, forName: "fw_shadowImage")
+            fw.setProperty(newValue, forName: "fw_shadowColor")
+            fw.setProperty(nil, forName: "fw_shadowImage")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = newValue
                 fw_appearance.shadowImage = nil
@@ -746,11 +746,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
     @objc dynamic public var fw_shadowImage: UIImage? {
         get {
-            return fw_property(forName: "fw_shadowImage") as? UIImage
+            return fw.property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowImage")
-            fw_setProperty(nil, forName: "fw_shadowColor")
+            fw.setProperty(newValue, forName: "fw_shadowImage")
+            fw.setProperty(nil, forName: "fw_shadowColor")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = nil
                 fw_appearance.shadowImage = newValue?.fw_image
@@ -827,12 +827,12 @@ extension Wrapper where Base: UIToolbar {
     
     /// 工具栏iOS13+样式对象，用于自定义样式，默认透明
     public var fw_appearance: UIToolbarAppearance {
-        if let appearance = fw_property(forName: "fw_appearance") as? UIToolbarAppearance {
+        if let appearance = fw.property(forName: "fw_appearance") as? UIToolbarAppearance {
             return appearance
         } else {
             let appearance = UIToolbarAppearance()
             appearance.configureWithTransparentBackground()
-            fw_setProperty(appearance, forName: "fw_appearance")
+            fw.setProperty(appearance, forName: "fw_appearance")
             return appearance
         }
     }
@@ -850,10 +850,10 @@ extension Wrapper where Base: UIToolbar {
     /// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     @objc dynamic public var fw_isTranslucent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isTranslucent")
+            return fw.propertyBool(forName: "fw_isTranslucent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_isTranslucent")
+            fw.setPropertyBool(newValue, forName: "fw_isTranslucent")
             if UINavigationBar.fw_appearanceEnabled {
                 if newValue {
                     fw_appearance.configureWithDefaultBackground()
@@ -887,10 +887,10 @@ extension Wrapper where Base: UIToolbar {
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
     @objc dynamic public var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return fw_property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
+            return fw.property(forName: "fw_buttonAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            fw_setProperty(newValue, forName: "fw_buttonAttributes")
+            fw.setProperty(newValue, forName: "fw_buttonAttributes")
             fw_updateButtonAttributes()
         }
     }
@@ -915,11 +915,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景颜色，兼容主题颜色，后设置生效
     @objc dynamic public var fw_backgroundColor: UIColor? {
         get {
-            return fw_property(forName: "fw_backgroundColor") as? UIColor
+            return fw.property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setProperty(newValue, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled {
                 if fw_isTranslucent {
                     fw_appearance.backgroundColor = newValue
@@ -952,11 +952,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景图片，兼容主题图片，后设置生效
     @objc dynamic public var fw_backgroundImage: UIImage? {
         get {
-            return fw_property(forName: "fw_backgroundImage") as? UIImage
+            return fw.property(forName: "fw_backgroundImage") as? UIImage
         }
         set {
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(newValue, forName: "fw_backgroundImage")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(newValue, forName: "fw_backgroundImage")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
                 fw_appearance.backgroundImage = newValue?.fw_image
@@ -971,12 +971,12 @@ extension Wrapper where Base: UIToolbar {
     /// 设置背景是否全透明，默认NO，后设置生效
     @objc dynamic public var fw_backgroundTransparent: Bool {
         get {
-            return fw_propertyBool(forName: "fw_backgroundTransparent")
+            return fw.propertyBool(forName: "fw_backgroundTransparent")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_backgroundTransparent")
-            fw_setProperty(nil, forName: "fw_backgroundColor")
-            fw_setProperty(nil, forName: "fw_backgroundImage")
+            fw.setPropertyBool(newValue, forName: "fw_backgroundTransparent")
+            fw.setProperty(nil, forName: "fw_backgroundColor")
+            fw.setProperty(nil, forName: "fw_backgroundImage")
             let image = newValue ? UIImage() : nil
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.backgroundColor = nil
@@ -992,11 +992,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
     @objc dynamic public var fw_shadowColor: UIColor? {
         get {
-            return fw_property(forName: "fw_shadowColor") as? UIColor
+            return fw.property(forName: "fw_shadowColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowColor")
-            fw_setProperty(nil, forName: "fw_shadowImage")
+            fw.setProperty(newValue, forName: "fw_shadowColor")
+            fw.setProperty(nil, forName: "fw_shadowImage")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = newValue
                 fw_appearance.shadowImage = nil
@@ -1014,11 +1014,11 @@ extension Wrapper where Base: UIToolbar {
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
     @objc dynamic public var fw_shadowImage: UIImage? {
         get {
-            return fw_property(forName: "fw_shadowImage") as? UIImage
+            return fw.property(forName: "fw_shadowImage") as? UIImage
         }
         set {
-            fw_setProperty(newValue, forName: "fw_shadowImage")
-            fw_setProperty(nil, forName: "fw_shadowColor")
+            fw.setProperty(newValue, forName: "fw_shadowImage")
+            fw.setProperty(nil, forName: "fw_shadowColor")
             if UINavigationBar.fw_appearanceEnabled {
                 fw_appearance.shadowColor = nil
                 fw_appearance.shadowImage = newValue?.fw_image
@@ -1088,21 +1088,21 @@ extension Wrapper where Base: UIToolbar {
     /// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
     public var fw_barPosition: UIBarPosition {
         get {
-            return .init(rawValue: fw_propertyInt(forName: "fw_barPosition")) ?? .any
+            return .init(rawValue: fw.propertyInt(forName: "fw_barPosition")) ?? .any
         }
         set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_barPosition")
+            fw.setPropertyInt(newValue.rawValue, forName: "fw_barPosition")
             fw_toolbarDelegate.barPosition = newValue
         }
     }
     
     private var fw_toolbarDelegate: ToolbarDelegate {
-        if let delegate = fw_property(forName: "fw_toolbarDelegate") as? ToolbarDelegate {
+        if let delegate = fw.property(forName: "fw_toolbarDelegate") as? ToolbarDelegate {
             return delegate
         } else {
             let delegate = ToolbarDelegate()
             self.delegate = delegate
-            fw_setProperty(delegate, forName: "fw_toolbarDelegate")
+            fw.setProperty(delegate, forName: "fw_toolbarDelegate")
             return delegate
         }
     }

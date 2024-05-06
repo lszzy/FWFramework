@@ -73,11 +73,11 @@ extension ModuleProtocol where Self: NSObject {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        if let instance = self.fw_property(forName: #function) as? Self {
+        if let instance = self.fw.property(forName: #function) as? Self {
             return instance
         } else {
             let instance = self.init()
-            self.fw_setProperty(instance, forName: #function)
+            self.fw.setProperty(instance, forName: #function)
             return instance
         }
     }
@@ -187,8 +187,8 @@ public class Mediator: NSObject {
         }
         
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "%@", Mediator.debugDescription())
-        Logger.debug(group: Logger.fw_moduleName, "%@", PluginManager.debugDescription())
+        Logger.debug(group: Logger.fw.moduleName, "%@", Mediator.debugDescription())
+        Logger.debug(group: Logger.fw.moduleName, "%@", PluginManager.debugDescription())
         #endif
     }
     
@@ -228,7 +228,7 @@ public class Mediator: NSObject {
                 moduleInvokePool[moduleClass] = true
             }
             
-            let returnValue = moduleInstance.fw_invokeMethod(selector, objects: arguments)?.takeUnretainedValue() as? Bool ?? false
+            let returnValue = moduleInstance.fw.invokeMethod(selector, objects: arguments)?.takeUnretainedValue() as? Bool ?? false
             if !result {
                 result = returnValue
             }

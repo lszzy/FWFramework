@@ -241,11 +241,11 @@ open class ImageDownloader: NSObject {
     }
 
     open func imageURL(for object: Any) -> URL? {
-        return NSObject.fw_getAssociatedObject(object, key: "imageURL(for:)") as? URL
+        return NSObject.fw.getAssociatedObject(object, key: "imageURL(for:)") as? URL
     }
 
     open func imageOperationKey(for object: Any) -> String? {
-        return NSObject.fw_getAssociatedObject(object, key: "imageOperationKey(for:)") as? String
+        return NSObject.fw.getAssociatedObject(object, key: "imageOperationKey(for:)") as? String
     }
 
     open func downloadImage(
@@ -422,19 +422,19 @@ open class ImageDownloader: NSObject {
     }
     
     private func activeImageDownloadReceipt(for object: Any) -> ImageDownloadReceipt? {
-        return NSObject.fw_getAssociatedObject(object, key: "activeImageDownloadReceipt(for:)") as? ImageDownloadReceipt
+        return NSObject.fw.getAssociatedObject(object, key: "activeImageDownloadReceipt(for:)") as? ImageDownloadReceipt
     }
     
     private func setActiveImageDownloadReceipt(_ receipt: ImageDownloadReceipt?, for object: Any) {
-        NSObject.fw_setAssociatedObject(object, key: "activeImageDownloadReceipt(for:)", value: receipt)
+        NSObject.fw.setAssociatedObject(object, key: "activeImageDownloadReceipt(for:)", value: receipt)
     }
     
     private func setImageURL(_ imageURL: URL?, for object: Any) {
-        NSObject.fw_setAssociatedObject(object, key: "imageURL(for:)", value: imageURL, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        NSObject.fw.setAssociatedObject(object, key: "imageURL(for:)", value: imageURL, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     private func setImageOperationKey(_ operationKey: String?, for object: Any) {
-        NSObject.fw_setAssociatedObject(object, key: "imageOperationKey(for:)", value: operationKey, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        NSObject.fw.setAssociatedObject(object, key: "imageOperationKey(for:)", value: operationKey, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
     
     private func urlRequest(url: Any?, options: WebImageOptions = []) -> URLRequest? {

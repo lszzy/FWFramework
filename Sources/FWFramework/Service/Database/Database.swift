@@ -1262,7 +1262,7 @@ private extension DatabaseManager {
     
     static func log(_ msg: String, error: Bool = false) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "Database:%@ %@", error ? " [Error]" : "", msg)
+        Logger.debug(group: Logger.fw.moduleName, "Database:%@ %@", error ? " [Error]" : "", msg)
         #endif
     }
     

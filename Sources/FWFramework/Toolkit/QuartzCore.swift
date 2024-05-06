@@ -470,12 +470,12 @@ extension Wrapper where Base: UIView {
     /// - Returns: CADisplayLink
     public static func fw_displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
         let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.fw_displayLinkAction(_:)))
-        displayLink.fw_setPropertyCopy(block, forName: "fw_displayLinkAction")
+        displayLink.fw.setPropertyCopy(block, forName: "fw_displayLinkAction")
         return displayLink
     }
     
     @objc private class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
-        let block = displayLink.fw_property(forName: "fw_displayLinkAction") as? (CADisplayLink) -> Void
+        let block = displayLink.fw.property(forName: "fw_displayLinkAction") as? (CADisplayLink) -> Void
         block?(displayLink)
     }
     
@@ -511,10 +511,10 @@ extension Wrapper where Base: UIView {
     }
     
     private func fw_animationTarget(_ lazyload: Bool) -> AnimationTarget? {
-        var target = fw_property(forName: "fw_animationTarget") as? AnimationTarget
+        var target = fw.property(forName: "fw_animationTarget") as? AnimationTarget
         if target == nil && lazyload {
             target = AnimationTarget()
-            fw_setProperty(target, forName: "fw_animationTarget")
+            fw.setProperty(target, forName: "fw_animationTarget")
         }
         return target
     }
@@ -542,10 +542,10 @@ extension Wrapper where Base: UIView {
     /// 设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeBackgroundColor: UIColor? {
         get {
-            return fw_property(forName: "fw_themeBackgroundColor") as? UIColor
+            return fw.property(forName: "fw_themeBackgroundColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeBackgroundColor")
+            fw.setProperty(newValue, forName: "fw_themeBackgroundColor")
             self.backgroundColor = newValue?.cgColor
         }
     }
@@ -553,10 +553,10 @@ extension Wrapper where Base: UIView {
     /// 设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeBorderColor: UIColor? {
         get {
-            return fw_property(forName: "fw_themeBorderColor") as? UIColor
+            return fw.property(forName: "fw_themeBorderColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeBorderColor")
+            fw.setProperty(newValue, forName: "fw_themeBorderColor")
             self.borderColor = newValue?.cgColor
         }
     }
@@ -564,10 +564,10 @@ extension Wrapper where Base: UIView {
     /// 设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeShadowColor: UIColor? {
         get {
-            return fw_property(forName: "fw_themeShadowColor") as? UIColor
+            return fw.property(forName: "fw_themeShadowColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeShadowColor")
+            fw.setProperty(newValue, forName: "fw_themeShadowColor")
             self.shadowColor = newValue?.cgColor
         }
     }
@@ -575,10 +575,10 @@ extension Wrapper where Base: UIView {
     /// 设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeContents: UIImage? {
         get {
-            return fw_property(forName: "fw_themeContents") as? UIImage
+            return fw.property(forName: "fw_themeContents") as? UIImage
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeContents")
+            fw.setProperty(newValue, forName: "fw_themeContents")
             self.contents = newValue?.fw_image?.cgImage
         }
     }
@@ -685,10 +685,10 @@ extension Wrapper where Base: UIView {
     /// 设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil
     public var fw_themeColors: [UIColor]? {
         get {
-            return fw_property(forName: "fw_themeColors") as? [UIColor]
+            return fw.property(forName: "fw_themeColors") as? [UIColor]
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeColors")
+            fw.setProperty(newValue, forName: "fw_themeColors")
             self.colors = newValue?.map({ $0.cgColor })
         }
     }
@@ -1388,7 +1388,7 @@ extension Wrapper where Base: UIView {
 
     /// 拖动手势，延迟加载
     public var fw_dragGesture: UIPanGestureRecognizer {
-        if let gesture = fw_property(forName: "fw_dragGesture") as? UIPanGestureRecognizer {
+        if let gesture = fw.property(forName: "fw_dragGesture") as? UIPanGestureRecognizer {
             return gesture
         } else {
             // 初始化拖动手势，默认禁用
@@ -1400,7 +1400,7 @@ extension Wrapper where Base: UIView {
             self.fw_dragArea = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
             self.addGestureRecognizer(gesture)
             
-            fw_setProperty(gesture, forName: "fw_dragGesture")
+            fw.setProperty(gesture, forName: "fw_dragGesture")
             return gesture
         }
     }
@@ -1408,14 +1408,14 @@ extension Wrapper where Base: UIView {
     /// 设置拖动限制区域，默认CGRectZero，无限制
     public var fw_dragLimit: CGRect {
         get {
-            if let value = fw_property(forName: "fw_dragLimit") as? NSValue {
+            if let value = fw.property(forName: "fw_dragLimit") as? NSValue {
                 return value.cgRectValue
             }
             return .zero
         }
         set {
             if newValue.equalTo(.zero) || newValue.contains(self.frame) {
-                fw_setProperty(NSValue(cgRect: newValue), forName: "fw_dragLimit")
+                fw.setProperty(NSValue(cgRect: newValue), forName: "fw_dragLimit")
             }
         }
     }
@@ -1423,7 +1423,7 @@ extension Wrapper where Base: UIView {
     /// 设置拖动动作有效区域，默认self.frame
     public var fw_dragArea: CGRect {
         get {
-            if let value = fw_property(forName: "fw_dragArea") as? NSValue {
+            if let value = fw.property(forName: "fw_dragArea") as? NSValue {
                 return value.cgRectValue
             }
             return .zero
@@ -1431,7 +1431,7 @@ extension Wrapper where Base: UIView {
         set {
             let reletiveFrame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
             if reletiveFrame.contains(newValue) {
-                fw_setProperty(NSValue(cgRect: newValue), forName: "fw_dragArea")
+                fw.setProperty(NSValue(cgRect: newValue), forName: "fw_dragArea")
             }
         }
     }
@@ -1439,45 +1439,45 @@ extension Wrapper where Base: UIView {
     /// 是否允许横向拖动(X)，默认true
     public var fw_dragHorizontal: Bool {
         get {
-            if let number = fw_propertyNumber(forName: "fw_dragHorizontal") {
+            if let number = fw.propertyNumber(forName: "fw_dragHorizontal") {
                 return number.boolValue
             }
             return true
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragHorizontal")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragHorizontal")
         }
     }
 
     /// 是否允许纵向拖动(Y)，默认true
     public var fw_dragVertical: Bool {
         get {
-            if let number = fw_propertyNumber(forName: "fw_dragVertical") {
+            if let number = fw.propertyNumber(forName: "fw_dragVertical") {
                 return number.boolValue
             }
             return true
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragVertical")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_dragVertical")
         }
     }
 
     /// 开始拖动回调
     public var fw_dragStartedBlock: ((UIView) -> Void)? {
-        get { return fw_property(forName: "fw_dragStartedBlock") as? (UIView) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_dragStartedBlock") }
+        get { return fw.property(forName: "fw_dragStartedBlock") as? (UIView) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_dragStartedBlock") }
     }
 
     /// 拖动移动回调
     public var fw_dragMovedBlock: ((UIView) -> Void)? {
-        get { return fw_property(forName: "fw_dragMovedBlock") as? (UIView) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_dragMovedBlock") }
+        get { return fw.property(forName: "fw_dragMovedBlock") as? (UIView) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_dragMovedBlock") }
     }
 
     /// 结束拖动回调
     public var fw_dragEndedBlock: ((UIView) -> Void)? {
-        get { return fw_property(forName: "fw_dragEndedBlock") as? (UIView) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_dragEndedBlock") }
+        get { return fw.property(forName: "fw_dragEndedBlock") as? (UIView) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_dragEndedBlock") }
     }
     
     @objc private func fw_dragHandler(_ sender: UIPanGestureRecognizer) {

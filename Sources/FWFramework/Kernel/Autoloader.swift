@@ -58,9 +58,9 @@ public class Autoloader: NSObject, AutoloadProtocol {
         if let className = clazz as? String {
             clazz = autoloadClass(className)
         }
-        guard let metaClass = NSObject.fw_metaClass(clazz) else { return [] }
+        guard let metaClass = NSObject.fw.metaClass(clazz) else { return [] }
         
-        let methodNames = NSObject.fw_classMethods(metaClass)
+        let methodNames = NSObject.fw.classMethods(metaClass)
             .filter({ methodName in
                 return methodName.hasPrefix("load") && methodName.count > 4 && !methodName.contains(":")
             })
@@ -118,8 +118,8 @@ public class Autoloader: NSObject, AutoloadProtocol {
         debugMethods = autoloadMethods(Autoloader.self)
         
         #if DEBUG
-        // Logger.debug(group: Logger.fw_moduleName, "%@", FrameworkAutoloader.debugDescription())
-        Logger.debug(group: Logger.fw_moduleName, "%@", debugDescription())
+        // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
+        Logger.debug(group: Logger.fw.moduleName, "%@", debugDescription())
         #endif
     }
     

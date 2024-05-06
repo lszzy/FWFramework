@@ -216,7 +216,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         }
         
         if self.responds(to: NSSelectorFromString("view")) {
-            return self.fw_invokeGetter("view") as? UIView
+            return self.fw.invokeGetter("view") as? UIView
         }
         return nil
     }
@@ -224,10 +224,10 @@ open class BadgeView: UIView, BadgeViewProtocol {
     /// 当item内的view生成后就会调用一次这个block，仅对UIBarButtonItem、UITabBarItem有效
     public var fw_viewLoadedBlock: ((UIBarItem, UIView) -> Void)? {
         get {
-            return fw_property(forName: "fw_viewLoadedBlock") as? (UIBarItem, UIView) -> Void
+            return fw.property(forName: "fw_viewLoadedBlock") as? (UIBarItem, UIView) -> Void
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_viewLoadedBlock")
+            fw.setPropertyCopy(newValue, forName: "fw_viewLoadedBlock")
             
             if let view = self.fw_view {
                 newValue?(self, view)

@@ -1160,7 +1160,7 @@ open class AttributedLabelURLDetector: NSObject, AttributedLabelURLDetectorProto
     }
     
     open func addRegularExpression(_ regularExpression: NSRegularExpression, attributes: [NSAttributedString.Key: Any]? = nil) {
-        regularExpression.fw_setProperty(attributes, forName: "detectLinksAttributes", policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        regularExpression.fw.setProperty(attributes, forName: "detectLinksAttributes", policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         regularExpressions.append(regularExpression)
     }
     
@@ -1182,7 +1182,7 @@ open class AttributedLabelURLDetector: NSObject, AttributedLabelURLDetectorProto
         var links: [AttributedLabelURL] = []
         let plainString = plainText as NSString
         for regularExpression in regularExpressions {
-            let attributes = regularExpression.fw_property(forName: "detectLinksAttributes") as? [NSAttributedString.Key: Any]
+            let attributes = regularExpression.fw.property(forName: "detectLinksAttributes") as? [NSAttributedString.Key: Any]
             regularExpression.enumerateMatches(in: plainText, range: NSMakeRange(0, plainString.length)) { result, flags, stop in
                 if let range = result?.range {
                     let text = plainString.substring(with: range)

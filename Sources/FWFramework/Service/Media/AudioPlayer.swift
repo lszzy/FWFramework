@@ -213,7 +213,7 @@ open class AudioPlayer: NSObject {
     
     open func getAudioIndex(_ item: AVPlayerItem?) -> Int? {
         guard let item = item else { return nil }
-        let number = item.fw_propertyNumber(forName: "audioIndex")
+        let number = item.fw.propertyNumber(forName: "audioIndex")
         return number?.intValue
     }
     
@@ -340,7 +340,7 @@ open class AudioPlayer: NSObject {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
             if !disableLogs {
-                Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
+                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
             }
         }
         UIApplication.shared.endReceivingRemoteControlEvents()
@@ -376,7 +376,7 @@ open class AudioPlayer: NSObject {
                 }
             } else if audioPlayer.status == .failed {
                 if !disableLogs {
-                    Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
+                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
                 }
                 
                 delegate?.audioPlayerDidFailed?(nil, error: audioPlayer.error)
@@ -438,7 +438,7 @@ open class AudioPlayer: NSObject {
                     if bufferdTime > milestone && audioPlayer.currentItem?.status == .readyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying {
                         if !isPlaying {
                             if !disableLogs {
-                                Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: resume from buffering..")
+                                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
                             }
                             play()
                         }
@@ -464,7 +464,7 @@ open class AudioPlayer: NSObject {
                     try audioSession.setCategory(.playback)
                 } catch {
                     if !disableLogs {
-                        Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: set category error: %@", error.localizedDescription)
+                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set category error: %@", error.localizedDescription)
                     }
                 }
                 
@@ -472,19 +472,19 @@ open class AudioPlayer: NSObject {
                     try audioSession.setActive(true)
                 } catch {
                     if !disableLogs {
-                        Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
+                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
                     }
                 }
             }
         } else {
             if !disableLogs {
-                Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: unable to register background playback")
+                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: unable to register background playback")
             }
         }
     }
     
     private func setAudioIndex(_ item: AVPlayerItem, index: Int) {
-        item.fw_setPropertyNumber(NSNumber(value: index), forName: "audioIndex")
+        item.fw.setPropertyNumber(NSNumber(value: index), forName: "audioIndex")
     }
     
     private func willPlayPlayerItem(at index: Int) {
@@ -630,16 +630,16 @@ open class AudioPlayer: NSObject {
     }
     
     private func observePlayerItem(_ item: AVPlayerItem) {
-        guard !item.fw_propertyBool(forName: "observePlayerItem") else { return }
-        item.fw_setPropertyBool(true, forName: "observePlayerItem")
+        guard !item.fw.propertyBool(forName: "observePlayerItem") else { return }
+        item.fw.setPropertyBool(true, forName: "observePlayerItem")
         
         item.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
         item.addObserver(self, forKeyPath: "status", options: .new, context: nil)
     }
     
     private func unobservePlayerItem(_ item: AVPlayerItem) {
-        guard item.fw_propertyBool(forName: "observePlayerItem") else { return }
-        item.fw_setPropertyBool(false, forName: "observePlayerItem")
+        guard item.fw.propertyBool(forName: "observePlayerItem") else { return }
+        item.fw.setPropertyBool(false, forName: "observePlayerItem")
         
         item.removeObserver(self, forKeyPath: "loadedTimeRanges", context: nil)
         item.removeObserver(self, forKeyPath: "status", context: nil)
@@ -659,7 +659,7 @@ open class AudioPlayer: NSObject {
             play()
         }
         if !disableLogs {
-            Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: interruption: %@", interruptionType == .began ? "began" : "ended")
+            Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: interruption: %@", interruptionType == .began ? "began" : "ended")
         }
     }
     
@@ -677,7 +677,7 @@ open class AudioPlayer: NSObject {
             play()
         }
         if !disableLogs {
-            Logger.debug(group: Logger.fw_moduleName, "AudioPlayer: routeChanged: %@", routeChangeReason == .newDeviceAvailable ? "New Device Available" : "Old Device Unavailable")
+            Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: routeChanged: %@", routeChangeReason == .newDeviceAvailable ? "New Device Available" : "Old Device Unavailable")
         }
     }
     

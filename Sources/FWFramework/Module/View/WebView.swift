@@ -403,7 +403,7 @@ open class WebView: WKWebView {
             var fileName = (suggestedFilename as NSString).deletingPathExtension
             fileName = (UUID().uuidString + fileName).fw_md5Encode
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
-            download.fw_setProperty(url, forName: "downloadUrl")
+            download.fw.setProperty(url, forName: "downloadUrl")
             completionHandler(url)
         }
         
@@ -414,7 +414,7 @@ open class WebView: WKWebView {
                 return
             }
             
-            guard let url = download.fw_property(forName: "downloadUrl") as? URL else {
+            guard let url = download.fw.property(forName: "downloadUrl") as? URL else {
                 return
             }
             
@@ -822,7 +822,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         removeScriptMessageHandlers()
         
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
     }
     
@@ -919,11 +919,11 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     // MARK: - Private
     private func getClassBridges(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        guard let metaClass = NSObject.fw_metaClass(clazz) else {
+        guard let metaClass = NSObject.fw.metaClass(clazz) else {
             return [:]
         }
         
-        let methods = NSObject.fw_classMethods(metaClass)
+        let methods = NSObject.fw.classMethods(metaClass)
         if let mapper = mapper {
             return mapper(methods)
         }
@@ -1095,7 +1095,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
     
@@ -1257,8 +1257,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     // MARK: - ReusableViewProtocol
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
+        get { return self.fw.property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
+        set { self.fw.setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
     }
     
     /// 初始化WKWebView可重用视图
@@ -1329,7 +1329,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         if let userAgent = customUserAgent, !userAgent.isEmpty {
             return userAgent
         }
-        if let userAgent = fw_invokeGetter("userAgent") as? String, !userAgent.isEmpty {
+        if let userAgent = fw.invokeGetter("userAgent") as? String, !userAgent.isEmpty {
             return userAgent
         }
         return WKWebView.fw_browserUserAgent
@@ -1392,14 +1392,14 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
     public var fw_jsBridge: WebViewJSBridge? {
-        get { fw_property(forName: "fw_jsBridge") as? WebViewJSBridge }
-        set { fw_setProperty(newValue, forName: "fw_jsBridge") }
+        get { fw.property(forName: "fw_jsBridge") as? WebViewJSBridge }
+        set { fw.setProperty(newValue, forName: "fw_jsBridge") }
     }
     
     /// 是否启用Javascript桥接器，需结合setupJsBridge使用
     public var fw_jsBridgeEnabled: Bool {
-        get { fw_propertyBool(forName: "fw_jsBridgeEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_jsBridgeEnabled") }
+        get { fw.propertyBool(forName: "fw_jsBridgeEnabled") }
+        set { fw.setPropertyBool(newValue, forName: "fw_jsBridgeEnabled") }
     }
     
     /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
@@ -1413,8 +1413,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     /// 绑定控制器导航栏左侧按钮组，需结合setupNavigationItems使用
     public var fw_navigationItems: [Any]? {
-        get { fw_property(forName: "fw_navigationItems") as? [Any] }
-        set { fw_setProperty(newValue, forName: "fw_navigationItems") }
+        get { fw.property(forName: "fw_navigationItems") as? [Any] }
+        set { fw.setProperty(newValue, forName: "fw_navigationItems") }
     }
     
     /// 自动初始化控制器导航栏左侧按钮组，navigationItems设置后生效

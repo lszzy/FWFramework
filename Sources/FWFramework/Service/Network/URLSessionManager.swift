@@ -192,11 +192,11 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     }
     
     open func setUserInfo(_ userInfo: [AnyHashable: Any]?, for task: URLSessionTask) {
-        task.fw_setPropertyCopy(userInfo, forName: "userInfo")
+        task.fw.setPropertyCopy(userInfo, forName: "userInfo")
     }
     
     open func userInfo(for task: URLSessionTask) -> [AnyHashable: Any]? {
-        return task.fw_property(forName: "userInfo") as? [AnyHashable: Any]
+        return task.fw.property(forName: "userInfo") as? [AnyHashable: Any]
     }
     
     @objc private func taskDidResume(_ notification: Notification) {
@@ -360,7 +360,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             if result == nil {
                 return
             } else if let resultError = result as? Error {
-                task.fw_setProperty(resultError, forName: "authenticationChallengeError")
+                task.fw.setProperty(resultError, forName: "authenticationChallengeError")
                 disposition = .cancelAuthenticationChallenge
             } else if let resultCredential = result as? URLCredential {
                 credential = resultCredential
@@ -381,7 +381,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
                 disposition = .useCredential
                 credential = URLCredential(trust: serverTrust)
             } else {
-                task.fw_setProperty(serverTrustError(for: challenge.protectionSpace.serverTrust, url: task.currentRequest?.url), forName: "authenticationChallengeError")
+                task.fw.setProperty(serverTrustError(for: challenge.protectionSpace.serverTrust, url: task.currentRequest?.url), forName: "authenticationChallengeError")
                 disposition = .cancelAuthenticationChallenge
             }
         }
@@ -609,7 +609,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
     
     // MARK: - URLSessionTaskDelegate
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        let error = (task.fw_property(forName: "authenticationChallengeError") as? Error) ?? error
+        let error = (task.fw.property(forName: "authenticationChallengeError") as? Error) ?? error
         let manager = self.manager
         var responseObject: Any?
         

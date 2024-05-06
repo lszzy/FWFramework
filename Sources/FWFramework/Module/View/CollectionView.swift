@@ -458,16 +458,16 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
 @_spi(FW) extension UICollectionView {
     public var fw_collectionDelegate: CollectionViewDelegate {
         get {
-            if let result = fw_property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
+            if let result = fw.property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
                 return result
             } else {
                 let result = CollectionViewDelegate()
-                fw_setProperty(result, forName: "fw_collectionDelegate")
+                fw.setProperty(result, forName: "fw_collectionDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_collectionDelegate")
+            fw.setProperty(newValue, forName: "fw_collectionDelegate")
         }
     }
     
@@ -561,8 +561,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     }
     
     private var fw_sectionConfigAttributes: [UICollectionViewLayoutAttributes] {
-        get { return fw_property(forName: "fw_sectionConfigAttributes") as? [UICollectionViewLayoutAttributes] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_sectionConfigAttributes") }
+        get { return fw.property(forName: "fw_sectionConfigAttributes") as? [UICollectionViewLayoutAttributes] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_sectionConfigAttributes") }
     }
     
 }

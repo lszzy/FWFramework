@@ -126,11 +126,11 @@ open class ModuleBundle: NSObject {
     }
     
     private class var bundleTarget: Target {
-        if let target = self.fw_property(forName: "bundleTarget") as? Target {
+        if let target = self.fw.property(forName: "bundleTarget") as? Target {
             return target
         } else {
             let target = Target()
-            self.fw_setProperty(target, forName: "bundleTarget")
+            self.fw.setProperty(target, forName: "bundleTarget")
             return target
         }
     }

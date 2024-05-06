@@ -421,11 +421,11 @@ public class Router: NSObject {
     }
     
     private class func routeClass(with clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        guard let metaClass = NSObject.fw_metaClass(clazz) else {
+        guard let metaClass = NSObject.fw.metaClass(clazz) else {
             return [:]
         }
         
-        let methods = NSObject.fw_classMethods(metaClass)
+        let methods = NSObject.fw.classMethods(metaClass)
         if let mapper = mapper {
             return mapper(methods)
         }

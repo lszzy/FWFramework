@@ -363,7 +363,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
                 pickerController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: FrameworkBundle.cancelButton, style: .plain, target: pickerController, action: #selector(ImagePickerController.handleCancelButtonClick(_:)))
             }
             // 此处需要强引用imagePickerController，防止weak属性释放imagePickerController
-            fw_setProperty(pickerController, forName: "imagePickerController")
+            fw.setProperty(pickerController, forName: "imagePickerController")
             self.imagePickerController = pickerController
         }
     }
@@ -1514,20 +1514,20 @@ fileprivate extension Asset {
     
     var pickerCroppedRect: CGRect {
         get {
-            let value = fw_property(forName: "pickerCroppedRect") as? NSValue
+            let value = fw.property(forName: "pickerCroppedRect") as? NSValue
             return value?.cgRectValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(cgRect: newValue), forName: "pickerCroppedRect")
+            fw.setProperty(NSValue(cgRect: newValue), forName: "pickerCroppedRect")
         }
     }
     
     var pickerCroppedAngle: Int {
         get {
-            return fw_propertyInt(forName: "pickerCroppedAngle")
+            return fw.propertyInt(forName: "pickerCroppedAngle")
         }
         set {
-            fw_setPropertyInt(newValue, forName: "pickerCroppedAngle")
+            fw.setPropertyInt(newValue, forName: "pickerCroppedAngle")
         }
     }
     

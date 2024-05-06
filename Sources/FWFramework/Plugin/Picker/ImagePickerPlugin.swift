@@ -374,7 +374,7 @@ extension ImagePickerPlugin {
     /// 自定义图片选取插件，未设置时自动从插件池加载
     public var fw_imagePickerPlugin: ImagePickerPlugin! {
         get {
-            if let pickerPlugin = fw_property(forName: "fw_imagePickerPlugin") as? ImagePickerPlugin {
+            if let pickerPlugin = fw.property(forName: "fw_imagePickerPlugin") as? ImagePickerPlugin {
                 return pickerPlugin
             } else if let pickerPlugin = PluginManager.loadPlugin(ImagePickerPlugin.self) {
                 return pickerPlugin
@@ -382,7 +382,7 @@ extension ImagePickerPlugin {
             return ImagePickerPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_imagePickerPlugin")
+            fw.setProperty(newValue, forName: "fw_imagePickerPlugin")
         }
     }
     
@@ -622,7 +622,7 @@ extension ImagePickerPlugin {
         pickerDelegate.shouldDismiss = shouldDismiss
         pickerDelegate.completionBlock = completion
         
-        pickerController.fw_setProperty(pickerDelegate, forName: "fw_pickerDelegate")
+        pickerController.fw.setProperty(pickerDelegate, forName: "fw_pickerDelegate")
         pickerController.delegate = pickerDelegate
         return pickerController
     }
@@ -835,7 +835,7 @@ extension ImagePickerPlugin {
         pickerDelegate.shouldDismiss = shouldDismiss
         pickerDelegate.completionBlock = completion
         
-        pickerController.fw_setProperty(pickerDelegate, forName: "fw_pickerDelegate")
+        pickerController.fw.setProperty(pickerDelegate, forName: "fw_pickerDelegate")
         pickerController.delegate = pickerDelegate
         return pickerController
     }
@@ -893,14 +893,14 @@ extension ImagePickerPlugin {
     
     /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
     public var fw_pickerControllerDismissed: Bool {
-        get { fw_propertyBool(forName: #function) }
-        set { fw_setPropertyBool(newValue, forName: #function) }
+        get { fw.propertyBool(forName: #function) }
+        set { fw.setPropertyBool(newValue, forName: #function) }
     }
     
     /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
     public var fw_exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
-        get { fw_property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: #function) }
+        get { fw.property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: #function) }
     }
     
 }

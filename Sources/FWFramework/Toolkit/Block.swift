@@ -655,8 +655,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     private var fw_blockTargets: [BlockTarget] {
-        get { return fw_property(forName: "fw_blockTargets") as? [BlockTarget] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_blockTargets") }
+        get { return fw.property(forName: "fw_blockTargets") as? [BlockTarget] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_blockTargets") }
     }
     
 }
@@ -790,8 +790,8 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     private var fw_blockTargets: [UIGestureRecognizer.BlockTarget] {
-        get { return fw_property(forName: "fw_blockTargets") as? [UIGestureRecognizer.BlockTarget] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_blockTargets") }
+        get { return fw.property(forName: "fw_blockTargets") as? [UIGestureRecognizer.BlockTarget] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_blockTargets") }
     }
     
 }
@@ -839,10 +839,10 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     /// 自定义标题样式属性，兼容appearance，默认nil同系统
     public var fw_titleAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return fw_property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
+            return fw.property(forName: "fw_titleAttributes") as? [NSAttributedString.Key: Any]
         }
         set {
-            fw_setProperty(newValue, forName: "fw_titleAttributes")
+            fw.setProperty(newValue, forName: "fw_titleAttributes")
             guard let titleAttributes = newValue else { return }
             
             let states: [UIControl.State] = [.normal, .highlighted, .disabled, .focused]
@@ -871,7 +871,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         self.target = target
         self.action = action
         // 设置target为强引用，因为self.target为弱引用
-        fw_setProperty(target, forName: "fw_setBlock")
+        fw.setProperty(target, forName: "fw_setBlock")
     }
     
     private func fw_addItemEvent(_ customView: UIView) {

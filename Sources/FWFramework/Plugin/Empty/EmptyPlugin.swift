@@ -249,7 +249,7 @@ extension EmptyViewDelegate {
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var fw_emptyPlugin: EmptyPlugin! {
         get {
-            if let emptyPlugin = fw_property(forName: "fw_emptyPlugin") as? EmptyPlugin {
+            if let emptyPlugin = fw.property(forName: "fw_emptyPlugin") as? EmptyPlugin {
                 return emptyPlugin
             } else if let emptyPlugin = PluginManager.loadPlugin(EmptyPlugin.self) {
                 return emptyPlugin
@@ -257,7 +257,7 @@ extension EmptyViewDelegate {
             return EmptyPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_emptyPlugin")
+            fw.setProperty(newValue, forName: "fw_emptyPlugin")
         }
     }
     
@@ -268,7 +268,7 @@ extension EmptyViewDelegate {
             if let scrollView = self as? UIScrollView {
                 view = scrollView.fw_overlayView
             }
-            if let value = view.fw_property(forName: "fw_emptyInsets") as? NSValue {
+            if let value = view.fw.property(forName: "fw_emptyInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
@@ -278,7 +278,7 @@ extension EmptyViewDelegate {
             if let scrollView = self as? UIScrollView {
                 view = scrollView.fw_overlayView
             }
-            view.fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_emptyInsets")
+            view.fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_emptyInsets")
         }
     }
     
@@ -412,11 +412,11 @@ extension EmptyViewDelegate {
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
     public weak var fw_emptyViewDelegate: EmptyViewDelegate? {
         get {
-            return fw_property(forName: "fw_emptyViewDelegate") as? EmptyViewDelegate
+            return fw.property(forName: "fw_emptyViewDelegate") as? EmptyViewDelegate
         }
         set {
             if newValue == nil { self.fw_invalidateEmptyView() }
-            fw_setPropertyWeak(newValue, forName: "fw_emptyViewDelegate")
+            fw.setPropertyWeak(newValue, forName: "fw_emptyViewDelegate")
             
             UIScrollView.fw_enableEmptyPlugin()
         }
@@ -433,7 +433,7 @@ extension EmptyViewDelegate {
         
         let hideSuccess = self.fw_invalidateEmptyView()
         if shouldDisplay {
-            fw_setPropertyBool(true, forName: "fw_invalidateEmptyView")
+            fw.setPropertyBool(true, forName: "fw_invalidateEmptyView")
             
             self.isScrollEnabled = emptyViewDelegate.emptyViewShouldScroll(self)
             
@@ -449,7 +449,7 @@ extension EmptyViewDelegate {
     /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
     public var fw_totalDataCount: Int {
         get {
-            if let totalCount = fw_propertyNumber(forName: "fw_totalDataCount")?.intValue,
+            if let totalCount = fw.propertyNumber(forName: "fw_totalDataCount")?.intValue,
                totalCount >= 0 {
                 return totalCount
             }
@@ -485,14 +485,14 @@ extension EmptyViewDelegate {
             return totalCount
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_totalDataCount")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_totalDataCount")
         }
     }
     
     @discardableResult
     private func fw_invalidateEmptyView() -> Bool {
-        if !fw_propertyBool(forName: "fw_invalidateEmptyView") { return false }
-        fw_setProperty(nil, forName: "fw_invalidateEmptyView")
+        if !fw.propertyBool(forName: "fw_invalidateEmptyView") { return false }
+        fw.setProperty(nil, forName: "fw_invalidateEmptyView")
         
         self.isScrollEnabled = true
         
@@ -543,7 +543,7 @@ extension EmptyViewDelegate {
     
     /// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
     public var fw_overlayView: UIView {
-        if let overlayView = fw_property(forName: "fw_overlayView") as? UIView {
+        if let overlayView = fw.property(forName: "fw_overlayView") as? UIView {
             return overlayView
         } else {
             let overlayView = ScrollOverlayView()
@@ -552,14 +552,14 @@ extension EmptyViewDelegate {
             overlayView.backgroundColor = .clear
             overlayView.clipsToBounds = true
             
-            fw_setProperty(overlayView, forName: "fw_overlayView")
+            fw.setProperty(overlayView, forName: "fw_overlayView")
             return overlayView
         }
     }
 
     /// 是否显示自定义浮层
     public var fw_hasOverlayView: Bool {
-        let overlayView = fw_property(forName: "fw_overlayView") as? UIView
+        let overlayView = fw.property(forName: "fw_overlayView") as? UIView
         return overlayView != nil && overlayView?.superview != nil
     }
 
@@ -578,7 +578,7 @@ extension EmptyViewDelegate {
 
     /// 隐藏自定义浮层，自动从滚动视图移除
     public func fw_hideOverlayView() {
-        let overlayView = fw_property(forName: "fw_overlayView") as? UIView
+        let overlayView = fw.property(forName: "fw_overlayView") as? UIView
         if overlayView != nil && overlayView?.superview != nil {
             overlayView?.removeFromSuperview()
         }
