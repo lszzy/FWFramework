@@ -695,7 +695,7 @@ public class AlertAppearance: NSObject {
     /// 自定义弹窗插件，未设置时自动从插件池加载
     public var fw_alertPlugin: AlertPlugin! {
         get {
-            if let alertPlugin = fw_property(forName: "fw_alertPlugin") as? AlertPlugin {
+            if let alertPlugin = fw.property(forName: "fw_alertPlugin") as? AlertPlugin {
                 return alertPlugin
             } else if let alertPlugin = PluginManager.loadPlugin(AlertPlugin.self) {
                 return alertPlugin
@@ -703,7 +703,7 @@ public class AlertAppearance: NSObject {
             return AlertPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_alertPlugin")
+            fw.setProperty(newValue, forName: "fw_alertPlugin")
         }
     }
     
@@ -1305,21 +1305,21 @@ public class AlertAppearance: NSObject {
     /// 自定义样式，默认为样式单例
     public var fw_alertAppearance: AlertAppearance! {
         get {
-            let appearance = fw_property(forName: "fw_alertAppearance") as? AlertAppearance
+            let appearance = fw.property(forName: "fw_alertAppearance") as? AlertAppearance
             return appearance ?? AlertAppearance.appearance
         }
         set {
-            fw_setProperty(newValue, forName: "fw_alertAppearance")
+            fw.setProperty(newValue, forName: "fw_alertAppearance")
         }
     }
     
     /// 是否是推荐动作
     public var fw_isPreferred: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isPreferred")
+            return fw.propertyBool(forName: "fw_isPreferred")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_isPreferred")
+            fw.setPropertyBool(newValue, forName: "fw_isPreferred")
             if self.fw_titleColor != nil || (self.title?.count ?? 0) < 1 || !self.fw_alertAppearance.actionEnabled { return }
             
             var titleColor: UIColor?
@@ -1335,7 +1335,7 @@ public class AlertAppearance: NSObject {
                 titleColor = self.fw_alertAppearance.actionColor
             }
             if let titleColor = titleColor {
-                self.fw_invokeSetter("titleTextColor", object: titleColor)
+                self.fw.invokeSetter("titleTextColor", object: titleColor)
             }
         }
     }
@@ -1343,11 +1343,11 @@ public class AlertAppearance: NSObject {
     /// 指定标题颜色
     public var fw_titleColor: UIColor? {
         get {
-            return fw_property(forName: "fw_titleColor") as? UIColor
+            return fw.property(forName: "fw_titleColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_titleColor")
-            self.fw_invokeSetter("titleTextColor", object: newValue)
+            fw.setProperty(newValue, forName: "fw_titleColor")
+            self.fw.invokeSetter("titleTextColor", object: newValue)
         }
     }
     
@@ -1381,43 +1381,43 @@ public class AlertAppearance: NSObject {
     /// 自定义样式，默认为样式单例
     public var fw_alertAppearance: AlertAppearance! {
         get {
-            let appearance = fw_property(forName: "fw_alertAppearance") as? AlertAppearance
+            let appearance = fw.property(forName: "fw_alertAppearance") as? AlertAppearance
             return appearance ?? AlertAppearance.appearance
         }
         set {
-            fw_setProperty(newValue, forName: "fw_alertAppearance")
+            fw.setProperty(newValue, forName: "fw_alertAppearance")
         }
     }
     
     /// 弹出框样式，默认为Default
     public var fw_alertStyle: AlertStyle {
         get {
-            return .init(rawValue: fw_propertyInt(forName: "fw_alertStyle"))
+            return .init(rawValue: fw.propertyInt(forName: "fw_alertStyle"))
         }
         set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_alertStyle")
+            fw.setPropertyInt(newValue.rawValue, forName: "fw_alertStyle")
         }
     }
 
     /// 设置属性标题
     public var fw_attributedTitle: NSAttributedString? {
         get {
-            return fw_property(forName: "fw_attributedTitle") as? NSAttributedString
+            return fw.property(forName: "fw_attributedTitle") as? NSAttributedString
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_attributedTitle")
-            self.fw_invokeSetter("attributedTitle", object: newValue)
+            fw.setPropertyCopy(newValue, forName: "fw_attributedTitle")
+            self.fw.invokeSetter("attributedTitle", object: newValue)
         }
     }
 
     /// 设置属性消息
     public var fw_attributedMessage: NSAttributedString? {
         get {
-            return fw_property(forName: "fw_attributedMessage") as? NSAttributedString
+            return fw.property(forName: "fw_attributedMessage") as? NSAttributedString
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_attributedMessage")
-            self.fw_invokeSetter("attributedMessage", object: newValue)
+            fw.setPropertyCopy(newValue, forName: "fw_attributedMessage")
+            self.fw.invokeSetter("attributedMessage", object: newValue)
         }
     }
     

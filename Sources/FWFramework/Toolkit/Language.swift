@@ -157,7 +157,7 @@ extension Notification.Name {
     private class TargetBundle: Bundle {
         
         override func localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
-            if let bundle = fw_property(forName: "fw_localizedBundle") as? Bundle {
+            if let bundle = fw.property(forName: "fw_localizedBundle") as? Bundle {
                 return bundle.localizedString(forKey: key, value: value, table: tableName)
             } else {
                 return super.localizedString(forKey: key, value: value, table: tableName)
@@ -194,7 +194,7 @@ extension Notification.Name {
     @objc private func fw_languageChanged(_ notification: Notification) {
         let language = notification.object as? String
         let bundle = fw_localizedBundle(language: language)
-        fw_setProperty(bundle, forName: "fw_localizedBundle")
+        fw.setProperty(bundle, forName: "fw_localizedBundle")
     }
     
     // MARK: - Main
@@ -275,7 +275,7 @@ extension Notification.Name {
            let path = Bundle.main.path(forResource: language, ofType: "lproj") {
             bundle = Bundle(path: path)
         }
-        Bundle.main.fw_setProperty(bundle, forName: "fw_localizedBundle")
+        Bundle.main.fw.setProperty(bundle, forName: "fw_localizedBundle")
     }
     
     // MARK: - Bundle

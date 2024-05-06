@@ -394,7 +394,7 @@ extension ToastPlugin {
     /// 自定义吐司插件，未设置时自动从插件池加载
     public var fw_toastPlugin: ToastPlugin! {
         get {
-            if let toastPlugin = fw_property(forName: "fw_toastPlugin") as? ToastPlugin {
+            if let toastPlugin = fw.property(forName: "fw_toastPlugin") as? ToastPlugin {
                 return toastPlugin
             } else if let toastPlugin = PluginManager.loadPlugin(ToastPlugin.self) {
                 return toastPlugin
@@ -402,20 +402,20 @@ extension ToastPlugin {
             return ToastPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_toastPlugin")
+            fw.setProperty(newValue, forName: "fw_toastPlugin")
         }
     }
     
     /// 设置吐司外间距，默认zero
     public var fw_toastInsets: UIEdgeInsets {
         get {
-            if let value = fw_property(forName: "fw_toastInsets") as? NSValue {
+            if let value = fw.property(forName: "fw_toastInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_toastInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_toastInsets")
         }
     }
     
@@ -512,14 +512,14 @@ extension ToastPlugin {
     
     /// 设置吐司是否显示在window上，默认NO，显示到view上
     public var fw_toastInWindow: Bool {
-        get { fw_propertyBool(forName: "fw_toastInWindow") }
-        set { fw_setPropertyBool(newValue, forName: "fw_toastInWindow") }
+        get { fw.propertyBool(forName: "fw_toastInWindow") }
+        set { fw.setPropertyBool(newValue, forName: "fw_toastInWindow") }
     }
     
     /// 设置吐司是否显示在祖先视图上，默认NO，显示到view上
     public var fw_toastInAncestor: Bool {
-        get { fw_propertyBool(forName: "fw_toastInAncestor") }
-        set { fw_setPropertyBool(newValue, forName: "fw_toastInAncestor") }
+        get { fw.propertyBool(forName: "fw_toastInAncestor") }
+        set { fw.setPropertyBool(newValue, forName: "fw_toastInAncestor") }
     }
     
     /// 自定义吐司插件，未设置时自动从插件池加载
@@ -537,7 +537,7 @@ extension ToastPlugin {
     /// 获取或设置吐司容器视图，默认view
     public var fw_toastContainer: UIView! {
         get {
-            if let view = fw_property(forName: "fw_toastContainer") as? UIView {
+            if let view = fw.property(forName: "fw_toastContainer") as? UIView {
                 return view
             }
             if self.fw_toastInWindow { return UIWindow.fw.main ?? self.view }
@@ -545,7 +545,7 @@ extension ToastPlugin {
             return self.view
         }
         set {
-            fw_setPropertyWeak(newValue, forName: "fw_toastContainer")
+            fw.setPropertyWeak(newValue, forName: "fw_toastContainer")
         }
     }
     

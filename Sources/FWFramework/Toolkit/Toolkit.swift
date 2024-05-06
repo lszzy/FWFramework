@@ -883,26 +883,26 @@ extension Wrapper where Base: UINavigationController {
         static let shared = SafariViewControllerDelegate()
         
         func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-            let completion = controller.fw_property(forName: "safariViewControllerDidFinish") as? () -> Void
+            let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
             completion?()
         }
         
         func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-            let completion = controller.fw_property(forName: "messageComposeViewController") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
             }
         }
         
         func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-            let completion = controller.fw_property(forName: "mailComposeController") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
             }
         }
         
         func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-            let completion = controller.fw_property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(true)
             }
@@ -1113,7 +1113,7 @@ extension Wrapper where Base: UINavigationController {
         guard let url = url?.urlValue, fw_isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
-            safariController.fw_setProperty(completionHandler, forName: "safariViewControllerDidFinish")
+            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
             safariController.delegate = SafariViewControllerDelegate.shared
         }
         customBlock?(safariController)
@@ -1128,7 +1128,7 @@ extension Wrapper where Base: UINavigationController {
         }
         
         if completionHandler != nil {
-            controller.fw_setProperty(completionHandler, forName: "messageComposeViewController")
+            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
         }
         controller.messageComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
@@ -1142,7 +1142,7 @@ extension Wrapper where Base: UINavigationController {
         }
         
         if completionHandler != nil {
-            controller.fw_setProperty(completionHandler, forName: "mailComposeController")
+            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
         }
         controller.mailComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
@@ -1158,7 +1158,7 @@ extension Wrapper where Base: UINavigationController {
                 return
             }
             
-            controller.fw_setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
             customBlock?(controller)
             Navigator.present(controller, animated: true)
         }
@@ -2174,27 +2174,27 @@ extension Wrapper where Base: UINavigationController {
     
     /// 保存图片到相册，保存成功时error为nil
     public func fw_saveImage(completion: ((Error?) -> Void)? = nil) {
-        fw_setPropertyCopy(completion, forName: "fw_saveImage")
+        fw.setPropertyCopy(completion, forName: "fw_saveImage")
         UIImageWriteToSavedPhotosAlbum(self, self, #selector(fw_saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
-        UIImage.fw_setPropertyCopy(completion, forName: "fw_saveVideo")
+        UIImage.fw.setPropertyCopy(completion, forName: "fw_saveVideo")
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_saveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
     @objc private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
-        fw_setPropertyCopy(nil, forName: "fw_saveImage")
+        let block = fw.property(forName: "fw_saveImage") as? (Error?) -> Void
+        fw.setPropertyCopy(nil, forName: "fw_saveImage")
         block?(error)
     }
     
     @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = UIImage.fw_property(forName: "fw_saveVideo") as? (Error?) -> Void
-        UIImage.fw_setPropertyCopy(nil, forName: "fw_saveVideo")
+        let block = UIImage.fw.property(forName: "fw_saveVideo") as? (Error?) -> Void
+        UIImage.fw.setPropertyCopy(nil, forName: "fw_saveVideo")
         block?(error)
     }
     
@@ -2765,7 +2765,7 @@ public enum ViewControllerLifecycleState: Int {
             
             #if DEBUG
             if let viewController = viewController {
-                Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
+                Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
             }
             #endif
         }
@@ -2845,30 +2845,30 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     private var fw_issetLifecycleStateTarget: Bool {
-        return fw_property(forName: "fw_lifecycleStateTarget") != nil
+        return fw.property(forName: "fw_lifecycleStateTarget") != nil
     }
     
     private var fw_lifecycleStateTarget: LifecycleStateTarget {
-        if let target = fw_property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
+        if let target = fw.property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
             return target
         }
         
         let target = LifecycleStateTarget()
         target.viewController = self
-        fw_setProperty(target, forName: "fw_lifecycleStateTarget")
+        fw.setProperty(target, forName: "fw_lifecycleStateTarget")
         return target
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
     public var fw_allowsPopGesture: (() -> Bool)? {
-        get { fw_property(forName: "fw_allowsPopGesture") as? () -> Bool }
-        set { fw_setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
+        get { fw.property(forName: "fw_allowsPopGesture") as? () -> Bool }
+        set { fw.setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
     public var fw_shouldPopController: (() -> Bool)? {
-        get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
-        set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
+        get { fw.property(forName: "fw_shouldPopController") as? () -> Bool }
+        set { fw.setPropertyCopy(newValue, forName: "fw_shouldPopController") }
     }
     
     fileprivate static func fw_swizzleToolkitViewController() {
@@ -3184,7 +3184,7 @@ public enum ViewControllerLifecycleState: Int {
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func fw_enablePopProxy() {
         self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
-        fw_setPropertyBool(true, forName: "fw_popProxyEnabled")
+        fw.setPropertyBool(true, forName: "fw_popProxyEnabled")
         UINavigationController.fw_swizzleToolkitNavigationController()
     }
     
@@ -3195,25 +3195,25 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     private var fw_popProxyEnabled: Bool {
-        return fw_propertyBool(forName: "fw_popProxyEnabled")
+        return fw.propertyBool(forName: "fw_popProxyEnabled")
     }
     
     private var fw_popProxyTarget: PopProxyTarget {
-        if let proxy = fw_property(forName: "fw_popProxyTarget") as? PopProxyTarget {
+        if let proxy = fw.property(forName: "fw_popProxyTarget") as? PopProxyTarget {
             return proxy
         } else {
             let proxy = PopProxyTarget(navigationController: self)
-            fw_setProperty(proxy, forName: "fw_popProxyTarget")
+            fw.setProperty(proxy, forName: "fw_popProxyTarget")
             return proxy
         }
     }
     
     private var fw_delegateProxy: GestureRecognizerDelegateProxy {
-        if let proxy = fw_property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
+        if let proxy = fw.property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
             return proxy
         } else {
             let proxy = GestureRecognizerDelegateProxy()
-            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            fw.setProperty(proxy, forName: "fw_delegateProxy")
             return proxy
         }
     }

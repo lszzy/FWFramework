@@ -791,10 +791,10 @@ public class StatisticalEvent: NSObject, NSCopying {
     /// 设置并尝试自动绑定点击事件统计
     public var fw_statisticalClick: StatisticalEvent? {
         get {
-            return fw_property(forName: "fw_statisticalClick") as? StatisticalEvent
+            return fw.property(forName: "fw_statisticalClick") as? StatisticalEvent
         }
         set {
-            fw_setProperty(newValue, forName: "fw_statisticalClick")
+            fw.setProperty(newValue, forName: "fw_statisticalClick")
             StatisticalManager.swizzleStatistical()
             fw_statisticalBindClick(newValue?.containerView)
         }
@@ -802,16 +802,16 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     /// 设置统计点击事件触发时自定义监听器，默认nil
     public var fw_statisticalClickListener: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalClickListener") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalClickListener") }
+        get { fw.property(forName: "fw_statisticalClickListener") as? (StatisticalEvent) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_statisticalClickListener") }
     }
     
     /// 手工绑定点击事件统计，可指定容器视图，自动绑定失败时可手工调用
     @discardableResult
     public func fw_statisticalBindClick(_ containerView: UIView? = nil) -> Bool {
-        guard !fw_propertyBool(forName: "fw_statisticalBindClick") else { return true }
+        guard !fw.propertyBool(forName: "fw_statisticalBindClick") else { return true }
         let result = statisticalViewWillBindClick(containerView)
-        if result { fw_setPropertyBool(true, forName: "fw_statisticalBindClick") }
+        if result { fw.setPropertyBool(true, forName: "fw_statisticalBindClick") }
         return result
     }
     
@@ -827,11 +827,11 @@ public class StatisticalEvent: NSObject, NSCopying {
     /// 设置并尝试自动绑定曝光事件统计。如果对象发生变化(indexPath|name|object)，也会触发
     public var fw_statisticalExposure: StatisticalEvent? {
         get {
-            return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
+            return fw.property(forName: "fw_statisticalExposure") as? StatisticalEvent
         }
         set {
             let oldValue = fw_statisticalExposure
-            fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            fw.setProperty(newValue, forName: "fw_statisticalExposure")
             StatisticalManager.swizzleStatistical()
             fw_statisticalBindExposure(newValue?.containerView)
             if oldValue != nil, newValue == nil {
@@ -842,18 +842,18 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     /// 设置统计曝光事件触发时自定义监听器，默认nil
     public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
+        get { fw.property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
     }
     
     /// 手工绑定曝光事件统计，可指定容器视图，自动绑定失败时可手工调用
     @discardableResult
     public func fw_statisticalBindExposure(_ containerView: UIView? = nil) -> Bool {
-        var result = fw_propertyBool(forName: "fw_statisticalBindExposure")
+        var result = fw.propertyBool(forName: "fw_statisticalBindExposure")
         if !result {
             result = statisticalViewWillBindExposure(containerView)
             if result {
-                fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+                fw.setPropertyBool(true, forName: "fw_statisticalBindExposure")
                 fw_statisticalAddObservers()
             }
         }
@@ -876,7 +876,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     /// 检查并更新视图曝光状态，用于自定义场景
     public func fw_statisticalCheckExposure() {
-        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard fw.propertyBool(forName: "fw_statisticalBindExposure") else { return }
         
         if fw_statisticalExposure != nil {
             NSObject.cancelPreviousPerformRequests(withTarget: fw_statisticalTarget, selector: #selector(StatisticalTarget.exposureUpdate), object: nil)
@@ -893,23 +893,23 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     // MARK: - Private
     fileprivate var fw_statisticalTarget: StatisticalTarget {
-        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+        if let target = fw.property(forName: "fw_statisticalTarget") as? StatisticalTarget {
             return target
         } else {
             let target = StatisticalTarget()
             target.view = self
-            fw_setProperty(target, forName: "fw_statisticalTarget")
+            fw.setProperty(target, forName: "fw_statisticalTarget")
             return target
         }
     }
     
     fileprivate func fw_statisticalAddObservers() {
-        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard fw.propertyBool(forName: "fw_statisticalBindExposure") else { return }
         fw_statisticalTarget.addObservers()
     }
     
     fileprivate func fw_statisticalRemoveObservers() {
-        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard fw.propertyBool(forName: "fw_statisticalBindExposure") else { return }
         fw_statisticalTarget.removeObservers()
     }
     
@@ -1210,11 +1210,11 @@ public class StatisticalEvent: NSObject, NSCopying {
     /// 设置并尝试自动绑定曝光事件统计
     public var fw_statisticalExposure: StatisticalEvent? {
         get {
-            return fw_property(forName: "fw_statisticalExposure") as? StatisticalEvent
+            return fw.property(forName: "fw_statisticalExposure") as? StatisticalEvent
         }
         set {
             let oldValue = fw_statisticalExposure
-            fw_setProperty(newValue, forName: "fw_statisticalExposure")
+            fw.setProperty(newValue, forName: "fw_statisticalExposure")
             fw_statisticalBindExposure()
             if oldValue != nil, newValue == nil {
                 fw_statisticalTarget.removeObservers()
@@ -1224,8 +1224,8 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     /// 设置统计曝光事件触发时自定义监听器，默认nil
     public var fw_statisticalExposureListener: ((StatisticalEvent) -> Void)? {
-        get { fw_property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
+        get { fw.property(forName: "fw_statisticalExposureListener") as? (StatisticalEvent) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_statisticalExposureListener") }
     }
     
     /// 触发控制器曝光事件统计，仅绑定statisticalExposure后生效
@@ -1238,7 +1238,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     /// 检查并更新控制器曝光状态，用于自定义场景
     public func fw_statisticalCheckExposure() {
-        guard fw_propertyBool(forName: "fw_statisticalBindExposure") else { return }
+        guard fw.propertyBool(forName: "fw_statisticalBindExposure") else { return }
         
         let identifier = StatisticalManager.statisticalIdentifier(event: fw_statisticalExposure)
         let oldIdentifier = fw_statisticalTarget.exposureIdentifier
@@ -1279,19 +1279,19 @@ public class StatisticalEvent: NSObject, NSCopying {
     
     // MARK: - Private
     fileprivate var fw_statisticalTarget: StatisticalTarget {
-        if let target = fw_property(forName: "fw_statisticalTarget") as? StatisticalTarget {
+        if let target = fw.property(forName: "fw_statisticalTarget") as? StatisticalTarget {
             return target
         } else {
             let target = StatisticalTarget()
             target.viewController = self
-            fw_setProperty(target, forName: "fw_statisticalTarget")
+            fw.setProperty(target, forName: "fw_statisticalTarget")
             return target
         }
     }
     
     fileprivate func fw_statisticalBindExposure() {
-        if !fw_propertyBool(forName: "fw_statisticalBindExposure") {
-            fw_setPropertyBool(true, forName: "fw_statisticalBindExposure")
+        if !fw.propertyBool(forName: "fw_statisticalBindExposure") {
+            fw.setPropertyBool(true, forName: "fw_statisticalBindExposure")
             fw_statisticalTarget.addObservers()
         }
         

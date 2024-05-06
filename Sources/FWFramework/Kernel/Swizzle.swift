@@ -360,7 +360,7 @@ extension Wrapper where Base: NSObject {
         } else {
             guard let objectClass = object_getClass(target) else { return false }
             let swizzleIdentifier = fw_swizzleIdentifier(target, selector: selector, identifier: identifier ?? "")
-            NSObject.fw_setAssociatedObject(target, key: swizzleIdentifier, value: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            NSObject.fw.setAssociatedObject(target, key: swizzleIdentifier, value: true, policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return fw_swizzleInstanceMethod(objectClass, selector: selector, identifier: identifier ?? "", block: block)
         }
     }
@@ -442,7 +442,7 @@ extension Wrapper where Base: NSObject {
     ) -> Bool {
         guard let objectClass = object_getClass(self) else { return false }
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        fw_setProperty(true, forName: swizzleIdentifier)
+        fw.setProperty(true, forName: swizzleIdentifier)
         return NSObject.fw_swizzleInstanceMethod(objectClass, selector: originalSelector, identifier: identifier, block: block)
     }
     
@@ -459,7 +459,7 @@ extension Wrapper where Base: NSObject {
         identifier: String = ""
     ) -> Bool {
         let swizzleIdentifier = NSObject.fw_swizzleIdentifier(self, selector: originalSelector, identifier: identifier)
-        return fw_property(forName: swizzleIdentifier) != nil
+        return fw.property(forName: swizzleIdentifier) != nil
     }
     
     private static var fw_swizzleIdentifiers = NSMutableSet()

@@ -857,10 +857,10 @@ extension Wrapper where Base: UITextView {
     }
     
     private func fw_addReturnEvent() {
-        let value = fw_propertyNumber(forName: "fw_addReturnEvent")
+        let value = fw.propertyNumber(forName: "fw_addReturnEvent")
         if value == nil {
             self.addTarget(self.fw_keyboardTarget, action: #selector(KeyboardTarget<UITextField>.invokeReturnAction), for: .editingDidEndOnExit)
-            fw_setPropertyNumber(NSNumber(value: true), forName: "fw_addReturnEvent")
+            fw.setPropertyNumber(NSNumber(value: true), forName: "fw_addReturnEvent")
         }
     }
     
@@ -964,11 +964,11 @@ extension Wrapper where Base: UITextView {
     }
     
     private var fw_keyboardTarget: KeyboardTarget<UITextField> {
-        if let target = fw_property(forName: "fw_keyboardTarget") as? KeyboardTarget<UITextField> {
+        if let target = fw.property(forName: "fw_keyboardTarget") as? KeyboardTarget<UITextField> {
             return target
         } else {
             let target = KeyboardTarget<UITextField>(textInput: self)
-            fw_setProperty(target, forName: "fw_keyboardTarget")
+            fw.setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
     }
@@ -1123,11 +1123,11 @@ extension Wrapper where Base: UITextView {
     }
     
     private var fw_delegateProxy: TextViewDelegateProxy {
-        if let proxy = fw_property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
+        if let proxy = fw.property(forName: "fw_delegateProxy") as? TextViewDelegateProxy {
             return proxy
         } else {
             let proxy = TextViewDelegateProxy()
-            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            fw.setProperty(proxy, forName: "fw_delegateProxy")
             return proxy
         }
     }
@@ -1232,11 +1232,11 @@ extension Wrapper where Base: UITextView {
     }
     
     private var fw_keyboardTarget: UITextField.KeyboardTarget<UITextView> {
-        if let target = fw_property(forName: "fw_keyboardTarget") as? UITextField.KeyboardTarget<UITextView> {
+        if let target = fw.property(forName: "fw_keyboardTarget") as? UITextField.KeyboardTarget<UITextView> {
             return target
         } else {
             let target = UITextField.KeyboardTarget<UITextView>(textInput: self)
-            fw_setProperty(target, forName: "fw_keyboardTarget")
+            fw.setProperty(target, forName: "fw_keyboardTarget")
             return target
         }
     }
@@ -1259,7 +1259,7 @@ extension Wrapper where Base: UITextView {
             
             let textField = UITextField()
             textField.placeholder = " "
-            let placeholderLabel = textField.fw_invokeGetter(String(format: "%@%@%@", "_p", "lacehol", "derLabel")) as? UILabel
+            let placeholderLabel = textField.fw.invokeGetter(String(format: "%@%@%@", "_p", "lacehol", "derLabel")) as? UILabel
             defaultPlaceholderColor = placeholderLabel?.textColor
             return defaultPlaceholderColor
         }
@@ -1378,11 +1378,11 @@ extension Wrapper where Base: UITextView {
     /// 自定义占位文本内间距，默认zero与内容一致
     public var fw_placeholderInset: UIEdgeInsets {
         get {
-            let value = fw_property(forName: "fw_placeholderInset") as? NSValue
+            let value = fw.property(forName: "fw_placeholderInset") as? NSValue
             return value?.uiEdgeInsetsValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_placeholderInset")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_placeholderInset")
             self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
@@ -1390,13 +1390,13 @@ extension Wrapper where Base: UITextView {
     /// 自定义垂直分布方式，会自动修改contentInset，默认Top与系统一致
     public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
         get {
-            if let value = fw_propertyNumber(forName: "fw_verticalAlignment") {
+            if let value = fw.propertyNumber(forName: "fw_verticalAlignment") {
                 return .init(rawValue: value.intValue) ?? .top
             }
             return .top
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
+            fw.setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_verticalAlignment")
             self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         }
     }
@@ -1413,7 +1413,7 @@ extension Wrapper where Base: UITextView {
     }
     
     private var fw_placeholderLabel: UILabel {
-        if let label = fw_property(forName: "fw_placeholderLabel") as? UILabel { return label }
+        if let label = fw.property(forName: "fw_placeholderLabel") as? UILabel { return label }
         
         let originalText = self.attributedText
         self.text = " "
@@ -1424,7 +1424,7 @@ extension Wrapper where Base: UITextView {
         label.numberOfLines = 0
         label.isUserInteractionEnabled = false
         label.font = self.font
-        fw_setProperty(label, forName: "fw_placeholderLabel")
+        fw.setProperty(label, forName: "fw_placeholderLabel")
         self.fw_placeholderTarget.setNeedsUpdatePlaceholder()
         self.insertSubview(label, at: 0)
         
@@ -1445,11 +1445,11 @@ extension Wrapper where Base: UITextView {
     }
     
     private var fw_placeholderTarget: PlaceholderTarget {
-        if let target = fw_property(forName: "fw_placeholderTarget") as? PlaceholderTarget {
+        if let target = fw.property(forName: "fw_placeholderTarget") as? PlaceholderTarget {
             return target
         } else {
             let target = PlaceholderTarget(textView: self)
-            fw_setProperty(target, forName: "fw_placeholderTarget")
+            fw.setProperty(target, forName: "fw_placeholderTarget")
             return target
         }
     }
@@ -1457,10 +1457,10 @@ extension Wrapper where Base: UITextView {
     /// 是否启用自动高度功能，随文字改变高度
     public var fw_autoHeightEnabled: Bool {
         get {
-            return fw_propertyBool(forName: "fw_autoHeightEnabled")
+            return fw.propertyBool(forName: "fw_autoHeightEnabled")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_autoHeightEnabled")
+            fw.setPropertyBool(newValue, forName: "fw_autoHeightEnabled")
             self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
@@ -1468,13 +1468,13 @@ extension Wrapper where Base: UITextView {
     /// 最大高度，默认CGFLOAT_MAX，启用自动高度后生效
     public var fw_maxHeight: CGFloat {
         get {
-            if let value = fw_propertyNumber(forName: "fw_maxHeight") {
+            if let value = fw.propertyNumber(forName: "fw_maxHeight") {
                 return value.doubleValue
             }
             return .greatestFiniteMagnitude
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxHeight")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxHeight")
             self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
@@ -1482,18 +1482,18 @@ extension Wrapper where Base: UITextView {
     /// 最小高度，默认0，启用自动高度后生效
     public var fw_minHeight: CGFloat {
         get {
-            return fw_propertyDouble(forName: "fw_minHeight")
+            return fw.propertyDouble(forName: "fw_minHeight")
         }
         set {
-            fw_setPropertyDouble(newValue, forName: "fw_minHeight")
+            fw.setPropertyDouble(newValue, forName: "fw_minHeight")
             self.fw_placeholderTarget.setNeedsUpdateText()
         }
     }
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
     public var fw_heightDidChange: ((CGFloat) -> Void)? {
-        get { return fw_property(forName: "fw_heightDidChange") as? (CGFloat) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: "fw_heightDidChange") }
+        get { return fw.property(forName: "fw_heightDidChange") as? (CGFloat) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: "fw_heightDidChange") }
     }
 
     /// 快捷启用自动高度，并设置最大高度和回调句柄

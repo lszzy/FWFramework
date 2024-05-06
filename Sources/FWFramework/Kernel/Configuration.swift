@@ -21,11 +21,11 @@ open class Configuration: NSObject {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        if let instance = self.fw_property(forName: #function) as? Self {
+        if let instance = self.fw.property(forName: #function) as? Self {
             return instance
         } else {
             let instance = self.init()
-            self.fw_setProperty(instance, forName: #function)
+            self.fw.setProperty(instance, forName: #function)
             instance.initializeConfiguration()
             return instance
         }

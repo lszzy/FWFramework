@@ -43,11 +43,11 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
     
     /// 集合视图，默认不显示滚动条
     public var collectionView: UICollectionView {
-        if let result = fw_property(forName: "collectionView") as? UICollectionView {
+        if let result = fw.property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
             let result = UICollectionView.fw_collectionView(setupCollectionViewLayout())
-            fw_setProperty(result, forName: "collectionView")
+            fw.setProperty(result, forName: "collectionView")
             return result
         }
     }
@@ -59,8 +59,8 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
     
     /// 集合数据，默认空数组，延迟加载
     public var collectionData: [CollectionElement] {
-        get { return fw_property(forName: "collectionData") as? [CollectionElement] ?? [] }
-        set { fw_setProperty(newValue, forName: "collectionData") }
+        get { return fw.property(forName: "collectionData") as? [CollectionElement] ?? [] }
+        set { fw.setProperty(newValue, forName: "collectionData") }
     }
     
     /// 渲染集合视图内容布局，只调用一次

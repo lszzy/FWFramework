@@ -966,24 +966,24 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     /// 视图控制器present|dismiss转场。注意会修改transitioningDelegate，且会强引用之；如需weak引用，请直接设置transitioningDelegate
     public var fw_modalTransition: AnimatedTransition? {
         get {
-            return fw_property(forName: "fw_modalTransition") as? AnimatedTransition
+            return fw.property(forName: "fw_modalTransition") as? AnimatedTransition
         }
         set {
             // 注意：App退出后台时如果弹出页面，整个present动画不会执行。如果需要设置遮罩层等，需要在viewDidAppear中处理兼容
             // 设置delegation动画，nil时清除delegate动画
             self.transitioningDelegate = newValue
             // 强引用，防止被自动释放，nil时释放引用
-            fw_setProperty(newValue, forName: "fw_modalTransition")
+            fw.setProperty(newValue, forName: "fw_modalTransition")
         }
     }
 
     /// 视图控制器push|pop转场，代理导航控制器转场，需在fwNavigationTransition设置后生效
     public var fw_viewTransition: AnimatedTransition? {
         get {
-            return fw_property(forName: "fw_viewTransition") as? AnimatedTransition
+            return fw.property(forName: "fw_viewTransition") as? AnimatedTransition
         }
         set {
-            fw_setProperty(newValue, forName: "fw_viewTransition")
+            fw.setProperty(newValue, forName: "fw_viewTransition")
         }
     }
 
@@ -1032,10 +1032,10 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     /// 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发，手工dismiss不会触发。会自动设置presentationController.delegate
     public var fw_presentationDidDismiss: (() -> Void)? {
         get {
-            return fw_property(forName: "fw_presentationDidDismiss") as? () -> Void
+            return fw.property(forName: "fw_presentationDidDismiss") as? () -> Void
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_presentationDidDismiss")
+            fw.setPropertyCopy(newValue, forName: "fw_presentationDidDismiss")
             self.presentationController?.delegate = self.fw_presentationTarget
         }
     }
@@ -1052,11 +1052,11 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     }
     
     private var fw_presentationTarget: PresentationTarget {
-        if let target = fw_property(forName: "fw_presentationTarget") as? PresentationTarget {
+        if let target = fw.property(forName: "fw_presentationTarget") as? PresentationTarget {
             return target
         } else {
             let target = PresentationTarget()
-            fw_setProperty(target, forName: "fw_presentationTarget")
+            fw.setProperty(target, forName: "fw_presentationTarget")
             return target
         }
     }
@@ -1165,13 +1165,13 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     /// 导航控制器push|pop转场。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
     public var fw_navigationTransition: AnimatedTransition? {
         get {
-            return fw_property(forName: "fw_navigationTransition") as? AnimatedTransition
+            return fw.property(forName: "fw_navigationTransition") as? AnimatedTransition
         }
         set {
             // 设置delegate动画，nil时清理delegate动画，无需清理CA动画
             self.delegate = newValue
             // 强引用，防止被自动释放，nil时释放引用
-            fw_setProperty(newValue, forName: "fw_navigationTransition")
+            fw.setProperty(newValue, forName: "fw_navigationTransition")
         }
     }
     

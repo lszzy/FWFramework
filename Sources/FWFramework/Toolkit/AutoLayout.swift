@@ -644,13 +644,13 @@ extension Wrapper where Base == Array<UIView> {
     /// 其余使用AutoLayout的场景统一使用全局等比例缩放布局开关设置
     public var fw_autoScaleLayout: Bool {
         get {
-            if let number = fw_propertyNumber(forName: "fw_autoScaleLayout") {
+            if let number = fw.propertyNumber(forName: "fw_autoScaleLayout") {
                 return number.boolValue
             }
             return UIView.fw_autoScaleBlock != nil
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
         }
     }
 
@@ -697,7 +697,7 @@ extension Wrapper where Base == Array<UIView> {
     /// 设置视图是否收缩，默认NO为原始值，YES时为收缩值
     public var fw_isCollapsed: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isCollapsed")
+            return fw.propertyBool(forName: "fw_isCollapsed")
         }
         set {
             // 为了防止修改active时约束冲突，始终将已激活的约束放到前面修改
@@ -708,20 +708,20 @@ extension Wrapper where Base == Array<UIView> {
                 constraint.fw_isCollapsed = newValue
             }
             
-            fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
+            fw.setPropertyBool(newValue, forName: "fw_isCollapsed")
         }
     }
 
     /// 设置视图是否自动收缩，如image为nil，text为nil、@""时自动收缩，默认NO
     public var fw_autoCollapse: Bool {
-        get { fw_propertyBool(forName: "fw_autoCollapse") }
-        set { fw_setPropertyBool(newValue, forName: "fw_autoCollapse") }
+        get { fw.propertyBool(forName: "fw_autoCollapse") }
+        set { fw.setPropertyBool(newValue, forName: "fw_autoCollapse") }
     }
 
     /// 设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
     public var fw_hiddenCollapse: Bool {
-        get { fw_propertyBool(forName: "fw_hiddenCollapse") }
-        set { fw_setPropertyBool(newValue, forName: "fw_hiddenCollapse") }
+        get { fw.propertyBool(forName: "fw_hiddenCollapse") }
+        set { fw.setPropertyBool(newValue, forName: "fw_hiddenCollapse") }
     }
 
     /// 添加视图的偏移收缩约束，必须先添加才能生效
@@ -770,8 +770,8 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     fileprivate var fw_collapseConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_collapseConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_collapseConstraints") }
+        get { return fw.property(forName: "fw_collapseConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_collapseConstraints") }
     }
     
     // MARK: - Axis
@@ -1204,14 +1204,14 @@ extension Wrapper where Base == Array<UIView> {
     
     /// 最近一批添加或更新的布局约束
     public var fw_lastConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_lastConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_lastConstraints") }
+        get { return fw.property(forName: "fw_lastConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_lastConstraints") }
     }
     
     /// 获取当前所有约束
     public private(set) var fw_allConstraints: [NSLayoutConstraint] {
-        get { return fw_property(forName: "fw_allConstraints") as? [NSLayoutConstraint] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_allConstraints") }
+        get { return fw.property(forName: "fw_allConstraints") as? [NSLayoutConstraint] ?? [] }
+        set { fw.setProperty(newValue, forName: "fw_allConstraints") }
     }
     
     /// 移除当前指定约束数组
@@ -1364,7 +1364,7 @@ extension UILayoutPriority {
     /// 是否自动等比例缩放偏移值，默认未设置时检查视图和全局配置
     public var fw_autoScaleLayout: Bool {
         get {
-            if let number = fw_propertyNumber(forName: "fw_autoScaleLayout") {
+            if let number = fw.propertyNumber(forName: "fw_autoScaleLayout") {
                 return number.boolValue
             }
             
@@ -1377,9 +1377,9 @@ extension UILayoutPriority {
             return autoScaleLayout
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_autoScaleLayout")
             
-            if let offset = fw_propertyNumber(forName: "fw_offset") {
+            if let offset = fw.propertyNumber(forName: "fw_offset") {
                 fw_offset = offset.doubleValue
             }
         }
@@ -1388,11 +1388,11 @@ extension UILayoutPriority {
     /// 设置偏移值，根据配置自动等比例缩放和取反
     public var fw_offset: CGFloat {
         get {
-            let number = fw_propertyNumber(forName: "fw_offset")
+            let number = fw.propertyNumber(forName: "fw_offset")
             return number?.doubleValue ?? .zero
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_offset")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_offset")
             
             var offset = newValue
             if fw_autoScaleLayout {
@@ -1404,101 +1404,101 @@ extension UILayoutPriority {
     
     /// 标记是否是相反的约束，一般相对于父视图
     public var fw_isOpposite: Bool {
-        get { fw_propertyBool(forName: "fw_isOpposite") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isOpposite") }
+        get { fw.propertyBool(forName: "fw_isOpposite") }
+        set { fw.setPropertyBool(newValue, forName: "fw_isOpposite") }
     }
     
     /// 可收缩约束的收缩偏移值，默认0
     public var fw_collapseOffset: CGFloat {
-        get { fw_propertyDouble(forName: "fw_collapseOffset") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_collapseOffset") }
+        get { fw.propertyDouble(forName: "fw_collapseOffset") }
+        set { fw.setPropertyDouble(newValue, forName: "fw_collapseOffset") }
     }
     
     /// 可收缩约束的原始偏移值，默认为添加收缩约束时的值，未添加时为0
     public var fw_originalOffset: CGFloat {
-        get { fw_propertyDouble(forName: "fw_originalOffset") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_originalOffset") }
+        get { fw.propertyDouble(forName: "fw_originalOffset") }
+        set { fw.setPropertyDouble(newValue, forName: "fw_originalOffset") }
     }
     
     /// 可收缩约束的收缩优先级，默认defaultLow。注意Required不能修改，否则iOS13以下崩溃
     public var fw_collapsePriority: UILayoutPriority {
         get {
-            if let number = fw_propertyNumber(forName: "fw_collapsePriority") {
+            if let number = fw.propertyNumber(forName: "fw_collapsePriority") {
                 return .init(number.floatValue)
             }
             return .defaultLow
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_collapsePriority")
+            fw.setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_collapsePriority")
         }
     }
     
     /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，未添加时为defaultHigh。注意Required不能修改，否则iOS13以下崩溃
     public var fw_originalPriority: UILayoutPriority {
         get {
-            if let number = fw_propertyNumber(forName: "fw_originalPriority") {
+            if let number = fw.propertyNumber(forName: "fw_originalPriority") {
                 return .init(number.floatValue)
             }
             return .defaultHigh
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
+            fw.setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
         }
     }
     
     /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，未添加时为false
     public var fw_originalActive: Bool {
         get {
-            if let number = fw_propertyNumber(forName: "fw_originalActive") {
+            if let number = fw.propertyNumber(forName: "fw_originalActive") {
                 return number.boolValue
             }
             return false
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_originalActive")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_originalActive")
         }
     }
     
     /// 约束偏移是否可收缩，默认false，开启时自动初始化originalOffset
     public var fw_shouldCollapseOffset: Bool {
         get {
-            fw_propertyBool(forName: "fw_shouldCollapseOffset")
+            fw.propertyBool(forName: "fw_shouldCollapseOffset")
         }
         set {
             guard newValue != fw_shouldCollapseOffset else { return }
             if newValue { fw_originalOffset = self.fw_offset }
-            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseOffset")
+            fw.setPropertyBool(newValue, forName: "fw_shouldCollapseOffset")
         }
     }
     
     /// 约束有效性是否可收缩，默认false，开启时自动初始化originalActive
     public var fw_shouldCollapseActive: Bool {
         get {
-            fw_propertyBool(forName: "fw_shouldCollapseActive")
+            fw.propertyBool(forName: "fw_shouldCollapseActive")
         }
         set {
             guard newValue != fw_shouldCollapseActive else { return }
             if newValue { fw_originalActive = self.isActive }
-            fw_setPropertyBool(newValue, forName: "fw_shouldCollapseActive")
+            fw.setPropertyBool(newValue, forName: "fw_shouldCollapseActive")
         }
     }
     
     /// 约束优先级是否可收缩，默认false，开启时自动初始化originalPriority
     public var fw_shouldCollapsePriority: Bool {
         get {
-            fw_propertyBool(forName: "fw_shouldCollapsePriority")
+            fw.propertyBool(forName: "fw_shouldCollapsePriority")
         }
         set {
             guard newValue != fw_shouldCollapsePriority else { return }
             if newValue { fw_originalPriority = self.priority }
-            fw_setPropertyBool(newValue, forName: "fw_shouldCollapsePriority")
+            fw.setPropertyBool(newValue, forName: "fw_shouldCollapsePriority")
         }
     }
     
     /// 自动布局是否收缩，启用收缩后生效，默认NO为原始值，YES时为收缩值
     public var fw_isCollapsed: Bool {
         get {
-            return fw_propertyBool(forName: "fw_isCollapsed")
+            return fw.propertyBool(forName: "fw_isCollapsed")
         }
         set {
             if fw_shouldCollapseActive {
@@ -1511,13 +1511,13 @@ extension UILayoutPriority {
                 self.fw_offset = newValue ? fw_collapseOffset : fw_originalOffset
             }
             
-            fw_setPropertyBool(newValue, forName: "fw_isCollapsed")
+            fw.setPropertyBool(newValue, forName: "fw_isCollapsed")
         }
     }
     
     fileprivate var fw_layoutIdentifier: String? {
-        get { fw_property(forName: "fw_layoutIdentifier") as? String }
-        set { fw_setPropertyCopy(newValue, forName: "fw_layoutIdentifier") }
+        get { fw.property(forName: "fw_layoutIdentifier") as? String }
+        set { fw.setPropertyCopy(newValue, forName: "fw_layoutIdentifier") }
     }
     
 }
@@ -2110,12 +2110,12 @@ public class LayoutChain {
 
     /// 链式布局对象
     public var fw_layoutChain: LayoutChain {
-        if let layoutChain = fw_property(forName: "fw_layoutChain") as? LayoutChain {
+        if let layoutChain = fw.property(forName: "fw_layoutChain") as? LayoutChain {
             return layoutChain
         }
         
         let layoutChain = LayoutChain(view: self)
-        fw_setProperty(layoutChain, forName: "fw_layoutChain")
+        fw.setProperty(layoutChain, forName: "fw_layoutChain")
         return layoutChain
     }
     
@@ -2297,8 +2297,8 @@ public class LayoutChain {
     
     /// 布局调试Key
     public var fw_layoutKey: String? {
-        get { fw_property(forName: "fw_layoutKey") as? String }
-        set { fw_setPropertyCopy(newValue, forName: "fw_layoutKey") }
+        get { fw.property(forName: "fw_layoutKey") as? String }
+        set { fw.setPropertyCopy(newValue, forName: "fw_layoutKey") }
     }
     
     private static var fw_staticAutoLayoutDebugSwizzled = false

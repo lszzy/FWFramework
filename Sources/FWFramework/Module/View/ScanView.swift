@@ -190,7 +190,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     
     #if DEBUG
     deinit {
-        Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
     }
     #endif
     

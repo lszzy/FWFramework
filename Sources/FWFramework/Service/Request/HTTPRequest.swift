@@ -590,7 +590,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         set {
             let error = newValue as? NSError
-            error?.fw_setPropertyBool(true, forName: "isRequestError")
+            error?.fw.setPropertyBool(true, forName: "isRequestError")
             _error = error
         }
     }
@@ -914,7 +914,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
         }
         #endif
 
@@ -1198,7 +1198,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
         }
         #endif
         
@@ -1514,7 +1514,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     public static func isRequestError(_ error: Error?) -> Bool {
         guard let error = error else { return false }
         if error is RequestErrorProtocol { return true }
-        if (error as NSError).fw_propertyBool(forName: "isRequestError") { return true }
+        if (error as NSError).fw.propertyBool(forName: "isRequestError") { return true }
         if (error as NSError).domain == NSURLErrorDomain { return true }
         if let underlyingError = error as? UnderlyingErrorProtocol {
             return isRequestError(underlyingError.underlyingError)

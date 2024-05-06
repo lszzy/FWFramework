@@ -79,6 +79,6 @@ extension Dictionary: DictionaryParameter {
 
 extension ObjectParameter {
     public var dictionaryValue: [AnyHashable: Any] {
-        NSObject.fw_mirrorDictionary(self)
+        NSObject.fw.mirrorDictionary(self)
     }
 }

@@ -814,10 +814,10 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     /// 是否自动等比例缩放方式设置transform，默认NO
     public var fw_autoScaleTransform: Bool {
         get {
-            return fw_propertyBool(forName: "fw_autoScaleTransform")
+            return fw.propertyBool(forName: "fw_autoScaleTransform")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_autoScaleTransform")
+            fw.setPropertyBool(newValue, forName: "fw_autoScaleTransform")
             if newValue {
                 let scaleX = UIScreen.fw_relativeScale
                 let scaleY = UIScreen.fw_relativeHeightScale
@@ -838,7 +838,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_statusBarHeight: CGFloat {
         // 1. 导航栏隐藏时不占用布局高度始终为0
         guard let navController = self.navigationController else { return 0 }
-        let navHidden = fw_propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
+        let navHidden = fw.propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
         guard !navHidden else { return 0 }
         
         // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
@@ -861,7 +861,7 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public var fw_navigationBarHeight: CGFloat {
         // 系统导航栏
         guard let navController = self.navigationController else { return 0 }
-        let navHidden = fw_propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
+        let navHidden = fw.propertyNumber(forName: "fw_navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
         guard !navHidden else { return 0 }
         return navController.navigationBar.frame.height
     }
