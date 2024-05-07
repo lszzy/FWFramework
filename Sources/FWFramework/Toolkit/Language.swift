@@ -315,9 +315,9 @@ extension Notification.Name {
 }
 
 // MARK: - FrameworkAutoloader+Language
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadToolkit_Language() {
+    @objc static func loadToolkit_Language() {
         if let language = Bundle.fw_localizedLanguage {
             Bundle.fw_localizedChanged(language)
         }

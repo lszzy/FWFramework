@@ -1311,43 +1311,6 @@ extension Wrapper where Base == Array<UIView> {
         return String(format: "%ld-%ld-%@-%ld-%@", attribute.rawValue, relation.rawValue, viewHash, toAttribute.rawValue, NSNumber(value: multiplier))
     }
     
-    fileprivate static func fw_swizzleAutoLayoutView() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.updateConstraints),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_autoCollapse && selfObject.fw_collapseConstraints.count > 0 {
-                // Absent意味着视图没有固有size，即{-1, -1}
-                let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
-                // 计算固有尺寸
-                let contentSize = selfObject.intrinsicContentSize
-                // 如果视图没有固定尺寸，自动设置约束
-                if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
-                    selfObject.fw_isCollapsed = true
-                } else {
-                    selfObject.fw_isCollapsed = false
-                }
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(setter: UIView.isHidden),
-            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
-        ) { store in { selfObject, hidden in
-            store.original(selfObject, store.selector, hidden)
-            
-            if selfObject.fw_hiddenCollapse && selfObject.fw_collapseConstraints.count > 0 {
-                selfObject.fw_isCollapsed = hidden
-            }
-        }}
-    }
-    
 }
 
 // MARK: - UILayoutPriority+AutoLayout
@@ -1523,13 +1486,70 @@ extension UILayoutPriority {
 }
 
 // MARK: - FrameworkAutoloader+AutoLayout
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadToolkit_AutoLayout() {
-        UIView.fw_swizzleAutoLayoutView()
+    @objc static func loadToolkit_AutoLayout() {
+        swizzleAutoLayoutView()
         if UIView.fw_autoLayoutDebug {
-            UIView.fw_swizzleAutoLayoutDebug()
+            swizzleAutoLayoutDebug()
         }
+    }
+    
+    private static func swizzleAutoLayoutView() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.updateConstraints),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_autoCollapse && selfObject.fw_collapseConstraints.count > 0 {
+                // Absent意味着视图没有固有size，即{-1, -1}
+                let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+                // 计算固有尺寸
+                let contentSize = selfObject.intrinsicContentSize
+                // 如果视图没有固定尺寸，自动设置约束
+                if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
+                    selfObject.fw_isCollapsed = true
+                } else {
+                    selfObject.fw_isCollapsed = false
+                }
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(setter: UIView.isHidden),
+            methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+        ) { store in { selfObject, hidden in
+            store.original(selfObject, store.selector, hidden)
+            
+            if selfObject.fw_hiddenCollapse && selfObject.fw_collapseConstraints.count > 0 {
+                selfObject.fw_isCollapsed = hidden
+            }
+        }}
+    }
+    
+    private static var autoLayoutDebugSwizzled = false
+    
+    fileprivate static func swizzleAutoLayoutDebug() {
+        guard !autoLayoutDebugSwizzled else { return }
+        autoLayoutDebugSwizzled = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            NSLayoutConstraint.self,
+            selector: #selector(NSLayoutConstraint.description),
+            methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
+            swizzleSignature: (@convention(block) (NSLayoutConstraint) -> String).self
+        ) { store in { selfObject in
+            guard UIView.fw_autoLayoutDebug else {
+                return store.original(selfObject, store.selector)
+            }
+            
+            return selfObject.fw_layoutDescription
+        }}
     }
     
 }
@@ -2290,7 +2310,7 @@ public class LayoutChain {
     }() {
         didSet {
             if fw_autoLayoutDebug {
-                fw_swizzleAutoLayoutDebug()
+                FrameworkAutoloader.swizzleAutoLayoutDebug()
             }
         }
     }
@@ -2299,26 +2319,6 @@ public class LayoutChain {
     public var fw_layoutKey: String? {
         get { fw_property(forName: "fw_layoutKey") as? String }
         set { fw_setPropertyCopy(newValue, forName: "fw_layoutKey") }
-    }
-    
-    private static var fw_staticAutoLayoutDebugSwizzled = false
-    
-    fileprivate static func fw_swizzleAutoLayoutDebug() {
-        guard !fw_staticAutoLayoutDebugSwizzled else { return }
-        fw_staticAutoLayoutDebugSwizzled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            NSLayoutConstraint.self,
-            selector: #selector(NSLayoutConstraint.description),
-            methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
-            swizzleSignature: (@convention(block) (NSLayoutConstraint) -> String).self
-        ) { store in { selfObject in
-            guard UIView.fw_autoLayoutDebug else {
-                return store.original(selfObject, store.selector)
-            }
-            
-            return selfObject.fw_layoutDescription
-        }}
     }
     
 }

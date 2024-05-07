@@ -2786,7 +2786,7 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
-    public private(set) var fw_lifecycleState: ViewControllerLifecycleState? {
+    public fileprivate(set) var fw_lifecycleState: ViewControllerLifecycleState? {
         get {
             guard fw_issetLifecycleStateTarget else { return nil }
             return fw_lifecycleStateTarget.state
@@ -2869,208 +2869,6 @@ public enum ViewControllerLifecycleState: Int {
     public var fw_shouldPopController: (() -> Bool)? {
         get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
         set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
-    }
-    
-    fileprivate static func fw_swizzleToolkitViewController() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.init(nibName:bundle:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
-        ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
-            let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
-            
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
-            return viewController
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.init(coder:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
-        ) { store in { selfObject, coder in
-            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
-            
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
-            return viewController
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLoad),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLoad
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willAppear
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: NSSelectorFromString("viewIsAppearing:"),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .isAppearing
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLayoutSubviews),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLayoutSubviews
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didAppear
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willDisappear
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didDisappear
-            }
-        }}
-    }
-    
-    fileprivate static func fw_swizzleToolkitTitleView() {
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationBar.self,
-            selector: #selector(UINavigationBar.layoutSubviews),
-            methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
-        ) { store in { selfObject in
-            guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
-                store.original(selfObject, store.selector)
-                return
-            }
-            
-            let titleMaximumWidth = titleView.bounds.width
-            var titleViewSize = titleView.sizeThatFits(CGSize(width: titleMaximumWidth, height: CGFloat.greatestFiniteMagnitude))
-            titleViewSize.height = ceil(titleViewSize.height)
-            
-            if titleView.bounds.height != titleViewSize.height {
-                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
-                titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
-            }
-            
-            if titleView.bounds.width != titleViewSize.width {
-                var titleFrame = titleView.frame
-                titleFrame.size.width = titleViewSize.width
-                titleView.frame = titleFrame
-            }
-            
-            store.original(selfObject, store.selector)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(setter: UIViewController.title),
-            methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.navigationItem.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.title),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.titleView),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
-        ) { store in { selfObject, titleView in
-            store.original(selfObject, store.selector, titleView)
-            
-            if let titleView = titleView as? TitleViewProtocol {
-                if (titleView.title?.count ?? 0) <= 0 {
-                    titleView.title = selfObject.title
-                }
-            }
-        }}
     }
     
 }
@@ -3289,11 +3087,213 @@ public enum ViewControllerLifecycleState: Int {
 }
 
 // MARK: - FrameworkAutoloader+Toolkit
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadToolkit_Toolkit() {
-        UIViewController.fw_swizzleToolkitViewController()
-        UIViewController.fw_swizzleToolkitTitleView()
+    @objc static func loadToolkit_Toolkit() {
+        swizzleToolkitViewController()
+        swizzleToolkitTitleView()
+    }
+    
+    private static func swizzleToolkitViewController() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(nibName:bundle:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
+            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+        ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
+            let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
+            return viewController
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(coder:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+        ) { store in { selfObject, coder in
+            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
+            
+            if viewController is ViewControllerLifecycleObservable ||
+                viewController.fw_lifecycleState != nil {
+                viewController.fw_lifecycleState = .didInit
+            }
+            return viewController
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLoad
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willAppear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: NSSelectorFromString("viewIsAppearing:"),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .isAppearing
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLayoutSubviews),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didLayoutSubviews
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didAppear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .willDisappear
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerLifecycleObservable ||
+                selfObject.fw_lifecycleState != nil {
+                selfObject.fw_lifecycleState = .didDisappear
+            }
+        }}
+    }
+    
+    private static func swizzleToolkitTitleView() {
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationBar.self,
+            selector: #selector(UINavigationBar.layoutSubviews),
+            methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
+        ) { store in { selfObject in
+            guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
+                store.original(selfObject, store.selector)
+                return
+            }
+            
+            let titleMaximumWidth = titleView.bounds.width
+            var titleViewSize = titleView.sizeThatFits(CGSize(width: titleMaximumWidth, height: CGFloat.greatestFiniteMagnitude))
+            titleViewSize.height = ceil(titleViewSize.height)
+            
+            if titleView.bounds.height != titleViewSize.height {
+                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
+                titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
+            }
+            
+            if titleView.bounds.width != titleViewSize.width {
+                var titleFrame = titleView.frame
+                titleFrame.size.width = titleViewSize.width
+                titleView.frame = titleFrame
+            }
+            
+            store.original(selfObject, store.selector)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(setter: UIViewController.title),
+            methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
+        ) { store in { selfObject, title in
+            store.original(selfObject, store.selector, title)
+            
+            if let titleView = selfObject.navigationItem.titleView as? TitleViewProtocol {
+                titleView.title = title
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationItem.self,
+            selector: #selector(setter: UINavigationItem.title),
+            methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
+            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
+        ) { store in { selfObject, title in
+            store.original(selfObject, store.selector, title)
+            
+            if let titleView = selfObject.titleView as? TitleViewProtocol {
+                titleView.title = title
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationItem.self,
+            selector: #selector(setter: UINavigationItem.titleView),
+            methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
+            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
+        ) { store in { selfObject, titleView in
+            store.original(selfObject, store.selector, titleView)
+            
+            if let titleView = titleView as? TitleViewProtocol {
+                if (titleView.title?.count ?? 0) <= 0 {
+                    titleView.title = selfObject.title
+                }
+            }
+        }}
     }
     
 }
