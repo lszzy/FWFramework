@@ -57,8 +57,16 @@ extension Wrapper where Base: UINavigationBar {
 extension Wrapper where Base: UIViewController {
     /// 状态栏样式，默认preferredStatusBarStyle，设置后才会生效
     public var statusBarStyle: UIStatusBarStyle {
-        get { return base.fw_statusBarStyle }
-        set { base.fw_statusBarStyle = newValue }
+        get {
+            if let style = propertyNumber(forName: "statusBarStyle") {
+                return .init(rawValue: style.intValue) ?? .default
+            }
+            return base.preferredStatusBarStyle
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "statusBarStyle")
+            base.setNeedsStatusBarAppearanceUpdate()
+        }
     }
 
     /// 状态栏是否隐藏，默认prefersStatusBarHidden，设置后才会生效
@@ -190,20 +198,6 @@ open class NavigationBarAppearance: NSObject {
 }
 
 @_spi(FW) extension UIViewController {
-    
-    /// 状态栏样式，默认preferredStatusBarStyle，设置后才会生效
-    public var fw_statusBarStyle: UIStatusBarStyle {
-        get {
-            if let style = fw.propertyNumber(forName: "fw_statusBarStyle") {
-                return .init(rawValue: style.intValue) ?? .default
-            }
-            return self.preferredStatusBarStyle
-        }
-        set {
-            fw.setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_statusBarStyle")
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
-    }
 
     /// 状态栏是否隐藏，默认prefersStatusBarHidden，设置后才会生效
     public var fw_statusBarHidden: Bool {
@@ -419,7 +413,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
             swizzleSignature: (@convention(block) (UIViewController) -> UIStatusBarStyle).self
         ) { store in { selfObject in
-            if let style = selfObject.fw.propertyNumber(forName: "fw_statusBarStyle") {
+            if let style = selfObject.fw.propertyNumber(forName: "statusBarStyle") {
                 return .init(rawValue: style.intValue) ?? .default
             } else {
                 return store.original(selfObject, store.selector)
