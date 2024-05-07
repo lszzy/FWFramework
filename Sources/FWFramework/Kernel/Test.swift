@@ -189,9 +189,9 @@ fileprivate class UnitTest: NSObject {
 }
 
 // MARK: - FrameworkAutoloader+Test
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadKernel_Test() {
+    @objc static func loadKernel_Test() {
         UnitTest.runTests()
     }
     

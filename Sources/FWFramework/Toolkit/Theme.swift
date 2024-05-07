@@ -685,16 +685,35 @@ public class ThemeObject<T>: NSObject {
         self.renderTheme(style)
     }
     
-    fileprivate static func fw_swizzleThemeClasses() {
-        fw_swizzleThemeClass(UIScreen.self)
-        fw_swizzleThemeClass(UIView.self)
-        fw_swizzleThemeClass(UIViewController.self)
-        // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
-        fw_swizzleThemeClass(UIImageView.self)
-        fw_swizzleThemeClass(UILabel.self)
+}
+
+@objc extension NSObject {
+    
+    /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
+    open func themeChanged(_ style: ThemeStyle) {}
+    
+    /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
+    open func renderTheme(_ style: ThemeStyle) {}
+    
+}
+
+// MARK: - FrameworkAutoloader+Theme
+extension FrameworkAutoloader {
+    
+    @objc static func loadToolkit_Theme() {
+        swizzleThemeClasses()
     }
     
-    private static func fw_swizzleThemeClass(_ themeClass: AnyClass) {
+    private static func swizzleThemeClasses() {
+        swizzleThemeClass(UIScreen.self)
+        swizzleThemeClass(UIView.self)
+        swizzleThemeClass(UIViewController.self)
+        // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
+        swizzleThemeClass(UIImageView.self)
+        swizzleThemeClass(UILabel.self)
+    }
+    
+    private static func swizzleThemeClass(_ themeClass: AnyClass) {
         NSObject.fw_swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
@@ -714,25 +733,6 @@ public class ThemeObject<T>: NSObject {
                 NotificationCenter.default.post(name: .ThemeChanged, object: selfObject, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
             }
         }}
-    }
-    
-}
-
-@objc extension NSObject {
-    
-    /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func themeChanged(_ style: ThemeStyle) {}
-    
-    /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func renderTheme(_ style: ThemeStyle) {}
-    
-}
-
-// MARK: - FrameworkAutoloader+Theme
-@objc extension FrameworkAutoloader {
-    
-    static func loadToolkit_Theme() {
-        NSObject.fw_swizzleThemeClasses()
     }
     
 }

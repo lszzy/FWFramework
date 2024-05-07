@@ -802,9 +802,9 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
 }
 
 // MARK: - FrameworkAutoloader+Network
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadService_Network() {
+    @objc static func loadService_Network() {
         URLSessionTaskSwizzling.swizzleURLSessionTask()
     }
     

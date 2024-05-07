@@ -205,44 +205,6 @@ open class NavigationBarAppearance: NSObject {
 
 @_spi(FW) extension UIViewController {
     
-    fileprivate static func fw_swizzleBarStyle() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(getter: UIViewController.prefersStatusBarHidden),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
-        ) { store in { selfObject in
-            if let hidden = selfObject.fw_propertyNumber(forName: "fw_statusBarHidden") {
-                return hidden.boolValue
-            } else {
-                return store.original(selfObject, store.selector)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(getter: UIViewController.preferredStatusBarStyle),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> UIStatusBarStyle).self
-        ) { store in { selfObject in
-            if let style = selfObject.fw_propertyNumber(forName: "fw_statusBarStyle") {
-                return .init(rawValue: style.intValue) ?? .default
-            } else {
-                return store.original(selfObject, store.selector)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            selfObject.fw_updateNavigationBarStyle(animated, isAppeared: false)
-        }}
-    }
-    
     /// 状态栏样式，默认preferredStatusBarStyle，设置后才会生效
     public var fw_statusBarStyle: UIStatusBarStyle {
         get {
@@ -356,7 +318,7 @@ open class NavigationBarAppearance: NSObject {
         return nil
     }
     
-    private func fw_updateNavigationBarStyle(_ animated: Bool, isAppeared: Bool) {
+    fileprivate func fw_updateNavigationBarStyle(_ animated: Bool, isAppeared: Bool) {
         // 含有导航栏且不是导航栏控制器，如果是child控制器且允许修改时才处理
         guard let navigationController = self.navigationController,
               !(self is UINavigationController) else { return }
@@ -445,10 +407,48 @@ open class NavigationBarAppearance: NSObject {
 }
 
 // MARK: - FrameworkAutoloader+BarStyle
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadToolkit_BarStyle() {
-        UIViewController.fw_swizzleBarStyle()
+    @objc static func loadToolkit_BarStyle() {
+        swizzleBarStyle()
+    }
+    
+    private static func swizzleBarStyle() {
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(getter: UIViewController.prefersStatusBarHidden),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
+        ) { store in { selfObject in
+            if let hidden = selfObject.fw_propertyNumber(forName: "fw_statusBarHidden") {
+                return hidden.boolValue
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(getter: UIViewController.preferredStatusBarStyle),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> UIStatusBarStyle).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> UIStatusBarStyle).self
+        ) { store in { selfObject in
+            if let style = selfObject.fw_propertyNumber(forName: "fw_statusBarStyle") {
+                return .init(rawValue: style.intValue) ?? .default
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            selfObject.fw_updateNavigationBarStyle(animated, isAppeared: false)
+        }}
     }
     
 }
