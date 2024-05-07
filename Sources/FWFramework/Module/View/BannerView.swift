@@ -403,7 +403,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         backgroundColor = .clear
         
         addSubview(mainView)
-        mainView.fw_pinEdges()
+        mainView.fw.pinEdges()
     }
     
     open override func layoutSubviews() {

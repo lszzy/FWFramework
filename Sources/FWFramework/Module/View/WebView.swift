@@ -519,8 +519,8 @@ open class WebView: WKWebView {
         #endif
         
         addSubview(progressView)
-        progressView.fw_pinEdges(excludingEdge: .bottom)
-        progressView.fw_setDimension(.height, size: 2.0)
+        progressView.fw.pinEdges(excludingEdge: .bottom)
+        progressView.fw.setDimension(.height, size: 2.0)
         fw.observeProperty(\.estimatedProgress) { webView, _ in
             webView.progressView.fw_webProgress = Float(webView.estimatedProgress)
         }

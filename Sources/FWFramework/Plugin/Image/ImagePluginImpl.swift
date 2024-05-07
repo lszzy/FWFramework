@@ -98,7 +98,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                 if let indicatorView = indicatorView {
                     indicatorView.tag = 2061
                     view.addSubview(indicatorView)
-                    indicatorView.fw_alignCenter()
+                    (indicatorView as UIView).fw.alignCenter()
                 }
             }
         }

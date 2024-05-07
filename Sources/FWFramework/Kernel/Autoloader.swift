@@ -129,7 +129,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
 /// 框架内部自动加载器，自动加载框架内置组件
 internal class FrameworkAutoloader: NSObject {
     
-    static var debugMethods: [String] = []
+    fileprivate static var debugMethods: [String] = []
     
     /// 自动加载器调试描述
     override class func debugDescription() -> String {

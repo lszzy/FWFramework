@@ -152,8 +152,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw_autoScaleLayout = false
-        fw_setDimensions(CGSize(width: badgeHeight, height: badgeHeight))
+        fw.autoScaleLayout = false
+        fw.setDimensions(CGSize(width: badgeHeight, height: badgeHeight))
     }
     
     private func setupLabel(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
@@ -163,9 +163,9 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw_autoScaleLayout = false
-        fw_setDimension(.height, size: badgeHeight)
-        fw_setDimension(.width, size: badgeHeight, relation: .greaterThanOrEqual)
+        fw.autoScaleLayout = false
+        fw.setDimension(.height, size: badgeHeight)
+        fw.setDimension(.width, size: badgeHeight, relation: .greaterThanOrEqual)
         
         let badgeLabel = UILabel()
         self.badgeLabel = badgeLabel
@@ -173,10 +173,10 @@ open class BadgeView: UIView, BadgeViewProtocol {
         badgeLabel.font = UIFont.systemFont(ofSize: fontSize)
         badgeLabel.textAlignment = .center
         addSubview(badgeLabel)
-        badgeLabel.fw_autoScaleLayout = false
-        badgeLabel.fw_alignCenter()
-        badgeLabel.fw_pinEdge(toSuperview: .right, inset: textInset, relation: .greaterThanOrEqual)
-        badgeLabel.fw_pinEdge(toSuperview: .left, inset: textInset, relation: .greaterThanOrEqual)
+        badgeLabel.fw.autoScaleLayout = false
+        badgeLabel.fw.alignCenter()
+        badgeLabel.fw.pinEdge(toSuperview: .right, inset: textInset, relation: .greaterThanOrEqual)
+        badgeLabel.fw.pinEdge(toSuperview: .left, inset: textInset, relation: .greaterThanOrEqual)
     }
     
 }
@@ -184,7 +184,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
 @_spi(FW) extension UIView {
     
     /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
-    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: some UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         badgeView.badgeLabel?.text = badgeValue
@@ -192,8 +192,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
         self.addSubview(badgeView)
         self.bringSubviewToFront(badgeView)
         
-        badgeView.fw_pinEdge(toSuperview: .top, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.y))
-        badgeView.fw_pinEdge(toSuperview: .right, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.x))
+        badgeView.fw.pinEdge(toSuperview: .top, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.y))
+        badgeView.fw.pinEdge(toSuperview: .right, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.x))
     }
 
     /// 隐藏提醒灯
@@ -249,7 +249,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
 @_spi(FW) extension UIBarButtonItem {
     
     /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
-    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: some UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
@@ -259,8 +259,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw_pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y)
-            badgeView.fw_pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x)
+            badgeView.fw.pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y)
+            badgeView.fw.pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x)
         }
     }
 
@@ -297,7 +297,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if let imageView = UITabBarItem.fw_imageView(selfObject) {
-                        badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+                        subview.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
                     }
                     break
                 }
@@ -331,7 +331,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
     }
     
     /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
-    public func fw_showBadgeView(_ badgeView: UIView & BadgeViewProtocol, badgeValue: String? = nil) {
+    public func fw_showBadgeView(_ badgeView: some UIView & BadgeViewProtocol, badgeValue: String? = nil) {
         self.fw_hideBadgeView()
         
         UITabBarItem.fw_swizzleBadgeView()
@@ -345,8 +345,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw_pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
-            badgeView.fw_pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+            badgeView.fw.pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
+            badgeView.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
         }
     }
 
