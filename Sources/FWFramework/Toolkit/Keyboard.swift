@@ -517,8 +517,7 @@ extension Wrapper where Base: UITextView {
             guard touchResign, let viewController = viewController else { return }
             
             if KeyboardConfig.keyboardGesture == nil {
-                KeyboardConfig.keyboardGesture = UITapGestureRecognizer.fw_gestureRecognizer(block: { sender in
-                    guard let sender = sender as? UITapGestureRecognizer else { return }
+                KeyboardConfig.keyboardGesture = UITapGestureRecognizer.fw.gestureRecognizer(block: { sender in
                     if sender.state == .ended {
                         sender.view?.endEditing(true)
                     }
@@ -703,20 +702,20 @@ extension Wrapper where Base: UITextView {
         }
         
         func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
-            let titleItem = title != nil ? UIBarButtonItem.fw_item(object: title, block: nil) : nil
+            let titleItem = title != nil ? UIBarButtonItem.fw.item(object: title, block: nil) : nil
             titleItem?.isEnabled = false
             
             let previousEnabled = previousResponder != nil || previousResponderTag > 0
             let nextEnabled = nextResponder != nil || nextResponderTag > 0
-            let previousItem = ((previousEnabled || nextEnabled) && toolbarPreviousButton != nil) ? UIBarButtonItem.fw_item(object: toolbarPreviousButton, target: self, action: #selector(goPrevious)) : nil
+            let previousItem = ((previousEnabled || nextEnabled) && toolbarPreviousButton != nil) ? UIBarButtonItem.fw.item(object: toolbarPreviousButton, target: self, action: #selector(goPrevious)) : nil
             previousItem?.isEnabled = previousEnabled
             self.previousItem = previousItem
             
-            let nextItem = ((previousEnabled || nextEnabled) && toolbarNextButton != nil) ? UIBarButtonItem.fw_item(object: toolbarNextButton, target: self, action: #selector(goNext)) : nil
+            let nextItem = ((previousEnabled || nextEnabled) && toolbarNextButton != nil) ? UIBarButtonItem.fw.item(object: toolbarNextButton, target: self, action: #selector(goNext)) : nil
             nextItem?.isEnabled = nextEnabled
             self.nextItem = nextItem
             
-            let doneItem = toolbarDoneButton != nil ? (doneBlock != nil ? UIBarButtonItem.fw_item(object: toolbarDoneButton, block: doneBlock) : UIBarButtonItem.fw_item(object: toolbarDoneButton, target: textInput, action: #selector(UIView.resignFirstResponder))) : nil
+            let doneItem = toolbarDoneButton != nil ? (doneBlock != nil ? UIBarButtonItem.fw.item(object: toolbarDoneButton, block: doneBlock) : UIBarButtonItem.fw.item(object: toolbarDoneButton, target: textInput, action: #selector(UIView.resignFirstResponder))) : nil
             doneItem?.style = .done
             
             addToolbar(titleItem: titleItem, previousItem: previousItem, nextItem: nextItem, doneItem: doneItem)

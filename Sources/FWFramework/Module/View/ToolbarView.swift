@@ -1319,7 +1319,7 @@ open class ToolbarButton: UIButton {
             self.init(image: object as? UIImage, title: object as? String)
         }
         if let block = block {
-            fw_addTouch(block: block)
+            fw.addTouch(block: block)
         }
     }
     

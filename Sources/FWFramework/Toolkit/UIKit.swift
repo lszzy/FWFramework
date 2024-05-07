@@ -2512,9 +2512,8 @@ extension Wrapper where Base: UIViewController {
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
     public func fw_addLinkGesture(block: @escaping (Any?) -> Void) {
         self.isUserInteractionEnabled = true
-        self.fw_addTapGesture { gesture in
-            guard let gesture = gesture as? UITapGestureRecognizer,
-                  let label = gesture.view as? UILabel else { return }
+        self.fw.addTapGesture { gesture in
+            guard let label = gesture.view as? UILabel else { return }
             let attributes = label.fw_attributes(gesture: gesture, allowsSpacing: false)
             let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
             block(link)
