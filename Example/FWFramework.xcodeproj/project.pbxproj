@@ -876,7 +876,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -958,7 +958,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1099,7 +1099,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1128,7 +1128,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

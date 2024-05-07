@@ -10,11 +10,8 @@ import QuartzCore
 
 // MARK: - WrapperGlobal
 /// 全局包装器(因struct只读，只能用class)
-public class WrapperGlobal {}
-
-/// 全局包装器别名
 ///
-/// 自定义FW为任意名称(如APP)示例：
+/// 自定义WrapperGlobal为任意名称(如APP)示例：
 /// ```swift
 /// public typealias APP = WrapperGlobal
 /// ```
@@ -22,6 +19,9 @@ public class WrapperGlobal {}
 /// ```swift
 /// APP.safeString(object)
 /// ```
+public class WrapperGlobal {}
+
+/// 全局包装器别名
 @_spi(FW) public typealias FW = WrapperGlobal
 
 // MARK: - Wrapper
@@ -41,7 +41,7 @@ public class Wrapper<Base> {
 // MARK: - WrapperCompatible
 /// 属性包装器兼容协议
 ///
-/// 自定义fw为任意名称(如app)示例：
+/// 自定义wrapperExtension为任意名称(如app)示例：
 /// ```swift
 /// extension WrapperCompatible {
 ///     public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }

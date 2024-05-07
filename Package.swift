@@ -61,7 +61,7 @@ let package = Package(
         .target(
             name: "FWFramework",
             path: "Sources/FWFramework",
-            resources: [.process("../PrivacyInfo.xcprivacy")],
+            resources: [.copy("../PrivacyInfo.xcprivacy")],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
