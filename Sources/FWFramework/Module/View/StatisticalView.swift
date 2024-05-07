@@ -322,48 +322,6 @@ public class StatisticalManager: NSObject {
         return identifier
     }
     
-    private static var statisticalSwizzled = false
-    
-    fileprivate static func swizzleStatistical() {
-        guard !statisticalSwizzled else { return }
-        statisticalSwizzled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.didMoveToSuperview),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.superview == nil {
-                selfObject.fw_statisticalRemoveObservers()
-            } else {
-                if selfObject.fw_statisticalClick != nil {
-                    selfObject.fw_statisticalBindClick()
-                }
-                if selfObject.fw_statisticalExposure != nil {
-                    selfObject.fw_statisticalBindExposure()
-                }
-                
-                selfObject.fw_statisticalAddObservers()
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.didMoveToWindow),
-            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_statisticalExposure != nil {
-                selfObject.fw_statisticalCheckExposure()
-            }
-        }}
-    }
-    
 }
 
 // MARK: - StatisticalEvent
@@ -795,7 +753,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         }
         set {
             fw_setProperty(newValue, forName: "fw_statisticalClick")
-            StatisticalManager.swizzleStatistical()
+            FrameworkAutoloader.swizzleStatisticalView()
             fw_statisticalBindClick(newValue?.containerView)
         }
     }
@@ -832,7 +790,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         set {
             let oldValue = fw_statisticalExposure
             fw_setProperty(newValue, forName: "fw_statisticalExposure")
-            StatisticalManager.swizzleStatistical()
+            FrameworkAutoloader.swizzleStatisticalView()
             fw_statisticalBindExposure(newValue?.containerView)
             if oldValue != nil, newValue == nil {
                 fw_statisticalRemoveObservers()
@@ -1323,6 +1281,53 @@ public class StatisticalEvent: NSObject, NSCopying {
         }
         
         return .fully
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+StatisticalView
+extension FrameworkAutoloader {
+    
+    private static var swizzleStatisticalViewFinished = false
+    
+    fileprivate static func swizzleStatisticalView() {
+        guard !swizzleStatisticalViewFinished else { return }
+        swizzleStatisticalViewFinished = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.didMoveToSuperview),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.superview == nil {
+                selfObject.fw_statisticalRemoveObservers()
+            } else {
+                if selfObject.fw_statisticalClick != nil {
+                    selfObject.fw_statisticalBindClick()
+                }
+                if selfObject.fw_statisticalExposure != nil {
+                    selfObject.fw_statisticalBindExposure()
+                }
+                
+                selfObject.fw_statisticalAddObservers()
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.didMoveToWindow),
+            methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIView) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_statisticalExposure != nil {
+                selfObject.fw_statisticalCheckExposure()
+            }
+        }}
     }
     
 }
