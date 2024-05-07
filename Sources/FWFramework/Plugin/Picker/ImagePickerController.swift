@@ -50,13 +50,13 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     /// 工具栏背景色
     open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
         didSet {
-            navigationController?.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+            navigationController?.navigationBar.fw.backgroundColor = toolbarBackgroundColor
         }
     }
     /// 工具栏颜色
     open var toolbarTintColor: UIColor? = .white {
         didSet {
-            navigationController?.navigationBar.fw_foregroundColor = toolbarTintColor
+            navigationController?.navigationBar.fw.foregroundColor = toolbarTintColor
         }
     }
     
@@ -159,7 +159,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLoad()
         
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.fw_backImage = FrameworkBundle.navBackImage
+        navigationController?.navigationBar.fw.backImage = FrameworkBundle.navBackImage
         if title == nil { title = FrameworkBundle.pickerAlbumTitle }
         
         view.addSubview(backgroundView)
@@ -190,10 +190,10 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
             if navigationController.isNavigationBarHidden != false {
                 navigationController.setNavigationBarHidden(false, animated: animated)
             }
-            navigationController.navigationBar.fw_isTranslucent = false
-            navigationController.navigationBar.fw_shadowColor = nil
-            navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
-            navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
+            navigationController.navigationBar.fw.isTranslucent = false
+            navigationController.navigationBar.fw.shadowColor = nil
+            navigationController.navigationBar.fw.backgroundColor = toolbarBackgroundColor
+            navigationController.navigationBar.fw.foregroundColor = toolbarTintColor
         }
     }
     
@@ -1624,12 +1624,12 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     
     open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
         didSet {
-            navigationController?.navigationBar.fw_backgroundColor = toolbarBackgroundColor
+            navigationController?.navigationBar.fw.backgroundColor = toolbarBackgroundColor
         }
     }
     open var toolbarTintColor: UIColor? = .white {
         didSet {
-            navigationController?.navigationBar.fw_foregroundColor = toolbarTintColor
+            navigationController?.navigationBar.fw.foregroundColor = toolbarTintColor
         }
     }
     
@@ -1817,10 +1817,10 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if navigationController.isNavigationBarHidden != false {
                 navigationController.setNavigationBarHidden(false, animated: animated)
             }
-            navigationController.navigationBar.fw_isTranslucent = false
-            navigationController.navigationBar.fw_shadowColor = nil
-            navigationController.navigationBar.fw_backgroundColor = toolbarBackgroundColor
-            navigationController.navigationBar.fw_foregroundColor = toolbarTintColor
+            navigationController.navigationBar.fw.isTranslucent = false
+            navigationController.navigationBar.fw.shadowColor = nil
+            navigationController.navigationBar.fw.backgroundColor = toolbarBackgroundColor
+            navigationController.navigationBar.fw.foregroundColor = toolbarTintColor
         }
         
         // 由于被选中的图片 selectedImageAssetArray 可以由外部改变，因此检查一下图片被选中的情况，并刷新 collectionView

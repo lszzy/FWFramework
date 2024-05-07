@@ -11,12 +11,45 @@ import UIKit
 extension Wrapper where Base: UINavigationBar {
     /// 应用指定导航栏配置
     public func applyBarAppearance(_ appearance: NavigationBarAppearance) {
-        base.fw_applyBarAppearance(appearance)
+        if appearance.isTranslucent != isTranslucent {
+            isTranslucent = appearance.isTranslucent
+        }
+        if appearance.backgroundTransparent {
+            backgroundTransparent = appearance.backgroundTransparent
+        } else if appearance.backgroundImage != nil {
+            backgroundImage = appearance.backgroundImage
+        } else if appearance.backgroundColor != nil {
+            backgroundColor = appearance.backgroundColor
+        }
+        if appearance.shadowImage != nil {
+            shadowImage = appearance.shadowImage
+        } else if appearance.shadowColor != nil {
+            shadowColor = appearance.shadowColor
+        } else {
+            shadowColor = nil
+        }
+        if appearance.foregroundColor != nil {
+            foregroundColor = appearance.foregroundColor
+        }
+        if appearance.titleAttributes != nil {
+            titleAttributes = appearance.titleAttributes
+        }
+        if appearance.buttonAttributes != nil {
+            buttonAttributes = appearance.buttonAttributes
+        }
+        if appearance.backImage != nil {
+            backImage = appearance.backImage
+        }
+        if appearance.appearanceBlock != nil {
+            appearance.appearanceBlock?(base)
+        }
     }
     
     /// 应用指定导航栏样式
     public func applyBarStyle(_ style: NavigationBarStyle) {
-        base.fw_applyBarStyle(style)
+        if let appearance = NavigationBarAppearance.appearance(for: style) {
+            applyBarAppearance(appearance)
+        }
     }
 }
 
@@ -153,53 +186,6 @@ open class NavigationBarAppearance: NSObject {
     open var leftBackImage: UIImage?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
     open var appearanceBlock: ((UINavigationBar) -> Void)?
-    
-}
-
-@_spi(FW) extension UINavigationBar {
-    
-    /// 应用指定导航栏配置
-    public func fw_applyBarAppearance(_ appearance: NavigationBarAppearance) {
-        if appearance.isTranslucent != self.fw_isTranslucent {
-            self.fw_isTranslucent = appearance.isTranslucent
-        }
-        if appearance.backgroundTransparent {
-            self.fw_backgroundTransparent = appearance.backgroundTransparent
-        } else if appearance.backgroundImage != nil {
-            self.fw_backgroundImage = appearance.backgroundImage
-        } else if appearance.backgroundColor != nil {
-            self.fw_backgroundColor = appearance.backgroundColor
-        }
-        if appearance.shadowImage != nil {
-            self.fw_shadowImage = appearance.shadowImage
-        } else if appearance.shadowColor != nil {
-            self.fw_shadowColor = appearance.shadowColor
-        } else {
-            self.fw_shadowColor = nil
-        }
-        if appearance.foregroundColor != nil {
-            self.fw_foregroundColor = appearance.foregroundColor
-        }
-        if appearance.titleAttributes != nil {
-            self.fw_titleAttributes = appearance.titleAttributes
-        }
-        if appearance.buttonAttributes != nil {
-            self.fw_buttonAttributes = appearance.buttonAttributes
-        }
-        if appearance.backImage != nil {
-            self.fw_backImage = appearance.backImage
-        }
-        if appearance.appearanceBlock != nil {
-            appearance.appearanceBlock?(self)
-        }
-    }
-    
-    /// 应用指定导航栏样式
-    public func fw_applyBarStyle(_ style: NavigationBarStyle) {
-        if let appearance = NavigationBarAppearance.appearance(for: style) {
-            self.fw_applyBarAppearance(appearance)
-        }
-    }
     
 }
 
@@ -345,7 +331,7 @@ open class NavigationBarAppearance: NSObject {
         }
         
         // 应用当前导航栏appearance
-        navigationController.navigationBar.fw_applyBarAppearance(appearance)
+        navigationController.navigationBar.fw.applyBarAppearance(appearance)
         
         // 标记转场导航栏样式需要刷新
         if isAppeared {
