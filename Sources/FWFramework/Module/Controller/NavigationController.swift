@@ -173,7 +173,7 @@ extension Wrapper where Base: UIToolbar {
         }
     }
     
-    private var fw_shouldBottomBarBeHidden: Bool {
+    fileprivate var fw_shouldBottomBarBeHidden: Bool {
         get {
             return fw.propertyBool(forName: "fw_shouldBottomBarBeHidden")
         }
@@ -402,88 +402,6 @@ extension Wrapper where Base: UIToolbar {
     
     private static var fw_staticBarTransitionEnabled = false
     
-    fileprivate static func fw_swizzleNavigationController() {
-        // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
-        if #available(iOS 14.2, *) {} else if #available(iOS 14.0, *) {
-            NSObject.fw.swizzleInstanceMethod(
-                UINavigationController.self,
-                selector: #selector(UINavigationController.popToViewController(_:animated:)),
-                methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
-                swizzleSignature: (@convention(block) (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
-            ) { store in { selfObject, viewController, animated in
-                if animated && selfObject.tabBarController != nil && !viewController.hidesBottomBarWhenPushed {
-                    var shouldHideTabBar = false
-                    if let index = selfObject.viewControllers.firstIndex(of: viewController) {
-                        let viewControllers = selfObject.viewControllers[0 ... index]
-                        for vc in viewControllers {
-                            if vc.hidesBottomBarWhenPushed {
-                                shouldHideTabBar = true
-                            }
-                        }
-                        if !shouldHideTabBar {
-                            selfObject.fw_shouldBottomBarBeHidden = true
-                        }
-                    }
-                }
-                
-                let result = store.original(selfObject, store.selector, viewController, animated)
-                selfObject.fw_shouldBottomBarBeHidden = false
-                return result
-            }}
-            
-            NSObject.fw.swizzleInstanceMethod(
-                UINavigationController.self,
-                selector: #selector(UINavigationController.popToRootViewController(animated:)),
-                methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
-                swizzleSignature: (@convention(block) (UINavigationController, Bool) -> [UIViewController]?).self
-            ) { store in { selfObject, animated in
-                if animated && selfObject.tabBarController != nil && selfObject.viewControllers.count > 2 && !(selfObject.viewControllers.first?.hidesBottomBarWhenPushed ?? false) {
-                    selfObject.fw_shouldBottomBarBeHidden = true
-                }
-                
-                let result = store.original(selfObject, store.selector, animated)
-                selfObject.fw_shouldBottomBarBeHidden = false
-                return result
-            }}
-            
-            NSObject.fw.swizzleInstanceMethod(
-                UINavigationController.self,
-                selector: #selector(UINavigationController.setViewControllers(_:animated:)),
-                methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
-                swizzleSignature: (@convention(block) (UINavigationController, [UIViewController], Bool) -> Void).self
-            ) { store in { selfObject, viewControllers, animated in
-                let viewController = viewControllers.last
-                if animated && selfObject.tabBarController != nil && !(viewController?.hidesBottomBarWhenPushed ?? false) {
-                    var shouldHideTabBar = false
-                    for vc in viewControllers {
-                        if vc.hidesBottomBarWhenPushed {
-                            shouldHideTabBar = true
-                        }
-                    }
-                    if !shouldHideTabBar {
-                        selfObject.fw_shouldBottomBarBeHidden = true
-                    }
-                }
-                
-                store.original(selfObject, store.selector, viewControllers, animated)
-                selfObject.fw_shouldBottomBarBeHidden = false
-            }}
-            
-            NSObject.fw.swizzleInstanceMethod(
-                UINavigationController.self,
-                selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
-                methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,
-                swizzleSignature: (@convention(block) (UINavigationController) -> Bool).self
-            ) { store in { selfObject in
-                var result = store.original(selfObject, store.selector)
-                if selfObject.fw_shouldBottomBarBeHidden {
-                    result = false
-                }
-                return result
-            }}
-        }
-    }
-    
     /// 是否启用导航栏全屏返回手势，默认NO。启用时系统返回手势失效，禁用时还原系统手势。如果只禁用系统手势，设置interactivePopGestureRecognizer.enabled即可
     public var fw_fullscreenPopGestureEnabled: Bool {
         get {
@@ -703,13 +621,95 @@ extension Wrapper where Base: UIToolbar {
 }
 
 // MARK: - FrameworkAutoloader+NavigationController
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadModule_NavigationController() {
-        UINavigationController.fw_swizzleNavigationController()
+    @objc static func loadModule_NavigationController() {
+        swizzleNavigationController()
         
         NavigationBarAppearance.appearanceChanged = { viewController in
             viewController.fw_barTransitionNeedsUpdate()
+        }
+    }
+    
+    private static func swizzleNavigationController() {
+        // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
+        if #available(iOS 14.2, *) {} else if #available(iOS 14.0, *) {
+            NSObject.fw.swizzleInstanceMethod(
+                UINavigationController.self,
+                selector: #selector(UINavigationController.popToViewController(_:animated:)),
+                methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
+                swizzleSignature: (@convention(block) (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
+            ) { store in { selfObject, viewController, animated in
+                if animated && selfObject.tabBarController != nil && !viewController.hidesBottomBarWhenPushed {
+                    var shouldHideTabBar = false
+                    if let index = selfObject.viewControllers.firstIndex(of: viewController) {
+                        let viewControllers = selfObject.viewControllers[0 ... index]
+                        for vc in viewControllers {
+                            if vc.hidesBottomBarWhenPushed {
+                                shouldHideTabBar = true
+                            }
+                        }
+                        if !shouldHideTabBar {
+                            selfObject.fw_shouldBottomBarBeHidden = true
+                        }
+                    }
+                }
+                
+                let result = store.original(selfObject, store.selector, viewController, animated)
+                selfObject.fw_shouldBottomBarBeHidden = false
+                return result
+            }}
+            
+            NSObject.fw.swizzleInstanceMethod(
+                UINavigationController.self,
+                selector: #selector(UINavigationController.popToRootViewController(animated:)),
+                methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
+                swizzleSignature: (@convention(block) (UINavigationController, Bool) -> [UIViewController]?).self
+            ) { store in { selfObject, animated in
+                if animated && selfObject.tabBarController != nil && selfObject.viewControllers.count > 2 && !(selfObject.viewControllers.first?.hidesBottomBarWhenPushed ?? false) {
+                    selfObject.fw_shouldBottomBarBeHidden = true
+                }
+                
+                let result = store.original(selfObject, store.selector, animated)
+                selfObject.fw_shouldBottomBarBeHidden = false
+                return result
+            }}
+            
+            NSObject.fw.swizzleInstanceMethod(
+                UINavigationController.self,
+                selector: #selector(UINavigationController.setViewControllers(_:animated:)),
+                methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
+                swizzleSignature: (@convention(block) (UINavigationController, [UIViewController], Bool) -> Void).self
+            ) { store in { selfObject, viewControllers, animated in
+                let viewController = viewControllers.last
+                if animated && selfObject.tabBarController != nil && !(viewController?.hidesBottomBarWhenPushed ?? false) {
+                    var shouldHideTabBar = false
+                    for vc in viewControllers {
+                        if vc.hidesBottomBarWhenPushed {
+                            shouldHideTabBar = true
+                        }
+                    }
+                    if !shouldHideTabBar {
+                        selfObject.fw_shouldBottomBarBeHidden = true
+                    }
+                }
+                
+                store.original(selfObject, store.selector, viewControllers, animated)
+                selfObject.fw_shouldBottomBarBeHidden = false
+            }}
+            
+            NSObject.fw.swizzleInstanceMethod(
+                UINavigationController.self,
+                selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
+                methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,
+                swizzleSignature: (@convention(block) (UINavigationController) -> Bool).self
+            ) { store in { selfObject in
+                var result = store.original(selfObject, store.selector)
+                if selfObject.fw_shouldBottomBarBeHidden {
+                    result = false
+                }
+                return result
+            }}
         }
     }
     

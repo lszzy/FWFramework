@@ -1472,7 +1472,32 @@ public class AlertAppearance: NSObject {
         return alertController
     }
     
-    fileprivate static func fw_swizzleAlertController() {
+    @discardableResult
+    fileprivate static func fw_alertSubview(_ view: UIView, block: @escaping (UIView) -> Bool) -> UIView? {
+        if block(view) {
+            return view
+        }
+        
+        for subview in view.subviews {
+            let resultView = fw_alertSubview(subview, block: block)
+            if resultView != nil {
+                return resultView
+            }
+        }
+        
+        return nil
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+AlertPlugin
+extension FrameworkAutoloader {
+    
+    @objc static func loadPlugin_AlertPlugin() {
+        swizzleAlertController()
+    }
+    
+    private static func swizzleAlertController() {
         NSObject.fw.swizzleInstanceMethod(
             UIAlertController.self,
             selector: #selector(UIAlertController.viewDidLoad),
@@ -1501,31 +1526,6 @@ public class AlertAppearance: NSObject {
                 return true
             }
         }}
-    }
-    
-    @discardableResult
-    private static func fw_alertSubview(_ view: UIView, block: @escaping (UIView) -> Bool) -> UIView? {
-        if block(view) {
-            return view
-        }
-        
-        for subview in view.subviews {
-            let resultView = fw_alertSubview(subview, block: block)
-            if resultView != nil {
-                return resultView
-            }
-        }
-        
-        return nil
-    }
-    
-}
-
-// MARK: - FrameworkAutoloader+AlertPlugin
-@objc extension FrameworkAutoloader {
-    
-    static func loadPlugin_AlertPlugin() {
-        UIAlertController.fw_swizzleAlertController()
     }
     
 }

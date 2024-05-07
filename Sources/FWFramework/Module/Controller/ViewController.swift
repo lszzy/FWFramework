@@ -147,7 +147,172 @@ public class ViewControllerManager: NSObject {
         return intercepterNames
     }
     
-    fileprivate static func swizzleViewController() {
+    fileprivate static func registerDefaultIntercepters() {
+        let scrollIntercepter = ViewControllerIntercepter()
+        scrollIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.scrollViewControllerViewDidLoad(viewController)
+        }
+        ViewControllerManager.shared.registerProtocol(ScrollViewControllerProtocol.self, intercepter: scrollIntercepter)
+        
+        let collectionIntercepter = ViewControllerIntercepter()
+        collectionIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.collectionViewControllerViewDidLoad(viewController)
+        }
+        ViewControllerManager.shared.registerProtocol((any CollectionDelegateControllerProtocol).self, intercepter: collectionIntercepter)
+        
+        let tableIntercepter = ViewControllerIntercepter()
+        tableIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.tableViewControllerViewDidLoad(viewController)
+        }
+        ViewControllerManager.shared.registerProtocol((any TableDelegateControllerProtocol).self, intercepter: tableIntercepter)
+        
+        let webIntercepter = ViewControllerIntercepter()
+        webIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
+        }
+        ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
+    }
+    
+    // MARK: - Hook
+    fileprivate func hookInit(_ viewController: UIViewController) {
+        /*
+        // ViewControllerProtocol全局拦截器init方法示例：
+        // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
+        viewController.extendedLayoutIncludesOpaqueBars = true
+        // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
+        viewController.hidesBottomBarWhenPushed = true
+        // 视图默认all延伸到全部工具栏，可指定top|bottom不被工具栏遮挡
+        viewController.edgesForExtendedLayout = .all
+         */
+        
+        // 1. 默认init
+        hookInit?(viewController)
+        
+        // 2. 拦截器init
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.initIntercepter?(viewController)
+            }
+        }
+        
+        if let viewController = viewController as? ViewControllerProtocol {
+            // 3. 控制器didInitialize
+            viewController.didInitialize()
+        }
+    }
+    
+    fileprivate func hookViewDidLoad(_ viewController: UIViewController) {
+        // 1. 默认viewDidLoad
+        hookViewDidLoad?(viewController)
+        
+        // 2. 拦截器viewDidLoad
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidLoadIntercepter?(viewController)
+            }
+        }
+        
+        if let viewController = viewController as? ViewControllerProtocol {
+            // 3. 控制器setupNavbar
+            viewController.setupNavbar()
+            // 4. 控制器setupSubviews
+            viewController.setupSubviews()
+            // 5. 控制器setupLayout
+            viewController.setupLayout()
+        }
+    }
+    
+    fileprivate func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewWillAppear
+        hookViewWillAppear?(viewController, animated)
+        
+        // 2. 拦截器viewWillAppear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewWillAppearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    fileprivate func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewIsAppearing
+        hookViewIsAppearing?(viewController, animated)
+        
+        // 2. 拦截器viewIsAppearing
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewIsAppearingIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    fileprivate func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
+        // 1. 默认viewDidLayoutSubviews
+        hookViewDidLayoutSubviews?(viewController)
+        
+        // 2. 拦截器viewDidLayoutSubviews
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidLayoutSubviewsIntercepter?(viewController)
+            }
+        }
+    }
+    
+    fileprivate func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewDidAppear
+        hookViewDidAppear?(viewController, animated)
+        
+        // 2. 拦截器viewDidAppear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidAppearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    fileprivate func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewWillDisappear
+        hookViewWillDisappear?(viewController, animated)
+        
+        // 2. 拦截器viewWillDisappear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewWillDisappearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+    fileprivate func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+        // 1. 默认viewDidDisappear
+        hookViewDidDisappear?(viewController, animated)
+        
+        // 2. 拦截器viewDidDisappear
+        let intercepterNames = intercepterNames(for: viewController)
+        for intercepterName in intercepterNames {
+            if let intercepter = intercepters[intercepterName] {
+                intercepter.viewDidDisappearIntercepter?(viewController, animated)
+            }
+        }
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+ViewController
+extension FrameworkAutoloader {
+    
+    @objc static func loadModule_ViewController() {
+        swizzleViewController()
+        ViewControllerManager.registerDefaultIntercepters()
+    }
+    
+    private static func swizzleViewController() {
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
@@ -266,171 +431,6 @@ public class ViewControllerManager: NSObject {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
-    }
-    
-    fileprivate static func registerDefaultIntercepters() {
-        let scrollIntercepter = ViewControllerIntercepter()
-        scrollIntercepter.viewDidLoadIntercepter = { viewController in
-            ViewControllerManager.shared.scrollViewControllerViewDidLoad(viewController)
-        }
-        ViewControllerManager.shared.registerProtocol(ScrollViewControllerProtocol.self, intercepter: scrollIntercepter)
-        
-        let collectionIntercepter = ViewControllerIntercepter()
-        collectionIntercepter.viewDidLoadIntercepter = { viewController in
-            ViewControllerManager.shared.collectionViewControllerViewDidLoad(viewController)
-        }
-        ViewControllerManager.shared.registerProtocol((any CollectionDelegateControllerProtocol).self, intercepter: collectionIntercepter)
-        
-        let tableIntercepter = ViewControllerIntercepter()
-        tableIntercepter.viewDidLoadIntercepter = { viewController in
-            ViewControllerManager.shared.tableViewControllerViewDidLoad(viewController)
-        }
-        ViewControllerManager.shared.registerProtocol((any TableDelegateControllerProtocol).self, intercepter: tableIntercepter)
-        
-        let webIntercepter = ViewControllerIntercepter()
-        webIntercepter.viewDidLoadIntercepter = { viewController in
-            ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
-        }
-        ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
-    }
-    
-    // MARK: - Hook
-    private func hookInit(_ viewController: UIViewController) {
-        /*
-        // ViewControllerProtocol全局拦截器init方法示例：
-        // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
-        viewController.extendedLayoutIncludesOpaqueBars = true
-        // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
-        viewController.hidesBottomBarWhenPushed = true
-        // 视图默认all延伸到全部工具栏，可指定top|bottom不被工具栏遮挡
-        viewController.edgesForExtendedLayout = .all
-         */
-        
-        // 1. 默认init
-        hookInit?(viewController)
-        
-        // 2. 拦截器init
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.initIntercepter?(viewController)
-            }
-        }
-        
-        if let viewController = viewController as? ViewControllerProtocol {
-            // 3. 控制器didInitialize
-            viewController.didInitialize()
-        }
-    }
-    
-    private func hookViewDidLoad(_ viewController: UIViewController) {
-        // 1. 默认viewDidLoad
-        hookViewDidLoad?(viewController)
-        
-        // 2. 拦截器viewDidLoad
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewDidLoadIntercepter?(viewController)
-            }
-        }
-        
-        if let viewController = viewController as? ViewControllerProtocol {
-            // 3. 控制器setupNavbar
-            viewController.setupNavbar()
-            // 4. 控制器setupSubviews
-            viewController.setupSubviews()
-            // 5. 控制器setupLayout
-            viewController.setupLayout()
-        }
-    }
-    
-    private func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
-        // 1. 默认viewWillAppear
-        hookViewWillAppear?(viewController, animated)
-        
-        // 2. 拦截器viewWillAppear
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewWillAppearIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-    private func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
-        // 1. 默认viewIsAppearing
-        hookViewIsAppearing?(viewController, animated)
-        
-        // 2. 拦截器viewIsAppearing
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewIsAppearingIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-    private func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
-        // 1. 默认viewDidLayoutSubviews
-        hookViewDidLayoutSubviews?(viewController)
-        
-        // 2. 拦截器viewDidLayoutSubviews
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewDidLayoutSubviewsIntercepter?(viewController)
-            }
-        }
-    }
-    
-    private func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
-        // 1. 默认viewDidAppear
-        hookViewDidAppear?(viewController, animated)
-        
-        // 2. 拦截器viewDidAppear
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewDidAppearIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-    private func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
-        // 1. 默认viewWillDisappear
-        hookViewWillDisappear?(viewController, animated)
-        
-        // 2. 拦截器viewWillDisappear
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewWillDisappearIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-    private func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
-        // 1. 默认viewDidDisappear
-        hookViewDidDisappear?(viewController, animated)
-        
-        // 2. 拦截器viewDidDisappear
-        let intercepterNames = intercepterNames(for: viewController)
-        for intercepterName in intercepterNames {
-            if let intercepter = intercepters[intercepterName] {
-                intercepter.viewDidDisappearIntercepter?(viewController, animated)
-            }
-        }
-    }
-    
-}
-
-// MARK: - FrameworkAutoloader+ViewController
-@objc extension FrameworkAutoloader {
-    
-    static func loadModule_ViewController() {
-        ViewControllerManager.swizzleViewController()
-        ViewControllerManager.registerDefaultIntercepters()
     }
     
 }

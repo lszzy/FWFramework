@@ -449,9 +449,9 @@ extension ImagePlugin {
 }
 
 // MARK: - FrameworkAutoloader+ImagePlugin
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadPlugin_ImagePlugin() {
+    @objc static func loadPlugin_ImagePlugin() {
         ModuleBundle.imageNamedBlock = { name, bundle in
             return UIImage.fw_imageNamed(name, bundle: bundle)
         }

@@ -2075,56 +2075,6 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
-    fileprivate static func fw_swizzleUIKitView() {
-        NSObject.fw.swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.point(inside:with:)),
-            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
-        ) { store in { selfObject, point, event in
-            if let insetsValue = selfObject.fw.property(forName: "fw_touchInsets") as? NSValue {
-                let touchInsets = insetsValue.uiEdgeInsetsValue
-                var bounds = selfObject.bounds
-                bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
-                return CGRectContainsPoint(bounds, point)
-            }
-            
-            var pointInside = store.original(selfObject, store.selector, point, event)
-            if (!pointInside && selfObject.fw.propertyBool(forName: "fw_pointInsideSubviews")) {
-                for subview in selfObject.subviews {
-                    if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
-                        pointInside = true
-                        break
-                    }
-                }
-            }
-            return pointInside
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.hitTest(_:with:)),
-            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
-            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> UIView?).self
-        ) { store in { selfObject, point, event in
-            guard selfObject.fw_isPenetrable else {
-                return store.original(selfObject, store.selector, point, event)
-            }
-            
-            guard selfObject.fw_isViewVisible, !selfObject.subviews.isEmpty else { return nil }
-            for subview in selfObject.subviews.reversed() {
-                guard subview.isUserInteractionEnabled,
-                      subview.frame.contains(point),
-                      subview.fw_isViewVisible else { continue }
-                
-                let subPoint = selfObject.convert(point, to: subview)
-                guard let hitView = subview.hitTest(subPoint, with: event) else { continue }
-                return hitView
-            }
-            return nil
-        }}
-    }
-    
 }
 
 // MARK: - UIImageView+UIKit
@@ -2777,70 +2727,6 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
-    fileprivate static func fw_swizzleUIKitLabel() {
-        NSObject.fw.swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(UILabel.drawText(in:)),
-            methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
-        ) { store in { selfObject, aRect in
-            var rect = aRect
-            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
-                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
-            }
-            
-            let verticalAlignment = selfObject.fw_verticalAlignment
-            if verticalAlignment == .top {
-                let fitsSize = selfObject.sizeThatFits(rect.size)
-                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.size.width, height: fitsSize.height)
-            } else if verticalAlignment == .bottom {
-                let fitsSize = selfObject.sizeThatFits(rect.size)
-                rect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.size.height - fitsSize.height), width: rect.size.width, height: fitsSize.height)
-            }
-            
-            store.original(selfObject, store.selector, rect)
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(getter: UILabel.intrinsicContentSize),
-            methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
-        ) { store in { selfObject in
-            if selfObject.fw.property(forName: "fw_contentInset") != nil {
-                let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
-                return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
-            }
-            
-            return store.original(selfObject, store.selector)
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UILabel.self,
-            selector: #selector(UILabel.sizeThatFits(_:)),
-            methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
-        ) { store in { selfObject, aSize in
-            var size = aSize
-            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
-                let contentInset = contentInsetValue.uiEdgeInsetsValue
-                size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
-                var fitsSize = store.original(selfObject, store.selector, size)
-                if !fitsSize.equalTo(.zero) {
-                    fitsSize = CGSize(width: fitsSize.width + contentInset.left + contentInset.right, height: fitsSize.height + contentInset.top + contentInset.bottom)
-                }
-                return fitsSize
-            }
-            
-            return store.original(selfObject, store.selector, size)
-        }}
-        
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
-    }
-    
 }
 
 // MARK: - UIControl+UIKit
@@ -2854,27 +2740,9 @@ extension Wrapper where Base: UIViewController {
         set { fw.setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
     
-    private var fw_touchEventTimestamp: TimeInterval {
+    fileprivate var fw_touchEventTimestamp: TimeInterval {
         get { fw.propertyDouble(forName: "fw_touchEventTimestamp") }
         set { fw.setPropertyDouble(newValue, forName: "fw_touchEventTimestamp") }
-    }
-    
-    fileprivate static func fw_swizzleUIKitControl() {
-        NSObject.fw.swizzleInstanceMethod(
-            UIControl.self,
-            selector: #selector(UIControl.sendAction(_:to:for:)),
-            methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
-        ) { store in { selfObject, action, target, event in
-            // 仅拦截Touch事件，且配置了间隔时间的Event
-            if let event = event, event.type == .touches, event.subtype == .none,
-               selfObject.fw_touchEventInterval > 0 {
-                if Date().timeIntervalSince1970 - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval { return }
-                selfObject.fw_touchEventTimestamp = Date().timeIntervalSince1970
-            }
-            
-            store.original(selfObject, store.selector, action, target, event)
-        }}
     }
     
 }
@@ -3032,40 +2900,6 @@ extension Wrapper where Base: UIViewController {
                 self?.isEnabled = false
             }
         }
-    }
-    
-    fileprivate static func fw_swizzleUIKitButton() {
-        NSObject.fw.swizzleInstanceMethod(
-            UIButton.self,
-            selector: #selector(setter: UIButton.isEnabled),
-            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
-        ) { store in { selfObject, enabled in
-            store.original(selfObject, store.selector, enabled)
-            
-            if selfObject.fw_disabledAlpha > 0 {
-                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
-            }
-            if selfObject.fw_disabledChanged != nil {
-                selfObject.fw_disabledChanged?(selfObject, enabled)
-            }
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UIButton.self,
-            selector: #selector(setter: UIButton.isHighlighted),
-            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
-        ) { store in { selfObject, highlighted in
-            store.original(selfObject, store.selector, highlighted)
-            
-            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
-                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
-            }
-            if selfObject.isEnabled && selfObject.fw_highlightedChanged != nil {
-                selfObject.fw_highlightedChanged?(selfObject, highlighted)
-            }
-        }}
     }
     
 }
@@ -3532,23 +3366,6 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
-    fileprivate static func fw_swizzleUIKitSwitch() {
-        NSObject.fw.swizzleInstanceMethod(
-            UISwitch.self,
-            selector: #selector(UISwitch.traitCollectionDidChange(_:)),
-            methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
-            swizzleSignature: (@convention(block) (UISwitch, UITraitCollection?) -> Void).self
-        ) { store in { selfObject, previousTraitCollection in
-            store.original(selfObject, store.selector, previousTraitCollection)
-
-            guard selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
-            guard let offTintColor = selfObject.fw_offTintColor else { return }
-            DispatchQueue.main.async {
-                selfObject.fw_offTintColor = offTintColor
-            }
-        }}
-    }
-    
 }
 
 // MARK: - UITextField+UIKit
@@ -3759,36 +3576,6 @@ extension Wrapper where Base: UIViewController {
                 self.selectedTextRange = self.textRange(from: position, to: position)
             }
         }
-    }
-    
-    fileprivate static func fw_swizzleUIKitTextField() {
-        NSObject.fw.swizzleInstanceMethod(
-            UITextField.self,
-            selector: #selector(UITextField.canPerformAction(_:withSender:)),
-            methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
-        ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
-            
-            return store.original(selfObject, store.selector, action, sender)
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UITextField.self,
-            selector: #selector(UITextField.caretRect(for:)),
-            methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
-            swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
-        ) { store in { selfObject, position in
-            var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
-            
-            let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
-            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
-            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
-            return caretRect
-        }}
     }
     
 }
@@ -4031,36 +3818,6 @@ extension Wrapper where Base: UIViewController {
         let height = self.sizeThatFits(drawSize).height - inset.top - inset.bottom
         let lines = Int(round(height / lineHeight))
         return lines
-    }
-    
-    fileprivate static func fw_swizzleUIKitTextView() {
-        NSObject.fw.swizzleInstanceMethod(
-            UITextView.self,
-            selector: #selector(UITextView.canPerformAction(_:withSender:)),
-            methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
-        ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
-            
-            return store.original(selfObject, store.selector, action, sender)
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UITextView.self,
-            selector: #selector(UITextView.caretRect(for:)),
-            methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
-            swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
-        ) { store in { selfObject, position in
-            var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
-            
-            let rect = rectValue.cgRectValue
-            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
-            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
-            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
-            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
-            return caretRect
-        }}
     }
     
 }
@@ -4634,121 +4391,6 @@ extension Wrapper where Base: UIViewController {
         }
     }
     
-    fileprivate static func fw_swizzleUIKitSearchBar() {
-        NSObject.fw.swizzleInstanceMethod(
-            UISearchBar.self,
-            selector: #selector(UISearchBar.layoutSubviews),
-            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if let isCenterValue = selfObject.fw.propertyNumber(forName: "fw_searchIconCenter") {
-                if !isCenterValue.boolValue {
-                    let offset = selfObject.fw.propertyNumber(forName: "fw_searchIconOffset")
-                    selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
-                } else {
-                    let textField = selfObject.fw_textField
-                    var attributes: [NSAttributedString.Key: Any]?
-                    if let font = textField.font {
-                        attributes = [.font: font]
-                    }
-                    let placeholderWidth = (selfObject.placeholder as? NSString)?.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attributes, context: nil).size.width ?? .zero
-                    let textOffset = 4 + selfObject.searchTextPositionAdjustment.horizontal
-                    let iconWidth = textField.leftView?.frame.size.width ?? 0
-                    let targetWidth = textField.frame.size.width - ceil(placeholderWidth) - textOffset - iconWidth
-                    let position = targetWidth / 2.0 - 6.0
-                    selfObject.setPositionAdjustment(UIOffset(horizontal: position > 0 ? position : 0, vertical: 0), for: .search)
-                }
-            }
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UISearchBar.self,
-            selector: #selector(setter: UISearchBar.placeholder),
-            methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar, String?) -> Void).self
-        ) { store in { selfObject, placeholder in
-            store.original(selfObject, store.selector, placeholder)
-            
-            if selfObject.fw_placeholderColor != nil || selfObject.fw_font != nil {
-                guard let attrString = selfObject.searchTextField.attributedPlaceholder?.mutableCopy() as? NSMutableAttributedString else { return }
-                
-                if let placeholderColor = selfObject.fw_placeholderColor {
-                    attrString.addAttribute(.foregroundColor, value: placeholderColor, range: NSMakeRange(0, attrString.length))
-                }
-                if let font = selfObject.fw_font {
-                    attrString.addAttribute(.font, value: font, range: NSMakeRange(0, attrString.length))
-                }
-                // 默认移除文字阴影
-                attrString.removeAttribute(.shadow, range: NSMakeRange(0, attrString.length))
-                selfObject.searchTextField.attributedPlaceholder = attrString
-            }
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UISearchBar.self,
-            selector: #selector(UISearchBar.didMoveToWindow),
-            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject.fw_placeholderColor != nil {
-                let placeholder = selfObject.placeholder
-                selfObject.placeholder = placeholder
-            }
-        }}
-        
-        // iOS13因为层级关系变化，兼容处理
-        NSObject.fw.swizzleMethod(
-            objc_getClass("UISearchBarTextField"),
-            selector: #selector(setter: UITextField.frame),
-            methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
-        ) { store in { selfObject, aFrame in
-            var frame = aFrame
-            let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
-            if let searchBar = searchBar {
-                var textFieldMaxX = searchBar.bounds.size.width
-                if let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue,
-                   let cancelButton = searchBar.fw_cancelButton {
-                    let cancelInset = cancelInsetValue.uiEdgeInsetsValue
-                    let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
-                    textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
-                    frame.size.width = textFieldMaxX - frame.origin.x
-                }
-                
-                if let contentInsetValue = searchBar.fw.property(forName: "fw_contentInset") as? NSValue {
-                    let contentInset = contentInsetValue.uiEdgeInsetsValue
-                    frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
-                }
-            }
-            
-            store.original(selfObject, store.selector, frame)
-        }}
-        
-        NSObject.fw.swizzleMethod(
-            objc_getClass("UINavigationButton"),
-            selector: #selector(setter: UIButton.frame),
-            methodSignature: (@convention(c) (UIButton, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, CGRect) -> Void).self
-        ) { store in { selfObject, aFrame in
-            var frame = aFrame
-            let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
-            if let searchBar = searchBar,
-               let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue {
-                let cancelInset = cancelInsetValue.uiEdgeInsetsValue
-                let cancelWidth = selfObject.sizeThatFits(searchBar.bounds.size).width
-                frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.right
-                frame.origin.y = cancelInset.top
-                frame.size.height = searchBar.bounds.size.height - cancelInset.top - cancelInset.bottom
-            }
-            
-            store.original(selfObject, store.selector, frame)
-        }}
-    }
-    
 }
 
 // MARK: - UIViewController+UIKit
@@ -4875,17 +4517,375 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - FrameworkAutoloader+UIKit
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadToolkit_UIKit() {
-        UIView.fw_swizzleUIKitView()
-        UILabel.fw_swizzleUIKitLabel()
-        UIControl.fw_swizzleUIKitControl()
-        UIButton.fw_swizzleUIKitButton()
-        UISwitch.fw_swizzleUIKitSwitch()
-        UITextField.fw_swizzleUIKitTextField()
-        UITextView.fw_swizzleUIKitTextView()
-        UISearchBar.fw_swizzleUIKitSearchBar()
+    @objc static func loadToolkit_UIKit() {
+        swizzleUIKitView()
+        swizzleUIKitLabel()
+        swizzleUIKitControl()
+        swizzleUIKitButton()
+        swizzleUIKitSwitch()
+        swizzleUIKitTextField()
+        swizzleUIKitTextView()
+        swizzleUIKitSearchBar()
+    }
+    
+    private static func swizzleUIKitView() {
+        NSObject.fw.swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.point(inside:with:)),
+            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
+        ) { store in { selfObject, point, event in
+            if let insetsValue = selfObject.fw.property(forName: "fw_touchInsets") as? NSValue {
+                let touchInsets = insetsValue.uiEdgeInsetsValue
+                var bounds = selfObject.bounds
+                bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
+                return CGRectContainsPoint(bounds, point)
+            }
+            
+            var pointInside = store.original(selfObject, store.selector, point, event)
+            if (!pointInside && selfObject.fw.propertyBool(forName: "fw_pointInsideSubviews")) {
+                for subview in selfObject.subviews {
+                    if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
+                        pointInside = true
+                        break
+                    }
+                }
+            }
+            return pointInside
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIView.self,
+            selector: #selector(UIView.hitTest(_:with:)),
+            methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
+            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> UIView?).self
+        ) { store in { selfObject, point, event in
+            guard selfObject.fw_isPenetrable else {
+                return store.original(selfObject, store.selector, point, event)
+            }
+            
+            guard selfObject.fw_isViewVisible, !selfObject.subviews.isEmpty else { return nil }
+            for subview in selfObject.subviews.reversed() {
+                guard subview.isUserInteractionEnabled,
+                      subview.frame.contains(point),
+                      subview.fw_isViewVisible else { continue }
+                
+                let subPoint = selfObject.convert(point, to: subview)
+                guard let hitView = subview.hitTest(subPoint, with: event) else { continue }
+                return hitView
+            }
+            return nil
+        }}
+    }
+    
+    private static func swizzleUIKitLabel() {
+        NSObject.fw.swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.drawText(in:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
+        ) { store in { selfObject, aRect in
+            var rect = aRect
+            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
+                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
+            }
+            
+            let verticalAlignment = selfObject.fw_verticalAlignment
+            if verticalAlignment == .top {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.size.width, height: fitsSize.height)
+            } else if verticalAlignment == .bottom {
+                let fitsSize = selfObject.sizeThatFits(rect.size)
+                rect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.size.height - fitsSize.height), width: rect.size.width, height: fitsSize.height)
+            }
+            
+            store.original(selfObject, store.selector, rect)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(getter: UILabel.intrinsicContentSize),
+            methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
+        ) { store in { selfObject in
+            if selfObject.fw.property(forName: "fw_contentInset") != nil {
+                let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
+                return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
+            }
+            
+            return store.original(selfObject, store.selector)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UILabel.self,
+            selector: #selector(UILabel.sizeThatFits(_:)),
+            methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
+            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
+        ) { store in { selfObject, aSize in
+            var size = aSize
+            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
+                let contentInset = contentInsetValue.uiEdgeInsetsValue
+                size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
+                var fitsSize = store.original(selfObject, store.selector, size)
+                if !fitsSize.equalTo(.zero) {
+                    fitsSize = CGSize(width: fitsSize.width + contentInset.left + contentInset.right, height: fitsSize.height + contentInset.top + contentInset.bottom)
+                }
+                return fitsSize
+            }
+            
+            return store.original(selfObject, store.selector, size)
+        }}
+        
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
+        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
+    }
+    
+    private static func swizzleUIKitControl() {
+        NSObject.fw.swizzleInstanceMethod(
+            UIControl.self,
+            selector: #selector(UIControl.sendAction(_:to:for:)),
+            methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
+            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
+        ) { store in { selfObject, action, target, event in
+            // 仅拦截Touch事件，且配置了间隔时间的Event
+            if let event = event, event.type == .touches, event.subtype == .none,
+               selfObject.fw_touchEventInterval > 0 {
+                if Date().timeIntervalSince1970 - selfObject.fw_touchEventTimestamp < selfObject.fw_touchEventInterval { return }
+                selfObject.fw_touchEventTimestamp = Date().timeIntervalSince1970
+            }
+            
+            store.original(selfObject, store.selector, action, target, event)
+        }}
+    }
+    
+    private static func swizzleUIKitButton() {
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isEnabled),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, enabled in
+            store.original(selfObject, store.selector, enabled)
+            
+            if selfObject.fw_disabledAlpha > 0 {
+                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
+            }
+            if selfObject.fw_disabledChanged != nil {
+                selfObject.fw_disabledChanged?(selfObject, enabled)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(setter: UIButton.isHighlighted),
+            methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+        ) { store in { selfObject, highlighted in
+            store.original(selfObject, store.selector, highlighted)
+            
+            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
+                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
+            }
+            if selfObject.isEnabled && selfObject.fw_highlightedChanged != nil {
+                selfObject.fw_highlightedChanged?(selfObject, highlighted)
+            }
+        }}
+    }
+    
+    private static func swizzleUIKitSwitch() {
+        NSObject.fw.swizzleInstanceMethod(
+            UISwitch.self,
+            selector: #selector(UISwitch.traitCollectionDidChange(_:)),
+            methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
+            swizzleSignature: (@convention(block) (UISwitch, UITraitCollection?) -> Void).self
+        ) { store in { selfObject, previousTraitCollection in
+            store.original(selfObject, store.selector, previousTraitCollection)
+
+            guard selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+            guard let offTintColor = selfObject.fw_offTintColor else { return }
+            DispatchQueue.main.async {
+                selfObject.fw_offTintColor = offTintColor
+            }
+        }}
+    }
+    
+    private static func swizzleUIKitTextField() {
+        NSObject.fw.swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UITextField.self,
+            selector: #selector(UITextField.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
+    }
+    
+    private static func swizzleUIKitTextView() {
+        NSObject.fw.swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.canPerformAction(_:withSender:)),
+            methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
+            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
+        ) { store in { selfObject, action, sender in
+            if selfObject.fw_menuDisabled { return false }
+            
+            return store.original(selfObject, store.selector, action, sender)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UITextView.self,
+            selector: #selector(UITextView.caretRect(for:)),
+            methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
+            swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
+        ) { store in { selfObject, position in
+            var caretRect = store.original(selfObject, store.selector, position)
+            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            
+            let rect = rectValue.cgRectValue
+            if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
+            if rect.origin.y != 0 { caretRect.origin.y += rect.origin.y }
+            if rect.size.width != 0 { caretRect.size.width = rect.size.width }
+            if rect.size.height != 0 { caretRect.size.height = rect.size.height }
+            return caretRect
+        }}
+    }
+    
+    private static func swizzleUIKitSearchBar() {
+        NSObject.fw.swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(UISearchBar.layoutSubviews),
+            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if let isCenterValue = selfObject.fw.propertyNumber(forName: "fw_searchIconCenter") {
+                if !isCenterValue.boolValue {
+                    let offset = selfObject.fw.propertyNumber(forName: "fw_searchIconOffset")
+                    selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
+                } else {
+                    let textField = selfObject.fw_textField
+                    var attributes: [NSAttributedString.Key: Any]?
+                    if let font = textField.font {
+                        attributes = [.font: font]
+                    }
+                    let placeholderWidth = (selfObject.placeholder as? NSString)?.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attributes, context: nil).size.width ?? .zero
+                    let textOffset = 4 + selfObject.searchTextPositionAdjustment.horizontal
+                    let iconWidth = textField.leftView?.frame.size.width ?? 0
+                    let targetWidth = textField.frame.size.width - ceil(placeholderWidth) - textOffset - iconWidth
+                    let position = targetWidth / 2.0 - 6.0
+                    selfObject.setPositionAdjustment(UIOffset(horizontal: position > 0 ? position : 0, vertical: 0), for: .search)
+                }
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(setter: UISearchBar.placeholder),
+            methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar, String?) -> Void).self
+        ) { store in { selfObject, placeholder in
+            store.original(selfObject, store.selector, placeholder)
+            
+            if selfObject.fw_placeholderColor != nil || selfObject.fw_font != nil {
+                guard let attrString = selfObject.searchTextField.attributedPlaceholder?.mutableCopy() as? NSMutableAttributedString else { return }
+                
+                if let placeholderColor = selfObject.fw_placeholderColor {
+                    attrString.addAttribute(.foregroundColor, value: placeholderColor, range: NSMakeRange(0, attrString.length))
+                }
+                if let font = selfObject.fw_font {
+                    attrString.addAttribute(.font, value: font, range: NSMakeRange(0, attrString.length))
+                }
+                // 默认移除文字阴影
+                attrString.removeAttribute(.shadow, range: NSMakeRange(0, attrString.length))
+                selfObject.searchTextField.attributedPlaceholder = attrString
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UISearchBar.self,
+            selector: #selector(UISearchBar.didMoveToWindow),
+            methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject.fw_placeholderColor != nil {
+                let placeholder = selfObject.placeholder
+                selfObject.placeholder = placeholder
+            }
+        }}
+        
+        // iOS13因为层级关系变化，兼容处理
+        NSObject.fw.swizzleMethod(
+            objc_getClass("UISearchBarTextField"),
+            selector: #selector(setter: UITextField.frame),
+            methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
+        ) { store in { selfObject, aFrame in
+            var frame = aFrame
+            let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
+            if let searchBar = searchBar {
+                var textFieldMaxX = searchBar.bounds.size.width
+                if let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue,
+                   let cancelButton = searchBar.fw_cancelButton {
+                    let cancelInset = cancelInsetValue.uiEdgeInsetsValue
+                    let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
+                    textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
+                    frame.size.width = textFieldMaxX - frame.origin.x
+                }
+                
+                if let contentInsetValue = searchBar.fw.property(forName: "fw_contentInset") as? NSValue {
+                    let contentInset = contentInsetValue.uiEdgeInsetsValue
+                    frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
+                }
+            }
+            
+            store.original(selfObject, store.selector, frame)
+        }}
+        
+        NSObject.fw.swizzleMethod(
+            objc_getClass("UINavigationButton"),
+            selector: #selector(setter: UIButton.frame),
+            methodSignature: (@convention(c) (UIButton, Selector, CGRect) -> Void).self,
+            swizzleSignature: (@convention(block) (UIButton, CGRect) -> Void).self
+        ) { store in { selfObject, aFrame in
+            var frame = aFrame
+            let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
+            if let searchBar = searchBar,
+               let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue {
+                let cancelInset = cancelInsetValue.uiEdgeInsetsValue
+                let cancelWidth = selfObject.sizeThatFits(searchBar.bounds.size).width
+                frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.right
+                frame.origin.y = cancelInset.top
+                frame.size.height = searchBar.bounds.size.height - cancelInset.top - cancelInset.bottom
+            }
+            
+            store.original(selfObject, store.selector, frame)
+        }}
     }
     
 }
