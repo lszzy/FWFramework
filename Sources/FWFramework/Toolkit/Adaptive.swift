@@ -238,6 +238,11 @@ extension Wrapper where Base: UIDevice {
     public static var deviceResolution: CGSize {
         return Base.fw_deviceResolution
     }
+    
+    /// 获取设备模型，格式："iPhone6,1"
+    public static var deviceModel: String? {
+        return Base.fw_deviceModel
+    }
 }
 
 // MARK: - Wrapper+UIScreen
@@ -532,6 +537,22 @@ extension Wrapper where Base: UIViewController {
     /// 设备分辨率，跟横竖屏无关
     public static var fw_deviceResolution: CGSize {
         return CGSize(width: fw_deviceWidth * UIScreen.main.scale, height: fw_deviceHeight * UIScreen.main.scale)
+    }
+    
+    /// 获取设备模型，格式："iPhone6,1"
+    public static var fw_deviceModel: String? {
+        #if targetEnvironment(simulator)
+        return String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
+        #else
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let deviceModel = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return deviceModel
+        #endif
     }
     
 }
