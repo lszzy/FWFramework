@@ -55,10 +55,10 @@ extension Wrapper where Base: Timer {
     ///   - block: 每秒执行block，为0时自动停止
     /// - Returns: 定时器，可手工停止
     public static func commonTimer(countDown: Int, block: @escaping (Int) -> Void) -> Timer {
-        let startTime = Date.fw_currentTime
+        let startTime = Date.fw.currentTime
         let timer = commonTimer(timeInterval: 1, block: { timer in
             DispatchQueue.main.async {
-                let remainTime = countDown - Int(round(Date.fw_currentTime - startTime))
+                let remainTime = countDown - Int(round(Date.fw.currentTime - startTime))
                 if remainTime <= 0 {
                     block(0)
                     timer.invalidate()
@@ -583,14 +583,15 @@ public class MulticastBlock: NSObject {
     
     /// 指定Key并返回代理单例
     public static func sharedBlock(_ key: AnyHashable) -> MulticastBlock {
-        return fw_synchronized {
-            if let instance = instances[key] {
-                return instance
-            } else {
-                let instance = MulticastBlock()
-                instances[key] = instance
-                return instance
-            }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if let instance = instances[key] {
+            return instance
+        } else {
+            let instance = MulticastBlock()
+            instances[key] = instance
+            return instance
         }
     }
     

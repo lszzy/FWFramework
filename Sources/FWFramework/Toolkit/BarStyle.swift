@@ -333,7 +333,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
             swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
         ) { store in { selfObject in
-            if let hidden = selfObject.fw.propertyNumber(forName: "fw_statusBarHidden") {
+            if let hidden = selfObject.fw.propertyNumber(forName: "statusBarHidden") {
                 return hidden.boolValue
             } else {
                 return store.original(selfObject, store.selector)
