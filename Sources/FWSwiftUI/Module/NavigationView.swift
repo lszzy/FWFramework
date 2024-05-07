@@ -85,9 +85,9 @@ public struct NavigationBarConfiguration {
         viewController.navigationItem.rightBarButtonItem?.customView?.sizeToFit()
         
         if let appearance = appearance {
-            viewController.fw_navigationBarAppearance = appearance()
+            viewController.fw.navigationBarAppearance = appearance()
         } else if let style = style {
-            viewController.fw_navigationBarStyle = style
+            viewController.fw.navigationBarStyle = style
         } else if let background = background {
             let appearance = NavigationBarAppearance()
             if let color = background as? Color {
@@ -99,7 +99,7 @@ public struct NavigationBarConfiguration {
             } else if let transparent = background as? Bool {
                 appearance.backgroundTransparent = transparent
             }
-            viewController.fw_navigationBarAppearance = appearance
+            viewController.fw.navigationBarAppearance = appearance
         }
         
         customize?(viewController)
