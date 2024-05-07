@@ -116,6 +116,6 @@ extension Double {
 extension UIView {
     
     /// 链式布局对象
-    public var chain: LayoutChain { fw_layoutChain }
+    public var chain: LayoutChain { fw.layoutChain }
     
 }
