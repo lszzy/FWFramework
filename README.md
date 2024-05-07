@@ -23,7 +23,7 @@ iOS development framework, mainly solves the routine and pain points in native d
 All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
 ## Installation
-It is recommended to use CocoaPods or Swift Package Manager to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
+It is recommended to use CocoaPods or Swift Package Manager to install and automatically manage dependencies.
 
 ### CocoaPods
 This framework supports CocoaPods, Podfile example:
@@ -56,6 +56,19 @@ This framework supports Swift Package Manager, just add and check the required m
 
 ## [Api](https://fwframework.wuyong.site)
 The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.
+
+Custom code prefix is app example:
+
+	public typealias APP = WrapperGlobal
+	
+	extension WrapperCompatible {
+		public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+		public var app: Wrapper<Self> { get { wrapperExtension } set {} }
+	}
+    
+Example of importing default fw code prefix:
+
+	@_spi(FW) import FWFramework
 
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:

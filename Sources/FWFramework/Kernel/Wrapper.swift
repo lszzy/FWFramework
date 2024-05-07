@@ -9,7 +9,7 @@ import Foundation
 import QuartzCore
 
 // MARK: - WrapperGlobal
-/// 全局包装器(因struct只读，只能用class)
+/// 全局包装器
 ///
 /// 自定义WrapperGlobal为任意名称(如APP)示例：
 /// ```swift
@@ -25,7 +25,7 @@ public class WrapperGlobal {}
 @_spi(FW) public typealias FW = WrapperGlobal
 
 // MARK: - Wrapper
-/// 属性包装器(因struct只读，只能用class)
+/// 属性包装器
 public class Wrapper<Base> {
     
     /// 原始对象
