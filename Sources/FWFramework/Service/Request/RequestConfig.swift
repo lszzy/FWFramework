@@ -188,7 +188,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.willStartBlock = { [weak self] request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if (request.autoShowLoading || request.autoShowError),
                    self?.autoSetupContext == true, request.context == nil {
                     self?.setupContext(for: request)
@@ -211,7 +211,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.didStopBlock = { request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if request.autoShowLoading {
                     request.hideLoading()
                 }
@@ -254,7 +254,7 @@ open class RequestContextAccessory: RequestAccessory {
             return
         }
         
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.showErrorBlock?(request.context, error)
         }
     }
@@ -269,7 +269,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.showLoadingBlock?(request.context)
         }
     }
@@ -282,7 +282,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.hideLoadingBlock?(request.context)
         }
     }

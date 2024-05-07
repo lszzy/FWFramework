@@ -76,12 +76,12 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         emptyView.setActionButtonTitle(emptyAction)
         emptyView.setMoreActionButtonTitle(emptyMoreAction)
         if block != nil {
-            emptyView.actionButton.fw_addTouch { sender in
+            emptyView.actionButton.fw.addTouch { sender in
                 block?(0, sender)
             }
         }
         if block != nil, emptyMoreAction != nil {
-            emptyView.moreActionButton.fw_addTouch { sender in
+            emptyView.moreActionButton.fw.addTouch { sender in
                 block?(1, sender)
             }
         }

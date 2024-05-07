@@ -418,7 +418,7 @@ open class WebView: WKWebView {
                 return
             }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if let presentedController = download.webView?.fw_viewController?.presentedViewController {
                     presentedController.dismiss(animated: true) {
                         UIApplication.fw_openActivityItems([url])
@@ -1429,7 +1429,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
                 leftItems.append(leftItem)
             } else {
                 if i == 0 {
-                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
+                    let leftItem = UIBarButtonItem.fw.item(object: navigationItem) { [weak self, weak viewController] _ in
                         if self?.canGoBack ?? false {
                             self?.goBack()
                         } else {
@@ -1449,7 +1449,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
                     }
                     leftItems.append(leftItem)
                 } else {
-                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
+                    let leftItem = UIBarButtonItem.fw.item(object: navigationItem) { [weak self, weak viewController] _ in
                         if let navigationController = viewController?.navigationController,
                            navigationController.popViewController(animated: true) != nil    {
                             return

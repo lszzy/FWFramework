@@ -91,7 +91,7 @@ open class ToastView: UIControl {
                 touchEnabled = true
                 
                 contentView.isUserInteractionEnabled = true
-                contentView.fw_addTapGesture { [weak self] _ in
+                contentView.fw.addTapGesture { [weak self] _ in
                     if let cancelBlock = self?.cancelBlock {
                         self?.hide()
                         cancelBlock()
@@ -366,7 +366,7 @@ open class ToastView: UIControl {
     open func hide(afterDelay delay: TimeInterval, completion: (() -> Void)? = nil) -> Bool {
         if superview != nil {
             invalidateTimer()
-            hideTimer = Timer.fw_commonTimer(timeInterval: delay, block: { [weak self] _ in
+            hideTimer = Timer.fw.commonTimer(timeInterval: delay, block: { [weak self] _ in
                 let hideSuccess = self?.hide() ?? false
                 if hideSuccess {
                     completion?()

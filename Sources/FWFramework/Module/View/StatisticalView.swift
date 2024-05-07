@@ -488,8 +488,8 @@ public class StatisticalEvent: NSObject, NSCopying {
                 self is UITextField {
                 controlEvents = .valueChanged
             }
-            control.fw_addBlock({ sender in
-                (sender as? UIControl)?.fw_statisticalTrackClick()
+            control.fw.addBlock({ sender in
+                sender.fw_statisticalTrackClick()
             }, for: controlEvents)
             return true
         }
@@ -497,8 +497,8 @@ public class StatisticalEvent: NSObject, NSCopying {
         guard let gestureRecognizers = self.gestureRecognizers else { return false }
         for gesture in gestureRecognizers {
             if let tapGesture = gesture as? UITapGestureRecognizer {
-                tapGesture.fw_addBlock { sender in
-                    (sender as? UIGestureRecognizer)?.view?.fw_statisticalTrackClick()
+                tapGesture.fw.addBlock { sender in
+                    sender.view?.fw_statisticalTrackClick()
                 }
                 return true
             }

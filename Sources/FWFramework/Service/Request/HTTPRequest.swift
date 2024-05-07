@@ -919,7 +919,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         #endif
 
         isDataFromCache = true
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             self.requestCompletePreprocessor()
             self.requestCompleteFilter()
             self.delegate?.requestFinished(self)
