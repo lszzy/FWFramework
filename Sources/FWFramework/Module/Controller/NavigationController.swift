@@ -585,7 +585,7 @@ extension Wrapper where Base: UIToolbar {
         self.titleTextAttributes = navigationBar.titleTextAttributes
         self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes
         
-        if UINavigationBar.fw_appearanceEnabled {
+        if UINavigationBar.fw.appearanceEnabled {
             self.standardAppearance = navigationBar.standardAppearance
             self.compactAppearance = navigationBar.compactAppearance
             self.scrollEdgeAppearance = navigationBar.scrollEdgeAppearance

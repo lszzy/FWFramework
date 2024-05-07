@@ -461,7 +461,7 @@ extension Wrapper where Base: NSObject {
     }
 }
 
-// MARK: - Target
+// MARK: - NotificationTarget
 fileprivate class NotificationTarget: NSObject {
     var broadcast: Bool = false
     var name: Notification.Name?
@@ -488,6 +488,7 @@ fileprivate class NotificationTarget: NSObject {
     }
 }
 
+// MARK: - PropertyTarget
 fileprivate class PropertyTarget: NSObject {
     var observation: NSKeyValueObservation?
     var keyPath: AnyHashable?

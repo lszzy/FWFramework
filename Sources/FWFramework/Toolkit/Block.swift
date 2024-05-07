@@ -910,13 +910,13 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
         set {
             if let item = newValue as? UIBarButtonItem {
                 self.navigationItem.backBarButtonItem = item
-                self.navigationController?.navigationBar.fw_backImage = nil
+                self.navigationController?.navigationBar.fw.backImage = nil
             } else if let image = newValue as? UIImage {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
-                self.navigationController?.navigationBar.fw_backImage = image
+                self.navigationController?.navigationBar.fw.backImage = image
             } else {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem.fw_item(object: newValue ?? UIImage(), target: nil, action: nil)
-                self.navigationController?.navigationBar.fw_backImage = nil
+                self.navigationController?.navigationBar.fw.backImage = nil
             }
         }
     }
