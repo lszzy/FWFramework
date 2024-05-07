@@ -1442,7 +1442,7 @@ extension UILayoutPriority {
             return .defaultHigh
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: priority.rawValue), forName: "fw_originalPriority")
+            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_originalPriority")
         }
     }
     
