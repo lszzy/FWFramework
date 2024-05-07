@@ -550,7 +550,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法列表
     public static func classMethods(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "M")
-        if let cacheNames = NSObject.classCaches[cacheKey] {
+        if let cacheNames = FrameworkStorage.classCaches[cacheKey] {
             return cacheNames
         }
         
@@ -575,7 +575,7 @@ extension Wrapper where Base: NSObject {
             }
         }
         
-        NSObject.classCaches[cacheKey] = resultNames
+        FrameworkStorage.classCaches[cacheKey] = resultNames
         return resultNames
     }
     
@@ -585,7 +585,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 属性列表
     public static func classProperties(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "P")
-        if let cacheNames = NSObject.classCaches[cacheKey] {
+        if let cacheNames = FrameworkStorage.classCaches[cacheKey] {
             return cacheNames
         }
         
@@ -610,7 +610,7 @@ extension Wrapper where Base: NSObject {
             }
         }
         
-        NSObject.classCaches[cacheKey] = resultNames
+        FrameworkStorage.classCaches[cacheKey] = resultNames
         return resultNames
     }
     
@@ -620,7 +620,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "V")
-        if let cacheNames = NSObject.classCaches[cacheKey] {
+        if let cacheNames = FrameworkStorage.classCaches[cacheKey] {
             return cacheNames
         }
         
@@ -646,7 +646,7 @@ extension Wrapper where Base: NSObject {
             }
         }
         
-        NSObject.classCaches[cacheKey] = resultNames
+        FrameworkStorage.classCaches[cacheKey] = resultNames
         return resultNames
     }
     
@@ -707,7 +707,9 @@ extension Wrapper where Base: NSObject {
     }
 }
 
-extension NSObject {
+// MARK: - FrameworkStorage
+/// 框架内部存储器，存储框架内部静态数据
+internal class FrameworkStorage {
     
     fileprivate static var classCaches: [String: [String]] = [:]
     

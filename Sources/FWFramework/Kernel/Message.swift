@@ -99,9 +99,9 @@ extension Wrapper where Base: WrapperObject {
     ///   - name: 消息名称
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
-    ///   - toReceiver: 消息接收者
-    public func sendMessage<T: WrapperObject>(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver receiver: T) {
-        NSObject.fw.sendMessage(name, object: object, userInfo: userInfo, toReceiver: receiver)
+    ///   - receiver: 消息接收者
+    public func sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, to receiver: some WrapperObject) {
+        NSObject.fw.sendMessage(name, object: object, userInfo: userInfo, to: receiver)
     }
     
     /// 发送点对点消息，附带对象和用户信息
@@ -109,8 +109,8 @@ extension Wrapper where Base: WrapperObject {
     ///   - name: 消息名称
     ///   - object: 消息对象，默认nil
     ///   - userInfo: 用户信息，默认nil
-    ///   - toReceiver: 消息接收者
-    public static func sendMessage<T: WrapperObject>(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, toReceiver receiver: T) {
+    ///   - receiver: 消息接收者
+    public static func sendMessage(_ name: Notification.Name, object: AnyObject? = nil, userInfo: [AnyHashable: Any]? = nil, to receiver: some WrapperObject) {
         guard receiver.fw.issetMessageTargets else { return }
         
         let notification = Notification(name: name, object: object, userInfo: userInfo)

@@ -73,7 +73,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 渲染表格视图布局，setupSubviews之前调用，默认铺满
     public func setupTableLayout() {
-        tableView.fw_pinEdges()
+        tableView.fw.pinEdges()
     }
     
 }

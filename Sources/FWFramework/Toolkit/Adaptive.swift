@@ -372,10 +372,10 @@ extension Wrapper where Base: UIScreen {
     public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
-            if UIScreen.staticWindow != nil { UIScreen.staticWindow = nil }
+            if FrameworkStorage.staticWindow != nil { FrameworkStorage.staticWindow = nil }
         } else {
-            if UIScreen.staticWindow == nil { UIScreen.staticWindow = UIWindow(frame: UIScreen.main.bounds) }
-            mainWindow = UIScreen.staticWindow
+            if FrameworkStorage.staticWindow == nil { FrameworkStorage.staticWindow = UIWindow(frame: UIScreen.main.bounds) }
+            mainWindow = FrameworkStorage.staticWindow
         }
         return mainWindow?.safeAreaInsets ?? .zero
     }
@@ -469,20 +469,20 @@ extension Wrapper where Base: UIScreen {
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var referenceSize: CGSize {
-        get { return Base.referenceSize }
-        set { Base.referenceSize = newValue }
+        get { return FrameworkStorage.referenceSize }
+        set { FrameworkStorage.referenceSize = newValue }
     }
     
     /// 全局自定义屏幕宽度缩放比例句柄，默认nil
     public static var relativeScaleBlock: (() -> CGFloat)? {
-        get { return Base.relativeScaleBlock }
-        set { Base.relativeScaleBlock = newValue }
+        get { return FrameworkStorage.relativeScaleBlock }
+        set { FrameworkStorage.relativeScaleBlock = newValue }
     }
     
     /// 全局自定义屏幕高度缩放比例句柄，默认nil
     public static var relativeHeightScaleBlock: (() -> CGFloat)? {
-        get { return Base.relativeHeightScaleBlock }
-        set { Base.relativeHeightScaleBlock = newValue }
+        get { return FrameworkStorage.relativeHeightScaleBlock }
+        set { FrameworkStorage.relativeHeightScaleBlock = newValue }
     }
     
     /// 获取当前屏幕宽度缩放比例，宽度常用
@@ -569,9 +569,8 @@ extension Wrapper where Base: UIViewController {
     /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
     public var statusBarHeight: CGFloat {
         // 1. 导航栏隐藏时不占用布局高度始终为0
-        guard let navController = base.navigationController else { return 0 }
-        let navHidden = propertyNumber(forName: "navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
-        guard !navHidden else { return 0 }
+        guard base.navigationController != nil else { return 0 }
+        guard !navigationBarHidden else { return 0 }
         
         // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
         let isPortrait = !UIDevice.fw.isLandscape
@@ -593,8 +592,7 @@ extension Wrapper where Base: UIViewController {
     public var navigationBarHeight: CGFloat {
         // 系统导航栏
         guard let navController = base.navigationController else { return 0 }
-        let navHidden = propertyNumber(forName: "navigationBarHidden")?.boolValue ?? navController.isNavigationBarHidden
-        guard !navHidden else { return 0 }
+        guard !navigationBarHidden else { return 0 }
         return navController.navigationBar.frame.height
     }
 
@@ -633,7 +631,8 @@ extension Wrapper where Base: UIViewController {
     }
 }
 
-extension UIScreen {
+// MARK: - FrameworkStorage+Adaptive
+extension FrameworkStorage {
     
     fileprivate static var staticWindow: UIWindow?
     fileprivate static var referenceSize: CGSize = CGSize(width: 375, height: 812)

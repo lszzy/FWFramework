@@ -61,7 +61,7 @@ open class HostingView<Content: View>: UIView {
                 
         addSubview(contentHostingController.view)
         contentHostingController.view.backgroundColor = .clear
-        contentHostingController.view.fw_pinEdges()
+        contentHostingController.view.fw.pinEdges()
     }
     
     public required init?(coder: NSCoder) {

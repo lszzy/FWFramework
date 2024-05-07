@@ -412,14 +412,14 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         let result = UIView.fw_progressView(style: .imagePreview)
         result.isHidden = true
         addSubview(result)
-        result.fw_alignCenter()
+        (result as UIView).fw.alignCenter()
         return result
     }() {
         didSet {
             oldValue.removeFromSuperview()
             progressView.isHidden = true
             addSubview(progressView)
-            progressView.fw_alignCenter()
+            (progressView as UIView).fw.alignCenter()
         }
     }
     

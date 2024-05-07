@@ -76,7 +76,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
 
     /// 渲染集合视图布局，setupSubviews之前调用，默认铺满
     public func setupCollectionLayout() {
-        collectionView.fw_pinEdges()
+        collectionView.fw.pinEdges()
     }
     
 }

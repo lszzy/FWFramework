@@ -79,7 +79,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
     public func setupWebLayout() {
-        webView.fw_pinEdges()
+        webView.fw.pinEdges()
     }
     
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现

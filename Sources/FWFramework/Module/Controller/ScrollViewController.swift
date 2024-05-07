@@ -56,7 +56,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
     
     /// 渲染滚动视图布局，setupSubviews之前调用，默认铺满
     public func setupScrollLayout() {
-        scrollView.fw_pinEdges()
+        scrollView.fw.pinEdges()
     }
     
 }
@@ -72,7 +72,7 @@ internal extension ViewControllerManager {
         
         let contentView = viewController.contentView
         scrollView.addSubview(contentView)
-        contentView.fw_pinEdges()
+        contentView.fw.pinEdges()
         
         hookScrollViewController?(viewController)
         

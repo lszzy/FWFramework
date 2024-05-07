@@ -1072,7 +1072,7 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
         let ancestorView = viewController.fw_ancestorView
         ancestorView.addSubview(self)
         if pinEdges {
-            self.fw_pinEdges()
+            self.fw.pinEdges()
             ancestorView.setNeedsLayout()
             ancestorView.layoutIfNeeded()
         }
@@ -1084,7 +1084,7 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
         let viewController = UIViewController()
         viewController.view.addSubview(self)
         if pinEdges {
-            self.fw_pinEdges()
+            self.fw.pinEdges()
             viewController.view.setNeedsLayout()
             viewController.view.layoutIfNeeded()
         }
