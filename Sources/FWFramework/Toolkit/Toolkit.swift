@@ -2926,7 +2926,7 @@ public enum ViewControllerLifecycleState: Int {
         
     }
     
-    private class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
+    fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
         
         weak var navigationController: UINavigationController?
         
@@ -2983,16 +2983,16 @@ public enum ViewControllerLifecycleState: Int {
     public func fw_enablePopProxy() {
         self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
         fw_setPropertyBool(true, forName: "fw_popProxyEnabled")
-        UINavigationController.fw_swizzleToolkitNavigationController()
+        FrameworkAutoloader.swizzleToolkitNavigationController()
     }
     
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func fw_enablePopProxy() {
         fw_staticPopProxyEnabled = true
-        fw_swizzleToolkitNavigationController()
+        FrameworkAutoloader.swizzleToolkitNavigationController()
     }
     
-    private var fw_popProxyEnabled: Bool {
+    fileprivate var fw_popProxyEnabled: Bool {
         return fw_propertyBool(forName: "fw_popProxyEnabled")
     }
     
@@ -3006,7 +3006,7 @@ public enum ViewControllerLifecycleState: Int {
         }
     }
     
-    private var fw_delegateProxy: GestureRecognizerDelegateProxy {
+    fileprivate var fw_delegateProxy: GestureRecognizerDelegateProxy {
         if let proxy = fw_property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
             return proxy
         } else {
@@ -3016,73 +3016,7 @@ public enum ViewControllerLifecycleState: Int {
         }
     }
     
-    private static var fw_staticPopProxyEnabled = false
-    private static var fw_staticPopProxySwizzled = false
-    
-    private static func fw_swizzleToolkitNavigationController() {
-        guard !fw_staticPopProxySwizzled else { return }
-        fw_staticPopProxySwizzled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationController.self,
-            selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
-            methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
-            swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
-        ) { store in { selfObject, navigationBar, item in
-            if fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled {
-                // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
-                if selfObject.viewControllers.count >= (navigationBar.items?.count ?? 0) &&
-                    !(selfObject.topViewController?.shouldPopController ?? false) {
-                    return false
-                }
-            }
-            
-            return store.original(selfObject, store.selector, navigationBar, item)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationController.self,
-            selector: #selector(UIViewController.viewDidLoad),
-            methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            if !fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled { return }
-            
-            // 拦截系统返回手势事件代理，加载自定义代理方法
-            if !(selfObject.interactivePopGestureRecognizer?.delegate is GestureRecognizerDelegateProxy) {
-                selfObject.fw_delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
-                selfObject.fw_delegateProxy.navigationController = selfObject
-                selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw_delegateProxy
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationController.self,
-            selector: #selector(getter: UINavigationController.childForStatusBarHidden),
-            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
-        ) { store in { selfObject in
-            if fw_staticPopProxyEnabled && selfObject.topViewController != nil {
-                return selfObject.topViewController
-            } else {
-                return store.original(selfObject, store.selector)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationController.self,
-            selector: #selector(getter: UINavigationController.childForStatusBarStyle),
-            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
-        ) { store in { selfObject in
-            if fw_staticPopProxyEnabled && selfObject.topViewController != nil {
-                return selfObject.topViewController
-            } else {
-                return store.original(selfObject, store.selector)
-            }
-        }}
-    }
+    fileprivate static var fw_staticPopProxyEnabled = false
     
 }
 
@@ -3292,6 +3226,73 @@ extension FrameworkAutoloader {
                 if (titleView.title?.count ?? 0) <= 0 {
                     titleView.title = selfObject.title
                 }
+            }
+        }}
+    }
+    
+    private static var swizzleToolkitNavigationControllerFinished = false
+    
+    fileprivate static func swizzleToolkitNavigationController() {
+        guard !swizzleToolkitNavigationControllerFinished else { return }
+        swizzleToolkitNavigationControllerFinished = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
+            methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
+            swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
+        ) { store in { selfObject, navigationBar, item in
+            if UINavigationController.fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled {
+                // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
+                if selfObject.viewControllers.count >= (navigationBar.items?.count ?? 0) &&
+                    !(selfObject.topViewController?.shouldPopController ?? false) {
+                    return false
+                }
+            }
+            
+            return store.original(selfObject, store.selector, navigationBar, item)
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            if !UINavigationController.fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled { return }
+            
+            // 拦截系统返回手势事件代理，加载自定义代理方法
+            if !(selfObject.interactivePopGestureRecognizer?.delegate is UINavigationController.GestureRecognizerDelegateProxy) {
+                selfObject.fw_delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
+                selfObject.fw_delegateProxy.navigationController = selfObject
+                selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw_delegateProxy
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarHidden),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if UINavigationController.fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarStyle),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if UINavigationController.fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
             }
         }}
     }

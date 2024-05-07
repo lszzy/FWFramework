@@ -3092,7 +3092,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldBegin")
-            UIScrollView.fw_swizzleUIKitScrollView()
+            FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
 
@@ -3103,7 +3103,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
-            UIScrollView.fw_swizzleUIKitScrollView()
+            FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
 
@@ -3114,7 +3114,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
-            UIScrollView.fw_swizzleUIKitScrollView()
+            FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
 
@@ -3125,11 +3125,11 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
-            UIScrollView.fw_swizzleUIKitScrollView()
+            FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
     
-    @objc private func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc fileprivate func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
@@ -3137,7 +3137,7 @@ extension Wrapper where Base: UIViewController {
         return fw_swizzleGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -3145,7 +3145,7 @@ extension Wrapper where Base: UIViewController {
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
@@ -3153,24 +3153,12 @@ extension Wrapper where Base: UIViewController {
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    @objc private func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let shouldBlock = self.fw_shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
         return fw_swizzleGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
-    }
-    
-    private static var fw_staticPanProxySwizzled = false
-    
-    private static func fw_swizzleUIKitScrollView() {
-        guard !fw_staticPanProxySwizzled else { return }
-        fw_staticPanProxySwizzled = true
-        
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
 }
@@ -3937,7 +3925,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_imageEdgeInsets")
-            UITableViewCell.fw_swizzleUIKitTableViewCell()
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
     
@@ -3949,7 +3937,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_textEdgeInsets")
-            UITableViewCell.fw_swizzleUIKitTableViewCell()
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
     
@@ -3961,7 +3949,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_detailTextEdgeInsets")
-            UITableViewCell.fw_swizzleUIKitTableViewCell()
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
     
@@ -3973,7 +3961,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_accessoryEdgeInsets")
-            UITableViewCell.fw_swizzleUIKitTableViewCell()
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
 
@@ -4008,89 +3996,6 @@ extension Wrapper where Base: UIViewController {
             let indexPath = self != nil ? tableView.indexPath(for: self!) : nil
             completion?(tableView, indexPath, finished)
         } : nil)
-    }
-    
-    private static var fw_staticTableViewCellSwizzled = false
-    
-    private static func fw_swizzleUIKitTableViewCell() {
-        guard !fw_staticTableViewCellSwizzled else { return }
-        fw_staticTableViewCellSwizzled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UITableViewCell.self,
-            selector: #selector(UITableViewCell.layoutSubviews),
-            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            let hasAccessoryInset = selfObject.accessoryView?.superview != nil && selfObject.fw_accessoryEdgeInsets != .zero
-            let hasImageInset = selfObject.imageView?.image != nil && selfObject.fw_imageEdgeInsets != .zero
-            let hasTextInset = (selfObject.textLabel?.text?.count ?? 0) > 0 && selfObject.fw_textEdgeInsets != .zero
-            let hasDetailTextInset = (selfObject.detailTextLabel?.text?.count ?? 0) > 0 && selfObject.fw_detailTextEdgeInsets != .zero
-            guard hasAccessoryInset || hasImageInset || hasTextInset || hasDetailTextInset else {
-                return
-            }
-            
-            if hasAccessoryInset {
-                var accessoryFrame = selfObject.accessoryView?.frame ?? .zero
-                accessoryFrame.origin.x = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.right
-                accessoryFrame.origin.y = accessoryFrame.minY + selfObject.fw_accessoryEdgeInsets.top - selfObject.fw_accessoryEdgeInsets.bottom
-                selfObject.accessoryView?.frame = accessoryFrame
-                
-                var contentFrame = selfObject.contentView.frame
-                contentFrame.size.width = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.left
-                selfObject.contentView.frame = contentFrame
-            }
-            
-            var imageFrame = selfObject.imageView?.frame ?? .zero
-            var textFrame = selfObject.textLabel?.frame ?? .zero
-            var detailTextFrame = selfObject.detailTextLabel?.frame ?? .zero
-            
-            if hasImageInset {
-                imageFrame.origin.x += selfObject.fw_imageEdgeInsets.left - selfObject.fw_imageEdgeInsets.right
-                imageFrame.origin.y += selfObject.fw_imageEdgeInsets.top - selfObject.fw_imageEdgeInsets.bottom
-                
-                textFrame.origin.x += selfObject.fw_imageEdgeInsets.left
-                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
-                
-                detailTextFrame.origin.x += selfObject.fw_imageEdgeInsets.left
-                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
-            }
-            if hasTextInset {
-                textFrame.origin.x += selfObject.fw_textEdgeInsets.left - selfObject.fw_textEdgeInsets.right
-                textFrame.origin.y += selfObject.fw_textEdgeInsets.top - selfObject.fw_textEdgeInsets.bottom
-                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
-            }
-            if hasDetailTextInset {
-                detailTextFrame.origin.x += selfObject.fw_detailTextEdgeInsets.left - selfObject.fw_detailTextEdgeInsets.right
-                detailTextFrame.origin.y += selfObject.fw_detailTextEdgeInsets.top - selfObject.fw_detailTextEdgeInsets.bottom
-                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
-            }
-            
-            if hasImageInset {
-                selfObject.imageView?.frame = imageFrame
-            }
-            if hasImageInset || hasTextInset {
-                selfObject.textLabel?.frame = textFrame
-            }
-            if hasImageInset || hasDetailTextInset {
-                selfObject.detailTextLabel?.frame = detailTextFrame
-            }
-            
-            if hasAccessoryInset {
-                if let textLabel = selfObject.textLabel, textLabel.frame.maxX > selfObject.contentView.bounds.width {
-                    var textLabelFrame = textLabel.frame
-                    textLabelFrame.size.width = selfObject.contentView.bounds.width - textLabelFrame.minX
-                    textLabel.frame = textLabelFrame
-                }
-                if let detailTextLabel = selfObject.detailTextLabel, detailTextLabel.frame.maxX > selfObject.contentView.bounds.width {
-                    var detailTextLabelFrame = detailTextLabel.frame
-                    detailTextLabelFrame.size.width = selfObject.contentView.bounds.width - detailTextLabelFrame.minX
-                    detailTextLabel.frame = detailTextLabelFrame
-                }
-            }
-        }}
     }
     
 }
@@ -4885,6 +4790,101 @@ extension FrameworkAutoloader {
             }
             
             store.original(selfObject, store.selector, frame)
+        }}
+    }
+    
+    private static var swizzleUIKitScrollViewFinished = false
+    
+    fileprivate static func swizzleUIKitScrollView() {
+        guard !swizzleUIKitScrollViewFinished else { return }
+        swizzleUIKitScrollViewFinished = true
+        
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+    }
+    
+    private static var swizzleUIKitTableViewCellFinished = false
+    
+    fileprivate static func swizzleUIKitTableViewCell() {
+        guard !swizzleUIKitTableViewCellFinished else { return }
+        swizzleUIKitTableViewCellFinished = true
+        
+        NSObject.fw_swizzleInstanceMethod(
+            UITableViewCell.self,
+            selector: #selector(UITableViewCell.layoutSubviews),
+            methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            let hasAccessoryInset = selfObject.accessoryView?.superview != nil && selfObject.fw_accessoryEdgeInsets != .zero
+            let hasImageInset = selfObject.imageView?.image != nil && selfObject.fw_imageEdgeInsets != .zero
+            let hasTextInset = (selfObject.textLabel?.text?.count ?? 0) > 0 && selfObject.fw_textEdgeInsets != .zero
+            let hasDetailTextInset = (selfObject.detailTextLabel?.text?.count ?? 0) > 0 && selfObject.fw_detailTextEdgeInsets != .zero
+            guard hasAccessoryInset || hasImageInset || hasTextInset || hasDetailTextInset else {
+                return
+            }
+            
+            if hasAccessoryInset {
+                var accessoryFrame = selfObject.accessoryView?.frame ?? .zero
+                accessoryFrame.origin.x = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.right
+                accessoryFrame.origin.y = accessoryFrame.minY + selfObject.fw_accessoryEdgeInsets.top - selfObject.fw_accessoryEdgeInsets.bottom
+                selfObject.accessoryView?.frame = accessoryFrame
+                
+                var contentFrame = selfObject.contentView.frame
+                contentFrame.size.width = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.left
+                selfObject.contentView.frame = contentFrame
+            }
+            
+            var imageFrame = selfObject.imageView?.frame ?? .zero
+            var textFrame = selfObject.textLabel?.frame ?? .zero
+            var detailTextFrame = selfObject.detailTextLabel?.frame ?? .zero
+            
+            if hasImageInset {
+                imageFrame.origin.x += selfObject.fw_imageEdgeInsets.left - selfObject.fw_imageEdgeInsets.right
+                imageFrame.origin.y += selfObject.fw_imageEdgeInsets.top - selfObject.fw_imageEdgeInsets.bottom
+                
+                textFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
+                
+                detailTextFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
+            }
+            if hasTextInset {
+                textFrame.origin.x += selfObject.fw_textEdgeInsets.left - selfObject.fw_textEdgeInsets.right
+                textFrame.origin.y += selfObject.fw_textEdgeInsets.top - selfObject.fw_textEdgeInsets.bottom
+                textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
+            }
+            if hasDetailTextInset {
+                detailTextFrame.origin.x += selfObject.fw_detailTextEdgeInsets.left - selfObject.fw_detailTextEdgeInsets.right
+                detailTextFrame.origin.y += selfObject.fw_detailTextEdgeInsets.top - selfObject.fw_detailTextEdgeInsets.bottom
+                detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
+            }
+            
+            if hasImageInset {
+                selfObject.imageView?.frame = imageFrame
+            }
+            if hasImageInset || hasTextInset {
+                selfObject.textLabel?.frame = textFrame
+            }
+            if hasImageInset || hasDetailTextInset {
+                selfObject.detailTextLabel?.frame = detailTextFrame
+            }
+            
+            if hasAccessoryInset {
+                if let textLabel = selfObject.textLabel, textLabel.frame.maxX > selfObject.contentView.bounds.width {
+                    var textLabelFrame = textLabel.frame
+                    textLabelFrame.size.width = selfObject.contentView.bounds.width - textLabelFrame.minX
+                    textLabel.frame = textLabelFrame
+                }
+                if let detailTextLabel = selfObject.detailTextLabel, detailTextLabel.frame.maxX > selfObject.contentView.bounds.width {
+                    var detailTextLabelFrame = detailTextLabel.frame
+                    detailTextLabelFrame.size.width = selfObject.contentView.bounds.width - detailTextLabelFrame.minX
+                    detailTextLabel.frame = detailTextLabelFrame
+                }
+            }
         }}
     }
     
