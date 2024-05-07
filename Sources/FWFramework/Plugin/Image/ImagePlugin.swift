@@ -448,21 +448,6 @@ extension ImagePlugin {
     
 }
 
-// MARK: - FrameworkAutoloader+ImagePlugin
-extension FrameworkAutoloader {
-    
-    @objc static func loadPlugin_ImagePlugin() {
-        ModuleBundle.imageNamedBlock = { name, bundle in
-            return UIImage.fw_imageNamed(name, bundle: bundle)
-        }
-        
-        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
-            return UIImage.fw_image(data: data, scale: scale, options: options)
-        }
-    }
-    
-}
-
 // MARK: - Concurrency+ImagePlugin
 #if compiler(>=5.6.0) && canImport(_Concurrency)
 extension Wrapper where Base: UIImage {
@@ -494,3 +479,18 @@ extension Wrapper where Base: UIImage {
     
 }
 #endif
+
+// MARK: - FrameworkAutoloader+ImagePlugin
+extension FrameworkAutoloader {
+    
+    @objc static func loadPlugin_ImagePlugin() {
+        ModuleBundle.imageNamedBlock = { name, bundle in
+            return UIImage.fw_imageNamed(name, bundle: bundle)
+        }
+        
+        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
+            return UIImage.fw_image(data: data, scale: scale, options: options)
+        }
+    }
+    
+}
