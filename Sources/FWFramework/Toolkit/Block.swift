@@ -332,14 +332,15 @@ public class MulticastBlock: NSObject {
     
     /// 指定Key并返回代理单例
     public static func sharedBlock(_ key: AnyHashable) -> MulticastBlock {
-        return fw_synchronized {
-            if let instance = instances[key] {
-                return instance
-            } else {
-                let instance = MulticastBlock()
-                instances[key] = instance
-                return instance
-            }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if let instance = instances[key] {
+            return instance
+        } else {
+            let instance = MulticastBlock()
+            instances[key] = instance
+            return instance
         }
     }
     

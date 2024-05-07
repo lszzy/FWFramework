@@ -116,6 +116,7 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
 /// 导航栏样式配置
 open class NavigationBarAppearance: NSObject {
     
+    static var appearanceChanged: ((UIViewController) -> Void)?
     private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     
     /// 根据style获取全局appearance对象
@@ -386,7 +387,7 @@ open class NavigationBarAppearance: NSObject {
         
         // 标记转场导航栏样式需要刷新
         if isAppeared {
-            FrameworkBundle.barStyleChanged?(self)
+            NavigationBarAppearance.appearanceChanged?(self)
         }
     }
 
