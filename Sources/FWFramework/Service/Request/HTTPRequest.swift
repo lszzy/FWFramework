@@ -70,6 +70,22 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
     public typealias Completion = (HTTPRequest) -> Void
     
     /// 请求构建器，可继承
+    ///
+    /// 继承HTTPRequest并重载Builder示例：
+    /// ```swift
+    /// class AppRequest: HTTPRequest {
+    ///     class Builder: HTTPRequest.Builder {
+    ///         override func build() -> AppRequest {
+    ///             return AppRequest(builder: self)
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// 使用AppRequest.Builder示例：
+    /// ```swift
+    /// let request = AppRequest.Builder()/*...*/.build()
+    /// ```
     open class Builder {
         
         /// 只读属性
