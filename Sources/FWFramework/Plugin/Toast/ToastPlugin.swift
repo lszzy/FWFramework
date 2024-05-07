@@ -709,9 +709,9 @@ extension ToastPlugin {
 }
 
 // MARK: - FrameworkAutoloader+ToastPlugin
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadPlugin_ToastPlugin() {
+    @objc static func loadPlugin_ToastPlugin() {
         RequestContextAccessory.showErrorBlock = { context, error in
             if let viewController = context as? UIViewController {
                 viewController.fw_showMessage(error: error)
