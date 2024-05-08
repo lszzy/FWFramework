@@ -822,7 +822,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         removeScriptMessageHandlers()
         
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
     }
     
@@ -1095,7 +1095,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
     
@@ -1257,8 +1257,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     // MARK: - ReusableViewProtocol
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return self.fw.property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
-        set { self.fw.setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
+        get { return NSObject.fw.getAssociatedObject(self, key: #function) as? (WKWebViewConfiguration, String) -> Void }
+        set { NSObject.fw.setAssociatedObject(self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
     
     /// 初始化WKWebView可重用视图

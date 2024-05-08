@@ -9,12 +9,6 @@ import Foundation
 
 // MARK: - AnyObject+Runtime
 extension Wrapper where Base: WrapperObject {
-    // MARK: - Module
-    /// 获取类所在的模块名称，兼容主应用和framework等(可能不准确)
-    public static var moduleName: String {
-        return Bundle(for: Base.self).executableURL?.lastPathComponent ?? ""
-    }
-    
     // MARK: - Runtime
     /// 安全调用方法，支持多个参数
     /// - Parameters:
@@ -80,15 +74,12 @@ extension Wrapper where Base: WrapperObject {
     
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
+    ///   - target: 调用的目标
     ///   - selector: 要执行的方法
     ///   - objects: 传递的参数数组，默认空
     /// - Returns: 方法返回值
     @discardableResult
-    public static func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
-        return invokeMethod(Base.self, selector: selector, objects: objects)
-    }
-    
-    private static func invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]?) -> Unmanaged<AnyObject>! {
+    public static func invokeMethod(_ target: AnyObject, selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         guard target.responds(to: selector),
               let signature = object_getClass(target)?.objcInstanceMethodSignature(for: selector),
               let invocationClass = ObjCClassBridge.invocationClass else {
@@ -317,42 +308,6 @@ extension Wrapper where Base: WrapperObject {
         setProperty(value, forName: name)
     }
     
-    /// 读取类关联属性
-    /// - Parameter name: 属性名称
-    /// - Returns: 属性值
-    public static func property(forName name: String) -> Any? {
-        let value = NSObject.fw.getAssociatedObject(Base.self, key: name)
-        if let weakObject = value as? WeakObject {
-            return weakObject.object
-        }
-        return value
-    }
-    
-    /// 设置类关联属性，可指定关联策略
-    /// - Parameters:
-    ///   - value: 属性值
-    ///   - name: 属性名称
-    ///   - policy: 关联策略，默认RETAIN_NONATOMIC
-    public static func setProperty(_ value: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
-        NSObject.fw.setAssociatedObject(Base.self, key: name, value: value, policy: policy)
-    }
-    
-    /// 设置类拷贝关联属性
-    /// - Parameters:
-    ///   - value: 属性值
-    ///   - name: 属性名称
-    public static func setPropertyCopy(_ value: Any?, forName name: String) {
-        NSObject.fw.setAssociatedObject(Base.self, key: name, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
-    }
-    
-    /// 设置类弱引用关联属性，OC不支持weak关联属性
-    /// - Parameters:
-    ///   - value: 属性值
-    ///   - name: 属性名称
-    public static func setPropertyWeak(_ value: AnyObject?, forName name: String) {
-        NSObject.fw.setAssociatedObject(Base.self, key: name, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-    }
-    
     // MARK: - Bind
     /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
@@ -503,6 +458,12 @@ extension Wrapper where Base: WrapperObject {
 
 // MARK: - NSObject+Runtime
 extension Wrapper where Base: NSObject {
+    // MARK: - Module
+    /// 获取指定类所在的模块名称，兼容主应用和framework等(可能不准确)
+    public static func moduleName(for aClass: AnyClass) -> String {
+        return Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
+    }
+    
     // MARK: - Class
     /// 获取指定类的metaClass
     /// - Parameter clazz: 支持AnyClass|NSObject对象

@@ -129,7 +129,7 @@ public class StateMachine: NSObject {
         set {
             if isActive {
                 #if DEBUG
-                Logger.debug(Logger.fw.moduleName, "StateMachine is activated.")
+                Logger.debug(Logger.moduleName, "StateMachine is activated.")
                 #endif
                 return
             }
@@ -148,7 +148,7 @@ public class StateMachine: NSObject {
     public func addState(_ object: StateObject) {
         if isActive {
             #if DEBUG
-            Logger.debug(Logger.fw.moduleName, "StateMachine is activated.")
+            Logger.debug(Logger.moduleName, "StateMachine is activated.")
             #endif
             return
         }
@@ -196,7 +196,7 @@ public class StateMachine: NSObject {
     public func addEvent(_ event: StateEvent) {
         if isActive {
             #if DEBUG
-            Logger.debug(Logger.fw.moduleName, "StateMachine is activated.")
+            Logger.debug(Logger.moduleName, "StateMachine is activated.")
             #endif
             return
         }
@@ -229,7 +229,7 @@ public class StateMachine: NSObject {
     public func activate() {
         if isActive {
             #if DEBUG
-            Logger.debug(Logger.fw.moduleName, "StateMachine is activated.")
+            Logger.debug(Logger.moduleName, "StateMachine is activated.")
             #endif
             return
         }

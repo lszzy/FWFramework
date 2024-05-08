@@ -73,11 +73,11 @@ extension ModuleProtocol where Self: NSObject {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        if let instance = self.fw.property(forName: #function) as? Self {
+        if let instance = NSObject.fw.getAssociatedObject(self, key: #function) as? Self {
             return instance
         } else {
             let instance = self.init()
-            self.fw.setProperty(instance, forName: #function)
+            NSObject.fw.setAssociatedObject(self, key: #function, value: instance)
             return instance
         }
     }
@@ -187,8 +187,8 @@ public class Mediator: NSObject {
         }
         
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "%@", Mediator.debugDescription())
-        Logger.debug(group: Logger.fw.moduleName, "%@", PluginManager.debugDescription())
+        Logger.debug(group: Logger.moduleName, "%@", Mediator.debugDescription())
+        Logger.debug(group: Logger.moduleName, "%@", PluginManager.debugDescription())
         #endif
     }
     

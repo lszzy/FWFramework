@@ -63,13 +63,13 @@ open class TaskOperation: Operation {
             state = .failure
             
             #if DEBUG
-            Logger.debug(group: Logger.fw.moduleName, "Task failed: %@", NSStringFromClass(type(of: self)))
+            Logger.debug(group: Logger.moduleName, "Task failed: %@", NSStringFromClass(type(of: self)))
             #endif
         } else {
             state = .success
             
             #if DEBUG
-            Logger.debug(group: Logger.fw.moduleName, "Task finished: %@", NSStringFromClass(type(of: self)))
+            Logger.debug(group: Logger.moduleName, "Task finished: %@", NSStringFromClass(type(of: self)))
             #endif
         }
         lock.unlock()
@@ -86,7 +86,7 @@ open class TaskOperation: Operation {
         lock.unlock()
         
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "Task started: %@", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.moduleName, "Task started: %@", NSStringFromClass(type(of: self)))
         #endif
         
         if needMainThread() {
@@ -108,7 +108,7 @@ open class TaskOperation: Operation {
             super.cancel()
             
             #if DEBUG
-            Logger.debug(group: Logger.fw.moduleName, "Task cancelled: %@", NSStringFromClass(type(of: self)))
+            Logger.debug(group: Logger.moduleName, "Task cancelled: %@", NSStringFromClass(type(of: self)))
             #endif
         }
         

@@ -4542,10 +4542,10 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, size)
         }}
         
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
-        UILabel.fw.exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.text), swizzleSelector: #selector(UILabel.fw_swizzleSetText(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.attributedText), swizzleSelector: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.lineBreakMode), swizzleSelector: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.textAlignment), swizzleSelector: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
     }
     
     private static func swizzleUIKitControl() {
@@ -4798,10 +4798,10 @@ extension FrameworkAutoloader {
         guard !swizzleUIKitScrollViewFinished else { return }
         swizzleUIKitScrollViewFinished = true
         
-        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw.exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
     private static var swizzleUIKitTableViewCellFinished = false

@@ -51,7 +51,7 @@ open class RequestManager {
         
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
     }
@@ -171,7 +171,7 @@ open class RequestManager {
     private func startRequest(_ request: HTTPRequest) {
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
         
@@ -340,7 +340,7 @@ open class RequestManager {
     private func requestDidSucceed(_ request: HTTPRequest) {
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.responseString))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.responseString))
         }
         #endif
         
@@ -362,7 +362,7 @@ open class RequestManager {
         request.error = error
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.error))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.error))
         }
         #endif
         

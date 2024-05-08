@@ -13,79 +13,12 @@ extension Wrapper where Base: NSObject {
     // MARK: - Exchange
     /// 交换类实例方法。复杂情况可能会冲突
     /// - Parameters:
+    ///   - originalClass: 目标类
     ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
+    ///   - swizzleSelector: 交换方法
     /// - Returns: 是否成功
     @discardableResult
     public static func exchangeInstanceMethod(
-        _ originalSelector: Selector,
-        swizzleMethod: Selector
-    ) -> Bool {
-        return exchangeClass(Base.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
-    }
-    
-    /// 交换类静态方法。复杂情况可能会冲突
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeClassMethod(
-        _ originalSelector: Selector,
-        swizzleMethod: Selector
-    ) -> Bool {
-        guard let metaClass = object_getClass(Base.self) else { return false }
-        return exchangeClass(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod)
-    }
-    
-    /// 交换类实例方法为block实现。复杂情况可能会冲突
-    ///
-    /// swizzleBlock示例：
-    /// ```objc
-    /// ^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    ///   - block: 实现block
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeInstanceMethod(
-        _ originalSelector: Selector,
-        swizzleMethod: Selector,
-        block: Any
-    ) -> Bool {
-        return exchangeClass(Base.self, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
-    }
-
-    /// 交换类静态方法为block实现。复杂情况可能会冲突
-    ///
-    /// - Parameters:
-    ///   - originalSelector: 原始方法
-    ///   - swizzleMethod: 交换方法
-    ///   - block: 实现block
-    /// - Returns: 是否成功
-    @discardableResult
-    public static func exchangeClassMethod(
-        _ originalSelector: Selector,
-        swizzleMethod: Selector,
-        block: Any
-    ) -> Bool {
-        guard let metaClass = object_getClass(Base.self) else { return false }
-        return exchangeClass(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleMethod, block: block)
-    }
-    
-    /// 生成原始方法对应的随机交换方法
-    /// - Parameter selector: 原始方法
-    /// - Returns: 交换方法
-    public static func exchangeSwizzleSelector(
-        _ selector: Selector
-    ) -> Selector {
-        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
-    }
-    
-    private static func exchangeClass(
         _ originalClass: AnyClass,
         originalSelector: Selector,
         swizzleSelector: Selector
@@ -104,7 +37,37 @@ extension Wrapper where Base: NSObject {
         return true
     }
     
-    private static func exchangeClass(
+    /// 交换类静态方法。复杂情况可能会冲突
+    /// - Parameters:
+    ///   - originalClass: 目标类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeClassMethod(
+        _ originalClass: AnyClass,
+        originalSelector: Selector,
+        swizzleSelector: Selector
+    ) -> Bool {
+        guard let metaClass = object_getClass(originalClass) else { return false }
+        return exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector)
+    }
+    
+    /// 交换类实例方法为block实现。复杂情况可能会冲突
+    ///
+    /// swizzleBlock示例：
+    /// ```objc
+    /// ^(__unsafe_unretained UIViewController *selfObject, BOOL animated){ ((void(*)(id, SEL, BOOL))objc_msgSend)(selfObject, swizzleSelector, animated); }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - originalClass: 目标类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    ///   - block: 实现block
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeInstanceMethod(
         _ originalClass: AnyClass,
         originalSelector: Selector,
         swizzleSelector: Selector,
@@ -118,6 +81,34 @@ extension Wrapper where Base: NSObject {
         class_addMethod(originalClass, swizzleSelector, imp_implementationWithBlock(block), method_getTypeEncoding(originalMethod))
         method_exchangeImplementations(class_getInstanceMethod(originalClass, originalSelector)!, class_getInstanceMethod(originalClass, swizzleSelector)!)
         return true
+    }
+
+    /// 交换类静态方法为block实现。复杂情况可能会冲突
+    ///
+    /// - Parameters:
+    ///   - originalClass: 目标类
+    ///   - originalSelector: 原始方法
+    ///   - swizzleSelector: 交换方法
+    ///   - block: 实现block
+    /// - Returns: 是否成功
+    @discardableResult
+    public static func exchangeClassMethod(
+        _ originalClass: AnyClass,
+        originalSelector: Selector,
+        swizzleSelector: Selector,
+        block: Any
+    ) -> Bool {
+        guard let metaClass = object_getClass(originalClass) else { return false }
+        return exchangeInstanceMethod(metaClass, originalSelector: originalSelector, swizzleSelector: swizzleSelector, block: block)
+    }
+    
+    /// 生成原始方法对应的随机交换方法
+    /// - Parameter selector: 原始方法
+    /// - Returns: 交换方法
+    public static func exchangeSwizzleSelector(
+        _ selector: Selector
+    ) -> Selector {
+        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
     }
 
     // MARK: - SwizzleStore

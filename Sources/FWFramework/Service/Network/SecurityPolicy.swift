@@ -73,7 +73,7 @@ open class SecurityPolicy: NSObject {
     
     open func evaluateServerTrust(_ serverTrust: SecTrust, forDomain domain: String? = nil) -> Bool {
         if domain != nil && allowInvalidCertificates && validatesDomainName && (pinningMode == .none || (pinnedCertificates?.count ?? 0) == 0) {
-            Logger.debug(group: Logger.fw.moduleName, "In order to validate a domain name for self signed certificates, you MUST use pinning.")
+            Logger.debug(group: Logger.moduleName, "In order to validate a domain name for self signed certificates, you MUST use pinning.")
             return false
         }
 

@@ -118,8 +118,8 @@ public class Autoloader: NSObject, AutoloadProtocol {
         debugMethods = autoloadMethods(Autoloader.self)
         
         #if DEBUG
-        // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
-        Logger.debug(group: Logger.fw.moduleName, "%@", debugDescription())
+        // Logger.debug(group: Logger.moduleName, "%@", FrameworkAutoloader.debugDescription())
+        Logger.debug(group: Logger.moduleName, "%@", debugDescription())
         #endif
     }
     
