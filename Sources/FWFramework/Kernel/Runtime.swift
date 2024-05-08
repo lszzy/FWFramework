@@ -709,7 +709,7 @@ extension Wrapper where Base: NSObject {
 
 // MARK: - FrameworkStorage
 /// 框架内部存储器，存储框架内部静态数据
-internal class FrameworkStorage {
+@_spi(FW) public class FrameworkStorage {
     
     fileprivate static var classCaches: [String: [String]] = [:]
     
