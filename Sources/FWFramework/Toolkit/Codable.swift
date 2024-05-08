@@ -38,12 +38,12 @@ public extension Encodable {
     
     func encoded(using encoder: JSONEncoder = JSONEncoder()) throws -> [String: Any] {
         let data = try encoded(using: encoder) as Data
-        return try Data.fw_jsonDecode(data, options: .fragmentsAllowed) as? [String: Any] ?? [:]
+        return try Data.fw.jsonDecode(data, options: .fragmentsAllowed) as? [String: Any] ?? [:]
     }
     
     func encoded(using encoder: JSONEncoder = JSONEncoder()) throws -> [Any] {
         let data = try encoded(using: encoder) as Data
-        return try Data.fw_jsonDecode(data, options: .fragmentsAllowed) as? [Any] ?? []
+        return try Data.fw.jsonDecode(data, options: .fragmentsAllowed) as? [Any] ?? []
     }
     
     func encoded(using encoder: JSONEncoder = JSONEncoder()) throws -> String {
@@ -142,12 +142,12 @@ public extension Decodable {
     }
     
     static func decoded(from json: [String: Any], using decoder: JSONDecoder = JSONDecoder(), as type: Self.Type = Self.self) throws -> Self {
-        let data = try Data.fw_jsonEncode(json, options: .fragmentsAllowed)
+        let data = try Data.fw.jsonEncode(json, options: .fragmentsAllowed)
         return try decoder.decode(type, from: data)
     }
     
     static func decoded(from jsonArray: [Any], using decoder: JSONDecoder = JSONDecoder(), as type: Self.Type = Self.self) throws -> Self {
-        let data = try Data.fw_jsonEncode(jsonArray, options: .fragmentsAllowed)
+        let data = try Data.fw.jsonEncode(jsonArray, options: .fragmentsAllowed)
         return try decoder.decode(type, from: data)
     }
     
@@ -166,14 +166,14 @@ public extension Data {
 
 public extension Dictionary {
     func decoded<T: Decodable>(using decoder: JSONDecoder = JSONDecoder(), as type: T.Type = T.self) throws -> T {
-        let data = try Data.fw_jsonEncode(self, options: .fragmentsAllowed)
+        let data = try Data.fw.jsonEncode(self, options: .fragmentsAllowed)
         return try data.decoded(using: decoder, as: type)
     }
 }
 
 public extension Array {
     func decoded<T: Decodable>(using decoder: JSONDecoder = JSONDecoder(), as type: T.Type = T.self) throws -> T {
-        let data = try Data.fw_jsonEncode(self, options: .fragmentsAllowed)
+        let data = try Data.fw.jsonEncode(self, options: .fragmentsAllowed)
         return try data.decoded(using: decoder, as: type)
     }
 }

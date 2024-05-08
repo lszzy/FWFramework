@@ -774,7 +774,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
     
     public static func configuration(filePath: String) -> PlayerCacheConfiguration {
         let filePath = configurationFilePath(for: filePath)
-        if let configuration = Data.fw_unarchivedObject(withFile: filePath) as? PlayerCacheConfiguration {
+        if let configuration = Data.fw.unarchivedObject(withFile: filePath) as? PlayerCacheConfiguration {
             configuration.filePath = filePath
             return configuration
         } else {
@@ -931,7 +931,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        Data.fw_archiveObject(self, toFile: filePath)
+        Data.fw.archiveObject(self, toFile: filePath)
     }
 }
 
@@ -954,7 +954,7 @@ public class PlayerCacheManager: NSObject {
         if let block = cacheFileNameRules {
             pathComponent = block(url)
         } else {
-            pathComponent = url.absoluteString.fw_md5Encode.fw_appendingPathExtension(url.pathExtension)
+            pathComponent = url.absoluteString.fw.md5Encode.fw_appendingPathExtension(url.pathExtension)
         }
         return cacheDirectory.fw_appendingPath(pathComponent)
     }

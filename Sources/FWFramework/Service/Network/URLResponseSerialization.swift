@@ -133,7 +133,7 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
             throw NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo)
         }
         
-        var responseObject = try Data.fw_jsonDecode(data, options: readingOptions)
+        var responseObject = try Data.fw.jsonDecode(data, options: readingOptions)
         if removesKeysWithNullValues {
             responseObject = Self.removingKeysWithNullValues(responseObject)
         }
