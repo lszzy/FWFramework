@@ -7,6 +7,9 @@
 
 import Foundation
 import SQLite3
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 数据库模型协议信息
 @objc public protocol DatabaseModel: NSObjectProtocol {
