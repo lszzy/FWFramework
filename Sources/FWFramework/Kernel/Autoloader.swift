@@ -127,12 +127,12 @@ public class Autoloader: NSObject, AutoloadProtocol {
 
 // MARK: - FrameworkAutoloader
 /// 框架内部自动加载器，自动加载框架内置组件
-@_spi(FW) public class FrameworkAutoloader: NSObject {
+internal class FrameworkAutoloader: NSObject {
     
     fileprivate static var debugMethods: [String] = []
     
     /// 自动加载器调试描述
-    public override class func debugDescription() -> String {
+    override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
         for methodName in debugMethods {

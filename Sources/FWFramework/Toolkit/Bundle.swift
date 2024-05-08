@@ -168,7 +168,7 @@ open class ModuleBundle: NSObject {
 ///
 /// 如果主应用存在FWFramework.bundle或主Bundle内包含对应图片|多语言，则优先使用；否则使用框架默认实现。
 /// FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
-@_spi(FW) public class FrameworkBundle: ModuleBundle {
+public class FrameworkBundle: ModuleBundle {
     
     // MARK: - Image
     /// 图片，导航栏返回，fw.navBack
