@@ -2180,7 +2180,7 @@ extension Wrapper where Base: UINavigationController {
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
-        UIImage.fw.setPropertyCopy(completion, forName: "fw_saveVideo")
+        NSObject.fw.setAssociatedObject(UIImage.self, key: "fw_saveVideo", value: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_saveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
@@ -2193,8 +2193,8 @@ extension Wrapper where Base: UINavigationController {
     }
     
     @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = UIImage.fw.property(forName: "fw_saveVideo") as? (Error?) -> Void
-        UIImage.fw.setPropertyCopy(nil, forName: "fw_saveVideo")
+        let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "fw_saveVideo") as? (Error?) -> Void
+        NSObject.fw.setAssociatedObject(UIImage.self, key: "fw_saveVideo", value: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         block?(error)
     }
     
@@ -2765,7 +2765,7 @@ public enum ViewControllerLifecycleState: Int {
             
             #if DEBUG
             if let viewController = viewController {
-                Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
+                Logger.debug(group: Logger.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
             }
             #endif
         }

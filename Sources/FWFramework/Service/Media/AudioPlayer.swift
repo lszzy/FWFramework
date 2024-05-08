@@ -340,7 +340,7 @@ open class AudioPlayer: NSObject {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
             if !disableLogs {
-                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
+                Logger.debug(group: Logger.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
             }
         }
         UIApplication.shared.endReceivingRemoteControlEvents()
@@ -376,7 +376,7 @@ open class AudioPlayer: NSObject {
                 }
             } else if audioPlayer.status == .failed {
                 if !disableLogs {
-                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
+                    Logger.debug(group: Logger.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
                 }
                 
                 delegate?.audioPlayerDidFailed?(nil, error: audioPlayer.error)
@@ -438,7 +438,7 @@ open class AudioPlayer: NSObject {
                     if bufferdTime > milestone && audioPlayer.currentItem?.status == .readyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying {
                         if !isPlaying {
                             if !disableLogs {
-                                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
+                                Logger.debug(group: Logger.moduleName, "AudioPlayer: resume from buffering..")
                             }
                             play()
                         }
@@ -464,7 +464,7 @@ open class AudioPlayer: NSObject {
                     try audioSession.setCategory(.playback)
                 } catch {
                     if !disableLogs {
-                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set category error: %@", error.localizedDescription)
+                        Logger.debug(group: Logger.moduleName, "AudioPlayer: set category error: %@", error.localizedDescription)
                     }
                 }
                 
@@ -472,13 +472,13 @@ open class AudioPlayer: NSObject {
                     try audioSession.setActive(true)
                 } catch {
                     if !disableLogs {
-                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
+                        Logger.debug(group: Logger.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
                     }
                 }
             }
         } else {
             if !disableLogs {
-                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: unable to register background playback")
+                Logger.debug(group: Logger.moduleName, "AudioPlayer: unable to register background playback")
             }
         }
     }
@@ -659,7 +659,7 @@ open class AudioPlayer: NSObject {
             play()
         }
         if !disableLogs {
-            Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: interruption: %@", interruptionType == .began ? "began" : "ended")
+            Logger.debug(group: Logger.moduleName, "AudioPlayer: interruption: %@", interruptionType == .began ? "began" : "ended")
         }
     }
     
@@ -677,7 +677,7 @@ open class AudioPlayer: NSObject {
             play()
         }
         if !disableLogs {
-            Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: routeChanged: %@", routeChangeReason == .newDeviceAvailable ? "New Device Available" : "Old Device Unavailable")
+            Logger.debug(group: Logger.moduleName, "AudioPlayer: routeChanged: %@", routeChangeReason == .newDeviceAvailable ? "New Device Available" : "Old Device Unavailable")
         }
     }
     
