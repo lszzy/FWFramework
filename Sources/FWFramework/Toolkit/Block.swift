@@ -82,7 +82,7 @@ extension Wrapper where Base: Timer {
     ///   - repeats: 是否重复
     /// - Returns: 定时器
     public static func timer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
-        return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
+        return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerInvokeTimerAction(_:)), userInfo: block, repeats: repeats)
     }
 
     /// 创建Timer，使用block，默认模式安排到当前的运行循环中
@@ -92,7 +92,7 @@ extension Wrapper where Base: Timer {
     ///   - repeats: 是否重复
     /// - Returns: 定时器
     public static func scheduledTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
-        return Timer.scheduledTimer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
+        return Timer.scheduledTimer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerInvokeTimerAction(_:)), userInfo: block, repeats: repeats)
     }
     
     /// 暂停NSTimer
@@ -517,7 +517,7 @@ fileprivate class BlockTarget {
 // MARK: - Timer+Block
 extension Timer {
     
-    @objc fileprivate class func innerTimerAction(_ timer: Timer) {
+    @objc fileprivate class func innerInvokeTimerAction(_ timer: Timer) {
         let block = timer.userInfo as? (Timer) -> Void
         block?(timer)
     }

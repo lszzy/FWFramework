@@ -47,6 +47,11 @@ public enum BannerViewPageControlStyle: Int {
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    // MARK: - Track
+    // 框架内部统计点击和曝光扩展钩子句柄
+    @_spi(FW) public static var trackClickBlock: ((UIView, IndexPath?) -> Bool)?
+    @_spi(FW) public static var trackExposureBlock: ((UIView) -> Void)?
+    
     // MARK: - Accessor
     /// 图片数组，支持String|URL|UIImage
     open var imagesGroup: [Any]? {
@@ -538,10 +543,12 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         delegate?.bannerView?(self, didSelectItemAt: index)
         didSelectItemBlock?(index)
         
-        let cell = collectionView.cellForItem(at: indexPath)
-        let cellTracked = cell?.fw_statisticalTrackClick(indexPath: IndexPath(row: index, section: 0)) ?? false
+        var cellTracked = false
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            cellTracked = BannerView.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
+        }
         if !cellTracked {
-            fw_statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
+            cellTracked = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
         }
     }
     
@@ -579,7 +586,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         
         let itemIndex = flowLayout.currentPage ?? 0
         // 快速滚动时不计曝光次数
-        fw_statisticalCheckExposure()
+        BannerView.trackExposureBlock?(self)
         
         if infiniteLoop {
             if itemIndex == totalItemsCount - 1 {
@@ -605,7 +612,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         scrollToPageControlIndex(currentIndex, animated: animated)
         
         if !animated, currentIndex != previousIndex {
-            fw_statisticalCheckExposure()
+            BannerView.trackExposureBlock?(self)
         }
         
         if autoScroll {
@@ -629,6 +636,10 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         if targetIndex < totalItemsCount {
             flowLayout.scrollToPage(targetIndex, animated: false)
         }
+    }
+    
+    @_spi(FW) public func pageControlIndex(cellIndex index: Int) -> Int {
+        return index % imagePathsGroup.count
     }
     
     // MARK: - Private
@@ -722,25 +733,6 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             return
         }
         flowLayout.scrollToPage(targetIndex, animated: animated)
-    }
-    
-    fileprivate func pageControlIndex(cellIndex index: Int) -> Int {
-        return index % imagePathsGroup.count
-    }
-    
-    // MARK: - StatisticalViewProtocol
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        return true
-    }
-    
-    open override func statisticalViewChildViews() -> [UIView]? {
-        return mainView.subviews
-    }
-    
-    open override func statisticalViewIndexPath() -> IndexPath? {
-        let itemIndex = flowLayout.currentPage ?? 0
-        let indexPath = IndexPath(row: pageControlIndex(cellIndex: itemIndex), section: 0)
-        return indexPath
     }
     
 }
@@ -1117,37 +1109,6 @@ open class BannerViewCell: UICollectionViewCell {
             imageView.frame = CGRect(x: imageViewInset.left, y: imageViewInset.top, width: insetView.bounds.size.width - imageViewInset.left - imageViewInset.right, height: insetView.bounds.size.height - imageViewInset.top - imageViewInset.bottom)
             titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
-    }
-    
-    // MARK: - StatisticalViewProtocol
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        return true
-    }
-    
-    open override func statisticalViewWillBindExposure(_ containerView: UIView?) -> Bool {
-        let bannerView: UIView? = (containerView is BannerView) ? containerView : statisticalViewContainerView()
-        return bannerView?.fw_statisticalBindExposure(containerView) ?? false
-    }
-    
-    open override func statisticalViewContainerView() -> UIView? {
-        var superview = self.superview
-        while superview != nil {
-            if let bannerView = superview as? BannerView {
-                return bannerView
-            }
-            superview = superview?.superview
-        }
-        return nil
-    }
-    
-    open override func statisticalViewIndexPath() -> IndexPath? {
-        guard let bannerView = statisticalViewContainerView() as? BannerView,
-              let cellIndexPath = bannerView.mainView.indexPath(for: self) else {
-            return nil
-        }
-        
-        let indexPath = IndexPath(row: bannerView.pageControlIndex(cellIndex: cellIndexPath.row), section: 0)
-        return indexPath
     }
     
 }

@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 import AVFoundation
 import MobileCoreServices
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - PlayerCacheLoaderManager
 public protocol PlayerCacheLoaderManagerDelegate: AnyObject {

@@ -9,7 +9,7 @@ import UIKit
 import AdSupport
 import AppTrackingTransparency
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - Wrapper+UIDevice

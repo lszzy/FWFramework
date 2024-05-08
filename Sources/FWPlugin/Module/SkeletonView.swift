@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - Wrapper+UIView
 /// 视图显示骨架屏扩展

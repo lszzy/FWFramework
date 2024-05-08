@@ -48,26 +48,6 @@ extension WrapperGlobal {
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         return UIFont.fw_font(ofSize: size, weight: weight, autoScale: autoScale)
     }
-    
-    /// 快速创建图标对象
-    ///
-    /// - Parameters:
-    ///   - named: 图标名称
-    ///   - size: 图标大小
-    /// - Returns: FWIcon对象
-    public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
-        return Icon.iconNamed(named, size: size)
-    }
-    
-    /// 快速创建图标图像
-    ///
-    /// - Parameters:
-    ///   - name: 图标名称
-    ///   - size: 图片大小
-    /// - Returns: UIImage对象
-    public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
-        return Icon.iconImage(name, size: size)
-    }
 }
 
 // MARK: - Wrapper+UIApplication
