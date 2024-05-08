@@ -19,6 +19,14 @@ let package = Package(
             targets: ["FWSwiftUI"]
         ),
         .library(
+            name: "FWPluginService",
+            targets: ["FWPluginService"]
+        ),
+        .library(
+            name: "FWPluginModule",
+            targets: ["FWPluginModule"]
+        ),
+        .library(
             name: "FWPluginCalendar",
             targets: ["FWPluginCalendar"]
         ),
@@ -71,6 +79,24 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM"),
+            ]
+        ),
+        .target(
+            name: "FWPluginService",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Service",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM"),
+            ]
+        ),
+        .target(
+            name: "FWPluginModule",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Module",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
