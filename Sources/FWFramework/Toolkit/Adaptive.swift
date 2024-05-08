@@ -372,10 +372,10 @@ extension Wrapper where Base: UIScreen {
     public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
-            if FrameworkStorage.staticWindow != nil { FrameworkStorage.staticWindow = nil }
+            if UIScreen.fw_staticWindow != nil { UIScreen.fw_staticWindow = nil }
         } else {
-            if FrameworkStorage.staticWindow == nil { FrameworkStorage.staticWindow = UIWindow(frame: UIScreen.main.bounds) }
-            mainWindow = FrameworkStorage.staticWindow
+            if UIScreen.fw_staticWindow == nil { UIScreen.fw_staticWindow = UIWindow(frame: UIScreen.main.bounds) }
+            mainWindow = UIScreen.fw_staticWindow
         }
         return mainWindow?.safeAreaInsets ?? .zero
     }
@@ -469,20 +469,20 @@ extension Wrapper where Base: UIScreen {
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var referenceSize: CGSize {
-        get { return FrameworkStorage.referenceSize }
-        set { FrameworkStorage.referenceSize = newValue }
+        get { return UIScreen.fw_referenceSize }
+        set { UIScreen.fw_referenceSize = newValue }
     }
     
     /// 全局自定义屏幕宽度缩放比例句柄，默认nil
     public static var relativeScaleBlock: (() -> CGFloat)? {
-        get { return FrameworkStorage.relativeScaleBlock }
-        set { FrameworkStorage.relativeScaleBlock = newValue }
+        get { return UIScreen.fw_relativeScaleBlock }
+        set { UIScreen.fw_relativeScaleBlock = newValue }
     }
     
     /// 全局自定义屏幕高度缩放比例句柄，默认nil
     public static var relativeHeightScaleBlock: (() -> CGFloat)? {
-        get { return FrameworkStorage.relativeHeightScaleBlock }
-        set { FrameworkStorage.relativeHeightScaleBlock = newValue }
+        get { return UIScreen.fw_relativeHeightScaleBlock }
+        set { UIScreen.fw_relativeHeightScaleBlock = newValue }
     }
     
     /// 获取当前屏幕宽度缩放比例，宽度常用
@@ -631,13 +631,13 @@ extension Wrapper where Base: UIViewController {
     }
 }
 
-// MARK: - FrameworkStorage+Adaptive
-extension FrameworkStorage {
+// MARK: - UIScreen+Adaptive
+extension UIScreen {
     
-    fileprivate static var staticWindow: UIWindow?
-    fileprivate static var referenceSize: CGSize = CGSize(width: 375, height: 812)
-    fileprivate static var relativeScaleBlock: (() -> CGFloat)?
-    fileprivate static var relativeHeightScaleBlock: (() -> CGFloat)?
+    fileprivate static var fw_staticWindow: UIWindow?
+    fileprivate static var fw_referenceSize: CGSize = CGSize(width: 375, height: 812)
+    fileprivate static var fw_relativeScaleBlock: (() -> CGFloat)?
+    fileprivate static var fw_relativeHeightScaleBlock: (() -> CGFloat)?
     
 }
 
