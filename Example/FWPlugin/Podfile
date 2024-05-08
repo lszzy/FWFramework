@@ -11,6 +11,8 @@ target "FWFramework_Plugin" do
   pod 'FWFramework/FWSwiftUI/Toolkit', :path => '../../'
   pod 'FWFramework/FWSwiftUI/Plugin', :path => '../../'
   pod 'FWFramework/FWSwiftUI/Module', :path => '../../'
+  pod 'FWFramework/FWPlugin/Service', :path => '../../'
+  pod 'FWFramework/FWPlugin/Module', :path => '../../'
   pod 'FWFramework/FWPlugin/Contacts', :path => '../../'
   pod 'FWFramework/FWPlugin/Microphone', :path => '../../'
   pod 'FWFramework/FWPlugin/Calendar', :path => '../../'
