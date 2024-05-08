@@ -276,11 +276,69 @@ open class BadgeView: UIView, BadgeViewProtocol {
 
 @_spi(FW) extension UITabBarItem {
     
-    private static var fw_staticBadgeViewSwizzled = false
+    /// 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
+    public weak var fw_imageView: UIImageView? {
+        if let tabBarButton = self.fw_view {
+            return UITabBarItem.fw_imageView(tabBarButton)
+        }
+        return nil
+    }
     
-    fileprivate static func fw_swizzleBadgeView() {
-        guard !fw_staticBadgeViewSwizzled else { return }
-        fw_staticBadgeViewSwizzled = true
+    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
+    public func fw_showBadgeView(_ badgeView: some UIView & BadgeViewProtocol, badgeValue: String? = nil) {
+        self.fw_hideBadgeView()
+        
+        FrameworkAutoloader.swizzleBadgeView()
+        // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
+        self.fw_viewLoadedBlock = { item, view in
+            guard let item = item as? UITabBarItem,
+                  let imageView = item.fw_imageView else { return }
+            
+            badgeView.badgeLabel?.text = badgeValue
+            badgeView.tag = 2041
+            view.addSubview(badgeView)
+            view.bringSubviewToFront(badgeView)
+            
+            badgeView.fw.pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
+            badgeView.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+        }
+    }
+
+    /// 隐藏提醒灯
+    public func fw_hideBadgeView() {
+        if let superview = self.fw_view,
+           let badgeView = superview.viewWithTag(2041) {
+            badgeView.removeFromSuperview()
+        }
+    }
+    
+    fileprivate static func fw_imageView(_ tabBarButton: UIView) -> UIImageView? {
+        var superview = tabBarButton
+        // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
+        if let effectView = tabBarButton.subviews.first as? UIVisualEffectView,
+           effectView.contentView.subviews.count > 0 {
+            superview = effectView.contentView
+        }
+        
+        for subview in superview.subviews {
+            // iOS10及以后，imageView都是用UITabBarSwappableImageView实现的，所以遇到这个class就直接拿
+            if NSStringFromClass(type(of: subview)) == "UITabBarSwappableImageView" {
+                return subview as? UIImageView
+            }
+        }
+        return nil
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+BadgeView
+extension FrameworkAutoloader {
+    
+    private static var swizzleBadgeViewFinished = false
+    
+    fileprivate static func swizzleBadgeView() {
+        guard !swizzleBadgeViewFinished else { return }
+        swizzleBadgeViewFinished = true
         
         NSObject.fw.swizzleMethod(
             objc_getClass("UITabBarButton"),
@@ -303,59 +361,6 @@ open class BadgeView: UIView, BadgeViewProtocol {
                 }
             }
         }}
-    }
-    
-    private static func fw_imageView(_ tabBarButton: UIView) -> UIImageView? {
-        var superview = tabBarButton
-        // iOS 13 下如果 tabBar 是磨砂的，则每个 button 内部都会有一个磨砂，而磨砂再包裹了 imageView、label 等 subview，但某些时机后系统又会把 imageView、label 挪出来放到 button 上，所以这里做个保护
-        if let effectView = tabBarButton.subviews.first as? UIVisualEffectView,
-           effectView.contentView.subviews.count > 0 {
-            superview = effectView.contentView
-        }
-        
-        for subview in superview.subviews {
-            // iOS10及以后，imageView都是用UITabBarSwappableImageView实现的，所以遇到这个class就直接拿
-            if NSStringFromClass(type(of: subview)) == "UITabBarSwappableImageView" {
-                return subview as? UIImageView
-            }
-        }
-        return nil
-    }
-    
-    /// 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
-    public weak var fw_imageView: UIImageView? {
-        if let tabBarButton = self.fw_view {
-            return UITabBarItem.fw_imageView(tabBarButton)
-        }
-        return nil
-    }
-    
-    /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
-    public func fw_showBadgeView(_ badgeView: some UIView & BadgeViewProtocol, badgeValue: String? = nil) {
-        self.fw_hideBadgeView()
-        
-        UITabBarItem.fw_swizzleBadgeView()
-        // 查找内部视图，由于view只有显示到页面后才存在，所以使用回调存在后才添加
-        self.fw_viewLoadedBlock = { item, view in
-            guard let item = item as? UITabBarItem,
-                  let imageView = item.fw_imageView else { return }
-            
-            badgeView.badgeLabel?.text = badgeValue
-            badgeView.tag = 2041
-            view.addSubview(badgeView)
-            view.bringSubviewToFront(badgeView)
-            
-            badgeView.fw.pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
-            badgeView.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
-        }
-    }
-
-    /// 隐藏提醒灯
-    public func fw_hideBadgeView() {
-        if let superview = self.fw_view,
-           let badgeView = superview.viewWithTag(2041) {
-            badgeView.removeFromSuperview()
-        }
     }
     
 }

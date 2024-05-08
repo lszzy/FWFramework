@@ -697,46 +697,6 @@ public class ThemeObject<T>: NSObject {
     
 }
 
-// MARK: - FrameworkAutoloader+Theme
-extension FrameworkAutoloader {
-    
-    @objc static func loadToolkit_Theme() {
-        swizzleThemeClasses()
-    }
-    
-    private static func swizzleThemeClasses() {
-        swizzleThemeClass(UIScreen.self)
-        swizzleThemeClass(UIView.self)
-        swizzleThemeClass(UIViewController.self)
-        // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
-        swizzleThemeClass(UIImageView.self)
-        swizzleThemeClass(UILabel.self)
-    }
-    
-    private static func swizzleThemeClass(_ themeClass: AnyClass) {
-        NSObject.fw.swizzleInstanceMethod(
-            themeClass,
-            selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
-            methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,
-            swizzleSignature: (@convention(block) (NSObject & UITraitEnvironment, UITraitCollection?) -> Void).self
-        ) { store in { selfObject, traitCollection in
-            store.original(selfObject, store.selector, traitCollection)
-            
-            if !selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: traitCollection) { return }
-            let style = ThemeManager.shared.style(for: selfObject.traitCollection)
-            let oldStyle = ThemeManager.shared.style(for: traitCollection)
-            if style == oldStyle { return }
-            
-            let notifyObject: NSObject = selfObject
-            notifyObject.fw_notifyThemeChanged(style)
-            if selfObject == UIScreen.main {
-                NotificationCenter.default.post(name: .ThemeChanged, object: selfObject, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
-            }
-        }}
-    }
-    
-}
-
 // MARK: - UIImageView+Theme
 @_spi(FW) extension UIImageView {
     
@@ -773,6 +733,46 @@ extension FrameworkAutoloader {
         if let themeAsset = fw_themeAsset, themeAsset.fw_isThemeAsset {
             self.image = themeAsset.fw_image
         }
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+Theme
+extension FrameworkAutoloader {
+    
+    @objc static func loadToolkit_Theme() {
+        swizzleThemeClasses()
+    }
+    
+    private static func swizzleThemeClasses() {
+        swizzleThemeClass(UIScreen.self)
+        swizzleThemeClass(UIView.self)
+        swizzleThemeClass(UIViewController.self)
+        // UIImageView|UILabel内部重写traitCollectionDidChange:时未调用super导致不回调themeChanged:
+        swizzleThemeClass(UIImageView.self)
+        swizzleThemeClass(UILabel.self)
+    }
+    
+    private static func swizzleThemeClass(_ themeClass: AnyClass) {
+        NSObject.fw.swizzleInstanceMethod(
+            themeClass,
+            selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
+            methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,
+            swizzleSignature: (@convention(block) (NSObject & UITraitEnvironment, UITraitCollection?) -> Void).self
+        ) { store in { selfObject, traitCollection in
+            store.original(selfObject, store.selector, traitCollection)
+            
+            if !selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: traitCollection) { return }
+            let style = ThemeManager.shared.style(for: selfObject.traitCollection)
+            let oldStyle = ThemeManager.shared.style(for: traitCollection)
+            if style == oldStyle { return }
+            
+            let notifyObject: NSObject = selfObject
+            notifyObject.fw_notifyThemeChanged(style)
+            if selfObject == UIScreen.main {
+                NotificationCenter.default.post(name: .ThemeChanged, object: selfObject, userInfo: [NSKeyValueChangeKey.oldKey: oldStyle.rawValue, NSKeyValueChangeKey.newKey: style.rawValue])
+            }
+        }}
     }
     
 }

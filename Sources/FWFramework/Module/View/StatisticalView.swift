@@ -322,11 +322,11 @@ public class StatisticalManager: NSObject {
         return identifier
     }
     
-    private static var statisticalSwizzled = false
+    private static var swizzleStatisticalViewFinished = false
     
-    fileprivate static func swizzleStatistical() {
-        guard !statisticalSwizzled else { return }
-        statisticalSwizzled = true
+    fileprivate static func swizzleStatisticalView() {
+        guard !swizzleStatisticalViewFinished else { return }
+        swizzleStatisticalViewFinished = true
         
         NSObject.fw.swizzleInstanceMethod(
             UIView.self,
@@ -795,7 +795,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         }
         set {
             fw.setProperty(newValue, forName: "fw_statisticalClick")
-            StatisticalManager.swizzleStatistical()
+            StatisticalManager.swizzleStatisticalView()
             fw_statisticalBindClick(newValue?.containerView)
         }
     }
@@ -832,7 +832,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         set {
             let oldValue = fw_statisticalExposure
             fw.setProperty(newValue, forName: "fw_statisticalExposure")
-            StatisticalManager.swizzleStatistical()
+            StatisticalManager.swizzleStatisticalView()
             fw_statisticalBindExposure(newValue?.containerView)
             if oldValue != nil, newValue == nil {
                 fw_statisticalRemoveObservers()

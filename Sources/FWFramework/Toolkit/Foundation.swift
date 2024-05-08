@@ -1888,7 +1888,7 @@ extension Wrapper where Base: UserDefaults {
     public static var fw_httpProxyDisabled = false {
         didSet {
             if fw_httpProxyDisabled {
-                fw_swizzleHttpProxy()
+                FrameworkAutoloader.swizzleHttpProxy()
             }
         }
     }
@@ -1897,37 +1897,6 @@ extension Wrapper where Base: UserDefaults {
     public static var fw_httpProxyString: String? {
         let proxy = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
         return proxy?[kCFNetworkProxiesHTTPProxy as String] as? String
-    }
-    
-    private static var fw_staticHttpProxySwizzled = false
-    
-    private static func fw_swizzleHttpProxy() {
-        guard !fw_staticHttpProxySwizzled else { return }
-        fw_staticHttpProxySwizzled = true
-        
-        NSObject.fw.swizzleClassMethod(
-            URLSession.self,
-            selector: #selector(URLSession.init(configuration:)),
-            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
-            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
-        ) { store in { selfObject, configuration in
-            if fw_httpProxyDisabled {
-                configuration.connectionProxyDictionary = [:]
-            }
-            return store.original(selfObject, store.selector, configuration)
-        }}
-        
-        NSObject.fw.swizzleClassMethod(
-            URLSession.self,
-            selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
-            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
-            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
-        ) { store in { selfObject, configuration, delegate, delegateQueue in
-            if fw_httpProxyDisabled {
-                configuration.connectionProxyDictionary = [:]
-            }
-            return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
-        }}
     }
     
 }
@@ -1963,6 +1932,42 @@ extension Wrapper where Base: UserDefaults {
             self.removeObject(forKey: forKey)
         }
         self.synchronize()
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+Foundation
+extension FrameworkAutoloader {
+    
+    private static var swizzleHttpProxyFinished = false
+    
+    fileprivate static func swizzleHttpProxy() {
+        guard !swizzleHttpProxyFinished else { return }
+        swizzleHttpProxyFinished = true
+        
+        NSObject.fw.swizzleClassMethod(
+            URLSession.self,
+            selector: #selector(URLSession.init(configuration:)),
+            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
+            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
+        ) { store in { selfObject, configuration in
+            if URLSession.fw_httpProxyDisabled {
+                configuration.connectionProxyDictionary = [:]
+            }
+            return store.original(selfObject, store.selector, configuration)
+        }}
+        
+        NSObject.fw.swizzleClassMethod(
+            URLSession.self,
+            selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
+            methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
+            swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
+        ) { store in { selfObject, configuration, delegate, delegateQueue in
+            if URLSession.fw_httpProxyDisabled {
+                configuration.connectionProxyDictionary = [:]
+            }
+            return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
+        }}
     }
     
 }
