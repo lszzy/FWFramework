@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.subspec 'FWFramework' do |ss|
     ss.subspec 'Kernel' do |sss|
       sss.source_files = 'Sources/FWFramework/Kernel/**/*.swift'
-      sss.resources = ['Sources/PrivacyInfo.xcprivacy']
+      sss.resource_bundles = {'PrivacyInfo' => ['Sources/PrivacyInfo.xcprivacy']}
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
       }
