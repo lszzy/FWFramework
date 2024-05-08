@@ -35,7 +35,7 @@ open class CacheFile: CacheEngine {
     }
     
     private func filePath(_ key: String) -> String {
-        let fileName = "\(key.fw_md5Encode).plist"
+        let fileName = "\(key.fw.md5Encode).plist"
         return (path as NSString).appendingPathComponent(fileName)
     }
     

@@ -885,7 +885,7 @@ private extension DatabaseManager {
                         let blob = sqlite3_column_blob(ppStmt, column)
                         if blob != nil {
                             let value = NSData(bytes: blob, length: Int(length)) as Data
-                            if var fieldValue = value.fw_unarchivedObject() {
+                            if var fieldValue = value.fw.unarchivedObject() {
                                 switch propertyInfo.type {
                                 case .mutableArray:
                                     if let valueArray = fieldValue as? NSArray {
@@ -1009,16 +1009,16 @@ private extension DatabaseManager {
             } else {
                 switch propertyInfo.type {
                 case .mutableArray:
-                    let data = Data.fw_archivedData(NSMutableArray())
+                    let data = Data.fw.archivedData(NSMutableArray())
                     valueArray.append(data ?? Data())
                 case .mutableDictionary:
-                    let data = Data.fw_archivedData(NSMutableDictionary())
+                    let data = Data.fw.archivedData(NSMutableDictionary())
                     valueArray.append(data ?? Data())
                 case .array:
-                    let data = Data.fw_archivedData(NSArray())
+                    let data = Data.fw.archivedData(NSArray())
                     valueArray.append(data ?? Data())
                 case .dictionary:
-                    let data = Data.fw_archivedData(NSDictionary())
+                    let data = Data.fw.archivedData(NSDictionary())
                     valueArray.append(data ?? Data())
                 case .data:
                     valueArray.append(Data())
@@ -1063,7 +1063,7 @@ private extension DatabaseManager {
                 case .mutableDictionary, .mutableArray, .dictionary, .array:
                     var data: NSData?
                     if value is NSArray || value is NSDictionary {
-                        data = Data.fw_archivedData(value) as? NSData
+                        data = Data.fw.archivedData(value) as? NSData
                     } else {
                         data = value as? NSData
                     }
@@ -1152,7 +1152,7 @@ private extension DatabaseManager {
                             value = NSArray()
                         }
                     }
-                    let data = Data.fw_archivedData(value) as? NSData
+                    let data = Data.fw.archivedData(value) as? NSData
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                     if data == nil {

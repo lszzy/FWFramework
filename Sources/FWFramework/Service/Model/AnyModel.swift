@@ -106,7 +106,7 @@ extension AnyModel where Self: CodableModel {
                 data = string.data(using: .utf8)
             } else {
                 do {
-                    data = try Data.fw_jsonEncode(object)
+                    data = try Data.fw.jsonEncode(object)
                 } catch {
                     InternalLogger.logError(error.localizedDescription)
                 }
@@ -126,7 +126,7 @@ extension AnyModel where Self: CodableModel {
     public func encodeObject() -> Any? {
         do {
             let data = try self.encoded() as Data
-            return try Data.fw_jsonDecode(data)
+            return try Data.fw.jsonDecode(data)
         } catch {
             InternalLogger.logError(error.localizedDescription)
             return nil

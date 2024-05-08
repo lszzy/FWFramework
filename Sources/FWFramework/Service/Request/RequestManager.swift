@@ -150,7 +150,7 @@ open class RequestManager {
             return nil
         }
         
-        tempPath = (tempPath as NSString).appendingPathComponent(downloadPath.fw_md5Encode)
+        tempPath = (tempPath as NSString).appendingPathComponent(downloadPath.fw.md5Encode)
         return URL(fileURLWithPath: tempPath)
     }
     

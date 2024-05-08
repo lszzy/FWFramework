@@ -401,7 +401,7 @@ open class WebView: WKWebView {
             
             let fileExt = (suggestedFilename as NSString).pathExtension
             var fileName = (suggestedFilename as NSString).deletingPathExtension
-            fileName = (UUID().uuidString + fileName).fw_md5Encode
+            fileName = (UUID().uuidString + fileName).fw.md5Encode
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
             download.fw.setProperty(url, forName: "downloadUrl")
             completionHandler(url)

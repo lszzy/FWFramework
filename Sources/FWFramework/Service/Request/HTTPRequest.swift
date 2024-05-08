@@ -1161,7 +1161,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         _cacheString = String(data: cache.data, encoding: _cacheMetadata?.stringEncoding ?? .utf8)
         switch responseSerializerType() {
         case .JSON:
-            _cacheJSON = _cacheData?.fw_jsonDecode
+            _cacheJSON = _cacheData?.fw.jsonDecode
             guard _cacheJSON != nil else {
                 throw RequestError.cacheInvalidCacheData
             }
@@ -1183,7 +1183,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         cacheMetadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
         cacheMetadata.creationDate = Date()
         cacheMetadata.appVersionString = UIApplication.fw_appVersion
-        guard let metadata = Data.fw_archivedData(cacheMetadata) else { return false }
+        guard let metadata = Data.fw.archivedData(cacheMetadata) else { return false }
         
         do {
             try requestCache.saveCache((data: data, metadata: metadata), for: self)
@@ -1204,7 +1204,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         let argument = cacheArgumentFilter(requestArgument())
         let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw.safeString(argument))
-        return requestInfo.fw_md5Encode
+        return requestInfo.fw.md5Encode
     }
     
     fileprivate func loadCacheResponse(completion: Completion?, processor: Completion? = nil) throws {
@@ -1233,7 +1233,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
     }
     
     private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
-        guard let cacheMetadata = metadata.fw_unarchivedObject() as? RequestCacheMetadata else {
+        guard let cacheMetadata = metadata.fw.unarchivedObject() as? RequestCacheMetadata else {
             throw RequestError.cacheInvalidMetadata
         }
         
