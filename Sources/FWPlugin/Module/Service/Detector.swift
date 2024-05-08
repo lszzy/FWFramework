@@ -9,9 +9,6 @@ import UIKit
 #if canImport(Vision)
 import Vision
 #endif
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 /// 智能检测器
 public class Detector: NSObject {
@@ -93,9 +90,4 @@ public class OcrResult: NSObject {
     /// 识别区域
     public var rect: CGRect = .zero
     
-}
-
-// MARK: - Autoloader+Service
-@objc extension Autoloader {
-    static func loadPlugin_Service() {}
 }
