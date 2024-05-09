@@ -519,7 +519,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         if (pageLabel.text?.count ?? 0) < 1 && imagePreviewView.imageCount > 0 {
             updatePageLabel()
         }
-        let pageLabelCenter = self.pageLabelCenter?() ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - (UIScreen.fw_safeAreaInsets.bottom + 18))
+        let pageLabelCenter = self.pageLabelCenter?() ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - (UIScreen.fw.safeAreaInsets.bottom + 18))
         pageLabel.center = pageLabelCenter
     }
     

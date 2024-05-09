@@ -412,14 +412,14 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         let result = UIView.fw_progressView(style: .imagePreview)
         result.isHidden = true
         addSubview(result)
-        result.fw_alignCenter()
+        (result as UIView).fw.alignCenter()
         return result
     }() {
         didSet {
             oldValue.removeFromSuperview()
             progressView.isHidden = true
             addSubview(progressView)
-            progressView.fw_alignCenter()
+            (progressView as UIView).fw.alignCenter()
         }
     }
     
@@ -512,7 +512,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         if let _videoCloseButton = _videoCloseButton {
             _videoCloseButton.sizeToFit()
-            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw_safeAreaInsets.left + 24, y: UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2)
+            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw.safeAreaInsets.left + 24, y: UIScreen.fw.statusBarHeight + UIScreen.fw.navigationBarHeight / 2)
             _videoCloseButton.center = videoCloseButtonCenter
         }
         
@@ -604,7 +604,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             if (urlString as NSString).isAbsolutePath {
                 imageURL = URL(fileURLWithPath: urlString)
             } else {
-                imageURL = URL.fw_url(string: urlString)
+                imageURL = URL.fw.url(string: urlString)
             }
         } else if let urlRequest = imageURL as? URLRequest {
             imageURL = urlRequest.url

@@ -352,7 +352,7 @@ extension ImagePlugin {
     /// 自定义图片插件，未设置时自动从插件池加载
     public var fw_imagePlugin: ImagePlugin! {
         get {
-            if let imagePlugin = fw_property(forName: "fw_imagePlugin") as? ImagePlugin {
+            if let imagePlugin = fw.property(forName: "fw_imagePlugin") as? ImagePlugin {
                 return imagePlugin
             } else if let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) {
                 return imagePlugin
@@ -360,7 +360,7 @@ extension ImagePlugin {
             return ImagePluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_imagePlugin")
+            fw.setProperty(newValue, forName: "fw_imagePlugin")
         }
     }
 
@@ -401,8 +401,8 @@ extension ImagePlugin {
     
     /// 是否隐藏全局图片加载指示器，默认false，仅全局图片指示器开启时生效
     public var fw_hidesImageIndicator: Bool {
-        get { fw_propertyBool(forName: #function) }
-        set { fw_setPropertyBool(newValue, forName: #function) }
+        get { fw.propertyBool(forName: #function) }
+        set { fw.setPropertyBool(newValue, forName: #function) }
     }
     
 }
@@ -464,16 +464,18 @@ extension Wrapper where Base: UIImage {
         let target = NSObject()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                target.fw_tempObject = UIImage.fw_downloadImage(url, options: options, context: context) { image, _, error in
+                let receipt = UIImage.fw_downloadImage(url, options: options, context: context) { image, _, error in
                     if let image = image {
                         continuation.resume(returning: image)
                     } else {
                         continuation.resume(throwing: error ?? RequestError.unknown)
                     }
                 }
+                target.fw.setProperty(receipt, forName: #function)
             }
         } onCancel: {
-            UIImage.fw_cancelImageDownload(target.fw_tempObject)
+            let receipt = target.fw.property(forName: #function)
+            UIImage.fw_cancelImageDownload(receipt)
         }
     }
     

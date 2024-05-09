@@ -399,32 +399,32 @@ extension Wrapper where Base: UICollectionView {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewFixed") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
+        get { fw.propertyBool(forName: "fw_maxYViewFixed") }
+        set { fw.setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
     }
 
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
     public var fw_maxYViewPadding: CGFloat {
         get {
-            if let number = fw_propertyNumber(forName: "fw_maxYViewPadding") {
+            if let number = fw.propertyNumber(forName: "fw_maxYViewPadding") {
                 return number.doubleValue
             }
             return .zero
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
         }
     }
 
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var fw_maxYViewExpanded: Bool {
-        get { fw_propertyBool(forName: "fw_maxYViewExpanded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
+        get { fw.propertyBool(forName: "fw_maxYViewExpanded") }
+        set { fw.setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
     }
     
     fileprivate var fw_maxYView: UIView? {
-        get { fw_property(forName: "fw_maxYView") as? UIView }
-        set { fw_setProperty(newValue, forName: "fw_maxYView") }
+        get { fw.property(forName: "fw_maxYView") as? UIView }
+        set { fw.setProperty(newValue, forName: "fw_maxYView") }
     }
     
     /// 创建可重用动态布局视图方法
@@ -614,10 +614,10 @@ extension Wrapper where Base: UICollectionView {
     ) -> CGSize {
         // 获取用于计算尺寸的视图
         let classIdentifier = NSStringFromClass(viewClass).appending(viewIdentifier)
-        var dict = fw_property(forName: "fw_dynamicSizeViews") as? NSMutableDictionary
+        var dict = fw.property(forName: "fw_dynamicSizeViews") as? NSMutableDictionary
         if dict == nil {
             dict = NSMutableDictionary()
-            fw_setProperty(dict, forName: "fw_dynamicSizeViews")
+            fw.setProperty(dict, forName: "fw_dynamicSizeViews")
         }
         var view: UIView
         if let reuseView = dict?[classIdentifier] as? UIView {
@@ -636,8 +636,8 @@ extension Wrapper where Base: UICollectionView {
         if width <= 0 && height <= 0 {
             width = CGRectGetWidth(frame)
             if width <= 0, let superview = superview {
-                if !superview.fw_propertyBool(forName: "fw_dynamicSizeLayouted") {
-                    superview.fw_setPropertyBool(true, forName: "fw_dynamicSizeLayouted")
+                if !superview.fw.propertyBool(forName: "fw_dynamicSizeLayouted") {
+                    superview.fw.setPropertyBool(true, forName: "fw_dynamicSizeLayouted")
                     
                     superview.setNeedsLayout()
                     superview.layoutIfNeeded()
@@ -739,11 +739,11 @@ public enum HeaderFooterViewType: Int {
         reuseIdentifier: String? = nil
     ) -> Self {
         let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
-        if tableView.fw_propertyBool(forName: identifier) {
+        if tableView.fw.propertyBool(forName: identifier) {
             return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Self
         }
         tableView.register(self, forHeaderFooterViewReuseIdentifier: identifier)
-        tableView.fw_setPropertyBool(true, forName: identifier)
+        tableView.fw.setPropertyBool(true, forName: identifier)
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Self
     }
     
@@ -853,11 +853,11 @@ public enum HeaderFooterViewType: Int {
     }
     
     private var fw_dynamicLayoutHeightCache: DynamicLayoutHeightCache {
-        if let heightCache = fw_property(forName: "fw_dynamicLayoutHeightCache") as? DynamicLayoutHeightCache {
+        if let heightCache = fw.property(forName: "fw_dynamicLayoutHeightCache") as? DynamicLayoutHeightCache {
             return heightCache
         } else {
             let heightCache = DynamicLayoutHeightCache()
-            fw_setProperty(heightCache, forName: "fw_dynamicLayoutHeightCache")
+            fw.setProperty(heightCache, forName: "fw_dynamicLayoutHeightCache")
             return heightCache
         }
     }
@@ -936,11 +936,11 @@ public enum HeaderFooterViewType: Int {
         reuseIdentifier: String? = nil
     ) -> Self {
         let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
-        if collectionView.fw_propertyBool(forName: identifier) {
+        if collectionView.fw.propertyBool(forName: identifier) {
             return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Self
         }
         collectionView.register(self, forCellWithReuseIdentifier: identifier)
-        collectionView.fw_setPropertyBool(true, forName: identifier)
+        collectionView.fw.setPropertyBool(true, forName: identifier)
         return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Self
     }
 
@@ -969,11 +969,11 @@ public enum HeaderFooterViewType: Int {
     ) -> Self {
         let identifier = reuseIdentifier ?? NSStringFromClass(self).appending("FWDynamicLayoutReuseIdentifier")
         let kindIdentifier = identifier + kind
-        if collectionView.fw_propertyBool(forName: kindIdentifier) {
+        if collectionView.fw.propertyBool(forName: kindIdentifier) {
             return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Self
         }
         collectionView.register(self, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
-        collectionView.fw_setPropertyBool(true, forName: kindIdentifier)
+        collectionView.fw.setPropertyBool(true, forName: kindIdentifier)
         return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Self
     }
 
@@ -1082,11 +1082,11 @@ public enum HeaderFooterViewType: Int {
     }
     
     private var fw_dynamicLayoutSizeCache: DynamicLayoutSizeCache {
-        if let sizeCache = fw_property(forName: "fw_dynamicLayoutSizeCache") as? DynamicLayoutSizeCache {
+        if let sizeCache = fw.property(forName: "fw_dynamicLayoutSizeCache") as? DynamicLayoutSizeCache {
             return sizeCache
         } else {
             let sizeCache = DynamicLayoutSizeCache()
-            fw_setProperty(sizeCache, forName: "fw_dynamicLayoutSizeCache")
+            fw.setProperty(sizeCache, forName: "fw_dynamicLayoutSizeCache")
             return sizeCache
         }
     }

@@ -322,7 +322,7 @@ extension Font {
     public static func font(size: CGFloat, weight: Font.Weight = .regular, autoScale: Bool? = nil) -> Font {
         var fontSize = size
         if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
-            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlatFont)
+            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw_autoFlatFont)
         }
         
         if let font = fontBlock?(fontSize, weight) { return font }

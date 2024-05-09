@@ -63,6 +63,11 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWPlugin' do |ss|
+    ss.subspec 'Module' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Module'
+    end
+      
     ss.subspec 'Contacts' do |sss|
       sss.source_files = 'Sources/FWPlugin/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'

@@ -1611,26 +1611,26 @@ extension Wrapper where Base: UIViewController {
     /// 设置额外热区(点击区域)
     public var fw_touchInsets: UIEdgeInsets {
         get {
-            if let value = fw_property(forName: "fw_touchInsets") as? NSValue {
+            if let value = fw.property(forName: "fw_touchInsets") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_touchInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_touchInsets")
         }
     }
     
     /// 设置视图是否允许检测子视图pointInside，默认false
     public var fw_pointInsideSubviews: Bool {
-        get { return fw_propertyBool(forName: "fw_pointInsideSubviews") }
-        set { fw_setPropertyBool(newValue, forName: "fw_pointInsideSubviews") }
+        get { return fw.propertyBool(forName: "fw_pointInsideSubviews") }
+        set { fw.setPropertyBool(newValue, forName: "fw_pointInsideSubviews") }
     }
     
     /// 设置视图是否可穿透(子视图响应)
     public var fw_isPenetrable: Bool {
-        get { return fw_propertyBool(forName: "fw_isPenetrable") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isPenetrable") }
+        get { return fw.propertyBool(forName: "fw_isPenetrable") }
+        set { fw.setPropertyBool(newValue, forName: "fw_isPenetrable") }
     }
 
     /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
@@ -1733,12 +1733,12 @@ extension Wrapper where Base: UIViewController {
     }
     
     private func fw_borderLayer(_ edgeKey: String) -> CALayer {
-        if let borderLayer = fw_property(forName: edgeKey) as? CALayer {
+        if let borderLayer = fw.property(forName: edgeKey) as? CALayer {
             return borderLayer
         } else {
             let borderLayer = CALayer()
             self.layer.addSublayer(borderLayer)
-            fw_setProperty(borderLayer, forName: edgeKey)
+            fw.setProperty(borderLayer, forName: edgeKey)
             return borderLayer
         }
     }
@@ -1746,12 +1746,12 @@ extension Wrapper where Base: UIViewController {
     /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func fw_setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
         var borderLayer: CAShapeLayer
-        if let layer = fw_property(forName: "fw_dashBorderLayer") as? CAShapeLayer {
+        if let layer = fw.property(forName: "fw_dashBorderLayer") as? CAShapeLayer {
             borderLayer = layer
         } else {
             borderLayer = CAShapeLayer()
             self.layer.addSublayer(borderLayer)
-            fw_setProperty(borderLayer, forName: "fw_dashBorderLayer")
+            fw.setProperty(borderLayer, forName: "fw_dashBorderLayer")
         }
         
         borderLayer.frame = self.bounds
@@ -1778,12 +1778,12 @@ extension Wrapper where Base: UIViewController {
         fw_setCornerLayer(corner, radius: radius)
         
         var borderLayer: CAShapeLayer
-        if let layer = fw_property(forName: "fw_borderLayerCorner") as? CAShapeLayer {
+        if let layer = fw.property(forName: "fw_borderLayerCorner") as? CAShapeLayer {
             borderLayer = layer
         } else {
             borderLayer = CAShapeLayer()
             self.layer.addSublayer(borderLayer)
-            fw_setProperty(borderLayer, forName: "fw_borderLayerCorner")
+            fw.setProperty(borderLayer, forName: "fw_borderLayerCorner")
         }
         
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
@@ -1803,55 +1803,55 @@ extension Wrapper where Base: UIViewController {
     public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         if edge.contains(.top) {
             let borderView = fw_borderView("fw_borderViewTop", edge: .top)
-            borderView.fw_setDimension(.height, size: width)
-            borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.fw.setDimension(.height, size: width)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.left) {
             let borderView = fw_borderView("fw_borderViewLeft", edge: .left)
-            borderView.fw_setDimension(.width, size: width)
-            borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.fw.setDimension(.width, size: width)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.bottom) {
             let borderView = fw_borderView("fw_borderViewBottom", edge: .bottom)
-            borderView.fw_setDimension(.height, size: width)
-            borderView.fw_pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw_pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.fw.setDimension(.height, size: width)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.right) {
             let borderView = fw_borderView("fw_borderViewRight", edge: .right)
-            borderView.fw_setDimension(.width, size: width)
-            borderView.fw_pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw_pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.fw.setDimension(.width, size: width)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
             borderView.backgroundColor = color
         }
     }
     
     private func fw_borderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
-        if let borderView = fw_property(forName: edgeKey) as? UIView {
+        if let borderView = fw.property(forName: edgeKey) as? UIView {
             return borderView
         } else {
             let borderView = UIView()
             self.addSubview(borderView)
-            fw_setProperty(borderView, forName: edgeKey)
+            fw.setProperty(borderView, forName: edgeKey)
             
             if edge == .top || edge == .bottom {
-                borderView.fw_pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
-                borderView.fw_setDimension(.height, size: 0)
-                borderView.fw_pinEdge(toSuperview: .left, inset: 0)
-                borderView.fw_pinEdge(toSuperview: .right, inset: 0)
+                borderView.fw.pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
+                borderView.fw.setDimension(.height, size: 0)
+                borderView.fw.pinEdge(toSuperview: .left, inset: 0)
+                borderView.fw.pinEdge(toSuperview: .right, inset: 0)
             } else {
-                borderView.fw_pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
-                borderView.fw_setDimension(.width, size: 0)
-                borderView.fw_pinEdge(toSuperview: .top, inset: 0)
-                borderView.fw_pinEdge(toSuperview: .bottom, inset: 0)
+                borderView.fw.pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
+                borderView.fw.setDimension(.width, size: 0)
+                borderView.fw.pinEdge(toSuperview: .top, inset: 0)
+                borderView.fw.pinEdge(toSuperview: .bottom, inset: 0)
             }
             return borderView
         }
@@ -1902,7 +1902,7 @@ extension Wrapper where Base: UIViewController {
             let effect = UIBlurEffect(style: style)
             let effectView = UIVisualEffectView(effect: effect)
             self.addSubview(effectView)
-            effectView.fw_pinEdges()
+            effectView.fw.pinEdges()
             return effectView
         }
         return nil
@@ -2017,8 +2017,8 @@ extension Wrapper where Base: UIViewController {
     
     /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
     public var fw_sortIndex: Int {
-        get { fw_propertyInt(forName: "fw_sortIndex") }
-        set { fw_setPropertyInt(newValue, forName: "fw_sortIndex") }
+        get { fw.propertyInt(forName: "fw_sortIndex") }
+        set { fw.setPropertyInt(newValue, forName: "fw_sortIndex") }
     }
 
     /// 根据sortIndex排序subviews，需结合sortIndex使用
@@ -2063,7 +2063,7 @@ extension Wrapper where Base: UIViewController {
         overlay.layer.compositingFilter = "saturationBlendMode"
         overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
         self.addSubview(overlay)
-        overlay.fw_pinEdges()
+        overlay.fw.pinEdges()
     }
     
     /// 隐藏灰色视图，仅支持iOS13+
@@ -2365,13 +2365,13 @@ extension Wrapper where Base: UIViewController {
     /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
     public var fw_textAttributes: [NSAttributedString.Key: Any]? {
         get {
-            return fw_property(forName: "fw_textAttributes") as? [NSAttributedString.Key : Any]
+            return fw.property(forName: "fw_textAttributes") as? [NSAttributedString.Key : Any]
         }
         set {
             let prevTextAttributes = self.fw_textAttributes
             if (prevTextAttributes as? NSDictionary)?.isEqual(to: newValue ?? [:]) ?? false { return }
             
-            fw_setPropertyCopy(newValue, forName: "fw_textAttributes")
+            fw.setPropertyCopy(newValue, forName: "fw_textAttributes")
             guard (self.text?.count ?? 0) > 0 else { return }
             
             let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString
@@ -2388,7 +2388,7 @@ extension Wrapper where Base: UIViewController {
                     }
                     if !NSEqualRanges(range, fullRange) { return }
                     for (attr, value) in attrs {
-                        if String.fw_safeString(prevTextAttributes[attr]) == String.fw_safeString(value) {
+                        if String.fw.safeString(prevTextAttributes[attr]) == String.fw.safeString(value) {
                             removeAttributes.append(attr)
                         }
                     }
@@ -2447,7 +2447,7 @@ extension Wrapper where Base: UIViewController {
     public var fw_lineHeight: CGFloat {
         get {
             if self.fw_issetLineHeight {
-                return fw_propertyDouble(forName: "fw_lineHeight")
+                return fw.propertyDouble(forName: "fw_lineHeight")
             } else if (self.attributedText?.length ?? 0) > 0 {
                 var result: CGFloat = 0
                 if let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString {
@@ -2468,9 +2468,9 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             if newValue > 0 {
-                fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+                fw.setPropertyDouble(newValue, forName: "fw_lineHeight")
             } else {
-                fw_setProperty(nil, forName: "fw_lineHeight")
+                fw.setProperty(nil, forName: "fw_lineHeight")
             }
             guard let string = self.attributedText?.string else { return }
             let attributedString = NSAttributedString(string: string, attributes: self.fw_textAttributes)
@@ -2479,20 +2479,20 @@ extension Wrapper where Base: UIViewController {
     }
     
     private var fw_issetLineHeight: Bool {
-        return fw_property(forName: "fw_lineHeight") != nil
+        return fw.property(forName: "fw_lineHeight") != nil
     }
 
     /// 自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局
     public var fw_contentInset: UIEdgeInsets {
         get {
-            if let value = fw_property(forName: "fw_contentInset") as? NSValue {
+            if let value = fw.property(forName: "fw_contentInset") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
         }
         set {
-            let insets = UIEdgeInsets(top: UIScreen.fw_flatValue(newValue.top), left: UIScreen.fw_flatValue(newValue.left), bottom: UIScreen.fw_flatValue(newValue.bottom), right: UIScreen.fw_flatValue(newValue.right))
-            fw_setProperty(NSValue(uiEdgeInsets: insets), forName: "fw_contentInset")
+            let insets = UIEdgeInsets(top: UIScreen.fw.flatValue(newValue.top), left: UIScreen.fw.flatValue(newValue.left), bottom: UIScreen.fw.flatValue(newValue.bottom), right: UIScreen.fw.flatValue(newValue.right))
+            fw.setProperty(NSValue(uiEdgeInsets: insets), forName: "fw_contentInset")
             self.setNeedsDisplay()
         }
     }
@@ -2500,11 +2500,11 @@ extension Wrapper where Base: UIViewController {
     /// 纵向分布方式，默认居中
     public var fw_verticalAlignment: UIControl.ContentVerticalAlignment {
         get {
-            let value = fw_propertyInt(forName: "fw_verticalAlignment")
+            let value = fw.propertyInt(forName: "fw_verticalAlignment")
             return .init(rawValue: value) ?? .center
         }
         set {
-            fw_setPropertyInt(newValue.rawValue, forName: "fw_verticalAlignment")
+            fw.setPropertyInt(newValue.rawValue, forName: "fw_verticalAlignment")
             self.setNeedsDisplay()
         }
     }
@@ -2512,9 +2512,8 @@ extension Wrapper where Base: UIViewController {
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
     public func fw_addLinkGesture(block: @escaping (Any?) -> Void) {
         self.isUserInteractionEnabled = true
-        self.fw_addTapGesture { gesture in
-            guard let gesture = gesture as? UITapGestureRecognizer,
-                  let label = gesture.view as? UILabel else { return }
+        self.fw.addTapGesture { gesture in
+            guard let label = gesture.view as? UILabel else { return }
             let attributes = label.fw_attributes(gesture: gesture, allowsSpacing: false)
             let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
             block(link)
@@ -2736,13 +2735,13 @@ extension Wrapper where Base: UIViewController {
     
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
     @objc dynamic public var fw_touchEventInterval: TimeInterval {
-        get { fw_propertyDouble(forName: "fw_touchEventInterval") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
+        get { fw.propertyDouble(forName: "fw_touchEventInterval") }
+        set { fw.setPropertyDouble(newValue, forName: "fw_touchEventInterval") }
     }
     
     fileprivate var fw_touchEventTimestamp: TimeInterval {
-        get { fw_propertyDouble(forName: "fw_touchEventTimestamp") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_touchEventTimestamp") }
+        get { fw.propertyDouble(forName: "fw_touchEventTimestamp") }
+        set { fw.setPropertyDouble(newValue, forName: "fw_touchEventTimestamp") }
     }
     
 }
@@ -2759,10 +2758,10 @@ extension Wrapper where Base: UIViewController {
     /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
     public var fw_disabledAlpha: CGFloat {
         get {
-            return fw_propertyDouble(forName: "fw_disabledAlpha")
+            return fw.propertyDouble(forName: "fw_disabledAlpha")
         }
         set {
-            fw_setPropertyDouble(newValue, forName: "fw_disabledAlpha")
+            fw.setPropertyDouble(newValue, forName: "fw_disabledAlpha")
             if newValue > 0 {
                 self.alpha = self.isEnabled ? 1 : newValue
             }
@@ -2772,10 +2771,10 @@ extension Wrapper where Base: UIViewController {
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
     public var fw_highlightedAlpha: CGFloat {
         get {
-            return fw_propertyDouble(forName: "fw_highlightedAlpha")
+            return fw.propertyDouble(forName: "fw_highlightedAlpha")
         }
         set {
-            fw_setPropertyDouble(newValue, forName: "fw_highlightedAlpha")
+            fw.setPropertyDouble(newValue, forName: "fw_highlightedAlpha")
             if self.isEnabled && newValue > 0 {
                 self.alpha = self.isHighlighted ? newValue : 1
             }
@@ -2785,10 +2784,10 @@ extension Wrapper where Base: UIViewController {
     /// 自定义按钮禁用状态改变时的句柄，默认nil
     public var fw_disabledChanged: ((UIButton, Bool) -> Void)? {
         get {
-            return fw_property(forName: "fw_disabledChanged") as? (UIButton, Bool) -> Void
+            return fw.property(forName: "fw_disabledChanged") as? (UIButton, Bool) -> Void
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_disabledChanged")
+            fw.setPropertyCopy(newValue, forName: "fw_disabledChanged")
             if newValue != nil {
                 newValue?(self, self.isEnabled)
             }
@@ -2798,10 +2797,10 @@ extension Wrapper where Base: UIViewController {
     /// 自定义按钮高亮状态改变时的句柄，默认nil
     public var fw_highlightedChanged: ((UIButton, Bool) -> Void)? {
         get {
-            return fw_property(forName: "fw_highlightedChanged") as? (UIButton, Bool) -> Void
+            return fw.property(forName: "fw_highlightedChanged") as? (UIButton, Bool) -> Void
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_highlightedChanged")
+            fw.setPropertyCopy(newValue, forName: "fw_highlightedChanged")
             if self.isEnabled && newValue != nil {
                 newValue?(self, self.isHighlighted)
             }
@@ -3044,13 +3043,13 @@ extension Wrapper where Base: UIViewController {
     /// 1. 设置scrollView属性isDirectionalLockEnabled为true
     /// 2. 设置布局高度为固定ceil高度，如：FW.fixed(ceil(FW.relative(40)))
     public var fw_contentView: UIView {
-        if let contentView = fw_property(forName: "fw_contentView") as? UIView {
+        if let contentView = fw.property(forName: "fw_contentView") as? UIView {
             return contentView
         } else {
             let contentView = UIView()
-            fw_setProperty(contentView, forName: "fw_contentView")
+            fw.setProperty(contentView, forName: "fw_contentView")
             self.addSubview(contentView)
-            contentView.fw_pinEdges()
+            contentView.fw.pinEdges()
             return contentView
         }
     }
@@ -3071,15 +3070,15 @@ extension Wrapper where Base: UIViewController {
             if view.superview != toSuperview {
                 view.removeFromSuperview()
                 toSuperview.addSubview(view)
-                view.fw_pinEdge(toSuperview: .left, inset: 0)
-                view.fw_pinEdge(toSuperview: .top, inset: toPosition)
-                view.fw_setDimensions(view.bounds.size)
+                view.fw.pinEdge(toSuperview: .left, inset: 0)
+                view.fw.pinEdge(toSuperview: .top, inset: toPosition)
+                view.fw.setDimensions(view.bounds.size)
             }
         } else {
             if view.superview != fromSuperview {
                 view.removeFromSuperview()
                 fromSuperview.addSubview(view)
-                view.fw_pinEdges()
+                view.fw.pinEdges()
             }
         }
         return distance
@@ -3088,10 +3087,10 @@ extension Wrapper where Base: UIViewController {
     /// 是否开始识别pan手势
     public var fw_shouldBegin: ((UIGestureRecognizer) -> Bool)? {
         get {
-            return fw_property(forName: "fw_shouldBegin") as? (UIGestureRecognizer) -> Bool
+            return fw.property(forName: "fw_shouldBegin") as? (UIGestureRecognizer) -> Bool
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_shouldBegin")
+            fw.setPropertyCopy(newValue, forName: "fw_shouldBegin")
             FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
@@ -3099,10 +3098,10 @@ extension Wrapper where Base: UIViewController {
     /// 是否允许同时识别多个手势
     public var fw_shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            return fw_property(forName: "fw_shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            return fw.property(forName: "fw_shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
+            fw.setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
             FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
@@ -3110,10 +3109,10 @@ extension Wrapper where Base: UIViewController {
     /// 是否另一个手势识别失败后，才能识别pan手势
     public var fw_shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            return fw_property(forName: "fw_shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            return fw.property(forName: "fw_shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
+            fw.setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
             FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
@@ -3121,10 +3120,10 @@ extension Wrapper where Base: UIViewController {
     /// 是否pan手势识别失败后，才能识别另一个手势
     public var fw_shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            return fw_property(forName: "fw_shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            return fw.property(forName: "fw_shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
-            fw_setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
+            fw.setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
             FrameworkAutoloader.swizzleUIKitScrollView()
         }
     }
@@ -3279,13 +3278,13 @@ extension Wrapper where Base: UIViewController {
     /// 中间圆球的大小，默认zero
     public var fw_thumbSize: CGSize {
         get {
-            if let value = fw_property(forName: "fw_thumbSize") as? NSValue {
+            if let value = fw.property(forName: "fw_thumbSize") as? NSValue {
                 return value.cgSizeValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(cgSize: newValue), forName: "fw_thumbSize")
+            fw.setProperty(NSValue(cgSize: newValue), forName: "fw_thumbSize")
             fw_updateThumbImage()
         }
     }
@@ -3293,10 +3292,10 @@ extension Wrapper where Base: UIViewController {
     /// 中间圆球的颜色，默认nil
     public var fw_thumbColor: UIColor? {
         get {
-            return fw_property(forName: "fw_thumbColor") as? UIColor
+            return fw.property(forName: "fw_thumbColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_thumbColor")
+            fw.setProperty(newValue, forName: "fw_thumbColor")
             self.fw_updateThumbImage()
         }
     }
@@ -3340,17 +3339,17 @@ extension Wrapper where Base: UIViewController {
     /// 自定义关闭时除圆点外的背景色
     @objc dynamic public var fw_offTintColor: UIColor? {
         get {
-            return fw_property(forName: "fw_offTintColor") as? UIColor
+            return fw.property(forName: "fw_offTintColor") as? UIColor
         }
         set {
             let switchWellView = value(forKeyPath: "_visualElement._switchWellView") as? UIView
-            var defaultOffTintColor = switchWellView?.fw_property(forName: "defaultOffTintColor") as? UIColor
+            var defaultOffTintColor = switchWellView?.fw.property(forName: "defaultOffTintColor") as? UIColor
             if defaultOffTintColor == nil {
                 defaultOffTintColor = switchWellView?.backgroundColor
-                switchWellView?.fw_setProperty(defaultOffTintColor, forName: "defaultOffTintColor")
+                switchWellView?.fw.setProperty(defaultOffTintColor, forName: "defaultOffTintColor")
             }
             switchWellView?.backgroundColor = newValue ?? defaultOffTintColor
-            fw_setProperty(newValue, forName: "fw_offTintColor")
+            fw.setProperty(newValue, forName: "fw_offTintColor")
         }
     }
     
@@ -3400,13 +3399,13 @@ extension Wrapper where Base: UIViewController {
         func textLengthChanged() {
             if maxLength > 0, shouldCheckLength {
                 if (textValue?.count ?? 0) > maxLength {
-                    textValue = textValue?.fw_substring(to: maxLength)
+                    textValue = textValue?.fw.substring(to: maxLength)
                 }
             }
 
             if maxUnicodeLength > 0, shouldCheckLength {
-                if (textValue?.fw_unicodeLength ?? 0) > maxUnicodeLength {
-                    textValue = textValue?.fw_unicodeSubstring(maxUnicodeLength)
+                if (textValue?.fw.unicodeLength ?? 0) > maxUnicodeLength {
+                    textValue = textValue?.fw.unicodeSubstring(maxUnicodeLength)
                 }
             }
         }
@@ -3415,13 +3414,13 @@ extension Wrapper where Base: UIViewController {
             var filterText = text
             if maxLength > 0, shouldCheckLength {
                 if filterText.count > maxLength {
-                    filterText = filterText.fw_substring(to: maxLength)
+                    filterText = filterText.fw.substring(to: maxLength)
                 }
             }
 
             if maxUnicodeLength > 0, shouldCheckLength {
-                if filterText.fw_unicodeLength > maxUnicodeLength {
-                    filterText = filterText.fw_unicodeSubstring(maxUnicodeLength)
+                if filterText.fw.unicodeLength > maxUnicodeLength {
+                    filterText = filterText.fw.unicodeSubstring(maxUnicodeLength)
                 }
             }
             return filterText
@@ -3496,12 +3495,12 @@ extension Wrapper where Base: UIViewController {
     }
     
     private func fw_inputTarget(_ lazyload: Bool) -> InputTarget? {
-        if let target = fw_property(forName: "fw_inputTarget") as? InputTarget {
+        if let target = fw.property(forName: "fw_inputTarget") as? InputTarget {
             return target
         } else if lazyload {
             let target = InputTarget(textInput: self)
             self.addTarget(target, action: #selector(InputTarget.textChangedAction), for: .editingChanged)
-            fw_setProperty(target, forName: "fw_inputTarget")
+            fw.setProperty(target, forName: "fw_inputTarget")
             return target
         }
         return nil
@@ -3509,20 +3508,20 @@ extension Wrapper where Base: UIViewController {
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var fw_menuDisabled: Bool {
-        get { fw_propertyBool(forName: "fw_menuDisabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
+        get { fw.propertyBool(forName: "fw_menuDisabled") }
+        set { fw.setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
     /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
         get {
-            if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
+            if let value = fw.property(forName: "fw_cursorRect") as? NSValue {
                 return value.cgRectValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
+            fw.setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
         }
     }
 
@@ -3615,12 +3614,12 @@ extension Wrapper where Base: UIViewController {
     }
     
     private func fw_inputTarget(_ lazyload: Bool) -> UITextField.InputTarget? {
-        if let target = fw_property(forName: "fw_inputTarget") as? UITextField.InputTarget {
+        if let target = fw.property(forName: "fw_inputTarget") as? UITextField.InputTarget {
             return target
         } else if lazyload {
             let target = UITextField.InputTarget(textInput: self)
-            self.fw_observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
-            fw_setProperty(target, forName: "fw_inputTarget")
+            self.fw.observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
+            fw.setProperty(target, forName: "fw_inputTarget")
             return target
         }
         return nil
@@ -3628,20 +3627,20 @@ extension Wrapper where Base: UIViewController {
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var fw_menuDisabled: Bool {
-        get { fw_propertyBool(forName: "fw_menuDisabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_menuDisabled") }
+        get { fw.propertyBool(forName: "fw_menuDisabled") }
+        set { fw.setPropertyBool(newValue, forName: "fw_menuDisabled") }
     }
 
     /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var fw_cursorRect: CGRect {
         get {
-            if let value = fw_property(forName: "fw_cursorRect") as? NSValue {
+            if let value = fw.property(forName: "fw_cursorRect") as? NSValue {
                 return value.cgRectValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
+            fw.setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
         }
     }
 
@@ -3727,8 +3726,8 @@ extension Wrapper where Base: UIViewController {
     /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
     public var fw_lineHeight: CGFloat {
         get {
-            if fw_property(forName: "fw_lineHeight") != nil {
-                return fw_propertyDouble(forName: "fw_lineHeight")
+            if fw.property(forName: "fw_lineHeight") != nil {
+                return fw.propertyDouble(forName: "fw_lineHeight")
             }
             
             var result: CGFloat = 0
@@ -3753,9 +3752,9 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             if newValue > 0 {
-                fw_setPropertyDouble(newValue, forName: "fw_lineHeight")
+                fw.setPropertyDouble(newValue, forName: "fw_lineHeight")
             } else {
-                fw_setProperty(nil, forName: "fw_lineHeight")
+                fw.setProperty(nil, forName: "fw_lineHeight")
             }
             
             self.fw_placeholderLineHeight = newValue
@@ -3879,24 +3878,24 @@ extension Wrapper where Base: UIViewController {
     
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: (UITableViewCell) -> Void = { [weak self] cell in
-            let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
+            let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,
                   self?.indexPath(for: cell) != nil,
                   identifier != previousIdentifier else { return }
             
             exposure()
-            cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+            cell.fw.setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
         }
-        cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        cell.fw.setPropertyCopy(block, forName: "fw_willDisplay")
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
         perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
     }
     
     @objc private func fw_willDisplay(_ cell: UITableViewCell) {
-        let block = cell.fw_property(forName: "fw_willDisplay") as? (UITableViewCell) -> Void
+        let block = cell.fw.property(forName: "fw_willDisplay") as? (UITableViewCell) -> Void
         block?(cell)
     }
     
@@ -3920,11 +3919,11 @@ extension Wrapper where Base: UIViewController {
     /// 调整imageView的位置偏移，默认zero不生效，仅支持default|subtitle样式
     public var fw_imageEdgeInsets: UIEdgeInsets {
         get {
-            let value = fw_property(forName: "fw_imageEdgeInsets") as? NSValue
+            let value = fw.property(forName: "fw_imageEdgeInsets") as? NSValue
             return value?.uiEdgeInsetsValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_imageEdgeInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_imageEdgeInsets")
             FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
@@ -3932,11 +3931,11 @@ extension Wrapper where Base: UIViewController {
     /// 调整textLabel的位置偏移，默认zero不生效，仅支持default|subtitle样式
     public var fw_textEdgeInsets: UIEdgeInsets {
         get {
-            let value = fw_property(forName: "fw_textEdgeInsets") as? NSValue
+            let value = fw.property(forName: "fw_textEdgeInsets") as? NSValue
             return value?.uiEdgeInsetsValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_textEdgeInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_textEdgeInsets")
             FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
@@ -3944,11 +3943,11 @@ extension Wrapper where Base: UIViewController {
     /// 调整detailTextLabel的位置偏移，默认zero不生效，仅支持subtitle样式
     public var fw_detailTextEdgeInsets: UIEdgeInsets {
         get {
-            let value = fw_property(forName: "fw_detailTextEdgeInsets") as? NSValue
+            let value = fw.property(forName: "fw_detailTextEdgeInsets") as? NSValue
             return value?.uiEdgeInsetsValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_detailTextEdgeInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_detailTextEdgeInsets")
             FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
@@ -3956,11 +3955,11 @@ extension Wrapper where Base: UIViewController {
     /// 调整accessoryView的位置偏移，默认zero不生效，仅对自定义accessoryView生效
     public var fw_accessoryEdgeInsets: UIEdgeInsets {
         get {
-            let value = fw_property(forName: "fw_accessoryEdgeInsets") as? NSValue
+            let value = fw.property(forName: "fw_accessoryEdgeInsets") as? NSValue
             return value?.uiEdgeInsetsValue ?? .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_accessoryEdgeInsets")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_accessoryEdgeInsets")
             FrameworkAutoloader.swizzleUIKitTableViewCell()
         }
     }
@@ -4048,8 +4047,8 @@ extension Wrapper where Base: UIViewController {
     }
     
     private var fw_movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
-        get { return fw_property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
-        set { fw_setPropertyCopy(newValue, forName: #function) }
+        get { return fw.property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
+        set { fw.setPropertyCopy(newValue, forName: #function) }
     }
     
     @objc private func fw_movementGestureAction(_ gesture: UILongPressGestureRecognizer) {
@@ -4072,24 +4071,24 @@ extension Wrapper where Base: UIViewController {
     
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw_safeString(key))"
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: (UICollectionViewCell) -> Void = { [weak self] cell in
-            let previousIdentifier = cell.fw_property(forName: "fw_willDisplayIdentifier") as? String
+            let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
             guard self?.visibleCells.contains(cell) ?? false,
                   self?.indexPath(for: cell) != nil,
                   identifier != previousIdentifier else { return }
             
             exposure()
-            cell.fw_setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
+            cell.fw.setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
         }
-        cell.fw_setPropertyCopy(block, forName: "fw_willDisplay")
+        cell.fw.setPropertyCopy(block, forName: "fw_willDisplay")
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
         perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
     }
     
     @objc private func fw_willDisplay(_ cell: UICollectionViewCell) {
-        let block = cell.fw_property(forName: "fw_willDisplay") as? (UICollectionViewCell) -> Void
+        let block = cell.fw.property(forName: "fw_willDisplay") as? (UICollectionViewCell) -> Void
         block?(cell)
     }
     
@@ -4141,13 +4140,13 @@ extension Wrapper where Base: UIViewController {
     /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
     public var fw_contentInset: UIEdgeInsets {
         get {
-            if let value = fw_property(forName: "fw_contentInset") as? NSValue {
+            if let value = fw.property(forName: "fw_contentInset") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
             self.setNeedsLayout()
         }
     }
@@ -4155,13 +4154,13 @@ extension Wrapper where Base: UIViewController {
     /// 自定义取消按钮边距，未设置时为系统默认
     public var fw_cancelButtonInset: UIEdgeInsets {
         get {
-            if let value = fw_property(forName: "fw_cancelButtonInset") as? NSValue {
+            if let value = fw.property(forName: "fw_cancelButtonInset") as? NSValue {
                 return value.uiEdgeInsetsValue
             }
             return .zero
         }
         set {
-            fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_cancelButtonInset")
+            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_cancelButtonInset")
             self.setNeedsLayout()
         }
     }
@@ -4173,16 +4172,16 @@ extension Wrapper where Base: UIViewController {
 
     /// 取消按钮内部视图，showsCancelButton开启后才存在
     public weak var fw_cancelButton: UIButton? {
-        return fw_invokeGetter("cancelButton") as? UIButton
+        return fw.invokeGetter("cancelButton") as? UIButton
     }
     
     /// 输入框的文字颜色
     public var fw_textColor: UIColor? {
         get {
-            fw_property(forName: #function) as? UIColor
+            fw.property(forName: #function) as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: #function)
+            fw.setProperty(newValue, forName: #function)
             searchTextField.textColor = newValue
         }
     }
@@ -4190,10 +4189,10 @@ extension Wrapper where Base: UIViewController {
     /// 输入框的字体，会同时影响placeholder的字体
     public var fw_font: UIFont? {
         get {
-            fw_property(forName: #function) as? UIFont
+            fw.property(forName: #function) as? UIFont
         }
         set {
-            fw_setProperty(newValue, forName: #function)
+            fw.setProperty(newValue, forName: #function)
             if let placeholder = self.placeholder {
                 self.placeholder = placeholder
             }
@@ -4204,10 +4203,10 @@ extension Wrapper where Base: UIViewController {
     /// 输入框内placeholder的颜色
     public var fw_placeholderColor: UIColor? {
         get {
-            fw_property(forName: #function) as? UIColor
+            fw.property(forName: #function) as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: #function)
+            fw.setProperty(newValue, forName: #function)
             if let placeholder = self.placeholder {
                 self.placeholder = placeholder
             }
@@ -4217,10 +4216,10 @@ extension Wrapper where Base: UIViewController {
     /// 设置整体背景色
     public var fw_backgroundColor: UIColor? {
         get {
-            return fw_property(forName: "fw_backgroundColor") as? UIColor
+            return fw.property(forName: "fw_backgroundColor") as? UIColor
         }
         set {
-            fw_setProperty(newValue, forName: "fw_backgroundColor")
+            fw.setProperty(newValue, forName: "fw_backgroundColor")
             self.backgroundImage = UIImage.fw_image(color: newValue)
         }
     }
@@ -4234,13 +4233,13 @@ extension Wrapper where Base: UIViewController {
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
     public var fw_searchIconOffset: CGFloat {
         get {
-            if let value = fw_propertyNumber(forName: "fw_searchIconOffset") {
+            if let value = fw.propertyNumber(forName: "fw_searchIconOffset") {
                 return value.doubleValue
             }
             return self.positionAdjustment(for: .search).horizontal
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_searchIconOffset")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_searchIconOffset")
             self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
         }
     }
@@ -4248,13 +4247,13 @@ extension Wrapper where Base: UIViewController {
     /// 设置清空图标离右侧的偏移位置
     public var fw_clearIconOffset: CGFloat {
         get {
-            if let value = fw_propertyNumber(forName: "fw_clearIconOffset") {
+            if let value = fw.propertyNumber(forName: "fw_clearIconOffset") {
                 return value.doubleValue
             }
             return self.positionAdjustment(for: .clear).horizontal
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_clearIconOffset")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_clearIconOffset")
             self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .clear)
         }
     }
@@ -4268,10 +4267,10 @@ extension Wrapper where Base: UIViewController {
     /// 设置TextField搜索图标(placeholder)是否居中，否则居左
     public var fw_searchIconCenter: Bool {
         get {
-            return fw_propertyBool(forName: "fw_searchIconCenter")
+            return fw.propertyBool(forName: "fw_searchIconCenter")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_searchIconCenter")
+            fw.setPropertyBool(newValue, forName: "fw_searchIconCenter")
             self.setNeedsLayout()
             self.layoutIfNeeded()
         }
@@ -4280,10 +4279,10 @@ extension Wrapper where Base: UIViewController {
     /// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
     public var fw_forceCancelButtonEnabled: Bool {
         get {
-            return fw_propertyBool(forName: "fw_forceCancelButtonEnabled")
+            return fw.propertyBool(forName: "fw_forceCancelButtonEnabled")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
+            fw.setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
             guard let cancelButton = fw_cancelButton else { return }
             if newValue {
                 cancelButton.isEnabled = true
@@ -4367,8 +4366,8 @@ extension Wrapper where Base: UIViewController {
 
     /// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
     public var fw_isDataLoaded: Bool {
-        get { return fw_propertyBool(forName: "fw_isDataLoaded") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isDataLoaded") }
+        get { return fw.propertyBool(forName: "fw_isDataLoaded") }
+        set { fw.setPropertyBool(newValue, forName: "fw_isDataLoaded") }
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
@@ -4391,7 +4390,7 @@ extension Wrapper where Base: UIViewController {
         if layout != nil {
             layout?(viewController.view)
         } else {
-            viewController.view.fw_pinEdges()
+            viewController.view.fw.pinEdges()
         }
         viewController.didMove(toParent: self)
     }
@@ -4436,13 +4435,13 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.point(inside:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
             swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
         ) { store in { selfObject, point, event in
-            if let insetsValue = selfObject.fw_property(forName: "fw_touchInsets") as? NSValue {
+            if let insetsValue = selfObject.fw.property(forName: "fw_touchInsets") as? NSValue {
                 let touchInsets = insetsValue.uiEdgeInsetsValue
                 var bounds = selfObject.bounds
                 bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
@@ -4450,7 +4449,7 @@ extension FrameworkAutoloader {
             }
             
             var pointInside = store.original(selfObject, store.selector, point, event)
-            if (!pointInside && selfObject.fw_propertyBool(forName: "fw_pointInsideSubviews")) {
+            if (!pointInside && selfObject.fw.propertyBool(forName: "fw_pointInsideSubviews")) {
                 for subview in selfObject.subviews {
                     if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
                         pointInside = true
@@ -4461,7 +4460,7 @@ extension FrameworkAutoloader {
             return pointInside
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(UIView.hitTest(_:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
@@ -4486,14 +4485,14 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitLabel() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(UILabel.drawText(in:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
             swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
         ) { store in { selfObject, aRect in
             var rect = aRect
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
                 rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
             }
             
@@ -4509,13 +4508,13 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, rect)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(getter: UILabel.intrinsicContentSize),
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
             swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
         ) { store in { selfObject in
-            if selfObject.fw_property(forName: "fw_contentInset") != nil {
+            if selfObject.fw.property(forName: "fw_contentInset") != nil {
                 let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
                 return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
             }
@@ -4523,14 +4522,14 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UILabel.self,
             selector: #selector(UILabel.sizeThatFits(_:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
             swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
         ) { store in { selfObject, aSize in
             var size = aSize
-            if let contentInsetValue = selfObject.fw_property(forName: "fw_contentInset") as? NSValue {
+            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
                 let contentInset = contentInsetValue.uiEdgeInsetsValue
                 size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
                 var fitsSize = store.original(selfObject, store.selector, size)
@@ -4543,14 +4542,14 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, size)
         }}
         
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.text), swizzleMethod: #selector(UILabel.fw_swizzleSetText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.attributedText), swizzleMethod: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.lineBreakMode), swizzleMethod: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
-        UILabel.fw_exchangeInstanceMethod(#selector(setter: UILabel.textAlignment), swizzleMethod: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.text), swizzleSelector: #selector(UILabel.fw_swizzleSetText(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.attributedText), swizzleSelector: #selector(UILabel.fw_swizzleSetAttributedText(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.lineBreakMode), swizzleSelector: #selector(UILabel.fw_swizzleSetLineBreakMode(_:)))
+        NSObject.fw.exchangeInstanceMethod(UILabel.self, originalSelector: #selector(setter: UILabel.textAlignment), swizzleSelector: #selector(UILabel.fw_swizzleSetTextAlignment(_:)))
     }
     
     private static func swizzleUIKitControl() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIControl.self,
             selector: #selector(UIControl.sendAction(_:to:for:)),
             methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
@@ -4568,7 +4567,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitButton() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIButton.self,
             selector: #selector(setter: UIButton.isEnabled),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
@@ -4584,7 +4583,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIButton.self,
             selector: #selector(setter: UIButton.isHighlighted),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
@@ -4602,7 +4601,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitSwitch() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISwitch.self,
             selector: #selector(UISwitch.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
@@ -4619,7 +4618,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitTextField() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextField.self,
             selector: #selector(UITextField.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
@@ -4630,14 +4629,14 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, action, sender)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextField.self,
             selector: #selector(UITextField.caretRect(for:)),
             methodSignature: (@convention(c) (UITextField, Selector, UITextPosition) -> CGRect).self,
             swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
         ) { store in { selfObject, position in
             var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
             if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
@@ -4649,7 +4648,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitTextView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextView.self,
             selector: #selector(UITextView.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
@@ -4660,14 +4659,14 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, action, sender)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITextView.self,
             selector: #selector(UITextView.caretRect(for:)),
             methodSignature: (@convention(c) (UITextView, Selector, UITextPosition) -> CGRect).self,
             swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
         ) { store in { selfObject, position in
             var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw_property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
             if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
@@ -4679,7 +4678,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleUIKitSearchBar() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(UISearchBar.layoutSubviews),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
@@ -4687,9 +4686,9 @@ extension FrameworkAutoloader {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if let isCenterValue = selfObject.fw_propertyNumber(forName: "fw_searchIconCenter") {
+            if let isCenterValue = selfObject.fw.propertyNumber(forName: "fw_searchIconCenter") {
                 if !isCenterValue.boolValue {
-                    let offset = selfObject.fw_propertyNumber(forName: "fw_searchIconOffset")
+                    let offset = selfObject.fw.propertyNumber(forName: "fw_searchIconOffset")
                     selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
                 } else {
                     let textField = selfObject.fw_textField
@@ -4707,7 +4706,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(setter: UISearchBar.placeholder),
             methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
@@ -4730,7 +4729,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UISearchBar.self,
             selector: #selector(UISearchBar.didMoveToWindow),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
@@ -4745,7 +4744,7 @@ extension FrameworkAutoloader {
         }}
         
         // iOS13因为层级关系变化，兼容处理
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass("UISearchBarTextField"),
             selector: #selector(setter: UITextField.frame),
             methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
@@ -4755,7 +4754,7 @@ extension FrameworkAutoloader {
             let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
             if let searchBar = searchBar {
                 var textFieldMaxX = searchBar.bounds.size.width
-                if let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue,
+                if let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue,
                    let cancelButton = searchBar.fw_cancelButton {
                     let cancelInset = cancelInsetValue.uiEdgeInsetsValue
                     let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
@@ -4763,7 +4762,7 @@ extension FrameworkAutoloader {
                     frame.size.width = textFieldMaxX - frame.origin.x
                 }
                 
-                if let contentInsetValue = searchBar.fw_property(forName: "fw_contentInset") as? NSValue {
+                if let contentInsetValue = searchBar.fw.property(forName: "fw_contentInset") as? NSValue {
                     let contentInset = contentInsetValue.uiEdgeInsetsValue
                     frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
                 }
@@ -4772,7 +4771,7 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, frame)
         }}
         
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass("UINavigationButton"),
             selector: #selector(setter: UIButton.frame),
             methodSignature: (@convention(c) (UIButton, Selector, CGRect) -> Void).self,
@@ -4781,7 +4780,7 @@ extension FrameworkAutoloader {
             var frame = aFrame
             let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
             if let searchBar = searchBar,
-               let cancelInsetValue = searchBar.fw_property(forName: "fw_cancelButtonInset") as? NSValue {
+               let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue {
                 let cancelInset = cancelInsetValue.uiEdgeInsetsValue
                 let cancelWidth = selfObject.sizeThatFits(searchBar.bounds.size).width
                 frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.right
@@ -4799,10 +4798,10 @@ extension FrameworkAutoloader {
         guard !swizzleUIKitScrollViewFinished else { return }
         swizzleUIKitScrollViewFinished = true
         
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
-        UIScrollView.fw_exchangeInstanceMethod(#selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleMethod: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
     private static var swizzleUIKitTableViewCellFinished = false
@@ -4811,7 +4810,7 @@ extension FrameworkAutoloader {
         guard !swizzleUIKitTableViewCellFinished else { return }
         swizzleUIKitTableViewCellFinished = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,
             selector: #selector(UITableViewCell.layoutSubviews),
             methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,

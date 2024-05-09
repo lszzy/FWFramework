@@ -1,5 +1,5 @@
 //
-//  Detector.swift
+//  Recognizer.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/25.
@@ -10,13 +10,27 @@ import UIKit
 import Vision
 #endif
 
-/// 智能检测器
-public class Detector: NSObject {
+/// 图像文本识别器
+public class Recognizer: NSObject {
+    
+    /// 识别结果
+    public struct Result {
+        /// 识别文本
+        public var text: String = ""
+        /// 可信度，0到1
+        public var confidence: Float = 0
+        /// 图片大小
+        public var imageSize: CGSize = .zero
+        /// 识别区域
+        public var rect: CGRect = .zero
+        
+        public init() {}
+    }
     
     /// 识别图片文字，可设置语言(zh-CN,en-US)等，完成时主线程回调结果
-    public static func recognizeText(in image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([OcrResult]) -> Void) {
+    public static func recognizeText(in image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            Detector.performOcr(image: image, configuration: configuration) { results in
+            performOcr(image: image, configuration: configuration) { results in
                 DispatchQueue.main.async {
                     completion(results)
                 }
@@ -24,7 +38,8 @@ public class Detector: NSObject {
         }
     }
     
-    private static func performOcr(image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([OcrResult]) -> Void) {
+    // MARK: - Private
+    private static func performOcr(image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
         let textRequest = VNRecognizeTextRequest() { request, error in
             let imageSize = CGSize(width: image.width, height: image.height)
             guard let results = request.results as? [VNRecognizedTextObservation], !results.isEmpty else {
@@ -32,22 +47,22 @@ public class Detector: NSObject {
                 return
             }
             
-            let outputObjects: [OcrResult] = results.compactMap { result in
+            let outputObjects: [Result] = results.compactMap { result in
                 guard let candidate = result.topCandidates(1).first,
                       let box = try? candidate.boundingBox(for: candidate.string.startIndex..<candidate.string.endIndex) else {
                     return nil
                 }
                 
                 let unwrappedBox: VNRectangleObservation = box
-                let boxRect = Detector.convertToImageRect(boundingBox: unwrappedBox, imageSize: imageSize)
+                let boxRect = convertToImageRect(boundingBox: unwrappedBox, imageSize: imageSize)
                 let confidence: Float = candidate.confidence
                 
-                let ocrResult = OcrResult()
-                ocrResult.text = candidate.string
-                ocrResult.confidence = confidence
-                ocrResult.rect = boxRect
-                ocrResult.imageSize = imageSize
-                return ocrResult
+                var result = Result()
+                result.text = candidate.string
+                result.confidence = confidence
+                result.rect = boxRect
+                result.imageSize = imageSize
+                return result
             }
             completion(outputObjects)
         }
@@ -75,19 +90,5 @@ public class Detector: NSObject {
                       width: abs(bottomRight.x - topLeft.x),
                       height: abs(topLeft.y - bottomRight.y))
     }
-    
-}
-
-/// OCR扫描结果
-public class OcrResult: NSObject {
-    
-    /// 识别文本
-    public var text: String = ""
-    /// 可信度，0到1
-    public var confidence: Float = 0
-    /// 图片大小
-    public var imageSize: CGSize = .zero
-    /// 识别区域
-    public var rect: CGRect = .zero
     
 }

@@ -196,8 +196,8 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         return result
     }()
     
-    private var segmentWidth: CGFloat = 0
-    private var segmentWidthsArray: [CGFloat] = []
+    @_spi(FW) public var segmentWidth: CGFloat = 0
+    @_spi(FW) public var segmentWidthsArray: [CGFloat] = []
     private var titleBackgroundLayers: [CALayer] = []
     private var segmentBackgroundLayers: [CALayer] = []
     
@@ -943,7 +943,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.scrollRectToVisible(rectToScrollTo, animated: animated)
         
         if !animated {
-            fw_statisticalCheckExposure()
+            BannerView.trackExposureBlock?(self)
         }
     }
     
@@ -1024,7 +1024,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
         
         indexChangedBlock?(index)
-        fw_statisticalTrackClick(indexPath: IndexPath(row: index, section: 0), event: nil)
+        _ = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0))
     }
     
     private func resultingTitleTextAttributes() -> [NSAttributedString.Key: Any] {
@@ -1061,16 +1061,16 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            fw_statisticalCheckExposure()
+            BannerView.trackExposureBlock?(self)
         }
     }
     
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        fw_statisticalCheckExposure()
+        BannerView.trackExposureBlock?(self)
     }
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        fw_statisticalCheckExposure()
+        BannerView.trackExposureBlock?(self)
     }
     
     // MARK: - SegmentedAccessibilityDelegate
@@ -1106,39 +1106,6 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     
     open override func accessibilityElement(at index: Int) -> Any? {
         return _accessibilityElements.safeElement(index)
-    }
-    
-    // MARK: - StatisticalViewProtocol
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        return true
-    }
-    
-    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        let visibleMin = scrollView.contentOffset.x
-        let visibleMax = visibleMin + scrollView.frame.size.width
-        var sectionCount = 0
-        var dynamicWidth = false
-        if self.type == .text && segmentWidthStyle == .fixed {
-            sectionCount = sectionTitles.count
-        } else if segmentWidthStyle == .dynamic {
-            sectionCount = segmentWidthsArray.count
-            dynamicWidth = true
-        } else {
-            sectionCount = sectionImages.count
-        }
-        
-        var indexPaths = [IndexPath]()
-        var currentMin = contentEdgeInset.left
-        for i in 0..<sectionCount {
-            let currentMax = currentMin + (dynamicWidth ? segmentWidthsArray[i] : segmentWidth)
-            if currentMin > visibleMax { break }
-            
-            if currentMin >= visibleMin && currentMax <= visibleMax {
-                indexPaths.append(IndexPath(row: i, section: 0))
-            }
-            currentMin = currentMax
-        }
-        return indexPaths
     }
     
 }

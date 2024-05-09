@@ -29,24 +29,24 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
     
     /// 滚动视图，默认不显示滚动条
     public var scrollView: UIScrollView {
-        if let result = fw_property(forName: "scrollView") as? UIScrollView {
+        if let result = fw.property(forName: "scrollView") as? UIScrollView {
             return result
         } else {
             let result = UIScrollView()
             result.showsVerticalScrollIndicator = false
             result.showsHorizontalScrollIndicator = false
-            fw_setProperty(result, forName: "scrollView")
+            fw.setProperty(result, forName: "scrollView")
             return result
         }
     }
     
     /// 内容容器视图，自动撑开，子视图需要添加到此视图上
     public var contentView: UIView {
-        if let result = fw_property(forName: "contentView") as? UIView {
+        if let result = fw.property(forName: "contentView") as? UIView {
             return result
         } else {
             let result = UIView()
-            fw_setProperty(result, forName: "contentView")
+            fw.setProperty(result, forName: "contentView")
             return result
         }
     }
@@ -56,7 +56,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
     
     /// 渲染滚动视图布局，setupSubviews之前调用，默认铺满
     public func setupScrollLayout() {
-        scrollView.fw_pinEdges()
+        scrollView.fw.pinEdges()
     }
     
 }
@@ -72,7 +72,7 @@ internal extension ViewControllerManager {
         
         let contentView = viewController.contentView
         scrollView.addSubview(contentView)
-        contentView.fw_pinEdges()
+        contentView.fw.pinEdges()
         
         hookScrollViewController?(viewController)
         

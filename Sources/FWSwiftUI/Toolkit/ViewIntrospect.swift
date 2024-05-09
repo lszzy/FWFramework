@@ -668,7 +668,7 @@ public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: Intro
         #if DEBUG
         let filePath = file.withUTF8Buffer { String(decoding: $0, as: UTF8.self) }
         let fileName = URL(fileURLWithPath: filePath).lastPathComponent
-        Logger.debug(group: Logger.fw_moduleName, "\n===========RUNTIME ERROR===========\nIf you're seeing this, someone forgot to mark %@:%@ as unavailable.\nThis won't have any effect, but it should be disallowed altogether.", fileName, "\(line)")
+        Logger.debug(group: Logger.moduleName, "\n===========RUNTIME ERROR===========\nIf you're seeing this, someone forgot to mark %@:%@ as unavailable.\nThis won't have any effect, but it should be disallowed altogether.", fileName, "\(line)")
         #endif
         return .unavailable
     }

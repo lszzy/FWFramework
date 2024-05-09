@@ -7,6 +7,9 @@
 
 import Foundation
 import SQLite3
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 数据库模型协议信息
 @objc public protocol DatabaseModel: NSObjectProtocol {
@@ -882,7 +885,7 @@ private extension DatabaseManager {
                         let blob = sqlite3_column_blob(ppStmt, column)
                         if blob != nil {
                             let value = NSData(bytes: blob, length: Int(length)) as Data
-                            if var fieldValue = value.fw_unarchivedObject() {
+                            if var fieldValue = value.fw.unarchivedObject() {
                                 switch propertyInfo.type {
                                 case .mutableArray:
                                     if let valueArray = fieldValue as? NSArray {
@@ -1006,16 +1009,16 @@ private extension DatabaseManager {
             } else {
                 switch propertyInfo.type {
                 case .mutableArray:
-                    let data = Data.fw_archivedData(NSMutableArray())
+                    let data = Data.fw.archivedData(NSMutableArray())
                     valueArray.append(data ?? Data())
                 case .mutableDictionary:
-                    let data = Data.fw_archivedData(NSMutableDictionary())
+                    let data = Data.fw.archivedData(NSMutableDictionary())
                     valueArray.append(data ?? Data())
                 case .array:
-                    let data = Data.fw_archivedData(NSArray())
+                    let data = Data.fw.archivedData(NSArray())
                     valueArray.append(data ?? Data())
                 case .dictionary:
-                    let data = Data.fw_archivedData(NSDictionary())
+                    let data = Data.fw.archivedData(NSDictionary())
                     valueArray.append(data ?? Data())
                 case .data:
                     valueArray.append(Data())
@@ -1060,7 +1063,7 @@ private extension DatabaseManager {
                 case .mutableDictionary, .mutableArray, .dictionary, .array:
                     var data: NSData?
                     if value is NSArray || value is NSDictionary {
-                        data = Data.fw_archivedData(value) as? NSData
+                        data = Data.fw.archivedData(value) as? NSData
                     } else {
                         data = value as? NSData
                     }
@@ -1073,7 +1076,7 @@ private extension DatabaseManager {
                     let data = value as? NSData ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, data.bytes, Int32(data.length), nil)
                 case .string:
-                    let string = String.fw_safeString(value)
+                    let string = String.fw.safeString(value)
                     sqlite3_bind_text(ppStmt, index, (string as NSString).utf8String, -1, nil)
                 case .number, .double, .float:
                     sqlite3_bind_double(ppStmt, index, (value as? NSNumber)?.doubleValue ?? 0)
@@ -1149,7 +1152,7 @@ private extension DatabaseManager {
                             value = NSArray()
                         }
                     }
-                    let data = Data.fw_archivedData(value) as? NSData
+                    let data = Data.fw.archivedData(value) as? NSData
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                     if data == nil {
@@ -1262,7 +1265,7 @@ private extension DatabaseManager {
     
     static func log(_ msg: String, error: Bool = false) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "Database:%@ %@", error ? " [Error]" : "", msg)
+        Logger.debug(group: Logger.moduleName, "Database:%@ %@", error ? " [Error]" : "", msg)
         #endif
     }
     

@@ -60,11 +60,11 @@ open class ReusableViewPool: NSObject {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        if let instance = self.fw_property(forName: #function) as? Self {
+        if let instance = NSObject.fw.getAssociatedObject(self, key: #function) as? Self {
             return instance
         } else {
             let instance = self.init()
-            self.fw_setProperty(instance, forName: #function)
+            NSObject.fw.setAssociatedObject(self, key: #function, value: instance)
             return instance
         }
     }
@@ -297,32 +297,32 @@ public protocol ReusableViewProtocol {
     
     /// 视图持有者对象，弱引用
     public weak var fw_viewHolder: NSObject? {
-        get { return fw_property(forName: "fw_viewHolder") as? NSObject }
-        set { fw_setPropertyWeak(newValue, forName: "fw_viewHolder") }
+        get { return fw.property(forName: "fw_viewHolder") as? NSObject }
+        set { fw.setPropertyWeak(newValue, forName: "fw_viewHolder") }
     }
     
     /// 重用唯一标志，默认nil
     public var fw_reuseIdentifier: String? {
-        get { return fw_property(forName: "fw_reuseIdentifier") as? String }
-        set { fw_setProperty(newValue, forName: "fw_reuseIdentifier") }
+        get { return fw.property(forName: "fw_reuseIdentifier") as? String }
+        set { fw.setProperty(newValue, forName: "fw_reuseIdentifier") }
     }
     
     /// 视图已重用次数，默认0
     public var fw_reusedTimes: Int {
-        get { return fw_propertyInt(forName: "fw_reusedTimes") }
-        set { fw_setPropertyInt(newValue, forName: "fw_reusedTimes") }
+        get { return fw.propertyInt(forName: "fw_reusedTimes") }
+        set { fw.setPropertyInt(newValue, forName: "fw_reusedTimes") }
     }
     
     /// 标记重用准备中(true)，准备中的视图在完成(false)之前都不会被dequeue，默认false
     public var fw_reusePreparing: Bool {
-        get { return fw_propertyBool(forName: "fw_reusePreparing") }
-        set { fw_setPropertyBool(newValue, forName: "fw_reusePreparing") }
+        get { return fw.propertyBool(forName: "fw_reusePreparing") }
+        set { fw.setPropertyBool(newValue, forName: "fw_reusePreparing") }
     }
     
     /// 标记重用失效，将自动从缓存池移除
     public var fw_reuseInvalid: Bool {
-        get { return fw_propertyBool(forName: "fw_reuseInvalid") }
-        set { fw_setPropertyBool(newValue, forName: "fw_reuseInvalid") }
+        get { return fw.propertyBool(forName: "fw_reuseInvalid") }
+        set { fw.setPropertyBool(newValue, forName: "fw_reuseInvalid") }
     }
     
     /// 按需预加载下一个可重用视图，仅当前视图可重用时生效

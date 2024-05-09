@@ -146,39 +146,39 @@ extension Wrapper where Base: UIToolbar {
     /// 自定义转场过程中containerView的背景色，默认透明
     public var fw_containerBackgroundColor: UIColor! {
         get {
-            let backgroundColor = fw_property(forName: "fw_containerBackgroundColor") as? UIColor
+            let backgroundColor = fw.property(forName: "fw_containerBackgroundColor") as? UIColor
             return backgroundColor ?? .clear
         }
         set {
-            fw_setProperty(newValue, forName: "fw_containerBackgroundColor")
+            fw.setProperty(newValue, forName: "fw_containerBackgroundColor")
         }
     }
     
     private var fw_backgroundViewHidden: Bool {
         get {
-            return fw_propertyBool(forName: "fw_backgroundViewHidden")
+            return fw.propertyBool(forName: "fw_backgroundViewHidden")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_backgroundViewHidden")
+            fw.setPropertyBool(newValue, forName: "fw_backgroundViewHidden")
             self.navigationBar.fw_backgroundView?.isHidden = newValue
         }
     }
     
     private weak var fw_transitionContextToViewController: UIViewController? {
         get {
-            return fw_property(forName: "fw_transitionContextToViewController") as? UIViewController
+            return fw.property(forName: "fw_transitionContextToViewController") as? UIViewController
         }
         set {
-            fw_setPropertyWeak(newValue, forName: "fw_transitionContextToViewController")
+            fw.setPropertyWeak(newValue, forName: "fw_transitionContextToViewController")
         }
     }
     
     fileprivate var fw_shouldBottomBarBeHidden: Bool {
         get {
-            return fw_propertyBool(forName: "fw_shouldBottomBarBeHidden")
+            return fw.propertyBool(forName: "fw_shouldBottomBarBeHidden")
         }
         set {
-            fw_setPropertyBool(newValue, forName: "fw_shouldBottomBarBeHidden")
+            fw.setPropertyBool(newValue, forName: "fw_shouldBottomBarBeHidden")
         }
     }
     
@@ -187,7 +187,7 @@ extension Wrapper where Base: UIToolbar {
         guard !fw_staticBarTransitionEnabled else { return }
         fw_staticBarTransitionEnabled = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
@@ -202,7 +202,7 @@ extension Wrapper where Base: UIToolbar {
             }
         }}
         
-        NSObject.fw_swizzleMethod(
+        NSObject.fw.swizzleMethod(
             objc_getClass(String(format: "%@%@%@", "_U", "IBarBack", "ground")),
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
@@ -223,7 +223,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector, hidden)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -244,7 +244,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -276,7 +276,7 @@ extension Wrapper where Base: UIToolbar {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.pushViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> Void).self,
@@ -303,7 +303,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, viewController, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> UIViewController?).self,
@@ -328,7 +328,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popToViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
@@ -352,7 +352,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, viewController, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.popToRootViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
@@ -377,7 +377,7 @@ extension Wrapper where Base: UIToolbar {
             return store.original(selfObject, store.selector, animated)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationController.setViewControllers(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
@@ -426,24 +426,24 @@ extension Wrapper where Base: UIToolbar {
     }
     
     private var fw_popGestureRecognizerDelegate: FullscreenPopGestureRecognizerDelegate {
-        if let delegate = fw_property(forName: "fw_popGestureRecognizerDelegate") as? FullscreenPopGestureRecognizerDelegate {
+        if let delegate = fw.property(forName: "fw_popGestureRecognizerDelegate") as? FullscreenPopGestureRecognizerDelegate {
             return delegate
         } else {
             let delegate = FullscreenPopGestureRecognizerDelegate()
             delegate.navigationController = self
-            fw_setProperty(delegate, forName: "fw_popGestureRecognizerDelegate")
+            fw.setProperty(delegate, forName: "fw_popGestureRecognizerDelegate")
             return delegate
         }
     }
 
     /// 导航栏全屏返回手势对象
     public var fw_fullscreenPopGestureRecognizer: UIPanGestureRecognizer {
-        if let gestureRecognizer = fw_property(forName: "fw_fullscreenPopGestureRecognizer") as? UIPanGestureRecognizer {
+        if let gestureRecognizer = fw.property(forName: "fw_fullscreenPopGestureRecognizer") as? UIPanGestureRecognizer {
             return gestureRecognizer
         } else {
             let gestureRecognizer = UIPanGestureRecognizer()
             gestureRecognizer.maximumNumberOfTouches = 1
-            fw_setProperty(gestureRecognizer, forName: "fw_fullscreenPopGestureRecognizer")
+            fw.setProperty(gestureRecognizer, forName: "fw_fullscreenPopGestureRecognizer")
             return gestureRecognizer
         }
     }
@@ -469,8 +469,8 @@ extension Wrapper where Base: UIToolbar {
     
     /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
     public var fw_barTransitionIdentifier: AnyHashable? {
-        get { return fw_property(forName: "fw_barTransitionIdentifier") as? AnyHashable }
-        set { fw_setProperty(newValue, forName: "fw_barTransitionIdentifier") }
+        get { return fw.property(forName: "fw_barTransitionIdentifier") as? AnyHashable }
+        set { fw.setProperty(newValue, forName: "fw_barTransitionIdentifier") }
     }
     
     /// 标记转场导航栏样式需要刷新，如果viewDidAppear之前导航栏样式发生了改变，可调用此方法
@@ -481,8 +481,8 @@ extension Wrapper where Base: UIToolbar {
     }
     
     fileprivate var fw_transitionNavigationBar: UINavigationBar? {
-        get { return fw_property(forName: "fw_transitionNavigationBar") as? UINavigationBar }
-        set { fw_setProperty(newValue, forName: "fw_transitionNavigationBar") }
+        get { return fw.property(forName: "fw_transitionNavigationBar") as? UINavigationBar }
+        set { fw.setProperty(newValue, forName: "fw_transitionNavigationBar") }
     }
     
     fileprivate func fw_resizeTransitionNavigationBarFrame() {
@@ -527,14 +527,14 @@ extension Wrapper where Base: UIToolbar {
     
     /// 视图控制器是否禁用全屏返回手势，默认NO
     public var fw_fullscreenPopGestureDisabled: Bool {
-        get { return fw_propertyBool(forName: "fw_fullscreenPopGestureDisabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_fullscreenPopGestureDisabled") }
+        get { return fw.propertyBool(forName: "fw_fullscreenPopGestureDisabled") }
+        set { fw.setPropertyBool(newValue, forName: "fw_fullscreenPopGestureDisabled") }
     }
 
     /// 视图控制器全屏手势距离左侧最大距离，默认0，无限制
     public var fw_fullscreenPopGestureDistance: CGFloat {
-        get { return fw_propertyDouble(forName: "fw_fullscreenPopGestureDistance") }
-        set { fw_setPropertyDouble(newValue, forName: "fw_fullscreenPopGestureDistance") }
+        get { return fw.propertyDouble(forName: "fw_fullscreenPopGestureDistance") }
+        set { fw.setPropertyDouble(newValue, forName: "fw_fullscreenPopGestureDistance") }
     }
     
 }
@@ -543,7 +543,7 @@ extension Wrapper where Base: UIToolbar {
     
     /// 导航栏背景视图，显示背景色和背景图片等
     public var fw_backgroundView: UIView? {
-        return fw_invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
+        return fw.invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
     }
     
     /// 导航栏内容视图，iOS11+才存在，显示item和titleView等
@@ -572,8 +572,8 @@ extension Wrapper where Base: UIToolbar {
     }
     
     fileprivate var fw_isFakeBar: Bool {
-        get { return fw_propertyBool(forName: "fw_isFakeBar") }
-        set { fw_setPropertyBool(newValue, forName: "fw_isFakeBar") }
+        get { return fw.propertyBool(forName: "fw_isFakeBar") }
+        set { fw.setPropertyBool(newValue, forName: "fw_isFakeBar") }
     }
     
     fileprivate func fw_replaceStyle(navigationBar: UINavigationBar) {
@@ -585,7 +585,7 @@ extension Wrapper where Base: UIToolbar {
         self.titleTextAttributes = navigationBar.titleTextAttributes
         self.largeTitleTextAttributes = navigationBar.largeTitleTextAttributes
         
-        if UINavigationBar.fw_appearanceEnabled {
+        if UINavigationBar.fw.appearanceEnabled {
             self.standardAppearance = navigationBar.standardAppearance
             self.compactAppearance = navigationBar.compactAppearance
             self.scrollEdgeAppearance = navigationBar.scrollEdgeAppearance
@@ -605,7 +605,7 @@ extension Wrapper where Base: UIToolbar {
     
     /// 工具栏背景视图，显示背景色和背景图片等。如果标签栏同时显示，背景视图高度也会包含标签栏高度
     public var fw_backgroundView: UIView? {
-        return fw_invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
+        return fw.invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
     }
     
     /// 工具栏内容视图，iOS11+才存在，显示item等
@@ -634,7 +634,7 @@ extension FrameworkAutoloader {
     private static func swizzleNavigationController() {
         // 修复iOS14.0如果pop到一个hidesBottomBarWhenPushed=NO的vc，tabBar无法正确显示出来的bug；iOS14.2已修复该问题
         if #available(iOS 14.2, *) {} else if #available(iOS 14.0, *) {
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToViewController(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
@@ -660,7 +660,7 @@ extension FrameworkAutoloader {
                 return result
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToRootViewController(animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
@@ -675,7 +675,7 @@ extension FrameworkAutoloader {
                 return result
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: #selector(UINavigationController.setViewControllers(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
@@ -698,7 +698,7 @@ extension FrameworkAutoloader {
                 selfObject.fw_shouldBottomBarBeHidden = false
             }}
             
-            NSObject.fw_swizzleInstanceMethod(
+            NSObject.fw.swizzleInstanceMethod(
                 UINavigationController.self,
                 selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
                 methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,

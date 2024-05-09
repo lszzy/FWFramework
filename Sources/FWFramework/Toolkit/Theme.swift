@@ -305,7 +305,7 @@ public class ThemeManager: NSObject {
             if newValue && self.mode != .system {
                 style = self.mode == .dark ? .dark : .light
             }
-            UIWindow.fw_mainWindow?.overrideUserInterfaceStyle = style
+            UIWindow.fw.main?.overrideUserInterfaceStyle = style
         }
     }
     private var _overrideWindow = false
@@ -387,8 +387,8 @@ public class ThemeObject<T>: NSObject {
     }
     
     private var fw_themeObject: ThemeObject<UIColor>? {
-        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIColor> }
-        set { fw_setProperty(newValue, forName: "fw_themeObject") }
+        get { fw.property(forName: "fw_themeObject") as? ThemeObject<UIColor> }
+        set { fw.setProperty(newValue, forName: "fw_themeObject") }
     }
     
     /// 动态创建主题色，分别指定浅色和深色
@@ -470,8 +470,8 @@ public class ThemeObject<T>: NSObject {
     }
     
     private var fw_themeObject: ThemeObject<UIImage>? {
-        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
-        set { fw_setProperty(newValue, forName: "fw_themeObject") }
+        get { fw.property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
+        set { fw.setProperty(newValue, forName: "fw_themeObject") }
     }
     
     // MARK: - Color
@@ -565,7 +565,7 @@ public class ThemeObject<T>: NSObject {
 
     /// 指定主题样式获取对应静态图片用于显示，iOS13+可跟随系统改变
     public func fw_image(forStyle style: ThemeStyle) -> UIImage? {
-        let isThemeAsset = fw_propertyBool(forName: "fw_isThemeAsset")
+        let isThemeAsset = fw.propertyBool(forName: "fw_isThemeAsset")
         if isThemeAsset {
             let traitCollection = UITraitCollection(userInterfaceStyle: style == .dark ? .dark : .light)
             return self.image(with: traitCollection)
@@ -576,13 +576,13 @@ public class ThemeObject<T>: NSObject {
 
     /// 是否是主题图片资源，仅支持判断使用fwTheme创建的图片资源
     public var fw_isThemeAsset: Bool {
-        let isThemeAsset = fw_propertyBool(forName: "fw_isThemeAsset")
+        let isThemeAsset = fw.propertyBool(forName: "fw_isThemeAsset")
         return isThemeAsset || fw_themeObject != nil
     }
     
     private var fw_themeObject: ThemeObject<UIImage>? {
-        get { fw_property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
-        set { fw_setProperty(newValue, forName: "fw_themeObject") }
+        get { fw.property(forName: "fw_themeObject") as? ThemeObject<UIImage> }
+        set { fw.setProperty(newValue, forName: "fw_themeObject") }
     }
     
     /// 创建主题动态图片资源，分别指定浅色和深色，系统方式，推荐使用
@@ -594,7 +594,7 @@ public class ThemeObject<T>: NSObject {
         if let dark = dark {
             asset.register(dark, with: UITraitCollection(userInterfaceStyle: .dark))
         }
-        asset.fw_setPropertyBool(true, forName: "fw_isThemeAsset")
+        asset.fw.setPropertyBool(true, forName: "fw_isThemeAsset")
         return asset
     }
 
@@ -613,11 +613,11 @@ public class ThemeObject<T>: NSObject {
     /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
     public weak var fw_themeContext: (NSObject & UITraitEnvironment)? {
         get {
-            return fw_property(forName: "fw_themeContext") as? (NSObject & UITraitEnvironment)
+            return fw.property(forName: "fw_themeContext") as? (NSObject & UITraitEnvironment)
         }
         set {
             let oldContext: NSObject? = fw_themeContext
-            fw_setPropertyWeak(newValue, forName: "fw_themeContext")
+            fw.setPropertyWeak(newValue, forName: "fw_themeContext")
             
             if let oldContext = oldContext {
                 if let oldIdentifier = fw_themeContextIdentifier {
@@ -657,17 +657,17 @@ public class ThemeObject<T>: NSObject {
     }
     
     private var fw_themeContextIdentifier: String? {
-        get { fw_property(forName: "fw_themeContextIdentifier") as? String }
-        set { fw_setPropertyCopy(newValue, forName: "fw_themeContextIdentifier") }
+        get { fw.property(forName: "fw_themeContextIdentifier") as? String }
+        set { fw.setPropertyCopy(newValue, forName: "fw_themeContextIdentifier") }
     }
     
     private var fw_issetThemeListeners: Bool {
-        return fw_property(forName: "fw_themeListeners") != nil
+        return fw.property(forName: "fw_themeListeners") != nil
     }
     
     private var fw_themeListeners: [String: (ThemeStyle) -> Void] {
-        get { return fw_property(forName: "fw_themeListeners") as? [String: (ThemeStyle) -> Void] ?? [:] }
-        set { fw_setProperty(newValue, forName: "fw_themeListeners") }
+        get { return fw.property(forName: "fw_themeListeners") as? [String: (ThemeStyle) -> Void] ?? [:] }
+        set { fw.setProperty(newValue, forName: "fw_themeListeners") }
     }
     
     fileprivate func fw_notifyThemeChanged(_ style: ThemeStyle) {
@@ -703,11 +703,11 @@ public class ThemeObject<T>: NSObject {
     /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
     public var fw_themeImage: UIImage? {
         get {
-            return fw_property(forName: "fw_themeImage") as? UIImage
+            return fw.property(forName: "fw_themeImage") as? UIImage
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeImage")
-            fw_setProperty(nil, forName: "fw_themeAsset")
+            fw.setProperty(newValue, forName: "fw_themeImage")
+            fw.setProperty(nil, forName: "fw_themeAsset")
             self.image = newValue?.fw_image
         }
     }
@@ -715,11 +715,11 @@ public class ThemeObject<T>: NSObject {
     /// 设置主题图片资源，自动跟随系统改变，清空时需置为nil，二选一
     public var fw_themeAsset: UIImageAsset? {
         get {
-            return fw_property(forName: "fw_themeAsset") as? UIImageAsset
+            return fw.property(forName: "fw_themeAsset") as? UIImageAsset
         }
         set {
-            fw_setProperty(newValue, forName: "fw_themeAsset")
-            fw_setProperty(nil, forName: "fw_themeImage")
+            fw.setProperty(newValue, forName: "fw_themeAsset")
+            fw.setProperty(nil, forName: "fw_themeImage")
             self.image = newValue?.fw_image
         }
     }
@@ -754,7 +754,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleThemeClass(_ themeClass: AnyClass) {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,

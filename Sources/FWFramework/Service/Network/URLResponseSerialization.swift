@@ -21,11 +21,11 @@ open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
     }
     
     open func setUserInfo(_ userInfo: [AnyHashable: Any]?, for response: URLResponse?) {
-        response?.fw_setPropertyCopy(userInfo, forName: "userInfo")
+        response?.fw.setPropertyCopy(userInfo, forName: "userInfo")
     }
     
     open func userInfo(for response: URLResponse?) -> [AnyHashable: Any]? {
-        return response?.fw_property(forName: "userInfo") as? [AnyHashable: Any]
+        return response?.fw.property(forName: "userInfo") as? [AnyHashable: Any]
     }
     
     open func validateResponse(_ response: URLResponse?, data: Data) throws {
@@ -133,7 +133,7 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
             throw NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo)
         }
         
-        var responseObject = try Data.fw_jsonDecode(data, options: readingOptions)
+        var responseObject = try Data.fw.jsonDecode(data, options: readingOptions)
         if removesKeysWithNullValues {
             responseObject = Self.removingKeysWithNullValues(responseObject)
         }
@@ -170,7 +170,6 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var shouldCacheResponseData = false
     
     static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
-    
     private static var imageLock = NSLock()
     
     public override init() {
@@ -179,7 +178,7 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     }
     
     public static func cachedResponseData(for image: UIImage) -> Data? {
-        return image.fw_property(forName: "cachedResponseData") as? Data
+        return image.fw.property(forName: "cachedResponseData") as? Data
     }
     
     public static func clearCachedResponseData(for image: UIImage) {
@@ -187,7 +186,7 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     }
     
     private static func setCachedResponseData(_ data: Data?, for image: UIImage) {
-        image.fw_setProperty(data, forName: "cachedResponseData")
+        image.fw.setProperty(data, forName: "cachedResponseData")
     }
     
     private static func image(data: Data?, scale: CGFloat, options: [ImageCoderOptions : Any]?) -> UIImage? {

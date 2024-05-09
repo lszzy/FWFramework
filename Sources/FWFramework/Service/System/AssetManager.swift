@@ -90,7 +90,7 @@ public class Asset: NSObject {
         switch phAsset.mediaType {
         case .image:
             self.assetType = .image
-            if (phAsset.fw_invokeGetter("uniformTypeIdentifier") as? String) == (kUTTypeGIF as String) {
+            if (phAsset.fw.invokeGetter("uniformTypeIdentifier") as? String) == (kUTTypeGIF as String) {
                 self.assetSubType = .gif
             } else {
                 if phAsset.mediaSubtypes.contains(.photoLive) {

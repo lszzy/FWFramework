@@ -487,10 +487,10 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     /// 抽屉拖拽视图，绑定抽屉拖拽效果后才存在
     public var fw_drawerView: DrawerView? {
         get {
-            return fw_property(forName: "fw_drawerView") as? DrawerView
+            return fw.property(forName: "fw_drawerView") as? DrawerView
         }
         set {
-            fw_setProperty(newValue, forName: "fw_drawerView")
+            fw.setProperty(newValue, forName: "fw_drawerView")
         }
     }
     
@@ -522,8 +522,8 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     
     /// 外部滚动视图是否位于顶部固定位置，在顶部时不能滚动
     public var fw_drawerSuperviewFixed: Bool {
-        get { return fw_propertyBool(forName: "fw_drawerSuperviewFixed") }
-        set { fw_setPropertyBool(newValue, forName: "fw_drawerSuperviewFixed") }
+        get { return fw.propertyBool(forName: "fw_drawerSuperviewFixed") }
+        set { fw.setPropertyBool(newValue, forName: "fw_drawerSuperviewFixed") }
     }
 
     /// 外部滚动视图scrollViewDidScroll调用，参数为固定的位置

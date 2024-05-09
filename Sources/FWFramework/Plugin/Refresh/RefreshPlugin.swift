@@ -294,7 +294,7 @@ extension RefreshPlugin {
     /// 自定义刷新插件，未设置时自动从插件池加载
     public var fw_refreshPlugin: RefreshPlugin! {
         get {
-            if let refreshPlugin = fw_property(forName: "fw_refreshPlugin") as? RefreshPlugin {
+            if let refreshPlugin = fw.property(forName: "fw_refreshPlugin") as? RefreshPlugin {
                 return refreshPlugin
             } else if let refreshPlugin = PluginManager.loadPlugin(RefreshPlugin.self) {
                 return refreshPlugin
@@ -302,7 +302,7 @@ extension RefreshPlugin {
             return RefreshPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_refreshPlugin")
+            fw.setProperty(newValue, forName: "fw_refreshPlugin")
         }
     }
 
@@ -454,10 +454,10 @@ extension RefreshPlugin {
 
     public var fw_pullRefreshView: PullRefreshView? {
         get {
-            return fw_property(forName: "fw_pullRefreshView") as? PullRefreshView
+            return fw.property(forName: "fw_pullRefreshView") as? PullRefreshView
         }
         set {
-            fw_setProperty(newValue, forName: "fw_pullRefreshView")
+            fw.setProperty(newValue, forName: "fw_pullRefreshView")
         }
     }
     
@@ -532,10 +532,10 @@ extension RefreshPlugin {
 
     public var fw_infiniteScrollView: InfiniteScrollView? {
         get {
-            return fw_property(forName: "fw_infiniteScrollView") as? InfiniteScrollView
+            return fw.property(forName: "fw_infiniteScrollView") as? InfiniteScrollView
         }
         set {
-            fw_setProperty(newValue, forName: "fw_infiniteScrollView")
+            fw.setProperty(newValue, forName: "fw_infiniteScrollView")
         }
     }
     

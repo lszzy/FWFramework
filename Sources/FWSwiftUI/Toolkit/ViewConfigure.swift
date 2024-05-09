@@ -20,8 +20,8 @@ extension View {
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
-            guard !viewController.fw_propertyBool(forName: "viewControllerInitialize") else { return }
-            viewController.fw_setPropertyBool(true, forName: "viewControllerInitialize")
+            guard !viewController.fw.propertyBool(forName: "viewControllerInitialize") else { return }
+            viewController.fw.setPropertyBool(true, forName: "viewControllerInitialize")
             
             initialization(viewController)
         }, viewContext: viewContext)
@@ -76,8 +76,8 @@ extension View {
         _ initialization: @escaping (UIView) -> Void
     ) -> some View {
         return hostingViewConfigure { hostingView in
-            guard !hostingView.fw_propertyBool(forName: "hostingViewInitialize") else { return }
-            hostingView.fw_setPropertyBool(true, forName: "hostingViewInitialize")
+            guard !hostingView.fw.propertyBool(forName: "hostingViewInitialize") else { return }
+            hostingView.fw.setPropertyBool(true, forName: "hostingViewInitialize")
             
             initialization(hostingView)
         }
@@ -102,8 +102,8 @@ extension View {
         _ initialization: @escaping (UIScrollView) -> Void
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            guard !scrollView.fw_propertyBool(forName: "scrollViewInitialize") else { return }
-            scrollView.fw_setPropertyBool(true, forName: "scrollViewInitialize")
+            guard !scrollView.fw.propertyBool(forName: "scrollViewInitialize") else { return }
+            scrollView.fw.setPropertyBool(true, forName: "scrollViewInitialize")
             
             initialization(scrollView)
         }
@@ -126,8 +126,8 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            if !scrollView.fw_propertyBool(forName: "scrollViewRefreshing") {
-                scrollView.fw_setPropertyBool(true, forName: "scrollViewRefreshing")
+            if !scrollView.fw.propertyBool(forName: "scrollViewRefreshing") {
+                scrollView.fw.setPropertyBool(true, forName: "scrollViewRefreshing")
                 
                 scrollView.fw_setRefreshing { [weak scrollView] in
                     action({ finished in
@@ -164,8 +164,8 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
-            if !scrollView.fw_propertyBool(forName: "scrollViewLoading") {
-                scrollView.fw_setPropertyBool(true, forName: "scrollViewLoading")
+            if !scrollView.fw.propertyBool(forName: "scrollViewLoading") {
+                scrollView.fw.setPropertyBool(true, forName: "scrollViewLoading")
                 
                 scrollView.fw_setLoading { [weak scrollView] in
                     action({ finished in
@@ -232,10 +232,10 @@ extension View {
                         .eraseToAnyView()
                 }
             }
-            .then(isPlainStyle && UIDevice.fw_iosVersion >= 16, body: { view in
+            .then(isPlainStyle && UIDevice.fw.iosVersion >= 16, body: { view in
                 view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
-                    guard !collectionView.fw_propertyBool(forName: "resetListStyle") else { return }
-                    collectionView.fw_setPropertyBool(true, forName: "resetListStyle")
+                    guard !collectionView.fw.propertyBool(forName: "resetListStyle") else { return }
+                    collectionView.fw.setPropertyBool(true, forName: "resetListStyle")
                     
                     if #available(iOS 16.0, *) {
                         guard collectionView.collectionViewLayout is UICollectionViewCompositionalLayout else { return }
@@ -248,10 +248,10 @@ extension View {
                     }
                 }
             })
-            .then(UIDevice.fw_iosVersion < 16) { view in
+            .then(UIDevice.fw.iosVersion < 16) { view in
                 view.introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
-                    if !tableView.fw_propertyBool(forName: "resetListStyle") {
-                        tableView.fw_setPropertyBool(true, forName: "resetListStyle")
+                    if !tableView.fw.propertyBool(forName: "resetListStyle") {
+                        tableView.fw.setPropertyBool(true, forName: "resetListStyle")
                         
                         if #available(iOS 15.0, *) {
                             tableView.sectionHeaderTopPadding = 0
@@ -312,8 +312,8 @@ extension View {
         _ initialization: @escaping (UIScrollView) -> Void
     ) -> some View {
         return listViewConfigure { scrollView in
-            guard !scrollView.fw_propertyBool(forName: "listViewInitialize") else { return }
-            scrollView.fw_setPropertyBool(true, forName: "listViewInitialize")
+            guard !scrollView.fw.propertyBool(forName: "listViewInitialize") else { return }
+            scrollView.fw.setPropertyBool(true, forName: "listViewInitialize")
             
             initialization(scrollView)
         }
@@ -342,8 +342,8 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
-            if !scrollView.fw_propertyBool(forName: "listViewRefreshing") {
-                scrollView.fw_setPropertyBool(true, forName: "listViewRefreshing")
+            if !scrollView.fw.propertyBool(forName: "listViewRefreshing") {
+                scrollView.fw.setPropertyBool(true, forName: "listViewRefreshing")
                 
                 scrollView.fw_setRefreshing { [weak scrollView] in
                     action({ finished in
@@ -380,8 +380,8 @@ extension View {
         customize: ((UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
-            if !scrollView.fw_propertyBool(forName: "listViewLoading") {
-                scrollView.fw_setPropertyBool(true, forName: "listViewLoading")
+            if !scrollView.fw.propertyBool(forName: "listViewLoading") {
+                scrollView.fw.setPropertyBool(true, forName: "listViewLoading")
                 
                 scrollView.fw_setLoading { [weak scrollView] in
                     action({ finished in
@@ -438,8 +438,8 @@ extension View {
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textFieldConfigure { textField in
-            guard !textField.fw_propertyBool(forName: "textFieldInitialize") else { return }
-            textField.fw_setPropertyBool(true, forName: "textFieldInitialize")
+            guard !textField.fw.propertyBool(forName: "textFieldInitialize") else { return }
+            textField.fw.setPropertyBool(true, forName: "textFieldInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textField] vc, state, _ in
@@ -470,8 +470,8 @@ extension View {
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textViewConfigure { textView in
-            guard !textView.fw_propertyBool(forName: "textViewInitialize") else { return }
-            textView.fw_setPropertyBool(true, forName: "textViewInitialize")
+            guard !textView.fw.propertyBool(forName: "textViewInitialize") else { return }
+            textView.fw.setPropertyBool(true, forName: "textViewInitialize")
             
             if let viewController = viewContext?.viewController {
                 viewController.fw_observeLifecycleState { [weak textView] vc, state, _ in

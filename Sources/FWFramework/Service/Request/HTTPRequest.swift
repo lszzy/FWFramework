@@ -606,7 +606,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         set {
             let error = newValue as? NSError
-            error?.fw_setPropertyBool(true, forName: "isRequestError")
+            error?.fw.setPropertyBool(true, forName: "isRequestError")
             _error = error
         }
     }
@@ -930,12 +930,12 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
 
         isDataFromCache = true
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             self.requestCompletePreprocessor()
             self.requestCompleteFilter()
             self.delegate?.requestFinished(self)
@@ -1161,7 +1161,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         _cacheString = String(data: cache.data, encoding: _cacheMetadata?.stringEncoding ?? .utf8)
         switch responseSerializerType() {
         case .JSON:
-            _cacheJSON = _cacheData?.fw_jsonDecode
+            _cacheJSON = _cacheData?.fw.jsonDecode
             guard _cacheJSON != nil else {
                 throw RequestError.cacheInvalidCacheData
             }
@@ -1179,11 +1179,11 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         let cacheMetadata = RequestCacheMetadata()
         cacheMetadata.version = cacheVersion()
-        cacheMetadata.sensitiveDataString = String.fw_safeString(cacheSensitiveData())
+        cacheMetadata.sensitiveDataString = String.fw.safeString(cacheSensitiveData())
         cacheMetadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
         cacheMetadata.creationDate = Date()
         cacheMetadata.appVersionString = UIApplication.fw_appVersion
-        guard let metadata = Data.fw_archivedData(cacheMetadata) else { return false }
+        guard let metadata = Data.fw.archivedData(cacheMetadata) else { return false }
         
         do {
             try requestCache.saveCache((data: data, metadata: metadata), for: self)
@@ -1203,8 +1203,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
             baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
         }
         let argument = cacheArgumentFilter(requestArgument())
-        let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw_safeString(argument))
-        return requestInfo.fw_md5Encode
+        let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw.safeString(argument))
+        return requestInfo.fw.md5Encode
     }
     
     fileprivate func loadCacheResponse(completion: Completion?, processor: Completion? = nil) throws {
@@ -1214,7 +1214,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw_safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
         
@@ -1233,7 +1233,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
     }
     
     private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
-        guard let cacheMetadata = metadata.fw_unarchivedObject() as? RequestCacheMetadata else {
+        guard let cacheMetadata = metadata.fw.unarchivedObject() as? RequestCacheMetadata else {
             throw RequestError.cacheInvalidMetadata
         }
         
@@ -1248,7 +1248,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         
         let metadataSensitive = cacheMetadata.sensitiveDataString ?? ""
-        let currentSensitive = String.fw_safeString(cacheSensitiveData())
+        let currentSensitive = String.fw.safeString(cacheSensitiveData())
         if metadataSensitive != currentSensitive {
             throw RequestError.cacheSensitiveDataMismatch
         }
@@ -1530,7 +1530,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     public static func isRequestError(_ error: Error?) -> Bool {
         guard let error = error else { return false }
         if error is RequestErrorProtocol { return true }
-        if (error as NSError).fw_propertyBool(forName: "isRequestError") { return true }
+        if (error as NSError).fw.propertyBool(forName: "isRequestError") { return true }
         if (error as NSError).domain == NSURLErrorDomain { return true }
         if let underlyingError = error as? UnderlyingErrorProtocol {
             return isRequestError(underlyingError.underlyingError)

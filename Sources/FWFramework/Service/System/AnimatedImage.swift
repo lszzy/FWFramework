@@ -834,13 +834,13 @@ open class ImageCoder: NSObject {
     /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
     public var fw_imageLoopCount: UInt {
         get {
-            if let value = fw_propertyNumber(forName: "fw_imageLoopCount") {
+            if let value = fw.propertyNumber(forName: "fw_imageLoopCount") {
                 return value.uintValue
             }
             return .zero
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_imageLoopCount")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_imageLoopCount")
         }
     }
 
@@ -857,13 +857,13 @@ open class ImageCoder: NSObject {
     /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
     public var fw_imageFormat: ImageFormat {
         get {
-            if let value = fw_propertyNumber(forName: "fw_imageFormat") {
+            if let value = fw.propertyNumber(forName: "fw_imageFormat") {
                 return .init(value.intValue)
             }
             return ImageCoder.imageFormat(from: self.cgImage?.utType)
         }
         set {
-            fw_setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_imageFormat")
+            fw.setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_imageFormat")
         }
     }
     
