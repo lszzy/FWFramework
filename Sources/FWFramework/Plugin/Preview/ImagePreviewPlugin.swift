@@ -99,7 +99,7 @@ extension ImagePreviewPlugin {
     /// 自定义图片预览插件，未设置时自动从插件池加载
     public var fw_imagePreviewPlugin: ImagePreviewPlugin! {
         get {
-            if let previewPlugin = fw_property(forName: "fw_imagePreviewPlugin") as? ImagePreviewPlugin {
+            if let previewPlugin = fw.property(forName: "fw_imagePreviewPlugin") as? ImagePreviewPlugin {
                 return previewPlugin
             } else if let previewPlugin = PluginManager.loadPlugin(ImagePreviewPlugin.self) {
                 return previewPlugin
@@ -107,7 +107,7 @@ extension ImagePreviewPlugin {
             return ImagePreviewPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_imagePreviewPlugin")
+            fw.setProperty(newValue, forName: "fw_imagePreviewPlugin")
         }
     }
     
@@ -148,7 +148,7 @@ extension ImagePreviewPlugin {
     public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView)
     }
@@ -165,7 +165,7 @@ extension ImagePreviewPlugin {
     public func fw_showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock)
     }

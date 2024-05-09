@@ -51,7 +51,7 @@ public class KeychainManager: NSObject {
     /// 读取Object数据
     public func passwordObject(forService service: String?, account: String?) -> Any? {
         guard let passwordData = passwordData(forService: service, account: account) else { return nil }
-        return passwordData.fw_unarchivedObject()
+        return passwordData.fw.unarchivedObject()
     }
     
     /// 保存String数据
@@ -83,7 +83,7 @@ public class KeychainManager: NSObject {
     /// 保存Object数据
     @discardableResult
     public func setPasswordObject(_ passwordObject: Any, forService service: String?, account: String?) -> Bool {
-        guard let passwordData = Data.fw_archivedData(passwordObject) else { return false }
+        guard let passwordData = Data.fw.archivedData(passwordObject) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }
     

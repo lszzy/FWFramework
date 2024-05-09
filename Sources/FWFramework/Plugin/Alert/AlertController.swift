@@ -488,7 +488,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         }
         alertControllerView.addSubview(result)
         if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
-            result.fw_pinEdges(toSuperview: alertAppearance.sheetContainerInsets)
+            result.fw.pinEdges(toSuperview: alertAppearance.sheetContainerInsets)
         } else {
             result.frame = alertControllerView.bounds
             result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -842,9 +842,9 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
             return
         }
         if action.style == .cancel {
-            Logger.debug(group: Logger.fw_moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with AlertActionStyleCancel style'")
+            Logger.debug(group: Logger.moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with AlertActionStyleCancel style'")
         } else if !otherActions.contains(action) {
-            Logger.debug(group: Logger.fw_moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with AlertActionStyleCancel style'")
+            Logger.debug(group: Logger.moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with AlertActionStyleCancel style'")
         } else {
             if let index = otherActions.firstIndex(of: action) {
                 actionSequenceView.setCustomSpacing(spacing, afterActionIndex: index)

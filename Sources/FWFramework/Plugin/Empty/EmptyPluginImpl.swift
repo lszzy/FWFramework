@@ -67,7 +67,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         let emptyView = PlaceholderView(frame: view.bounds)
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
-        emptyView.fw_pinEdges(toSuperview: view.fw_emptyInsets)
+        emptyView.fw.pinEdges(toSuperview: view.fw_emptyInsets)
         
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)
@@ -76,12 +76,12 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         emptyView.setActionButtonTitle(emptyAction)
         emptyView.setMoreActionButtonTitle(emptyMoreAction)
         if block != nil {
-            emptyView.actionButton.fw_addTouch { sender in
+            emptyView.actionButton.fw.addTouch { sender in
                 block?(0, sender)
             }
         }
         if block != nil, emptyMoreAction != nil {
-            emptyView.moreActionButton.fw_addTouch { sender in
+            emptyView.moreActionButton.fw.addTouch { sender in
                 block?(1, sender)
             }
         }

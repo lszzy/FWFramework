@@ -1,5 +1,5 @@
 //
-//  TestFloatController.swift
+//  TestFloatingController.swift
 //  FWFramework_Example
 //
 //  Created by wuyong on 2022/9/21.
@@ -8,10 +8,10 @@
 
 import FWFramework
 
-class TestFloatController: UIViewController, ViewControllerProtocol {
+class TestFloatingController: UIViewController, ViewControllerProtocol {
     
-    private lazy var floatLayoutView: FloatLayoutView = {
-        let result = FloatLayoutView()
+    private lazy var floatView: FloatingView = {
+        let result = FloatingView()
         result.padding = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         result.itemMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.minimumItemSize = CGSize(width: 69, height: 29)
@@ -21,8 +21,8 @@ class TestFloatController: UIViewController, ViewControllerProtocol {
     }()
     
     func setupSubviews() {
-        view.addSubview(floatLayoutView)
-        floatLayoutView.app.layoutChain
+        view.addSubview(floatView)
+        floatView.app.layoutChain
             .left(24)
             .right(24)
             .top(toSafeArea: 36)
@@ -37,7 +37,7 @@ class TestFloatController: UIViewController, ViewControllerProtocol {
                 label.font = APP.font(14)
                 label.app.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
                 label.app.contentInset = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
-                floatLayoutView.addSubview(label)
+                floatView.addSubview(label)
             } else {
                 let button = UIButton()
                 button.setTitleColor(AppTheme.textColor, for: .normal)
@@ -47,13 +47,13 @@ class TestFloatController: UIViewController, ViewControllerProtocol {
                 button.titleLabel?.numberOfLines = 0
                 button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
                 button.isHidden = suggestions[i].isEmpty
-                floatLayoutView.addSubview(button)
+                floatView.addSubview(button)
             }
         }
         
-        floatLayoutView.setNeedsLayout()
-        floatLayoutView.layoutIfNeeded()
-        floatLayoutView.invalidateIntrinsicContentSize()
+        floatView.setNeedsLayout()
+        floatView.layoutIfNeeded()
+        floatView.invalidateIntrinsicContentSize()
     }
     
 }

@@ -390,16 +390,16 @@ open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDel
     /// 滚动事件代理，需手工设置delegate生效
     public var fw_scrollDelegate: ScrollViewDelegate {
         get {
-            if let result = fw_property(forName: "fw_scrollDelegate") as? ScrollViewDelegate {
+            if let result = fw.property(forName: "fw_scrollDelegate") as? ScrollViewDelegate {
                 return result
             } else {
                 let result = ScrollViewDelegate()
-                fw_setProperty(result, forName: "fw_scrollDelegate")
+                fw.setProperty(result, forName: "fw_scrollDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_scrollDelegate")
+            fw.setProperty(newValue, forName: "fw_scrollDelegate")
         }
     }
     
@@ -411,16 +411,16 @@ open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDel
     /// 输入事件代理，需手工设置delegate生效
     public var fw_textDelegate: TextFieldDelegate {
         get {
-            if let result = fw_property(forName: "fw_textDelegate") as? TextFieldDelegate {
+            if let result = fw.property(forName: "fw_textDelegate") as? TextFieldDelegate {
                 return result
             } else {
                 let result = TextFieldDelegate()
-                fw_setProperty(result, forName: "fw_textDelegate")
+                fw.setProperty(result, forName: "fw_textDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_textDelegate")
+            fw.setProperty(newValue, forName: "fw_textDelegate")
         }
     }
     
@@ -432,16 +432,16 @@ open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDel
     /// 输入事件代理，需手工设置delegate生效
     public var fw_textDelegate: TextViewDelegate {
         get {
-            if let result = fw_property(forName: "fw_textDelegate") as? TextViewDelegate {
+            if let result = fw.property(forName: "fw_textDelegate") as? TextViewDelegate {
                 return result
             } else {
                 let result = TextViewDelegate()
-                fw_setProperty(result, forName: "fw_textDelegate")
+                fw.setProperty(result, forName: "fw_textDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_textDelegate")
+            fw.setProperty(newValue, forName: "fw_textDelegate")
         }
     }
     
@@ -453,16 +453,16 @@ open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDel
     /// 搜索栏事件代理，需手工设置delegate生效
     public var fw_searchDelegate: SearchBarDelegate {
         get {
-            if let result = fw_property(forName: "fw_searchDelegate") as? SearchBarDelegate {
+            if let result = fw.property(forName: "fw_searchDelegate") as? SearchBarDelegate {
                 return result
             } else {
                 let result = SearchBarDelegate()
-                fw_setProperty(result, forName: "fw_searchDelegate")
+                fw.setProperty(result, forName: "fw_searchDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_searchDelegate")
+            fw.setProperty(newValue, forName: "fw_searchDelegate")
         }
     }
     

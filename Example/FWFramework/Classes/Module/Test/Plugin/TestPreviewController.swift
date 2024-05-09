@@ -22,8 +22,8 @@ class TestPreviewController: UIViewController {
     var images: [Any] = []
     var exitAtIndex: Int?
     
-    lazy var floatLayoutView: FloatLayoutView = {
-        let result = FloatLayoutView()
+    lazy var floatView: FloatingView = {
+        let result = FloatingView()
         result.itemMargins = UIEdgeInsets(top: UIScreen.app.pixelOne, left: UIScreen.app.pixelOne, bottom: 0, right: 0)
         return result
     }()
@@ -114,9 +114,9 @@ extension TestPreviewController: ViewControllerProtocol {
                 }
             }
             button.addTarget(self, action: #selector(handleImageButtonEvent(_:)), for: .touchUpInside)
-            floatLayoutView.addSubview(button)
+            floatView.addSubview(button)
         }
-        view.addSubview(floatLayoutView)
+        view.addSubview(floatView)
         
         view.addSubview(tipsLabel)
     }
@@ -127,19 +127,19 @@ extension TestPreviewController: ViewControllerProtocol {
         let margins = UIEdgeInsets(top: 24 + app.topBarHeight, left: 24 + view.safeAreaInsets.left, bottom: 24, right: 24 + view.safeAreaInsets.right)
         let contentWidth = view.app.width - (margins.left + margins.right)
         let column = APP.isIpad || APP.isLandscape ? images.count : 3
-        let imageWidth = contentWidth / CGFloat(column) - CGFloat(column - 1) * (floatLayoutView.itemMargins.left + floatLayoutView.itemMargins.right)
-        floatLayoutView.minimumItemSize = CGSize(width: imageWidth, height: imageWidth)
-        floatLayoutView.maximumItemSize = floatLayoutView.minimumItemSize
-        floatLayoutView.frame = CGRect(x: margins.left, y: margins.top, width: contentWidth, height: floatLayoutView.sizeThatFits(CGSize(width: contentWidth, height: .greatestFiniteMagnitude)).height)
+        let imageWidth = contentWidth / CGFloat(column) - CGFloat(column - 1) * (floatView.itemMargins.left + floatView.itemMargins.right)
+        floatView.minimumItemSize = CGSize(width: imageWidth, height: imageWidth)
+        floatView.maximumItemSize = floatView.minimumItemSize
+        floatView.frame = CGRect(x: margins.left, y: margins.top, width: contentWidth, height: floatView.sizeThatFits(CGSize(width: contentWidth, height: .greatestFiniteMagnitude)).height)
         
-        tipsLabel.frame = CGRect(x: margins.left, y: CGRectGetMaxY(floatLayoutView.frame) + 16, width: contentWidth, height: tipsLabel.sizeThatFits(CGSize(width: contentWidth, height: .greatestFiniteMagnitude)).height)
+        tipsLabel.frame = CGRect(x: margins.left, y: CGRectGetMaxY(floatView.frame) + 16, width: contentWidth, height: tipsLabel.sizeThatFits(CGSize(width: contentWidth, height: .greatestFiniteMagnitude)).height)
     }
     
     @objc func handleImageButtonEvent(_ button: UIButton) {
         if self.usePlugin {
-            let buttonIndex = floatLayoutView.subviews.firstIndex(of: button)
+            let buttonIndex = floatView.subviews.firstIndex(of: button)
             self.app.showImagePreview(imageURLs: images, imageInfos: nil, currentIndex: buttonIndex ?? 0) { [weak self] index in
-                return self?.floatLayoutView.subviews[index]
+                return self?.floatView.subviews[index]
             }
             return
         }
@@ -150,7 +150,7 @@ extension TestPreviewController: ViewControllerProtocol {
             imagePreviewController.showsPageLabel = true
             imagePreviewController.imagePreviewView.delegate = self
             imagePreviewController.sourceImageView = { [weak self] index in
-                return self?.floatLayoutView.subviews[index]
+                return self?.floatView.subviews[index]
             }
             imagePreviewController.imagePreviewView.customZoomContentView = { zoomImageView, contentView in
                 guard let imageView = contentView as? UIImageView else { return }
@@ -189,7 +189,7 @@ extension TestPreviewController: ViewControllerProtocol {
         imagePreviewController.dismissingWhenTappedVideo = self.dismissTappedVideo
         imagePreviewController.imagePreviewView.autoplayVideo = self.autoplayVideo
         imagePreviewController.presentingStyle = previewFade ? .fade : .zoom
-        let buttonIndex = floatLayoutView.subviews.firstIndex(of: button)
+        let buttonIndex = floatView.subviews.firstIndex(of: button)
         imagePreviewController.imagePreviewView.currentImageIndex = buttonIndex ?? 0
         present(imagePreviewController, animated: true)
     }

@@ -247,7 +247,7 @@ extension ViewPlugin {
     /// 自定义视图插件，未设置时自动从插件池加载
     public var fw_viewPlugin: ViewPlugin! {
         get {
-            if let viewPlugin = fw_property(forName: "fw_viewPlugin") as? ViewPlugin {
+            if let viewPlugin = fw.property(forName: "fw_viewPlugin") as? ViewPlugin {
                 return viewPlugin
             } else if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) {
                 return viewPlugin
@@ -255,7 +255,7 @@ extension ViewPlugin {
             return ViewPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_viewPlugin")
+            fw.setProperty(newValue, forName: "fw_viewPlugin")
         }
     }
 
@@ -328,13 +328,13 @@ extension ViewPlugin {
     
     /// 指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:animated:
     open var progress: CGFloat {
-        get { fw_propertyDouble(forName: "progress") }
+        get { fw.propertyDouble(forName: "progress") }
         set { setProgress(newValue, animated: false) }
     }
     
     /// 设置指示器进度，大于0小于1时开始动画，其它值停止动画。同setProgress:
     open func setProgress(_ progress: CGFloat, animated: Bool) {
-        fw_setPropertyDouble(progress, forName: "progress")
+        fw.setPropertyDouble(progress, forName: "progress")
         if 0 < progress && progress < 1 {
             if !isAnimating {
                 startAnimating()

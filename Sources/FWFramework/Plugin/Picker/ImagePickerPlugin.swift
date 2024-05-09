@@ -374,7 +374,7 @@ extension ImagePickerPlugin {
     /// 自定义图片选取插件，未设置时自动从插件池加载
     public var fw_imagePickerPlugin: ImagePickerPlugin! {
         get {
-            if let pickerPlugin = fw_property(forName: "fw_imagePickerPlugin") as? ImagePickerPlugin {
+            if let pickerPlugin = fw.property(forName: "fw_imagePickerPlugin") as? ImagePickerPlugin {
                 return pickerPlugin
             } else if let pickerPlugin = PluginManager.loadPlugin(ImagePickerPlugin.self) {
                 return pickerPlugin
@@ -382,7 +382,7 @@ extension ImagePickerPlugin {
             return ImagePickerPluginImpl.shared
         }
         set {
-            fw_setProperty(newValue, forName: "fw_imagePickerPlugin")
+            fw.setProperty(newValue, forName: "fw_imagePickerPlugin")
         }
     }
     
@@ -451,7 +451,7 @@ extension ImagePickerPlugin {
     public func fw_showImageCamera(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImageCamera(allowsEditing: allowsEditing, completion: completion)
     }
@@ -465,7 +465,7 @@ extension ImagePickerPlugin {
     public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
@@ -477,7 +477,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(allowsEditing: allowsEditing, completion: completion)
     }
@@ -490,7 +490,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(selectionLimit: selectionLimit, allowsEditing: allowsEditing, completion: completion)
     }
@@ -505,7 +505,7 @@ extension ImagePickerPlugin {
     public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
         var ctrl = self.fw_viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
-            ctrl = UIWindow.fw_mainWindow?.fw_topPresentedController
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
         ctrl?.fw_showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion)
     }
@@ -532,7 +532,7 @@ extension ImagePickerPlugin {
                 if let url = info[.mediaURL] as? URL {
                     let filePath = AssetManager.imagePickerPath
                     try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
-                    if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
+                    if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw.md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                         let tempFileURL = URL(fileURLWithPath: fullPath)
                         do {
                             try FileManager.default.moveItem(at: url, to: tempFileURL)
@@ -622,7 +622,7 @@ extension ImagePickerPlugin {
         pickerDelegate.shouldDismiss = shouldDismiss
         pickerDelegate.completionBlock = completion
         
-        pickerController.fw_setProperty(pickerDelegate, forName: "fw_pickerDelegate")
+        pickerController.fw.setProperty(pickerDelegate, forName: "fw_pickerDelegate")
         pickerController.delegate = pickerDelegate
         return pickerController
     }
@@ -758,7 +758,7 @@ extension ImagePickerPlugin {
                     if let url = url {
                         let filePath = AssetManager.imagePickerPath
                         try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
-                        if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw_md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
+                        if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw.md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                             let fileURL = URL(fileURLWithPath: fullPath)
                             do {
                                 try FileManager.default.moveItem(at: url, to: fileURL)
@@ -835,7 +835,7 @@ extension ImagePickerPlugin {
         pickerDelegate.shouldDismiss = shouldDismiss
         pickerDelegate.completionBlock = completion
         
-        pickerController.fw_setProperty(pickerDelegate, forName: "fw_pickerDelegate")
+        pickerController.fw.setProperty(pickerDelegate, forName: "fw_pickerDelegate")
         pickerController.delegate = pickerDelegate
         return pickerController
     }
@@ -893,14 +893,14 @@ extension ImagePickerPlugin {
     
     /// 照片选择器是否已经dismiss，用于解决didFinishPicking回调多次问题
     public var fw_pickerControllerDismissed: Bool {
-        get { fw_propertyBool(forName: #function) }
-        set { fw_setPropertyBool(newValue, forName: #function) }
+        get { fw.propertyBool(forName: #function) }
+        set { fw.setPropertyBool(newValue, forName: #function) }
     }
     
     /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
     public var fw_exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
-        get { fw_property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
-        set { fw_setPropertyCopy(newValue, forName: #function) }
+        get { fw.property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
+        set { fw.setPropertyCopy(newValue, forName: #function) }
     }
     
 }

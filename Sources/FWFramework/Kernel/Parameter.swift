@@ -51,7 +51,7 @@ extension String: StringParameter, AttributedStringParameter, DataParameter, URL
     public var stringValue: String { self }
     public var attributedStringValue: NSAttributedString { NSAttributedString(string: self) }
     public var dataValue: Data { data(using: .utf8) ?? .init() }
-    public var urlValue: URL { URL.fw_url(string: self) ?? URL() }
+    public var urlValue: URL { URL.fw.url(string: self) ?? URL() }
 }
 
 extension NSAttributedString: AttributedStringParameter, StringParameter {
@@ -79,6 +79,6 @@ extension Dictionary: DictionaryParameter {
 
 extension ObjectParameter {
     public var dictionaryValue: [AnyHashable: Any] {
-        NSObject.fw_mirrorDictionary(self)
+        NSObject.fw.mirrorDictionary(self)
     }
 }

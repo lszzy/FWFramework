@@ -8,6 +8,30 @@
 import UIKit
 import CoreText
 
+// MARK: - WrapperGlobal
+extension WrapperGlobal {
+    /// 快速创建图标对象
+    ///
+    /// - Parameters:
+    ///   - named: 图标名称
+    ///   - size: 图标大小
+    /// - Returns: FWIcon对象
+    public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
+        return Icon.iconNamed(named, size: size)
+    }
+    
+    /// 快速创建图标图像
+    ///
+    /// - Parameters:
+    ///   - name: 图标名称
+    ///   - size: 图片大小
+    /// - Returns: UIImage对象
+    public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
+        return Icon.iconImage(name, size: size)
+    }
+}
+
+// MARK: - Icon
 /// 字体图标抽象基类，子类需继承
 ///
 /// [Foundation icons](https://zurb.com/playground/foundation-icon-fonts-3#allicons)

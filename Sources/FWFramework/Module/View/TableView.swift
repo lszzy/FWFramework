@@ -384,16 +384,16 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
 @_spi(FW) extension UITableView {
     public var fw_tableDelegate: TableViewDelegate {
         get {
-            if let result = fw_property(forName: "fw_tableDelegate") as? TableViewDelegate {
+            if let result = fw.property(forName: "fw_tableDelegate") as? TableViewDelegate {
                 return result
             } else {
                 let result = TableViewDelegate()
-                fw_setProperty(result, forName: "fw_tableDelegate")
+                fw.setProperty(result, forName: "fw_tableDelegate")
                 return result
             }
         }
         set {
-            fw_setProperty(newValue, forName: "fw_tableDelegate")
+            fw.setProperty(newValue, forName: "fw_tableDelegate")
         }
     }
     

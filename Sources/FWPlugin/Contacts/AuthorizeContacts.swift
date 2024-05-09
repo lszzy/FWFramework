@@ -7,7 +7,7 @@
 
 import Contacts
 #if FWMacroSPM
-import FWFramework
+@_spi(FW) import FWFramework
 #endif
 
 // MARK: - AuthorizeType+Contacts

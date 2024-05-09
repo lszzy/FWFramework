@@ -51,7 +51,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.leftBarButtonItem?.customView = HostingView(rootView: leading)
             }
         } else if let leading = leading {
-            viewController.fw_leftBarItem = leading
+            viewController.fw.leftBarItem = leading
         }
         
         if let title = title as? AnyView {
@@ -77,7 +77,7 @@ public struct NavigationBarConfiguration {
                 viewController.navigationItem.rightBarButtonItem?.customView = HostingView(rootView: trailing)
             }
         } else if let trailing = trailing {
-            viewController.fw_rightBarItem = trailing
+            viewController.fw.rightBarItem = trailing
         }
         
         viewController.navigationItem.leftBarButtonItem?.customView?.sizeToFit()
@@ -85,9 +85,9 @@ public struct NavigationBarConfiguration {
         viewController.navigationItem.rightBarButtonItem?.customView?.sizeToFit()
         
         if let appearance = appearance {
-            viewController.fw_navigationBarAppearance = appearance()
+            viewController.fw.navigationBarAppearance = appearance()
         } else if let style = style {
-            viewController.fw_navigationBarStyle = style
+            viewController.fw.navigationBarStyle = style
         } else if let background = background {
             let appearance = NavigationBarAppearance()
             if let color = background as? Color {
@@ -99,7 +99,7 @@ public struct NavigationBarConfiguration {
             } else if let transparent = background as? Bool {
                 appearance.backgroundTransparent = transparent
             }
-            viewController.fw_navigationBarAppearance = appearance
+            viewController.fw.navigationBarAppearance = appearance
         }
         
         customize?(viewController)

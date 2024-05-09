@@ -188,7 +188,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.willStartBlock = { [weak self] request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if (request.autoShowLoading || request.autoShowError),
                    self?.autoSetupContext == true, request.context == nil {
                     self?.setupContext(for: request)
@@ -211,7 +211,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.didStopBlock = { request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if request.autoShowLoading {
                     request.hideLoading()
                 }
@@ -226,7 +226,7 @@ open class RequestContextAccessory: RequestAccessory {
     open func setupContext(for request: HTTPRequest) {
         guard request.context == nil else { return }
         
-        request.context = UIWindow.fw_mainWindow?.fw_topViewController
+        request.context = UIWindow.fw.main?.fw.topViewController
     }
     
     /// 监听请求上下文，默认context控制器释放时自动停止请求
@@ -254,7 +254,7 @@ open class RequestContextAccessory: RequestAccessory {
             return
         }
         
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.showErrorBlock?(request.context, error)
         }
     }
@@ -269,7 +269,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.showLoadingBlock?(request.context)
         }
     }
@@ -282,7 +282,7 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
+        DispatchQueue.fw.mainAsync {
             RequestContextAccessory.hideLoadingBlock?(request.context)
         }
     }

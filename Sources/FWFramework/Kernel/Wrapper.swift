@@ -9,7 +9,7 @@ import Foundation
 import QuartzCore
 
 // MARK: - WrapperGlobal
-/// 全局包装器(因struct只读，只能用class)
+/// 全局包装器
 ///
 /// 自定义WrapperGlobal为任意名称(如APP)示例：
 /// ```swift
@@ -25,11 +25,11 @@ public class WrapperGlobal {}
 @_spi(FW) public typealias FW = WrapperGlobal
 
 // MARK: - Wrapper
-/// 属性包装器(因struct只读，只能用class)
+/// 属性包装器
 public class Wrapper<Base> {
     
     /// 原始对象
-    public private(set) var base: Base
+    public let base: Base
     
     /// 初始化方法
     public init(_ base: Base) {
@@ -69,6 +69,11 @@ public protocol WrapperCompatible {
     
 }
 
+/// 注意事项：
+/// 1. 静态扩展方法中尽量不使用Base.self，因为可能会出现类型与预期不一致的场景。
+///   示例1：Logger.fw.method()，此时method中Base.self为Logger，预期结果正确
+///   示例2：ModuleBundle类 class var 实现时使用 self.fw.method()，此时子类method中Base.self可能为父类，与预期结果不一致
+/// 2. 扩展方法中请勿使用[weak self]，而应该使用[weak base]，因为self使用完就会释放，详情可参见Block实现
 extension WrapperCompatible {
     
     /// wrapperExtension类包装器属性

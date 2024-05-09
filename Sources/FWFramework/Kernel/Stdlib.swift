@@ -11,37 +11,37 @@ import Foundation
 extension WrapperGlobal {
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
-        return String.fw_safeString(value)
+        return String.fw.safeString(value)
     }
 
     /// 安全数字，不为nil
     public static func safeNumber(_ value: Any?) -> NSNumber {
-        return NSNumber.fw_safeNumber(value)
+        return NSNumber.fw.safeNumber(value)
     }
     
     /// 安全Int，不为nil
     public static func safeInt(_ value: Any?) -> Int {
-        return NSNumber.fw_safeNumber(value).intValue
+        return NSNumber.fw.safeNumber(value).intValue
     }
     
     /// 安全Bool，不为nil
     public static func safeBool(_ value: Any?) -> Bool {
-        return NSNumber.fw_safeNumber(value).boolValue
+        return NSNumber.fw.safeNumber(value).boolValue
     }
     
     /// 安全Float，不为nil
     public static func safeFloat(_ value: Any?) -> Float {
-        return NSNumber.fw_safeNumber(value).floatValue
+        return NSNumber.fw.safeNumber(value).floatValue
     }
     
     /// 安全Double，不为nil
     public static func safeDouble(_ value: Any?) -> Double {
-        return NSNumber.fw_safeNumber(value).doubleValue
+        return NSNumber.fw.safeNumber(value).doubleValue
     }
 
     /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
     public static func safeURL(_ value: Any?) -> URL {
-        return URL.fw_safeURL(value)
+        return URL.fw.safeURL(value)
     }
     
     /// 获取安全值
@@ -67,8 +67,8 @@ extension Wrapper {
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return String.fw_safeString(base) }
-    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(base) }
+    public var safeString: String { return String.fw.safeString(base) }
+    public var safeNumber: NSNumber { return NSNumber.fw.safeNumber(base) }
     public var safeArray: [Any] { return (base as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (base as? [AnyHashable: Any]) ?? [:] }
 }
@@ -77,7 +77,7 @@ extension Wrapper {
 extension Wrapper where Base == Data {
     /// 转换为UTF8字符串
     public var utf8String: String? {
-        return base.fw_utf8String
+        return String(data: base, encoding: .utf8)
     }
 }
 
@@ -85,142 +85,6 @@ extension Wrapper where Base == Data {
 extension Wrapper where Base == String {
     /// 安全字符串，不为nil
     public static func safeString(_ value: Any?) -> String {
-        return Base.fw_safeString(value)
-    }
-    
-    /// 去掉首尾空白字符
-    public var trimString: String {
-        return base.fw_trimString
-    }
-    
-    /// 首字母大写
-    public var ucfirstString: String {
-        return base.fw_ucfirstString
-    }
-    
-    /// 首字母小写
-    public var lcfirstString: String {
-        return base.fw_lcfirstString
-    }
-    
-    /// 驼峰转下划线
-    public var underlineString: String {
-        return base.fw_underlineString
-    }
-    
-    /// 下划线转驼峰
-    public var camelString: String {
-        return base.fw_camelString
-    }
-    
-    /// 转换为UTF8数据
-    public var utf8Data: Data? {
-        return base.fw_utf8Data
-    }
-    
-    /// 转换为URL
-    public var url: URL? {
-        return base.fw_url
-    }
-    
-    /// 转换为文件URL
-    public var fileURL: URL {
-        return base.fw_fileURL
-    }
-    
-    /// 转换为NSNumber
-    public var number: NSNumber? {
-        return base.fw_number
-    }
-    
-    /// 计算长度，中文为1，英文为0.5，表情为2
-    public var unicodeLength: Int {
-        return base.fw_unicodeLength
-    }
-    
-    /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func unicodeSubstring(_ length: Int) -> String {
-        return base.fw_unicodeSubstring(length)
-    }
-    
-    /// 从指定位置截取子串
-    public func substring(from index: Int) -> String {
-        return base.fw_substring(from: index)
-    }
-    
-    /// 截取子串到指定位置
-    public func substring(to index: Int) -> String {
-        return base.fw_substring(to: index)
-    }
-    
-    /// 截取指定范围的子串
-    public func substring(with range: NSRange) -> String {
-        return base.fw_substring(with: range)
-    }
-    
-    /// 截取指定范围的子串
-    public func substring(with range: Range<Int>) -> String {
-        return base.fw_substring(with: range)
-    }
-}
-
-// MARK: - Wrapper+NSNumber
-extension Wrapper where Base: NSNumber {
-    /// 安全数字，不为nil
-    public static func safeNumber(_ value: Any?) -> NSNumber {
-        return Base.fw_safeNumber(value)
-    }
-    
-    /// 安全Int，不为nil
-    public static func safeInt(_ value: Any?) -> Int {
-        return Base.fw_safeNumber(value).intValue
-    }
-    
-    /// 安全Bool，不为nil
-    public static func safeBool(_ value: Any?) -> Bool {
-        return Base.fw_safeNumber(value).boolValue
-    }
-    
-    /// 安全Float，不为nil
-    public static func safeFloat(_ value: Any?) -> Float {
-        return Base.fw_safeNumber(value).floatValue
-    }
-    
-    /// 安全Double，不为nil
-    public static func safeDouble(_ value: Any?) -> Double {
-        return Base.fw_safeNumber(value).doubleValue
-    }
-}
-
-// MARK: - Wrapper+URL
-extension Wrapper where Base == URL {
-    /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
-    public static func safeURL(_ value: Any?) -> URL {
-        return Base.fw_safeURL(value)
-    }
-    
-    /// 生成URL，中文自动URL编码
-    public static func url(string: String?) -> URL? {
-        return Base.fw_url(string: string)
-    }
-    
-    /// 生成URL，中文自动URL编码，支持基准URL
-    public static func url(string: String?, relativeTo baseURL: URL?) -> URL? {
-        return Base.fw_url(string: string, relativeTo: baseURL)
-    }
-}
-
-// MARK: - Stdlib+Extension
-@_spi(FW) extension Data {
-    /// 转换为UTF8字符串
-    public var fw_utf8String: String? {
-        return String(data: self, encoding: .utf8)
-    }
-}
-
-@_spi(FW) extension String {
-    /// 安全字符串，不为nil
-    public static func fw_safeString(_ value: Any?) -> String {
         guard let value = value, !(value is NSNull) else { return "" }
         if let string = value as? String { return string }
         if let data = value as? Data { return String(data: data, encoding: .utf8) ?? "" }
@@ -232,25 +96,25 @@ extension Wrapper where Base == URL {
     }
     
     /// 去掉首尾空白字符
-    public var fw_trimString: String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    public var trimString: String {
+        return base.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     /// 首字母大写
-    public var fw_ucfirstString: String {
-        return String(prefix(1).uppercased() + dropFirst())
+    public var ucfirstString: String {
+        return String(base.prefix(1).uppercased() + base.dropFirst())
     }
     
     /// 首字母小写
-    public var fw_lcfirstString: String {
-        return String(prefix(1).lowercased() + dropFirst())
+    public var lcfirstString: String {
+        return String(base.prefix(1).lowercased() + base.dropFirst())
     }
     
     /// 驼峰转下划线
-    public var fw_underlineString: String {
-        guard self.count > 0 else { return self }
+    public var underlineString: String {
+        guard base.count > 0 else { return base }
         var result = ""
-        let str = self as NSString
+        let str = base as NSString
         for i in 0 ..< str.length {
             let cString = String(format: "%c", str.character(at: i))
             let cStringLower = cString.lowercased()
@@ -265,10 +129,10 @@ extension Wrapper where Base == URL {
     }
     
     /// 下划线转驼峰
-    public var fw_camelString: String {
-        guard self.count > 0 else { return self }
+    public var camelString: String {
+        guard base.count > 0 else { return base }
         var result = ""
-        let comps = self.components(separatedBy: "_")
+        let comps = base.components(separatedBy: "_")
         for i in 0 ..< comps.count {
             let comp = comps[i] as NSString
             if i > 0 && comp.length > 0 {
@@ -284,30 +148,30 @@ extension Wrapper where Base == URL {
     }
     
     /// 转换为UTF8数据
-    public var fw_utf8Data: Data? {
-        return self.data(using: .utf8)
+    public var utf8Data: Data? {
+        return base.data(using: .utf8)
     }
     
     /// 转换为URL
-    public var fw_url: URL? {
-        return URL.fw_url(string: self)
+    public var url: URL? {
+        return URL.fw.url(string: base)
     }
     
     /// 转换为文件URL
-    public var fw_fileURL: URL {
-        return URL(fileURLWithPath: self)
+    public var fileURL: URL {
+        return URL(fileURLWithPath: base)
     }
     
     /// 转换为NSNumber
-    public var fw_number: NSNumber? {
+    public var number: NSNumber? {
         let boolNumbers = ["true": true, "false": false, "yes": true, "no": false]
         let nilNumbers = ["nil", "null", "(null)", "<null>"]
-        let lowerStr = self.lowercased()
+        let lowerStr = base.lowercased()
         if let value = boolNumbers[lowerStr] { return NSNumber(value: value) }
         if nilNumbers.contains(lowerStr) { return nil }
         
-        guard let cstring = self.cString(using: .utf8) else { return nil }
-        if self.rangeOfCharacter(from: CharacterSet(charactersIn: ".")) != nil {
+        guard let cstring = base.cString(using: .utf8) else { return nil }
+        if base.rangeOfCharacter(from: CharacterSet(charactersIn: ".")) != nil {
             let cnumber = atof(cstring)
             if cnumber.isNaN || cnumber.isInfinite { return nil }
             return NSNumber(value: cnumber)
@@ -317,9 +181,9 @@ extension Wrapper where Base == URL {
     }
     
     /// 计算长度，中文为1，英文为0.5，表情为2
-    public var fw_unicodeLength: Int {
+    public var unicodeLength: Int {
         var length: Int = 0
-        let str = self as NSString
+        let str = base as NSString
         for i in 0 ..< str.length {
             length += str.character(at: i) > 0xff ? 2 : 1
         }
@@ -327,16 +191,16 @@ extension Wrapper where Base == URL {
     }
     
     /// 截取字符串，中文为1，英文为0.5，表情为2
-    public func fw_unicodeSubstring(_ length: Int) -> String {
+    public func unicodeSubstring(_ length: Int) -> String {
         let length = length * 2
-        let str = self as NSString
+        let str = base as NSString
         
         var i: Int = 0
         var len: Int = 0
         while i < str.length {
             len += str.character(at: i) > 0xff ? 2 : 1
             i += 1
-            if i >= str.length { return self }
+            if i >= str.length { return base }
             
             if len == length {
                 return str.substring(to: i)
@@ -345,55 +209,77 @@ extension Wrapper where Base == URL {
                 return str.substring(to: i - 1)
             }
         }
-        return self
+        return base
     }
     
     /// 从指定位置截取子串
-    public func fw_substring(from index: Int) -> String {
-        return fw_substring(with: min(index, self.count) ..< self.count)
+    public func substring(from index: Int) -> String {
+        return substring(with: min(index, base.count) ..< base.count)
     }
     
     /// 截取子串到指定位置
-    public func fw_substring(to index: Int) -> String {
-        return fw_substring(with: 0 ..< max(0, index))
+    public func substring(to index: Int) -> String {
+        return substring(with: 0 ..< max(0, index))
     }
     
     /// 截取指定范围的子串
-    public func fw_substring(with range: NSRange) -> String {
+    public func substring(with range: NSRange) -> String {
         guard let range = Range<Int>(range) else { return "" }
-        return fw_substring(with: range)
+        return substring(with: range)
     }
     
     /// 截取指定范围的子串
-    public func fw_substring(with range: Range<Int>) -> String {
+    public func substring(with range: Range<Int>) -> String {
         guard range.lowerBound >= 0, range.upperBound >= range.lowerBound else { return "" }
-        let range = Range(uncheckedBounds: (lower: max(0, min(range.lowerBound, self.count)), upper: max(0, min(range.upperBound, self.count))))
-        let start = self.index(self.startIndex, offsetBy: range.lowerBound)
-        let end = self.index(start, offsetBy: range.upperBound - range.lowerBound)
-        return String(self[start ..< end])
+        let range = Range(uncheckedBounds: (lower: max(0, min(range.lowerBound, base.count)), upper: max(0, min(range.upperBound, base.count))))
+        let start = base.index(base.startIndex, offsetBy: range.lowerBound)
+        let end = base.index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(base[start ..< end])
     }
 }
 
-@_spi(FW) extension NSNumber {
+// MARK: - Wrapper+NSNumber
+extension Wrapper where Base: NSNumber {
     /// 安全数字，不为nil
-    public static func fw_safeNumber(_ value: Any?) -> NSNumber {
+    public static func safeNumber(_ value: Any?) -> NSNumber {
         guard let value = value else { return NSNumber(value: 0) }
         if let number = value as? NSNumber { return number }
-        return String.fw_safeString(value).fw_number ?? NSNumber(value: 0)
+        return String.fw.safeString(value).fw.number ?? NSNumber(value: 0)
+    }
+    
+    /// 安全Int，不为nil
+    public static func safeInt(_ value: Any?) -> Int {
+        return safeNumber(value).intValue
+    }
+    
+    /// 安全Bool，不为nil
+    public static func safeBool(_ value: Any?) -> Bool {
+        return safeNumber(value).boolValue
+    }
+    
+    /// 安全Float，不为nil
+    public static func safeFloat(_ value: Any?) -> Float {
+        return safeNumber(value).floatValue
+    }
+    
+    /// 安全Double，不为nil
+    public static func safeDouble(_ value: Any?) -> Double {
+        return safeNumber(value).doubleValue
     }
 }
 
-@_spi(FW) extension URL {
+// MARK: - Wrapper+URL
+extension Wrapper where Base == URL {
     /// 安全URL，不为nil，不兼容文件路径(需fileURLWithPath)
-    public static func fw_safeURL(_ value: Any?) -> URL {
+    public static func safeURL(_ value: Any?) -> URL {
         guard let value = value else { return URL() }
         if let url = value as? URL { return url }
-        if let url = URL.fw_url(string: String.fw_safeString(value)) { return url }
+        if let url = url(string: String.fw.safeString(value)) { return url }
         return URL()
     }
     
     /// 生成URL，中文自动URL编码
-    public static func fw_url(string: String?) -> URL? {
+    public static func url(string: String?) -> URL? {
         guard let string = string else { return nil }
         if let url = URL(string: string) { return url }
         // 如果生成失败，自动URL编码再试
@@ -402,7 +288,7 @@ extension Wrapper where Base == URL {
     }
     
     /// 生成URL，中文自动URL编码，支持基准URL
-    public static func fw_url(string: String?, relativeTo baseURL: URL?) -> URL? {
+    public static func url(string: String?, relativeTo baseURL: URL?) -> URL? {
         guard let string = string else { return nil }
         if let url = URL(string: string, relativeTo: baseURL) { return url }
         // 如果生成失败，自动URL编码再试
@@ -411,14 +297,15 @@ extension Wrapper where Base == URL {
     }
 }
 
+// MARK: - Optional+Extension
 /// 可选类安全转换，不为nil
 extension Optional {
     public var safeInt: Int { return safeNumber.intValue }
     public var safeBool: Bool { return safeNumber.boolValue }
     public var safeFloat: Float { return safeNumber.floatValue }
     public var safeDouble: Double { return safeNumber.doubleValue }
-    public var safeString: String { return String.fw_safeString(self) }
-    public var safeNumber: NSNumber { return NSNumber.fw_safeNumber(self) }
+    public var safeString: String { return String.fw.safeString(self) }
+    public var safeNumber: NSNumber { return NSNumber.fw.safeNumber(self) }
     public var safeArray: [Any] { return (self as? [Any]) ?? [] }
     public var safeDictionary: [AnyHashable: Any] { return (self as? [AnyHashable: Any]) ?? [:] }
     
@@ -428,11 +315,11 @@ extension Optional {
     public var double: Double? { return number?.doubleValue }
     public var string: String? {
         guard let value = self else { return nil }
-        return String.fw_safeString(value)
+        return String.fw.safeString(value)
     }
     public var number: NSNumber? {
         guard let value = self else { return nil }
-        return NSNumber.fw_safeNumber(value)
+        return NSNumber.fw.safeNumber(value)
     }
     public var array: [Any]? { return self as? [Any] }
     public var dictionary: [AnyHashable: Any]? { return self as? [AnyHashable: Any] }

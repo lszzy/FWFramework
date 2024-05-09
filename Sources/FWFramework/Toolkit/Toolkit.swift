@@ -48,26 +48,6 @@ extension WrapperGlobal {
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         return UIFont.fw_font(ofSize: size, weight: weight, autoScale: autoScale)
     }
-    
-    /// 快速创建图标对象
-    ///
-    /// - Parameters:
-    ///   - named: 图标名称
-    ///   - size: 图标大小
-    /// - Returns: FWIcon对象
-    public static func icon(_ named: String, _ size: CGFloat) -> Icon? {
-        return Icon.iconNamed(named, size: size)
-    }
-    
-    /// 快速创建图标图像
-    ///
-    /// - Parameters:
-    ///   - name: 图标名称
-    ///   - size: 图片大小
-    /// - Returns: UIImage对象
-    public static func iconImage(_ name: String, _ size: CGFloat) -> UIImage? {
-        return Icon.iconImage(name, size: size)
-    }
 }
 
 // MARK: - Wrapper+UIApplication
@@ -883,26 +863,26 @@ extension Wrapper where Base: UINavigationController {
         static let shared = SafariViewControllerDelegate()
         
         func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-            let completion = controller.fw_property(forName: "safariViewControllerDidFinish") as? () -> Void
+            let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
             completion?()
         }
         
         func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-            let completion = controller.fw_property(forName: "messageComposeViewController") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
             }
         }
         
         func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-            let completion = controller.fw_property(forName: "mailComposeController") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
             }
         }
         
         func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-            let completion = controller.fw_property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
+            let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
             controller.dismiss(animated: true) {
                 completion?(true)
             }
@@ -1097,7 +1077,7 @@ extension Wrapper where Base: UINavigationController {
         activityController.completionWithItemsHandler = completionHandler
         // 兼容iPad，默认居中显示
         let viewController = Navigator.topPresentedController
-        if UIDevice.fw_isIpad, let viewController = viewController,
+        if UIDevice.fw.isIpad, let viewController = viewController,
            let popoverController = activityController.popoverPresentationController {
             let ancestorView = viewController.fw_ancestorView
             popoverController.sourceView = ancestorView
@@ -1113,7 +1093,7 @@ extension Wrapper where Base: UINavigationController {
         guard let url = url?.urlValue, fw_isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
-            safariController.fw_setProperty(completionHandler, forName: "safariViewControllerDidFinish")
+            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
             safariController.delegate = SafariViewControllerDelegate.shared
         }
         customBlock?(safariController)
@@ -1128,7 +1108,7 @@ extension Wrapper where Base: UINavigationController {
         }
         
         if completionHandler != nil {
-            controller.fw_setProperty(completionHandler, forName: "messageComposeViewController")
+            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
         }
         controller.messageComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
@@ -1142,7 +1122,7 @@ extension Wrapper where Base: UINavigationController {
         }
         
         if completionHandler != nil {
-            controller.fw_setProperty(completionHandler, forName: "mailComposeController")
+            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
         }
         controller.mailComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
@@ -1158,7 +1138,7 @@ extension Wrapper where Base: UINavigationController {
                 return
             }
             
-            controller.fw_setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
             customBlock?(controller)
             Navigator.present(controller, animated: true)
         }
@@ -1171,7 +1151,7 @@ extension Wrapper where Base: UINavigationController {
             player = AVPlayer(playerItem: playerItem)
         } else if let url = url as? URL {
             player = AVPlayer(url: url)
-        } else if let videoUrl = URL.fw_url(string: url as? String) {
+        } else if let videoUrl = URL.fw.url(string: url as? String) {
             player = AVPlayer(url: videoUrl)
         }
         guard player != nil else { return nil }
@@ -1427,10 +1407,10 @@ extension Wrapper where Base: UINavigationController {
         // 处理参数
         var string = hexString.uppercased()
         if string.hasPrefix("0X") {
-            string = string.fw_substring(from: 2)
+            string = string.fw.substring(from: 2)
         }
         if string.hasPrefix("#") {
-            string = string.fw_substring(from: 1)
+            string = string.fw.substring(from: 1)
         }
         
         // 检查长度
@@ -1447,30 +1427,30 @@ extension Wrapper where Base: UINavigationController {
         if length < 5 {
             // ARGB
             if fw_colorStandardARGB && length == 4 {
-                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(1, 3)), string.fw_substring(with: NSMakeRange(0, 1)))
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
             }
             // RGB|RGBA
-            let tmpR = string.fw_substring(with: NSMakeRange(0, 1))
-            let tmpG = string.fw_substring(with: NSMakeRange(1, 1))
-            let tmpB = string.fw_substring(with: NSMakeRange(2, 1))
+            let tmpR = string.fw.substring(with: NSMakeRange(0, 1))
+            let tmpG = string.fw.substring(with: NSMakeRange(1, 1))
+            let tmpB = string.fw.substring(with: NSMakeRange(2, 1))
             strR = String(format: "%@%@", tmpR, tmpR)
             strG = String(format: "%@%@", tmpG, tmpG)
             strB = String(format: "%@%@", tmpB, tmpB)
             if length == 4 {
-                let tmpA = string.fw_substring(with: NSMakeRange(3, 1))
+                let tmpA = string.fw.substring(with: NSMakeRange(3, 1))
                 strA = String(format: "%@%@", tmpA, tmpA)
             }
         } else {
             // AARRGGBB
             if fw_colorStandardARGB && length == 8 {
-                string = String(format: "%@%@", string.fw_substring(with: NSMakeRange(2, 6)), string.fw_substring(with: NSMakeRange(0, 2)))
+                string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
             }
             // RRGGBB|RRGGBBAA
-            strR = string.fw_substring(with: NSMakeRange(0, 2))
-            strG = string.fw_substring(with: NSMakeRange(2, 2))
-            strB = string.fw_substring(with: NSMakeRange(4, 2))
+            strR = string.fw.substring(with: NSMakeRange(0, 2))
+            strG = string.fw.substring(with: NSMakeRange(2, 2))
+            strB = string.fw.substring(with: NSMakeRange(4, 2))
             if length == 8 {
-                strA = string.fw_substring(with: NSMakeRange(6, 2))
+                strA = string.fw.substring(with: NSMakeRange(6, 2))
             }
         }
         
@@ -1597,7 +1577,7 @@ extension Wrapper where Base: UINavigationController {
         }
         set {
             guard newValue != fw_autoScaleFont else { return }
-            fw_autoScaleBlock = newValue ? { UIScreen.fw_relativeValue($0, flat: fw_autoFlatFont) } : nil
+            fw_autoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: fw_autoFlatFont) } : nil
         }
     }
     
@@ -1632,7 +1612,7 @@ extension Wrapper where Base: UINavigationController {
     public static func fw_font(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         var fontSize = size
         if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
-            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw_relativeValue(size, flat: UIFont.fw_autoFlatFont)
+            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw_autoFlatFont)
         }
         
         if let font = fw_fontBlock?(fontSize, weight) { return font }
@@ -2174,27 +2154,27 @@ extension Wrapper where Base: UINavigationController {
     
     /// 保存图片到相册，保存成功时error为nil
     public func fw_saveImage(completion: ((Error?) -> Void)? = nil) {
-        fw_setPropertyCopy(completion, forName: "fw_saveImage")
+        fw.setPropertyCopy(completion, forName: "fw_saveImage")
         UIImageWriteToSavedPhotosAlbum(self, self, #selector(fw_saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func fw_saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
-        UIImage.fw_setPropertyCopy(completion, forName: "fw_saveVideo")
+        NSObject.fw.setAssociatedObject(UIImage.self, key: "fw_saveVideo", value: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, self, #selector(fw_saveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
     @objc private func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = fw_property(forName: "fw_saveImage") as? (Error?) -> Void
-        fw_setPropertyCopy(nil, forName: "fw_saveImage")
+        let block = fw.property(forName: "fw_saveImage") as? (Error?) -> Void
+        fw.setPropertyCopy(nil, forName: "fw_saveImage")
         block?(error)
     }
     
     @objc private static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = UIImage.fw_property(forName: "fw_saveVideo") as? (Error?) -> Void
-        UIImage.fw_setPropertyCopy(nil, forName: "fw_saveVideo")
+        let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "fw_saveVideo") as? (Error?) -> Void
+        NSObject.fw.setAssociatedObject(UIImage.self, key: "fw_saveVideo", value: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         block?(error)
     }
     
@@ -2765,7 +2745,7 @@ public enum ViewControllerLifecycleState: Int {
             
             #if DEBUG
             if let viewController = viewController {
-                Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
+                Logger.debug(group: Logger.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
             }
             #endif
         }
@@ -2845,30 +2825,30 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     private var fw_issetLifecycleStateTarget: Bool {
-        return fw_property(forName: "fw_lifecycleStateTarget") != nil
+        return fw.property(forName: "fw_lifecycleStateTarget") != nil
     }
     
     private var fw_lifecycleStateTarget: LifecycleStateTarget {
-        if let target = fw_property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
+        if let target = fw.property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
             return target
         }
         
         let target = LifecycleStateTarget()
         target.viewController = self
-        fw_setProperty(target, forName: "fw_lifecycleStateTarget")
+        fw.setProperty(target, forName: "fw_lifecycleStateTarget")
         return target
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
     public var fw_allowsPopGesture: (() -> Bool)? {
-        get { fw_property(forName: "fw_allowsPopGesture") as? () -> Bool }
-        set { fw_setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
+        get { fw.property(forName: "fw_allowsPopGesture") as? () -> Bool }
+        set { fw.setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
     public var fw_shouldPopController: (() -> Bool)? {
-        get { fw_property(forName: "fw_shouldPopController") as? () -> Bool }
-        set { fw_setPropertyCopy(newValue, forName: "fw_shouldPopController") }
+        get { fw.property(forName: "fw_shouldPopController") as? () -> Bool }
+        set { fw.setPropertyCopy(newValue, forName: "fw_shouldPopController") }
     }
     
 }
@@ -2982,7 +2962,7 @@ public enum ViewControllerLifecycleState: Int {
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func fw_enablePopProxy() {
         self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
-        fw_setPropertyBool(true, forName: "fw_popProxyEnabled")
+        fw.setPropertyBool(true, forName: "fw_popProxyEnabled")
         FrameworkAutoloader.swizzleToolkitNavigationController()
     }
     
@@ -2993,25 +2973,25 @@ public enum ViewControllerLifecycleState: Int {
     }
     
     fileprivate var fw_popProxyEnabled: Bool {
-        return fw_propertyBool(forName: "fw_popProxyEnabled")
+        return fw.propertyBool(forName: "fw_popProxyEnabled")
     }
     
     private var fw_popProxyTarget: PopProxyTarget {
-        if let proxy = fw_property(forName: "fw_popProxyTarget") as? PopProxyTarget {
+        if let proxy = fw.property(forName: "fw_popProxyTarget") as? PopProxyTarget {
             return proxy
         } else {
             let proxy = PopProxyTarget(navigationController: self)
-            fw_setProperty(proxy, forName: "fw_popProxyTarget")
+            fw.setProperty(proxy, forName: "fw_popProxyTarget")
             return proxy
         }
     }
     
     fileprivate var fw_delegateProxy: GestureRecognizerDelegateProxy {
-        if let proxy = fw_property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
+        if let proxy = fw.property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
             return proxy
         } else {
             let proxy = GestureRecognizerDelegateProxy()
-            fw_setProperty(proxy, forName: "fw_delegateProxy")
+            fw.setProperty(proxy, forName: "fw_delegateProxy")
             return proxy
         }
     }
@@ -3029,7 +3009,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleToolkitViewController() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
@@ -3044,7 +3024,7 @@ extension FrameworkAutoloader {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
@@ -3059,7 +3039,7 @@ extension FrameworkAutoloader {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -3073,7 +3053,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3087,7 +3067,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3101,7 +3081,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -3115,7 +3095,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3129,7 +3109,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3143,7 +3123,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -3159,7 +3139,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleToolkitTitleView() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
@@ -3175,7 +3155,7 @@ extension FrameworkAutoloader {
             titleViewSize.height = ceil(titleViewSize.height)
             
             if titleView.bounds.height != titleViewSize.height {
-                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
+                let titleViewMinY: CGFloat = UIScreen.fw.flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
                 titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
             }
             
@@ -3188,7 +3168,7 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(setter: UIViewController.title),
             methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
@@ -3201,7 +3181,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.title),
             methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
@@ -3214,7 +3194,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.titleView),
             methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
@@ -3236,7 +3216,7 @@ extension FrameworkAutoloader {
         guard !swizzleToolkitNavigationControllerFinished else { return }
         swizzleToolkitNavigationControllerFinished = true
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
@@ -3253,7 +3233,7 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, navigationBar, item)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
@@ -3270,7 +3250,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarHidden),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
@@ -3283,7 +3263,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarStyle),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,

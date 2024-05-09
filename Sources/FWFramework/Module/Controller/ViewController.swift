@@ -116,7 +116,7 @@ public class ViewControllerManager: NSObject {
     ///   - type: 控制器协议类型，必须继承ViewControllerProtocol
     ///   - intercepter: 控制器拦截器对象，传nil时取消注册
     public func registerProtocol<T>(_ type: T.Type, intercepter: ViewControllerIntercepter?) {
-        let intercepterId = String.fw_safeString(type)
+        let intercepterId = String.fw.safeString(type)
         if let intercepter = intercepter {
             intercepter.intercepterValidator = { $0 is T }
             intercepters[intercepterId] = intercepter
@@ -134,7 +134,7 @@ public class ViewControllerManager: NSObject {
         
         // 解析拦截器列表，ViewControllerProtocol始终位于第一位
         var intercepterNames: [String] = []
-        intercepterNames.append(String.fw_safeString(ViewControllerProtocol.self))
+        intercepterNames.append(String.fw.safeString(ViewControllerProtocol.self))
         for (intercepterName, intercepter) in intercepters {
             if intercepter.intercepterValidator?(viewController) ?? false,
                !intercepterNames.contains(intercepterName) {
@@ -313,7 +313,7 @@ extension FrameworkAutoloader {
     }
     
     private static func swizzleViewController() {
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
@@ -327,7 +327,7 @@ extension FrameworkAutoloader {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
@@ -341,7 +341,7 @@ extension FrameworkAutoloader {
             return viewController
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -354,7 +354,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -367,7 +367,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -380,7 +380,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
@@ -393,7 +393,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -406,7 +406,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
@@ -419,7 +419,7 @@ extension FrameworkAutoloader {
             }
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,

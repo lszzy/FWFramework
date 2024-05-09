@@ -708,11 +708,11 @@ extension Wrapper where Base: UserDefaults {
     
     private var fw_lockSemaphore: DispatchSemaphore {
         return fw_synchronized {
-            if let semaphore = fw_property(forName: #function) as? DispatchSemaphore {
+            if let semaphore = fw.property(forName: #function) as? DispatchSemaphore {
                 return semaphore
             } else {
                 let semaphore = DispatchSemaphore(value: 1)
-                fw_setProperty(semaphore, forName: #function)
+                fw.setProperty(semaphore, forName: #function)
                 return semaphore
             }
         }
@@ -722,18 +722,18 @@ extension Wrapper where Base: UserDefaults {
     public var fw_queue: DispatchQueue {
         get {
             return fw_synchronized {
-                if let queue = fw_property(forName: #function) as? DispatchQueue {
+                if let queue = fw.property(forName: #function) as? DispatchQueue {
                     return queue
                 } else {
                     let queue = DispatchQueue(label: #function)
-                    fw_setProperty(queue, forName: #function)
+                    fw.setProperty(queue, forName: #function)
                     return queue
                 }
             }
         }
         set {
             fw_synchronized {
-                fw_setProperty(newValue, forName: #function)
+                fw.setProperty(newValue, forName: #function)
             }
         }
     }
@@ -777,11 +777,11 @@ extension Wrapper where Base: UserDefaults {
     ) {
         fw_synchronized {
             var tokens: NSMutableSet
-            if let mutableSet = fw_property(forName: "fw_dispatchOnce") as? NSMutableSet {
+            if let mutableSet = fw.property(forName: "fw_dispatchOnce") as? NSMutableSet {
                 tokens = mutableSet
             } else {
                 tokens = NSMutableSet()
-                fw_setProperty(tokens, forName: "fw_dispatchOnce")
+                fw.setProperty(tokens, forName: "fw_dispatchOnce")
             }
             
             guard !tokens.contains(token) else { return }
@@ -1871,12 +1871,12 @@ extension Wrapper where Base: UserDefaults {
         var urlString = string + (string.contains("?") ? "&" : "?")
         let urlParams = params ?? [:]
         for (key, value) in urlParams {
-            let valueStr = String.fw_safeString(value)
+            let valueStr = String.fw.safeString(value)
                 .replacingOccurrences(of: " ", with: "+")
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            urlString += "\(String.fw_safeString(key))=\(valueStr ?? "")&"
+            urlString += "\(String.fw.safeString(key))=\(valueStr ?? "")&"
         }
-        return URL(string: urlString.fw_substring(to: urlString.count - 1))
+        return URL(string: urlString.fw.substring(to: urlString.count - 1))
     }
     
 }
@@ -1945,7 +1945,7 @@ extension FrameworkAutoloader {
         guard !swizzleHttpProxyFinished else { return }
         swizzleHttpProxyFinished = true
         
-        NSObject.fw_swizzleClassMethod(
+        NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
@@ -1957,7 +1957,7 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, configuration)
         }}
         
-        NSObject.fw_swizzleClassMethod(
+        NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,

@@ -41,7 +41,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
     public var webView: WebView {
-        if let result = fw_property(forName: "webView") as? WebView {
+        if let result = fw.property(forName: "webView") as? WebView {
             return result
         } else {
             var result: WebView
@@ -52,7 +52,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
                 setupWebConfiguration(configuration)
                 result = WebView(frame: .zero, configuration: configuration)
             }
-            fw_setProperty(result, forName: "webView")
+            fw.setProperty(result, forName: "webView")
             return result
         }
     }
@@ -60,10 +60,10 @@ extension WebViewControllerProtocol where Self: UIViewController {
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     public var webRequest: Any? {
         get {
-            return fw_property(forName: "webRequest")
+            return fw.property(forName: "webRequest")
         }
         set {
-            fw_setProperty(newValue, forName: "webRequest")
+            fw.setProperty(newValue, forName: "webRequest")
             
             if isViewLoaded {
                 webView.webRequest = newValue
@@ -79,7 +79,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
     public func setupWebLayout() {
-        webView.fw_pinEdges()
+        webView.fw.pinEdges()
     }
     
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现
