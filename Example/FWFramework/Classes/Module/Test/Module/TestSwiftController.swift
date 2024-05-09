@@ -321,13 +321,20 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
 }
 
 class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol {
+    class Cell: UITableViewCell {
+        var index: Int = 0
+    }
+    
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
+        tableDelegate.cellClass = Cell.self
         tableDelegate.numberOfRows = { [weak self] _ in
             return self?.tableData.count ?? 0
         }
         tableDelegate.cellConfiguation = { cell, indexPath in
+            let cell = cell as! Cell
             cell.app.maxYViewExpanded = true
+            cell.index = indexPath.row
             cell.textLabel?.text = "\(indexPath.row)"
         }
     }

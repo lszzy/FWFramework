@@ -265,11 +265,7 @@ extension Wrapper where Base: UITableViewCell {
         style: UITableViewCell.CellStyle = .default,
         reuseIdentifier: String? = nil
     ) -> Base {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Base.self).appending("FWDynamicLayoutReuseIdentifier")
-        if let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? Base {
-            return cell
-        }
-        return Base(style: style, reuseIdentifier: identifier)
+        return tableView.fw.cell(of: Base.self, style: style, reuseIdentifier: reuseIdentifier)
     }
     
     /// 根据配置自动计算cell高度，可指定key使用缓存，子类可重写
@@ -307,13 +303,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
         tableView: UITableView,
         reuseIdentifier: String? = nil
     ) -> Base {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Base.self).appending("FWDynamicLayoutReuseIdentifier")
-        if tableView.fw.propertyBool(forName: identifier) {
-            return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Base
-        }
-        tableView.register(Base.self, forHeaderFooterViewReuseIdentifier: identifier)
-        tableView.fw.setPropertyBool(true, forName: identifier)
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! Base
+        return tableView.fw.headerFooterView(of: Base.self, reuseIdentifier: reuseIdentifier)
     }
     
     /// 根据配置自动计算cell高度，可指定key使用缓存，子类可重写
@@ -416,6 +406,19 @@ extension Wrapper where Base: UITableView {
     }
 
     // MARK: - Cell
+    /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
+    public func cell<T: UITableViewCell>(
+        of cellClass: T.Type,
+        style: UITableViewCell.CellStyle = .default,
+        reuseIdentifier: String? = nil
+    ) -> T {
+        let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
+        if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T {
+            return cell
+        }
+        return T(style: style, reuseIdentifier: identifier)
+    }
+    
     /// 获取 Cell 需要的高度，可指定key使用缓存
     /// - Parameters:
     ///   - cellClass: cell class
@@ -446,6 +449,20 @@ extension Wrapper where Base: UITableView {
     }
 
     // MARK: - HeaderFooterView
+    /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
+    public func headerFooterView<T: UITableViewHeaderFooterView>(
+        of headerFooterViewClass: T.Type,
+        reuseIdentifier: String? = nil
+    ) -> T {
+        let identifier = reuseIdentifier ?? NSStringFromClass(headerFooterViewClass).appending("FWDynamicLayoutReuseIdentifier")
+        if base.fw.propertyBool(forName: identifier) {
+            return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
+        }
+        base.register(headerFooterViewClass, forHeaderFooterViewReuseIdentifier: identifier)
+        base.fw.setPropertyBool(true, forName: identifier)
+        return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
+    }
+    
     /// 获取 HeaderFooter 需要的高度，可指定key使用缓存
     /// - Parameters:
     ///   - headerFooterViewClass: HeaderFooter class
@@ -504,13 +521,7 @@ extension Wrapper where Base: UICollectionViewCell {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Base.self).appending("FWDynamicLayoutReuseIdentifier")
-        if collectionView.fw.propertyBool(forName: identifier) {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Base
-        }
-        collectionView.register(Base.self, forCellWithReuseIdentifier: identifier)
-        collectionView.fw.setPropertyBool(true, forName: identifier)
-        return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! Base
+        return collectionView.fw.cell(of: Base.self, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
 
     /// 根据配置自动计算view大小，可固定宽度或高度，可指定key使用缓存，子类可重写
@@ -552,14 +563,7 @@ extension Wrapper where Base: UICollectionReusableView {
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        let identifier = reuseIdentifier ?? NSStringFromClass(Base.self).appending("FWDynamicLayoutReuseIdentifier")
-        let kindIdentifier = identifier + kind
-        if collectionView.fw.propertyBool(forName: kindIdentifier) {
-            return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Base
-        }
-        collectionView.register(Base.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
-        collectionView.fw.setPropertyBool(true, forName: kindIdentifier)
-        return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! Base
+        return collectionView.fw.reusableView(of: Base.self, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
     
     /// 根据配置自动计算view大小，可固定宽度或高度，可指定key使用缓存，子类可重写
@@ -661,6 +665,21 @@ extension Wrapper where Base: UICollectionView {
     }
 
     // MARK: - Cell
+    /// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
+    public func cell<T: UICollectionViewCell>(
+        of cellClass: T.Type,
+        indexPath: IndexPath,
+        reuseIdentifier: String? = nil
+    ) -> T {
+        let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
+        if base.fw.propertyBool(forName: identifier) {
+            return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
+        }
+        base.register(cellClass, forCellWithReuseIdentifier: identifier)
+        base.fw.setPropertyBool(true, forName: identifier)
+        return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
+    }
+    
     /// 获取 Cell 需要的尺寸，可固定宽度或高度，可指定key使用缓存
     /// - Parameters:
     ///   - cellClass: cell类
@@ -697,6 +716,23 @@ extension Wrapper where Base: UICollectionView {
     }
 
     // MARK: - ReusableView
+    /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
+    public func reusableView<T: UICollectionReusableView>(
+        of reusableViewClass: T.Type,
+        kind: String,
+        indexPath: IndexPath,
+        reuseIdentifier: String? = nil
+    ) -> T {
+        let identifier = reuseIdentifier ?? NSStringFromClass(reusableViewClass).appending("FWDynamicLayoutReuseIdentifier")
+        let kindIdentifier = identifier + kind
+        if base.fw.propertyBool(forName: kindIdentifier) {
+            return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
+        }
+        base.register(reusableViewClass, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
+        base.fw.setPropertyBool(true, forName: kindIdentifier)
+        return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
+    }
+    
     /// 获取 ReusableView 需要的尺寸，可固定宽度或高度，可指定key使用缓存
     /// - Parameters:
     ///   - reusableViewClass: ReusableView class
