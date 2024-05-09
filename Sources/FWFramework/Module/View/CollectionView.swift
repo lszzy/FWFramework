@@ -173,7 +173,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
         // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let cell = cellClass.fw_cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = cellClass.fw.cell(collectionView: collectionView, indexPath: indexPath)
         cellConfiguration?(cell, indexPath)
         return cell
     }
@@ -194,7 +194,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             }
             
             // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            let view = viewClass.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             headerConfiguration?(view, indexPath)
             return view
         }
@@ -209,7 +209,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             }
             
             // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            let view = viewClass.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
             footerConfiguration?(view, indexPath)
             return view
         }
@@ -244,7 +244,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
         }
         let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
-        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
+        return collectionView.fw.size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguration?(cell, indexPath)
         }
     }
@@ -338,7 +338,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         let cacheKey = cacheKeyForHeader?(section) ?? (sizeCacheEnabled ? section : nil)
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
+        return collectionView.fw.size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.headerConfiguration?(reusableView, indexPath)
         }
     }
@@ -375,7 +375,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         let cacheKey = cacheKeyForFooter?(section) ?? (sizeCacheEnabled ? section : nil)
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
+        return collectionView.fw.size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.footerConfiguration?(reusableView, indexPath)
         }
     }

@@ -631,7 +631,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
     
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let layoutCell = tableDelegate.tableView(tableView, cellForRowAt: indexPath)
-        let cell = UITableViewCell.fw_cell(tableView: tableView, style: .default, reuseIdentifier: "FWSkeletonCell")
+        let cell = UITableViewCell.fw.cell(tableView: tableView, style: .default, reuseIdentifier: "FWSkeletonCell")
         cell.selectionStyle = .none
         if let skeletonLayout = cell.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
@@ -657,7 +657,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
     
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let layoutHeader = tableDelegate.tableView(tableView, viewForHeaderInSection: section) else { return nil }
-        let header = UITableViewHeaderFooterView.fw_headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonHeader")
+        let header = UITableViewHeaderFooterView.fw.headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonHeader")
         if let skeletonLayout = header.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
         }
@@ -682,7 +682,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
     
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let layoutFooter = tableDelegate.tableView(tableView, viewForFooterInSection: section) else { return nil }
-        let footer = UITableViewHeaderFooterView.fw_headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonFooter")
+        let footer = UITableViewHeaderFooterView.fw.headerFooterView(tableView: tableView, reuseIdentifier: "FWSkeletonFooter")
         if let skeletonLayout = footer.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
         }
@@ -783,7 +783,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let layoutCell = collectionDelegate.collectionView(collectionView, cellForItemAt: indexPath)
-        let cell = UICollectionViewCell.fw_cell(collectionView: collectionView, indexPath: indexPath, reuseIdentifier: "FWSkeletonCell")
+        let cell = UICollectionViewCell.fw.cell(collectionView: collectionView, indexPath: indexPath, reuseIdentifier: "FWSkeletonCell")
         if let skeletonLayout = cell.contentView.viewWithTag(2052) as? SkeletonLayout {
             skeletonLayout.removeFromSuperview()
         }
@@ -813,7 +813,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let layoutHeader = collectionDelegate.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
-            let header = UICollectionReusableView.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonHeader")
+            let header = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonHeader")
             if let skeletonLayout = header.viewWithTag(2052) as? SkeletonLayout {
                 skeletonLayout.removeFromSuperview()
             }
@@ -834,7 +834,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
         
         if kind == UICollectionView.elementKindSectionFooter {
             let layoutFooter = collectionDelegate.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
-            let footer = UICollectionReusableView.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonFooter")
+            let footer = UICollectionReusableView.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath, reuseIdentifier: "FWSkeletonFooter")
             if let skeletonLayout = footer.viewWithTag(2052) as? SkeletonLayout {
                 skeletonLayout.removeFromSuperview()
             }
