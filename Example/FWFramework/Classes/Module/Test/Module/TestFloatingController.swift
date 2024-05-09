@@ -1,5 +1,5 @@
 //
-//  TestFloatController.swift
+//  TestFloatingController.swift
 //  FWFramework_Example
 //
 //  Created by wuyong on 2022/9/21.
@@ -8,10 +8,10 @@
 
 import FWFramework
 
-class TestFloatController: UIViewController, ViewControllerProtocol {
+class TestFloatingController: UIViewController, ViewControllerProtocol {
     
-    private lazy var floatView: FloatView = {
-        let result = FloatView()
+    private lazy var floatView: FloatingView = {
+        let result = FloatingView()
         result.padding = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         result.itemMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.minimumItemSize = CGSize(width: 69, height: 29)
