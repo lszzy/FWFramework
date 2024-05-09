@@ -786,7 +786,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
     }
     
     public static func configurationFilePath(for filePath: String) -> String {
-        return filePath.fw_appendingPathExtension("metadata")
+        return filePath.fw.appendingPathExtension("metadata")
     }
     
     public static func createAndSaveDownloadedConfiguration(for url: URL) throws {
@@ -943,7 +943,7 @@ public class PlayerCacheManager: NSObject {
     public static let playerCacheFinishedErrorKey = "FWPlayerCacheFinishedErrorKey"
     
     public static var cacheDirectory: String = {
-        let result = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "PlayerCache"])
+        let result = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "PlayerCache"])
         return result
     }()
     public static var cacheUpdateNotifyInterval: TimeInterval = 0.1
@@ -954,9 +954,9 @@ public class PlayerCacheManager: NSObject {
         if let block = cacheFileNameRules {
             pathComponent = block(url)
         } else {
-            pathComponent = url.absoluteString.fw.md5Encode.fw_appendingPathExtension(url.pathExtension)
+            pathComponent = url.absoluteString.fw.md5Encode.fw.appendingPathExtension(url.pathExtension)
         }
-        return cacheDirectory.fw_appendingPath(pathComponent)
+        return cacheDirectory.fw.appendingPath(pathComponent)
     }
     
     public static func cacheConfiguration(for url: URL) -> PlayerCacheConfiguration {

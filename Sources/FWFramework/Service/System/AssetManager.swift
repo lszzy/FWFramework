@@ -604,23 +604,23 @@ public class AssetManager: NSObject {
     
     /// 资源管理器临时文件存放目录，使用完成后需自行删除
     public static var cachePath: String {
-        let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "AssetManager"])
+        let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager"])
         return cachePath
     }
     
     /// LivePhoto导出文件存放路径，使用完成后需自行删除
     public static var livePhotoPath: String {
-        return cachePath.fw_appendingPath("LivePhoto")
+        return cachePath.fw.appendingPath("LivePhoto")
     }
     
     /// 视频导出文件建议存放路径，使用完成后需自行删除
     public static var videoExportPath: String {
-        return cachePath.fw_appendingPath("VideoExport")
+        return cachePath.fw.appendingPath("VideoExport")
     }
     
     /// 图片选择器缓存文件存放目录，使用完成后需自行删除
     public static var imagePickerPath: String {
-        return cachePath.fw_appendingPath("ImagePicker")
+        return cachePath.fw.appendingPath("ImagePicker")
     }
     
     /// 获取当前应用的“照片”访问授权状态

@@ -804,32 +804,32 @@ public enum HeaderFooterViewType: Int {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var fw_maxYViewFixed: Bool {
-        get { fw.propertyBool(forName: "fw_maxYViewFixed") }
-        set { fw.setPropertyBool(newValue, forName: "fw_maxYViewFixed") }
+        get { fw.propertyBool(forName: "maxYViewFixed") }
+        set { fw.setPropertyBool(newValue, forName: "maxYViewFixed") }
     }
 
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
     public var fw_maxYViewPadding: CGFloat {
         get {
-            if let number = fw.propertyNumber(forName: "fw_maxYViewPadding") {
+            if let number = fw.propertyNumber(forName: "maxYViewPadding") {
                 return number.doubleValue
             }
             return .zero
         }
         set {
-            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_maxYViewPadding")
+            fw.setPropertyNumber(NSNumber(value: newValue), forName: "maxYViewPadding")
         }
     }
 
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var fw_maxYViewExpanded: Bool {
-        get { fw.propertyBool(forName: "fw_maxYViewExpanded") }
-        set { fw.setPropertyBool(newValue, forName: "fw_maxYViewExpanded") }
+        get { fw.propertyBool(forName: "maxYViewExpanded") }
+        set { fw.setPropertyBool(newValue, forName: "maxYViewExpanded") }
     }
     
     fileprivate var fw_maxYView: UIView? {
-        get { fw.property(forName: "fw_maxYView") as? UIView }
-        set { fw.setProperty(newValue, forName: "fw_maxYView") }
+        get { fw.property(forName: "maxYView") as? UIView }
+        set { fw.setProperty(newValue, forName: "maxYView") }
     }
     
     /// 创建可重用动态布局视图方法

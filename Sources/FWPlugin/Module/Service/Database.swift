@@ -354,7 +354,7 @@ public class DatabaseManager: NSObject {
             let fileArray = try? FileManager.default.contentsOfDirectory(atPath: cachePath)
             fileArray?.forEach({ file in
                 if file != ".DS_Store" {
-                    let filePath = cachePath.fw_appendingPath(file)
+                    let filePath = cachePath.fw.appendingPath(file)
                     try? FileManager.default.removeItem(atPath: filePath)
                     log(String(format: "已经删除了数据库 -> %@", filePath))
                 }
@@ -402,7 +402,7 @@ private extension DatabaseManager {
             return customPath
         }
         
-        return FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "Database"])
+        return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "Database"])
     }
     
     static var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
@@ -577,7 +577,7 @@ private extension DatabaseManager {
     static func updateTableField(_ modelClass: AnyClass, newVersion: String, localModelName: String) {
         let tableName = getTableName(modelClass)
         let cacheDirectory = databaseCacheDirectory(modelClass)
-        let databaseCachePath = cacheDirectory.fw_appendingPath(localModelName)
+        let databaseCachePath = cacheDirectory.fw.appendingPath(localModelName)
         if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
             let oldFieldNames = getModelFieldNames(modelClass)
             let newModelInfo = parseModelFields(modelClass, hasPrimary: false)
@@ -632,7 +632,7 @@ private extension DatabaseManager {
             }
             
             close()
-            let newDatabasePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), newVersion))
+            let newDatabasePath = cacheDirectory.fw.appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), newVersion))
             try? FileManager.default.moveItem(atPath: databaseCachePath, toPath: newDatabasePath)
         }
     }
@@ -720,7 +720,7 @@ private extension DatabaseManager {
         
         if let vendorPath = getVendorPath(modelClass), !vendorPath.isEmpty {
             let version = getModelVersion(modelClass)
-            let sqlitePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
+            let sqlitePath = cacheDirectory.fw.appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
             if FileManager.default.fileExists(atPath: vendorPath),
                !FileManager.default.fileExists(atPath: sqlitePath) {
                 try? FileManager.default.copyItem(atPath: vendorPath, toPath: sqlitePath)
@@ -793,7 +793,7 @@ private extension DatabaseManager {
             }
         }
         checkUpdate = true
-        let databaseCachePath = cacheDirectory.fw_appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
+        let databaseCachePath = cacheDirectory.fw.appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
         if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
             return createTable(modelClass)
         }
@@ -1230,7 +1230,7 @@ private extension DatabaseManager {
             for fileName in fileNames {
                 if fileName.range(of: className.appending("_v")) != nil {
                     if isPath {
-                        filePath = cacheDirectory.fw_appendingPath(fileName)
+                        filePath = cacheDirectory.fw.appendingPath(fileName)
                     } else {
                         filePath = fileName
                     }

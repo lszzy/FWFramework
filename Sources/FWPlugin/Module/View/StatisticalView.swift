@@ -162,7 +162,7 @@ public class StatisticalManager: NSObject {
         event.viewController = view?.fw_viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
-        event.triggerTimestamp = Date.fw_currentTime
+        event.triggerTimestamp = Date.fw.currentTime
         event.isExposure = false
         event.isFinished = true
         handleEvent(event)
@@ -187,7 +187,7 @@ public class StatisticalManager: NSObject {
         let isVisibleCells = view?.statisticalViewVisibleIndexPaths() != nil
         var totalDuration = (view?.fw_statisticalTarget.exposureDurations[triggerKey] ?? 0)
         var duration: TimeInterval = 0
-        let triggerTimestamp = Date.fw_currentTime
+        let triggerTimestamp = Date.fw.currentTime
         if isFinished {
             var exposureTimestamp: TimeInterval?
             if isVisibleCells {
@@ -253,7 +253,7 @@ public class StatisticalManager: NSObject {
         
         var totalDuration = (viewController?.fw_statisticalTarget.exposureDuration ?? 0)
         var duration: TimeInterval = 0
-        let triggerTimestamp = Date.fw_currentTime
+        let triggerTimestamp = Date.fw.currentTime
         if isFinished {
             let exposureTimestamp = viewController?.fw_statisticalTarget.exposureTimestamp
             if let exposureTimestamp = exposureTimestamp, exposureTimestamp > 0 {

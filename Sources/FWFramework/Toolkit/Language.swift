@@ -170,7 +170,7 @@ extension Notification.Name {
     /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
     public func fw_localizedBundle() -> Bundle {
         if self.isKind(of: TargetBundle.self) { return self }
-        fw_synchronized {
+        fw.synchronized {
             if !self.isKind(of: TargetBundle.self) {
                 object_setClass(self, TargetBundle.self)
                 
@@ -264,7 +264,7 @@ extension Notification.Name {
     }
     
     fileprivate static func fw_localizedChanged(_ language: String?) {
-        fw_synchronized {
+        fw.synchronized {
             if object_getClass(Bundle.main) != TargetBundle.self {
                 object_setClass(Bundle.main, TargetBundle.self)
             }

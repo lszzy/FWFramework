@@ -31,9 +31,9 @@ open class CacheSqlite: CacheEngine {
             dbPath = path
         // 相对路径: Libray/Caches/FWFramework/CacheSqlite/path[shared.sqlite]
         } else {
-            let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "CacheSqlite"])
+            let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheSqlite"])
             let fileName = path ?? ""
-            dbPath = cachePath.fw_appendingPath(!fileName.isEmpty ? fileName : "shared.sqlite")
+            dbPath = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared.sqlite")
         }
         self.dbPath = dbPath
         // 自动创建目录

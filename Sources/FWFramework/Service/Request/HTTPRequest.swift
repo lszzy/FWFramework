@@ -537,7 +537,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
     /// 当前响应服务器时间
     open var responseServerTime: TimeInterval {
         guard let serverDate = responseHeaders?["Date"] as? String else { return 0 }
-        return Date.fw_formatServerDate(serverDate)
+        return Date.fw.formatServerDate(serverDate)
     }
     /// 请求开始时间
     open internal(set) var requestStartTime: TimeInterval = 0
