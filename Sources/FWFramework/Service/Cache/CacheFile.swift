@@ -28,9 +28,9 @@ open class CacheFile: CacheEngine {
             self.path = path
         // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
         } else {
-            let cachePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "CacheFile"])
+            let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheFile"])
             let fileName = path ?? ""
-            self.path = cachePath.fw_appendingPath(!fileName.isEmpty ? fileName : "shared")
+            self.path = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
         }
     }
     

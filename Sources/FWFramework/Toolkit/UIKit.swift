@@ -1864,11 +1864,11 @@ extension Wrapper where Base: UIViewController {
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
         
-        let startTime = Date.fw_currentTime
+        let startTime = Date.fw.currentTime
         var hasWindow = false
         timer.setEventHandler { [weak self] in
             DispatchQueue.main.async {
-                var countDown = seconds - Int(round(Date.fw_currentTime - startTime))
+                var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
                 if countDown <= 0 {
                     timer.cancel()
                 }

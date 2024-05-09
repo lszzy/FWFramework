@@ -455,13 +455,13 @@ open class RequestCache: RequestCacheProtocol {
     
     /// 获取请求缓存基础路径
     open func cacheFilePath(for request: HTTPRequest) -> String {
-        var filePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "RequestCache"])
+        var filePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "RequestCache"])
         if let filterPath = cacheFilePathFilter?(request, filePath) {
             filePath = filterPath
         }
         
-        FileManager.fw_createDirectory(atPath: filePath)
-        FileManager.fw_skipBackup(filePath)
+        FileManager.fw.createDirectory(atPath: filePath)
+        FileManager.fw.skipBackup(filePath)
         return filePath
     }
     
