@@ -413,10 +413,12 @@ extension Wrapper where Base: UITableView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
-        if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T {
-            return cell
+        if !base.fw.propertyBool(forName: identifier) {
+            base.register(cellClass, forCellReuseIdentifier: identifier)
+            base.fw.setPropertyBool(true, forName: identifier)
         }
-        return T(style: style, reuseIdentifier: identifier)
+        if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T { return cell }
+        return cellClass.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     /// 获取 Cell 需要的高度，可指定key使用缓存
@@ -455,11 +457,10 @@ extension Wrapper where Base: UITableView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(headerFooterViewClass).appending("FWDynamicLayoutReuseIdentifier")
-        if base.fw.propertyBool(forName: identifier) {
-            return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
+        if !base.fw.propertyBool(forName: identifier) {
+            base.register(headerFooterViewClass, forHeaderFooterViewReuseIdentifier: identifier)
+            base.fw.setPropertyBool(true, forName: identifier)
         }
-        base.register(headerFooterViewClass, forHeaderFooterViewReuseIdentifier: identifier)
-        base.fw.setPropertyBool(true, forName: identifier)
         return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
     }
     
@@ -672,11 +673,10 @@ extension Wrapper where Base: UICollectionView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
-        if base.fw.propertyBool(forName: identifier) {
-            return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
+        if !base.fw.propertyBool(forName: identifier) {
+            base.register(cellClass, forCellWithReuseIdentifier: identifier)
+            base.fw.setPropertyBool(true, forName: identifier)
         }
-        base.register(cellClass, forCellWithReuseIdentifier: identifier)
-        base.fw.setPropertyBool(true, forName: identifier)
         return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
     }
     
@@ -725,11 +725,10 @@ extension Wrapper where Base: UICollectionView {
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(reusableViewClass).appending("FWDynamicLayoutReuseIdentifier")
         let kindIdentifier = identifier + kind
-        if base.fw.propertyBool(forName: kindIdentifier) {
-            return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
+        if !base.fw.propertyBool(forName: kindIdentifier) {
+            base.register(reusableViewClass, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
+            base.fw.setPropertyBool(true, forName: kindIdentifier)
         }
-        base.register(reusableViewClass, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
-        base.fw.setPropertyBool(true, forName: kindIdentifier)
         return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
     }
     
