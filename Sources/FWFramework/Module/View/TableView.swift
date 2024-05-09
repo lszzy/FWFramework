@@ -152,8 +152,8 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
             return cell
         }
         let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
-        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let cell = cellClass.fw.cell(tableView: tableView)
+        // 注意：此处必须使用tableView.fw.cell创建，否则返回的对象类型不对
+        let cell = tableView.fw.cell(of: cellClass)
         cellConfiguation?(cell, indexPath)
         return cell
     }
@@ -213,8 +213,8 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         let viewClass = viewClassForHeader?(tableView, section) ?? headerViewClass
         guard let viewClass = viewClass else { return nil }
         
-        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let view = viewClass.fw.headerFooterView(tableView: tableView)
+        // 注意：此处必须使用tableView.fw.headerFooterView创建，否则返回的对象类型不对
+        let view = tableView.fw.headerFooterView(of: viewClass)
         headerConfiguration?(view, section)
         return view
     }
@@ -257,8 +257,8 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         let viewClass = viewClassForFooter?(tableView, section) ?? footerViewClass
         guard let viewClass = viewClass else { return nil }
         
-        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let view = viewClass.fw.headerFooterView(tableView: tableView)
+        // 注意：此处必须使用tableView.fw.headerFooterView创建，否则返回的对象类型不对
+        let view = tableView.fw.headerFooterView(of: viewClass)
         footerConfiguration?(view, section)
         return view
     }

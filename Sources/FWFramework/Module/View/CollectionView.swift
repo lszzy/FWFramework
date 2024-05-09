@@ -172,8 +172,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return cell
         }
         let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
-        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let cell = cellClass.fw.cell(collectionView: collectionView, indexPath: indexPath)
+        // 注意：此处必须使用collectionView.fw.cell创建，否则返回的对象类型不对
+        let cell = collectionView.fw.cell(of: cellClass, indexPath: indexPath)
         cellConfiguration?(cell, indexPath)
         return cell
     }
@@ -193,8 +193,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
                 return UICollectionReusableView()
             }
             
-            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用collectionView.fw.reusableView创建，否则返回的对象类型不对
+            let view = collectionView.fw.reusableView(of: viewClass, kind: kind, indexPath: indexPath)
             headerConfiguration?(view, indexPath)
             return view
         }
@@ -208,8 +208,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
                 return UICollectionReusableView()
             }
             
-            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw.reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用collectionView.fw.reusableView创建，否则返回的对象类型不对
+            let view = collectionView.fw.reusableView(of: viewClass, kind: kind, indexPath: indexPath)
             footerConfiguration?(view, indexPath)
             return view
         }
