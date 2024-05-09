@@ -153,7 +153,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
         // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let cell = cellClass.fw_cell(tableView: tableView)
+        let cell = cellClass.fw.cell(tableView: tableView)
         cellConfiguation?(cell, indexPath)
         return cell
     }
@@ -197,7 +197,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         let cellClass = cellClassForRow?(tableView, indexPath) ?? (cellClass ?? UITableViewCell.self)
         let cacheKey = cacheKeyForRow?(indexPath) ?? (heightCacheEnabled ? indexPath : nil)
-        return tableView.fw_height(cellClass: cellClass, cacheBy: cacheKey) { [weak self] (cell) in
+        return tableView.fw.height(cellClass: cellClass, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguation?(cell, indexPath)
         }
     }
@@ -214,7 +214,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         guard let viewClass = viewClass else { return nil }
         
         // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let view = viewClass.fw_headerFooterView(tableView: tableView)
+        let view = viewClass.fw.headerFooterView(tableView: tableView)
         headerConfiguration?(view, section)
         return view
     }
@@ -241,7 +241,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         
         let cacheKey = cacheKeyForHeader?(section) ?? (heightCacheEnabled ? section : nil)
-        return tableView.fw_height(headerFooterViewClass: viewClass, type: .header, cacheBy: cacheKey) { [weak self] (headerView) in
+        return tableView.fw.height(headerFooterViewClass: viewClass, type: .header, cacheBy: cacheKey) { [weak self] (headerView) in
             self?.headerConfiguration?(headerView, section)
         }
     }
@@ -258,7 +258,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         guard let viewClass = viewClass else { return nil }
         
         // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let view = viewClass.fw_headerFooterView(tableView: tableView)
+        let view = viewClass.fw.headerFooterView(tableView: tableView)
         footerConfiguration?(view, section)
         return view
     }
@@ -285,7 +285,7 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         
         let cacheKey = cacheKeyForFooter?(section) ?? (heightCacheEnabled ? section : nil)
-        return tableView.fw_height(headerFooterViewClass: viewClass, type: .footer, cacheBy: cacheKey) { [weak self] (footerView) in
+        return tableView.fw.height(headerFooterViewClass: viewClass, type: .footer, cacheBy: cacheKey) { [weak self] (footerView) in
             self?.footerConfiguration?(footerView, section)
         }
     }
