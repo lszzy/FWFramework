@@ -22,8 +22,8 @@ class TestPreviewController: UIViewController {
     var images: [Any] = []
     var exitAtIndex: Int?
     
-    lazy var floatView: FloatView = {
-        let result = FloatView()
+    lazy var floatView: FloatingView = {
+        let result = FloatingView()
         result.itemMargins = UIEdgeInsets(top: UIScreen.app.pixelOne, left: UIScreen.app.pixelOne, bottom: 0, right: 0)
         return result
     }()
