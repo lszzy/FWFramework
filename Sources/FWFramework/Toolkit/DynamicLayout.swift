@@ -413,10 +413,6 @@ extension Wrapper where Base: UITableView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
-        if !base.fw.propertyBool(forName: identifier) {
-            base.register(cellClass, forCellReuseIdentifier: identifier)
-            base.fw.setPropertyBool(true, forName: identifier)
-        }
         if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T { return cell }
         return cellClass.init(style: style, reuseIdentifier: identifier)
     }
