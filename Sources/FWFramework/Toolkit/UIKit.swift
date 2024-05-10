@@ -3757,7 +3757,7 @@ extension Wrapper where Base: UIViewController {
                 fw.setProperty(nil, forName: "fw_lineHeight")
             }
             
-            self.fw_placeholderLineHeight = newValue
+            self.fw.placeholderLineHeight = newValue
             
             var typingAttributes = self.typingAttributes
             var paragraphStyle: NSMutableParagraphStyle
