@@ -12,38 +12,38 @@ extension Wrapper where Base: UITextField {
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var keyboardManager: Bool {
-        get { return base.fw_keyboardManager }
-        set { base.fw_keyboardManager = newValue }
+        get { return base.innerKeyboardManager }
+        set { base.innerKeyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     public var keyboardDistance: CGFloat {
-        get { return base.fw_keyboardDistance }
-        set { base.fw_keyboardDistance = newValue }
+        get { return base.innerKeyboardDistance }
+        set { base.innerKeyboardDistance = newValue }
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
     public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
-        get { return base.fw_keyboardDistanceBlock }
-        set { base.fw_keyboardDistanceBlock = newValue }
+        get { return base.innerKeyboardDistanceBlock }
+        set { base.innerKeyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var reboundDistance: CGFloat {
-        get { return base.fw_reboundDistance }
-        set { base.fw_reboundDistance = newValue }
+        get { return base.innerReboundDistance }
+        set { base.innerReboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     public var keyboardResign: Bool {
-        get { return base.fw_keyboardResign }
-        set { base.fw_keyboardResign = newValue }
+        get { return base.innerKeyboardResign }
+        set { base.innerKeyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     public var touchResign: Bool {
-        get { return base.fw_touchResign }
-        set { base.fw_touchResign = newValue }
+        get { return base.innerTouchResign }
+        set { base.innerTouchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
@@ -55,8 +55,8 @@ extension Wrapper where Base: UITextField {
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一
     public var returnResign: Bool {
-        get { return base.fw_returnResign }
-        set { base.fw_returnResign = newValue }
+        get { return base.innerReturnResign }
+        set { base.innerReturnResign = newValue }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一
@@ -192,38 +192,38 @@ extension Wrapper where Base: UITextView {
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var keyboardManager: Bool {
-        get { return base.fw_keyboardManager }
-        set { base.fw_keyboardManager = newValue }
+        get { return base.innerKeyboardManager }
+        set { base.innerKeyboardManager = newValue }
     }
 
     /// 设置输入框和键盘的空白间距，默认10.0
     public var keyboardDistance: CGFloat {
-        get { return base.fw_keyboardDistance }
-        set { base.fw_keyboardDistance = newValue }
+        get { return base.innerKeyboardDistance }
+        set { base.innerKeyboardDistance = newValue }
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
     public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
-        get { return base.fw_keyboardDistanceBlock }
-        set { base.fw_keyboardDistanceBlock = newValue }
+        get { return base.innerKeyboardDistanceBlock }
+        set { base.innerKeyboardDistanceBlock = newValue }
     }
 
     /// 设置输入框和键盘的回弹触发最小距离，默认0始终回弹
     public var reboundDistance: CGFloat {
-        get { return base.fw_reboundDistance }
-        set { base.fw_reboundDistance = newValue }
+        get { return base.innerReboundDistance }
+        set { base.innerReboundDistance = newValue }
     }
 
     /// 是否启用键盘后台关闭处理，退后台时收起键盘，回到前台时恢复键盘，解决系统退后台输入框跳动问题，默认NO
     public var keyboardResign: Bool {
-        get { return base.fw_keyboardResign }
-        set { base.fw_keyboardResign = newValue }
+        get { return base.innerKeyboardResign }
+        set { base.innerKeyboardResign = newValue }
     }
     
     /// 是否启用点击背景关闭键盘(会继续触发其它点击事件)，默认NO
     public var touchResign: Bool {
-        get { return base.fw_touchResign }
-        set { base.fw_touchResign = newValue }
+        get { return base.innerTouchResign }
+        set { base.innerTouchResign = newValue }
     }
     
     /// 指定用于键盘管理滚动的scrollView，默认为nil，通过修改VC.view.frame实现
@@ -235,8 +235,8 @@ extension Wrapper where Base: UITextView {
     // MARK: - Return
     /// 点击键盘完成按钮是否关闭键盘，默认NO，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
     public var returnResign: Bool {
-        get { return base.fw_returnResign }
-        set { base.fw_returnResign = newValue }
+        get { return base.innerReturnResign }
+        set { base.innerReturnResign = newValue }
     }
 
     /// 设置点击键盘完成按钮是否自动切换下一个输入框，二选一。此方法会修改delegate，可使用fwDelegate访问原始delegate
@@ -568,37 +568,37 @@ extension Wrapper where Base: UITextView {
 /// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 extension UITextField {
     
-    @objc dynamic fileprivate var fw_keyboardManager: Bool {
+    @objc dynamic fileprivate var innerKeyboardManager: Bool {
         get { return fw.keyboardTarget.keyboardManager }
         set { fw.keyboardTarget.keyboardManager = newValue }
     }
 
-    @objc dynamic fileprivate var fw_keyboardDistance: CGFloat {
+    @objc dynamic fileprivate var innerKeyboardDistance: CGFloat {
         get { return fw.keyboardTarget.keyboardDistance }
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
     
-    @objc dynamic fileprivate var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc dynamic fileprivate var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
-    @objc dynamic fileprivate var fw_reboundDistance: CGFloat {
+    @objc dynamic fileprivate var innerReboundDistance: CGFloat {
         get { return fw.keyboardTarget.reboundDistance }
         set { fw.keyboardTarget.reboundDistance = newValue }
     }
 
-    @objc dynamic fileprivate var fw_keyboardResign: Bool {
+    @objc dynamic fileprivate var innerKeyboardResign: Bool {
         get { return fw.keyboardTarget.keyboardResign }
         set { fw.keyboardTarget.keyboardResign = newValue }
     }
     
-    @objc dynamic fileprivate var fw_touchResign: Bool {
+    @objc dynamic fileprivate var innerTouchResign: Bool {
         get { return fw.keyboardTarget.touchResign }
         set { fw.keyboardTarget.touchResign = newValue }
     }
     
-    @objc dynamic fileprivate var fw_returnResign: Bool {
+    @objc dynamic fileprivate var innerReturnResign: Bool {
         get {
             return fw.keyboardTarget.returnResign
         }
@@ -614,37 +614,37 @@ extension UITextField {
 /// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
 extension UITextView {
     
-    @objc dynamic fileprivate var fw_keyboardManager: Bool {
+    @objc dynamic fileprivate var innerKeyboardManager: Bool {
         get { return fw.keyboardTarget.keyboardManager }
         set { fw.keyboardTarget.keyboardManager = newValue }
     }
 
-    @objc dynamic fileprivate var fw_keyboardDistance: CGFloat {
+    @objc dynamic fileprivate var innerKeyboardDistance: CGFloat {
         get { return fw.keyboardTarget.keyboardDistance }
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
     
-    @objc dynamic fileprivate var fw_keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc dynamic fileprivate var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
 
-    @objc dynamic fileprivate var fw_reboundDistance: CGFloat {
+    @objc dynamic fileprivate var innerReboundDistance: CGFloat {
         get { return fw.keyboardTarget.reboundDistance }
         set { fw.keyboardTarget.reboundDistance = newValue }
     }
 
-    @objc dynamic fileprivate var fw_keyboardResign: Bool {
+    @objc dynamic fileprivate var innerKeyboardResign: Bool {
         get { return fw.keyboardTarget.keyboardResign }
         set { fw.keyboardTarget.keyboardResign = newValue }
     }
     
-    @objc dynamic fileprivate var fw_touchResign: Bool {
+    @objc dynamic fileprivate var innerTouchResign: Bool {
         get { return fw.keyboardTarget.touchResign }
         set { fw.keyboardTarget.touchResign = newValue }
     }
     
-    @objc dynamic public var fw_returnResign: Bool {
+    @objc dynamic public var innerReturnResign: Bool {
         get {
             return fw.keyboardTarget.returnResign
         }
@@ -770,7 +770,7 @@ fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
     
     private weak var viewController: UIViewController? {
         if _viewController == nil {
-            _viewController = textInput?.fw_viewController
+            _viewController = textInput?.fw.viewController
         }
         return _viewController
     }

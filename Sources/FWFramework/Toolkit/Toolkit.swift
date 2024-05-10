@@ -69,14 +69,14 @@ extension Wrapper where Base: UIApplication {
     /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var appVersion: String {
         get {
-            if let appVersion = UIApplication.fw_appVersion {
+            if let appVersion = UIApplication.innerAppVersion {
                 return appVersion
             }
             let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
             return appVersion ?? appBuildVersion
         }
         set {
-            UIApplication.fw_appVersion = newValue
+            UIApplication.innerAppVersion = newValue
         }
     }
 
@@ -544,7 +544,7 @@ extension Wrapper where Base: UIColor {
         
         if a >= 1.0 {
             return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
-        } else if UIColor.fw_colorStandardARGB {
+        } else if UIColor.innerColorStandardARGB {
             return String(format: "#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
         } else {
             return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255), lround(a * 255))
@@ -553,8 +553,8 @@ extension Wrapper where Base: UIColor {
     
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
     public static var colorStandardARGB: Bool {
-        get { return Base.fw_colorStandardARGB }
-        set { Base.fw_colorStandardARGB = newValue }
+        get { return Base.innerColorStandardARGB }
+        set { Base.innerColorStandardARGB = newValue }
     }
 
     /// 获取透明度为1.0的RGB随机颜色
@@ -594,7 +594,7 @@ extension Wrapper where Base: UIColor {
         var strA = ""
         if length < 5 {
             // ARGB
-            if UIColor.fw_colorStandardARGB && length == 4 {
+            if UIColor.innerColorStandardARGB && length == 4 {
                 string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
             }
             // RGB|RGBA
@@ -610,7 +610,7 @@ extension Wrapper where Base: UIColor {
             }
         } else {
             // AARRGGBB
-            if UIColor.fw_colorStandardARGB && length == 8 {
+            if UIColor.innerColorStandardARGB && length == 8 {
                 string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
             }
             // RRGGBB|RRGGBBAA
@@ -746,31 +746,31 @@ extension Wrapper where Base: UIColor {
 extension Wrapper where Base: UIFont {
     /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
     public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
-        get { return Base.fw_autoScaleBlock }
-        set { Base.fw_autoScaleBlock = newValue }
+        get { return Base.innerAutoScaleBlock }
+        set { Base.innerAutoScaleBlock = newValue }
     }
     
     /// 快捷启用全局自动等比例缩放适配，自动设置默认autoScaleBlock
     public static var autoScaleFont: Bool {
         get {
-            Base.fw_autoScaleBlock != nil
+            Base.innerAutoScaleBlock != nil
         }
         set {
             guard newValue != autoScaleFont else { return }
-            Base.fw_autoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
+            Base.innerAutoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
         }
     }
     
     /// 是否启用全局自动像素取整字体，默认false
     public static var autoFlatFont: Bool {
-        get { Base.fw_autoFlatFont }
-        set { Base.fw_autoFlatFont = newValue }
+        get { Base.innerAutoFlatFont }
+        set { Base.innerAutoFlatFont = newValue }
     }
     
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
-        get { return Base.fw_fontBlock }
-        set { Base.fw_fontBlock = newValue }
+        get { return Base.innerFontBlock }
+        set { Base.innerFontBlock = newValue }
     }
 
     /// 返回系统Thin字体，自动等比例缩放
@@ -812,7 +812,7 @@ extension Wrapper where Base: UIFont {
     /// 获取指定名称、字重、斜体字体的完整规范名称
     public static func fontName(_ name: String, weight: UIFont.Weight, italic: Bool = false) -> String {
         var fontName = name
-        if let weightSuffix = UIFont.fw_weightSuffixes[weight] {
+        if let weightSuffix = UIFont.innerWeightSuffixes[weight] {
             fontName += weightSuffix + (italic ? "Italic" : "")
         }
         return fontName
@@ -1331,14 +1331,14 @@ extension Wrapper where Base: UIImage {
     /// 保存图片到相册，保存成功时error为nil
     public func saveImage(completion: ((Error?) -> Void)? = nil) {
         setPropertyCopy(completion, forName: "saveImage")
-        UIImageWriteToSavedPhotosAlbum(base, base, #selector(UIImage.fw_saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
+        UIImageWriteToSavedPhotosAlbum(base, base, #selector(UIImage.innerSaveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
-            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, UIImage.self, #selector(UIImage.fw_saveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
+            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, UIImage.self, #selector(UIImage.innerSaveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
     
@@ -1834,24 +1834,24 @@ extension Wrapper where Base: UINavigationController {
 // MARK: - UIApplication+Toolkit
 extension UIApplication {
     
-    fileprivate static var fw_appVersion: String?
+    fileprivate static var innerAppVersion: String?
     
 }
 
 // MARK: - UIColor+Toolkit
 extension UIColor {
     
-    fileprivate static var fw_colorStandardARGB = false
+    fileprivate static var innerColorStandardARGB = false
     
 }
 
 // MARK: - UIFont+Toolkit
 extension UIFont {
     
-    fileprivate static var fw_autoScaleBlock: ((CGFloat) -> CGFloat)?
-    fileprivate static var fw_autoFlatFont = false
-    fileprivate static var fw_fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
-    fileprivate static let fw_weightSuffixes: [UIFont.Weight: String] = [
+    fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
+    fileprivate static var innerAutoFlatFont = false
+    fileprivate static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
+    fileprivate static let innerWeightSuffixes: [UIFont.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
         .light: "-Light",
@@ -1868,13 +1868,13 @@ extension UIFont {
 // MARK: - UIImage+Toolkit
 extension UIImage {
     
-    @objc fileprivate func fw_saveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc fileprivate func innerSaveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = fw.property(forName: "saveImage") as? (Error?) -> Void
         fw.setPropertyCopy(nil, forName: "saveImage")
         block?(error)
     }
     
-    @objc fileprivate static func fw_saveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
+    @objc fileprivate static func innerSaveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "saveVideo") as? (Error?) -> Void
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         block?(error)

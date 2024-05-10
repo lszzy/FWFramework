@@ -47,7 +47,7 @@ extension Wrapper where Base: UIColor {
 
     /// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
     public static func themeNamed(_ name: String, bundle: Bundle? = nil) -> UIColor {
-        if let themeColor = UIColor.fw_themeColors[name] {
+        if let themeColor = UIColor.innerThemeColors[name] {
             return themeColor
         }
         
@@ -62,12 +62,12 @@ extension Wrapper where Base: UIColor {
 
     /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
     public static func setThemeColor(_ color: UIColor?, forName name: String) {
-        UIColor.fw_themeColors[name] = color
+        UIColor.innerThemeColors[name] = color
     }
 
     /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
     public static func setThemeColors(_ nameColors: [String: UIColor]) {
-        UIColor.fw_themeColors.merge(nameColors) { _, last in last }
+        UIColor.innerThemeColors.merge(nameColors) { _, last in last }
     }
 }
 
@@ -144,7 +144,7 @@ extension Wrapper where Base: UIImage {
 
     /// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
     public static func themeNamed(_ name: String, bundle: Bundle? = nil) -> UIImage {
-        if let themeImage = UIImage.fw_themeImages[name] {
+        if let themeImage = UIImage.innerThemeImages[name] {
             return themeImage
         }
         
@@ -158,12 +158,12 @@ extension Wrapper where Base: UIImage {
 
     /// 手工单个注册主题图像，未配置主题图像时可使用本方式
     public static func setThemeImage(_ image: UIImage?, forName name: String) {
-        UIImage.fw_themeImages[name] = image
+        UIImage.innerThemeImages[name] = image
     }
 
     /// 手工批量注册主题图像，未配置主题图像时可使用本方式
     public static func setThemeImages(_ nameImages: [String: UIImage]) {
-        UIImage.fw_themeImages.merge(nameImages) { _, last in last }
+        UIImage.innerThemeImages.merge(nameImages) { _, last in last }
     }
 
     // MARK: - Color
@@ -174,8 +174,8 @@ extension Wrapper where Base: UIImage {
     
     /// 默认主题图片颜色配置句柄，默认nil
     public static var themeImageColorConfiguration: (() -> UIColor)? {
-        get { Base.fw_themeImageColorConfiguration }
-        set { Base.fw_themeImageColorConfiguration = newValue }
+        get { Base.innerThemeImageColorConfiguration }
+        set { Base.innerThemeImageColorConfiguration = newValue }
     }
 }
 
@@ -503,15 +503,15 @@ public class ThemeObject<T>: NSObject {
 // MARK: - UIColor+Theme
 extension UIColor {
     
-    fileprivate static var fw_themeColors: [String: UIColor] = [:]
+    fileprivate static var innerThemeColors: [String: UIColor] = [:]
     
 }
 
 // MARK: - UIImage+Theme
 extension UIImage {
     
-    fileprivate static var fw_themeImages: [String: UIImage] = [:]
-    fileprivate static var fw_themeImageColorConfiguration: (() -> UIColor)?
+    fileprivate static var innerThemeImages: [String: UIImage] = [:]
+    fileprivate static var innerThemeImageColorConfiguration: (() -> UIColor)?
     
 }
 

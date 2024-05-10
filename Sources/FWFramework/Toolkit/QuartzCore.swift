@@ -37,7 +37,7 @@ extension Wrapper where Base: CADisplayLink {
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
     public static func displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
-        let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.fw_displayLinkAction(_:)))
+        let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.innerDisplayLinkAction(_:)))
         displayLink.fw.setPropertyCopy(block, forName: "displayLinkAction")
         return displayLink
     }
@@ -917,7 +917,7 @@ extension Wrapper where Base: UIView {
             return gesture
         } else {
             // 初始化拖动手势，默认禁用
-            let gesture = UIPanGestureRecognizer(target: base, action: #selector(UIView.fw_dragHandler(_:)))
+            let gesture = UIPanGestureRecognizer(target: base, action: #selector(UIView.innerDragHandler(_:)))
             gesture.maximumNumberOfTouches = 1
             gesture.minimumNumberOfTouches = 1
             gesture.cancelsTouchesInView = false
@@ -1009,7 +1009,7 @@ extension Wrapper where Base: UIView {
 // MARK: - CADisplayLink+QuartzCore
 extension CADisplayLink {
     
-    @objc fileprivate class func fw_displayLinkAction(_ displayLink: CADisplayLink) {
+    @objc fileprivate class func innerDisplayLinkAction(_ displayLink: CADisplayLink) {
         let block = displayLink.fw.property(forName: "displayLinkAction") as? (CADisplayLink) -> Void
         block?(displayLink)
     }
@@ -1054,7 +1054,7 @@ extension CAGradientLayer {
 // MARK: - UIView+QuartzCore
 extension UIView {
     
-    @objc fileprivate func fw_dragHandler(_ sender: UIPanGestureRecognizer) {
+    @objc fileprivate func innerDragHandler(_ sender: UIPanGestureRecognizer) {
         // 检查是否能够在拖动区域拖动
         let locationInView = sender.location(in: self)
         if !fw.dragArea.contains(locationInView) &&

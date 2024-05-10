@@ -372,10 +372,10 @@ extension Wrapper where Base: UIScreen {
     public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
-            if UIScreen.fw_staticWindow != nil { UIScreen.fw_staticWindow = nil }
+            if UIScreen.innerMainWindow != nil { UIScreen.innerMainWindow = nil }
         } else {
-            if UIScreen.fw_staticWindow == nil { UIScreen.fw_staticWindow = UIWindow(frame: UIScreen.main.bounds) }
-            mainWindow = UIScreen.fw_staticWindow
+            if UIScreen.innerMainWindow == nil { UIScreen.innerMainWindow = UIWindow(frame: UIScreen.main.bounds) }
+            mainWindow = UIScreen.innerMainWindow
         }
         return mainWindow?.safeAreaInsets ?? .zero
     }
@@ -469,20 +469,20 @@ extension Wrapper where Base: UIScreen {
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public static var referenceSize: CGSize {
-        get { return UIScreen.fw_referenceSize }
-        set { UIScreen.fw_referenceSize = newValue }
+        get { return UIScreen.innerReferenceSize }
+        set { UIScreen.innerReferenceSize = newValue }
     }
     
     /// 全局自定义屏幕宽度缩放比例句柄，默认nil
     public static var relativeScaleBlock: (() -> CGFloat)? {
-        get { return UIScreen.fw_relativeScaleBlock }
-        set { UIScreen.fw_relativeScaleBlock = newValue }
+        get { return UIScreen.innerRelativeScaleBlock }
+        set { UIScreen.innerRelativeScaleBlock = newValue }
     }
     
     /// 全局自定义屏幕高度缩放比例句柄，默认nil
     public static var relativeHeightScaleBlock: (() -> CGFloat)? {
-        get { return UIScreen.fw_relativeHeightScaleBlock }
-        set { UIScreen.fw_relativeHeightScaleBlock = newValue }
+        get { return UIScreen.innerRelativeHeightScaleBlock }
+        set { UIScreen.innerRelativeHeightScaleBlock = newValue }
     }
     
     /// 获取当前屏幕宽度缩放比例，宽度常用
@@ -634,10 +634,10 @@ extension Wrapper where Base: UIViewController {
 // MARK: - UIScreen+Adaptive
 extension UIScreen {
     
-    fileprivate static var fw_staticWindow: UIWindow?
-    fileprivate static var fw_referenceSize: CGSize = CGSize(width: 375, height: 812)
-    fileprivate static var fw_relativeScaleBlock: (() -> CGFloat)?
-    fileprivate static var fw_relativeHeightScaleBlock: (() -> CGFloat)?
+    fileprivate static var innerReferenceSize: CGSize = CGSize(width: 375, height: 812)
+    fileprivate static var innerRelativeScaleBlock: (() -> CGFloat)?
+    fileprivate static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
+    fileprivate static var innerMainWindow: UIWindow?
     
 }
 
