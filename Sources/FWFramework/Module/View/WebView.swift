@@ -167,8 +167,8 @@ open class WebView: WKWebView {
                 return
             }
             
-            if UIApplication.fw_isSystemURL(navigationAction.request.url) {
-                UIApplication.fw_openURL(navigationAction.request.url)
+            if UIApplication.fw.isSystemURL(navigationAction.request.url) {
+                UIApplication.fw.openURL(navigationAction.request.url)
                 decisionHandler(.cancel)
                 return
             }
@@ -184,8 +184,8 @@ open class WebView: WKWebView {
             
             if let webView = webView as? WebView,
                !webView.allowsUrlSchemes.isEmpty,
-               UIApplication.fw_isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
-                UIApplication.fw_openURL(navigationAction.request.url)
+               UIApplication.fw.isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
+                UIApplication.fw.openURL(navigationAction.request.url)
                 decisionHandler(.cancel)
                 return
             }
@@ -193,7 +193,7 @@ open class WebView: WKWebView {
             if let webView = webView as? WebView,
                !webView.allowsRouterSchemes.isEmpty,
                let url = navigationAction.request.url,
-               UIApplication.fw_isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
+               UIApplication.fw.isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
                 Router.openURL(url)
                 decisionHandler(.cancel)
                 return
@@ -202,7 +202,7 @@ open class WebView: WKWebView {
             if let webView = webView as? WebView,
                webView.allowsUniversalLinks,
                navigationAction.request.url?.scheme == "https" {
-                UIApplication.fw_openUniversalLinks(navigationAction.request.url) { success in
+                UIApplication.fw.openUniversalLinks(navigationAction.request.url) { success in
                     decisionHandler(success ? .cancel : .allow)
                 }
                 return
@@ -421,10 +421,10 @@ open class WebView: WKWebView {
             DispatchQueue.fw.mainAsync {
                 if let presentedController = download.webView?.fw_viewController?.presentedViewController {
                     presentedController.dismiss(animated: true) {
-                        UIApplication.fw_openActivityItems([url])
+                        UIApplication.fw.openActivityItems([url])
                     }
                 } else {
-                    UIApplication.fw_openActivityItems([url])
+                    UIApplication.fw.openActivityItems([url])
                 }
             }
         }
@@ -1314,13 +1314,13 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
 
     /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
     public static var fw_extensionUserAgent: String {
-        let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw_appExecutable, UIApplication.fw_appVersion)
+        let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion)
         return userAgent
     }
 
     /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
     public static var fw_requestUserAgent: String {
-        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw_appExecutable, UIApplication.fw_appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
+        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
         return userAgent
     }
     

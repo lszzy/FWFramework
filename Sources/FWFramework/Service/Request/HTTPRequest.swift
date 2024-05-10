@@ -1182,7 +1182,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         cacheMetadata.sensitiveDataString = String.fw.safeString(cacheSensitiveData())
         cacheMetadata.stringEncoding = RequestManager.shared.stringEncoding(for: self)
         cacheMetadata.creationDate = Date()
-        cacheMetadata.appVersionString = UIApplication.fw_appVersion
+        cacheMetadata.appVersionString = UIApplication.fw.appVersion
         guard let metadata = Data.fw.archivedData(cacheMetadata) else { return false }
         
         do {
@@ -1254,7 +1254,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         }
         
         let metadataAppVersion = cacheMetadata.appVersionString ?? ""
-        let currentAppVersion = UIApplication.fw_appVersion
+        let currentAppVersion = UIApplication.fw.appVersion
         if metadataAppVersion != currentAppVersion {
             throw RequestError.cacheAppVersionMismatch
         }
