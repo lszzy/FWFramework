@@ -319,7 +319,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
 
     /// 播放音效
     open class func playSoundEffect(_ file: String) {
-        UIApplication.fw_playSystemSound(file)
+        UIApplication.fw.playSystemSound(file)
     }
 
     // MARK: - Read

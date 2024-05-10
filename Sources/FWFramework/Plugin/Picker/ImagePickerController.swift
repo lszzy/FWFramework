@@ -324,7 +324,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         
         if albumControllerDelegate?.albumControllerWillShowDenied?(self) != nil {
         } else {
-            let appName = UIApplication.fw_appDisplayName
+            let appName = UIApplication.fw.appDisplayName
             let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
             fw_showEmptyView(text: tipText)
         }
@@ -2100,7 +2100,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if AssetManager.authorizationStatus == .notAuthorized {
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowDenied?(self) != nil {
                 } else {
-                    let appName = UIApplication.fw_appDisplayName
+                    let appName = UIApplication.fw.appDisplayName
                     let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
                     fw_showEmptyView(text: tipText)
                 }

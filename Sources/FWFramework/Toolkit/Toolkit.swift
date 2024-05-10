@@ -23,7 +23,7 @@ extension WrapperGlobal {
     ///   - alpha: 透明度可选，默认1.0
     /// - Returns: UIColor
     public static func color(_ hex: Int, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor.fw_color(hex: hex, alpha: alpha)
+        return UIColor.fw.color(hex: hex, alpha: alpha)
     }
 
     /// 从RGB创建UIColor
@@ -46,208 +46,439 @@ extension WrapperGlobal {
     ///   - autoScale: 是否自动等比例缩放，默认全局配置
     /// - Returns: UIFont
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        return UIFont.fw_font(ofSize: size, weight: weight, autoScale: autoScale)
+        return UIFont.fw.font(ofSize: size, weight: weight, autoScale: autoScale)
     }
 }
 
 // MARK: - Wrapper+UIApplication
-/// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app
+/// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app。
+/// 为了防止系统启动图缓存，每次更换启动图时建议修改启动图名称(比如添加日期等)，防止刚更新App时新图不生效
 extension Wrapper where Base: UIApplication {
     /// 读取应用名称
     public static var appName: String {
-        return Base.fw_appName
+        let appName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
+        return appName ?? ""
     }
 
     /// 读取应用显示名称，未配置时读取名称
     public static var appDisplayName: String {
-        return Base.fw_appDisplayName
+        let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+        return displayName ?? appName
     }
 
     /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var appVersion: String {
-        get { return Base.fw_appVersion }
-        set { Base.fw_appVersion = newValue }
+        get {
+            if let appVersion = UIApplication.fw_appVersion {
+                return appVersion
+            }
+            let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            return appVersion ?? appBuildVersion
+        }
+        set {
+            UIApplication.fw_appVersion = newValue
+        }
     }
 
     /// 读取应用构建版本号，示例：1.0.0.1
     public static var appBuildVersion: String {
-        return Base.fw_appBuildVersion
+        let buildVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+        return buildVersion ?? ""
     }
 
     /// 读取应用唯一标识
     public static var appIdentifier: String {
-        return Base.fw_appIdentifier
+        let appIdentifier = Bundle.main.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
+        return appIdentifier ?? ""
     }
     
     /// 读取应用可执行程序名称
     public static var appExecutable: String {
-        return Base.fw_appExecutable
+        let appExecutable = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
+        return appExecutable ?? appIdentifier
     }
     
     /// 读取应用信息字典
     public static func appInfo(_ key: String) -> Any? {
-        return Base.fw_appInfo(key)
+        return Bundle.main.object(forInfoDictionaryKey: key)
     }
     
     /// 读取应用启动URL
     public static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey : Any]?) -> URL? {
-        return Base.fw_appLaunchURL(options)
+        if let url = options?[.url] as? URL {
+            return url
+        } else if let dict = options?[.userActivityDictionary] as? [AnyHashable: Any],
+                  let userActivity = dict["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity,
+                  userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+            return userActivity.webpageURL
+        }
+        return nil
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
     public static func canOpenURL(_ url: URLParameter?) -> Bool {
-        return Base.fw_canOpenURL(url)
+        guard let url = url?.urlValue else { return false }
+        return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     public static func openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openURL(url, completionHandler: completionHandler)
+        guard let url = url?.urlValue else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
     public static func openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openUniversalLinks(url, completionHandler: completionHandler)
+        guard let url = url?.urlValue else { return }
+        UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
     public static func isSystemURL(_ url: URLParameter?) -> Bool {
-        return Base.fw_isSystemURL(url)
+        guard let url = url?.urlValue else { return false }
+        if let scheme = url.scheme?.lowercased(),
+           ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
+            return true
+        }
+        if isAppStoreURL(url) {
+            return true
+        }
+        if url.absoluteString == UIApplication.openSettingsURLString {
+            return true
+        }
+        if #available(iOS 16.0, *) {
+            if url.absoluteString == UIApplication.openNotificationSettingsURLString {
+                return true
+            }
+        } else if #available(iOS 15.4, *) {
+            if url.absoluteString == UIApplicationOpenNotificationSettingsURLString {
+                return true
+            }
+        }
+        return false
     }
     
     /// 判断URL是否在指定Scheme链接数组中，不区分大小写
     public static func isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
-        return Base.fw_isSchemeURL(url, schemes: schemes)
+        guard let url = url?.urlValue,
+              let urlScheme = url.scheme?.lowercased(),
+              !urlScheme.isEmpty else { return false }
+        
+        return schemes.contains { $0.lowercased() == urlScheme }
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
     public static func isHttpURL(_ url: URLParameter?) -> Bool {
-        return Base.fw_isHttpURL(url)
+        let urlString = url?.urlValue.absoluteString ?? ""
+        return urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://")
     }
 
     /// 判断URL是否是AppStore链接，支持NSString|NSURL
     public static func isAppStoreURL(_ url: URLParameter?) -> Bool {
-        return Base.fw_isAppStoreURL(url)
+        guard let url = url?.urlValue else { return false }
+        // itms-apps等
+        if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
+            return true
+        // https://apps.apple.com/等
+        } else if let host = url.host?.lowercased(), ["itunes.apple.com", "apps.apple.com"].contains(host) {
+            return true
+        }
+        return false
     }
 
     /// 打开AppStore下载页
     public static func openAppStore(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openAppStore(appId, completionHandler: completionHandler)
+        // SKStoreProductViewController可以内部打开
+        openURL("https://apps.apple.com/app/id\(appId)", completionHandler: completionHandler)
     }
 
     /// 打开AppStore评价页
     public static func openAppStoreReview(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openAppStore(appId, completionHandler: completionHandler)
+        openURL("https://apps.apple.com/app/id\(appId)?action=write-review", completionHandler: completionHandler)
     }
 
     /// 打开应用内评价，有次数限制
     public static func openAppReview() {
-        Base.fw_openAppReview()
+        SKStoreReviewController.requestReview()
     }
 
     /// 打开系统应用设置页
     public static func openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openAppSettings(completionHandler)
+        openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
     }
     
     /// 打开系统应用通知设置页
     public static func openAppNotificationSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openAppNotificationSettings(completionHandler)
+        if #available(iOS 16.0, *) {
+            openURL(UIApplication.openNotificationSettingsURLString, completionHandler: completionHandler)
+        } else if #available(iOS 15.4, *) {
+            openURL(UIApplicationOpenNotificationSettingsURLString, completionHandler: completionHandler)
+        } else {
+            openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
+        }
     }
 
     /// 打开系统邮件App
     public static func openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openMailApp(email, completionHandler: completionHandler)
+        openURL("mailto:" + email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
     public static func openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openMessageApp(phone, completionHandler: completionHandler)
+        openURL("sms:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
     public static func openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openPhoneApp(phone, completionHandler: completionHandler)
+        openURL("tel:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
-    public static func openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
-        Base.fw_openActivityItems(activityItems, excludedTypes: excludedTypes, completionHandler: completionHandler, customBlock: customBlock)
+    public static func openActivityItems(
+        _ activityItems: [Any],
+        excludedTypes: [UIActivity.ActivityType]? = nil,
+        completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil,
+        customBlock: ((UIActivityViewController) -> Void)? = nil
+    ) {
+        let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        activityController.excludedActivityTypes = excludedTypes
+        activityController.completionWithItemsHandler = completionHandler
+        // 兼容iPad，默认居中显示
+        let viewController = Navigator.topPresentedController
+        if UIDevice.fw.isIpad, let viewController = viewController,
+           let popoverController = activityController.popoverPresentationController {
+            let ancestorView = viewController.fw_ancestorView
+            popoverController.sourceView = ancestorView
+            popoverController.sourceRect = CGRect(x: ancestorView.center.x, y: ancestorView.center.y, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        customBlock?(activityController)
+        viewController?.present(activityController, animated: true)
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
     public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
-        Base.fw_openSafariController(url, completionHandler: completionHandler, customBlock: customBlock)
+        guard let url = url?.urlValue, isHttpURL(url) else { return }
+        let safariController = SFSafariViewController(url: url)
+        if completionHandler != nil {
+            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
+            safariController.delegate = SafariViewControllerDelegate.shared
+        }
+        customBlock?(safariController)
+        Navigator.present(safariController, animated: true)
     }
 
     /// 打开短信控制器，完成时回调
     public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openMessageController(controller, completionHandler: completionHandler)
+        if !MFMessageComposeViewController.canSendText() {
+            completionHandler?(false)
+            return
+        }
+        
+        if completionHandler != nil {
+            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
+        }
+        controller.messageComposeDelegate = SafariViewControllerDelegate.shared
+        Navigator.present(controller, animated: true)
     }
 
     /// 打开邮件控制器，完成时回调
     public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        Base.fw_openMailController(controller, completionHandler: completionHandler)
+        if !MFMailComposeViewController.canSendMail() {
+            completionHandler?(false)
+            return
+        }
+        
+        if completionHandler != nil {
+            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
+        }
+        controller.mailComposeDelegate = SafariViewControllerDelegate.shared
+        Navigator.present(controller, animated: true)
     }
 
     /// 打开Store控制器，完成时回调
     public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
-        Base.fw_openStoreController(parameters, completionHandler: completionHandler, customBlock: customBlock)
+        let controller = SKStoreProductViewController()
+        controller.delegate = SafariViewControllerDelegate.shared
+        controller.loadProduct(withParameters: parameters) { result, _ in
+            if !result {
+                completionHandler?(false)
+                return
+            }
+            
+            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            customBlock?(controller)
+            Navigator.present(controller, animated: true)
+        }
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
     public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
-        return Base.fw_openVideoPlayer(url)
+        var player: AVPlayer?
+        if let playerItem = url as? AVPlayerItem {
+            player = AVPlayer(playerItem: playerItem)
+        } else if let url = url as? URL {
+            player = AVPlayer(url: url)
+        } else if let videoUrl = URL.fw.url(string: url as? String) {
+            player = AVPlayer(url: videoUrl)
+        }
+        guard player != nil else { return nil }
+        
+        let viewController = AVPlayerViewController()
+        viewController.player = player
+        return viewController
     }
 
     /// 打开音频播放器，支持NSURL|NSString
     public static func openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
-        return Base.fw_openAudioPlayer(url)
+        // 设置播放模式示例: ambient不支持后台，playback支持后台和混音(需配置后台audio模式)
+        // try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        // try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
+        
+        var audioUrl: URL?
+        if let url = url as? URL {
+            audioUrl = url
+        } else if let urlString = url as? String {
+            if (urlString as NSString).isAbsolutePath {
+                audioUrl = URL(fileURLWithPath: urlString)
+            } else {
+                audioUrl = Bundle.main.url(forResource: urlString, withExtension: nil)
+            }
+        }
+        guard let audioUrl = audioUrl else { return nil }
+        
+        guard let audioPlayer = try? AVAudioPlayer(contentsOf: audioUrl) else { return nil }
+        if !audioPlayer.prepareToPlay() { return nil }
+        
+        audioPlayer.play()
+        return audioPlayer
     }
     
     /// 播放内置声音文件，完成后回调
     @discardableResult
     public static func playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
-        return Base.fw_playSystemSound(file, completionHandler: completionHandler)
+        guard !file.isEmpty else { return 0 }
+        
+        var soundFile = file
+        if !(file as NSString).isAbsolutePath {
+            guard let resourceFile = Bundle.main.path(forResource: file, ofType: nil) else { return 0 }
+            soundFile = resourceFile
+        }
+        if !FileManager.default.fileExists(atPath: soundFile) {
+            return 0
+        }
+        
+        let soundUrl = URL(fileURLWithPath: soundFile)
+        var soundId: SystemSoundID = 0
+        AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
+        AudioServicesPlaySystemSoundWithCompletion(soundId, completionHandler)
+        return soundId
     }
 
     /// 停止播放内置声音文件
     public static func stopSystemSound(_ soundId: SystemSoundID) {
-        Base.fw_stopSystemSound(soundId)
+        if soundId == 0 { return }
+        
+        AudioServicesRemoveSystemSoundCompletion(soundId)
+        AudioServicesDisposeSystemSoundID(soundId)
     }
 
     /// 播放内置震动，完成后回调
     public static func playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
-        Base.fw_playSystemVibrate(completionHandler)
+        AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
     
     /// 播放触控反馈
     public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
-        Base.fw_playImpactFeedback(style)
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
+        feedbackGenerator.impactOccurred()
     }
 
     /// 语音朗读文字，可指定语言(如zh-CN)
     public static func playSpeechUtterance(_ string: String, language: String?) {
-        Base.fw_playSpeechUtterance(string, language: language)
+        let speechUtterance = AVSpeechUtterance(string: string)
+        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
+        let speechSynthesizer = AVSpeechSynthesizer()
+        speechSynthesizer.speak(speechUtterance)
     }
     
     /// 是否是盗版(不是从AppStore安装)
     public static var isPirated: Bool {
-        return Base.fw_isPirated
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        if getgid() <= 10 {
+            return true
+        }
+
+        if Bundle.main.object(forInfoDictionaryKey: "SignerIdentity") != nil {
+            return true
+        }
+
+        let bundlePath = Bundle.main.bundlePath as NSString
+        var path = bundlePath.appendingPathComponent(String(format: "%@%@%@", "_C", "odeSi", "gnature"))
+        if !FileManager.default.fileExists(atPath: path) {
+            return true
+        }
+
+        path = bundlePath.appendingPathComponent("SC_Info")
+        if !FileManager.default.fileExists(atPath: path) {
+            return true
+        }
+        
+        return false
+        #endif
     }
     
     /// 是否是Testflight版本(非AppStore)
     public static var isTestflight: Bool {
-        return Base.fw_isTestflight
+        return inferredEnvironment == 1
     }
     
     /// 是否是AppStore版本
     public static var isAppStore: Bool {
-        return Base.fw_isAppStore
+        return inferredEnvironment == 2
+    }
+    
+    /// 推测的运行环境，0=>Debug, 1=>Testflight, 2=>AppStore
+    private static var inferredEnvironment: Int {
+        #if DEBUG
+        return 0
+
+        #elseif targetEnvironment(simulator)
+        return 0
+
+        #else
+        if Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil {
+            return 1
+        }
+        guard let appStoreReceiptUrl = Bundle.main.appStoreReceiptURL else {
+            return 0
+        }
+        if appStoreReceiptUrl.lastPathComponent.lowercased() == "sandboxreceipt" {
+            return 1
+        }
+        if appStoreReceiptUrl.path.lowercased().contains("simulator") {
+            return 0
+        }
+        return 2
+        #endif
     }
     
     /// 开始后台任务，task必须调用completionHandler
     public static func beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
-        Base.fw_beginBackgroundTask(task, expirationHandler: expirationHandler)
+        var bgTask: UIBackgroundTaskIdentifier = .invalid
+        bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            expirationHandler?()
+            UIApplication.shared.endBackgroundTask(bgTask)
+            bgTask = .invalid
+        })
+        
+        task({
+            UIApplication.shared.endBackgroundTask(bgTask)
+            bgTask = .invalid
+        })
     }
 }
 
@@ -854,464 +1085,41 @@ extension Wrapper where Base: UINavigationController {
 }
 
 // MARK: - UIApplication+Toolkit
-/// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app。
-/// 为了防止系统启动图缓存，每次更换启动图时建议修改启动图名称(比如添加日期等)，防止刚更新App时新图不生效
-@_spi(FW) extension UIApplication {
+extension UIApplication {
     
-    private class SafariViewControllerDelegate: NSObject, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
-        
-        static let shared = SafariViewControllerDelegate()
-        
-        func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-            let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
-            completion?()
-        }
-        
-        func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-            let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
-            controller.dismiss(animated: true) {
-                completion?(result == .sent)
-            }
-        }
-        
-        func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-            let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
-            controller.dismiss(animated: true) {
-                completion?(result == .sent)
-            }
-        }
-        
-        func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-            let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
-            controller.dismiss(animated: true) {
-                completion?(true)
-            }
-        }
-        
+    fileprivate static var fw_appVersion: String?
+    
+}
+
+// MARK: - SafariViewControllerDelegate
+fileprivate class SafariViewControllerDelegate: NSObject, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
+    
+    static let shared = SafariViewControllerDelegate()
+    
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
+        completion?()
     }
     
-    /// 读取应用名称
-    public static var fw_appName: String {
-        let appName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
-        return appName ?? ""
-    }
-
-    /// 读取应用显示名称，未配置时读取名称
-    public static var fw_appDisplayName: String {
-        let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
-        return displayName ?? fw_appName
-    }
-
-    /// 读取应用主版本号，可自定义，示例：1.0.0
-    public static var fw_appVersion: String {
-        get {
-            if let appVersion = _fw_appVersion {
-                return appVersion
-            }
-            let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-            return appVersion ?? fw_appBuildVersion
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
+        controller.dismiss(animated: true) {
+            completion?(result == .sent)
         }
-        set {
-            _fw_appVersion = newValue
-        }
-    }
-    private static var _fw_appVersion: String?
-    
-    /// 读取应用构建版本号，示例：1.0.0.1
-    public static var fw_appBuildVersion: String {
-        let buildVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
-        return buildVersion ?? ""
-    }
-
-    /// 读取应用唯一标识
-    public static var fw_appIdentifier: String {
-        let appIdentifier = Bundle.main.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
-        return appIdentifier ?? ""
     }
     
-    /// 读取应用可执行程序名称
-    public static var fw_appExecutable: String {
-        let appExecutable = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
-        return appExecutable ?? fw_appIdentifier
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
+        controller.dismiss(animated: true) {
+            completion?(result == .sent)
+        }
     }
     
-    /// 读取应用信息字典
-    public static func fw_appInfo(_ key: String) -> Any? {
-        return Bundle.main.object(forInfoDictionaryKey: key)
-    }
-    
-    /// 读取应用启动URL
-    public static func fw_appLaunchURL(_ options: [UIApplication.LaunchOptionsKey : Any]?) -> URL? {
-        if let url = options?[.url] as? URL {
-            return url
-        } else if let dict = options?[.userActivityDictionary] as? [AnyHashable: Any],
-                  let userActivity = dict["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity,
-                  userActivity.activityType == NSUserActivityTypeBrowsingWeb {
-            return userActivity.webpageURL
+    func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
+        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
+        controller.dismiss(animated: true) {
+            completion?(true)
         }
-        return nil
-    }
-    
-    /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func fw_canOpenURL(_ url: URLParameter?) -> Bool {
-        guard let url = url?.urlValue else { return false }
-        return UIApplication.shared.canOpenURL(url)
-    }
-
-    /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func fw_openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = url?.urlValue else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
-    }
-
-    /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func fw_openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = url?.urlValue else { return }
-        UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
-    }
-
-    /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    public static func fw_isSystemURL(_ url: URLParameter?) -> Bool {
-        guard let url = url?.urlValue else { return false }
-        if let scheme = url.scheme?.lowercased(),
-           ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
-            return true
-        }
-        if fw_isAppStoreURL(url) {
-            return true
-        }
-        if url.absoluteString == UIApplication.openSettingsURLString {
-            return true
-        }
-        if #available(iOS 16.0, *) {
-            if url.absoluteString == UIApplication.openNotificationSettingsURLString {
-                return true
-            }
-        } else if #available(iOS 15.4, *) {
-            if url.absoluteString == UIApplicationOpenNotificationSettingsURLString {
-                return true
-            }
-        }
-        return false
-    }
-    
-    /// 判断URL是否在指定Scheme链接数组中，不区分大小写
-    public static func fw_isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
-        guard let url = url?.urlValue,
-              let urlScheme = url.scheme?.lowercased(),
-              !urlScheme.isEmpty else { return false }
-        
-        return schemes.contains { $0.lowercased() == urlScheme }
-    }
-
-    /// 判断URL是否HTTP链接，支持NSString|NSURL
-    public static func fw_isHttpURL(_ url: URLParameter?) -> Bool {
-        let urlString = url?.urlValue.absoluteString ?? ""
-        return urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://")
-    }
-
-    /// 判断URL是否是AppStore链接，支持NSString|NSURL
-    public static func fw_isAppStoreURL(_ url: URLParameter?) -> Bool {
-        guard let url = url?.urlValue else { return false }
-        // itms-apps等
-        if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
-            return true
-        // https://apps.apple.com/等
-        } else if let host = url.host?.lowercased(), ["itunes.apple.com", "apps.apple.com"].contains(host) {
-            return true
-        }
-        return false
-    }
-
-    /// 打开AppStore下载页
-    public static func fw_openAppStore(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
-        // SKStoreProductViewController可以内部打开
-        fw_openURL("https://apps.apple.com/app/id\(appId)", completionHandler: completionHandler)
-    }
-
-    /// 打开AppStore评价页
-    public static func fw_openAppStoreReview(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("https://apps.apple.com/app/id\(appId)?action=write-review", completionHandler: completionHandler)
-    }
-
-    /// 打开应用内评价，有次数限制
-    public static func fw_openAppReview() {
-        SKStoreReviewController.requestReview()
-    }
-
-    /// 打开系统应用设置页
-    public static func fw_openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
-    }
-    
-    /// 打开系统应用通知设置页
-    public static func fw_openAppNotificationSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
-        if #available(iOS 16.0, *) {
-            fw_openURL(UIApplication.openNotificationSettingsURLString, completionHandler: completionHandler)
-        } else if #available(iOS 15.4, *) {
-            fw_openURL(UIApplicationOpenNotificationSettingsURLString, completionHandler: completionHandler)
-        } else {
-            fw_openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
-        }
-    }
-
-    /// 打开系统邮件App
-    public static func fw_openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("mailto:" + email, completionHandler: completionHandler)
-    }
-
-    /// 打开系统短信App
-    public static func fw_openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("sms:" + phone, completionHandler: completionHandler)
-    }
-
-    /// 打开系统电话App
-    public static func fw_openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
-        fw_openURL("tel:" + phone, completionHandler: completionHandler)
-    }
-
-    /// 打开系统分享
-    public static func fw_openActivityItems(_ activityItems: [Any], excludedTypes: [UIActivity.ActivityType]? = nil, completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil, customBlock: ((UIActivityViewController) -> Void)? = nil) {
-        let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-        activityController.excludedActivityTypes = excludedTypes
-        activityController.completionWithItemsHandler = completionHandler
-        // 兼容iPad，默认居中显示
-        let viewController = Navigator.topPresentedController
-        if UIDevice.fw.isIpad, let viewController = viewController,
-           let popoverController = activityController.popoverPresentationController {
-            let ancestorView = viewController.fw_ancestorView
-            popoverController.sourceView = ancestorView
-            popoverController.sourceRect = CGRect(x: ancestorView.center.x, y: ancestorView.center.y, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        customBlock?(activityController)
-        viewController?.present(activityController, animated: true)
-    }
-
-    /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func fw_openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
-        guard let url = url?.urlValue, fw_isHttpURL(url) else { return }
-        let safariController = SFSafariViewController(url: url)
-        if completionHandler != nil {
-            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
-            safariController.delegate = SafariViewControllerDelegate.shared
-        }
-        customBlock?(safariController)
-        Navigator.present(safariController, animated: true)
-    }
-
-    /// 打开短信控制器，完成时回调
-    public static func fw_openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        if !MFMessageComposeViewController.canSendText() {
-            completionHandler?(false)
-            return
-        }
-        
-        if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
-        }
-        controller.messageComposeDelegate = SafariViewControllerDelegate.shared
-        Navigator.present(controller, animated: true)
-    }
-
-    /// 打开邮件控制器，完成时回调
-    public static func fw_openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
-        if !MFMailComposeViewController.canSendMail() {
-            completionHandler?(false)
-            return
-        }
-        
-        if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
-        }
-        controller.mailComposeDelegate = SafariViewControllerDelegate.shared
-        Navigator.present(controller, animated: true)
-    }
-
-    /// 打开Store控制器，完成时回调
-    public static func fw_openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
-        let controller = SKStoreProductViewController()
-        controller.delegate = SafariViewControllerDelegate.shared
-        controller.loadProduct(withParameters: parameters) { result, _ in
-            if !result {
-                completionHandler?(false)
-                return
-            }
-            
-            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
-            customBlock?(controller)
-            Navigator.present(controller, animated: true)
-        }
-    }
-
-    /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-    public static func fw_openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
-        var player: AVPlayer?
-        if let playerItem = url as? AVPlayerItem {
-            player = AVPlayer(playerItem: playerItem)
-        } else if let url = url as? URL {
-            player = AVPlayer(url: url)
-        } else if let videoUrl = URL.fw.url(string: url as? String) {
-            player = AVPlayer(url: videoUrl)
-        }
-        guard player != nil else { return nil }
-        
-        let viewController = AVPlayerViewController()
-        viewController.player = player
-        return viewController
-    }
-
-    /// 打开音频播放器，支持NSURL|NSString
-    public static func fw_openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
-        // 设置播放模式示例: ambient不支持后台，playback支持后台和混音(需配置后台audio模式)
-        // try? AVAudioSession.sharedInstance().setCategory(.ambient)
-        // try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
-        
-        var audioUrl: URL?
-        if let url = url as? URL {
-            audioUrl = url
-        } else if let urlString = url as? String {
-            if (urlString as NSString).isAbsolutePath {
-                audioUrl = URL(fileURLWithPath: urlString)
-            } else {
-                audioUrl = Bundle.main.url(forResource: urlString, withExtension: nil)
-            }
-        }
-        guard let audioUrl = audioUrl else { return nil }
-        
-        guard let audioPlayer = try? AVAudioPlayer(contentsOf: audioUrl) else { return nil }
-        if !audioPlayer.prepareToPlay() { return nil }
-        
-        audioPlayer.play()
-        return audioPlayer
-    }
-    
-    /// 播放内置声音文件
-    @discardableResult
-    public static func fw_playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
-        guard !file.isEmpty else { return 0 }
-        
-        var soundFile = file
-        if !(file as NSString).isAbsolutePath {
-            guard let resourceFile = Bundle.main.path(forResource: file, ofType: nil) else { return 0 }
-            soundFile = resourceFile
-        }
-        if !FileManager.default.fileExists(atPath: soundFile) {
-            return 0
-        }
-        
-        let soundUrl = URL(fileURLWithPath: soundFile)
-        var soundId: SystemSoundID = 0
-        AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
-        AudioServicesPlaySystemSoundWithCompletion(soundId, completionHandler)
-        return soundId
-    }
-
-    /// 停止播放内置声音文件
-    public static func fw_stopSystemSound(_ soundId: SystemSoundID) {
-        if soundId == 0 { return }
-        
-        AudioServicesRemoveSystemSoundCompletion(soundId)
-        AudioServicesDisposeSystemSoundID(soundId)
-    }
-
-    /// 播放内置震动
-    public static func fw_playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
-        AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
-    }
-    
-    /// 播放触控反馈
-    public static func fw_playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
-        let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
-        feedbackGenerator.impactOccurred()
-    }
-
-    /// 语音朗读文字，可指定语言(如zh-CN)
-    public static func fw_playSpeechUtterance(_ string: String, language: String?) {
-        let speechUtterance = AVSpeechUtterance(string: string)
-        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
-        speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
-        let speechSynthesizer = AVSpeechSynthesizer()
-        speechSynthesizer.speak(speechUtterance)
-    }
-    
-    /// 是否是盗版(不是从AppStore安装)
-    public static var fw_isPirated: Bool {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        if getgid() <= 10 {
-            return true
-        }
-        
-        if Bundle.main.object(forInfoDictionaryKey: "SignerIdentity") != nil {
-            return true
-        }
-        
-        let bundlePath = Bundle.main.bundlePath as NSString
-        var path = bundlePath.appendingPathComponent(String(format: "%@%@%@", "_C", "odeSi", "gnature"))
-        if !FileManager.default.fileExists(atPath: path) {
-            return true
-        }
-        
-        path = bundlePath.appendingPathComponent("SC_Info")
-        if !FileManager.default.fileExists(atPath: path) {
-            return true
-        }
-        
-        // 这方法可以运行时被替换掉，可以通过加密代码、修改方法名等提升检察性
-        return false
-        #endif
-    }
-    
-    /// 是否是Testflight版本
-    public static var fw_isTestflight: Bool {
-        return fw_inferredEnvironment == 1
-    }
-    
-    /// 是否是AppStore版本
-    public static var fw_isAppStore: Bool {
-        return fw_inferredEnvironment == 2
-    }
-    
-    /// 推测的运行环境，0=>Debug, 1=>Testflight, 2=>AppStore
-    private static var fw_inferredEnvironment: Int {
-        #if DEBUG
-        return 0
-
-        #elseif targetEnvironment(simulator)
-        return 0
-
-        #else
-        if Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil {
-            return 1
-        }
-        guard let appStoreReceiptUrl = Bundle.main.appStoreReceiptURL else {
-            return 0
-        }
-        if appStoreReceiptUrl.lastPathComponent.lowercased() == "sandboxreceipt" {
-            return 1
-        }
-        if appStoreReceiptUrl.path.lowercased().contains("simulator") {
-            return 0
-        }
-        return 2
-        #endif
-    }
-    
-    /// 开始后台任务，task必须调用completionHandler
-    public static func fw_beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
-        var bgTask: UIBackgroundTaskIdentifier = .invalid
-        bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-            expirationHandler?()
-            UIApplication.shared.endBackgroundTask(bgTask)
-            bgTask = .invalid
-        })
-        
-        task({
-            UIApplication.shared.endBackgroundTask(bgTask)
-            bgTask = .invalid
-        })
     }
     
 }
