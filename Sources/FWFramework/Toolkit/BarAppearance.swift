@@ -274,7 +274,7 @@ extension Wrapper where Base: UINavigationBar {
     
     fileprivate func themeChanged(_ style: ThemeStyle) {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            updateBackgroundColor(backgroundColor.fw.color)
+            updateBackgroundColor(backgroundColor)
         }
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
@@ -282,7 +282,7 @@ extension Wrapper where Base: UINavigationBar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            updateShadowColor(shadowColor.fw.color)
+            updateShadowColor(shadowColor)
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
@@ -442,7 +442,7 @@ extension Wrapper where Base: UITabBar {
     
     fileprivate func themeChanged(_ style: ThemeStyle) {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            updateBackgroundColor(backgroundColor.fw.color)
+            updateBackgroundColor(backgroundColor)
         }
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
@@ -450,7 +450,7 @@ extension Wrapper where Base: UITabBar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            updateShadowColor(shadowColor.fw.color)
+            updateShadowColor(shadowColor)
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {
@@ -664,7 +664,7 @@ extension Wrapper where Base: UIToolbar {
     
     fileprivate func themeChanged(_ style: ThemeStyle) {
         if let backgroundColor = backgroundColor, backgroundColor.fw.isThemeColor {
-            updateBackgroundColor(backgroundColor.fw.color)
+            updateBackgroundColor(backgroundColor)
         }
         
         if let backgroundImage = backgroundImage, backgroundImage.fw.isThemeImage {
@@ -672,7 +672,7 @@ extension Wrapper where Base: UIToolbar {
         }
         
         if let shadowColor = shadowColor, shadowColor.fw.isThemeColor {
-            updateShadowColor(shadowColor.fw.color)
+            updateShadowColor(shadowColor)
         }
         
         if let shadowImage = shadowImage, shadowImage.fw.isThemeImage {

@@ -1016,8 +1016,8 @@ extension Wrapper where Base: NSAttributedString {
         var lightAttributes: [NSAttributedString.Key: Any] = [:]
         var darkAttributes: [NSAttributedString.Key: Any] = [:]
         if let textColor = defaultAttributes?[.foregroundColor] as? UIColor {
-            lightAttributes[.foregroundColor] = textColor.fw_color(forStyle: .light)
-            darkAttributes[.foregroundColor] = textColor.fw_color(forStyle: .dark)
+            lightAttributes[.foregroundColor] = textColor.fw.color(forStyle: .light)
+            darkAttributes[.foregroundColor] = textColor.fw.color(forStyle: .dark)
         }
         if let font = defaultAttributes?[.font] as? UIFont {
             lightAttributes[.font] = font
