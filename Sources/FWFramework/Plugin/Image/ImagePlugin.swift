@@ -324,7 +324,7 @@ extension ImagePlugin {
             return imagePlugin.imageEncode(image, options: options)
         }
         
-        if image.fw_hasAlpha {
+        if image.fw.hasAlpha {
             return image.pngData()
         } else {
             return image.jpegData(compressionQuality: 1)

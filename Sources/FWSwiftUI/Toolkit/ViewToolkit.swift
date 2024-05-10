@@ -172,7 +172,7 @@ extension Color {
     ///   - alpha: 透明度可选，默认1
     /// - Returns: Color
     public static func color(_ hexString: String, _ alpha: Double = 1) -> Color {
-        return Color(UIColor.fw_color(hexString: hexString, alpha: alpha))
+        return Color(UIColor.fw.color(hexString: hexString, alpha: alpha))
     }
     
     /// 几乎透明的颜色，常用于clear不起作用的场景
@@ -282,7 +282,7 @@ extension Color {
             return nil
         }
         
-        return UIColor.fw_color(hexString: hexString.trimmingCharacters(in: .newlines))
+        return UIColor.fw.color(hexString: hexString.trimmingCharacters(in: .newlines))
     }
     
 }
@@ -321,8 +321,8 @@ extension Font {
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
     public static func font(size: CGFloat, weight: Font.Weight = .regular, autoScale: Bool? = nil) -> Font {
         var fontSize = size
-        if (autoScale == nil && UIFont.fw_autoScaleFont) || autoScale == true {
-            fontSize = UIFont.fw_autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw_autoFlatFont)
+        if (autoScale == nil && UIFont.fw.autoScaleFont) || autoScale == true {
+            fontSize = UIFont.fw.autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw.autoFlatFont)
         }
         
         if let font = fontBlock?(fontSize, weight) { return font }

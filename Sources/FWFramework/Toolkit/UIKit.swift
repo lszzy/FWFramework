@@ -1962,7 +1962,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 图片截图
     public var fw_snapshotImage: UIImage? {
-        return UIImage.fw_image(view: self)
+        return UIImage.fw.image(view: self)
     }
 
     /// Pdf截图
@@ -2558,7 +2558,7 @@ extension Wrapper where Base: UIViewController {
         if let numberOfLines = numberOfLines { self.numberOfLines = numberOfLines }
         if let lineHeight = lineHeight { 
             if let font = font {
-                self.fw_lineHeight = font.fw_lineHeight(expected: lineHeight)
+                self.fw_lineHeight = font.fw.lineHeight(expected: lineHeight)
             } else {
                 self.fw_lineHeight = lineHeight
             }
@@ -3304,7 +3304,7 @@ extension Wrapper where Base: UIViewController {
         let thumbSize = self.fw_thumbSize
         guard thumbSize.width > 0, thumbSize.height > 0 else { return }
         let thumbColor = self.fw_thumbColor ?? (self.tintColor ?? .white)
-        let thumbImage = UIImage.fw_image(size: thumbSize) { context in
+        let thumbImage = UIImage.fw.image(size: thumbSize) { context in
             let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: thumbSize.width, height: thumbSize.height))
             context.setFillColor(thumbColor.cgColor)
             path.fill()
@@ -4220,7 +4220,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             fw.setProperty(newValue, forName: "fw_backgroundColor")
-            self.backgroundImage = UIImage.fw_image(color: newValue)
+            self.backgroundImage = UIImage.fw.image(color: newValue)
         }
     }
 

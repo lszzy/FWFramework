@@ -333,8 +333,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
-                compressImage = compressImage?.fw_compressImage(maxWidth: 1080)
-                compressImage = compressImage?.fw_compressImage(maxLength: 512 * 1024)
+                compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
+                compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
             
             var ciImage = compressImage?.ciImage
@@ -374,8 +374,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
-                compressImage = compressImage?.fw_compressImage(maxWidth: 1080)
-                compressImage = compressImage?.fw_compressImage(maxLength: 512 * 1024)
+                compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
+                compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
             
             guard let cgImage = compressImage?.cgImage else {

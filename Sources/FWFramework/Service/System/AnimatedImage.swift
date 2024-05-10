@@ -316,7 +316,7 @@ open class ImageCoder: NSObject {
         
         var format = format
         if format == .undefined {
-            format = image.fw_hasAlpha ? .png : .jpeg
+            format = image.fw.hasAlpha ? .png : .jpeg
         }
         guard let imageRef = image.cgImage else {
             return nil

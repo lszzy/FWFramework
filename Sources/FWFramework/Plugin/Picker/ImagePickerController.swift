@@ -559,10 +559,10 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open var checkboxCheckedImage: UIImage? = FrameworkBundle.pickerCheckedImage
     
     open var originImageCheckboxImage: UIImage? = {
-        return FrameworkBundle.pickerCheckImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+        return FrameworkBundle.pickerCheckImage?.fw.image(scaleSize: CGSize(width: 18, height: 18))
     }()
     open var originImageCheckboxCheckedImage: UIImage? = {
-        return FrameworkBundle.pickerCheckedImage?.fw_image(scaleSize: CGSize(width: 18, height: 18))
+        return FrameworkBundle.pickerCheckedImage?.fw.image(scaleSize: CGSize(width: 18, height: 18))
     }()
     /// 是否使用原图，默认NO
     open var shouldUseOriginImage: Bool = false

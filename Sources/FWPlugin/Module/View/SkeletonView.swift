@@ -131,13 +131,13 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
             fromValue = 0.6
             toValue = 1
         default:
-            let lightColor = UIColor.fw_color(hex: 0xEEEEEE)
+            let lightColor = UIColor.fw.color(hex: 0xEEEEEE)
             let lightBrightness: CGFloat = 0.92
-            let darkColor = UIColor.fw_color(hex: 0x282828)
+            let darkColor = UIColor.fw.color(hex: 0x282828)
             let darkBrightness: CGFloat = 0.5
             colors = [
                 UIColor.fw.themeLight(lightColor, dark: darkColor),
-                UIColor.fw.themeLight(lightColor.fw_brightnessColor(lightBrightness), dark: darkColor.fw_brightnessColor(darkBrightness)),
+                UIColor.fw.themeLight(lightColor.fw.brightnessColor(lightBrightness), dark: darkColor.fw.brightnessColor(darkBrightness)),
                 UIColor.fw.themeLight(lightColor, dark: darkColor)
             ]
         }
@@ -238,7 +238,7 @@ public class SkeletonAppearance: NSObject {
     /// 骨架背景色，默认自动适配
     public var backgroundColor: UIColor = UIColor.fw.themeLight(UIColor.white, dark: UIColor.black)
     /// 骨架颜色，默认自动适配
-    public var skeletonColor: UIColor = UIColor.fw.themeLight(UIColor.fw_color(hex: 0xEEEEEE), dark: UIColor.fw_color(hex: 0x282828))
+    public var skeletonColor: UIColor = UIColor.fw.themeLight(UIColor.fw.color(hex: 0xEEEEEE), dark: UIColor.fw.color(hex: 0x282828))
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15

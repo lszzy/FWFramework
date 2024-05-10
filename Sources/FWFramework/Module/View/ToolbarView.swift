@@ -1353,9 +1353,9 @@ open class ToolbarButton: UIButton {
         
         if let image = image, self.image(for: state) != image {
             if state == .normal {
-                self.highlightedImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                self.highlightedImage = image.fw.image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
                 setImage(self.highlightedImage, for: .highlighted)
-                self.disabledImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                self.disabledImage = image.fw.image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
                 setImage(self.disabledImage, for: .disabled)
             } else {
                 if image != self.highlightedImage && image != self.disabledImage {
