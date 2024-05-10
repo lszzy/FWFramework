@@ -226,7 +226,7 @@ public class FrameworkBundle: ModuleBundle {
     public override class func didInitialize() {
         addImage("fw.navBack") {
             let size = CGSize(width: 12, height: 20)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 context.setStrokeColor(color.cgColor)
                 let lineWidth: CGFloat = 2
@@ -241,7 +241,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.navClose") {
             let size = CGSize(width: 16, height: 16)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 context.setStrokeColor(color.cgColor)
                 let lineWidth: CGFloat = 2
@@ -260,7 +260,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.videoPlay") {
             let size = CGSize(width: 60, height: 60)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 let fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25)
                 context.setStrokeColor(color.cgColor)
@@ -286,7 +286,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.videoPause") {
             let size = CGSize(width: 12, height: 18)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 context.setStrokeColor(color.cgColor)
                 let lineWidth: CGFloat = 2
@@ -302,7 +302,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.videoStart") {
             let size = CGSize(width: 17, height: 17)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 context.setStrokeColor(color.cgColor)
                 let path = UIBezierPath()
@@ -316,7 +316,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.pickerCheck") {
             let size = CGSize(width: 20, height: 20)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 let fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25)
                 context.setStrokeColor(color.cgColor)
@@ -331,7 +331,7 @@ public class FrameworkBundle: ModuleBundle {
         
         addImage("fw.pickerChecked") {
             let size = CGSize(width: 20, height: 20)
-            return UIImage.fw_image(size: size) { context in
+            return UIImage.fw.image(size: size) { context in
                 let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 let fillColor = UIColor(red: 7.0 / 255.0, green: 193.0 / 255.0, blue: 96.0 / 255.0, alpha: 1.0)
                 context.setStrokeColor(color.cgColor)

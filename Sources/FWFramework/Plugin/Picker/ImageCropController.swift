@@ -706,7 +706,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         let isDidCropToImageHandled = delegate?.responds(to: #selector(ImageCropControllerDelegate.cropController(_:didCropToImage:rect:angle:))) == true || onDidCropToImage != nil
         
         if croppingStyle == .circular && isCircularImageHandled {
-            if let image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: true) {
+            if let image = self.image.fw.croppedImage(frame: cropFrame, angle: angle, circular: true) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
                     self.delegate?.cropController?(self, didCropToCircularImage: image, rect: cropFrame, angle: angle)
                     self.onDidCropToCircularImage?(image, cropFrame, angle)
@@ -719,7 +719,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
             if angle == 0 && cropFrame == CGRect(origin: .zero, size: self.image.size) {
                 image = self.image
             } else {
-                image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: false)
+                image = self.image.fw.croppedImage(frame: cropFrame, angle: angle, circular: false)
             }
             
             if let image = image {
