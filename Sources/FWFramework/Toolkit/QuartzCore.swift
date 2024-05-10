@@ -1028,7 +1028,7 @@ extension CALayer {
         if let themeShadowColor = fw.themeShadowColor {
             self.shadowColor = themeShadowColor.cgColor
         }
-        if let themeContents = fw.themeContents, themeContents.fw_isThemeImage {
+        if let themeContents = fw.themeContents, themeContents.fw.isThemeImage {
             self.contents = themeContents.fw.image?.cgImage
         }
     }
