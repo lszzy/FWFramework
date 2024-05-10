@@ -111,8 +111,9 @@ extension Wrapper where Base: UIImage {
 
     /// 指定主题颜色，快速生成当前图片对应的主题图片
     public func themeImage(color themeColor: UIColor) -> UIImage {
-        return UIImage.fw.themeImage { [weak base] style in
-            guard let image = base?.fw.image(forStyle: style) else { return nil }
+        let strongBase = base
+        return UIImage.fw.themeImage { style in
+            guard let image = strongBase.fw.image(forStyle: style) else { return nil }
             let color = themeColor.fw.color(forStyle: style)
             
             UIGraphicsBeginImageContextWithOptions(image.size, false, 0)

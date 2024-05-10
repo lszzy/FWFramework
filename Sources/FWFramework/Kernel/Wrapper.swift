@@ -73,7 +73,7 @@ public protocol WrapperCompatible {
 /// 1. 静态扩展方法中尽量不使用Base.self，因为可能会出现类型与预期不一致的场景。
 ///   示例1：Logger.fw.method()，此时method中Base.self为Logger，预期结果正确
 ///   示例2：ModuleBundle类 class var 实现时使用 self.fw.method()，此时子类method中Base.self可能为父类，与预期结果不一致
-/// 2. 扩展方法中请勿使用[weak self]，而应该使用[weak base]，因为self使用完就会释放，详情可参见Block实现
+/// 2. 扩展方法闭包中请勿使用[weak self]，而应该使用[weak base]，因为self使用完就会释放；闭包如需强引用base，可外部声明let strongBase = base，再在内部使用strongBase即可；详情可参见Block实现
 extension WrapperCompatible {
     
     /// wrapperExtension类包装器属性

@@ -693,32 +693,33 @@ extension Wrapper where Base: UIView {
     ) {
         // 是否是文本输入框
         let isTextField = base is UITextField
-        UIView.animate(withDuration: duration) { [weak base] in
+        let strongBase = base
+        UIView.animate(withDuration: duration) {
             if isTextField {
                 // 水平摇摆
-                base?.transform = CGAffineTransformMakeTranslation(delta * direction, 0)
+                strongBase.transform = CGAffineTransformMakeTranslation(delta * direction, 0)
                 // 垂直摇摆
-                // base?.transform = CGAffineTransformMakeTranslation(0, delta * direction)
+                // strongBase.transform = CGAffineTransformMakeTranslation(0, delta * direction)
             } else {
                 // 水平摇摆
-                base?.layer.setAffineTransform(CGAffineTransformMakeTranslation(delta * direction, 0))
+                strongBase.layer.setAffineTransform(CGAffineTransformMakeTranslation(delta * direction, 0))
                 // 垂直摇摆
-                // base?.layer.setAffineTransform(CGAffineTransformMakeTranslation(0, delta * direction))
+                // strongBase.layer.setAffineTransform(CGAffineTransformMakeTranslation(0, delta * direction))
             }
-        } completion: { [weak base] finished in
+        } completion: { finished in
             if currentTimes >= times {
                 UIView.animate(withDuration: duration) {
                     if isTextField {
-                        base?.transform = .identity
+                        strongBase.transform = .identity
                     } else {
-                        base?.layer.setAffineTransform(.identity)
+                        strongBase.layer.setAffineTransform(.identity)
                     }
                 } completion: { finished in
                     completion?(finished)
                 }
                 return
             }
-            base?.fw.shake(
+            strongBase.fw.shake(
                 times: times - 1,
                 delta: delta,
                 duration: duration,
@@ -741,12 +742,13 @@ extension Wrapper where Base: UIView {
         duration: TimeInterval,
         completion: ((Bool) -> Void)? = nil
     ) {
+        let strongBase = base
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: .curveLinear,
-            animations: { [weak base] in
-                base?.alpha = alpha
+            animations: {
+                strongBase.alpha = alpha
             },
             completion: completion
         )
@@ -785,13 +787,13 @@ extension Wrapper where Base: UIView {
         duration: TimeInterval,
         completion: ((Bool) -> Void)? = nil
     ) {
+        let strongBase = base
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: .curveLinear,
-            animations: { [weak base] in
-                guard let base = base else { return }
-                base.transform = CGAffineTransformRotate(base.transform, degree * .pi / 180.0)
+            animations: {
+                strongBase.transform = CGAffineTransformRotate(strongBase.transform, degree * .pi / 180.0)
             },
             completion: completion
         )
@@ -811,13 +813,13 @@ extension Wrapper where Base: UIView {
         duration: TimeInterval,
         completion: ((Bool) -> Void)? = nil
     ) {
+        let strongBase = base
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: .curveLinear,
-            animations: { [weak base] in
-                guard let base = base else { return }
-                base.transform = CGAffineTransformScale(base.transform, scaleX, scaleY)
+            animations: {
+                strongBase.transform = CGAffineTransformScale(strongBase.transform, scaleX, scaleY)
             },
             completion: completion
         )
@@ -835,13 +837,13 @@ extension Wrapper where Base: UIView {
         duration: TimeInterval,
         completion: ((Bool) -> Void)? = nil
     ) {
+        let strongBase = base
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: .curveLinear,
-            animations: { [weak base] in
-                guard let base = base else { return }
-                base.frame = CGRect(origin: point, size: base.frame.size)
+            animations: {
+                strongBase.frame = CGRect(origin: point, size: strongBase.frame.size)
             },
             completion: completion
         )
@@ -859,12 +861,13 @@ extension Wrapper where Base: UIView {
         duration: TimeInterval,
         completion: ((Bool) -> Void)? = nil
     ) {
+        let strongBase = base
         UIView.animate(
             withDuration: duration,
             delay: 0,
             options: .curveLinear,
-            animations: { [weak base] in
-                base?.frame = frame
+            animations: {
+                strongBase.frame = frame
             },
             completion: completion
         )
