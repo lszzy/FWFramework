@@ -95,7 +95,7 @@ open class ModuleBundle: NSObject {
         if localized != bundleTarget.identifier { return localized }
         
         let tableKey = table ?? "Localizable"
-        let languageKey = Bundle.fw_currentLanguage ?? "en"
+        let languageKey = Bundle.fw.currentLanguage ?? "en"
         let tableStrings = bundleTarget.strings[tableKey]
         let languageStrings = tableStrings?[languageKey] ?? tableStrings?["en"]
         return languageStrings?[key] ?? key
@@ -147,12 +147,12 @@ open class ModuleBundle: NSObject {
         }
         
         // 2. ModuleBundle子模块类优先加载主应用的{模块名称}.bundle(可替换模块)，如主应用内FWFramework.bundle
-        if let appBundle = Bundle.fw_bundle(name: moduleName) {
-            return appBundle.fw_localizedBundle()
+        if let appBundle = Bundle.fw.bundle(name: moduleName) {
+            return appBundle.fw.localizedBundle()
         }
         /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
-        if let moduleBundle = Bundle.fw_bundle(with: bundleClass, name: moduleName) {
-            return moduleBundle.fw_localizedBundle()
+        if let moduleBundle = Bundle.fw.bundle(with: bundleClass, name: moduleName) {
+            return moduleBundle.fw.localizedBundle()
         }
         /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
         return nil

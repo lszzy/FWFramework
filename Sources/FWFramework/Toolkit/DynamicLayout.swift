@@ -418,7 +418,7 @@ extension Wrapper where Base: UITableView {
             base.fw.setPropertyBool(true, forName: identifier)
         }
         if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T { return cell }
-        return cellClass.init(style: style, reuseIdentifier: reuseIdentifier)
+        return cellClass.init(style: style, reuseIdentifier: identifier)
     }
     
     /// 获取 Cell 需要的高度，可指定key使用缓存
