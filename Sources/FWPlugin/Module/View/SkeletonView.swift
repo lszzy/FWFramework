@@ -183,7 +183,7 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
         default:
             let startAnimation = CABasicAnimation(keyPath: "startPoint")
             let endAnimation = CABasicAnimation(keyPath: "endPoint")
-            gradientLayer.fw_themeColors = colors
+            gradientLayer.fw.themeColors = colors
             switch direction {
             case .right:
                 startAnimation.fromValue = NSValue(cgPoint: CGPoint(x:-1, y:0.5))
@@ -274,7 +274,7 @@ open class SkeletonView: UIView {
     /// 骨架图片，默认空
     open var image: UIImage? {
         didSet {
-            layer.fw_themeContents = image
+            layer.fw.themeContents = image
             layer.contentsGravity = .resizeAspectFill
         }
     }

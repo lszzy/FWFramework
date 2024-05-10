@@ -748,7 +748,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     /// 当 sourceImageView 本身带圆角时，动画过程中会通过这个 layer 来处理圆角的动画
     open lazy var cornerRadiusMaskLayer: CALayer = {
         let result = CALayer()
-        result.fw_removeDefaultAnimations()
+        result.fw.removeDefaultAnimations()
         result.backgroundColor = UIColor.white.cgColor
         return result
     }()
