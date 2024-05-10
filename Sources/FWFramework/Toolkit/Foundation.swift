@@ -157,13 +157,14 @@ extension Wrapper where Base: WrapperObject {
         afterDelay delay: TimeInterval
     ) -> Any {
         var cancelled = false
-        let wrapper: (Bool) -> Void = { [weak base] cancel in
+        let strongBase = base
+        let wrapper: (Bool) -> Void = { cancel in
             if cancel {
                 cancelled = true
                 return
             }
-            if !cancelled, let base = base {
-                block(base)
+            if !cancelled {
+                block(strongBase)
             }
         }
         
