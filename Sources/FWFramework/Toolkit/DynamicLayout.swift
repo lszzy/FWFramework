@@ -165,7 +165,7 @@ extension Wrapper where Base: UIView {
         if let reuseView = dict?[classIdentifier] as? UIView {
             view = reuseView
         } else {
-            let dynamicView = viewClass.fw_dynamicLayoutView()
+            let dynamicView = viewClass.dynamicLayoutView()
             view = UIView()
             view.addSubview(dynamicView)
             dict?[classIdentifier] = view
@@ -191,11 +191,11 @@ extension Wrapper where Base: UIView {
         // 设置frame并布局视图
         view.frame = CGRect(x: 0, y: 0, width: width, height: height)
         dynamicView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        dynamicView.fw_dynamicLayoutPrepare()
+        dynamicView.dynamicLayoutPrepare()
         configuration(dynamicView)
         
         // 自动撑开方式
-        if dynamicView.fw_maxYViewExpanded {
+        if dynamicView.maxYViewExpanded {
             if fixedHeight > 0 {
                 width = dynamicView.fw.layoutWidth(height: height)
             } else {
@@ -212,29 +212,29 @@ extension Wrapper where Base: UIView {
         let maxYBlock: (UIView) -> CGFloat = { view in
             return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
         }
-        if dynamicView.fw_maxYViewFixed {
-            if let maxYView = dynamicView.fw_maxYView {
+        if dynamicView.maxYViewFixed {
+            if let maxYView = dynamicView.maxYView {
                 maxY = maxYBlock(maxYView)
             } else {
                 var maxYView: UIView?
-                for tempView in dynamicView.fw_dynamicLayoutContentView.subviews.reversed() {
+                for tempView in dynamicView.dynamicLayoutContentView.subviews.reversed() {
                     let tempY = maxYBlock(tempView)
                     if tempY > maxY {
                         maxY = tempY
                         maxYView = tempView
                     }
                 }
-                dynamicView.fw_maxYView = maxYView
+                dynamicView.maxYView = maxYView
             }
         } else {
-            for tempView in dynamicView.fw_dynamicLayoutContentView.subviews.reversed() {
+            for tempView in dynamicView.dynamicLayoutContentView.subviews.reversed() {
                 let tempY = maxYBlock(tempView)
                 if tempY > maxY {
                     maxY = tempY
                 }
             }
         }
-        maxY += dynamicView.fw_maxYViewPadding
+        maxY += dynamicView.maxYViewPadding
         return fixedHeight > 0 ? CGSize(width: maxY, height: height) : CGSize(width: width, height: maxY)
     }
 }
@@ -243,20 +243,20 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UITableViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.fw_maxYViewFixed }
-        set { base.fw_maxYViewFixed = newValue }
+        get { return base.maxYViewFixed }
+        set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.fw_maxYViewPadding }
-        set { base.fw_maxYViewPadding = newValue }
+        get { return base.maxYViewPadding }
+        set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.fw_maxYViewExpanded }
-        set { base.fw_maxYViewExpanded = newValue }
+        get { return base.maxYViewExpanded }
+        set { base.maxYViewExpanded = newValue }
     }
     
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
@@ -282,20 +282,20 @@ extension Wrapper where Base: UITableViewCell {
 extension Wrapper where Base: UITableViewHeaderFooterView {
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.fw_maxYViewFixed }
-        set { base.fw_maxYViewFixed = newValue }
+        get { return base.maxYViewFixed }
+        set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.fw_maxYViewPadding }
-        set { base.fw_maxYViewPadding = newValue }
+        get { return base.maxYViewPadding }
+        set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.fw_maxYViewExpanded }
-        set { base.fw_maxYViewExpanded = newValue }
+        get { return base.maxYViewExpanded }
+        set { base.maxYViewExpanded = newValue }
     }
     
     /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
@@ -496,20 +496,20 @@ extension Wrapper where Base: UITableView {
 extension Wrapper where Base: UICollectionViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.fw_maxYViewFixed }
-        set { base.fw_maxYViewFixed = newValue }
+        get { return base.maxYViewFixed }
+        set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.fw_maxYViewPadding }
-        set { base.fw_maxYViewPadding = newValue }
+        get { return base.maxYViewPadding }
+        set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.fw_maxYViewExpanded }
-        set { base.fw_maxYViewExpanded = newValue }
+        get { return base.maxYViewExpanded }
+        set { base.maxYViewExpanded = newValue }
     }
 
     /// 免注册创建UICollectionViewCell，内部自动处理缓冲池，指定reuseIdentifier
@@ -537,20 +537,20 @@ extension Wrapper where Base: UICollectionViewCell {
 extension Wrapper where Base: UICollectionReusableView {
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.fw_maxYViewFixed }
-        set { base.fw_maxYViewFixed = newValue }
+        get { return base.maxYViewFixed }
+        set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.fw_maxYViewPadding }
-        set { base.fw_maxYViewPadding = newValue }
+        get { return base.maxYViewPadding }
+        set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.fw_maxYViewExpanded }
-        set { base.fw_maxYViewExpanded = newValue }
+        get { return base.maxYViewExpanded }
+        set { base.maxYViewExpanded = newValue }
     }
     
     /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
@@ -777,35 +777,35 @@ public enum HeaderFooterViewType: Int {
 @_spi(FW) public protocol DynamicLayoutViewProtocol {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
-    var fw_maxYViewFixed: Bool { get set }
+    var maxYViewFixed: Bool { get set }
     
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
-    var fw_maxYViewPadding: CGFloat { get set }
+    var maxYViewPadding: CGFloat { get set }
     
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-    var fw_maxYViewExpanded: Bool { get set }
+    var maxYViewExpanded: Bool { get set }
     
     /// 创建可重用动态布局视图方法
-    static func fw_dynamicLayoutView() -> Self
+    static func dynamicLayoutView() -> Self
     
     /// 获取可重用动态布局视图内容视图
-    var fw_dynamicLayoutContentView: UIView { get }
+    var dynamicLayoutContentView: UIView { get }
     
     /// 准备可重用动态布局视图方法
-    func fw_dynamicLayoutPrepare()
+    func dynamicLayoutPrepare()
     
 }
 
 @_spi(FW) extension DynamicLayoutViewProtocol where Self: UIView {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
-    public var fw_maxYViewFixed: Bool {
+    public var maxYViewFixed: Bool {
         get { fw.propertyBool(forName: "maxYViewFixed") }
         set { fw.setPropertyBool(newValue, forName: "maxYViewFixed") }
     }
 
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
-    public var fw_maxYViewPadding: CGFloat {
+    public var maxYViewPadding: CGFloat {
         get {
             if let number = fw.propertyNumber(forName: "maxYViewPadding") {
                 return number.doubleValue
@@ -818,18 +818,18 @@ public enum HeaderFooterViewType: Int {
     }
 
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
-    public var fw_maxYViewExpanded: Bool {
+    public var maxYViewExpanded: Bool {
         get { fw.propertyBool(forName: "maxYViewExpanded") }
         set { fw.setPropertyBool(newValue, forName: "maxYViewExpanded") }
     }
     
-    fileprivate var fw_maxYView: UIView? {
+    fileprivate var maxYView: UIView? {
         get { fw.property(forName: "maxYView") as? UIView }
         set { fw.setProperty(newValue, forName: "maxYView") }
     }
     
     /// 创建可重用动态布局视图方法
-    public static func fw_dynamicLayoutView() -> Self {
+    public static func dynamicLayoutView() -> Self {
         if let cellClass = self as? UITableViewCell.Type {
             return cellClass.init(style: .default, reuseIdentifier: nil) as! Self
         } else if let viewClass = self as? UITableViewHeaderFooterView.Type {
@@ -839,7 +839,7 @@ public enum HeaderFooterViewType: Int {
     }
     
     /// 获取可重用动态布局视图内容视图
-    public var fw_dynamicLayoutContentView: UIView {
+    public var dynamicLayoutContentView: UIView {
         if let cell = self as? UITableViewCell {
             return cell.contentView
         } else if let view = self as? UITableViewHeaderFooterView {
@@ -851,7 +851,7 @@ public enum HeaderFooterViewType: Int {
     }
     
     /// 可重用动态布局视图重用方法
-    public func fw_dynamicLayoutPrepare() {
+    public func dynamicLayoutPrepare() {
         if let cell = self as? UITableViewCell {
             cell.prepareForReuse()
         } else if let view = self as? UITableViewHeaderFooterView {

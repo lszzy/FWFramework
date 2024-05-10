@@ -70,62 +70,62 @@ extension Wrapper where Base: UINavigationBar {
 
     /// 导航栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     public var isTranslucent: Bool {
-        get { base.fw_isTranslucent }
-        set { base.fw_isTranslucent = newValue }
+        get { base.innerIsTranslucent }
+        set { base.innerIsTranslucent = newValue }
     }
 
     /// 设置前景颜色，包含文字和按钮等
     public var foregroundColor: UIColor? {
-        get { base.fw_foregroundColor }
-        set { base.fw_foregroundColor = newValue }
+        get { base.innerForegroundColor }
+        set { base.innerForegroundColor = newValue }
     }
 
     /// 单独设置标题颜色，nil时显示前景颜色
     public var titleAttributes: [NSAttributedString.Key: Any]? {
-        get { base.fw_titleAttributes }
-        set { base.fw_titleAttributes = newValue }
+        get { base.innerTitleAttributes }
+        set { base.innerTitleAttributes = newValue }
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
     public var buttonAttributes: [NSAttributedString.Key: Any]? {
-        get { base.fw_buttonAttributes }
-        set { base.fw_buttonAttributes = newValue }
+        get { base.innerButtonAttributes }
+        set { base.innerButtonAttributes = newValue }
     }
 
     /// 设置背景颜色(nil时透明)，兼容主题颜色，后设置生效
     public var backgroundColor: UIColor? {
-        get { base.fw_backgroundColor }
-        set { base.fw_backgroundColor = newValue }
+        get { base.innerBackgroundColor }
+        set { base.innerBackgroundColor = newValue }
     }
 
     /// 设置背景图片(nil时透明)，兼容主题图片，后设置生效
     public var backgroundImage: UIImage? {
-        get { base.fw_backgroundImage }
-        set { base.fw_backgroundImage = newValue }
+        get { base.innerBackgroundImage }
+        set { base.innerBackgroundImage = newValue }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
     public var backgroundTransparent: Bool {
-        get { base.fw_backgroundTransparent }
-        set { base.fw_backgroundTransparent = newValue }
+        get { base.innerBackgroundTransparent }
+        set { base.innerBackgroundTransparent = newValue }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
     public var shadowColor: UIColor? {
-        get { base.fw_shadowColor }
-        set { base.fw_shadowColor = newValue }
+        get { base.innerShadowColor }
+        set { base.innerShadowColor = newValue }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
     public var shadowImage: UIImage? {
-        get { base.fw_shadowImage }
-        set { base.fw_shadowImage = newValue }
+        get { base.innerShadowImage }
+        set { base.innerShadowImage = newValue }
     }
 
     /// 设置返回按钮图片，包含图片和转场Mask图片，自动偏移和系统左侧按钮位置保持一致
     public var backImage: UIImage? {
-        get { base.fw_backImage }
-        set { base.fw_backImage = newValue }
+        get { base.innerBackImage }
+        set { base.innerBackImage = newValue }
     }
     
     // MARK: - Private
@@ -318,44 +318,44 @@ extension Wrapper where Base: UITabBar {
 
     /// 标签栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     public var isTranslucent: Bool {
-        get { base.fw_isTranslucent }
-        set { base.fw_isTranslucent = newValue }
+        get { base.innerIsTranslucent }
+        set { base.innerIsTranslucent = newValue }
     }
 
     /// 设置前景颜色，包含文字和按钮等
     public var foregroundColor: UIColor? {
-        get { base.fw_foregroundColor }
-        set { base.fw_foregroundColor = newValue }
+        get { base.innerForegroundColor }
+        set { base.innerForegroundColor = newValue }
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
     public var backgroundColor: UIColor? {
-        get { base.fw_backgroundColor }
-        set { base.fw_backgroundColor = newValue }
+        get { base.innerBackgroundColor }
+        set { base.innerBackgroundColor = newValue }
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
     public var backgroundImage: UIImage? {
-        get { base.fw_backgroundImage }
-        set { base.fw_backgroundImage = newValue }
+        get { base.innerBackgroundImage }
+        set { base.innerBackgroundImage = newValue }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
     public var backgroundTransparent: Bool {
-        get { base.fw_backgroundTransparent }
-        set { base.fw_backgroundTransparent = newValue }
+        get { base.innerBackgroundTransparent }
+        set { base.innerBackgroundTransparent = newValue }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
     public var shadowColor: UIColor? {
-        get { base.fw_shadowColor }
-        set { base.fw_shadowColor = newValue }
+        get { base.innerShadowColor }
+        set { base.innerShadowColor = newValue }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
     public var shadowImage: UIImage? {
-        get { base.fw_shadowImage }
-        set { base.fw_shadowImage = newValue }
+        get { base.innerShadowImage }
+        set { base.innerShadowImage = newValue }
     }
     
     // MARK: - Private
@@ -489,50 +489,50 @@ extension Wrapper where Base: UIToolbar {
 
     /// 工具栏是否半透明，会重置背景，需优先设置，默认NO；背景色需带有alpha时半透明才会生效
     public var isTranslucent: Bool {
-        get { base.fw_isTranslucent }
-        set { base.fw_isTranslucent = newValue }
+        get { base.innerIsTranslucent }
+        set { base.innerIsTranslucent = newValue }
     }
 
     /// 设置前景颜色，包含文字和按钮等
     public var foregroundColor: UIColor? {
-        get { base.fw_foregroundColor }
-        set { base.fw_foregroundColor = newValue }
+        get { base.innerForegroundColor }
+        set { base.innerForegroundColor = newValue }
     }
     
     /// 单独设置按钮样式属性，nil时系统默认。仅iOS15+生效，iOS14及以下请使用UIBarButtonItem
     public var buttonAttributes: [NSAttributedString.Key: Any]? {
-        get { base.fw_buttonAttributes }
-        set { base.fw_buttonAttributes = newValue }
+        get { base.innerButtonAttributes }
+        set { base.innerButtonAttributes = newValue }
     }
 
     /// 设置背景颜色，兼容主题颜色，后设置生效
     public var backgroundColor: UIColor? {
-        get { base.fw_backgroundColor }
-        set { base.fw_backgroundColor = newValue }
+        get { base.innerBackgroundColor }
+        set { base.innerBackgroundColor = newValue }
     }
 
     /// 设置背景图片，兼容主题图片，后设置生效
     public var backgroundImage: UIImage? {
-        get { base.fw_backgroundImage }
-        set { base.fw_backgroundImage = newValue }
+        get { base.innerBackgroundImage }
+        set { base.innerBackgroundImage = newValue }
     }
 
     /// 设置背景是否全透明，默认NO，后设置生效
     public var backgroundTransparent: Bool {
-        get { base.fw_backgroundTransparent }
-        set { base.fw_backgroundTransparent = newValue }
+        get { base.innerBackgroundTransparent }
+        set { base.innerBackgroundTransparent = newValue }
     }
 
     /// 设置阴影颜色(nil时透明)，兼容主题颜色，后设置生效
     public var shadowColor: UIColor? {
-        get { base.fw_shadowColor }
-        set { base.fw_shadowColor = newValue }
+        get { base.innerShadowColor }
+        set { base.innerShadowColor = newValue }
     }
 
     /// 设置阴影图片(nil时透明)，兼容主题图片，后设置生效
     public var shadowImage: UIImage? {
-        get { base.fw_shadowImage }
-        set { base.fw_shadowImage = newValue }
+        get { base.innerShadowImage }
+        set { base.innerShadowImage = newValue }
     }
 
     /// 自定义工具栏位置，调用后才生效，会自动设置delegate。Bottom时背景自动向下延伸，TopAttached时背景自动向上延伸
@@ -702,7 +702,7 @@ extension UINavigationBar {
         fw.themeChanged(style)
     }
     
-    @objc dynamic fileprivate var fw_isTranslucent: Bool {
+    @objc dynamic fileprivate var innerIsTranslucent: Bool {
         get {
             return fw.propertyBool(forName: "isTranslucent")
         }
@@ -712,7 +712,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_foregroundColor: UIColor? {
+    @objc dynamic fileprivate var innerForegroundColor: UIColor? {
         get {
             return self.tintColor
         }
@@ -723,7 +723,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_titleAttributes: [NSAttributedString.Key: Any]? {
+    @objc dynamic fileprivate var innerTitleAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw.property(forName: "titleAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -733,7 +733,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
+    @objc dynamic fileprivate var innerButtonAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw.property(forName: "buttonAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -743,7 +743,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundColor: UIColor? {
+    @objc dynamic fileprivate var innerBackgroundColor: UIColor? {
         get {
             return fw.property(forName: "backgroundColor") as? UIColor
         }
@@ -754,7 +754,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundImage: UIImage? {
+    @objc dynamic fileprivate var innerBackgroundImage: UIImage? {
         get {
             return fw.property(forName: "backgroundImage") as? UIImage
         }
@@ -765,7 +765,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundTransparent: Bool {
+    @objc dynamic fileprivate var innerBackgroundTransparent: Bool {
         get {
             return fw.propertyBool(forName: "backgroundTransparent")
         }
@@ -777,7 +777,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowColor: UIColor? {
+    @objc dynamic fileprivate var innerShadowColor: UIColor? {
         get {
             return fw.property(forName: "shadowColor") as? UIColor
         }
@@ -788,7 +788,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowImage: UIImage? {
+    @objc dynamic fileprivate var innerShadowImage: UIImage? {
         get {
             return fw.property(forName: "shadowImage") as? UIImage
         }
@@ -799,7 +799,7 @@ extension UINavigationBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backImage: UIImage? {
+    @objc dynamic fileprivate var innerBackImage: UIImage? {
         get {
             if UINavigationBar.fw.appearanceEnabled {
                 return fw.appearance.backIndicatorImage
@@ -823,7 +823,7 @@ extension UITabBar {
         fw.themeChanged(style)
     }
     
-    @objc dynamic fileprivate var fw_isTranslucent: Bool {
+    @objc dynamic fileprivate var innerIsTranslucent: Bool {
         get {
             return fw.propertyBool(forName: "isTranslucent")
         }
@@ -833,12 +833,12 @@ extension UITabBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_foregroundColor: UIColor? {
+    @objc dynamic fileprivate var innerForegroundColor: UIColor? {
         get { return self.tintColor }
         set { self.tintColor = newValue }
     }
     
-    @objc dynamic fileprivate var fw_backgroundColor: UIColor? {
+    @objc dynamic fileprivate var innerBackgroundColor: UIColor? {
         get {
             return fw.property(forName: "backgroundColor") as? UIColor
         }
@@ -849,7 +849,7 @@ extension UITabBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundImage: UIImage? {
+    @objc dynamic fileprivate var innerBackgroundImage: UIImage? {
         get {
             return fw.property(forName: "backgroundImage") as? UIImage
         }
@@ -860,7 +860,7 @@ extension UITabBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundTransparent: Bool {
+    @objc dynamic fileprivate var innerBackgroundTransparent: Bool {
         get {
             return fw.propertyBool(forName: "backgroundTransparent")
         }
@@ -872,7 +872,7 @@ extension UITabBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowColor: UIColor? {
+    @objc dynamic fileprivate var innerShadowColor: UIColor? {
         get {
             return fw.property(forName: "shadowColor") as? UIColor
         }
@@ -883,7 +883,7 @@ extension UITabBar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowImage: UIImage? {
+    @objc dynamic fileprivate var innerShadowImage: UIImage? {
         get {
             return fw.property(forName: "shadowImage") as? UIImage
         }
@@ -905,7 +905,7 @@ extension UIToolbar {
         fw.themeChanged(style)
     }
     
-    @objc dynamic fileprivate var fw_isTranslucent: Bool {
+    @objc dynamic fileprivate var innerIsTranslucent: Bool {
         get {
             return fw.propertyBool(forName: "isTranslucent")
         }
@@ -915,7 +915,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_foregroundColor: UIColor? {
+    @objc dynamic fileprivate var innerForegroundColor: UIColor? {
         get {
             return self.tintColor
         }
@@ -925,7 +925,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_buttonAttributes: [NSAttributedString.Key: Any]? {
+    @objc dynamic fileprivate var innerButtonAttributes: [NSAttributedString.Key: Any]? {
         get {
             return fw.property(forName: "buttonAttributes") as? [NSAttributedString.Key: Any]
         }
@@ -935,7 +935,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundColor: UIColor? {
+    @objc dynamic fileprivate var innerBackgroundColor: UIColor? {
         get {
             return fw.property(forName: "backgroundColor") as? UIColor
         }
@@ -946,7 +946,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundImage: UIImage? {
+    @objc dynamic fileprivate var innerBackgroundImage: UIImage? {
         get {
             return fw.property(forName: "backgroundImage") as? UIImage
         }
@@ -957,7 +957,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_backgroundTransparent: Bool {
+    @objc dynamic fileprivate var innerBackgroundTransparent: Bool {
         get {
             return fw.propertyBool(forName: "backgroundTransparent")
         }
@@ -969,7 +969,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowColor: UIColor? {
+    @objc dynamic fileprivate var innerShadowColor: UIColor? {
         get {
             return fw.property(forName: "shadowColor") as? UIColor
         }
@@ -980,7 +980,7 @@ extension UIToolbar {
         }
     }
     
-    @objc dynamic fileprivate var fw_shadowImage: UIImage? {
+    @objc dynamic fileprivate var innerShadowImage: UIImage? {
         get {
             return fw.property(forName: "shadowImage") as? UIImage
         }

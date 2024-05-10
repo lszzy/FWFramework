@@ -55,10 +55,10 @@ extension Wrapper where Base: Bundle {
                 object_setClass(base, TargetBundle.self)
                 
                 if let language = Bundle.fw.localizedLanguage {
-                    base.fw_languageChanged(Notification(name: .LanguageChanged, object: language))
+                    base.innerLanguageChanged(Notification(name: .LanguageChanged, object: language))
                 }
                 
-                NotificationCenter.default.addObserver(base, selector: #selector(Bundle.fw_languageChanged(_:)), name: .LanguageChanged, object: nil)
+                NotificationCenter.default.addObserver(base, selector: #selector(Bundle.innerLanguageChanged(_:)), name: .LanguageChanged, object: nil)
             }
         }
         return base
@@ -100,13 +100,13 @@ extension Wrapper where Base: Bundle {
     /// 2. Locale.preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN；注意localizedLanguage重置为nil后无需下次启动即可获取到当前系统语言
     public static var systemLanguage: String? {
         get {
-            if let language = Bundle.fw_systemLanguage {
+            if let language = Bundle.innerSystemLanguage {
                 return language
             }
             return Bundle.main.preferredLocalizations.first
         }
         set {
-            Bundle.fw_systemLanguage = newValue
+            Bundle.innerSystemLanguage = newValue
         }
     }
 
@@ -197,9 +197,9 @@ extension Notification.Name {
 // MARK: - Bundle+Language
 extension Bundle {
     
-    fileprivate static var fw_systemLanguage: String?
+    fileprivate static var innerSystemLanguage: String?
     
-    @objc fileprivate func fw_languageChanged(_ notification: Notification) {
+    @objc fileprivate func innerLanguageChanged(_ notification: Notification) {
         let language = notification.object as? String
         let bundle = fw.localizedBundle(language: language)
         fw.setProperty(bundle, forName: "localizedBundle")

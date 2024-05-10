@@ -108,7 +108,7 @@ extension Wrapper where Base: NSObject {
     public static func exchangeSwizzleSelector(
         _ selector: Selector
     ) -> Selector {
-        return NSSelectorFromString("fw_swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
+        return NSSelectorFromString("swizzle_\(arc4random())_\(NSStringFromSelector(selector))")
     }
 
     // MARK: - SwizzleStore
@@ -312,12 +312,12 @@ extension Wrapper where Base: NSObject {
             return swizzleClass(originalClass, selector: selector, block: block)
         }
         
-        objc_sync_enter(NSObject.fw_swizzleIdentifiers)
-        defer { objc_sync_exit(NSObject.fw_swizzleIdentifiers) }
+        objc_sync_enter(NSObject.innerSwizzleIdentifiers)
+        defer { objc_sync_exit(NSObject.innerSwizzleIdentifiers) }
         
         let swizzleIdentifier = String(format: "%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? "+" : "-", NSStringFromSelector(selector), identifier)
-        if !NSObject.fw_swizzleIdentifiers.contains(swizzleIdentifier) {
-            NSObject.fw_swizzleIdentifiers.add(swizzleIdentifier)
+        if !NSObject.innerSwizzleIdentifiers.contains(swizzleIdentifier) {
+            NSObject.innerSwizzleIdentifiers.add(swizzleIdentifier)
             return swizzleClass(originalClass, selector: selector, block: block)
         }
         return false
@@ -436,7 +436,7 @@ extension Wrapper where Base: NSObject {
 // MARK: - NSObject+Swizzle
 extension NSObject {
     
-    fileprivate static var fw_swizzleIdentifiers = NSMutableSet()
+    fileprivate static var innerSwizzleIdentifiers = NSMutableSet()
     
 }
 

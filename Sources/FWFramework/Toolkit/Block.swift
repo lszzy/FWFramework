@@ -82,7 +82,7 @@ extension Wrapper where Base: Timer {
     ///   - repeats: 是否重复
     /// - Returns: 定时器
     public static func timer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
-        return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.fw_timerAction(_:)), userInfo: block, repeats: repeats)
+        return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
     }
 
     /// 创建Timer，使用block，默认模式安排到当前的运行循环中
@@ -92,7 +92,7 @@ extension Wrapper where Base: Timer {
     ///   - repeats: 是否重复
     /// - Returns: 定时器
     public static func scheduledTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
-        return Timer.scheduledTimer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.fw_timerAction(_:)), userInfo: block, repeats: repeats)
+        return Timer.scheduledTimer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
     }
     
     /// 暂停NSTimer
@@ -376,9 +376,9 @@ extension Wrapper where Base: UIBarButtonItem {
     private func addItemEvent(_ customView: UIView) {
         // 进行base转发，模拟实际action回调参数
         if let customControl = customView as? UIControl {
-            customControl.fw.addTouch(target: base, action: #selector(UIBarButtonItem.fw_invokeTargetAction(_:)))
+            customControl.fw.addTouch(target: base, action: #selector(UIBarButtonItem.innerInvokeTargetAction(_:)))
         } else {
-            customView.fw.addTapGesture(target: base, action: #selector(UIBarButtonItem.fw_invokeTargetAction(_:)))
+            customView.fw.addTapGesture(target: base, action: #selector(UIBarButtonItem.innerInvokeTargetAction(_:)))
         }
     }
 }
@@ -517,7 +517,7 @@ fileprivate class BlockTarget {
 // MARK: - Timer+Block
 extension Timer {
     
-    @objc fileprivate class func fw_timerAction(_ timer: Timer) {
+    @objc fileprivate class func innerTimerAction(_ timer: Timer) {
         let block = timer.userInfo as? (Timer) -> Void
         block?(timer)
     }
@@ -527,7 +527,7 @@ extension Timer {
 // MARK: UIBarButtonItem+Block
 extension UIBarButtonItem {
     
-    @objc fileprivate func fw_invokeTargetAction(_ sender: Any) {
+    @objc fileprivate func innerInvokeTargetAction(_ sender: Any) {
         if let target = target, let action = action,
             target.responds(to: action) {
             // 第一个参数UIBarButtonItem，第二个参数为UIControl或者手势对象
