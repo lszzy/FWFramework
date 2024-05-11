@@ -799,7 +799,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
         configuration.url = url
         
         let contentInfo = PlayerCacheContentInfo()
-        contentInfo.contentType = Data.fw_mimeType(from: url.pathExtension)
+        contentInfo.contentType = Data.fw.mimeType(from: url.pathExtension)
         contentInfo.contentLength = fileSize
         contentInfo.byteRangeAccessSupported = true
         contentInfo.downloadedContentLength = fileSize

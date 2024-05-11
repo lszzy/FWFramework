@@ -16,14 +16,6 @@ import AppTrackingTransparency
 extension Wrapper where Base: UIDevice {
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限
     public static var deviceIDFA: String {
-        return Base.fw_deviceIDFA
-    }
-}
-
-// MARK: - UIDevice+Tracking
-@_spi(FW) extension UIDevice {
-    /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限
-    public static var fw_deviceIDFA: String {
         return ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
 }

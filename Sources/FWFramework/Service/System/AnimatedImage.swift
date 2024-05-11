@@ -13,24 +13,38 @@ import ImageIO
 extension Wrapper where Base: UIImage {
     /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
     public var imageLoopCount: UInt {
-        get { return base.fw_imageLoopCount }
-        set { base.fw_imageLoopCount = newValue }
+        get {
+            if let value = propertyNumber(forName: "imageLoopCount") {
+                return value.uintValue
+            }
+            return .zero
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue), forName: "imageLoopCount")
+        }
     }
 
     /// 是否是动图，内部检查images数组
     public var isAnimated: Bool {
-        return base.fw_isAnimated
+        return base.images != nil
     }
     
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
     public var isVector: Bool {
-        return base.fw_isVector
+        return ImageCoder.isVectorImage(base)
     }
     
     /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
     public var imageFormat: ImageFormat {
-        get { return base.fw_imageFormat }
-        set { base.fw_imageFormat = newValue }
+        get {
+            if let value = propertyNumber(forName: "imageFormat") {
+                return .init(value.intValue)
+            }
+            return ImageCoder.imageFormat(from: base.cgImage?.utType)
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "imageFormat")
+        }
     }
 }
 
@@ -38,37 +52,37 @@ extension Wrapper where Base: UIImage {
 extension Wrapper where Base == Data {
     /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(for imageData: Data?) -> ImageFormat {
-        return Base.fw_imageFormat(for: imageData)
+        return ImageCoder.imageFormat(for: imageData)
     }
     
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
     public static func utType(from imageFormat: ImageFormat) -> CFString {
-        return Base.fw_utType(from: imageFormat)
+        return ImageCoder.utType(from: imageFormat)
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(from utType: CFString) -> ImageFormat {
-        return Base.fw_imageFormat(from: utType)
+        return ImageCoder.imageFormat(from: utType)
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
     public static func mimeType(from imageFormat: ImageFormat) -> String {
-        return Base.fw_mimeType(from: imageFormat)
+        return ImageCoder.mimeType(from: imageFormat)
     }
     
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
     public static func mimeType(from fileExtension: String) -> String {
-        return Base.fw_mimeType(from: fileExtension)
+        return ImageCoder.mimeType(from: fileExtension)
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
     public static func base64String(for imageData: Data?) -> String? {
-        return Base.fw_base64String(for: imageData)
+        return ImageCoder.base64String(for: imageData)
     }
     
     /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
     public static func imageData(for base64String: String?) -> Data? {
-        return Base.fw_imageData(for: base64String)
+        return ImageCoder.imageData(for: base64String)
     }
 }
 
@@ -301,10 +315,10 @@ open class ImageCoder: NSObject {
 
             let loopCount = imageLoopCount(source: source, format: format)
             animatedImage = ImageFrame.animatedImage(frames: frames)
-            animatedImage?.fw_imageLoopCount = loopCount
+            animatedImage?.fw.imageLoopCount = loopCount
         }
         
-        animatedImage?.fw_imageFormat = format
+        animatedImage?.fw.imageFormat = format
         return animatedImage
     }
 
@@ -341,7 +355,7 @@ open class ImageCoder: NSObject {
         } else {
             var dictionaryProperties: [String: Any] = [:]
             if let loopCountProperty = loopCountProperty(format) {
-                dictionaryProperties[loopCountProperty] = image.fw_imageLoopCount
+                dictionaryProperties[loopCountProperty] = image.fw.imageLoopCount
             }
             var containerProperties: [String: Any] = [:]
             if let dictionaryProperty = dictionaryProperty(format) {
@@ -826,85 +840,4 @@ open class ImageCoder: NSObject {
         return image
     }
 
-}
-
-// MARK: - UIImage+AnimatedImage
-@_spi(FW) extension UIImage {
-    
-    /// 图片循环次数，静态图片始终是0，动态图片0代表无限循环
-    public var fw_imageLoopCount: UInt {
-        get {
-            if let value = fw.propertyNumber(forName: "fw_imageLoopCount") {
-                return value.uintValue
-            }
-            return .zero
-        }
-        set {
-            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_imageLoopCount")
-        }
-    }
-
-    /// 是否是动图，内部检查images数组
-    public var fw_isAnimated: Bool {
-        return self.images != nil
-    }
-    
-    /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
-    public var fw_isVector: Bool {
-        return ImageCoder.isVectorImage(self)
-    }
-    
-    /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
-    public var fw_imageFormat: ImageFormat {
-        get {
-            if let value = fw.propertyNumber(forName: "fw_imageFormat") {
-                return .init(value.intValue)
-            }
-            return ImageCoder.imageFormat(from: self.cgImage?.utType)
-        }
-        set {
-            fw.setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "fw_imageFormat")
-        }
-    }
-    
-}
-
-// MARK: - Data+AnimatedImage
-@_spi(FW) extension Data {
-    
-    /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
-    public static func fw_imageFormat(for imageData: Data?) -> ImageFormat {
-        return ImageCoder.imageFormat(for: imageData)
-    }
-    
-    /// 图片格式转化为UTType，未知格式返回kUTTypeImage
-    public static func fw_utType(from imageFormat: ImageFormat) -> CFString {
-        return ImageCoder.utType(from: imageFormat)
-    }
-
-    /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
-    public static func fw_imageFormat(from utType: CFString) -> ImageFormat {
-        return ImageCoder.imageFormat(from: utType)
-    }
-
-    /// 图片格式转化为mimeType，未知格式返回application/octet-stream
-    public static func fw_mimeType(from imageFormat: ImageFormat) -> String {
-        return ImageCoder.mimeType(from: imageFormat)
-    }
-    
-    /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
-    public static func fw_mimeType(from fileExtension: String) -> String {
-        return ImageCoder.mimeType(from: fileExtension)
-    }
-
-    /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
-    public static func fw_base64String(for imageData: Data?) -> String? {
-        return ImageCoder.base64String(for: imageData)
-    }
-    
-    /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
-    public static func fw_imageData(for base64String: String?) -> Data? {
-        return ImageCoder.imageData(for: base64String)
-    }
-    
 }
