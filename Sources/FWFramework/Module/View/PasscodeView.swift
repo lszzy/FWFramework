@@ -129,7 +129,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     private lazy var textField: UITextField = {
         let result = UITextField()
-        result.fw_menuDisabled = true
+        result.fw.menuDisabled = true
         result.keyboardType = keyboardType
         result.delegate = self
         result.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)

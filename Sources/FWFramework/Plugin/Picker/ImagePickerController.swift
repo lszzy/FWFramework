@@ -621,8 +621,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleCancelButtonClick(_:)), for: .touchUpInside)
         result.fw.touchInsets = UIEdgeInsets(top: 30, left: 20, bottom: 50, right: 80)
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         return result
     }()
     
@@ -634,8 +634,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleCheckButtonClick(_:)), for: .touchUpInside)
         result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         return result
     }()
     
@@ -655,8 +655,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.setTitle(FrameworkBundle.doneButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         result.addTarget(self, action: #selector(handleSendButtonClick(_:)), for: .touchUpInside)
         return result
     }()
@@ -668,8 +668,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.setTitle(FrameworkBundle.editButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         result.addTarget(self, action: #selector(handleEditButtonClick(_:)), for: .touchUpInside)
         return result
     }()
@@ -686,8 +686,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         result.sizeToFit()
         result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         result.addTarget(self, action: #selector(handleOriginImageCheckboxButtonClick(_:)), for: .touchUpInside)
         return result
     }()
@@ -1754,8 +1754,8 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.setTitleColor(toolbarTintColor, for: .normal)
         result.setTitle(FrameworkBundle.doneButton, for: .normal)
         result.fw.touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleSendButtonClick(_:)), for: .touchUpInside)
         return result
@@ -1768,8 +1768,8 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.setTitleColor(toolbarTintColor, for: .normal)
         result.setTitle(FrameworkBundle.previewButton, for: .normal)
         result.fw.touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
-        result.fw_disabledAlpha = UIButton.fw_disabledAlpha
-        result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
+        result.fw.disabledAlpha = UIButton.fw.disabledAlpha
+        result.fw.highlightedAlpha = UIButton.fw.highlightedAlpha
         result.sizeToFit()
         result.addTarget(self, action: #selector(handlePreviewButtonClick(_:)), for: .touchUpInside)
         return result

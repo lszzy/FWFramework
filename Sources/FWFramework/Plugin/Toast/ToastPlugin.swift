@@ -541,7 +541,7 @@ extension ToastPlugin {
                 return view
             }
             if self.fw_toastInWindow { return UIWindow.fw.main ?? self.view }
-            if self.fw_toastInAncestor { return self.fw_ancestorView }
+            if self.fw_toastInAncestor { return self.fw.ancestorView }
             return self.view
         }
         set {

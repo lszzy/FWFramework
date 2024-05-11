@@ -268,7 +268,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             self.panDisabled = false
             if self.isOriginScrollable {
                 if self.isOriginDraggable {
-                    scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+                    scrollView.fw.scroll(to: self.scrollEdge, animated: false)
                 } else {
                     togglePosition(self.originPosition)
                     self.position = self.originPosition
@@ -279,11 +279,11 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             return
         }
         
-        if scrollView.fw_isScroll(to: self.scrollEdge) {
+        if scrollView.fw.isScroll(to: self.scrollEdge) {
             self.panDisabled = false
         }
         if !self.panDisabled {
-            scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+            scrollView.fw.scroll(to: self.scrollEdge, animated: false)
         }
     }
     
@@ -307,7 +307,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     
     // MARK: - Private
     private func isDirection(_ gestureRecognizer: UIPanGestureRecognizer) -> Bool {
-        let swipeDirection = gestureRecognizer.fw_swipeDirection
+        let swipeDirection = gestureRecognizer.fw.swipeDirection
         switch self.direction {
         case .up:
             return swipeDirection == .down
@@ -348,9 +348,9 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
         if let scrollViewFilter = self.scrollViewFilter { return scrollViewFilter(scrollView) }
         if !scrollView.fw.isViewVisible || !scrollView.isScrollEnabled { return false }
         if self.isVertical {
-            if !scrollView.fw_canScrollVertical { return false }
+            if !scrollView.fw.canScrollVertical { return false }
         } else {
-            if !scrollView.fw_canScrollHorizontal { return false }
+            if !scrollView.fw.canScrollHorizontal { return false }
         }
         return true
     }
@@ -413,10 +413,10 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             position = (isVertical ? view?.frame.origin.y : view?.frame.origin.x) ?? .zero
             originPosition = position
             
-            isOriginScrollView = gestureRecognizer.fw_hitTest(view: scrollView)
+            isOriginScrollView = gestureRecognizer.fw.hitTest(view: scrollView)
             isOriginDirection = isDirection(gestureRecognizer) || (scrollView != nil && isDirection(scrollView!.panGestureRecognizer))
             originOffset = scrollView?.contentOffset ?? .zero
-            isOriginDraggable = isOriginDirection && (scrollView?.fw_isScroll(to: scrollEdge) ?? false)
+            isOriginDraggable = isOriginDirection && (scrollView?.fw.isScroll(to: scrollEdge) ?? false)
             let positions = scrollView != nil ? scrollViewPositions?(scrollView!) : nil
             isOriginScrollable = originPosition == openPosition || positions?.contains(originPosition) == true
         // 拖动改变时更新视图位置
@@ -475,7 +475,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             togglePosition(self.openPosition)
             self.position = self.openPosition
         } else {
-            scrollView.fw_scroll(to: self.scrollEdge, animated: false)
+            scrollView.fw.scroll(to: self.scrollEdge, animated: false)
         }
     }
     

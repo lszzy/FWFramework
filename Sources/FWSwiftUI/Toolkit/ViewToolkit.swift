@@ -398,8 +398,8 @@ public struct OpacityButtonStyle: ButtonStyle {
     
     public init(disabled: Bool = false, highlightedAlpha: CGFloat? = nil, disabledAlpha: CGFloat? = nil) {
         self.disabled = disabled
-        self.highlightedAlpha = highlightedAlpha ?? UIButton.fw_highlightedAlpha
-        self.disabledAlpha = disabledAlpha ?? UIButton.fw_disabledAlpha
+        self.highlightedAlpha = highlightedAlpha ?? UIButton.fw.highlightedAlpha
+        self.disabledAlpha = disabledAlpha ?? UIButton.fw.disabledAlpha
     }
     
     public func makeBody(configuration: ButtonStyleConfiguration) -> some View {

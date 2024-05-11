@@ -526,7 +526,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if fw_isPresented {
+        if fw.isPresented {
             initObjectsForZoomStyleIfNeeded()
         }
         imagePreviewView.collectionView.reloadData()
@@ -537,7 +537,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         super.viewDidAppear(animated)
         useOriginalStatusBarHidden = false
         
-        if fw_isPresented {
+        if fw.isPresented {
             statusBarHidden = true
         }
         setNeedsStatusBarAppearanceUpdate()
@@ -589,7 +589,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     
     /// 处理单击关闭事件，子类可重写
     open func dismissingWhenTapped(_ zoomImageView: ZoomImageView) {
-        guard fw_isPresented else { return }
+        guard fw.isPresented else { return }
         
         var shouldDismiss = false
         if zoomImageView.videoPlayerItem != nil {

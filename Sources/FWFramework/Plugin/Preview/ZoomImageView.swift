@@ -897,7 +897,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     @objc private func handleCloseButton(_ button: UIButton) {
-        if let viewController = fw.viewController, viewController.fw_isPresented {
+        if let viewController = fw.viewController, viewController.fw.isPresented {
             viewController.dismiss(animated: true)
         }
     }
@@ -1059,8 +1059,8 @@ open class ZoomImageVideoToolbar: UIView {
         let result = UISlider()
         result.minimumTrackTintColor = UIColor(red: 195.0 / 255.0, green: 195.0 / 255.0, blue: 195.0 / 255.0, alpha: 1.0)
         result.maximumTrackTintColor = UIColor(red: 95.0 / 255.0, green: 95.0 / 255.0, blue: 95.0 / 255.0, alpha: 1.0)
-        result.fw_thumbSize = CGSize(width: 12, height: 12)
-        result.fw_thumbColor = UIColor.white
+        result.fw.thumbSize = CGSize(width: 12, height: 12)
+        result.fw.thumbColor = UIColor.white
         return result
     }()
     

@@ -316,7 +316,7 @@ extension Wrapper where Base: UIDevice {
 }
 
 // MARK: - Wrapper+UIView
-/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
+/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如base)时返回nil排除即可
 extension Wrapper where Base: UIView {
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
     public var isViewVisible: Bool {
@@ -437,25 +437,25 @@ extension Wrapper where Base: UIView {
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         if edge.contains(.top) {
-            let borderLayer = borderLayer("fw_borderLayerTop")
+            let borderLayer = borderLayer("borderLayerTop")
             borderLayer.frame = CGRect(x: leftInset, y: 0, width: base.bounds.size.width - leftInset - rightInset, height: width)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.left) {
-            let borderLayer = borderLayer("fw_borderLayerLeft")
+            let borderLayer = borderLayer("borderLayerLeft")
             borderLayer.frame = CGRect(x: 0, y: leftInset, width: width, height: base.bounds.size.height - leftInset - rightInset)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.bottom) {
-            let borderLayer = borderLayer("fw_borderLayerBottom")
+            let borderLayer = borderLayer("borderLayerBottom")
             borderLayer.frame = CGRect(x: leftInset, y: base.bounds.size.height - width, width: base.bounds.size.width - leftInset - rightInset, height: width)
             borderLayer.backgroundColor = color?.cgColor
         }
         
         if edge.contains(.right) {
-            let borderLayer = borderLayer("fw_borderLayerRight")
+            let borderLayer = borderLayer("borderLayerRight")
             borderLayer.frame = CGRect(x: base.bounds.size.width - width, y: leftInset, width: width, height: base.bounds.size.height - leftInset - rightInset)
             borderLayer.backgroundColor = color?.cgColor
         }
@@ -1214,6 +1214,10 @@ extension Wrapper where Base: UILabel {
             base.setNeedsDisplay()
         }
     }
+    
+    fileprivate var issetContentInset: Bool {
+        return property(forName: "contentInset") != nil
+    }
 
     /// 纵向分布方式，默认居中
     public var verticalAlignment: UIControl.ContentVerticalAlignment {
@@ -1424,53 +1428,83 @@ extension Wrapper where Base: UIControl {
 extension Wrapper where Base: UIButton {
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
     public static var highlightedAlpha: CGFloat {
-        get { return Base.fw_highlightedAlpha }
-        set { Base.fw_highlightedAlpha = newValue }
+        get { return UIButton.innerHighlightedAlpha }
+        set { UIButton.innerHighlightedAlpha = newValue }
     }
     
     /// 全局自定义按钮禁用时的alpha配置，默认0.3
     public static var disabledAlpha: CGFloat {
-        get { return Base.fw_disabledAlpha }
-        set { Base.fw_disabledAlpha = newValue }
+        get { return UIButton.innerDisabledAlpha }
+        set { UIButton.innerDisabledAlpha = newValue }
     }
     
     /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
     public var disabledAlpha: CGFloat {
-        get { return base.fw_disabledAlpha }
-        set { base.fw_disabledAlpha = newValue }
+        get {
+            return propertyDouble(forName: "disabledAlpha")
+        }
+        set {
+            setPropertyDouble(newValue, forName: "disabledAlpha")
+            if newValue > 0 {
+                base.alpha = base.isEnabled ? 1 : newValue
+            }
+        }
     }
 
     /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
     public var highlightedAlpha: CGFloat {
-        get { return base.fw_highlightedAlpha }
-        set { base.fw_highlightedAlpha = newValue }
+        get {
+            return propertyDouble(forName: "highlightedAlpha")
+        }
+        set {
+            setPropertyDouble(newValue, forName: "highlightedAlpha")
+            if base.isEnabled && newValue > 0 {
+                base.alpha = base.isHighlighted ? newValue : 1
+            }
+        }
     }
     
     /// 自定义按钮禁用状态改变时的句柄，默认nil
     public var disabledChanged: ((UIButton, Bool) -> Void)? {
-        get { return base.fw_disabledChanged }
-        set { base.fw_disabledChanged = newValue }
+        get {
+            return property(forName: "disabledChanged") as? (UIButton, Bool) -> Void
+        }
+        set {
+            setPropertyCopy(newValue, forName: "disabledChanged")
+            if newValue != nil {
+                newValue?(base, base.isEnabled)
+            }
+        }
     }
 
     /// 自定义按钮高亮状态改变时的句柄，默认nil
     public var highlightedChanged: ((UIButton, Bool) -> Void)? {
-        get { return base.fw_highlightedChanged }
-        set { base.fw_highlightedChanged = newValue }
+        get {
+            return property(forName: "highlightedChanged") as? (UIButton, Bool) -> Void
+        }
+        set {
+            setPropertyCopy(newValue, forName: "highlightedChanged")
+            if base.isEnabled && newValue != nil {
+                newValue?(base, base.isHighlighted)
+            }
+        }
     }
 
     /// 快速设置文本按钮
     public func setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
-        base.fw_setTitle(title, font: font, titleColor: titleColor)
+        if let title = title { base.setTitle(title, for: .normal) }
+        if let font = font { base.titleLabel?.font = font }
+        if let titleColor = titleColor { base.setTitleColor(titleColor, for: .normal) }
     }
 
     /// 快速设置文本
     public func setTitle(_ title: String?) {
-        base.fw_setTitle(title)
+        base.setTitle(title, for: .normal)
     }
 
     /// 快速设置图片
     public func setImage(_ image: UIImage?) {
-        base.fw_setImage(image)
+        base.setImage(image, for: .normal)
     }
 
     /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
@@ -1478,33 +1512,76 @@ extension Wrapper where Base: UIButton {
     /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
     /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
     public func setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
-        base.fw_setImageEdge(edge, spacing: spacing)
+        let imageSize = base.imageView?.image?.size ?? .zero
+        let labelSize = base.titleLabel?.intrinsicContentSize ?? .zero
+        switch edge {
+        case .left:
+            base.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing / 2.0, bottom: 0, right: spacing / 2.0)
+            base.titleEdgeInsets = UIEdgeInsets(top: 0, left: spacing / 2.0, bottom: 0, right: -spacing / 2.0)
+        case .right:
+            base.imageEdgeInsets = UIEdgeInsets(top: 0, left: labelSize.width + spacing / 2.0, bottom: 0, right: -labelSize.width - spacing / 2.0)
+            base.titleEdgeInsets = UIEdgeInsets(top: 0, left: -imageSize.width - spacing / 2.0, bottom: 0, right: imageSize.width + spacing / 2.0)
+        case .top:
+            base.imageEdgeInsets = UIEdgeInsets(top: -labelSize.height - spacing / 2.0, left: 0, bottom: spacing / 2.0, right: -labelSize.width)
+            base.titleEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: -imageSize.width, bottom: -imageSize.height - spacing / 2.0, right: 0)
+        case .bottom:
+            base.imageEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: 0, bottom: -labelSize.height - spacing / 2.0, right: -labelSize.width)
+            base.titleEdgeInsets = UIEdgeInsets(top: -imageSize.height - spacing / 2.0, left: -imageSize.width, bottom: spacing / 2.0, right: 0)
+        default:
+            break
+        }
     }
     
     /// 图文模式时自适应粗体文本，解决图文按钮文本显示不全(...)的兼容性问题
     public func adjustBoldText() {
-        base.fw_adjustBoldText()
+        base.titleLabel?.lineBreakMode = .byClipping
     }
     
     /// 设置状态背景色
     public func setBackgroundColor(_ backgroundColor: UIColor?, for state: UIControl.State) {
-        base.fw_setBackgroundColor(backgroundColor, for: state)
+        var image: UIImage?
+        if let backgroundColor = backgroundColor {
+            let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+            UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+            let context = UIGraphicsGetCurrentContext()
+            context?.setFillColor(backgroundColor.cgColor)
+            context?.fill(rect)
+            image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
+        base.setBackgroundImage(image, for: state)
     }
     
     /// 快速创建文本按钮
     public static func button(title: String?, font: UIFont?, titleColor: UIColor?) -> Base {
-        return Base.fw_button(title: title, font: font, titleColor: titleColor)
+        let button = Base(type: .custom)
+        button.fw.setTitle(title, font: font, titleColor: titleColor)
+        return button
     }
 
     /// 快速创建图片按钮
     public static func button(image: UIImage?) -> Base {
-        return Base.fw_button(image: image)
+        let button = Base(type: .custom)
+        button.setImage(image, for: .normal)
+        return button
     }
     
     /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
     @discardableResult
     public func startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSourceTimer {
-        return base.fw_startCountDown(seconds, title: title, waitTitle: waitTitle)
+        return startCountDown(seconds) { [weak base] countDown in
+            // 先设置titleLabel，再设置title，防止闪烁
+            if countDown <= 0 {
+                base?.titleLabel?.text = title
+                base?.setTitle(title, for: .normal)
+                base?.isEnabled = true
+            } else {
+                let waitText = String(format: waitTitle, countDown)
+                base?.titleLabel?.text = waitText
+                base?.setTitle(waitText, for: .normal)
+                base?.isEnabled = false
+            }
+        }
     }
 }
 
@@ -1512,70 +1589,133 @@ extension Wrapper where Base: UIButton {
 extension Wrapper where Base: UIScrollView {
     /// 判断当前scrollView内容是否足够滚动
     public var canScroll: Bool {
-        return base.fw_canScroll
+        return canScrollVertical || canScrollHorizontal
     }
 
     /// 判断当前的scrollView内容是否足够水平滚动
     public var canScrollHorizontal: Bool {
-        return base.fw_canScrollHorizontal
+        if base.bounds.size.width <= 0 { return false }
+        return base.contentSize.width + base.adjustedContentInset.left + base.adjustedContentInset.right > CGRectGetWidth(base.bounds)
     }
 
     /// 判断当前的scrollView内容是否足够纵向滚动
     public var canScrollVertical: Bool {
-        return base.fw_canScrollVertical
+        if base.bounds.size.height <= 0 { return false }
+        return base.contentSize.height + base.adjustedContentInset.top + base.adjustedContentInset.bottom > CGRectGetHeight(base.bounds)
     }
 
     /// 当前scrollView滚动到指定边
     public func scroll(to edge: UIRectEdge, animated: Bool = true) {
-        base.fw_scroll(to: edge, animated: animated)
+        let contentOffset = contentOffset(of: edge)
+        base.setContentOffset(contentOffset, animated: animated)
     }
 
     /// 是否已滚动到指定边
     public func isScroll(to edge: UIRectEdge) -> Bool {
-        return base.fw_isScroll(to: edge)
+        let contentOffset = contentOffset(of: edge)
+        switch edge {
+        case .top:
+            return base.contentOffset.y <= contentOffset.y
+        case .left:
+            return base.contentOffset.x <= contentOffset.x
+        case .bottom:
+            return base.contentOffset.y >= contentOffset.y
+        case .right:
+            return base.contentOffset.x >= contentOffset.x
+        default:
+            return false
+        }
     }
 
     /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
     public func contentOffset(of edge: UIRectEdge) -> CGPoint {
-        return base.fw_contentOffset(of: edge)
+        var contentOffset = base.contentOffset
+        switch edge {
+        case .top:
+            contentOffset.y = -base.adjustedContentInset.top
+        case .left:
+            contentOffset.x = -base.adjustedContentInset.left
+        case .bottom:
+            contentOffset.y = base.contentSize.height - base.bounds.size.height + base.adjustedContentInset.bottom
+        case .right:
+            contentOffset.x = base.contentSize.width - base.bounds.size.width + base.adjustedContentInset.right
+        default:
+            break
+        }
+        return contentOffset
     }
 
     /// 总页数，自动识别翻页方向
     public var totalPage: Int {
-        return base.fw_totalPage
+        if canScrollVertical {
+            return Int(ceil(base.contentSize.height / base.frame.size.height))
+        } else {
+            return Int(ceil(base.contentSize.width / base.frame.size.width))
+        }
     }
 
     /// 当前页数，不支持动画，自动识别翻页方向
     public var currentPage: Int {
-        get { return base.fw_currentPage }
-        set { base.fw_currentPage = newValue }
+        get {
+            if canScrollVertical {
+                let pageHeight = base.frame.size.height
+                return Int(floor((base.contentOffset.y - pageHeight / 2) / pageHeight)) + 1
+            } else {
+                let pageWidth = base.frame.size.width
+                return Int(floor((base.contentOffset.x - pageWidth / 2) / pageWidth)) + 1
+            }
+        }
+        set {
+            if canScrollVertical {
+                let offset = base.frame.size.height * CGFloat(newValue)
+                base.contentOffset = CGPoint(x: 0, y: offset)
+            } else {
+                let offset = base.frame.size.width * CGFloat(newValue)
+                base.contentOffset = CGPoint(x: offset, y: 0)
+            }
+        }
     }
 
     /// 设置当前页数，支持动画，自动识别翻页方向
     public func setCurrentPage(_ page: Int, animated: Bool = true) {
-        base.fw_setCurrentPage(page, animated: animated)
+        if canScrollVertical {
+            let offset = base.frame.size.height * CGFloat(page)
+            base.setContentOffset(CGPoint(x: 0, y: offset), animated: animated)
+        } else {
+            let offset = base.frame.size.width * CGFloat(page)
+            base.setContentOffset(CGPoint(x: offset, y: 0), animated: animated)
+        }
     }
 
     /// 是否是最后一页，自动识别翻页方向
     public var isLastPage: Bool {
-        return base.fw_isLastPage
+        return currentPage == totalPage - 1
     }
     
     /// 快捷设置contentOffset.x
     public var contentOffsetX: CGFloat {
-        get { return base.fw_contentOffsetX }
-        set { base.fw_contentOffsetX = newValue }
+        get { return base.contentOffset.x }
+        set { base.contentOffset = CGPoint(x: newValue, y: base.contentOffset.y) }
     }
 
     /// 快捷设置contentOffset.y
     public var contentOffsetY: CGFloat {
-        get { return base.fw_contentOffsetY }
-        set { base.fw_contentOffsetY = newValue }
+        get { return base.contentOffset.y }
+        set { base.contentOffset = CGPoint(x: base.contentOffset.x, y: newValue) }
     }
     
     /// 滚动视图完整图片截图
     public var contentSnapshot: UIImage? {
-        return base.fw_contentSnapshot
+        let size = base.contentSize
+        guard size != .zero else { return nil }
+
+        let strongBase = base
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let previousFrame = strongBase.frame
+            strongBase.frame = CGRect(origin: strongBase.frame.origin, size: size)
+            strongBase.layer.render(in: context.cgContext)
+            strongBase.frame = previousFrame
+        }
     }
     
     /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
@@ -1585,7 +1725,15 @@ extension Wrapper where Base: UIScrollView {
     /// 1. 设置scrollView属性isDirectionalLockEnabled为true
     /// 2. 设置布局高度为固定ceil高度，如：FW.fixed(ceil(FW.relative(40)))
     public var contentView: UIView {
-        return base.fw_contentView
+        if let contentView = property(forName: "contentView") as? UIView {
+            return contentView
+        } else {
+            let contentView = UIView()
+            setProperty(contentView, forName: "contentView")
+            base.addSubview(contentView)
+            contentView.fw.pinEdges()
+            return contentView
+        }
     }
     
     /**
@@ -1593,37 +1741,73 @@ extension Wrapper where Base: UIScrollView {
      
      @param view 需要悬停的视图，须占满fromSuperview
      @param fromSuperview 起始的父视图，须是scrollView的子视图
-     @param toSuperview 悬停的目标视图，须是scrollView的父级视图，一般控制器self.view
+     @param toSuperview 悬停的目标视图，须是scrollView的父级视图，一般控制器view
      @param toPosition 需要悬停的目标位置，相对于toSuperview的originY位置
      @return 相对于悬浮位置的距离，可用来设置导航栏透明度等
      */
     @discardableResult
     public func hoverView(_ view: UIView, fromSuperview: UIView, toSuperview: UIView, toPosition: CGFloat) -> CGFloat {
-        return base.fw_hoverView(view, fromSuperview: fromSuperview, toSuperview: toSuperview, toPosition: toPosition)
+        let distance = (fromSuperview.superview?.convert(fromSuperview.frame.origin, to: toSuperview) ?? .zero).y - toPosition
+        if distance <= 0 {
+            if view.superview != toSuperview {
+                view.removeFromSuperview()
+                toSuperview.addSubview(view)
+                view.fw.pinEdge(toSuperview: .left, inset: 0)
+                view.fw.pinEdge(toSuperview: .top, inset: toPosition)
+                view.fw.setDimensions(view.bounds.size)
+            }
+        } else {
+            if view.superview != fromSuperview {
+                view.removeFromSuperview()
+                fromSuperview.addSubview(view)
+                view.fw.pinEdges()
+            }
+        }
+        return distance
     }
     
     /// 是否开始识别pan手势
     public var shouldBegin: ((UIGestureRecognizer) -> Bool)? {
-        get { return base.fw_shouldBegin }
-        set { base.fw_shouldBegin = newValue }
+        get {
+            return property(forName: "shouldBegin") as? (UIGestureRecognizer) -> Bool
+        }
+        set {
+            setPropertyCopy(newValue, forName: "shouldBegin")
+            FrameworkAutoloader.swizzleUIKitScrollView()
+        }
     }
 
     /// 是否允许同时识别多个手势
     public var shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return base.fw_shouldRecognizeSimultaneously }
-        set { base.fw_shouldRecognizeSimultaneously = newValue }
+        get {
+            return property(forName: "shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            setPropertyCopy(newValue, forName: "shouldRecognizeSimultaneously")
+            FrameworkAutoloader.swizzleUIKitScrollView()
+        }
     }
 
     /// 是否另一个手势识别失败后，才能识别pan手势
     public var shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return base.fw_shouldRequireFailure }
-        set { base.fw_shouldRequireFailure = newValue }
+        get {
+            return property(forName: "shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            setPropertyCopy(newValue, forName: "shouldRequireFailure")
+            FrameworkAutoloader.swizzleUIKitScrollView()
+        }
     }
 
     /// 是否pan手势识别失败后，才能识别另一个手势
     public var shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get { return base.fw_shouldBeRequiredToFail }
-        set { base.fw_shouldBeRequiredToFail = newValue }
+        get {
+            return property(forName: "shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+        }
+        set {
+            setPropertyCopy(newValue, forName: "shouldBeRequiredToFail")
+            FrameworkAutoloader.swizzleUIKitScrollView()
+        }
     }
 }
 
@@ -1635,22 +1819,22 @@ extension Wrapper where Base: UIScrollView {
 extension Wrapper where Base: UIGestureRecognizer {
     /// 获取手势直接作用的view，不同于view，此处是view的subview
     public weak var targetView: UIView? {
-        return base.fw_targetView
+        return base.view?.hitTest(base.location(in: base.view), with: nil)
     }
 
     /// 是否正在拖动中：Began || Changed
     public var isTracking: Bool {
-        return base.fw_isTracking
+        return base.state == .began || base.state == .changed
     }
 
     /// 是否是激活状态: isEnabled && (Began || Changed)
     public var isActive: Bool {
-        return base.fw_isActive
+        return base.isEnabled && (base.state == .began || base.state == .changed)
     }
     
     /// 判断手势是否正作用于指定视图
     public func hitTest(view: UIView?) -> Bool {
-        return base.fw_hitTest(view: view)
+        return base.view?.hitTest(base.location(in: base.view), with: nil) != nil
     }
 }
 
@@ -1658,17 +1842,56 @@ extension Wrapper where Base: UIGestureRecognizer {
 extension Wrapper where Base: UIPanGestureRecognizer {
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
     public var swipeDirection: UISwipeGestureRecognizer.Direction {
-        return base.fw_swipeDirection
+        let transition = base.translation(in: base.view)
+        if abs(transition.x) > abs(transition.y) {
+            if transition.x < 0 {
+                return .left
+            } else if transition.x > 0 {
+                return .right
+            }
+        } else {
+            if transition.y > 0 {
+                return .down
+            } else if transition.y < 0 {
+                return .up
+            }
+        }
+        return []
     }
 
     /// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
     public var swipePercent: CGFloat {
-        return base.fw_swipePercent
+        guard let view = base.view,
+              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
+        var percent: CGFloat = 0
+        let transition = base.translation(in: view)
+        if abs(transition.x) > abs(transition.y) {
+            percent = abs(transition.x) / view.bounds.width
+        } else {
+            percent = abs(transition.y) / view.bounds.height
+        }
+        return max(0, min(percent, 1))
     }
 
     /// 计算指定方向的滑动进度
     public func swipePercent(of direction: UISwipeGestureRecognizer.Direction) -> CGFloat {
-        return base.fw_swipePercent(of: direction)
+        guard let view = base.view,
+              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
+        var percent: CGFloat = 0
+        let transition = base.translation(in: view)
+        switch direction {
+        case .left:
+            percent = -transition.x / view.bounds.width
+        case .right:
+            percent = transition.x / view.bounds.width
+        case .up:
+            percent = -transition.y / view.bounds.height
+        case .down:
+            percent = transition.y / view.bounds.height
+        default:
+            percent = transition.y / view.bounds.height
+        }
+        return max(0, min(percent, 1))
     }
 }
 
@@ -1676,8 +1899,19 @@ extension Wrapper where Base: UIPanGestureRecognizer {
 extension Wrapper where Base: UIPageControl {
     /// 自定义圆点大小，默认{10, 10}
     public var preferredSize: CGSize {
-        get { return base.fw_preferredSize }
-        set { base.fw_preferredSize = newValue }
+        get {
+            var size = base.bounds.size
+            if size.height <= 0 {
+                size = base.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+                if size.height <= 0 { size = CGSize(width: 10, height: 10) }
+            }
+            return size
+        }
+        set {
+            let height = preferredSize.height
+            let scale = newValue.height / height
+            base.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
     }
 }
 
@@ -1685,14 +1919,41 @@ extension Wrapper where Base: UIPageControl {
 extension Wrapper where Base: UISlider {
     /// 中间圆球的大小，默认zero
     public var thumbSize: CGSize {
-        get { return base.fw_thumbSize }
-        set { base.fw_thumbSize = newValue }
+        get {
+            if let value = property(forName: "thumbSize") as? NSValue {
+                return value.cgSizeValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(cgSize: newValue), forName: "thumbSize")
+            updateThumbImage()
+        }
     }
 
     /// 中间圆球的颜色，默认nil
     public var thumbColor: UIColor? {
-        get { return base.fw_thumbColor }
-        set { base.fw_thumbColor = newValue }
+        get {
+            return property(forName: "thumbColor") as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: "thumbColor")
+            updateThumbImage()
+        }
+    }
+    
+    private func updateThumbImage() {
+        let thumbSize = thumbSize
+        guard thumbSize.width > 0, thumbSize.height > 0 else { return }
+        let thumbColor = thumbColor ?? (base.tintColor ?? .white)
+        let thumbImage = UIImage.fw.image(size: thumbSize) { context in
+            let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: thumbSize.width, height: thumbSize.height))
+            context.setFillColor(thumbColor.cgColor)
+            path.fill()
+        }
+        
+        base.setThumbImage(thumbImage, for: .normal)
+        base.setThumbImage(thumbImage, for: .highlighted)
     }
 }
 
@@ -1700,14 +1961,25 @@ extension Wrapper where Base: UISlider {
 extension Wrapper where Base: UISwitch {
     /// 自定义尺寸大小，默认{51,31}
     public var preferredSize: CGSize {
-        get { return base.fw_preferredSize }
-        set { base.fw_preferredSize = newValue }
+        get {
+            var size = base.bounds.size
+            if size.height <= 0 {
+                size = base.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+                if size.height <= 0 { size = CGSize(width: 51, height: 31) }
+            }
+            return size
+        }
+        set {
+            let height = preferredSize.height
+            let scale = newValue.height / height
+            base.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
     }
     
     /// 自定义关闭时除圆点外的背景色
     public var offTintColor: UIColor? {
-        get { return base.fw_offTintColor }
-        set { base.fw_offTintColor = newValue }
+        get { return base.innerOffTintColor }
+        set { base.innerOffTintColor = newValue }
     }
 }
 
@@ -1715,70 +1987,116 @@ extension Wrapper where Base: UISwitch {
 extension Wrapper where Base: UITextField {
     /// 最大字数限制，0为无限制，二选一
     public var maxLength: Int {
-        get { return base.fw_maxLength }
-        set { base.fw_maxLength = newValue }
+        get { return inputTarget(false)?.maxLength ?? 0 }
+        set { inputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var maxUnicodeLength: Int {
-        get { return base.fw_maxUnicodeLength }
-        set { base.fw_maxUnicodeLength = newValue }
+        get { return inputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { inputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var textChangedBlock: ((String) -> Void)? {
-        get { return base.fw_textChangedBlock }
-        set { base.fw_textChangedBlock = newValue }
+        get { return inputTarget(false)?.textChangedBlock }
+        set { inputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func textLengthChanged() {
-        base.fw_textLengthChanged()
+        inputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func filterText(_ text: String) -> String {
-        return base.fw_filterText(text)
+        if let target = inputTarget(false) {
+            return target.filterText(text)
+        }
+        return text
     }
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
-        get { return base.fw_autoCompleteInterval }
-        set { base.fw_autoCompleteInterval = newValue }
+        get { return inputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
     public var autoCompleteBlock: ((String) -> Void)? {
-        get { return base.fw_autoCompleteBlock }
-        set { base.fw_autoCompleteBlock = newValue }
+        get { return inputTarget(false)?.autoCompleteBlock }
+        set { inputTarget(true)?.autoCompleteBlock = newValue }
+    }
+    
+    private func inputTarget(_ lazyload: Bool) -> InputTarget? {
+        if let target = property(forName: "inputTarget") as? InputTarget {
+            return target
+        } else if lazyload {
+            let target = InputTarget(textInput: base)
+            base.addTarget(target, action: #selector(InputTarget.textChangedAction), for: .editingChanged)
+            setProperty(target, forName: "inputTarget")
+            return target
+        }
+        return nil
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var menuDisabled: Bool {
-        get { return base.fw_menuDisabled }
-        set { base.fw_menuDisabled = newValue }
+        get { propertyBool(forName: "menuDisabled") }
+        set { setPropertyBool(newValue, forName: "menuDisabled") }
     }
 
     /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var cursorRect: CGRect {
-        get { return base.fw_cursorRect }
-        set { base.fw_cursorRect = newValue }
+        get {
+            if let value = property(forName: "cursorRect") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(cgRect: newValue), forName: "cursorRect")
+        }
     }
 
     /// 获取及设置当前选中文字范围
     public var selectedRange: NSRange {
-        get { return base.fw_selectedRange }
-        set { base.fw_selectedRange = newValue }
+        get {
+            guard let selectedRange = base.selectedTextRange else {
+                return NSRange(location: NSNotFound, length: 0)
+            }
+            let location = base.offset(from: base.beginningOfDocument, to: selectedRange.start)
+            let length = base.offset(from: selectedRange.start, to: selectedRange.end)
+            return NSRange(location: location, length: length)
+        }
+        set {
+            guard newValue.location != NSNotFound else {
+                base.selectedTextRange = nil
+                return
+            }
+            let start = base.position(from: base.beginningOfDocument, offset: newValue.location)
+            let end = base.position(from: base.beginningOfDocument, offset: NSMaxRange(newValue))
+            if let start = start, let end = end {
+                let selectionRange = base.textRange(from: start, to: end)
+                base.selectedTextRange = selectionRange
+            }
+        }
     }
 
     /// 移动光标到最后
     public func selectAllRange() {
-        base.fw_selectAllRange()
+        let range = base.textRange(from: base.beginningOfDocument, to: base.endOfDocument)
+        base.selectedTextRange = range
     }
 
     /// 移动光标到指定位置，兼容动态text赋值
     public func moveCursor(_ offset: Int) {
-        base.fw_moveCursor(offset)
+        DispatchQueue.main.async { [weak base] in
+            guard let base = base else { return }
+            if let position = base.position(from: base.beginningOfDocument, offset: offset) {
+                base.selectedTextRange = base.textRange(from: position, to: position)
+            }
+        }
     }
 }
 
@@ -1786,156 +2104,332 @@ extension Wrapper where Base: UITextField {
 extension Wrapper where Base: UITextView {
     /// 最大字数限制，0为无限制，二选一
     public var maxLength: Int {
-        get { return base.fw_maxLength }
-        set { base.fw_maxLength = newValue }
+        get { return inputTarget(false)?.maxLength ?? 0 }
+        set { inputTarget(true)?.maxLength = newValue }
     }
 
     /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
     public var maxUnicodeLength: Int {
-        get { return base.fw_maxUnicodeLength }
-        set { base.fw_maxUnicodeLength = newValue }
+        get { return inputTarget(false)?.maxUnicodeLength ?? 0 }
+        set { inputTarget(true)?.maxUnicodeLength = newValue }
     }
     
     /// 自定义文字改变处理句柄，自动trimString，默认nil
     public var textChangedBlock: ((String) -> Void)? {
-        get { return base.fw_textChangedBlock }
-        set { base.fw_textChangedBlock = newValue }
+        get { return inputTarget(false)?.textChangedBlock }
+        set { inputTarget(true)?.textChangedBlock = newValue }
     }
 
     /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
     public func textLengthChanged() {
-        base.fw_textLengthChanged()
+        inputTarget(false)?.textLengthChanged()
     }
 
     /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
     public func filterText(_ text: String) -> String {
-        return base.fw_filterText(text)
+        if let target = inputTarget(false) {
+            return target.filterText(text)
+        }
+        return text
     }
 
     /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
     public var autoCompleteInterval: TimeInterval {
-        get { return base.fw_autoCompleteInterval }
-        set { base.fw_autoCompleteInterval = newValue }
+        get { return inputTarget(false)?.autoCompleteInterval ?? 0 }
+        set { inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
     public var autoCompleteBlock: ((String) -> Void)? {
-        get { return base.fw_autoCompleteBlock }
-        set { base.fw_autoCompleteBlock = newValue }
+        get { return inputTarget(false)?.autoCompleteBlock }
+        set { inputTarget(true)?.autoCompleteBlock = newValue }
+    }
+    
+    private func inputTarget(_ lazyload: Bool) -> InputTarget? {
+        if let target = property(forName: "inputTarget") as? InputTarget {
+            return target
+        } else if lazyload {
+            let target = InputTarget(textInput: base)
+            observeNotification(UITextView.textDidChangeNotification, object: base, target: target, action: #selector(InputTarget.textChangedAction))
+            setProperty(target, forName: "inputTarget")
+            return target
+        }
+        return nil
     }
     
     /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
     public var menuDisabled: Bool {
-        get { return base.fw_menuDisabled }
-        set { base.fw_menuDisabled = newValue }
+        get { propertyBool(forName: "menuDisabled") }
+        set { setPropertyBool(newValue, forName: "menuDisabled") }
     }
 
     /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
     public var cursorRect: CGRect {
-        get { return base.fw_cursorRect }
-        set { base.fw_cursorRect = newValue }
+        get {
+            if let value = property(forName: "cursorRect") as? NSValue {
+                return value.cgRectValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(cgRect: newValue), forName: "cursorRect")
+        }
     }
 
     /// 获取及设置当前选中文字范围
     public var selectedRange: NSRange {
-        get { return base.fw_selectedRange }
-        set { base.fw_selectedRange = newValue }
+        get {
+            guard let selectedRange = base.selectedTextRange else {
+                return NSRange(location: NSNotFound, length: 0)
+            }
+            let location = base.offset(from: base.beginningOfDocument, to: selectedRange.start)
+            let length = base.offset(from: selectedRange.start, to: selectedRange.end)
+            return NSRange(location: location, length: length)
+        }
+        set {
+            guard newValue.location != NSNotFound else {
+                base.selectedTextRange = nil
+                return
+            }
+            let start = base.position(from: base.beginningOfDocument, offset: newValue.location)
+            let end = base.position(from: base.beginningOfDocument, offset: NSMaxRange(newValue))
+            if let start = start, let end = end {
+                let selectionRange = base.textRange(from: start, to: end)
+                base.selectedTextRange = selectionRange
+            }
+        }
     }
 
     /// 移动光标到最后
     public func selectAllRange() {
-        base.fw_selectAllRange()
+        let range = base.textRange(from: base.beginningOfDocument, to: base.endOfDocument)
+        base.selectedTextRange = range
     }
 
     /// 移动光标到指定位置，兼容动态text赋值
     public func moveCursor(_ offset: Int) {
-        base.fw_moveCursor(offset)
+        DispatchQueue.main.async { [weak base] in
+            guard let base = base else { return }
+            if let position = base.position(from: base.beginningOfDocument, offset: offset) {
+                base.selectedTextRange = base.textRange(from: position, to: position)
+            }
+        }
     }
 
     /// 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
     public var textSize: CGSize {
-        return base.fw_textSize
+        if base.frame.size.equalTo(.zero) {
+            base.setNeedsLayout()
+            base.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: base.frame.size.width, height: .greatestFiniteMagnitude)
+        return textSize(drawSize: drawSize)
     }
     
     /// 计算指定边界时，当前文本所占尺寸，包含textContainerInset
     public func textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
-        return base.fw_textSize(drawSize: drawSize, contentInset: contentInset)
+        var attrs: [NSAttributedString.Key: Any] = [:]
+        attrs[.font] = base.font
+        
+        let inset = contentInset ?? base.textContainerInset
+        let size = (base.text as? NSString)?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
 
     /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
     public var attributedTextSize: CGSize {
-        return base.fw_attributedTextSize
+        if base.frame.size.equalTo(.zero) {
+            base.setNeedsLayout()
+            base.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: base.frame.size.width, height: .greatestFiniteMagnitude)
+        return attributedTextSize(drawSize: drawSize)
     }
 
     /// 计算指定边界时，当前属性文本所占尺寸，包含textContainerInset，attributedText需指定字体
     public func attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
-        return base.fw_attributedTextSize(drawSize: drawSize, contentInset: contentInset)
+        let inset = contentInset ?? base.textContainerInset
+        let size = base.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
+        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
     
     /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
     public var lineHeight: CGFloat {
-        get { return base.fw_lineHeight }
-        set { base.fw_lineHeight = newValue }
+        get {
+            if property(forName: "lineHeight") != nil {
+                return propertyDouble(forName: "lineHeight")
+            }
+            
+            var result: CGFloat = 0
+            if let string = base.attributedText?.mutableCopy() as? NSMutableAttributedString {
+                string.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string.length), using: { obj, range, stop in
+                    guard let style = obj as? NSParagraphStyle else { return }
+                    if NSEqualRanges(range, NSMakeRange(0, string.length)) {
+                        if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                            result = style.maximumLineHeight
+                            stop.pointee = true
+                        }
+                    }
+                })
+            }
+            
+            if result <= 0, let style = base.typingAttributes[.paragraphStyle] as? NSParagraphStyle {
+                if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
+                    result = style.maximumLineHeight
+                }
+            }
+            return result > 0 ? result : (base.font?.lineHeight ?? 0)
+        }
+        set {
+            if newValue > 0 {
+                setPropertyDouble(newValue, forName: "lineHeight")
+            } else {
+                setProperty(nil, forName: "lineHeight")
+            }
+            
+            placeholderLineHeight = newValue
+            
+            var typingAttributes = base.typingAttributes
+            var paragraphStyle: NSMutableParagraphStyle
+            if let style = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else if let style = (typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle {
+                paragraphStyle = style
+            } else {
+                paragraphStyle = NSMutableParagraphStyle()
+            }
+            paragraphStyle.minimumLineHeight = newValue > 0 ? newValue : 0
+            paragraphStyle.maximumLineHeight = newValue > 0 ? newValue : 0
+            
+            typingAttributes[.paragraphStyle] = paragraphStyle
+            base.typingAttributes = typingAttributes
+        }
     }
     
     /// 获取当前文本框是否非空，兼容attributedText|text
     public var isNotEmpty: Bool {
-        return base.fw_isNotEmpty
+        if (base.attributedText?.length ?? 0) > 0 { return true }
+        if (base.text?.count ?? 0) > 0 { return true }
+        return false
     }
     
     /// 计算当前文本框实际显示行数，兼容textContainerInset|lineHeight
     public var actualNumberOfLines: Int {
-        return base.fw_actualNumberOfLines
+        if base.frame.size.equalTo(.zero) {
+            base.setNeedsLayout()
+            base.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: base.frame.size.width, height: .greatestFiniteMagnitude)
+        return actualNumberOfLines(drawSize: drawSize)
     }
     
     /// 计算指定边界、内边距、行高时，当前文本框实际显示行数
-    public func actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil) -> Int {
-        return base.fw_actualNumberOfLines(drawSize: drawSize, contentInset: contentInset, lineHeight: lineHeight)
+    public func actualNumberOfLines(
+        drawSize: CGSize,
+        contentInset: UIEdgeInsets? = nil,
+        lineHeight aLineHeight: CGFloat? = nil
+    ) -> Int {
+        guard isNotEmpty else { return 0 }
+        
+        let inset = contentInset ?? base.textContainerInset
+        let aLineHeight = aLineHeight ?? lineHeight
+        guard aLineHeight > 0 else { return 0 }
+        
+        let height = base.sizeThatFits(drawSize).height - inset.top - inset.bottom
+        let lines = Int(round(height / aLineHeight))
+        return lines
     }
 }
 
 // MARK: - Wrapper+UITableView
+/// 启用高度估算：设置rowHeight为automaticDimension并撑开布局即可，再设置estimatedRowHeight可提升性能
 extension Wrapper where Base: UITableView {
     /// 全局清空TableView默认多余边距
     public static func resetTableStyle() {
-        Base.fw_resetTableStyle()
+        if #available(iOS 15.0, *) {
+            UITableView.appearance().sectionHeaderTopPadding = 0
+        }
     }
     
     /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
     public var estimatedLayout: Bool {
-        get { return base.fw_estimatedLayout }
-        set { base.fw_estimatedLayout = newValue }
+        get {
+            return base.estimatedRowHeight == UITableView.automaticDimension
+        }
+        set {
+            if newValue {
+                base.estimatedRowHeight = UITableView.automaticDimension
+                base.estimatedSectionHeaderHeight = UITableView.automaticDimension
+                base.estimatedSectionFooterHeight = UITableView.automaticDimension
+            } else {
+                base.estimatedRowHeight = 0
+                base.estimatedSectionHeaderHeight = 0
+                base.estimatedSectionFooterHeight = 0
+            }
+        }
     }
     
     /// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
     public func resetTableStyle() {
-        base.fw_resetTableStyle()
+        base.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        base.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        if #available(iOS 15.0, *) {
+            base.sectionHeaderTopPadding = 0
+        }
+        
+        UITableView.fw.resetTableConfiguration?(base)
     }
     
     /// 配置全局resetTableStyle钩子句柄，默认nil
     public static var resetTableConfiguration: ((UITableView) -> Void)? {
-        get { Base.fw_resetTableConfiguration }
-        set { Base.fw_resetTableConfiguration = newValue }
+        get { UITableView.innerResetTableConfiguration }
+        set { UITableView.innerResetTableConfiguration = newValue }
     }
     
     /// reloadData完成回调
     public func reloadData(completion: (() -> Void)?) {
-        base.fw_reloadData(completion: completion)
+        let strongBase = base
+        UIView.animate(withDuration: 0) {
+            strongBase.reloadData()
+        } completion: { _ in
+            completion?()
+        }
     }
     
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
-        base.fw_reloadDataWithoutAnimation()
+        let strongBase = base
+        UIView.performWithoutAnimation {
+            strongBase.reloadData()
+        }
     }
     
     /// 判断indexPath是否有效
     public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
-        return base.fw_isValidIndexPath(indexPath)
+        guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
+        guard indexPath.section < base.numberOfSections else { return false }
+        return indexPath.row < base.numberOfRows(inSection: indexPath.section)
     }
     
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
+        let block: (UITableViewCell) -> Void = { [weak base] cell in
+            let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
+            guard base?.visibleCells.contains(cell) ?? false,
+                  base?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure()
+            cell.fw.setPropertyCopy(identifier, forName: "willDisplayIdentifier")
+        }
+        cell.fw.setPropertyCopy(block, forName: "willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: base, selector: #selector(UITableView.innerWillDisplay(_:)), object: cell)
+        base.perform(#selector(UITableView.innerWillDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
     }
 }
 
@@ -1943,42 +2437,79 @@ extension Wrapper where Base: UITableView {
 extension Wrapper where Base: UITableViewCell {
     /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
     public var separatorInset: UIEdgeInsets {
-        get { return base.fw_separatorInset }
-        set { base.fw_separatorInset = newValue }
+        get {
+            return base.separatorInset
+        }
+        set {
+            base.separatorInset = newValue
+            base.preservesSuperviewLayoutMargins = false
+            base.layoutMargins = separatorInset
+        }
     }
     
     /// 调整imageView的位置偏移，默认zero不生效，仅支持default|subtitle样式
     public var imageEdgeInsets: UIEdgeInsets {
-        get { return base.fw_imageEdgeInsets }
-        set { base.fw_imageEdgeInsets = newValue }
+        get {
+            let value = property(forName: "imageEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "imageEdgeInsets")
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
+        }
     }
     
     /// 调整textLabel的位置偏移，默认zero不生效，仅支持default|subtitle样式
     public var textEdgeInsets: UIEdgeInsets {
-        get { return base.fw_textEdgeInsets }
-        set { base.fw_textEdgeInsets = newValue }
+        get {
+            let value = property(forName: "textEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "textEdgeInsets")
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
+        }
     }
     
     /// 调整detailTextLabel的位置偏移，默认zero不生效，仅支持subtitle样式
     public var detailTextEdgeInsets: UIEdgeInsets {
-        get { return base.fw_detailTextEdgeInsets }
-        set { base.fw_detailTextEdgeInsets = newValue }
+        get {
+            let value = property(forName: "detailTextEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "detailTextEdgeInsets")
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
+        }
     }
     
     /// 调整accessoryView的位置偏移，默认zero不生效，仅对自定义accessoryView生效
     public var accessoryEdgeInsets: UIEdgeInsets {
-        get { return base.fw_accessoryEdgeInsets }
-        set { base.fw_accessoryEdgeInsets = newValue }
+        get {
+            let value = property(forName: "accessoryEdgeInsets") as? NSValue
+            return value?.uiEdgeInsetsValue ?? .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "accessoryEdgeInsets")
+            FrameworkAutoloader.swizzleUIKitTableViewCell()
+        }
     }
 
     /// 获取当前所属tableView
     public weak var tableView: UITableView? {
-        return base.fw_tableView
+        var superview = base.superview
+        while superview != nil {
+            if let tableView = superview as? UITableView {
+                return tableView
+            }
+            superview = superview?.superview
+        }
+        return nil
     }
 
     /// 获取当前显示indexPath
     public var indexPath: IndexPath? {
-        return base.fw_indexPath
+        return tableView?.indexPath(for: base)
     }
     
     /// 执行所属tableView的批量更新
@@ -1986,7 +2517,15 @@ extension Wrapper where Base: UITableViewCell {
         _ updates: ((UITableView, IndexPath?) -> Void)?,
         completion: ((UITableView, IndexPath?, Bool) -> Void)? = nil
     ) {
-        base.fw_performBatchUpdates(updates, completion: completion)
+        guard let tableView = tableView else { return }
+        
+        tableView.performBatchUpdates(updates != nil ? { [weak base] in
+            let indexPath = base != nil ? tableView.indexPath(for: base!) : nil
+            updates?(tableView, indexPath)
+        } : nil, completion: completion != nil ? { [weak base] finished in
+            let indexPath = base != nil ? tableView.indexPath(for: base!) : nil
+            completion?(tableView, indexPath, finished)
+        } : nil)
     }
 }
 
@@ -1994,33 +2533,70 @@ extension Wrapper where Base: UITableViewCell {
 extension Wrapper where Base: UICollectionView {
     /// reloadData完成回调
     public func reloadData(completion: (() -> Void)?) {
-        base.fw_reloadData(completion: completion)
+        let strongBase = base
+        UIView.animate(withDuration: 0) {
+            strongBase.reloadData()
+        } completion: { _ in
+            completion?()
+        }
     }
     
     /// reloadData禁用动画
     public func reloadDataWithoutAnimation() {
-        base.fw_reloadDataWithoutAnimation()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        base.reloadData()
+        CATransaction.commit()
     }
     
     /// 判断indexPath是否有效
     public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
-        return base.fw_isValidIndexPath(indexPath)
+        guard indexPath.section >= 0, indexPath.item >= 0 else { return false }
+        guard indexPath.section < base.numberOfSections else { return false }
+        return indexPath.item < base.numberOfItems(inSection: indexPath.section)
     }
     
     /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
     public func layoutFrame(at indexPath: IndexPath, to view: UIView?) -> CGRect? {
-        return base.fw_layoutFrame(at: indexPath, to: view)
+        guard var layoutFrame = base.layoutAttributesForItem(at: indexPath)?.frame else {
+            return nil
+        }
+        
+        layoutFrame = base.convert(layoutFrame, to: view)
+        return layoutFrame
     }
     
     /// 添加拖动排序手势，需结合canMove、moveItem、targetIndexPath使用
     @discardableResult
     public func addMovementGesture(customBlock: ((UILongPressGestureRecognizer) -> Bool)? = nil) -> UILongPressGestureRecognizer {
-        return base.fw_addMovementGesture(customBlock: customBlock)
+        movementGestureBlock = customBlock
+        
+        let movementGesture = UILongPressGestureRecognizer(target: base, action: #selector(UICollectionView.innerMovementGestureAction(_:)))
+        base.addGestureRecognizer(movementGesture)
+        return movementGesture
+    }
+    
+    fileprivate var movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
+        get { return property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
+        set { setPropertyCopy(newValue, forName: #function) }
     }
     
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
     public func willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        base.fw_willDisplay(cell, at: indexPath, key: key, exposure: exposure)
+        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
+        let block: (UICollectionViewCell) -> Void = { [weak base] cell in
+            let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
+            guard base?.visibleCells.contains(cell) ?? false,
+                  base?.indexPath(for: cell) != nil,
+                  identifier != previousIdentifier else { return }
+            
+            exposure()
+            cell.fw.setPropertyCopy(identifier, forName: "willDisplayIdentifier")
+        }
+        cell.fw.setPropertyCopy(block, forName: "willDisplay")
+        
+        NSObject.cancelPreviousPerformRequests(withTarget: base, selector: #selector(UICollectionView.innerWillDisplay(_:)), object: cell)
+        base.perform(#selector(UICollectionView.innerWillDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
     }
 }
 
@@ -2028,12 +2604,19 @@ extension Wrapper where Base: UICollectionView {
 extension Wrapper where Base: UICollectionViewCell {
     /// 获取当前所属collectionView
     public weak var collectionView: UICollectionView? {
-        return base.fw_collectionView
+        var superview = base.superview
+        while superview != nil {
+            if let collectionView = superview as? UICollectionView {
+                return collectionView
+            }
+            superview = superview?.superview
+        }
+        return nil
     }
 
     /// 获取当前显示indexPath
     public var indexPath: IndexPath? {
-        return base.fw_indexPath
+        return collectionView?.indexPath(for: base)
     }
     
     /// 执行所属collectionView的批量更新
@@ -2041,7 +2624,15 @@ extension Wrapper where Base: UICollectionViewCell {
         _ updates: ((UICollectionView, IndexPath?) -> Void)?,
         completion: ((UICollectionView, IndexPath?, Bool) -> Void)? = nil
     ) {
-        base.fw_performBatchUpdates(updates, completion: completion)
+        guard let collectionView = collectionView else { return }
+        
+        collectionView.performBatchUpdates(updates != nil ? { [weak base] in
+            let indexPath = base != nil ? collectionView.indexPath(for: base!) : nil
+            updates?(collectionView, indexPath)
+        } : nil, completion: completion != nil ? { [weak base] finished in
+            let indexPath = base != nil ? collectionView.indexPath(for: base!) : nil
+            completion?(collectionView, indexPath, finished)
+        } : nil)
     }
 }
 
@@ -2051,84 +2642,160 @@ extension Wrapper where Base: UISearchBar {
     ///
     /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
     public var contentInset: UIEdgeInsets {
-        get { return base.fw_contentInset }
-        set { base.fw_contentInset = newValue }
+        get {
+            if let value = property(forName: "contentInset") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "contentInset")
+            base.setNeedsLayout()
+        }
     }
 
     /// 自定义取消按钮边距，未设置时为系统默认
     public var cancelButtonInset: UIEdgeInsets {
-        get { return base.fw_cancelButtonInset }
-        set { base.fw_cancelButtonInset = newValue }
+        get {
+            if let value = property(forName: "cancelButtonInset") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "cancelButtonInset")
+            base.setNeedsLayout()
+        }
     }
 
     /// 输入框内部视图
     public var textField: UISearchTextField {
-        return base.fw_textField
+        return base.searchTextField
     }
 
     /// 取消按钮内部视图，showsCancelButton开启后才存在
     public weak var cancelButton: UIButton? {
-        return base.fw_cancelButton
+        return invokeGetter("cancelButton") as? UIButton
     }
     
     /// 输入框的文字颜色
     public var textColor: UIColor? {
-        get { return base.fw_textColor }
-        set { base.fw_textColor = newValue }
+        get {
+            property(forName: #function) as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: #function)
+            base.searchTextField.textColor = newValue
+        }
     }
     
     /// 输入框的字体，会同时影响placeholder的字体
     public var font: UIFont? {
-        get { return base.fw_font }
-        set { base.fw_font = newValue }
+        get {
+            property(forName: #function) as? UIFont
+        }
+        set {
+            setProperty(newValue, forName: #function)
+            if let placeholder = base.placeholder {
+                base.placeholder = placeholder
+            }
+            base.searchTextField.font = newValue
+        }
     }
     
     /// 输入框内placeholder的颜色
     public var placeholderColor: UIColor? {
-        get { return base.fw_placeholderColor }
-        set { base.fw_placeholderColor = newValue }
+        get {
+            property(forName: #function) as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: #function)
+            if let placeholder = base.placeholder {
+                base.placeholder = placeholder
+            }
+        }
     }
 
     /// 设置整体背景色
     public var backgroundColor: UIColor? {
-        get { return base.fw_backgroundColor }
-        set { base.fw_backgroundColor = newValue }
+        get {
+            return property(forName: "backgroundColor") as? UIColor
+        }
+        set {
+            setProperty(newValue, forName: "backgroundColor")
+            base.backgroundImage = UIImage.fw.image(color: newValue)
+        }
     }
 
     /// 设置输入框背景色
     public var textFieldBackgroundColor: UIColor? {
-        get { return base.fw_textFieldBackgroundColor }
-        set { base.fw_textFieldBackgroundColor = newValue }
+        get { textField.backgroundColor }
+        set { textField.backgroundColor = newValue }
     }
 
     /// 设置搜索图标离左侧的偏移位置，非居中时生效
     public var searchIconOffset: CGFloat {
-        get { return base.fw_searchIconOffset }
-        set { base.fw_searchIconOffset = newValue }
+        get {
+            if let value = propertyNumber(forName: "searchIconOffset") {
+                return value.doubleValue
+            }
+            return base.positionAdjustment(for: .search).horizontal
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue), forName: "searchIconOffset")
+            base.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
+        }
     }
     
     /// 设置清空图标离右侧的偏移位置
     public var clearIconOffset: CGFloat {
-        get { return base.fw_clearIconOffset }
-        set { base.fw_clearIconOffset = newValue }
+        get {
+            if let value = propertyNumber(forName: "clearIconOffset") {
+                return value.doubleValue
+            }
+            return base.positionAdjustment(for: .clear).horizontal
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue), forName: "clearIconOffset")
+            base.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .clear)
+        }
     }
 
     /// 设置搜索文本离左侧图标的偏移位置
     public var searchTextOffset: CGFloat {
-        get { return base.fw_searchTextOffset }
-        set { base.fw_searchTextOffset = newValue }
+        get { return base.searchTextPositionAdjustment.horizontal }
+        set { base.searchTextPositionAdjustment = UIOffset(horizontal: newValue, vertical: 0) }
     }
 
     /// 设置TextField搜索图标(placeholder)是否居中，否则居左
     public var searchIconCenter: Bool {
-        get { return base.fw_searchIconCenter }
-        set { base.fw_searchIconCenter = newValue }
+        get {
+            return propertyBool(forName: "searchIconCenter")
+        }
+        set {
+            setPropertyBool(newValue, forName: "searchIconCenter")
+            base.setNeedsLayout()
+            base.layoutIfNeeded()
+        }
     }
 
     /// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
     public var forceCancelButtonEnabled: Bool {
-        get { return base.fw_forceCancelButtonEnabled }
-        set { base.fw_forceCancelButtonEnabled = newValue }
+        get {
+            return propertyBool(forName: "forceCancelButtonEnabled")
+        }
+        set {
+            setPropertyBool(newValue, forName: "forceCancelButtonEnabled")
+            guard let cancelButton = cancelButton else { return }
+            if newValue {
+                cancelButton.isEnabled = true
+                cancelButton.fw.observeProperty(\.isEnabled) { object, _ in
+                    if !object.isEnabled { object.isEnabled = true }
+                }
+            } else {
+                cancelButton.fw.unobserveProperty(\.isEnabled)
+            }
+        }
     }
 }
 
@@ -2136,63 +2803,97 @@ extension Wrapper where Base: UISearchBar {
 extension Wrapper where Base: UIViewController {
     /// 判断当前控制器是否是头部控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
     public var isHead: Bool {
-        return base.fw_isHead
+        return base.navigationController == nil ||
+            base.navigationController?.viewControllers.first == base
     }
     
     /// 判断当前控制器是否是尾部控制器。如果是导航栏的最后一个控制器或者不含有导航栏，则返回YES
     public var isTail: Bool {
-        return base.fw_isTail
+        return base.navigationController == nil ||
+            base.navigationController?.viewControllers.last == base
     }
 
     /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
     public var isChild: Bool {
-        return base.fw_isChild
+        if let parent = base.parent,
+           !(parent is UINavigationController),
+           !(parent is UITabBarController) {
+            return true
+        }
+        return false
     }
 
     /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
     public var isPresented: Bool {
-        return base.fw_isPresented
+        var viewController: UIViewController = base
+        if let navigationController = base.navigationController {
+            if navigationController.viewControllers.first != base { return false }
+            viewController = navigationController
+        }
+        return viewController.presentingViewController?.presentedViewController == viewController
     }
 
     /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
     public var isPageSheet: Bool {
-        return base.fw_isPageSheet
+        let controller: UIViewController = base.navigationController ?? base
+        if controller.presentingViewController == nil { return false }
+        let style = controller.modalPresentationStyle
+        if style == .automatic || style == .pageSheet { return true }
+        return false
     }
 
     /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
     public var isViewVisible: Bool {
-        return base.fw_isViewVisible
+        return base.isViewLoaded && base.view.window != nil
     }
     
     /// 控制器是否可见，视图可见、尾部控制器、且不含presented控制器时为YES
     public var isVisible: Bool {
-        return base.fw_isVisible
+        return isViewVisible && isTail && base.presentedViewController == nil
     }
     
     /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
     public var ancestorView: UIView {
-        return base.fw_ancestorView
+        if let navigationController = base.tabBarController?.navigationController {
+            return navigationController.view
+        } else if let tabBarController = base.tabBarController {
+            return tabBarController.view
+        } else if let navigationController = base.navigationController {
+            return navigationController.view
+        } else {
+            return base.view
+        }
     }
 
     /// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
     public var isDataLoaded: Bool {
-        get { return base.fw_isDataLoaded }
-        set { base.fw_isDataLoaded = newValue }
+        get { return propertyBool(forName: "isDataLoaded") }
+        set { setPropertyBool(newValue, forName: "isDataLoaded") }
     }
     
     /// 移除子控制器，解决不能触发viewWillAppear等的bug
     public func removeChild(_ viewController: UIViewController) {
-        base.fw_removeChild(viewController)
+        viewController.willMove(toParent: nil)
+        viewController.removeFromParent()
+        viewController.view.removeFromSuperview()
     }
     
     /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
     public func addChild(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        base.fw_addChild(viewController, layout: layout)
+        addChild(viewController, in: nil, layout: layout)
     }
 
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
     public func addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
-        base.fw_addChild(viewController, in: view, layout: layout)
+        base.addChild(viewController)
+        let superview: UIView = view ?? base.view
+        superview.addSubview(viewController.view)
+        if layout != nil {
+            layout?(viewController.view)
+        } else {
+            viewController.view.fw.pinEdges()
+        }
+        viewController.didMove(toParent: base)
     }
     
     /// 弹出popover控制器
@@ -2204,7 +2905,18 @@ extension Wrapper where Base: UIViewController {
         animated: Bool = true,
         completion: (() -> Void)? = nil
     ) {
-        base.fw_presentPopover(popover, sourcePoint: sourcePoint, size: size, delegate: delegate, animated: animated, completion: completion)
+        popover.modalPresentationStyle = .popover
+        if let size = size {
+            popover.preferredContentSize = size
+        }
+        
+        if let presentation = popover.popoverPresentationController {
+            presentation.sourceView = base.view
+            presentation.sourceRect = CGRect(origin: sourcePoint, size: .zero)
+            presentation.delegate = delegate
+        }
+        
+        base.present(popover, animated: animated, completion: completion)
     }
 }
 
@@ -2294,599 +3006,56 @@ extension UIControl {
 }
 
 // MARK: - UIButton+UIKit
-@_spi(FW) extension UIButton {
+extension UIButton {
     
-    /// 全局自定义按钮高亮时的alpha配置，默认0.5
-    public static var fw_highlightedAlpha: CGFloat = 0.5
-    
-    /// 全局自定义按钮禁用时的alpha配置，默认0.3
-    public static var fw_disabledAlpha: CGFloat = 0.3
-    
-    /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
-    public var fw_disabledAlpha: CGFloat {
-        get {
-            return fw.propertyDouble(forName: "fw_disabledAlpha")
-        }
-        set {
-            fw.setPropertyDouble(newValue, forName: "fw_disabledAlpha")
-            if newValue > 0 {
-                self.alpha = self.isEnabled ? 1 : newValue
-            }
-        }
-    }
-
-    /// 自定义按钮高亮时的alpha，如0.5，默认0不生效
-    public var fw_highlightedAlpha: CGFloat {
-        get {
-            return fw.propertyDouble(forName: "fw_highlightedAlpha")
-        }
-        set {
-            fw.setPropertyDouble(newValue, forName: "fw_highlightedAlpha")
-            if self.isEnabled && newValue > 0 {
-                self.alpha = self.isHighlighted ? newValue : 1
-            }
-        }
-    }
-    
-    /// 自定义按钮禁用状态改变时的句柄，默认nil
-    public var fw_disabledChanged: ((UIButton, Bool) -> Void)? {
-        get {
-            return fw.property(forName: "fw_disabledChanged") as? (UIButton, Bool) -> Void
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_disabledChanged")
-            if newValue != nil {
-                newValue?(self, self.isEnabled)
-            }
-        }
-    }
-
-    /// 自定义按钮高亮状态改变时的句柄，默认nil
-    public var fw_highlightedChanged: ((UIButton, Bool) -> Void)? {
-        get {
-            return fw.property(forName: "fw_highlightedChanged") as? (UIButton, Bool) -> Void
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_highlightedChanged")
-            if self.isEnabled && newValue != nil {
-                newValue?(self, self.isHighlighted)
-            }
-        }
-    }
-
-    /// 快速设置文本按钮
-    public func fw_setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
-        if let title = title { self.setTitle(title, for: .normal) }
-        if let font = font { self.titleLabel?.font = font }
-        if let titleColor = titleColor { self.setTitleColor(titleColor, for: .normal) }
-    }
-
-    /// 快速设置文本
-    public func fw_setTitle(_ title: String?) {
-        self.setTitle(title, for: .normal)
-    }
-
-    /// 快速设置图片
-    public func fw_setImage(_ image: UIImage?) {
-        self.setImage(image, for: .normal)
-    }
-
-    /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
-    ///
-    /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
-    /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
-    public func fw_setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
-        let imageSize = self.imageView?.image?.size ?? .zero
-        let labelSize = self.titleLabel?.intrinsicContentSize ?? .zero
-        switch edge {
-        case .left:
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing / 2.0, bottom: 0, right: spacing / 2.0)
-            self.titleEdgeInsets = UIEdgeInsets(top: 0, left: spacing / 2.0, bottom: 0, right: -spacing / 2.0)
-        case .right:
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: labelSize.width + spacing / 2.0, bottom: 0, right: -labelSize.width - spacing / 2.0)
-            self.titleEdgeInsets = UIEdgeInsets(top: 0, left: -imageSize.width - spacing / 2.0, bottom: 0, right: imageSize.width + spacing / 2.0)
-        case .top:
-            self.imageEdgeInsets = UIEdgeInsets(top: -labelSize.height - spacing / 2.0, left: 0, bottom: spacing / 2.0, right: -labelSize.width)
-            self.titleEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: -imageSize.width, bottom: -imageSize.height - spacing / 2.0, right: 0)
-        case .bottom:
-            self.imageEdgeInsets = UIEdgeInsets(top: spacing / 2.0, left: 0, bottom: -labelSize.height - spacing / 2.0, right: -labelSize.width)
-            self.titleEdgeInsets = UIEdgeInsets(top: -imageSize.height - spacing / 2.0, left: -imageSize.width, bottom: spacing / 2.0, right: 0)
-        default:
-            break
-        }
-    }
-    
-    /// 图文模式时自适应粗体文本，解决图文按钮文本显示不全(...)的兼容性问题
-    public func fw_adjustBoldText() {
-        titleLabel?.lineBreakMode = .byClipping
-    }
-    
-    /// 设置状态背景色
-    public func fw_setBackgroundColor(_ backgroundColor: UIColor?, for state: UIControl.State) {
-        var image: UIImage?
-        if let backgroundColor = backgroundColor {
-            let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-            UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
-            let context = UIGraphicsGetCurrentContext()
-            context?.setFillColor(backgroundColor.cgColor)
-            context?.fill(rect)
-            image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-        }
-        self.setBackgroundImage(image, for: state)
-    }
-    
-    /// 快速创建文本按钮
-    public static func fw_button(title: String?, font: UIFont?, titleColor: UIColor?) -> Self {
-        let button = Self(type: .custom)
-        button.fw_setTitle(title, font: font, titleColor: titleColor)
-        return button
-    }
-
-    /// 快速创建图片按钮
-    public static func fw_button(image: UIImage?) -> Self {
-        let button = Self(type: .custom)
-        button.setImage(image, for: .normal)
-        return button
-    }
-    
-    /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
-    @discardableResult
-    public func fw_startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSourceTimer {
-        return self.fw.startCountDown(seconds) { [weak self] countDown in
-            // 先设置titleLabel，再设置title，防止闪烁
-            if countDown <= 0 {
-                self?.titleLabel?.text = title
-                self?.setTitle(title, for: .normal)
-                self?.isEnabled = true
-            } else {
-                let waitText = String(format: waitTitle, countDown)
-                self?.titleLabel?.text = waitText
-                self?.setTitle(waitText, for: .normal)
-                self?.isEnabled = false
-            }
-        }
-    }
+    fileprivate static var innerHighlightedAlpha: CGFloat = 0.5
+    fileprivate static var innerDisabledAlpha: CGFloat = 0.3
     
 }
 
 // MARK: - UIScrollView+UIKit
-@_spi(FW) extension UIScrollView {
+extension UIScrollView {
     
-    /// 判断当前scrollView内容是否足够滚动
-    public var fw_canScroll: Bool {
-        return fw_canScrollVertical || fw_canScrollHorizontal
-    }
-
-    /// 判断当前的scrollView内容是否足够水平滚动
-    public var fw_canScrollHorizontal: Bool {
-        if self.bounds.size.width <= 0 { return false }
-        return self.contentSize.width + self.adjustedContentInset.left + self.adjustedContentInset.right > CGRectGetWidth(self.bounds)
-    }
-
-    /// 判断当前的scrollView内容是否足够纵向滚动
-    public var fw_canScrollVertical: Bool {
-        if self.bounds.size.height <= 0 { return false }
-        return self.contentSize.height + self.adjustedContentInset.top + self.adjustedContentInset.bottom > CGRectGetHeight(self.bounds)
-    }
-
-    /// 当前scrollView滚动到指定边
-    public func fw_scroll(to edge: UIRectEdge, animated: Bool = true) {
-        let contentOffset = fw_contentOffset(of: edge)
-        self.setContentOffset(contentOffset, animated: animated)
-    }
-
-    /// 是否已滚动到指定边
-    public func fw_isScroll(to edge: UIRectEdge) -> Bool {
-        let contentOffset = fw_contentOffset(of: edge)
-        switch edge {
-        case .top:
-            return self.contentOffset.y <= contentOffset.y
-        case .left:
-            return self.contentOffset.x <= contentOffset.x
-        case .bottom:
-            return self.contentOffset.y >= contentOffset.y
-        case .right:
-            return self.contentOffset.x >= contentOffset.x
-        default:
-            return false
-        }
-    }
-
-    /// 获取当前的scrollView滚动到指定边时的contentOffset(包含contentInset)
-    public func fw_contentOffset(of edge: UIRectEdge) -> CGPoint {
-        var contentOffset = self.contentOffset
-        switch edge {
-        case .top:
-            contentOffset.y = -self.adjustedContentInset.top
-        case .left:
-            contentOffset.x = -self.adjustedContentInset.left
-        case .bottom:
-            contentOffset.y = self.contentSize.height - self.bounds.size.height + self.adjustedContentInset.bottom
-        case .right:
-            contentOffset.x = self.contentSize.width - self.bounds.size.width + self.adjustedContentInset.right
-        default:
-            break
-        }
-        return contentOffset
-    }
-
-    /// 总页数，自动识别翻页方向
-    public var fw_totalPage: Int {
-        if fw_canScrollVertical {
-            return Int(ceil(self.contentSize.height / self.frame.size.height))
-        } else {
-            return Int(ceil(self.contentSize.width / self.frame.size.width))
-        }
-    }
-
-    /// 当前页数，不支持动画，自动识别翻页方向
-    public var fw_currentPage: Int {
-        get {
-            if fw_canScrollVertical {
-                let pageHeight = self.frame.size.height
-                return Int(floor((self.contentOffset.y - pageHeight / 2) / pageHeight)) + 1
-            } else {
-                let pageWidth = self.frame.size.width
-                return Int(floor((self.contentOffset.x - pageWidth / 2) / pageWidth)) + 1
-            }
-        }
-        set {
-            if fw_canScrollVertical {
-                let offset = self.frame.size.height * CGFloat(newValue)
-                self.contentOffset = CGPoint(x: 0, y: offset)
-            } else {
-                let offset = self.frame.size.width * CGFloat(newValue)
-                self.contentOffset = CGPoint(x: offset, y: 0)
-            }
-        }
-    }
-
-    /// 设置当前页数，支持动画，自动识别翻页方向
-    public func fw_setCurrentPage(_ page: Int, animated: Bool = true) {
-        if fw_canScrollVertical {
-            let offset = self.frame.size.height * CGFloat(page)
-            self.setContentOffset(CGPoint(x: 0, y: offset), animated: animated)
-        } else {
-            let offset = self.frame.size.width * CGFloat(page)
-            self.setContentOffset(CGPoint(x: offset, y: 0), animated: animated)
-        }
-    }
-
-    /// 是否是最后一页，自动识别翻页方向
-    public var fw_isLastPage: Bool {
-        return self.fw_currentPage == self.fw_totalPage - 1
-    }
-    
-    /// 快捷设置contentOffset.x
-    public var fw_contentOffsetX: CGFloat {
-        get { return self.contentOffset.x }
-        set { self.contentOffset = CGPoint(x: newValue, y: self.contentOffset.y) }
-    }
-
-    /// 快捷设置contentOffset.y
-    public var fw_contentOffsetY: CGFloat {
-        get { return self.contentOffset.y }
-        set { self.contentOffset = CGPoint(x: self.contentOffset.x, y: newValue) }
-    }
-    
-    /// 滚动视图完整图片截图
-    public var fw_contentSnapshot: UIImage? {
-        let size = contentSize
-        guard size != .zero else { return nil }
-
-        return UIGraphicsImageRenderer(size: size).image { context in
-            let previousFrame = frame
-            frame = CGRect(origin: frame.origin, size: size)
-            layer.render(in: context.cgContext)
-            frame = previousFrame
-        }
-    }
-    
-    /// 内容视图，子视图需添加到本视图，布局约束完整时可自动滚动
-    ///
-    /// 当启用等比例缩放布局、且scrollView和contentView都固定高度时，
-    /// 为防止浮点数误差导致scrollView拖拽时出现纵向可滚动的兼容问题，解决方案如下：
-    /// 1. 设置scrollView属性isDirectionalLockEnabled为true
-    /// 2. 设置布局高度为固定ceil高度，如：FW.fixed(ceil(FW.relative(40)))
-    public var fw_contentView: UIView {
-        if let contentView = fw.property(forName: "fw_contentView") as? UIView {
-            return contentView
-        } else {
-            let contentView = UIView()
-            fw.setProperty(contentView, forName: "fw_contentView")
-            self.addSubview(contentView)
-            contentView.fw.pinEdges()
-            return contentView
-        }
-    }
-    
-    /**
-     设置自动布局视图悬停到指定父视图固定位置，在scrollViewDidScroll:中调用即可
-     
-     @param view 需要悬停的视图，须占满fromSuperview
-     @param fromSuperview 起始的父视图，须是scrollView的子视图
-     @param toSuperview 悬停的目标视图，须是scrollView的父级视图，一般控制器self.view
-     @param toPosition 需要悬停的目标位置，相对于toSuperview的originY位置
-     @return 相对于悬浮位置的距离，可用来设置导航栏透明度等
-     */
-    @discardableResult
-    public func fw_hoverView(_ view: UIView, fromSuperview: UIView, toSuperview: UIView, toPosition: CGFloat) -> CGFloat {
-        let distance = (fromSuperview.superview?.convert(fromSuperview.frame.origin, to: toSuperview) ?? .zero).y - toPosition
-        if distance <= 0 {
-            if view.superview != toSuperview {
-                view.removeFromSuperview()
-                toSuperview.addSubview(view)
-                view.fw.pinEdge(toSuperview: .left, inset: 0)
-                view.fw.pinEdge(toSuperview: .top, inset: toPosition)
-                view.fw.setDimensions(view.bounds.size)
-            }
-        } else {
-            if view.superview != fromSuperview {
-                view.removeFromSuperview()
-                fromSuperview.addSubview(view)
-                view.fw.pinEdges()
-            }
-        }
-        return distance
-    }
-    
-    /// 是否开始识别pan手势
-    public var fw_shouldBegin: ((UIGestureRecognizer) -> Bool)? {
-        get {
-            return fw.property(forName: "fw_shouldBegin") as? (UIGestureRecognizer) -> Bool
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_shouldBegin")
-            FrameworkAutoloader.swizzleUIKitScrollView()
-        }
-    }
-
-    /// 是否允许同时识别多个手势
-    public var fw_shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get {
-            return fw.property(forName: "fw_shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_shouldRecognizeSimultaneously")
-            FrameworkAutoloader.swizzleUIKitScrollView()
-        }
-    }
-
-    /// 是否另一个手势识别失败后，才能识别pan手势
-    public var fw_shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get {
-            return fw.property(forName: "fw_shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_shouldRequireFailure")
-            FrameworkAutoloader.swizzleUIKitScrollView()
-        }
-    }
-
-    /// 是否pan手势识别失败后，才能识别另一个手势
-    public var fw_shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
-        get {
-            return fw.property(forName: "fw_shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
-        }
-        set {
-            fw.setPropertyCopy(newValue, forName: "fw_shouldBeRequiredToFail")
-            FrameworkAutoloader.swizzleUIKitScrollView()
-        }
-    }
-    
-    @objc fileprivate func fw_swizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let shouldBlock = self.fw_shouldBegin {
+    @objc fileprivate func innerSwizzleGestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = fw.shouldBegin {
             return shouldBlock(gestureRecognizer)
         }
         
-        return fw_swizzleGestureRecognizerShouldBegin(gestureRecognizer)
+        return innerSwizzleGestureRecognizerShouldBegin(gestureRecognizer)
     }
     
-    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let shouldBlock = self.fw_shouldRecognizeSimultaneously {
+    @objc fileprivate func innerSwizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = fw.shouldRecognizeSimultaneously {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+        return innerSwizzleGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
     }
     
-    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let shouldBlock = self.fw_shouldRequireFailure {
+    @objc fileprivate func innerSwizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = fw.shouldRequireFailure {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
+        return innerSwizzleGestureRecognizer(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer)
     }
     
-    @objc fileprivate func fw_swizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let shouldBlock = self.fw_shouldBeRequiredToFail {
+    @objc fileprivate func innerSwizzleGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shouldBlock = fw.shouldBeRequiredToFail {
             return shouldBlock(gestureRecognizer, otherGestureRecognizer)
         }
         
-        return fw_swizzleGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
-    }
-    
-}
-
-// MARK: - UIGestureRecognizer+UIKit
-/// gestureRecognizerShouldBegin：是否继续进行手势识别，默认YES
-/// shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
-/// shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
-/// shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
-@_spi(FW) extension UIGestureRecognizer {
-    
-    /// 获取手势直接作用的view，不同于view，此处是view的subview
-    public weak var fw_targetView: UIView? {
-        return view?.hitTest(location(in: view), with: nil)
-    }
-
-    /// 是否正在拖动中：Began || Changed
-    public var fw_isTracking: Bool {
-        return state == .began || state == .changed
-    }
-
-    /// 是否是激活状态: isEnabled && (Began || Changed)
-    public var fw_isActive: Bool {
-        return isEnabled && (state == .began || state == .changed)
-    }
-    
-    /// 判断手势是否正作用于指定视图
-    public func fw_hitTest(view: UIView?) -> Bool {
-        return view?.hitTest(location(in: view), with: nil) != nil
-    }
-    
-}
-
-// MARK: - UIPanGestureRecognizer+UIKit
-@_spi(FW) extension UIPanGestureRecognizer {
-    
-    /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
-    public var fw_swipeDirection: UISwipeGestureRecognizer.Direction {
-        let transition = self.translation(in: self.view)
-        if abs(transition.x) > abs(transition.y) {
-            if transition.x < 0 {
-                return .left
-            } else if transition.x > 0 {
-                return .right
-            }
-        } else {
-            if transition.y > 0 {
-                return .down
-            } else if transition.y < 0 {
-                return .up
-            }
-        }
-        return []
-    }
-
-    /// 当前滑动进度，滑动绝对值相对于手势视图的宽或高
-    public var fw_swipePercent: CGFloat {
-        guard let view = self.view,
-              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
-        var percent: CGFloat = 0
-        let transition = self.translation(in: view)
-        if abs(transition.x) > abs(transition.y) {
-            percent = abs(transition.x) / view.bounds.width
-        } else {
-            percent = abs(transition.y) / view.bounds.height
-        }
-        return max(0, min(percent, 1))
-    }
-
-    /// 计算指定方向的滑动进度
-    public func fw_swipePercent(of direction: UISwipeGestureRecognizer.Direction) -> CGFloat {
-        guard let view = self.view,
-              view.bounds.width > 0, view.bounds.height > 0 else { return 0 }
-        var percent: CGFloat = 0
-        let transition = self.translation(in: view)
-        switch direction {
-        case .left:
-            percent = -transition.x / view.bounds.width
-        case .right:
-            percent = transition.x / view.bounds.width
-        case .up:
-            percent = -transition.y / view.bounds.height
-        case .down:
-            percent = transition.y / view.bounds.height
-        default:
-            percent = transition.y / view.bounds.height
-        }
-        return max(0, min(percent, 1))
-    }
-    
-}
-
-// MARK: - UIPageControl+UIKit
-@_spi(FW) extension UIPageControl {
-    
-    /// 自定义圆点大小，默认{10, 10}
-    public var fw_preferredSize: CGSize {
-        get {
-            var size = self.bounds.size
-            if size.height <= 0 {
-                size = self.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
-                if size.height <= 0 { size = CGSize(width: 10, height: 10) }
-            }
-            return size
-        }
-        set {
-            let height = self.fw_preferredSize.height
-            let scale = newValue.height / height
-            self.transform = CGAffineTransform(scaleX: scale, y: scale)
-        }
-    }
-    
-}
-
-// MARK: - UISlider+UIKit
-@_spi(FW) extension UISlider {
-    
-    /// 中间圆球的大小，默认zero
-    public var fw_thumbSize: CGSize {
-        get {
-            if let value = fw.property(forName: "fw_thumbSize") as? NSValue {
-                return value.cgSizeValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(cgSize: newValue), forName: "fw_thumbSize")
-            fw_updateThumbImage()
-        }
-    }
-
-    /// 中间圆球的颜色，默认nil
-    public var fw_thumbColor: UIColor? {
-        get {
-            return fw.property(forName: "fw_thumbColor") as? UIColor
-        }
-        set {
-            fw.setProperty(newValue, forName: "fw_thumbColor")
-            self.fw_updateThumbImage()
-        }
-    }
-    
-    private func fw_updateThumbImage() {
-        let thumbSize = self.fw_thumbSize
-        guard thumbSize.width > 0, thumbSize.height > 0 else { return }
-        let thumbColor = self.fw_thumbColor ?? (self.tintColor ?? .white)
-        let thumbImage = UIImage.fw.image(size: thumbSize) { context in
-            let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: thumbSize.width, height: thumbSize.height))
-            context.setFillColor(thumbColor.cgColor)
-            path.fill()
-        }
-        
-        self.setThumbImage(thumbImage, for: .normal)
-        self.setThumbImage(thumbImage, for: .highlighted)
+        return innerSwizzleGestureRecognizer(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer)
     }
     
 }
 
 // MARK: - UISwitch+UIKit
-@_spi(FW) extension UISwitch {
+extension UISwitch {
     
-    /// 自定义尺寸大小，默认{51,31}
-    public var fw_preferredSize: CGSize {
+    @objc dynamic fileprivate var innerOffTintColor: UIColor? {
         get {
-            var size = self.bounds.size
-            if size.height <= 0 {
-                size = self.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
-                if size.height <= 0 { size = CGSize(width: 51, height: 31) }
-            }
-            return size
-        }
-        set {
-            let height = self.fw_preferredSize.height
-            let scale = newValue.height / height
-            self.transform = CGAffineTransform(scaleX: scale, y: scale)
-        }
-    }
-    
-    /// 自定义关闭时除圆点外的背景色
-    @objc dynamic public var fw_offTintColor: UIColor? {
-        get {
-            return fw.property(forName: "fw_offTintColor") as? UIColor
+            return fw.property(forName: "offTintColor") as? UIColor
         }
         set {
             let switchWellView = value(forKeyPath: "_visualElement._switchWellView") as? UIView
@@ -2896,710 +3065,29 @@ extension UIControl {
                 switchWellView?.fw.setProperty(defaultOffTintColor, forName: "defaultOffTintColor")
             }
             switchWellView?.backgroundColor = newValue ?? defaultOffTintColor
-            fw.setProperty(newValue, forName: "fw_offTintColor")
+            fw.setProperty(newValue, forName: "offTintColor")
         }
-    }
-    
-}
-
-// MARK: - UITextField+UIKit
-@_spi(FW) extension UITextField {
-    
-    fileprivate class InputTarget {
-        weak var textInput: (UIView & UITextInput)?
-        var maxLength: Int = 0
-        var maxUnicodeLength: Int = 0
-        var textChangedBlock: ((String) -> Void)?
-        var autoCompleteInterval: TimeInterval = 0.5
-        var autoCompleteTimestamp: TimeInterval = 0
-        var autoCompleteBlock: ((String) -> Void)?
-        
-        private var shouldCheckLength: Bool {
-            if let markedTextRange = textInput?.markedTextRange,
-               textInput?.position(from: markedTextRange.start, offset: 0) != nil {
-                return false
-            }
-            return true
-        }
-        private var textValue: String? {
-            get {
-                if let textField = textInput as? UITextField {
-                    return textField.text
-                } else if let textView = textInput as? UITextView {
-                    return textView.text
-                }
-                return nil
-            }
-            set {
-                if let textField = textInput as? UITextField {
-                    textField.text = newValue
-                } else if let textView = textInput as? UITextView {
-                    textView.text = newValue
-                }
-            }
-        }
-
-        init(textInput: (UIView & UITextInput)?) {
-            self.textInput = textInput
-        }
-
-        func textLengthChanged() {
-            if maxLength > 0, shouldCheckLength {
-                if (textValue?.count ?? 0) > maxLength {
-                    textValue = textValue?.fw.substring(to: maxLength)
-                }
-            }
-
-            if maxUnicodeLength > 0, shouldCheckLength {
-                if (textValue?.fw.unicodeLength ?? 0) > maxUnicodeLength {
-                    textValue = textValue?.fw.unicodeSubstring(maxUnicodeLength)
-                }
-            }
-        }
-        
-        func filterText(_ text: String) -> String {
-            var filterText = text
-            if maxLength > 0, shouldCheckLength {
-                if filterText.count > maxLength {
-                    filterText = filterText.fw.substring(to: maxLength)
-                }
-            }
-
-            if maxUnicodeLength > 0, shouldCheckLength {
-                if filterText.fw.unicodeLength > maxUnicodeLength {
-                    filterText = filterText.fw.unicodeSubstring(maxUnicodeLength)
-                }
-            }
-            return filterText
-        }
-
-        @objc func textChangedAction() {
-            textLengthChanged()
-            
-            if textChangedBlock != nil {
-                let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                textChangedBlock?(inputText)
-            }
-
-            if autoCompleteBlock != nil {
-                autoCompleteTimestamp = Date().timeIntervalSince1970
-                let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                if inputText.isEmpty {
-                    autoCompleteBlock?("")
-                } else {
-                    let currentTimestamp = autoCompleteTimestamp
-                    DispatchQueue.main.asyncAfter(deadline: .now() + autoCompleteInterval) { [weak self] in
-                        if currentTimestamp == self?.autoCompleteTimestamp {
-                            self?.autoCompleteBlock?(inputText)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    /// 最大字数限制，0为无限制，二选一
-    public var fw_maxLength: Int {
-        get { return fw_inputTarget(false)?.maxLength ?? 0 }
-        set { fw_inputTarget(true)?.maxLength = newValue }
-    }
-
-    /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-    public var fw_maxUnicodeLength: Int {
-        get { return fw_inputTarget(false)?.maxUnicodeLength ?? 0 }
-        set { fw_inputTarget(true)?.maxUnicodeLength = newValue }
-    }
-    
-    /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return fw_inputTarget(false)?.textChangedBlock }
-        set { fw_inputTarget(true)?.textChangedBlock = newValue }
-    }
-
-    /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-    public func fw_textLengthChanged() {
-        fw_inputTarget(false)?.textLengthChanged()
-    }
-
-    /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
-    public func fw_filterText(_ text: String) -> String {
-        if let target = fw_inputTarget(false) {
-            return target.filterText(text)
-        }
-        return text
-    }
-
-    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
-    public var fw_autoCompleteInterval: TimeInterval {
-        get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
-    }
-
-    /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
-    public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return fw_inputTarget(false)?.autoCompleteBlock }
-        set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
-    }
-    
-    private func fw_inputTarget(_ lazyload: Bool) -> InputTarget? {
-        if let target = fw.property(forName: "fw_inputTarget") as? InputTarget {
-            return target
-        } else if lazyload {
-            let target = InputTarget(textInput: self)
-            self.addTarget(target, action: #selector(InputTarget.textChangedAction), for: .editingChanged)
-            fw.setProperty(target, forName: "fw_inputTarget")
-            return target
-        }
-        return nil
-    }
-    
-    /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
-    public var fw_menuDisabled: Bool {
-        get { fw.propertyBool(forName: "fw_menuDisabled") }
-        set { fw.setPropertyBool(newValue, forName: "fw_menuDisabled") }
-    }
-
-    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
-    public var fw_cursorRect: CGRect {
-        get {
-            if let value = fw.property(forName: "fw_cursorRect") as? NSValue {
-                return value.cgRectValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
-        }
-    }
-
-    /// 获取及设置当前选中文字范围
-    public var fw_selectedRange: NSRange {
-        get {
-            guard let selectedRange = self.selectedTextRange else {
-                return NSRange(location: NSNotFound, length: 0)
-            }
-            let location = self.offset(from: self.beginningOfDocument, to: selectedRange.start)
-            let length = self.offset(from: selectedRange.start, to: selectedRange.end)
-            return NSRange(location: location, length: length)
-        }
-        set {
-            guard newValue.location != NSNotFound else {
-                self.selectedTextRange = nil
-                return
-            }
-            let start = self.position(from: self.beginningOfDocument, offset: newValue.location)
-            let end = self.position(from: self.beginningOfDocument, offset: NSMaxRange(newValue))
-            if let start = start, let end = end {
-                let selectionRange = self.textRange(from: start, to: end)
-                self.selectedTextRange = selectionRange
-            }
-        }
-    }
-
-    /// 移动光标到最后
-    public func fw_selectAllRange() {
-        let range = self.textRange(from: self.beginningOfDocument, to: self.endOfDocument)
-        self.selectedTextRange = range
-    }
-
-    /// 移动光标到指定位置，兼容动态text赋值
-    public func fw_moveCursor(_ offset: Int) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            if let position = self.position(from: self.beginningOfDocument, offset: offset) {
-                self.selectedTextRange = self.textRange(from: position, to: position)
-            }
-        }
-    }
-    
-}
-
-// MARK: - UITextView+UIKit
-@_spi(FW) extension UITextView {
-    
-    /// 最大字数限制，0为无限制，二选一
-    public var fw_maxLength: Int {
-        get { return fw_inputTarget(false)?.maxLength ?? 0 }
-        set { fw_inputTarget(true)?.maxLength = newValue }
-    }
-
-    /// 最大Unicode字数限制(中文为1，英文为0.5)，0为无限制，二选一
-    public var fw_maxUnicodeLength: Int {
-        get { return fw_inputTarget(false)?.maxUnicodeLength ?? 0 }
-        set { fw_inputTarget(true)?.maxUnicodeLength = newValue }
-    }
-    
-    /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var fw_textChangedBlock: ((String) -> Void)? {
-        get { return fw_inputTarget(false)?.textChangedBlock }
-        set { fw_inputTarget(true)?.textChangedBlock = newValue }
-    }
-
-    /// 文本长度发生改变，自动检测字数限制，用于代码设置text等场景
-    public func fw_textLengthChanged() {
-        fw_inputTarget(false)?.textLengthChanged()
-    }
-
-    /// 获取满足最大字数限制的过滤后的文本，无需再调用textLengthChanged
-    public func fw_filterText(_ text: String) -> String {
-        if let target = fw_inputTarget(false) {
-            return target.filterText(text)
-        }
-        return text
-    }
-
-    /// 设置自动完成时间间隔，默认0.5秒，和autoCompleteBlock配套使用
-    public var fw_autoCompleteInterval: TimeInterval {
-        get { return fw_inputTarget(false)?.autoCompleteInterval ?? 0 }
-        set { fw_inputTarget(true)?.autoCompleteInterval = newValue > 0 ? newValue : 0.5 }
-    }
-
-    /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-    public var fw_autoCompleteBlock: ((String) -> Void)? {
-        get { return fw_inputTarget(false)?.autoCompleteBlock }
-        set { fw_inputTarget(true)?.autoCompleteBlock = newValue }
-    }
-    
-    private func fw_inputTarget(_ lazyload: Bool) -> UITextField.InputTarget? {
-        if let target = fw.property(forName: "fw_inputTarget") as? UITextField.InputTarget {
-            return target
-        } else if lazyload {
-            let target = UITextField.InputTarget(textInput: self)
-            self.fw.observeNotification(UITextView.textDidChangeNotification, object: self, target: target, action: #selector(UITextField.InputTarget.textChangedAction))
-            fw.setProperty(target, forName: "fw_inputTarget")
-            return target
-        }
-        return nil
-    }
-    
-    /// 是否禁用长按菜单(拷贝、选择、粘贴等)，默认NO
-    public var fw_menuDisabled: Bool {
-        get { fw.propertyBool(forName: "fw_menuDisabled") }
-        set { fw.setPropertyBool(newValue, forName: "fw_menuDisabled") }
-    }
-
-    /// 自定义光标偏移和大小，不为0才会生效，默认zero不生效
-    public var fw_cursorRect: CGRect {
-        get {
-            if let value = fw.property(forName: "fw_cursorRect") as? NSValue {
-                return value.cgRectValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(cgRect: newValue), forName: "fw_cursorRect")
-        }
-    }
-
-    /// 获取及设置当前选中文字范围
-    public var fw_selectedRange: NSRange {
-        get {
-            guard let selectedRange = self.selectedTextRange else {
-                return NSRange(location: NSNotFound, length: 0)
-            }
-            let location = self.offset(from: self.beginningOfDocument, to: selectedRange.start)
-            let length = self.offset(from: selectedRange.start, to: selectedRange.end)
-            return NSRange(location: location, length: length)
-        }
-        set {
-            guard newValue.location != NSNotFound else {
-                self.selectedTextRange = nil
-                return
-            }
-            let start = self.position(from: self.beginningOfDocument, offset: newValue.location)
-            let end = self.position(from: self.beginningOfDocument, offset: NSMaxRange(newValue))
-            if let start = start, let end = end {
-                let selectionRange = self.textRange(from: start, to: end)
-                self.selectedTextRange = selectionRange
-            }
-        }
-    }
-
-    /// 移动光标到最后
-    public func fw_selectAllRange() {
-        let range = self.textRange(from: self.beginningOfDocument, to: self.endOfDocument)
-        self.selectedTextRange = range
-    }
-
-    /// 移动光标到指定位置，兼容动态text赋值
-    public func fw_moveCursor(_ offset: Int) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            if let position = self.position(from: self.beginningOfDocument, offset: offset) {
-                self.selectedTextRange = self.textRange(from: position, to: position)
-            }
-        }
-    }
-
-    /// 计算当前文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整
-    public var fw_textSize: CGSize {
-        if self.frame.size.equalTo(.zero) {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-        
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        return fw_textSize(drawSize: drawSize)
-    }
-    
-    /// 计算指定边界时，当前文本所占尺寸，包含textContainerInset
-    public func fw_textSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
-        var attrs: [NSAttributedString.Key: Any] = [:]
-        attrs[.font] = self.font
-        
-        let inset = contentInset ?? self.textContainerInset
-        let size = (self.text as? NSString)?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attrs, context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
-    }
-
-    /// 计算当前属性文本所占尺寸，包含textContainerInset，需frame或者宽度布局完整，attributedText需指定字体
-    public var fw_attributedTextSize: CGSize {
-        if self.frame.size.equalTo(.zero) {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-        
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        return fw_attributedTextSize(drawSize: drawSize)
-    }
-
-    /// 计算指定边界时，当前属性文本所占尺寸，包含textContainerInset，attributedText需指定字体
-    public func fw_attributedTextSize(drawSize: CGSize, contentInset: UIEdgeInsets? = nil) -> CGSize {
-        let inset = contentInset ?? self.textContainerInset
-        let size = self.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
-        return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
-    }
-    
-    /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
-    public var fw_lineHeight: CGFloat {
-        get {
-            if fw.property(forName: "fw_lineHeight") != nil {
-                return fw.propertyDouble(forName: "fw_lineHeight")
-            }
-            
-            var result: CGFloat = 0
-            if let string = self.attributedText?.mutableCopy() as? NSMutableAttributedString {
-                string.enumerateAttribute(.paragraphStyle, in: NSMakeRange(0, string.length), using: { obj, range, stop in
-                    guard let style = obj as? NSParagraphStyle else { return }
-                    if NSEqualRanges(range, NSMakeRange(0, string.length)) {
-                        if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
-                            result = style.maximumLineHeight
-                            stop.pointee = true
-                        }
-                    }
-                })
-            }
-            
-            if result <= 0, let style = self.typingAttributes[.paragraphStyle] as? NSParagraphStyle {
-                if style.maximumLineHeight != 0 || style.minimumLineHeight != 0 {
-                    result = style.maximumLineHeight
-                }
-            }
-            return result > 0 ? result : (self.font?.lineHeight ?? 0)
-        }
-        set {
-            if newValue > 0 {
-                fw.setPropertyDouble(newValue, forName: "fw_lineHeight")
-            } else {
-                fw.setProperty(nil, forName: "fw_lineHeight")
-            }
-            
-            self.fw.placeholderLineHeight = newValue
-            
-            var typingAttributes = self.typingAttributes
-            var paragraphStyle: NSMutableParagraphStyle
-            if let style = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
-                paragraphStyle = style
-            } else if let style = (typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle {
-                paragraphStyle = style
-            } else {
-                paragraphStyle = NSMutableParagraphStyle()
-            }
-            paragraphStyle.minimumLineHeight = newValue > 0 ? newValue : 0
-            paragraphStyle.maximumLineHeight = newValue > 0 ? newValue : 0
-            
-            typingAttributes[.paragraphStyle] = paragraphStyle
-            self.typingAttributes = typingAttributes
-        }
-    }
-    
-    /// 获取当前文本框是否非空，兼容attributedText|text
-    public var fw_isNotEmpty: Bool {
-        if (attributedText?.length ?? 0) > 0 { return true }
-        if (text?.count ?? 0) > 0 { return true }
-        return false
-    }
-    
-    /// 计算当前文本框实际显示行数，兼容textContainerInset|lineHeight
-    public var fw_actualNumberOfLines: Int {
-        if self.frame.size.equalTo(.zero) {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-        
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        return fw_actualNumberOfLines(drawSize: drawSize)
-    }
-    
-    /// 计算指定边界、内边距、行高时，当前文本框实际显示行数
-    public func fw_actualNumberOfLines(drawSize: CGSize, contentInset: UIEdgeInsets? = nil, lineHeight: CGFloat? = nil) -> Int {
-        guard fw_isNotEmpty else { return 0 }
-        
-        let inset = contentInset ?? self.textContainerInset
-        let lineHeight = lineHeight ?? self.fw_lineHeight
-        guard lineHeight > 0 else { return 0 }
-        
-        let height = self.sizeThatFits(drawSize).height - inset.top - inset.bottom
-        let lines = Int(round(height / lineHeight))
-        return lines
     }
     
 }
 
 // MARK: - UITableView+UIKit
-/// 注意：需要支持appearance的属性必须标记为objc，否则不会生效;
-/// 启用高度估算：设置rowHeight为automaticDimension并撑开布局即可，再设置estimatedRowHeight可提升性能
-@_spi(FW) extension UITableView {
+extension UITableView {
     
-    /// 全局清空TableView默认多余边距
-    public static func fw_resetTableStyle() {
-        if #available(iOS 15.0, *) {
-            UITableView.appearance().sectionHeaderTopPadding = 0
-        }
-    }
+    fileprivate static var innerResetTableConfiguration: ((UITableView) -> Void)?
     
-    /// 是否启动高度估算布局，启用后需要子视图布局完整，无需实现heightForRow方法(iOS11默认启用，会先cellForRow再heightForRow)
-    public var fw_estimatedLayout: Bool {
-        get {
-            return self.estimatedRowHeight == UITableView.automaticDimension
-        }
-        set {
-            if newValue {
-                self.estimatedRowHeight = UITableView.automaticDimension
-                self.estimatedSectionHeaderHeight = UITableView.automaticDimension
-                self.estimatedSectionFooterHeight = UITableView.automaticDimension
-            } else {
-                self.estimatedRowHeight = 0
-                self.estimatedSectionHeaderHeight = 0
-                self.estimatedSectionFooterHeight = 0
-            }
-        }
-    }
-    
-    /// 清除Grouped等样式默认多余边距，注意CGFLOAT_MIN才会生效，0不会生效
-    public func fw_resetTableStyle() {
-        self.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        self.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        if #available(iOS 15.0, *) {
-            self.sectionHeaderTopPadding = 0
-        }
-        
-        UITableView.fw_resetTableConfiguration?(self)
-    }
-    
-    /// 配置全局resetTableStyle钩子句柄，默认nil
-    public static var fw_resetTableConfiguration: ((UITableView) -> Void)?
-    
-    /// reloadData完成回调
-    public func fw_reloadData(completion: (() -> Void)?) {
-        UIView.animate(withDuration: 0) {
-            self.reloadData()
-        } completion: { _ in
-            completion?()
-        }
-    }
-    
-    /// reloadData禁用动画
-    public func fw_reloadDataWithoutAnimation() {
-        UIView.performWithoutAnimation {
-            self.reloadData()
-        }
-    }
-    
-    /// 判断indexPath是否有效
-    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
-        guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
-        guard indexPath.section < numberOfSections else { return false }
-        return indexPath.row < numberOfRows(inSection: indexPath.section)
-    }
-    
-    /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func fw_willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: (UITableViewCell) -> Void = { [weak self] cell in
-            let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
-            guard self?.visibleCells.contains(cell) ?? false,
-                  self?.indexPath(for: cell) != nil,
-                  identifier != previousIdentifier else { return }
-            
-            exposure()
-            cell.fw.setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
-        }
-        cell.fw.setPropertyCopy(block, forName: "fw_willDisplay")
-        
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
-        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
-    }
-    
-    @objc private func fw_willDisplay(_ cell: UITableViewCell) {
-        let block = cell.fw.property(forName: "fw_willDisplay") as? (UITableViewCell) -> Void
+    @objc fileprivate func innerWillDisplay(_ cell: UITableViewCell) {
+        let block = cell.fw.property(forName: "willDisplay") as? (UITableViewCell) -> Void
         block?(cell)
     }
     
 }
 
-// MARK: - UITableViewCell+UIKit
-@_spi(FW) extension UITableViewCell {
-    
-    /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
-    public var fw_separatorInset: UIEdgeInsets {
-        get {
-            return self.separatorInset
-        }
-        set {
-            self.separatorInset = newValue
-            self.preservesSuperviewLayoutMargins = false
-            self.layoutMargins = separatorInset
-        }
-    }
-    
-    /// 调整imageView的位置偏移，默认zero不生效，仅支持default|subtitle样式
-    public var fw_imageEdgeInsets: UIEdgeInsets {
-        get {
-            let value = fw.property(forName: "fw_imageEdgeInsets") as? NSValue
-            return value?.uiEdgeInsetsValue ?? .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_imageEdgeInsets")
-            FrameworkAutoloader.swizzleUIKitTableViewCell()
-        }
-    }
-    
-    /// 调整textLabel的位置偏移，默认zero不生效，仅支持default|subtitle样式
-    public var fw_textEdgeInsets: UIEdgeInsets {
-        get {
-            let value = fw.property(forName: "fw_textEdgeInsets") as? NSValue
-            return value?.uiEdgeInsetsValue ?? .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_textEdgeInsets")
-            FrameworkAutoloader.swizzleUIKitTableViewCell()
-        }
-    }
-    
-    /// 调整detailTextLabel的位置偏移，默认zero不生效，仅支持subtitle样式
-    public var fw_detailTextEdgeInsets: UIEdgeInsets {
-        get {
-            let value = fw.property(forName: "fw_detailTextEdgeInsets") as? NSValue
-            return value?.uiEdgeInsetsValue ?? .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_detailTextEdgeInsets")
-            FrameworkAutoloader.swizzleUIKitTableViewCell()
-        }
-    }
-    
-    /// 调整accessoryView的位置偏移，默认zero不生效，仅对自定义accessoryView生效
-    public var fw_accessoryEdgeInsets: UIEdgeInsets {
-        get {
-            let value = fw.property(forName: "fw_accessoryEdgeInsets") as? NSValue
-            return value?.uiEdgeInsetsValue ?? .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_accessoryEdgeInsets")
-            FrameworkAutoloader.swizzleUIKitTableViewCell()
-        }
-    }
-
-    /// 获取当前所属tableView
-    public weak var fw_tableView: UITableView? {
-        var superview = self.superview
-        while superview != nil {
-            if let tableView = superview as? UITableView {
-                return tableView
-            }
-            superview = superview?.superview
-        }
-        return nil
-    }
-
-    /// 获取当前显示indexPath
-    public var fw_indexPath: IndexPath? {
-        return fw_tableView?.indexPath(for: self)
-    }
-    
-    /// 执行所属tableView的批量更新
-    public func fw_performBatchUpdates(
-        _ updates: ((UITableView, IndexPath?) -> Void)?,
-        completion: ((UITableView, IndexPath?, Bool) -> Void)? = nil
-    ) {
-        guard let tableView = fw_tableView else { return }
-        
-        tableView.performBatchUpdates(updates != nil ? { [weak self] in
-            let indexPath = self != nil ? tableView.indexPath(for: self!) : nil
-            updates?(tableView, indexPath)
-        } : nil, completion: completion != nil ? { [weak self] finished in
-            let indexPath = self != nil ? tableView.indexPath(for: self!) : nil
-            completion?(tableView, indexPath, finished)
-        } : nil)
-    }
-    
-}
-
 // MARK: - UICollectionView+UIKit
-@_spi(FW) extension UICollectionView {
+extension UICollectionView {
     
-    /// reloadData完成回调
-    public func fw_reloadData(completion: (() -> Void)?) {
-        UIView.animate(withDuration: 0) {
-            self.reloadData()
-        } completion: { _ in
-            completion?()
-        }
-    }
-    
-    /// reloadData禁用动画
-    public func fw_reloadDataWithoutAnimation() {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        self.reloadData()
-        CATransaction.commit()
-    }
-    
-    /// 判断indexPath是否有效
-    public func fw_isValidIndexPath(_ indexPath: IndexPath) -> Bool {
-        guard indexPath.section >= 0, indexPath.item >= 0 else { return false }
-        guard indexPath.section < numberOfSections else { return false }
-        return indexPath.item < numberOfItems(inSection: indexPath.section)
-    }
-    
-    /// 计算指定indexPath的frame，并转换为指定视图坐标(nil时默认window)
-    public func fw_layoutFrame(at indexPath: IndexPath, to view: UIView?) -> CGRect? {
-        guard var layoutFrame = layoutAttributesForItem(at: indexPath)?.frame else {
-            return nil
-        }
-        
-        layoutFrame = convert(layoutFrame, to: view)
-        return layoutFrame
-    }
-    
-    /// 添加拖动排序手势，需结合canMove、moveItem、targetIndexPath使用
-    @discardableResult
-    public func fw_addMovementGesture(customBlock: ((UILongPressGestureRecognizer) -> Bool)? = nil) -> UILongPressGestureRecognizer {
-        fw_movementGestureBlock = customBlock
-        
-        let movementGesture = UILongPressGestureRecognizer(target: self, action: #selector(fw_movementGestureAction(_:)))
-        addGestureRecognizer(movementGesture)
-        return movementGesture
-    }
-    
-    private var fw_movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
-        get { return fw.property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
-        set { fw.setPropertyCopy(newValue, forName: #function) }
-    }
-    
-    @objc private func fw_movementGestureAction(_ gesture: UILongPressGestureRecognizer) {
-        if let customBlock = fw_movementGestureBlock,
+    @objc fileprivate func innerMovementGestureAction(_ gesture: UILongPressGestureRecognizer) {
+        if let customBlock = fw.movementGestureBlock,
            !customBlock(gesture) { return }
         
         switch gesture.state {
@@ -3616,353 +3104,9 @@ extension UIControl {
         }
     }
     
-    /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func fw_willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
-        let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: (UICollectionViewCell) -> Void = { [weak self] cell in
-            let previousIdentifier = cell.fw.property(forName: "fw_willDisplayIdentifier") as? String
-            guard self?.visibleCells.contains(cell) ?? false,
-                  self?.indexPath(for: cell) != nil,
-                  identifier != previousIdentifier else { return }
-            
-            exposure()
-            cell.fw.setPropertyCopy(identifier, forName: "fw_willDisplayIdentifier")
-        }
-        cell.fw.setPropertyCopy(block, forName: "fw_willDisplay")
-        
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(fw_willDisplay(_:)), object: cell)
-        perform(#selector(fw_willDisplay(_:)), with: cell, afterDelay: 0.2, inModes: [.default])
-    }
-    
-    @objc private func fw_willDisplay(_ cell: UICollectionViewCell) {
-        let block = cell.fw.property(forName: "fw_willDisplay") as? (UICollectionViewCell) -> Void
+    @objc fileprivate func innerWillDisplay(_ cell: UICollectionViewCell) {
+        let block = cell.fw.property(forName: "willDisplay") as? (UICollectionViewCell) -> Void
         block?(cell)
-    }
-    
-}
-
-// MARK: - UICollectionViewCell+UIKit
-@_spi(FW) extension UICollectionViewCell {
-    
-    /// 获取当前所属collectionView
-    public weak var fw_collectionView: UICollectionView? {
-        var superview = self.superview
-        while superview != nil {
-            if let collectionView = superview as? UICollectionView {
-                return collectionView
-            }
-            superview = superview?.superview
-        }
-        return nil
-    }
-
-    /// 获取当前显示indexPath
-    public var fw_indexPath: IndexPath? {
-        return fw_collectionView?.indexPath(for: self)
-    }
-    
-    /// 执行所属collectionView的批量更新
-    public func fw_performBatchUpdates(
-        _ updates: ((UICollectionView, IndexPath?) -> Void)?,
-        completion: ((UICollectionView, IndexPath?, Bool) -> Void)? = nil
-    ) {
-        guard let collectionView = fw_collectionView else { return }
-        
-        collectionView.performBatchUpdates(updates != nil ? { [weak self] in
-            let indexPath = self != nil ? collectionView.indexPath(for: self!) : nil
-            updates?(collectionView, indexPath)
-        } : nil, completion: completion != nil ? { [weak self] finished in
-            let indexPath = self != nil ? collectionView.indexPath(for: self!) : nil
-            completion?(collectionView, indexPath, finished)
-        } : nil)
-    }
-    
-}
-
-// MARK: - UISearchBar+UIKit
-@_spi(FW) extension UISearchBar {
-    
-    /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
-    ///
-    /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
-    public var fw_contentInset: UIEdgeInsets {
-        get {
-            if let value = fw.property(forName: "fw_contentInset") as? NSValue {
-                return value.uiEdgeInsetsValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_contentInset")
-            self.setNeedsLayout()
-        }
-    }
-
-    /// 自定义取消按钮边距，未设置时为系统默认
-    public var fw_cancelButtonInset: UIEdgeInsets {
-        get {
-            if let value = fw.property(forName: "fw_cancelButtonInset") as? NSValue {
-                return value.uiEdgeInsetsValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_cancelButtonInset")
-            self.setNeedsLayout()
-        }
-    }
-
-    /// 输入框内部视图
-    public var fw_textField: UISearchTextField {
-        return searchTextField
-    }
-
-    /// 取消按钮内部视图，showsCancelButton开启后才存在
-    public weak var fw_cancelButton: UIButton? {
-        return fw.invokeGetter("cancelButton") as? UIButton
-    }
-    
-    /// 输入框的文字颜色
-    public var fw_textColor: UIColor? {
-        get {
-            fw.property(forName: #function) as? UIColor
-        }
-        set {
-            fw.setProperty(newValue, forName: #function)
-            searchTextField.textColor = newValue
-        }
-    }
-    
-    /// 输入框的字体，会同时影响placeholder的字体
-    public var fw_font: UIFont? {
-        get {
-            fw.property(forName: #function) as? UIFont
-        }
-        set {
-            fw.setProperty(newValue, forName: #function)
-            if let placeholder = self.placeholder {
-                self.placeholder = placeholder
-            }
-            searchTextField.font = newValue
-        }
-    }
-    
-    /// 输入框内placeholder的颜色
-    public var fw_placeholderColor: UIColor? {
-        get {
-            fw.property(forName: #function) as? UIColor
-        }
-        set {
-            fw.setProperty(newValue, forName: #function)
-            if let placeholder = self.placeholder {
-                self.placeholder = placeholder
-            }
-        }
-    }
-
-    /// 设置整体背景色
-    public var fw_backgroundColor: UIColor? {
-        get {
-            return fw.property(forName: "fw_backgroundColor") as? UIColor
-        }
-        set {
-            fw.setProperty(newValue, forName: "fw_backgroundColor")
-            self.backgroundImage = UIImage.fw.image(color: newValue)
-        }
-    }
-
-    /// 设置输入框背景色
-    public var fw_textFieldBackgroundColor: UIColor? {
-        get { fw_textField.backgroundColor }
-        set { fw_textField.backgroundColor = newValue }
-    }
-
-    /// 设置搜索图标离左侧的偏移位置，非居中时生效
-    public var fw_searchIconOffset: CGFloat {
-        get {
-            if let value = fw.propertyNumber(forName: "fw_searchIconOffset") {
-                return value.doubleValue
-            }
-            return self.positionAdjustment(for: .search).horizontal
-        }
-        set {
-            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_searchIconOffset")
-            self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .search)
-        }
-    }
-    
-    /// 设置清空图标离右侧的偏移位置
-    public var fw_clearIconOffset: CGFloat {
-        get {
-            if let value = fw.propertyNumber(forName: "fw_clearIconOffset") {
-                return value.doubleValue
-            }
-            return self.positionAdjustment(for: .clear).horizontal
-        }
-        set {
-            fw.setPropertyNumber(NSNumber(value: newValue), forName: "fw_clearIconOffset")
-            self.setPositionAdjustment(UIOffset(horizontal: newValue, vertical: 0), for: .clear)
-        }
-    }
-
-    /// 设置搜索文本离左侧图标的偏移位置
-    public var fw_searchTextOffset: CGFloat {
-        get { return self.searchTextPositionAdjustment.horizontal }
-        set { self.searchTextPositionAdjustment = UIOffset(horizontal: newValue, vertical: 0) }
-    }
-
-    /// 设置TextField搜索图标(placeholder)是否居中，否则居左
-    public var fw_searchIconCenter: Bool {
-        get {
-            return fw.propertyBool(forName: "fw_searchIconCenter")
-        }
-        set {
-            fw.setPropertyBool(newValue, forName: "fw_searchIconCenter")
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-    }
-
-    /// 强制取消按钮一直可点击，需在showsCancelButton设置之后生效。默认SearchBar失去焦点之后取消按钮不可点击
-    public var fw_forceCancelButtonEnabled: Bool {
-        get {
-            return fw.propertyBool(forName: "fw_forceCancelButtonEnabled")
-        }
-        set {
-            fw.setPropertyBool(newValue, forName: "fw_forceCancelButtonEnabled")
-            guard let cancelButton = fw_cancelButton else { return }
-            if newValue {
-                cancelButton.isEnabled = true
-                cancelButton.fw.observeProperty(\.isEnabled) { object, _ in
-                    if !object.isEnabled { object.isEnabled = true }
-                }
-            } else {
-                cancelButton.fw.unobserveProperty(\.isEnabled)
-            }
-        }
-    }
-    
-}
-
-// MARK: - UIViewController+UIKit
-@_spi(FW) extension UIViewController {
-    
-    /// 判断当前控制器是否是头部控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
-    public var fw_isHead: Bool {
-        return self.navigationController == nil ||
-            self.navigationController?.viewControllers.first == self
-    }
-    
-    /// 判断当前控制器是否是尾部控制器。如果是导航栏的最后一个控制器或者不含有导航栏，则返回YES
-    public var fw_isTail: Bool {
-        return self.navigationController == nil ||
-            self.navigationController?.viewControllers.last == self
-    }
-
-    /// 判断当前控制器是否是子控制器。如果父控制器存在，且不是导航栏或标签栏控制器，则返回YES
-    public var fw_isChild: Bool {
-        if let parent = self.parent,
-           !(parent is UINavigationController),
-           !(parent is UITabBarController) {
-            return true
-        }
-        return false
-    }
-
-    /// 判断当前控制器是否是present弹出。如果是导航栏的第一个控制器且导航栏是present弹出，也返回YES
-    public var fw_isPresented: Bool {
-        var viewController: UIViewController = self
-        if let navigationController = self.navigationController {
-            if navigationController.viewControllers.first != self { return false }
-            viewController = navigationController
-        }
-        return viewController.presentingViewController?.presentedViewController == viewController
-    }
-
-    /// 判断当前控制器是否是iOS13+默认pageSheet弹出样式。该样式下导航栏高度等与默认样式不同
-    public var fw_isPageSheet: Bool {
-        let controller: UIViewController = self.navigationController ?? self
-        if controller.presentingViewController == nil { return false }
-        let style = controller.modalPresentationStyle
-        if style == .automatic || style == .pageSheet { return true }
-        return false
-    }
-
-    /// 视图是否可见，viewWillAppear后为YES，viewDidDisappear后为NO
-    public var fw_isViewVisible: Bool {
-        return self.isViewLoaded && self.view.window != nil
-    }
-    
-    /// 控制器是否可见，视图可见、尾部控制器、且不含presented控制器时为YES
-    public var fw_isVisible: Bool {
-        return fw_isViewVisible && fw_isTail && presentedViewController == nil
-    }
-    
-    /// 获取祖先视图，标签栏存在时为标签栏根视图，导航栏存在时为导航栏根视图，否则为控制器根视图
-    public var fw_ancestorView: UIView {
-        if let navigationController = self.tabBarController?.navigationController {
-            return navigationController.view
-        } else if let tabBarController = self.tabBarController {
-            return tabBarController.view
-        } else if let navigationController = self.navigationController {
-            return navigationController.view
-        } else {
-            return self.view
-        }
-    }
-
-    /// 是否已经加载完数据，默认NO，加载数据完成后可标记为YES，可用于第一次加载时显示loading等判断
-    public var fw_isDataLoaded: Bool {
-        get { return fw.propertyBool(forName: "fw_isDataLoaded") }
-        set { fw.setPropertyBool(newValue, forName: "fw_isDataLoaded") }
-    }
-    
-    /// 移除子控制器，解决不能触发viewWillAppear等的bug
-    public func fw_removeChild(_ viewController: UIViewController) {
-        viewController.willMove(toParent: nil)
-        viewController.removeFromParent()
-        viewController.view.removeFromSuperview()
-    }
-    
-    /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChild(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        fw_addChild(viewController, in: nil, layout: layout)
-    }
-
-    /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
-    public func fw_addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
-        self.addChild(viewController)
-        let superview: UIView = view ?? self.view
-        superview.addSubview(viewController.view)
-        if layout != nil {
-            layout?(viewController.view)
-        } else {
-            viewController.view.fw.pinEdges()
-        }
-        viewController.didMove(toParent: self)
-    }
-    
-    /// 弹出popover控制器
-    public func fw_presentPopover(
-        _ popover: UIViewController,
-        sourcePoint: CGPoint,
-        size: CGSize? = nil,
-        delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
-        animated: Bool = true,
-        completion: (() -> Void)? = nil
-    ) {
-        popover.modalPresentationStyle = .popover
-        if let size = size {
-            popover.preferredContentSize = size
-        }
-        
-        if let presentation = popover.popoverPresentationController {
-            presentation.sourceView = view
-            presentation.sourceRect = CGRect(origin: sourcePoint, size: .zero)
-            presentation.delegate = delegate
-        }
-        
-        present(popover, animated: animated, completion: completion)
     }
     
 }
@@ -3974,6 +3118,100 @@ fileprivate class SaturationGrayView: UIView {
         return nil
     }
     
+}
+
+// MARK: - InputTarget
+fileprivate class InputTarget {
+    weak var textInput: (UIView & UITextInput)?
+    var maxLength: Int = 0
+    var maxUnicodeLength: Int = 0
+    var textChangedBlock: ((String) -> Void)?
+    var autoCompleteInterval: TimeInterval = 0.5
+    var autoCompleteTimestamp: TimeInterval = 0
+    var autoCompleteBlock: ((String) -> Void)?
+    
+    private var shouldCheckLength: Bool {
+        if let markedTextRange = textInput?.markedTextRange,
+           textInput?.position(from: markedTextRange.start, offset: 0) != nil {
+            return false
+        }
+        return true
+    }
+    private var textValue: String? {
+        get {
+            if let textField = textInput as? UITextField {
+                return textField.text
+            } else if let textView = textInput as? UITextView {
+                return textView.text
+            }
+            return nil
+        }
+        set {
+            if let textField = textInput as? UITextField {
+                textField.text = newValue
+            } else if let textView = textInput as? UITextView {
+                textView.text = newValue
+            }
+        }
+    }
+
+    init(textInput: (UIView & UITextInput)?) {
+        self.textInput = textInput
+    }
+
+    func textLengthChanged() {
+        if maxLength > 0, shouldCheckLength {
+            if (textValue?.count ?? 0) > maxLength {
+                textValue = textValue?.fw.substring(to: maxLength)
+            }
+        }
+
+        if maxUnicodeLength > 0, shouldCheckLength {
+            if (textValue?.fw.unicodeLength ?? 0) > maxUnicodeLength {
+                textValue = textValue?.fw.unicodeSubstring(maxUnicodeLength)
+            }
+        }
+    }
+    
+    func filterText(_ text: String) -> String {
+        var filterText = text
+        if maxLength > 0, shouldCheckLength {
+            if filterText.count > maxLength {
+                filterText = filterText.fw.substring(to: maxLength)
+            }
+        }
+
+        if maxUnicodeLength > 0, shouldCheckLength {
+            if filterText.fw.unicodeLength > maxUnicodeLength {
+                filterText = filterText.fw.unicodeSubstring(maxUnicodeLength)
+            }
+        }
+        return filterText
+    }
+
+    @objc func textChangedAction() {
+        textLengthChanged()
+        
+        if textChangedBlock != nil {
+            let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            textChangedBlock?(inputText)
+        }
+
+        if autoCompleteBlock != nil {
+            autoCompleteTimestamp = Date().timeIntervalSince1970
+            let inputText = textValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if inputText.isEmpty {
+                autoCompleteBlock?("")
+            } else {
+                let currentTimestamp = autoCompleteTimestamp
+                DispatchQueue.main.asyncAfter(deadline: .now() + autoCompleteInterval) { [weak self] in
+                    if currentTimestamp == self?.autoCompleteTimestamp {
+                        self?.autoCompleteBlock?(inputText)
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - FrameworkAutoloader+UIKit
@@ -3997,7 +3235,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
             swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
         ) { store in { selfObject, point, event in
-            if let insetsValue = selfObject.fw.property(forName: "fw_touchInsets") as? NSValue {
+            if let insetsValue = selfObject.fw.property(forName: "touchInsets") as? NSValue {
                 let touchInsets = insetsValue.uiEdgeInsetsValue
                 var bounds = selfObject.bounds
                 bounds = CGRect(x: bounds.origin.x - touchInsets.left, y: bounds.origin.y - touchInsets.top, width: bounds.size.width + touchInsets.left + touchInsets.right, height: bounds.size.height + touchInsets.top + touchInsets.bottom)
@@ -4005,7 +3243,7 @@ extension FrameworkAutoloader {
             }
             
             var pointInside = store.original(selfObject, store.selector, point, event)
-            if (!pointInside && selfObject.fw.propertyBool(forName: "fw_pointInsideSubviews")) {
+            if (!pointInside && selfObject.fw.propertyBool(forName: "pointInsideSubviews")) {
                 for subview in selfObject.subviews {
                     if subview.point(inside: CGPoint(x: point.x - subview.frame.origin.x, y: point.y - subview.frame.origin.y), with: event) {
                         pointInside = true
@@ -4048,8 +3286,8 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
         ) { store in { selfObject, aRect in
             var rect = aRect
-            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
-                rect = rect.inset(by: contentInsetValue.uiEdgeInsetsValue)
+            if selfObject.fw.issetContentInset {
+                rect = rect.inset(by: selfObject.fw.contentInset)
             }
             
             let verticalAlignment = selfObject.fw.verticalAlignment
@@ -4070,7 +3308,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
             swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
         ) { store in { selfObject in
-            if selfObject.fw.property(forName: "fw_contentInset") != nil {
+            if selfObject.fw.issetContentInset {
                 let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
                 return selfObject.sizeThatFits(CGSize(width: preferredMaxLayoutWidth, height: .greatestFiniteMagnitude))
             }
@@ -4085,8 +3323,8 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
         ) { store in { selfObject, aSize in
             var size = aSize
-            if let contentInsetValue = selfObject.fw.property(forName: "fw_contentInset") as? NSValue {
-                let contentInset = contentInsetValue.uiEdgeInsetsValue
+            if selfObject.fw.issetContentInset {
+                let contentInset = selfObject.fw.contentInset
                 size = CGSize(width: size.width - contentInset.left - contentInset.right, height: size.height - contentInset.top - contentInset.bottom)
                 var fitsSize = store.original(selfObject, store.selector, size)
                 if !fitsSize.equalTo(.zero) {
@@ -4131,11 +3369,11 @@ extension FrameworkAutoloader {
         ) { store in { selfObject, enabled in
             store.original(selfObject, store.selector, enabled)
             
-            if selfObject.fw_disabledAlpha > 0 {
-                selfObject.alpha = enabled ? 1 : selfObject.fw_disabledAlpha
+            if selfObject.fw.disabledAlpha > 0 {
+                selfObject.alpha = enabled ? 1 : selfObject.fw.disabledAlpha
             }
-            if selfObject.fw_disabledChanged != nil {
-                selfObject.fw_disabledChanged?(selfObject, enabled)
+            if selfObject.fw.disabledChanged != nil {
+                selfObject.fw.disabledChanged?(selfObject, enabled)
             }
         }}
         
@@ -4147,11 +3385,11 @@ extension FrameworkAutoloader {
         ) { store in { selfObject, highlighted in
             store.original(selfObject, store.selector, highlighted)
             
-            if selfObject.isEnabled && selfObject.fw_highlightedAlpha > 0 {
-                selfObject.alpha = highlighted ? selfObject.fw_highlightedAlpha : 1
+            if selfObject.isEnabled && selfObject.fw.highlightedAlpha > 0 {
+                selfObject.alpha = highlighted ? selfObject.fw.highlightedAlpha : 1
             }
-            if selfObject.isEnabled && selfObject.fw_highlightedChanged != nil {
-                selfObject.fw_highlightedChanged?(selfObject, highlighted)
+            if selfObject.isEnabled && selfObject.fw.highlightedChanged != nil {
+                selfObject.fw.highlightedChanged?(selfObject, highlighted)
             }
         }}
     }
@@ -4166,9 +3404,9 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, previousTraitCollection)
 
             guard selfObject.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
-            guard let offTintColor = selfObject.fw_offTintColor else { return }
+            guard let offTintColor = selfObject.fw.offTintColor else { return }
             DispatchQueue.main.async {
-                selfObject.fw_offTintColor = offTintColor
+                selfObject.fw.offTintColor = offTintColor
             }
         }}
     }
@@ -4180,7 +3418,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
             swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
         ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
+            if selfObject.fw.menuDisabled { return false }
             
             return store.original(selfObject, store.selector, action, sender)
         }}
@@ -4192,7 +3430,7 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UITextField, UITextPosition) -> CGRect).self
         ) { store in { selfObject, position in
             var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            guard let rectValue = selfObject.fw.property(forName: "cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
             if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
@@ -4210,7 +3448,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
             swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
         ) { store in { selfObject, action, sender in
-            if selfObject.fw_menuDisabled { return false }
+            if selfObject.fw.menuDisabled { return false }
             
             return store.original(selfObject, store.selector, action, sender)
         }}
@@ -4222,7 +3460,7 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UITextView, UITextPosition) -> CGRect).self
         ) { store in { selfObject, position in
             var caretRect = store.original(selfObject, store.selector, position)
-            guard let rectValue = selfObject.fw.property(forName: "fw_cursorRect") as? NSValue else { return caretRect }
+            guard let rectValue = selfObject.fw.property(forName: "cursorRect") as? NSValue else { return caretRect }
             
             let rect = rectValue.cgRectValue
             if rect.origin.x != 0 { caretRect.origin.x += rect.origin.x }
@@ -4242,12 +3480,12 @@ extension FrameworkAutoloader {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if let isCenterValue = selfObject.fw.propertyNumber(forName: "fw_searchIconCenter") {
+            if let isCenterValue = selfObject.fw.propertyNumber(forName: "searchIconCenter") {
                 if !isCenterValue.boolValue {
-                    let offset = selfObject.fw.propertyNumber(forName: "fw_searchIconOffset")
+                    let offset = selfObject.fw.propertyNumber(forName: "searchIconOffset")
                     selfObject.setPositionAdjustment(UIOffset(horizontal: offset?.doubleValue ?? 0, vertical: 0), for: .search)
                 } else {
-                    let textField = selfObject.fw_textField
+                    let textField = selfObject.searchTextField
                     var attributes: [NSAttributedString.Key: Any]?
                     if let font = textField.font {
                         attributes = [.font: font]
@@ -4270,13 +3508,13 @@ extension FrameworkAutoloader {
         ) { store in { selfObject, placeholder in
             store.original(selfObject, store.selector, placeholder)
             
-            if selfObject.fw_placeholderColor != nil || selfObject.fw_font != nil {
+            if selfObject.fw.placeholderColor != nil || selfObject.fw.font != nil {
                 guard let attrString = selfObject.searchTextField.attributedPlaceholder?.mutableCopy() as? NSMutableAttributedString else { return }
                 
-                if let placeholderColor = selfObject.fw_placeholderColor {
+                if let placeholderColor = selfObject.fw.placeholderColor {
                     attrString.addAttribute(.foregroundColor, value: placeholderColor, range: NSMakeRange(0, attrString.length))
                 }
-                if let font = selfObject.fw_font {
+                if let font = selfObject.fw.font {
                     attrString.addAttribute(.font, value: font, range: NSMakeRange(0, attrString.length))
                 }
                 // 默认移除文字阴影
@@ -4293,7 +3531,7 @@ extension FrameworkAutoloader {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            if selfObject.fw_placeholderColor != nil {
+            if selfObject.fw.placeholderColor != nil {
                 let placeholder = selfObject.placeholder
                 selfObject.placeholder = placeholder
             }
@@ -4310,15 +3548,15 @@ extension FrameworkAutoloader {
             let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
             if let searchBar = searchBar {
                 var textFieldMaxX = searchBar.bounds.size.width
-                if let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue,
-                   let cancelButton = searchBar.fw_cancelButton {
+                if let cancelInsetValue = searchBar.fw.property(forName: "cancelButtonInset") as? NSValue,
+                   let cancelButton = searchBar.fw.cancelButton {
                     let cancelInset = cancelInsetValue.uiEdgeInsetsValue
                     let cancelWidth = cancelButton.sizeThatFits(searchBar.bounds.size).width
                     textFieldMaxX = searchBar.bounds.size.width - cancelWidth - cancelInset.left - cancelInset.right
                     frame.size.width = textFieldMaxX - frame.origin.x
                 }
                 
-                if let contentInsetValue = searchBar.fw.property(forName: "fw_contentInset") as? NSValue {
+                if let contentInsetValue = searchBar.fw.property(forName: "contentInset") as? NSValue {
                     let contentInset = contentInsetValue.uiEdgeInsetsValue
                     frame = CGRect(x: contentInset.left, y: contentInset.top, width: textFieldMaxX - contentInset.left - contentInset.right, height: searchBar.bounds.size.height - contentInset.top - contentInset.bottom)
                 }
@@ -4336,7 +3574,7 @@ extension FrameworkAutoloader {
             var frame = aFrame
             let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
             if let searchBar = searchBar,
-               let cancelInsetValue = searchBar.fw.property(forName: "fw_cancelButtonInset") as? NSValue {
+               let cancelInsetValue = searchBar.fw.property(forName: "cancelButtonInset") as? NSValue {
                 let cancelInset = cancelInsetValue.uiEdgeInsetsValue
                 let cancelWidth = selfObject.sizeThatFits(searchBar.bounds.size).width
                 frame.origin.x = searchBar.bounds.size.width - cancelWidth - cancelInset.right
@@ -4354,10 +3592,10 @@ extension FrameworkAutoloader {
         guard !swizzleUIKitScrollViewFinished else { return }
         swizzleUIKitScrollViewFinished = true
         
-        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizerShouldBegin(_:)))
-        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
-        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldRequireFailureOf:)))
-        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.fw_swizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizerShouldBegin(_:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRequireFailureOf:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRequireFailureOf:)))
+        NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
     private static var swizzleUIKitTableViewCellFinished = false
@@ -4374,22 +3612,22 @@ extension FrameworkAutoloader {
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
-            let hasAccessoryInset = selfObject.accessoryView?.superview != nil && selfObject.fw_accessoryEdgeInsets != .zero
-            let hasImageInset = selfObject.imageView?.image != nil && selfObject.fw_imageEdgeInsets != .zero
-            let hasTextInset = (selfObject.textLabel?.text?.count ?? 0) > 0 && selfObject.fw_textEdgeInsets != .zero
-            let hasDetailTextInset = (selfObject.detailTextLabel?.text?.count ?? 0) > 0 && selfObject.fw_detailTextEdgeInsets != .zero
+            let hasAccessoryInset = selfObject.accessoryView?.superview != nil && selfObject.fw.accessoryEdgeInsets != .zero
+            let hasImageInset = selfObject.imageView?.image != nil && selfObject.fw.imageEdgeInsets != .zero
+            let hasTextInset = (selfObject.textLabel?.text?.count ?? 0) > 0 && selfObject.fw.textEdgeInsets != .zero
+            let hasDetailTextInset = (selfObject.detailTextLabel?.text?.count ?? 0) > 0 && selfObject.fw.detailTextEdgeInsets != .zero
             guard hasAccessoryInset || hasImageInset || hasTextInset || hasDetailTextInset else {
                 return
             }
             
             if hasAccessoryInset {
                 var accessoryFrame = selfObject.accessoryView?.frame ?? .zero
-                accessoryFrame.origin.x = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.right
-                accessoryFrame.origin.y = accessoryFrame.minY + selfObject.fw_accessoryEdgeInsets.top - selfObject.fw_accessoryEdgeInsets.bottom
+                accessoryFrame.origin.x = accessoryFrame.minX - selfObject.fw.accessoryEdgeInsets.right
+                accessoryFrame.origin.y = accessoryFrame.minY + selfObject.fw.accessoryEdgeInsets.top - selfObject.fw.accessoryEdgeInsets.bottom
                 selfObject.accessoryView?.frame = accessoryFrame
                 
                 var contentFrame = selfObject.contentView.frame
-                contentFrame.size.width = accessoryFrame.minX - selfObject.fw_accessoryEdgeInsets.left
+                contentFrame.size.width = accessoryFrame.minX - selfObject.fw.accessoryEdgeInsets.left
                 selfObject.contentView.frame = contentFrame
             }
             
@@ -4398,23 +3636,23 @@ extension FrameworkAutoloader {
             var detailTextFrame = selfObject.detailTextLabel?.frame ?? .zero
             
             if hasImageInset {
-                imageFrame.origin.x += selfObject.fw_imageEdgeInsets.left - selfObject.fw_imageEdgeInsets.right
-                imageFrame.origin.y += selfObject.fw_imageEdgeInsets.top - selfObject.fw_imageEdgeInsets.bottom
+                imageFrame.origin.x += selfObject.fw.imageEdgeInsets.left - selfObject.fw.imageEdgeInsets.right
+                imageFrame.origin.y += selfObject.fw.imageEdgeInsets.top - selfObject.fw.imageEdgeInsets.bottom
                 
-                textFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                textFrame.origin.x += selfObject.fw.imageEdgeInsets.left
                 textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
                 
-                detailTextFrame.origin.x += selfObject.fw_imageEdgeInsets.left
+                detailTextFrame.origin.x += selfObject.fw.imageEdgeInsets.left
                 detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
             }
             if hasTextInset {
-                textFrame.origin.x += selfObject.fw_textEdgeInsets.left - selfObject.fw_textEdgeInsets.right
-                textFrame.origin.y += selfObject.fw_textEdgeInsets.top - selfObject.fw_textEdgeInsets.bottom
+                textFrame.origin.x += selfObject.fw.textEdgeInsets.left - selfObject.fw.textEdgeInsets.right
+                textFrame.origin.y += selfObject.fw.textEdgeInsets.top - selfObject.fw.textEdgeInsets.bottom
                 textFrame.size.width = min(textFrame.width, selfObject.contentView.bounds.width - textFrame.minX)
             }
             if hasDetailTextInset {
-                detailTextFrame.origin.x += selfObject.fw_detailTextEdgeInsets.left - selfObject.fw_detailTextEdgeInsets.right
-                detailTextFrame.origin.y += selfObject.fw_detailTextEdgeInsets.top - selfObject.fw_detailTextEdgeInsets.bottom
+                detailTextFrame.origin.x += selfObject.fw.detailTextEdgeInsets.left - selfObject.fw.detailTextEdgeInsets.right
+                detailTextFrame.origin.y += selfObject.fw.detailTextEdgeInsets.top - selfObject.fw.detailTextEdgeInsets.bottom
                 detailTextFrame.size.width = min(detailTextFrame.width, selfObject.contentView.bounds.width - detailTextFrame.minX)
             }
             
