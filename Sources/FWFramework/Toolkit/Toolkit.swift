@@ -247,7 +247,7 @@ extension Wrapper where Base: UIApplication {
         let viewController = Navigator.topPresentedController
         if UIDevice.fw.isIpad, let viewController = viewController,
            let popoverController = activityController.popoverPresentationController {
-            let ancestorView = viewController.fw_ancestorView
+            let ancestorView = viewController.fw.ancestorView
             popoverController.sourceView = ancestorView
             popoverController.sourceRect = CGRect(x: ancestorView.center.x, y: ancestorView.center.y, width: 0, height: 0)
             popoverController.permittedArrowDirections = []
