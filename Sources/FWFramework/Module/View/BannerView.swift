@@ -1020,7 +1020,7 @@ open class BannerViewCell: UICollectionViewCell {
     
     /// 轮播文字内容间距设置(不影响背景)，默认{0 16 0 16}
     open var titleLabelContentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) {
-        didSet { titleLabel.fw_contentInset = titleLabelContentInset }
+        didSet { titleLabel.fw.contentInset = titleLabelContentInset }
     }
     
     /// 轮播文字label对齐方式
@@ -1067,7 +1067,7 @@ open class BannerViewCell: UICollectionViewCell {
     /// 标题标签
     open lazy var titleLabel: UILabel = {
         let result = UILabel()
-        result.fw_contentInset = titleLabelContentInset
+        result.fw.contentInset = titleLabelContentInset
         result.isHidden = true
         return result
     }()
