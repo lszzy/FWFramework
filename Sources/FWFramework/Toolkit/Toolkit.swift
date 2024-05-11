@@ -1648,7 +1648,7 @@ extension Wrapper where Base: UIImage {
         locations: UnsafePointer<CGFloat>?,
         direction: UISwipeGestureRecognizer.Direction
     ) -> UIImage? {
-        let linePoints = UIBezierPath.fw_linePoints(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height), direction: direction)
+        let linePoints = UIBezierPath.fw.linePoints(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height), direction: direction)
         let startPoint = linePoints.first?.cgPointValue ?? .zero
         let endPoint = linePoints.last?.cgPointValue ?? .zero
         return gradientImage(size: size, colors: colors, locations: locations, startPoint: startPoint, endPoint: endPoint)

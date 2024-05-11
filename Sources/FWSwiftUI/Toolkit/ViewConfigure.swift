@@ -52,11 +52,11 @@ extension View {
             }
             
             var viewController: UIViewController?
-            if let superController = hostingView.superview?.fw_viewController,
+            if let superController = hostingView.superview?.fw.viewController,
                !(superController is UINavigationController) && !(superController is UITabBarController) {
                 viewController = superController
             } else {
-                viewController = hostingView.fw_viewController
+                viewController = hostingView.fw.viewController
             }
             guard let viewController = viewController else {
                 return
