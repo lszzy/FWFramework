@@ -662,7 +662,7 @@ open class PresentationController: UIPresentationController {
             if rectCorner.contains(.allCorners) {
                 presentedView?.layer.cornerRadius = cornerRadius
             } else {
-                presentedView?.fw_setCornerLayer(rectCorner, radius: cornerRadius)
+                presentedView?.fw.setCornerLayer(rectCorner, radius: cornerRadius)
             }
         }
         dimmingView.frame = containerView?.bounds ?? .zero

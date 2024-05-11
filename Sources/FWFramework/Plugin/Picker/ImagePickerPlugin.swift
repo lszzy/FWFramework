@@ -449,7 +449,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func fw_showImageCamera(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -463,7 +463,7 @@ extension ImagePickerPlugin {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
     public func fw_showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping (Any?, Any?, Bool) -> Void) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -475,7 +475,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
     public func fw_showImagePicker(allowsEditing: Bool, completion: @escaping (UIImage?, Bool) -> Void) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -488,7 +488,7 @@ extension ImagePickerPlugin {
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
     public func fw_showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping ([UIImage], [Any], Bool) -> Void) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -503,7 +503,7 @@ extension ImagePickerPlugin {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
     public func fw_showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)? = nil, completion: @escaping ([Any], [Any], Bool) -> Void) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }

@@ -620,7 +620,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.setImage(FrameworkBundle.navBackImage, for: .normal)
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleCancelButtonClick(_:)), for: .touchUpInside)
-        result.fw_touchInsets = UIEdgeInsets(top: 30, left: 20, bottom: 50, right: 80)
+        result.fw.touchInsets = UIEdgeInsets(top: 30, left: 20, bottom: 50, right: 80)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
         return result
@@ -633,7 +633,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.setImage(checkboxCheckedImage, for: .highlighted)
         result.sizeToFit()
         result.addTarget(self, action: #selector(handleCheckButtonClick(_:)), for: .touchUpInside)
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
         return result
@@ -651,7 +651,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     
     open lazy var sendButton: UIButton = {
         let result = UIButton()
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.setTitle(FrameworkBundle.doneButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
@@ -664,7 +664,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     open lazy var editButton: UIButton = {
         let result = UIButton()
         result.isHidden = !showsEditButton
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.setTitle(FrameworkBundle.editButton, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.sizeToFit()
@@ -685,7 +685,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         result.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 5)
         result.contentEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         result.sizeToFit()
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
         result.addTarget(self, action: #selector(handleOriginImageCheckboxButtonClick(_:)), for: .touchUpInside)
@@ -1753,7 +1753,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.contentHorizontalAlignment = .right
         result.setTitleColor(toolbarTintColor, for: .normal)
         result.setTitle(FrameworkBundle.doneButton, for: .normal)
-        result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+        result.fw.touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
         result.sizeToFit()
@@ -1767,7 +1767,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.setTitleColor(toolbarTintColor, for: .normal)
         result.setTitle(FrameworkBundle.previewButton, for: .normal)
-        result.fw_touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+        result.fw.touchInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         result.fw_disabledAlpha = UIButton.fw_disabledAlpha
         result.fw_highlightedAlpha = UIButton.fw_highlightedAlpha
         result.sizeToFit()
@@ -2668,7 +2668,7 @@ open class ImagePickerCollectionCell: UICollectionViewCell {
     
     open lazy var checkboxButton: UIButton = {
         let result = UIButton()
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.setImage(checkboxImage, for: .normal)
         result.setImage(checkboxCheckedImage, for: .selected)
         result.setImage(checkboxCheckedImage, for: .highlighted)

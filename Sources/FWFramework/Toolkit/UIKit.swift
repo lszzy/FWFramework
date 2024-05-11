@@ -12,47 +12,127 @@ import CoreTelephony
 extension Wrapper where Base: UIBezierPath {
     /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
     public func shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
-        return base.fw_shapeImage(size, strokeWidth: strokeWidth, strokeColor: strokeColor, fillColor: fillColor)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        context.setLineWidth(strokeWidth)
+        context.setLineCap(.round)
+        strokeColor.setStroke()
+        context.addPath(base.cgPath)
+        context.strokePath()
+        
+        if let fillColor = fillColor {
+            fillColor.setFill()
+            context.addPath(base.cgPath)
+            context.fillPath()
+        }
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 
     /// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
     public func shapeLayer(_ rect: CGRect, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> CAShapeLayer {
-        return base.fw_shapeLayer(rect, strokeWidth: strokeWidth, strokeColor: strokeColor, fillColor: fillColor)
+        let layer = CAShapeLayer()
+        layer.frame = rect
+        layer.lineWidth = strokeWidth
+        layer.lineCap = .round
+        layer.strokeColor = strokeColor.cgColor
+        if let fillColor = fillColor {
+            layer.fillColor = fillColor.cgColor
+        }
+        layer.path = base.cgPath
+        return layer
     }
 
     /// 根据点计算折线路径(NSValue点)
     public static func lines(points: [NSValue]) -> UIBezierPath {
-        return Base.fw_lines(points: points)
+        let path = UIBezierPath()
+        var value = points.first ?? NSValue(cgPoint: .zero)
+        path.move(to: value.cgPointValue)
+        
+        for i in 1 ..< points.count {
+            value = points[i]
+            path.addLine(to: value.cgPointValue)
+        }
+        return path
     }
 
     /// 根据点计算贝塞尔曲线路径
     public static func quadCurvedPath(points: [NSValue]) -> UIBezierPath {
-        return Base.fw_quadCurvedPath(points: points)
+        let path = UIBezierPath()
+        var value = points.first ?? NSValue(cgPoint: .zero)
+        var p1 = value.cgPointValue
+        path.move(to: p1)
+        
+        if points.count == 2 {
+            value = points[1]
+            path.addLine(to: value.cgPointValue)
+            return path
+        }
+        
+        for i in 1 ..< points.count {
+            value = points[i]
+            let p2 = value.cgPointValue
+            
+            let midPoint = middlePoint(p1, with: p2)
+            path.addQuadCurve(to: midPoint, controlPoint: controlPoint(midPoint, with: p1))
+            path.addQuadCurve(to: p2, controlPoint: controlPoint(midPoint, with: p2))
+            
+            p1 = p2
+        }
+        return path
     }
     
     /// 计算两点的中心点
     public static func middlePoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        return Base.fw_middlePoint(p1, with: p2)
+        return CGPoint(x: (p1.x + p2.x) / 2.0, y: (p1.y + p2.y) / 2.0)
     }
 
     /// 计算两点的贝塞尔曲线控制点
     public static func controlPoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        return Base.fw_controlPoint(p1, with: p2)
+        var controlPoint = middlePoint(p1, with: p2)
+        let diffY = abs(p2.y - controlPoint.y)
+        if p1.y < p2.y {
+            controlPoint.y += diffY
+        } else if p1.y > p2.y {
+            controlPoint.y -= diffY
+        }
+        return controlPoint
     }
     
     /// 将角度(0~360)转换为弧度，周长为2*M_PI*r
     public static func radian(degree: CGFloat) -> CGFloat {
-        return Base.fw_radian(degree: degree)
+        return (CGFloat.pi * degree) / 180.0
     }
     
     /// 将弧度转换为角度(0~360)
     public static func degree(radian: CGFloat) -> CGFloat {
-        return Base.fw_degree(radian: radian)
+        return (radian * 180.0) / CGFloat.pi
     }
     
     /// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
     public static func linePoints(rect: CGRect, direction: UISwipeGestureRecognizer.Direction) -> [NSValue] {
-        return Base.fw_linePoints(rect: rect, direction: direction)
+        var startPoint: CGPoint = .zero
+        var endPoint: CGPoint = .zero
+        switch direction {
+        case .right:
+            startPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
+            endPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
+        case .up:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+        case .left:
+            startPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
+            endPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
+        case .down:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+        default:
+            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
+            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
+        }
+        return [NSValue(cgPoint: startPoint), NSValue(cgPoint: endPoint)]
     }
 }
 
@@ -60,44 +140,178 @@ extension Wrapper where Base: UIBezierPath {
 extension Wrapper where Base: UIDevice {
     /// 设置设备token原始Data，格式化并保存
     public static func setDeviceTokenData(_ tokenData: Data?) {
-        Base.fw_setDeviceTokenData(tokenData)
+        if let tokenData = tokenData {
+            deviceToken = tokenData.map{ String(format: "%02.0hhx", $0) }.joined()
+        } else {
+            deviceToken = nil
+        }
     }
 
     /// 获取设备Token格式化后的字符串
     public static var deviceToken: String? {
-        get { Base.fw_deviceToken }
-        set { Base.fw_deviceToken = newValue }
+        get {
+            return UserDefaults.standard.string(forKey: "FWDeviceToken")
+        }
+        set {
+            if let deviceToken = newValue {
+                UserDefaults.standard.set(deviceToken, forKey: "FWDeviceToken")
+                UserDefaults.standard.synchronize()
+            } else {
+                UserDefaults.standard.removeObject(forKey: "FWDeviceToken")
+                UserDefaults.standard.synchronize()
+            }
+        }
     }
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        return Base.fw_deviceIDFV
+        return UIDevice.current.identifierForVendor?.uuidString
     }
     
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
     public static var deviceUUID: String {
-        get { Base.fw_deviceUUID }
-        set { Base.fw_deviceUUID = newValue }
+        get {
+            if let deviceUUID = UIDevice.innerDeviceUUID {
+                return deviceUUID
+            }
+            
+            if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
+                UIDevice.innerDeviceUUID = deviceUUID
+                return deviceUUID
+            }
+            
+            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+            UIDevice.innerDeviceUUID = deviceUUID
+            KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+            return deviceUUID
+        }
+        set {
+            UIDevice.innerDeviceUUID = newValue
+            KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
+        }
     }
     
     /// 是否越狱
     public static var isJailbroken: Bool {
-        return Base.fw_isJailbroken
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        // 1
+        let paths = [
+            "/Applications/Cydia.app",
+            "/private/var/lib/apt/",
+            "/private/var/lib/cydia",
+            "/private/var/stash"
+        ]
+        for path in paths {
+            if FileManager.default.fileExists(atPath: path) {
+                return true
+            }
+        }
+
+        // 2
+        if let bash = fopen("/bin/bash", "r") {
+            fclose(bash)
+            return true
+        }
+
+        // 3
+        let uuidString = UUID().uuidString
+        let path = "/private/\(uuidString)"
+        do {
+            try "test".write(toFile: path, atomically: true, encoding: .utf8)
+            try FileManager.default.removeItem(atPath: path)
+            return true
+        } catch {
+            return false
+        }
+        #endif
     }
     
     /// 本地IP地址
     public static var ipAddress: String? {
-        return Base.fw_ipAddress
+        var ipAddr: String?
+        var addrs: UnsafeMutablePointer<ifaddrs>? = nil
+        
+        let ret = getifaddrs(&addrs)
+        if 0 == ret {
+            var cursor = addrs
+            
+            while cursor != nil {
+                if AF_INET == cursor!.pointee.ifa_addr.pointee.sa_family && 0 == (cursor!.pointee.ifa_flags & UInt32(IFF_LOOPBACK)) {
+                    ipAddr = String(cString: inet_ntoa(UnsafeMutablePointer<sockaddr_in>(OpaquePointer(cursor!.pointee.ifa_addr)).pointee.sin_addr))
+                    break
+                }
+                
+                cursor = cursor!.pointee.ifa_next
+            }
+            
+            freeifaddrs(addrs)
+        }
+        
+        return ipAddr
     }
     
     /// 本地主机名称
     public static var hostName: String? {
-        return Base.fw_hostName
+        var hostName = [CChar](repeating: 0, count: 256)
+        let success = gethostname(&hostName, 255)
+        if success != 0 { return nil }
+        hostName[255] = 0
+
+        #if targetEnvironment(simulator)
+        return String(cString: hostName)
+        #else
+        return String(format: "%s.local", hostName)
+        #endif
     }
     
     /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
     public static var networkTypes: [String]? {
-        return Base.fw_networkTypes
+        guard let currentRadio = UIDevice.innerNetworkInfo.serviceCurrentRadioAccessTechnology else {
+            return nil
+        }
+        
+        return currentRadio.values.compactMap { networkType($0) }
+    }
+    
+    private static func networkType(_ accessTechnology: String) -> String? {
+        let types2G = [
+            CTRadioAccessTechnologyGPRS,
+            CTRadioAccessTechnologyEdge,
+            CTRadioAccessTechnologyCDMA1x
+        ]
+        let types3G = [
+            CTRadioAccessTechnologyWCDMA,
+            CTRadioAccessTechnologyHSDPA,
+            CTRadioAccessTechnologyHSUPA,
+            CTRadioAccessTechnologyCDMAEVDORev0,
+            CTRadioAccessTechnologyCDMAEVDORevA,
+            CTRadioAccessTechnologyCDMAEVDORevB,
+            CTRadioAccessTechnologyeHRPD
+        ]
+        let types4G = [
+            CTRadioAccessTechnologyLTE
+        ]
+        var types5G: [String] = []
+        if #available(iOS 14.1, *) {
+            types5G = [
+                CTRadioAccessTechnologyNRNSA,
+                CTRadioAccessTechnologyNR
+            ]
+        }
+        
+        var networkType: String?
+        if types5G.contains(accessTechnology) {
+            networkType = "5G"
+        } else if types4G.contains(accessTechnology) {
+            networkType = "4G"
+        } else if types3G.contains(accessTechnology) {
+            networkType = "3G"
+        } else if types2G.contains(accessTechnology) {
+            networkType = "2G"
+        }
+        return networkType
     }
 }
 
@@ -106,185 +320,488 @@ extension Wrapper where Base: UIDevice {
 extension Wrapper where Base: UIView {
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
     public var isViewVisible: Bool {
-        return base.fw_isViewVisible
+        if base.isHidden || base.alpha <= 0.01 || base.window == nil { return false }
+        if base.bounds.width == 0 || base.bounds.height == 0 { return false }
+        return true
     }
 
     /// 获取响应的视图控制器
     public var viewController: UIViewController? {
-        return base.fw_viewController
+        var responder = base.next
+        while responder != nil {
+            if let viewController = responder as? UIViewController {
+                return viewController
+            }
+            responder = responder?.next
+        }
+        return nil
     }
 
     /// 设置额外热区(点击区域)
     public var touchInsets: UIEdgeInsets {
-        get { return base.fw_touchInsets }
-        set { base.fw_touchInsets = newValue }
+        get {
+            if let value = property(forName: "touchInsets") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            setProperty(NSValue(uiEdgeInsets: newValue), forName: "touchInsets")
+        }
     }
     
     /// 设置视图是否允许检测子视图pointInside，默认false
     public var pointInsideSubviews: Bool {
-        get { return base.fw_pointInsideSubviews }
-        set { base.fw_pointInsideSubviews = newValue }
+        get { return propertyBool(forName: "pointInsideSubviews") }
+        set { setPropertyBool(newValue, forName: "pointInsideSubviews") }
     }
     
     /// 设置视图是否可穿透(子视图响应)
     public var isPenetrable: Bool {
-        get { return base.fw_isPenetrable }
-        set { base.fw_isPenetrable = newValue }
+        get { return propertyBool(forName: "isPenetrable") }
+        set { setPropertyBool(newValue, forName: "isPenetrable") }
     }
 
     /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
     public var fitFrame: CGRect {
-        get { return base.fw_fitFrame }
-        set { base.fw_fitFrame = newValue }
+        get {
+            return base.frame
+        }
+        set {
+            var fitFrame = newValue
+            fitFrame.size = fitSize(drawSize: CGSize(width: fitFrame.size.width, height: .greatestFiniteMagnitude))
+            base.frame = fitFrame
+        }
     }
 
     /// 计算当前视图适合大小，需实现sizeThatFits:方法
     public var fitSize: CGSize {
-        return base.fw_fitSize
+        if base.frame.size.equalTo(.zero) {
+            base.setNeedsLayout()
+            base.layoutIfNeeded()
+        }
+        
+        let drawSize = CGSize(width: base.frame.size.width, height: .greatestFiniteMagnitude)
+        return fitSize(drawSize: drawSize)
     }
 
     /// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
     public func fitSize(drawSize: CGSize) -> CGSize {
-        return base.fw_fitSize(drawSize: drawSize)
+        let size = base.sizeThatFits(drawSize)
+        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
     
     /// 根据tag查找subview，仅从subviews中查找
     public func subview(tag: Int) -> UIView? {
-        return base.fw_subview(tag: tag)
+        var subview: UIView?
+        for obj in base.subviews {
+            if obj.tag == tag {
+                subview = obj
+                break
+            }
+        }
+        return subview
     }
 
     /// 设置阴影颜色、偏移和半径
     public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
-        base.fw_setShadowColor(color, offset: offset, radius: radius)
+        base.layer.shadowColor = color?.cgColor
+        base.layer.shadowOffset = offset
+        base.layer.shadowRadius = radius
+        base.layer.shadowOpacity = 1.0
     }
 
     /// 绘制四边边框
     public func setBorderColor(_ color: UIColor?, width: CGFloat) {
-        base.fw_setBorderColor(color, width: width)
+        base.layer.borderColor = color?.cgColor
+        base.layer.borderWidth = width
     }
 
     /// 绘制四边边框和四角圆角
     public func setBorderColor(_ color: UIColor?, width: CGFloat, cornerRadius: CGFloat) {
-        base.fw_setBorderColor(color, width: width, cornerRadius: cornerRadius)
+        setBorderColor(color, width: width)
+        setCornerRadius(cornerRadius)
     }
 
     /// 绘制四角圆角
     public func setCornerRadius(_ radius: CGFloat) {
-        base.fw_setCornerRadius(radius)
+        base.layer.cornerRadius = radius
+        base.layer.masksToBounds = true
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        base.fw_setBorderLayer(edge, color: color, width: width)
+        setBorderLayer(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        base.fw_setBorderLayer(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
+        if edge.contains(.top) {
+            let borderLayer = borderLayer("fw_borderLayerTop")
+            borderLayer.frame = CGRect(x: leftInset, y: 0, width: base.bounds.size.width - leftInset - rightInset, height: width)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.left) {
+            let borderLayer = borderLayer("fw_borderLayerLeft")
+            borderLayer.frame = CGRect(x: 0, y: leftInset, width: width, height: base.bounds.size.height - leftInset - rightInset)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.bottom) {
+            let borderLayer = borderLayer("fw_borderLayerBottom")
+            borderLayer.frame = CGRect(x: leftInset, y: base.bounds.size.height - width, width: base.bounds.size.width - leftInset - rightInset, height: width)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+        
+        if edge.contains(.right) {
+            let borderLayer = borderLayer("fw_borderLayerRight")
+            borderLayer.frame = CGRect(x: base.bounds.size.width - width, y: leftInset, width: width, height: base.bounds.size.height - leftInset - rightInset)
+            borderLayer.backgroundColor = color?.cgColor
+        }
+    }
+    
+    private func borderLayer(_ edgeKey: String) -> CALayer {
+        if let borderLayer = property(forName: edgeKey) as? CALayer {
+            return borderLayer
+        } else {
+            let borderLayer = CALayer()
+            base.layer.addSublayer(borderLayer)
+            setProperty(borderLayer, forName: edgeKey)
+            return borderLayer
+        }
     }
     
     /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
-        base.fw_setDashBorderLayer(color: color, width: width, cornerRadius: cornerRadius, lineLength: lineLength, lineSpacing: lineSpacing)
+        var borderLayer: CAShapeLayer
+        if let layer = property(forName: "dashBorderLayer") as? CAShapeLayer {
+            borderLayer = layer
+        } else {
+            borderLayer = CAShapeLayer()
+            base.layer.addSublayer(borderLayer)
+            setProperty(borderLayer, forName: "dashBorderLayer")
+        }
+        
+        borderLayer.frame = base.bounds
+        borderLayer.fillColor = UIColor.clear.cgColor
+        borderLayer.strokeColor = color?.cgColor
+        borderLayer.lineWidth = width
+        borderLayer.lineJoin = .round
+        borderLayer.lineDashPattern = [NSNumber(value: lineLength), NSNumber(value: lineSpacing)]
+        borderLayer.position = CGPoint(x: CGRectGetMidX(base.bounds), y: CGRectGetMidY(base.bounds))
+        borderLayer.path = UIBezierPath(roundedRect: CGRect(x: width / 2.0, y: width / 2.0, width: max(0, CGRectGetWidth(base.bounds) - width), height: max(0, CGRectGetHeight(base.bounds) - width)), cornerRadius: cornerRadius).cgPath
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
-        base.fw_setCornerLayer(corner, radius: radius)
+        let cornerLayer = CAShapeLayer()
+        let path = UIBezierPath(roundedRect: base.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
+        cornerLayer.frame = base.bounds
+        cornerLayer.path = path.cgPath
+        base.layer.mask = cornerLayer
     }
 
     /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
     public func setCornerLayer(_ corner: UIRectCorner, radius: CGFloat, borderColor: UIColor?, width: CGFloat) {
-        base.fw_setCornerLayer(corner, radius: radius, borderColor: borderColor, width: width)
+        setCornerLayer(corner, radius: radius)
+        
+        var borderLayer: CAShapeLayer
+        if let layer = property(forName: "borderLayerCorner") as? CAShapeLayer {
+            borderLayer = layer
+        } else {
+            borderLayer = CAShapeLayer()
+            base.layer.addSublayer(borderLayer)
+            setProperty(borderLayer, forName: "borderLayerCorner")
+        }
+        
+        let path = UIBezierPath(roundedRect: base.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
+        borderLayer.frame = base.bounds
+        borderLayer.path = path.cgPath
+        borderLayer.strokeColor = borderColor?.cgColor
+        borderLayer.lineWidth = width * 2.0
+        borderLayer.fillColor = nil
     }
     
     /// 绘制单边或多边边框视图。使用AutoLayout
     public func setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        base.fw_setBorderView(edge, color: color, width: width)
+        setBorderView(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框。使用AutoLayout
     public func setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        base.fw_setBorderView(edge, color: color, width: width, leftInset: leftInset, rightInset: rightInset)
+        if edge.contains(.top) {
+            let borderView = borderView("borderViewTop", edge: .top)
+            borderView.fw.setDimension(.height, size: width)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.left) {
+            let borderView = borderView("borderViewLeft", edge: .left)
+            borderView.fw.setDimension(.width, size: width)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.bottom) {
+            let borderView = borderView("borderViewBottom", edge: .bottom)
+            borderView.fw.setDimension(.height, size: width)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+        
+        if edge.contains(.right) {
+            let borderView = borderView("borderViewRight", edge: .right)
+            borderView.fw.setDimension(.width, size: width)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.backgroundColor = color
+        }
+    }
+    
+    private func borderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
+        if let borderView = property(forName: edgeKey) as? UIView {
+            return borderView
+        } else {
+            let borderView = UIView()
+            base.addSubview(borderView)
+            setProperty(borderView, forName: edgeKey)
+            
+            if edge == .top || edge == .bottom {
+                borderView.fw.pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
+                borderView.fw.setDimension(.height, size: 0)
+                borderView.fw.pinEdge(toSuperview: .left, inset: 0)
+                borderView.fw.pinEdge(toSuperview: .right, inset: 0)
+            } else {
+                borderView.fw.pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
+                borderView.fw.setDimension(.width, size: 0)
+                borderView.fw.pinEdge(toSuperview: .top, inset: 0)
+                borderView.fw.pinEdge(toSuperview: .bottom, inset: 0)
+            }
+            return borderView
+        }
     }
     
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
     @discardableResult
     public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSourceTimer {
-        return base.fw_startCountDown(seconds, block: block)
+        let queue = DispatchQueue.global()
+        let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
+        timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
+        
+        let startTime = Date.fw.currentTime
+        var hasWindow = false
+        timer.setEventHandler { [weak base] in
+            DispatchQueue.main.async {
+                var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
+                if countDown <= 0 {
+                    timer.cancel()
+                }
+                
+                // 按钮从window移除时自动cancel倒计时
+                if !hasWindow && base?.window != nil {
+                    hasWindow = true
+                } else if hasWindow && base?.window == nil {
+                    hasWindow = false
+                    countDown = 0
+                    timer.cancel()
+                }
+                
+                block(countDown <= 0 ? 0 : countDown)
+            }
+        }
+        timer.resume()
+        return timer
     }
     
     /// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
     @discardableResult
     public func setBlurEffect(_ style: UIBlurEffect.Style) -> UIVisualEffectView? {
-        return base.fw_setBlurEffect(style)
+        for subview in base.subviews {
+            if subview is UIVisualEffectView {
+                subview.removeFromSuperview()
+            }
+        }
+        
+        if style.rawValue > -1 {
+            let effect = UIBlurEffect(style: style)
+            let effectView = UIVisualEffectView(effect: effect)
+            base.addSubview(effectView)
+            effectView.fw.pinEdges()
+            return effectView
+        }
+        return nil
     }
     
     /// 移除所有子视图
     public func removeAllSubviews() {
-        base.fw_removeAllSubviews()
+        base.subviews.forEach { $0.removeFromSuperview() }
     }
 
     /// 递归查找指定子类的第一个子视图(含自身)
     public func subview(of clazz: AnyClass) -> UIView? {
-        return base.fw_subview(of: clazz)
+        return subview { view in
+            return view.isKind(of: clazz)
+        }
     }
 
     /// 递归查找指定条件的第一个子视图(含自身)
     public func subview(block: @escaping (UIView) -> Bool) -> UIView? {
-        return base.fw_subview(block: block)
+        if block(base) { return base }
+        
+        /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
+        for subview in base.subviews {
+            if block(subview) {
+                return subview
+            }
+        } */
+        
+        for subview in base.subviews {
+            if let resultView = subview.fw.subview(block: block) {
+                return resultView
+            }
+        }
+        return nil
     }
     
     /// 递归查找指定父类的第一个父视图(含自身)
     public func superview(of clazz: AnyClass) -> UIView? {
-        return base.fw_superview(of: clazz)
+        return superview { view in
+            return view.isKind(of: clazz)
+        }
     }
     
     /// 递归查找指定条件的第一个父视图(含自身)
     public func superview(block: @escaping (UIView) -> Bool) -> UIView? {
-        return base.fw_superview(block: block)
+        var resultView: UIView?
+        var superview: UIView? = base
+        while let view = superview {
+            if block(view) {
+                resultView = view
+                break
+            }
+            superview = view.superview
+        }
+        return resultView
     }
 
     /// 图片截图
     public var snapshotImage: UIImage? {
-        return base.fw_snapshotImage
+        return UIImage.fw.image(view: base)
     }
 
     /// Pdf截图
     public var snapshotPdf: Data? {
-        return base.fw_snapshotPdf
+        var bounds = base.bounds
+        let data = NSMutableData()
+        guard let consumer = CGDataConsumer(data: data as CFMutableData),
+              let context = CGContext(consumer: consumer, mediaBox: &bounds, nil) else { return nil }
+        context.beginPDFPage(nil)
+        context.translateBy(x: 0, y: bounds.size.height)
+        context.scaleBy(x: 1.0, y: -1.0)
+        base.layer.render(in: context)
+        context.endPDFPage()
+        context.closePDF()
+        return data as Data
     }
     
     /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
     public var frameApplyTransform: CGRect {
-        get { return base.fw_frameApplyTransform }
-        set { base.fw_frameApplyTransform = newValue }
+        get { return base.frame }
+        set { base.frame = UIView.fw.rectApplyTransform(newValue, transform: base.transform, anchorPoint: base.layer.anchorPoint) }
+    }
+    
+    /// 计算目标点 targetPoint 围绕坐标点 coordinatePoint 通过 transform 之后此点的坐标。@see https://github.com/Tencent/QMUI_iOS
+    private static func pointApplyTransform(_ coordinatePoint: CGPoint, targetPoint: CGPoint, transform: CGAffineTransform) -> CGPoint {
+        var p = CGPoint()
+        p.x = (targetPoint.x - coordinatePoint.x) * transform.a + (targetPoint.y - coordinatePoint.y) * transform.c + coordinatePoint.x
+        p.y = (targetPoint.x - coordinatePoint.x) * transform.b + (targetPoint.y - coordinatePoint.y) * transform.d + coordinatePoint.y
+        p.x += transform.tx
+        p.y += transform.ty
+        return p
+    }
+    
+    /// 系统的 CGRectApplyAffineTransform 只会按照 anchorPoint 为 (0, 0) 的方式去计算，但通常情况下我们面对的是 UIView/CALayer，它们默认的 anchorPoint 为 (.5, .5)，所以增加这个函数，在计算 transform 时可以考虑上 anchorPoint 的影响。@see https://github.com/Tencent/QMUI_iOS
+    private static func rectApplyTransform(_ rect: CGRect, transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
+        let width = CGRectGetWidth(rect)
+        let height = CGRectGetHeight(rect)
+        let oPoint = CGPoint(x: rect.origin.x + width * anchorPoint.x, y: rect.origin.y + height * anchorPoint.y)
+        let top_left = pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y), transform: transform)
+        let bottom_left = pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y + height), transform: transform)
+        let top_right = pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y), transform: transform)
+        let bottom_right = pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y + height), transform: transform)
+        let minX = min(min(min(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
+        let maxX = max(max(max(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
+        let minY = min(min(min(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
+        let maxY = max(max(max(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
+        let newWidth = maxX - minX
+        let newHeight = maxY - minY
+        let result = CGRect(x: minX, y: minY, width: newWidth, height: newHeight)
+        return result
     }
     
     /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
     public var sortIndex: Int {
-        get { return base.fw_sortIndex }
-        set { base.fw_sortIndex = newValue }
+        get { propertyInt(forName: "sortIndex") }
+        set { setPropertyInt(newValue, forName: "sortIndex") }
     }
 
     /// 根据sortIndex排序subviews，需结合sortIndex使用
     public func sortSubviews() {
-        base.fw_sortSubviews()
+        var sortViews: [UIView] = []
+        for subview in base.subviews {
+            if subview.fw.sortIndex != 0 {
+                sortViews.append(subview)
+            }
+        }
+        guard sortViews.count > 0 else { return }
+        
+        sortViews.sort { view1, view2 in
+            if view1.fw.sortIndex < 0 && view2.fw.sortIndex < 0 {
+                return view2.fw.sortIndex < view1.fw.sortIndex
+            } else {
+                return view1.fw.sortIndex < view2.fw.sortIndex
+            }
+        }
+        for subview in sortViews {
+            if subview.fw.sortIndex < 0 {
+                base.sendSubviewToBack(subview)
+            } else {
+                base.bringSubviewToFront(subview)
+            }
+        }
     }
     
     /// 是否显示灰色视图，仅支持iOS13+
     public var hasGrayView: Bool {
-        return base.fw_hasGrayView
+        let grayView = base.subviews.first { $0 is SaturationGrayView }
+        return grayView != nil
     }
     
     /// 显示灰色视图，仅支持iOS13+
     public func showGrayView() {
-        return base.fw_showGrayView()
+        hideGrayView()
+        
+        let overlay = SaturationGrayView()
+        overlay.isUserInteractionEnabled = false
+        overlay.backgroundColor = UIColor.lightGray
+        overlay.layer.compositingFilter = "saturationBlendMode"
+        overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+        base.addSubview(overlay)
+        overlay.fw.pinEdges()
     }
     
     /// 隐藏灰色视图，仅支持iOS13+
     public func hideGrayView() {
-        base.fw_hideGrayView()
+        for subview in base.subviews {
+            if subview is SaturationGrayView {
+                subview.removeFromSuperview()
+            }
+        }
     }
 }
 
@@ -292,32 +809,159 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIImageView {
     /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏
     public func setContentModeAspectFill() {
-        base.fw_setContentModeAspectFill()
+        base.contentMode = .scaleAspectFill
+        base.layer.masksToBounds = true
     }
     
     /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
     public func faceAware() {
-        base.fw_faceAware()
+        guard let image = base.image else { return }
+        
+        DispatchQueue.global(qos: .default).async { [weak base] in
+            var ciImage = image.ciImage
+            if ciImage == nil, let cgImage = image.cgImage {
+                ciImage = CIImage(cgImage: cgImage)
+            }
+            
+            if let ciImage = ciImage,
+               let cgImage = image.cgImage,
+               let features = UIImageView.innerFaceDetector?.features(in: ciImage),
+               !features.isEmpty {
+                DispatchQueue.main.async {
+                    base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
+                }
+            } else {
+                DispatchQueue.main.async {
+                    base?.fw.faceLayer(false)?.removeFromSuperlayer()
+                }
+            }
+        }
+    }
+    
+    private func faceMark(_ features: [CIFeature], size: CGSize) {
+        var fixedRect = CGRect(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude, width: 0, height: 0)
+        var rightBorder: CGFloat = 0
+        var bottomBorder: CGFloat = 0
+
+        for feature in features {
+            var oneRect = feature.bounds
+            oneRect.origin.y = size.height - oneRect.origin.y - oneRect.size.height
+
+            fixedRect.origin.x = min(oneRect.origin.x, fixedRect.origin.x)
+            fixedRect.origin.y = min(oneRect.origin.y, fixedRect.origin.y)
+
+            rightBorder = max(oneRect.origin.x + oneRect.size.width, rightBorder)
+            bottomBorder = max(oneRect.origin.y + oneRect.size.height, bottomBorder)
+        }
+
+        fixedRect.size.width = rightBorder - fixedRect.origin.x
+        fixedRect.size.height = bottomBorder - fixedRect.origin.y
+
+        var fixedCenter = CGPoint(x: fixedRect.origin.x + fixedRect.size.width / 2.0,
+                                  y: fixedRect.origin.y + fixedRect.size.height / 2.0)
+        var offset = CGPoint.zero
+        var finalSize = size
+
+        if size.width / size.height > base.bounds.size.width / base.bounds.size.height {
+            finalSize.height = base.bounds.size.height
+            finalSize.width = size.width / size.height * finalSize.height
+            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
+            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
+
+            offset.x = fixedCenter.x - base.bounds.size.width * 0.5
+            if offset.x < 0 {
+                offset.x = 0
+            } else if offset.x + base.bounds.size.width > finalSize.width {
+                offset.x = finalSize.width - base.bounds.size.width
+            }
+            offset.x = -offset.x
+        } else {
+            finalSize.width = base.bounds.size.width
+            finalSize.height = size.height / size.width * finalSize.width
+            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
+            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
+
+            offset.y = fixedCenter.y - base.bounds.size.height * (1 - 0.618)
+            if offset.y < 0 {
+                offset.y = 0
+            } else if offset.y + base.bounds.size.height > finalSize.height {
+                offset.y = finalSize.height - base.bounds.size.height
+            }
+            offset.y = -offset.y
+        }
+        
+        let sublayer = faceLayer(true)
+        sublayer?.frame = CGRect(origin: offset, size: finalSize)
+        sublayer?.contents = base.image?.cgImage
+    }
+    
+    private func faceLayer(_ lazyload: Bool) -> CALayer? {
+        if let sublayer = base.layer.sublayers?.first(where: { $0.name == "FWFaceLayer" }) {
+            return sublayer
+        }
+        
+        if lazyload {
+            let sublayer = CALayer()
+            sublayer.name = "FWFaceLayer"
+            sublayer.actions = ["contents": NSNull(), "bounds": NSNull(), "position": NSNull()]
+            base.layer.addSublayer(sublayer)
+            return sublayer
+        }
+        
+        return nil
     }
 
     /// 倒影效果
     public func reflect() {
-        base.fw_reflect()
+        var frame = base.frame
+        frame.origin.y += frame.size.height + 1
+        
+        let reflectImageView = UIImageView(frame: frame)
+        base.clipsToBounds = true
+        reflectImageView.contentMode = base.contentMode
+        reflectImageView.image = base.image
+        reflectImageView.transform = CGAffineTransform(scaleX: 1.0, y: -1.0)
+        
+        let reflectLayer = reflectImageView.layer
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.bounds = reflectLayer.bounds
+        gradientLayer.position = CGPoint(x: reflectLayer.bounds.size.width / 2.0, y: reflectLayer.bounds.size.height / 2.0)
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.3).cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        reflectLayer.mask = gradientLayer
+        
+        base.superview?.addSubview(reflectImageView)
     }
 
     /// 图片水印
     public func setImage(_ image: UIImage, watermarkImage: UIImage, in rect: CGRect) {
-        base.fw_setImage(image, watermarkImage: watermarkImage, in: rect)
+        UIGraphicsBeginImageContextWithOptions(base.frame.size, false, 0)
+        image.draw(in: base.bounds)
+        watermarkImage.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        base.image = newImage
     }
 
     /// 文字水印，指定区域
     public func setImage(_ image: UIImage, watermarkString: NSAttributedString, in rect: CGRect) {
-        base.fw_setImage(image, watermarkString: watermarkString, in: rect)
+        UIGraphicsBeginImageContextWithOptions(base.frame.size, false, 0)
+        image.draw(in: base.bounds)
+        watermarkString.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        base.image = newImage
     }
 
     /// 文字水印，指定坐标
     public func setImage(_ image: UIImage, watermarkString: NSAttributedString, at point: CGPoint) {
-        base.fw_setImage(image, watermarkString: watermarkString, at: point)
+        UIGraphicsBeginImageContextWithOptions(base.frame.size, false, 0)
+        image.draw(in: base.bounds)
+        watermarkString.draw(at: point)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        base.image = newImage
     }
 }
 
@@ -1262,984 +1906,29 @@ extension Wrapper where Base: UIViewController {
     }
 }
 
-// MARK: - UIBezierPath+UIKit
-@_spi(FW) extension UIBezierPath {
-    
-    /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-    public func fw_shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        context.setLineWidth(strokeWidth)
-        context.setLineCap(.round)
-        strokeColor.setStroke()
-        context.addPath(self.cgPath)
-        context.strokePath()
-        
-        if let fillColor = fillColor {
-            fillColor.setFill()
-            context.addPath(self.cgPath)
-            context.fillPath()
-        }
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
-    }
-
-    /// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-    public func fw_shapeLayer(_ rect: CGRect, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> CAShapeLayer {
-        let layer = CAShapeLayer()
-        layer.frame = rect
-        layer.lineWidth = strokeWidth
-        layer.lineCap = .round
-        layer.strokeColor = strokeColor.cgColor
-        if let fillColor = fillColor {
-            layer.fillColor = fillColor.cgColor
-        }
-        layer.path = self.cgPath
-        return layer
-    }
-
-    /// 根据点计算折线路径(NSValue点)
-    public static func fw_lines(points: [NSValue]) -> UIBezierPath {
-        let path = UIBezierPath()
-        var value = points.first ?? NSValue(cgPoint: .zero)
-        path.move(to: value.cgPointValue)
-        
-        for i in 1 ..< points.count {
-            value = points[i]
-            path.addLine(to: value.cgPointValue)
-        }
-        return path
-    }
-
-    /// 根据点计算贝塞尔曲线路径
-    public static func fw_quadCurvedPath(points: [NSValue]) -> UIBezierPath {
-        let path = UIBezierPath()
-        var value = points.first ?? NSValue(cgPoint: .zero)
-        var p1 = value.cgPointValue
-        path.move(to: p1)
-        
-        if points.count == 2 {
-            value = points[1]
-            path.addLine(to: value.cgPointValue)
-            return path
-        }
-        
-        for i in 1 ..< points.count {
-            value = points[i]
-            let p2 = value.cgPointValue
-            
-            let midPoint = fw_middlePoint(p1, with: p2)
-            path.addQuadCurve(to: midPoint, controlPoint: fw_controlPoint(midPoint, with: p1))
-            path.addQuadCurve(to: p2, controlPoint: fw_controlPoint(midPoint, with: p2))
-            
-            p1 = p2
-        }
-        return path
-    }
-    
-    /// 计算两点的中心点
-    public static func fw_middlePoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        return CGPoint(x: (p1.x + p2.x) / 2.0, y: (p1.y + p2.y) / 2.0)
-    }
-
-    /// 计算两点的贝塞尔曲线控制点
-    public static func fw_controlPoint(_ p1: CGPoint, with p2: CGPoint) -> CGPoint {
-        var controlPoint = fw_middlePoint(p1, with: p2)
-        let diffY = abs(p2.y - controlPoint.y)
-        if p1.y < p2.y {
-            controlPoint.y += diffY
-        } else if p1.y > p2.y {
-            controlPoint.y -= diffY
-        }
-        return controlPoint
-    }
-    
-    /// 将角度(0~360)转换为弧度，周长为2*M_PI*r
-    public static func fw_radian(degree: CGFloat) -> CGFloat {
-        return (CGFloat.pi * degree) / 180.0
-    }
-    
-    /// 将弧度转换为角度(0~360)
-    public static func fw_degree(radian: CGFloat) -> CGFloat {
-        return (radian * 180.0) / CGFloat.pi
-    }
-    
-    /// 根据滑动方向计算rect的线段起点、终点中心点坐标数组(示范：田)。默认从上到下滑动
-    public static func fw_linePoints(rect: CGRect, direction: UISwipeGestureRecognizer.Direction) -> [NSValue] {
-        var startPoint: CGPoint = .zero
-        var endPoint: CGPoint = .zero
-        switch direction {
-        case .right:
-            startPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
-            endPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
-        case .up:
-            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
-            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
-        case .left:
-            startPoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
-            endPoint = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
-        case .down:
-            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
-            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
-        default:
-            startPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
-            endPoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
-        }
-        return [NSValue(cgPoint: startPoint), NSValue(cgPoint: endPoint)]
-    }
-    
-}
-
 // MARK: - UIDevice+UIKit
-@_spi(FW) extension UIDevice {
+extension UIDevice {
     
-    /// 设置设备token原始Data，格式化并保存
-    public static func fw_setDeviceTokenData(_ tokenData: Data?) {
-        if let tokenData = tokenData {
-            fw_deviceToken = tokenData.map{ String(format: "%02.0hhx", $0) }.joined()
-        } else {
-            fw_deviceToken = nil
-        }
-    }
-
-    /// 获取设备Token格式化后的字符串
-    public static var fw_deviceToken: String? {
-        get {
-            return UserDefaults.standard.string(forKey: "FWDeviceToken")
-        }
-        set {
-            if let deviceToken = newValue {
-                UserDefaults.standard.set(deviceToken, forKey: "FWDeviceToken")
-                UserDefaults.standard.synchronize()
-            } else {
-                UserDefaults.standard.removeObject(forKey: "FWDeviceToken")
-                UserDefaults.standard.synchronize()
-            }
-        }
-    }
-
-    /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-    public static var fw_deviceIDFV: String? {
-        return UIDevice.current.identifierForVendor?.uuidString
-    }
-    
-    /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
-    public static var fw_deviceUUID: String {
-        get {
-            if let deviceUUID = UIDevice.fw_staticDeviceUUID {
-                return deviceUUID
-            }
-            
-            if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
-                UIDevice.fw_staticDeviceUUID = deviceUUID
-                return deviceUUID
-            }
-            
-            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
-            UIDevice.fw_staticDeviceUUID = deviceUUID
-            KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
-            return deviceUUID
-        }
-        set {
-            UIDevice.fw_staticDeviceUUID = newValue
-            KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
-        }
-    }
-    
-    private static var fw_staticDeviceUUID: String?
-    
-    /// 是否越狱
-    public static var fw_isJailbroken: Bool {
-        #if targetEnvironment(simulator)
-        return false
-        #else
-        // 1
-        let paths = [
-            "/Applications/Cydia.app",
-            "/private/var/lib/apt/",
-            "/private/var/lib/cydia",
-            "/private/var/stash"
-        ]
-        for path in paths {
-            if FileManager.default.fileExists(atPath: path) {
-                return true
-            }
-        }
-        
-        // 2
-        if let bash = fopen("/bin/bash", "r") {
-            fclose(bash)
-            return true
-        }
-        
-        // 3
-        let uuidString = UUID().uuidString
-        let path = "/private/\(uuidString)"
-        do {
-            try "test".write(toFile: path, atomically: true, encoding: .utf8)
-            try FileManager.default.removeItem(atPath: path)
-            return true
-        } catch {
-            return false
-        }
-        #endif
-    }
-    
-    /// 本地IP地址
-    public static var fw_ipAddress: String? {
-        var ipAddr: String?
-        var addrs: UnsafeMutablePointer<ifaddrs>? = nil
-        
-        let ret = getifaddrs(&addrs)
-        if 0 == ret {
-            var cursor = addrs
-            
-            while cursor != nil {
-                if AF_INET == cursor!.pointee.ifa_addr.pointee.sa_family && 0 == (cursor!.pointee.ifa_flags & UInt32(IFF_LOOPBACK)) {
-                    ipAddr = String(cString: inet_ntoa(UnsafeMutablePointer<sockaddr_in>(OpaquePointer(cursor!.pointee.ifa_addr)).pointee.sin_addr))
-                    break
-                }
-                
-                cursor = cursor!.pointee.ifa_next
-            }
-            
-            freeifaddrs(addrs)
-        }
-        
-        return ipAddr
-    }
-    
-    /// 本地主机名称
-    public static var fw_hostName: String? {
-        var hostName = [CChar](repeating: 0, count: 256)
-        let success = gethostname(&hostName, 255)
-        if success != 0 { return nil }
-        hostName[255] = 0
-
-        #if targetEnvironment(simulator)
-        return String(cString: hostName)
-        #else
-        return String(format: "%s.local", hostName)
-        #endif
-    }
-    
-    /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
-    public static var fw_networkTypes: [String]? {
-        guard let currentRadio = fw_networkInfo.serviceCurrentRadioAccessTechnology else {
-            return nil
-        }
-        
-        return currentRadio.values.compactMap { fw_networkType($0) }
-    }
-    
-    private static func fw_networkType(_ accessTechnology: String) -> String? {
-        let types2G = [
-            CTRadioAccessTechnologyGPRS,
-            CTRadioAccessTechnologyEdge,
-            CTRadioAccessTechnologyCDMA1x
-        ]
-        let types3G = [
-            CTRadioAccessTechnologyWCDMA,
-            CTRadioAccessTechnologyHSDPA,
-            CTRadioAccessTechnologyHSUPA,
-            CTRadioAccessTechnologyCDMAEVDORev0,
-            CTRadioAccessTechnologyCDMAEVDORevA,
-            CTRadioAccessTechnologyCDMAEVDORevB,
-            CTRadioAccessTechnologyeHRPD
-        ]
-        let types4G = [
-            CTRadioAccessTechnologyLTE
-        ]
-        var types5G: [String] = []
-        if #available(iOS 14.1, *) {
-            types5G = [
-                CTRadioAccessTechnologyNRNSA,
-                CTRadioAccessTechnologyNR
-            ]
-        }
-        
-        var networkType: String?
-        if types5G.contains(accessTechnology) {
-            networkType = "5G"
-        } else if types4G.contains(accessTechnology) {
-            networkType = "4G"
-        } else if types3G.contains(accessTechnology) {
-            networkType = "3G"
-        } else if types2G.contains(accessTechnology) {
-            networkType = "2G"
-        }
-        return networkType
-    }
-    
-    private static var fw_networkInfo = CTTelephonyNetworkInfo()
-    
-}
-
-// MARK: - UIView+UIKit
-/// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如self)时返回nil排除即可
-@_spi(FW) extension UIView {
-    
-    private class SaturationGrayView: UIView {
-        
-        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            return nil
-        }
-        
-    }
-    
-    /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
-    public var fw_isViewVisible: Bool {
-        if isHidden || alpha <= 0.01 || self.window == nil { return false }
-        if bounds.width == 0 || bounds.height == 0 { return false }
-        return true
-    }
-
-    /// 获取响应的视图控制器
-    public var fw_viewController: UIViewController? {
-        var responder = self.next
-        while responder != nil {
-            if let viewController = responder as? UIViewController {
-                return viewController
-            }
-            responder = responder?.next
-        }
-        return nil
-    }
-
-    /// 设置额外热区(点击区域)
-    public var fw_touchInsets: UIEdgeInsets {
-        get {
-            if let value = fw.property(forName: "fw_touchInsets") as? NSValue {
-                return value.uiEdgeInsetsValue
-            }
-            return .zero
-        }
-        set {
-            fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_touchInsets")
-        }
-    }
-    
-    /// 设置视图是否允许检测子视图pointInside，默认false
-    public var fw_pointInsideSubviews: Bool {
-        get { return fw.propertyBool(forName: "fw_pointInsideSubviews") }
-        set { fw.setPropertyBool(newValue, forName: "fw_pointInsideSubviews") }
-    }
-    
-    /// 设置视图是否可穿透(子视图响应)
-    public var fw_isPenetrable: Bool {
-        get { return fw.propertyBool(forName: "fw_isPenetrable") }
-        set { fw.setPropertyBool(newValue, forName: "fw_isPenetrable") }
-    }
-
-    /// 设置自动计算适合高度的frame，需实现sizeThatFits:方法
-    public var fw_fitFrame: CGRect {
-        get {
-            return self.frame
-        }
-        set {
-            var fitFrame = newValue
-            fitFrame.size = fw_fitSize(drawSize: CGSize(width: fitFrame.size.width, height: .greatestFiniteMagnitude))
-            self.frame = fitFrame
-        }
-    }
-
-    /// 计算当前视图适合大小，需实现sizeThatFits:方法
-    public var fw_fitSize: CGSize {
-        if self.frame.size.equalTo(.zero) {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-        
-        let drawSize = CGSize(width: self.frame.size.width, height: .greatestFiniteMagnitude)
-        return fw_fitSize(drawSize: drawSize)
-    }
-
-    /// 计算指定边界，当前视图适合大小，需实现sizeThatFits:方法
-    public func fw_fitSize(drawSize: CGSize) -> CGSize {
-        let size = self.sizeThatFits(drawSize)
-        return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
-    }
-    
-    /// 根据tag查找subview，仅从subviews中查找
-    public func fw_subview(tag: Int) -> UIView? {
-        var subview: UIView?
-        for obj in self.subviews {
-            if obj.tag == tag {
-                subview = obj
-                break
-            }
-        }
-        return subview
-    }
-
-    /// 设置阴影颜色、偏移和半径
-    public func fw_setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
-        self.layer.shadowColor = color?.cgColor
-        self.layer.shadowOffset = offset
-        self.layer.shadowRadius = radius
-        self.layer.shadowOpacity = 1.0
-    }
-
-    /// 绘制四边边框
-    public func fw_setBorderColor(_ color: UIColor?, width: CGFloat) {
-        self.layer.borderColor = color?.cgColor
-        self.layer.borderWidth = width
-    }
-
-    /// 绘制四边边框和四角圆角
-    public func fw_setBorderColor(_ color: UIColor?, width: CGFloat, cornerRadius: CGFloat) {
-        self.fw_setBorderColor(color, width: width)
-        self.fw_setCornerRadius(cornerRadius)
-    }
-
-    /// 绘制四角圆角
-    public func fw_setCornerRadius(_ radius: CGFloat) {
-        self.layer.cornerRadius = radius
-        self.layer.masksToBounds = true
-    }
-
-    /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        fw_setBorderLayer(edge, color: color, width: width, leftInset: 0, rightInset: 0)
-    }
-
-    /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        if edge.contains(.top) {
-            let borderLayer = fw_borderLayer("fw_borderLayerTop")
-            borderLayer.frame = CGRect(x: leftInset, y: 0, width: self.bounds.size.width - leftInset - rightInset, height: width)
-            borderLayer.backgroundColor = color?.cgColor
-        }
-        
-        if edge.contains(.left) {
-            let borderLayer = fw_borderLayer("fw_borderLayerLeft")
-            borderLayer.frame = CGRect(x: 0, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
-            borderLayer.backgroundColor = color?.cgColor
-        }
-        
-        if edge.contains(.bottom) {
-            let borderLayer = fw_borderLayer("fw_borderLayerBottom")
-            borderLayer.frame = CGRect(x: leftInset, y: self.bounds.size.height - width, width: self.bounds.size.width - leftInset - rightInset, height: width)
-            borderLayer.backgroundColor = color?.cgColor
-        }
-        
-        if edge.contains(.right) {
-            let borderLayer = fw_borderLayer("fw_borderLayerRight")
-            borderLayer.frame = CGRect(x: self.bounds.size.width - width, y: leftInset, width: width, height: self.bounds.size.height - leftInset - rightInset)
-            borderLayer.backgroundColor = color?.cgColor
-        }
-    }
-    
-    private func fw_borderLayer(_ edgeKey: String) -> CALayer {
-        if let borderLayer = fw.property(forName: edgeKey) as? CALayer {
-            return borderLayer
-        } else {
-            let borderLayer = CALayer()
-            self.layer.addSublayer(borderLayer)
-            fw.setProperty(borderLayer, forName: edgeKey)
-            return borderLayer
-        }
-    }
-    
-    /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
-        var borderLayer: CAShapeLayer
-        if let layer = fw.property(forName: "fw_dashBorderLayer") as? CAShapeLayer {
-            borderLayer = layer
-        } else {
-            borderLayer = CAShapeLayer()
-            self.layer.addSublayer(borderLayer)
-            fw.setProperty(borderLayer, forName: "fw_dashBorderLayer")
-        }
-        
-        borderLayer.frame = self.bounds
-        borderLayer.fillColor = UIColor.clear.cgColor
-        borderLayer.strokeColor = color?.cgColor
-        borderLayer.lineWidth = width
-        borderLayer.lineJoin = .round
-        borderLayer.lineDashPattern = [NSNumber(value: lineLength), NSNumber(value: lineSpacing)]
-        borderLayer.position = CGPoint(x: CGRectGetMidX(self.bounds), y: CGRectGetMidY(self.bounds))
-        borderLayer.path = UIBezierPath(roundedRect: CGRect(x: width / 2.0, y: width / 2.0, width: max(0, CGRectGetWidth(self.bounds) - width), height: max(0, CGRectGetHeight(self.bounds) - width)), cornerRadius: cornerRadius).cgPath
-    }
-
-    /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
-        let cornerLayer = CAShapeLayer()
-        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
-        cornerLayer.frame = self.bounds
-        cornerLayer.path = path.cgPath
-        self.layer.mask = cornerLayer
-    }
-
-    /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func fw_setCornerLayer(_ corner: UIRectCorner, radius: CGFloat, borderColor: UIColor?, width: CGFloat) {
-        fw_setCornerLayer(corner, radius: radius)
-        
-        var borderLayer: CAShapeLayer
-        if let layer = fw.property(forName: "fw_borderLayerCorner") as? CAShapeLayer {
-            borderLayer = layer
-        } else {
-            borderLayer = CAShapeLayer()
-            self.layer.addSublayer(borderLayer)
-            fw.setProperty(borderLayer, forName: "fw_borderLayerCorner")
-        }
-        
-        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
-        borderLayer.frame = self.bounds
-        borderLayer.path = path.cgPath
-        borderLayer.strokeColor = borderColor?.cgColor
-        borderLayer.lineWidth = width * 2.0
-        borderLayer.fillColor = nil
-    }
-    
-    /// 绘制单边或多边边框视图。使用AutoLayout
-    public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
-        fw_setBorderView(edge, color: color, width: width, leftInset: 0, rightInset: 0)
-    }
-
-    /// 绘制单边或多边边框。使用AutoLayout
-    public func fw_setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
-        if edge.contains(.top) {
-            let borderView = fw_borderView("fw_borderViewTop", edge: .top)
-            borderView.fw.setDimension(.height, size: width)
-            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
-            borderView.backgroundColor = color
-        }
-        
-        if edge.contains(.left) {
-            let borderView = fw_borderView("fw_borderViewLeft", edge: .left)
-            borderView.fw.setDimension(.width, size: width)
-            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
-            borderView.backgroundColor = color
-        }
-        
-        if edge.contains(.bottom) {
-            let borderView = fw_borderView("fw_borderViewBottom", edge: .bottom)
-            borderView.fw.setDimension(.height, size: width)
-            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
-            borderView.backgroundColor = color
-        }
-        
-        if edge.contains(.right) {
-            let borderView = fw_borderView("fw_borderViewRight", edge: .right)
-            borderView.fw.setDimension(.width, size: width)
-            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
-            borderView.backgroundColor = color
-        }
-    }
-    
-    private func fw_borderView(_ edgeKey: String, edge: UIRectEdge) -> UIView {
-        if let borderView = fw.property(forName: edgeKey) as? UIView {
-            return borderView
-        } else {
-            let borderView = UIView()
-            self.addSubview(borderView)
-            fw.setProperty(borderView, forName: edgeKey)
-            
-            if edge == .top || edge == .bottom {
-                borderView.fw.pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
-                borderView.fw.setDimension(.height, size: 0)
-                borderView.fw.pinEdge(toSuperview: .left, inset: 0)
-                borderView.fw.pinEdge(toSuperview: .right, inset: 0)
-            } else {
-                borderView.fw.pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
-                borderView.fw.setDimension(.width, size: 0)
-                borderView.fw.pinEdge(toSuperview: .top, inset: 0)
-                borderView.fw.pinEdge(toSuperview: .bottom, inset: 0)
-            }
-            return borderView
-        }
-    }
-    
-    /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
-    @discardableResult
-    public func fw_startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSourceTimer {
-        let queue = DispatchQueue.global()
-        let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
-        timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
-        
-        let startTime = Date.fw.currentTime
-        var hasWindow = false
-        timer.setEventHandler { [weak self] in
-            DispatchQueue.main.async {
-                var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
-                if countDown <= 0 {
-                    timer.cancel()
-                }
-                
-                // 按钮从window移除时自动cancel倒计时
-                if !hasWindow && self?.window != nil {
-                    hasWindow = true
-                } else if hasWindow && self?.window == nil {
-                    hasWindow = false
-                    countDown = 0
-                    timer.cancel()
-                }
-                
-                block(countDown <= 0 ? 0 : countDown)
-            }
-        }
-        timer.resume()
-        return timer
-    }
-    
-    /// 设置毛玻璃效果，使用UIVisualEffectView。内容需要添加到UIVisualEffectView.contentView
-    @discardableResult
-    public func fw_setBlurEffect(_ style: UIBlurEffect.Style) -> UIVisualEffectView? {
-        for subview in self.subviews {
-            if subview is UIVisualEffectView {
-                subview.removeFromSuperview()
-            }
-        }
-        
-        if style.rawValue > -1 {
-            let effect = UIBlurEffect(style: style)
-            let effectView = UIVisualEffectView(effect: effect)
-            self.addSubview(effectView)
-            effectView.fw.pinEdges()
-            return effectView
-        }
-        return nil
-    }
-    
-    /// 移除所有子视图
-    public func fw_removeAllSubviews() {
-        self.subviews.forEach { $0.removeFromSuperview() }
-    }
-
-    /// 递归查找指定子类的第一个子视图(含自身)
-    public func fw_subview(of clazz: AnyClass) -> UIView? {
-        return fw_subview { view in
-            return view.isKind(of: clazz)
-        }
-    }
-
-    /// 递归查找指定条件的第一个子视图(含自身)
-    public func fw_subview(block: @escaping (UIView) -> Bool) -> UIView? {
-        if block(self) { return self }
-        
-        /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
-        for subview in self.subviews {
-            if block(subview) {
-                return subview
-            }
-        } */
-        
-        for subview in self.subviews {
-            if let resultView = subview.fw_subview(block: block) {
-                return resultView
-            }
-        }
-        return nil
-    }
-    
-    /// 递归查找指定父类的第一个父视图(含自身)
-    public func fw_superview(of clazz: AnyClass) -> UIView? {
-        return fw_superview { view in
-            return view.isKind(of: clazz)
-        }
-    }
-    
-    /// 递归查找指定条件的第一个父视图(含自身)
-    public func fw_superview(block: @escaping (UIView) -> Bool) -> UIView? {
-        var resultView: UIView?
-        var superview: UIView? = self
-        while let view = superview {
-            if block(view) {
-                resultView = view
-                break
-            }
-            superview = view.superview
-        }
-        return resultView
-    }
-
-    /// 图片截图
-    public var fw_snapshotImage: UIImage? {
-        return UIImage.fw.image(view: self)
-    }
-
-    /// Pdf截图
-    public var fw_snapshotPdf: Data? {
-        var bounds = self.bounds
-        let data = NSMutableData()
-        guard let consumer = CGDataConsumer(data: data as CFMutableData),
-              let context = CGContext(consumer: consumer, mediaBox: &bounds, nil) else { return nil }
-        context.beginPDFPage(nil)
-        context.translateBy(x: 0, y: bounds.size.height)
-        context.scaleBy(x: 1.0, y: -1.0)
-        self.layer.render(in: context)
-        context.endPDFPage()
-        context.closePDF()
-        return data as Data
-    }
-    
-    /// 将要设置的frame按照view的anchorPoint(.5, .5)处理后再设置，而系统默认按照(0, 0)方式计算
-    public var fw_frameApplyTransform: CGRect {
-        get { return self.frame }
-        set { self.frame = UIView.fw_rectApplyTransform(newValue, transform: self.transform, anchorPoint: self.layer.anchorPoint) }
-    }
-    
-    /// 计算目标点 targetPoint 围绕坐标点 coordinatePoint 通过 transform 之后此点的坐标。@see https://github.com/Tencent/QMUI_iOS
-    private static func fw_pointApplyTransform(_ coordinatePoint: CGPoint, targetPoint: CGPoint, transform: CGAffineTransform) -> CGPoint {
-        var p = CGPoint()
-        p.x = (targetPoint.x - coordinatePoint.x) * transform.a + (targetPoint.y - coordinatePoint.y) * transform.c + coordinatePoint.x
-        p.y = (targetPoint.x - coordinatePoint.x) * transform.b + (targetPoint.y - coordinatePoint.y) * transform.d + coordinatePoint.y
-        p.x += transform.tx
-        p.y += transform.ty
-        return p
-    }
-    
-    /// 系统的 CGRectApplyAffineTransform 只会按照 anchorPoint 为 (0, 0) 的方式去计算，但通常情况下我们面对的是 UIView/CALayer，它们默认的 anchorPoint 为 (.5, .5)，所以增加这个函数，在计算 transform 时可以考虑上 anchorPoint 的影响。@see https://github.com/Tencent/QMUI_iOS
-    private static func fw_rectApplyTransform(_ rect: CGRect, transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
-        let width = CGRectGetWidth(rect)
-        let height = CGRectGetHeight(rect)
-        let oPoint = CGPoint(x: rect.origin.x + width * anchorPoint.x, y: rect.origin.y + height * anchorPoint.y)
-        let top_left = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y), transform: transform)
-        let bottom_left = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x, y: rect.origin.y + height), transform: transform)
-        let top_right = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y), transform: transform)
-        let bottom_right = fw_pointApplyTransform(oPoint, targetPoint: CGPoint(x: rect.origin.x + width, y: rect.origin.y + height), transform: transform)
-        let minX = min(min(min(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
-        let maxX = max(max(max(top_left.x, bottom_left.x), top_right.x), bottom_right.x)
-        let minY = min(min(min(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
-        let maxY = max(max(max(top_left.y, bottom_left.y), top_right.y), bottom_right.y)
-        let newWidth = maxX - minX
-        let newHeight = maxY - minY
-        let result = CGRect(x: minX, y: minY, width: newWidth, height: newHeight)
-        return result
-    }
-    
-    /// 自定义视图排序索引，需结合sortSubviews使用，默认0不处理
-    public var fw_sortIndex: Int {
-        get { fw.propertyInt(forName: "fw_sortIndex") }
-        set { fw.setPropertyInt(newValue, forName: "fw_sortIndex") }
-    }
-
-    /// 根据sortIndex排序subviews，需结合sortIndex使用
-    public func fw_sortSubviews() {
-        var sortViews: [UIView] = []
-        for subview in self.subviews {
-            if subview.fw_sortIndex != 0 {
-                sortViews.append(subview)
-            }
-        }
-        guard sortViews.count > 0 else { return }
-        
-        sortViews.sort { view1, view2 in
-            if view1.fw_sortIndex < 0 && view2.fw_sortIndex < 0 {
-                return view2.fw_sortIndex < view1.fw_sortIndex
-            } else {
-                return view1.fw_sortIndex < view2.fw_sortIndex
-            }
-        }
-        for subview in sortViews {
-            if subview.fw_sortIndex < 0 {
-                self.sendSubviewToBack(subview)
-            } else {
-                self.bringSubviewToFront(subview)
-            }
-        }
-    }
-    
-    /// 是否显示灰色视图，仅支持iOS13+
-    public var fw_hasGrayView: Bool {
-        let grayView = self.subviews.first { $0 is SaturationGrayView }
-        return grayView != nil
-    }
-    
-    /// 显示灰色视图，仅支持iOS13+
-    public func fw_showGrayView() {
-        fw_hideGrayView()
-        
-        let overlay = SaturationGrayView()
-        overlay.isUserInteractionEnabled = false
-        overlay.backgroundColor = UIColor.lightGray
-        overlay.layer.compositingFilter = "saturationBlendMode"
-        overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-        self.addSubview(overlay)
-        overlay.fw.pinEdges()
-    }
-    
-    /// 隐藏灰色视图，仅支持iOS13+
-    public func fw_hideGrayView() {
-        for subview in self.subviews {
-            if subview is SaturationGrayView {
-                subview.removeFromSuperview()
-            }
-        }
-    }
+    fileprivate static var innerDeviceUUID: String?
+    fileprivate static var innerNetworkInfo = CTTelephonyNetworkInfo()
     
 }
 
 // MARK: - UIImageView+UIKit
-@_spi(FW) extension UIImageView {
+extension UIImageView {
     
-    /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏
-    public func fw_setContentModeAspectFill() {
-        self.contentMode = .scaleAspectFill
-        self.layer.masksToBounds = true
-    }
-    
-    /// 优化图片人脸显示，参考：https://github.com/croath/UIImageView-BetterFace
-    public func fw_faceAware() {
-        guard let image = self.image else { return }
-        
-        DispatchQueue.global(qos: .default).async { [weak self] in
-            var ciImage = image.ciImage
-            if ciImage == nil, let cgImage = image.cgImage {
-                ciImage = CIImage(cgImage: cgImage)
-            }
-            
-            if let ciImage = ciImage,
-               let cgImage = image.cgImage,
-               let features = UIImageView.fw_faceDetector?.features(in: ciImage),
-               !features.isEmpty {
-                DispatchQueue.main.async {
-                    self?.fw_faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self?.fw_faceLayer(false)?.removeFromSuperlayer()
-                }
-            }
-        }
-    }
-    
-    private static var fw_faceDetector: CIDetector? = {
+    fileprivate static var innerFaceDetector: CIDetector? = {
         let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
         return detector
     }()
     
-    private func fw_faceMark(_ features: [CIFeature], size: CGSize) {
-        var fixedRect = CGRect(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude, width: 0, height: 0)
-        var rightBorder: CGFloat = 0
-        var bottomBorder: CGFloat = 0
+}
 
-        for feature in features {
-            var oneRect = feature.bounds
-            oneRect.origin.y = size.height - oneRect.origin.y - oneRect.size.height
-
-            fixedRect.origin.x = min(oneRect.origin.x, fixedRect.origin.x)
-            fixedRect.origin.y = min(oneRect.origin.y, fixedRect.origin.y)
-
-            rightBorder = max(oneRect.origin.x + oneRect.size.width, rightBorder)
-            bottomBorder = max(oneRect.origin.y + oneRect.size.height, bottomBorder)
-        }
-
-        fixedRect.size.width = rightBorder - fixedRect.origin.x
-        fixedRect.size.height = bottomBorder - fixedRect.origin.y
-
-        var fixedCenter = CGPoint(x: fixedRect.origin.x + fixedRect.size.width / 2.0,
-                                  y: fixedRect.origin.y + fixedRect.size.height / 2.0)
-        var offset = CGPoint.zero
-        var finalSize = size
-
-        if size.width / size.height > bounds.size.width / bounds.size.height {
-            finalSize.height = bounds.size.height
-            finalSize.width = size.width / size.height * finalSize.height
-            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
-            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
-
-            offset.x = fixedCenter.x - bounds.size.width * 0.5
-            if offset.x < 0 {
-                offset.x = 0
-            } else if offset.x + bounds.size.width > finalSize.width {
-                offset.x = finalSize.width - bounds.size.width
-            }
-            offset.x = -offset.x
-        } else {
-            finalSize.width = bounds.size.width
-            finalSize.height = size.height / size.width * finalSize.width
-            fixedCenter.x = finalSize.width / size.width * fixedCenter.x
-            fixedCenter.y = finalSize.width / size.width * fixedCenter.y
-
-            offset.y = fixedCenter.y - bounds.size.height * (1 - 0.618)
-            if offset.y < 0 {
-                offset.y = 0
-            } else if offset.y + bounds.size.height > finalSize.height {
-                offset.y = finalSize.height - bounds.size.height
-            }
-            offset.y = -offset.y
-        }
-        
-        let sublayer = fw_faceLayer(true)
-        sublayer?.frame = CGRect(origin: offset, size: finalSize)
-        sublayer?.contents = self.image?.cgImage
-    }
+// MARK: - SaturationGrayView
+fileprivate class SaturationGrayView: UIView {
     
-    private func fw_faceLayer(_ lazyload: Bool) -> CALayer? {
-        if let sublayer = layer.sublayers?.first(where: { $0.name == "FWFaceLayer" }) {
-            return sublayer
-        }
-        
-        if lazyload {
-            let sublayer = CALayer()
-            sublayer.name = "FWFaceLayer"
-            sublayer.actions = ["contents": NSNull(), "bounds": NSNull(), "position": NSNull()]
-            layer.addSublayer(sublayer)
-            return sublayer
-        }
-        
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return nil
-    }
-
-    /// 倒影效果
-    public func fw_reflect() {
-        var frame = self.frame
-        frame.origin.y += frame.size.height + 1
-        
-        let reflectImageView = UIImageView(frame: frame)
-        self.clipsToBounds = true
-        reflectImageView.contentMode = self.contentMode
-        reflectImageView.image = self.image
-        reflectImageView.transform = CGAffineTransform(scaleX: 1.0, y: -1.0)
-        
-        let reflectLayer = reflectImageView.layer
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.bounds = reflectLayer.bounds
-        gradientLayer.position = CGPoint(x: reflectLayer.bounds.size.width / 2.0, y: reflectLayer.bounds.size.height / 2.0)
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.3).cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        reflectLayer.mask = gradientLayer
-        
-        self.superview?.addSubview(reflectImageView)
-    }
-
-    /// 图片水印
-    public func fw_setImage(_ image: UIImage, watermarkImage: UIImage, in rect: CGRect) {
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
-        image.draw(in: self.bounds)
-        watermarkImage.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        self.image = newImage
-    }
-
-    /// 文字水印，指定区域
-    public func fw_setImage(_ image: UIImage, watermarkString: NSAttributedString, in rect: CGRect) {
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
-        image.draw(in: self.bounds)
-        watermarkString.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        self.image = newImage
-    }
-
-    /// 文字水印，指定坐标
-    public func fw_setImage(_ image: UIImage, watermarkString: NSAttributedString, at point: CGPoint) {
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
-        image.draw(in: self.bounds)
-        watermarkString.draw(at: point)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        self.image = newImage
     }
     
 }
@@ -2886,7 +2575,7 @@ extension Wrapper where Base: UIViewController {
     /// 设置按钮倒计时，从window移除时自动取消。等待时按钮disabled，非等待时enabled。时间支持格式化，示例：重新获取(%lds)
     @discardableResult
     public func fw_startCountDown(_ seconds: Int, title: String, waitTitle: String) -> DispatchSourceTimer {
-        return self.fw_startCountDown(seconds) { [weak self] countDown in
+        return self.fw.startCountDown(seconds) { [weak self] countDown in
             // 先设置titleLabel，再设置title，防止闪烁
             if countDown <= 0 {
                 self?.titleLabel?.text = title
@@ -4466,15 +4155,15 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
             swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> UIView?).self
         ) { store in { selfObject, point, event in
-            guard selfObject.fw_isPenetrable else {
+            guard selfObject.fw.isPenetrable else {
                 return store.original(selfObject, store.selector, point, event)
             }
             
-            guard selfObject.fw_isViewVisible, !selfObject.subviews.isEmpty else { return nil }
+            guard selfObject.fw.isViewVisible, !selfObject.subviews.isEmpty else { return nil }
             for subview in selfObject.subviews.reversed() {
                 guard subview.isUserInteractionEnabled,
                       subview.frame.contains(point),
-                      subview.fw_isViewVisible else { continue }
+                      subview.fw.isViewVisible else { continue }
                 
                 let subPoint = selfObject.convert(point, to: subview)
                 guard let hitView = subview.hitTest(subPoint, with: event) else { continue }

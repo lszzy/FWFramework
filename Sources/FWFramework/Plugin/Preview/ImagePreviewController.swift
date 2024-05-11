@@ -362,7 +362,7 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
         backgroundColor = .clear
         contentView.addSubview(zoomImageView)
         contentViewBounds = contentView.bounds
-        zoomImageView.fw_frameApplyTransform = contentView.bounds
+        zoomImageView.fw.frameApplyTransform = contentView.bounds
     }
     
     required init?(coder: NSCoder) {
@@ -374,7 +374,7 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
         
         if !contentView.bounds.equalTo(contentViewBounds) {
             contentViewBounds = contentView.bounds
-            zoomImageView.fw_frameApplyTransform = contentView.bounds
+            zoomImageView.fw.frameApplyTransform = contentView.bounds
         }
     }
     
@@ -515,7 +515,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        imagePreviewView.fw_frameApplyTransform = view.bounds
+        imagePreviewView.fw.frameApplyTransform = view.bounds
         if (pageLabel.text?.count ?? 0) < 1 && imagePreviewView.imageCount > 0 {
             updatePageLabel()
         }

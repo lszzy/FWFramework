@@ -233,12 +233,12 @@ open class RequestContextAccessory: RequestAccessory {
     open func observeContext(for request: HTTPRequest) {
         var viewController = request.context as? UIViewController
         if viewController == nil, let view = request.context as? UIView {
-            viewController = view.fw_viewController
+            viewController = view.fw.viewController
         }
         guard let viewController = viewController else { return }
         
         viewController.fw.observeLifecycleState(object: request) { _, state, request in
-            guard state == .didDeinit, let request = request as? HTTPRequest else { return }
+            guard state == .didDeinit else { return }
             guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
             
             request.cancel()

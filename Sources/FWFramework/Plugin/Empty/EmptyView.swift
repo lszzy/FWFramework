@@ -191,7 +191,7 @@ open class PlaceholderView: UIView {
         result.setTitleColor(actionButtonTitleColor.withAlphaComponent(0.5), for: .highlighted)
         result.setTitleColor(actionButtonTitleColor.withAlphaComponent(0.5), for: .disabled)
         result.titleLabel?.font = actionButtonFont
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         return result
     }()
     
@@ -202,7 +202,7 @@ open class PlaceholderView: UIView {
         result.setTitleColor(moreActionButtonTitleColor.withAlphaComponent(0.5), for: .highlighted)
         result.setTitleColor(moreActionButtonTitleColor.withAlphaComponent(0.5), for: .disabled)
         result.titleLabel?.font = moreActionButtonFont
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.isHidden = true
         return result
     }()

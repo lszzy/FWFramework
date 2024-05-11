@@ -159,7 +159,7 @@ public class StatisticalManager: NSObject {
         view?.fw_statisticalTarget.clickCounts[triggerKey] = triggerCount
         
         event.view = view
-        event.viewController = view?.fw_viewController
+        event.viewController = view?.fw.viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
         event.triggerTimestamp = Date.fw.currentTime
@@ -215,7 +215,7 @@ public class StatisticalManager: NSObject {
         let isTerminated = view?.fw_statisticalTarget.exposureTerminated ?? false
         
         event.view = view
-        event.viewController = view?.fw_viewController
+        event.viewController = view?.fw.viewController
         event.indexPath = indexPath
         event.triggerCount = triggerCount
         event.triggerTimestamp = triggerTimestamp
@@ -1004,7 +1004,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     fileprivate var fw_statisticalExposureState: StatisticalState {
-        if !fw_isViewVisible {
+        if !fw.isViewVisible {
             return .none
         }
         
@@ -1024,7 +1024,7 @@ public class StatisticalEvent: NSObject, NSCopying {
             }
         }
         
-        let viewController = fw_viewController
+        let viewController = fw.viewController
         if let viewController = viewController,
             !viewController.fw_isVisible {
             return .none
@@ -1032,7 +1032,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         
         var containerView = fw_statisticalExposure?.containerView
         if let containerView = containerView {
-            if !containerView.fw_isViewVisible {
+            if !containerView.fw.isViewVisible {
                 return .none
             }
         } else {
@@ -1045,7 +1045,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         var superview = self.superview
         var superviewHidden = false
         while superview != nil && superview != containerView {
-            if !(superview?.fw_isViewVisible ?? false) {
+            if !(superview?.fw.isViewVisible ?? false) {
                 superviewHidden = true
                 break
             }
@@ -1114,7 +1114,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         }
         
         let shieldView = self.fw_statisticalExposure?.shieldView?(self)
-        guard let shieldView = shieldView, shieldView.fw_isViewVisible else {
+        guard let shieldView = shieldView, shieldView.fw.isViewVisible else {
             return ratio
         }
         let shieldRect = shieldView.convert(shieldView.bounds, to: containerView)

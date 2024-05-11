@@ -346,7 +346,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     
     private func canScroll(_ scrollView: UIScrollView) -> Bool {
         if let scrollViewFilter = self.scrollViewFilter { return scrollViewFilter(scrollView) }
-        if !scrollView.fw_isViewVisible || !scrollView.isScrollEnabled { return false }
+        if !scrollView.fw.isViewVisible || !scrollView.isScrollEnabled { return false }
         if self.isVertical {
             if !scrollView.fw_canScrollVertical { return false }
         } else {

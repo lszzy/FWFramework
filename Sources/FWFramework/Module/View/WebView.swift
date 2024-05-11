@@ -419,7 +419,7 @@ open class WebView: WKWebView {
             }
             
             DispatchQueue.fw.mainAsync {
-                if let presentedController = download.webView?.fw_viewController?.presentedViewController {
+                if let presentedController = download.webView?.fw.viewController?.presentedViewController {
                     presentedController.dismiss(animated: true) {
                         UIApplication.fw.openActivityItems([url])
                     }

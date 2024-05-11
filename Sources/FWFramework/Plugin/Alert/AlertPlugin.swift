@@ -1003,7 +1003,7 @@ public class AlertAppearance: NSObject {
         cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1024,7 +1024,7 @@ public class AlertAppearance: NSObject {
         cancel: AttributedStringParameter? = nil,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1049,7 +1049,7 @@ public class AlertAppearance: NSObject {
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1068,7 +1068,7 @@ public class AlertAppearance: NSObject {
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1091,7 +1091,7 @@ public class AlertAppearance: NSObject {
         confirmBlock: (() -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1116,7 +1116,7 @@ public class AlertAppearance: NSObject {
         confirmBlock: ((String) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1143,7 +1143,7 @@ public class AlertAppearance: NSObject {
         confirmBlock: (([String]) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1174,7 +1174,7 @@ public class AlertAppearance: NSObject {
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1193,7 +1193,7 @@ public class AlertAppearance: NSObject {
         cancel: AttributedStringParameter?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1214,7 +1214,7 @@ public class AlertAppearance: NSObject {
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1239,7 +1239,7 @@ public class AlertAppearance: NSObject {
         actionBlock: ((Int) -> Void)?,
         cancelBlock: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1266,7 +1266,7 @@ public class AlertAppearance: NSObject {
         cancelBlock: (() -> Void)?,
         customBlock: ((Any) -> Void)?
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
         }
@@ -1281,7 +1281,7 @@ public class AlertAppearance: NSObject {
         animated: Bool,
         completion: (() -> Void)? = nil
     ) {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil {
             ctrl = UIWindow.fw.main?.rootViewController
         }
@@ -1290,7 +1290,7 @@ public class AlertAppearance: NSObject {
     
     /// 判断是否正在显示弹出框
     public var fw_isShowingAlert: Bool {
-        var ctrl = self.fw_viewController
+        var ctrl = self.fw.viewController
         if ctrl == nil {
             ctrl = UIWindow.fw.main?.rootViewController
         }
