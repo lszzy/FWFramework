@@ -15,27 +15,63 @@ import UIKit
 extension Wrapper where Base: UIView {
     /// 显示骨架屏，指定布局代理
     public func showSkeleton(delegate: SkeletonViewDelegate?) {
-        base.fw_showSkeleton(delegate: delegate)
+        showSkeleton(delegate: delegate, block: nil)
     }
     
     /// 显示骨架屏，指定布局句柄
     public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
-        base.fw_showSkeleton(block: block)
+        showSkeleton(delegate: nil, block: block)
     }
     
     /// 显示骨架屏，默认布局代理为self
     public func showSkeleton() {
-        base.fw_showSkeleton()
+        showSkeleton(delegate: base as? SkeletonViewDelegate)
     }
     
     /// 隐藏骨架屏
     public func hideSkeleton() {
-        base.fw_hideSkeleton()
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if base is UITableView || base is UICollectionView {
+            base.superview?.fw.hideSkeleton()
+            return
+        }
+        
+        if let layout = base.subviews.first(where: { $0.tag == 2051 }) as? SkeletonLayout {
+            layout.removeFromSuperview()
+        }
     }
     
     /// 是否正在显示骨架屏
     public var hasSkeleton: Bool {
-        return base.fw_hasSkeleton
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if base is UITableView || base is UICollectionView {
+            return base.superview?.fw.hasSkeleton ?? false
+        }
+        
+        return base.subviews.firstIndex(where: { $0.tag == 2051 }) != nil
+    }
+    
+    private func showSkeleton(delegate: SkeletonViewDelegate? = nil, block: ((SkeletonLayout) -> Void)? = nil) {
+        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
+        if base is UITableView || base is UICollectionView {
+            base.superview?.fw.showSkeleton(delegate: delegate, block: block)
+            return
+        }
+        
+        hideSkeleton()
+        base.setNeedsLayout()
+        base.layoutIfNeeded()
+        
+        let layout = SkeletonLayout(layoutView: base)
+        layout.tag = 2051
+        base.addSubview(layout)
+        layout.fw.pinEdges()
+        
+        delegate?.skeletonViewLayout(layout)
+        block?(layout)
+        
+        layout.setNeedsLayout()
+        layout.layoutIfNeeded()
     }
 }
 
@@ -44,27 +80,27 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIViewController {
     /// 显示view骨架屏，指定布局代理
     public func showSkeleton(delegate: SkeletonViewDelegate?) {
-        base.fw_showSkeleton(delegate: delegate)
+        base.view.fw.showSkeleton(delegate: delegate)
     }
     
     /// 显示view骨架屏，指定布局句柄
     public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
-        base.fw_showSkeleton(block: block)
+        base.view.fw.showSkeleton(block: block)
     }
     
     /// 显示view骨架屏，默认布局代理为self
     public func showSkeleton() {
-        base.fw_showSkeleton()
+        showSkeleton(delegate: base as? SkeletonViewDelegate)
     }
     
     /// 隐藏view骨架屏
     public func hideSkeleton() {
-        base.fw_hideSkeleton()
+        base.view.fw.hideSkeleton()
     }
     
     /// 是否正在显示view骨架屏
     public var hasSkeleton: Bool {
-        return base.fw_hasSkeleton
+        return base.view.fw.hasSkeleton
     }
 }
 
@@ -862,99 +898,6 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return collectionDelegate.collectionView(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section)
-    }
-}
-
-// MARK: - UIKit+SkeletonLayout
-/// 视图显示骨架屏扩展
-@_spi(FW) extension UIView {
-    private func fw_showSkeleton(delegate: SkeletonViewDelegate? = nil, block: ((SkeletonLayout) -> Void)? = nil) {
-        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
-        if self is UITableView || self is UICollectionView {
-            self.superview?.fw_showSkeleton(delegate: delegate, block: block)
-            return
-        }
-        
-        fw_hideSkeleton()
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-        
-        let layout = SkeletonLayout(layoutView: self)
-        layout.tag = 2051
-        self.addSubview(layout)
-        layout.fw.pinEdges()
-        
-        delegate?.skeletonViewLayout(layout)
-        block?(layout)
-        
-        layout.setNeedsLayout()
-        layout.layoutIfNeeded()
-    }
-    
-    /// 显示骨架屏，指定布局代理
-    public func fw_showSkeleton(delegate: SkeletonViewDelegate?) {
-        fw_showSkeleton(delegate: delegate, block: nil)
-    }
-    
-    /// 显示骨架屏，指定布局句柄
-    public func fw_showSkeleton(block: ((SkeletonLayout) -> Void)?) {
-        fw_showSkeleton(delegate: nil, block: block)
-    }
-    
-    /// 显示骨架屏，默认布局代理为self
-    public func fw_showSkeleton() {
-        fw_showSkeleton(delegate: self as? SkeletonViewDelegate)
-    }
-    
-    /// 隐藏骨架屏
-    public func fw_hideSkeleton() {
-        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
-        if self is UITableView || self is UICollectionView {
-            self.superview?.fw_hideSkeleton()
-            return
-        }
-        
-        if let layout = self.subviews.first(where: { $0.tag == 2051 }) as? SkeletonLayout {
-            layout.removeFromSuperview()
-        }
-    }
-    
-    /// 是否正在显示骨架屏
-    public var fw_hasSkeleton: Bool {
-        // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
-        if self is UITableView || self is UICollectionView {
-            return self.superview?.fw_hasSkeleton ?? false
-        }
-        
-        return self.subviews.firstIndex(where: { $0.tag == 2051 }) != nil
-    }
-}
-
-/// 控制器显示骨架屏扩展
-@_spi(FW) extension UIViewController {
-    /// 显示view骨架屏，指定布局代理
-    public func fw_showSkeleton(delegate: SkeletonViewDelegate?) {
-        self.view.fw_showSkeleton(delegate: delegate)
-    }
-    
-    /// 显示view骨架屏，指定布局句柄
-    public func fw_showSkeleton(block: ((SkeletonLayout) -> Void)?) {
-        self.view.fw_showSkeleton(block: block)
-    }
-    
-    /// 显示view骨架屏，默认布局代理为self
-    public func fw_showSkeleton() {
-        fw_showSkeleton(delegate: self as? SkeletonViewDelegate)
-    }
-    
-    /// 隐藏view骨架屏
-    public func fw_hideSkeleton() {
-        self.view.fw_hideSkeleton()
-    }
-    
-    /// 是否正在显示view骨架屏
-    public var fw_hasSkeleton: Bool {
-        return self.view.fw_hasSkeleton
     }
 }
 

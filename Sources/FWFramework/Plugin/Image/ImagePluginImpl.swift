@@ -50,7 +50,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func imageEncode(_ image: UIImage, options: [ImageCoderOptions : Any]? = nil) -> Data? {
-        let imageFormat = image.fw_imageFormat
+        let imageFormat = image.fw.imageFormat
         let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
         if imageData != nil || imageFormat == .undefined {
             return imageData
