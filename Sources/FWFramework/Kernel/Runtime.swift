@@ -9,6 +9,17 @@ import Foundation
 
 // MARK: - AnyObject+Runtime
 extension Wrapper where Base: WrapperObject {
+    // MARK: - Module
+    /// 获取当前类所在的模块名称，兼容主应用和framework等(可能不准确)
+    public static var moduleName: String {
+        return moduleName(for: Base.self)
+    }
+    
+    /// 获取指定类所在的模块名称，兼容主应用和framework等(可能不准确)
+    public static func moduleName(for aClass: AnyClass) -> String {
+        return Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
+    }
+    
     // MARK: - Runtime
     /// 安全调用方法，支持多个参数
     /// - Parameters:
@@ -458,12 +469,6 @@ extension Wrapper where Base: WrapperObject {
 
 // MARK: - NSObject+Runtime
 extension Wrapper where Base: NSObject {
-    // MARK: - Module
-    /// 获取指定类所在的模块名称，兼容主应用和framework等(可能不准确)
-    public static func moduleName(for aClass: AnyClass) -> String {
-        return Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
-    }
-    
     // MARK: - Class
     /// 获取指定类的metaClass
     /// - Parameter clazz: 支持AnyClass|NSObject对象

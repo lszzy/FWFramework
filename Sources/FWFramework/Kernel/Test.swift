@@ -90,7 +90,7 @@ fileprivate class UnitTest: NSObject {
             let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
             queue.async {
                 unitTest.run()
-                Logger.debug(group: Logger.moduleName, "%@", unitTest.debugDescription)
+                Logger.debug(group: Logger.fw.moduleName, "%@", unitTest.debugDescription)
             }
         }
     }
