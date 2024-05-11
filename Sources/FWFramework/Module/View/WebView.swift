@@ -822,7 +822,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         removeScriptMessageHandlers()
         
         #if DEBUG
-        Logger.debug(group: Logger.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
     }
     
@@ -1095,7 +1095,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
-        Logger.debug(group: Logger.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
     

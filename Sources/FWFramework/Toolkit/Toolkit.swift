@@ -1692,74 +1692,122 @@ extension Wrapper where Base: UIImage {
 extension Wrapper where Base: UIView {
     /// 顶部纵坐标，frame.origin.y
     public var top: CGFloat {
-        get { return base.fw_top }
-        set { base.fw_top = newValue }
+        get {
+            return base.frame.origin.y
+        }
+        set {
+            var frame = base.frame
+            frame.origin.y = newValue
+            base.frame = frame
+        }
     }
 
     /// 底部纵坐标，frame.origin.y + frame.size.height
     public var bottom: CGFloat {
-        get { return base.fw_bottom }
-        set { base.fw_bottom = newValue }
+        get { return top + height }
+        set { top = newValue - height }
     }
 
     /// 左边横坐标，frame.origin.x
     public var left: CGFloat {
-        get { return base.fw_left }
-        set { base.fw_left = newValue }
+        get {
+            return base.frame.origin.x
+        }
+        set {
+            var frame = base.frame
+            frame.origin.x = newValue
+            base.frame = frame
+        }
     }
 
     /// 右边横坐标，frame.origin.x + frame.size.width
     public var right: CGFloat {
-        get { return base.fw_right }
-        set { base.fw_right = newValue }
+        get { return left + width }
+        set { left = newValue - width }
     }
 
     /// 宽度，frame.size.width
     public var width: CGFloat {
-        get { return base.fw_width }
-        set { base.fw_width = newValue }
+        get {
+            return base.frame.size.width
+        }
+        set {
+            var frame = base.frame
+            frame.size.width = newValue
+            base.frame = frame
+        }
     }
 
     /// 高度，frame.size.height
     public var height: CGFloat {
-        get { return base.fw_height }
-        set { base.fw_height = newValue }
+        get {
+            return base.frame.size.height
+        }
+        set {
+            var frame = base.frame
+            frame.size.height = newValue
+            base.frame = frame
+        }
     }
 
     /// 中心横坐标，center.x
     public var centerX: CGFloat {
-        get { return base.fw_centerX }
-        set { base.fw_centerX = newValue }
+        get { return base.center.x }
+        set { base.center = CGPoint(x: newValue, y: base.center.y) }
     }
 
     /// 中心纵坐标，center.y
     public var centerY: CGFloat {
-        get { return base.fw_centerY }
-        set { base.fw_centerY = newValue }
+        get { return base.center.y }
+        set { base.center = CGPoint(x: base.center.x, y: newValue) }
     }
 
     /// 起始横坐标，frame.origin.x
     public var x: CGFloat {
-        get { return base.fw_x }
-        set { base.fw_x = newValue }
+        get {
+            return base.frame.origin.x
+        }
+        set {
+            var frame = base.frame
+            frame.origin.x = newValue
+            base.frame = frame
+        }
     }
 
     /// 起始纵坐标，frame.origin.y
     public var y: CGFloat {
-        get { return base.fw_y }
-        set { base.fw_y = newValue }
+        get {
+            return base.frame.origin.y
+        }
+        set {
+            var frame = base.frame
+            frame.origin.y = newValue
+            base.frame = frame
+        }
     }
 
     /// 起始坐标，frame.origin
     public var origin: CGPoint {
-        get { return base.fw_origin }
-        set { base.fw_origin = newValue }
+        get {
+            return base.frame.origin
+        }
+        set {
+            var frame = base.frame
+            frame.origin = newValue
+            base.frame = frame
+        }
     }
 
     /// 大小，frame.size
     public var size: CGSize {
-        get { return base.fw_size }
-        set { base.fw_size = newValue }
+        get {
+            return base.frame.size
+        }
+        set {
+            var frame = base.frame
+            frame.size = newValue
+            base.frame = frame
+        }
     }
 }
 
@@ -1767,53 +1815,102 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIViewController {
     /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
     public var lifecycleState: ViewControllerLifecycleState? {
-        return base.fw_lifecycleState
+        get {
+            guard issetLifecycleStateTarget else { return nil }
+            return lifecycleStateTarget.state
+        }
+        set {
+            guard let newValue = newValue else { return }
+            lifecycleStateTarget.state = newValue
+        }
     }
     
     /// 添加生命周期变化监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
-        return base.fw_observeLifecycleState { viewController, state, _ in
+        let target = LifecycleStateHandler()
+        target.object = nil
+        target.block = { viewController, state, _ in
             block(viewController as! Base, state)
         }
+        lifecycleStateTarget.handlers.append(target)
+        return target
     }
     
     /// 添加生命周期变化监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleState<T>(object: T, block: @escaping (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol {
-        return base.fw_observeLifecycleState(object: object) { viewController, state, object in
+        let target = LifecycleStateHandler()
+        target.object = object
+        target.block = { viewController, state, object in
             block(viewController as! Base, state, object as! T)
         }
+        lifecycleStateTarget.handlers.append(target)
+        return target
     }
     
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
     public func unobserveLifecycleState(observer: Any? = nil) -> Bool {
-        return base.fw_unobserveLifecycleState(observer: observer)
+        guard issetLifecycleStateTarget else { return false }
+        
+        if let observer = observer as? LifecycleStateHandler {
+            let result = lifecycleStateTarget.handlers.contains(observer)
+            lifecycleStateTarget.handlers.removeAll { $0 == observer }
+            return result
+        } else {
+            lifecycleStateTarget.handlers.removeAll()
+            return true
+        }
     }
 
     /// 自定义完成结果对象，默认nil
     public var completionResult: Any? {
-        get { return base.fw_completionResult }
-        set { base.fw_completionResult = newValue }
+        get {
+            guard issetLifecycleStateTarget else { return nil }
+            return lifecycleStateTarget.completionResult
+        }
+        set {
+            lifecycleStateTarget.completionResult = newValue
+        }
     }
 
     /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
     public var completionHandler: ((Any?) -> Void)? {
-        get { return base.fw_completionHandler }
-        set { base.fw_completionHandler = newValue }
+        get {
+            guard issetLifecycleStateTarget else { return nil }
+            return lifecycleStateTarget.completionHandler
+        }
+        set {
+            lifecycleStateTarget.completionHandler = newValue
+        }
+    }
+    
+    private var issetLifecycleStateTarget: Bool {
+        return property(forName: "lifecycleStateTarget") != nil
+    }
+    
+    private var lifecycleStateTarget: LifecycleStateTarget {
+        if let target = property(forName: "lifecycleStateTarget") as? LifecycleStateTarget {
+            return target
+        }
+        
+        let target = LifecycleStateTarget()
+        target.viewController = base
+        setProperty(target, forName: "lifecycleStateTarget")
+        return target
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
     public var allowsPopGesture: (() -> Bool)? {
-        get { return base.fw_allowsPopGesture }
-        set { base.fw_allowsPopGesture = newValue }
+        get { property(forName: "allowsPopGesture") as? () -> Bool }
+        set { setPropertyCopy(newValue, forName: "allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
     public var shouldPopController: (() -> Bool)? {
-        get { return base.fw_shouldPopController }
-        set { base.fw_shouldPopController = newValue }
+        get { property(forName: "shouldPopController") as? () -> Bool }
+        set { setPropertyCopy(newValue, forName: "shouldPopController") }
     }
 }
 
@@ -1822,13 +1919,61 @@ extension Wrapper where Base: UIViewController {
 extension Wrapper where Base: UINavigationController {
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func enablePopProxy() {
-        base.fw_enablePopProxy()
+        base.interactivePopGestureRecognizer?.delegate = popProxyTarget
+        setPropertyBool(true, forName: "popProxyEnabled")
+        FrameworkAutoloader.swizzleToolkitNavigationController()
     }
     
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func enablePopProxy() {
-        Base.fw_enablePopProxy()
+        UINavigationController.innerPopProxyEnabled = true
+        FrameworkAutoloader.swizzleToolkitNavigationController()
     }
+    
+    fileprivate var popProxyEnabled: Bool {
+        return propertyBool(forName: "popProxyEnabled")
+    }
+    
+    private var popProxyTarget: PopProxyTarget {
+        if let proxy = property(forName: "popProxyTarget") as? PopProxyTarget {
+            return proxy
+        } else {
+            let proxy = PopProxyTarget(navigationController: base)
+            setProperty(proxy, forName: "popProxyTarget")
+            return proxy
+        }
+    }
+    
+    fileprivate var delegateProxy: GestureRecognizerDelegateProxy {
+        if let proxy = property(forName: "delegateProxy") as? GestureRecognizerDelegateProxy {
+            return proxy
+        } else {
+            let proxy = GestureRecognizerDelegateProxy()
+            setProperty(proxy, forName: "delegateProxy")
+            return proxy
+        }
+    }
+}
+
+// MARK: - UIViewController+Toolkit
+@objc extension UIViewController {
+    
+    /// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认true
+    open var allowsPopGesture: Bool {
+        if let block = fw.allowsPopGesture {
+            return block()
+        }
+        return true
+    }
+    
+    /// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认true
+    open var shouldPopController: Bool {
+        if let block = fw.shouldPopController {
+            return block()
+        }
+        return true
+    }
+    
 }
 
 // MARK: - UIApplication+Toolkit
@@ -1882,7 +2027,14 @@ extension UIImage {
     
 }
 
-// MARK: - UIView+Toolkit
+// MARK: - UINavigationController+Toolkit
+extension UINavigationController {
+    
+    fileprivate static var innerPopProxyEnabled = false
+    
+}
+
+// MARK: - ViewState
 /// 视图状态枚举，兼容UIKit和SwiftUI
 public enum ViewState: Equatable {
     
@@ -1924,150 +2076,11 @@ public enum ViewState: Equatable {
     
 }
 
-@_spi(FW) extension UIView {
-    
-    /// 顶部纵坐标，frame.origin.y
-    public var fw_top: CGFloat {
-        get {
-            return self.frame.origin.y
-        }
-        set {
-            var frame = self.frame
-            frame.origin.y = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 底部纵坐标，frame.origin.y + frame.size.height
-    public var fw_bottom: CGFloat {
-        get {
-            return self.fw_top + self.fw_height
-        }
-        set {
-            self.fw_top = newValue - self.fw_height
-        }
-    }
-
-    /// 左边横坐标，frame.origin.x
-    public var fw_left: CGFloat {
-        get {
-            return self.frame.origin.x
-        }
-        set {
-            var frame = self.frame
-            frame.origin.x = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 右边横坐标，frame.origin.x + frame.size.width
-    public var fw_right: CGFloat {
-        get {
-            return self.fw_left + self.fw_width
-        }
-        set {
-            self.fw_left = newValue - self.fw_width
-        }
-    }
-
-    /// 宽度，frame.size.width
-    public var fw_width: CGFloat {
-        get {
-            return self.frame.size.width
-        }
-        set {
-            var frame = self.frame
-            frame.size.width = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 高度，frame.size.height
-    public var fw_height: CGFloat {
-        get {
-            return self.frame.size.height
-        }
-        set {
-            var frame = self.frame
-            frame.size.height = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 中心横坐标，center.x
-    public var fw_centerX: CGFloat {
-        get {
-            return self.center.x
-        }
-        set {
-            self.center = CGPoint(x: newValue, y: self.center.y)
-        }
-    }
-
-    /// 中心纵坐标，center.y
-    public var fw_centerY: CGFloat {
-        get {
-            return self.center.y
-        }
-        set {
-            self.center = CGPoint(x: self.center.x, y: newValue)
-        }
-    }
-
-    /// 起始横坐标，frame.origin.x
-    public var fw_x: CGFloat {
-        get {
-            return self.frame.origin.x
-        }
-        set {
-            var frame = self.frame
-            frame.origin.x = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 起始纵坐标，frame.origin.y
-    public var fw_y: CGFloat {
-        get {
-            return self.frame.origin.y
-        }
-        set {
-            var frame = self.frame
-            frame.origin.y = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 起始坐标，frame.origin
-    public var fw_origin: CGPoint {
-        get {
-            return self.frame.origin
-        }
-        set {
-            var frame = self.frame
-            frame.origin = newValue
-            self.frame = frame
-        }
-    }
-
-    /// 大小，frame.size
-    public var fw_size: CGSize {
-        get {
-            return self.frame.size
-        }
-        set {
-            var frame = self.frame
-            frame.size = newValue
-            self.frame = frame
-        }
-    }
-    
-}
-
-// MARK: - UIViewController+Toolkit
+// MARK: - ViewControllerLifecycleObservable
 /// 视图控制器生命周期监听协议
 public protocol ViewControllerLifecycleObservable {}
 
+// MARK: - ViewControllerLifecycleState
 /// 视图控制器常用生命周期状态枚举
 ///
 /// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)，请使用object参数
@@ -2084,288 +2097,137 @@ public enum ViewControllerLifecycleState: Int {
     case didDeinit = 8
 }
 
+// MARK: - TitleViewProtocol
 /// 自定义titleView协议
 @objc public protocol TitleViewProtocol {
     /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
     var title: String? { get set }
 }
 
-/// 为提升性能，触发lifecycleState改变等的swizzle代码统一放到了ViewController
-@_spi(FW) extension UIViewController {
+// MARK: - LifecycleStateTarget
+fileprivate class LifecycleStateTarget: NSObject {
+    unowned(unsafe) var viewController: UIViewController?
+    var handlers: [LifecycleStateHandler] = []
+    var completionResult: Any?
+    var completionHandler: ((Any?) -> Void)?
+    var state: ViewControllerLifecycleState = .didInit {
+        didSet { stateChanged(from: oldValue, to: state) }
+    }
     
-    private class LifecycleStateTarget: NSObject {
-        unowned(unsafe) var viewController: UIViewController?
-        var handlers: [LifecycleStateHandler] = []
-        var completionResult: Any?
-        var completionHandler: ((Any?) -> Void)?
-        var state: ViewControllerLifecycleState = .didInit {
-            didSet { stateChanged(from: oldValue, to: state) }
+    deinit {
+        // 注意deinit不会触发属性的didSet，需手工调用stateChanged
+        let oldState = state
+        state = .didDeinit
+        stateChanged(from: oldState, to: state)
+        
+        if completionHandler != nil {
+            completionHandler?(completionResult)
         }
         
-        deinit {
-            // 注意deinit不会触发属性的didSet，需手工调用stateChanged
-            let oldState = state
-            state = .didDeinit
-            stateChanged(from: oldState, to: state)
-            
-            if completionHandler != nil {
-                completionHandler?(completionResult)
-            }
-            
-            #if DEBUG
-            if let viewController = viewController {
-                Logger.debug(group: Logger.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
-            }
-            #endif
+        #if DEBUG
+        if let viewController = viewController {
+            Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
         }
-        
-        private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
-            if let viewController = viewController, newState != oldState {
-                handlers.forEach { $0.block?(viewController, newState, $0.object) }
-            }
-            if newState == .didDeinit {
-                handlers.removeAll()
-            }
-        }
+        #endif
     }
     
-    private class LifecycleStateHandler: NSObject {
-        var object: Any?
-        var block: ((UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
+    private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
+        if let viewController = viewController, newState != oldState {
+            handlers.forEach { $0.block?(viewController, newState, $0.object) }
+        }
+        if newState == .didDeinit {
+            handlers.removeAll()
+        }
+    }
+}
+
+// MARK: - LifecycleStateHandler
+fileprivate class LifecycleStateHandler: NSObject {
+    var object: Any?
+    var block: ((UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
+}
+
+// MARK: - PopProxyTarget
+fileprivate class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
+    
+    private weak var navigationController: UINavigationController?
+    
+    init(navigationController: UINavigationController?) {
+        self.navigationController = navigationController
     }
     
-    /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
-    public fileprivate(set) var fw_lifecycleState: ViewControllerLifecycleState? {
-        get {
-            guard fw_issetLifecycleStateTarget else { return nil }
-            return fw_lifecycleStateTarget.state
-        }
-        set {
-            guard let newValue = newValue else { return }
-            fw_lifecycleStateTarget.state = newValue
-        }
-    }
-
-    /// 添加生命周期变化监听句柄，可携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
-    @discardableResult
-    public func fw_observeLifecycleState(object: Any? = nil, block: @escaping (UIViewController, ViewControllerLifecycleState, Any?) -> Void) -> NSObjectProtocol {
-        let target = LifecycleStateHandler()
-        target.object = object
-        target.block = block
-        fw_lifecycleStateTarget.handlers.append(target)
-        return target
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let topController = navigationController?.topViewController else { return false }
+        return topController.shouldPopController && topController.allowsPopGesture
     }
     
-    /// 移除生命周期监听者，传nil时移除所有
-    @discardableResult
-    public func fw_unobserveLifecycleState(observer: Any? = nil) -> Bool {
-        guard fw_issetLifecycleStateTarget else { return false }
-        
-        if let observer = observer as? LifecycleStateHandler {
-            let result = fw_lifecycleStateTarget.handlers.contains(observer)
-            fw_lifecycleStateTarget.handlers.removeAll { $0 == observer }
-            return result
-        } else {
-            fw_lifecycleStateTarget.handlers.removeAll()
-            return true
-        }
-    }
-
-    /// 自定义完成结果对象，默认nil
-    public var fw_completionResult: Any? {
-        get {
-            guard fw_issetLifecycleStateTarget else { return nil }
-            return fw_lifecycleStateTarget.completionResult
-        }
-        set {
-            fw_lifecycleStateTarget.completionResult = newValue
-        }
-    }
-
-    /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
-    public var fw_completionHandler: ((Any?) -> Void)? {
-        get {
-            guard fw_issetLifecycleStateTarget else { return nil }
-            return fw_lifecycleStateTarget.completionHandler
-        }
-        set {
-            fw_lifecycleStateTarget.completionHandler = newValue
-        }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
-    private var fw_issetLifecycleStateTarget: Bool {
-        return fw.property(forName: "fw_lifecycleStateTarget") != nil
-    }
-    
-    private var fw_lifecycleStateTarget: LifecycleStateTarget {
-        if let target = fw.property(forName: "fw_lifecycleStateTarget") as? LifecycleStateTarget {
-            return target
-        }
-        
-        let target = LifecycleStateTarget()
-        target.viewController = self
-        fw.setProperty(target, forName: "fw_lifecycleStateTarget")
-        return target
-    }
-
-    /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    public var fw_allowsPopGesture: (() -> Bool)? {
-        get { fw.property(forName: "fw_allowsPopGesture") as? () -> Bool }
-        set { fw.setPropertyCopy(newValue, forName: "fw_allowsPopGesture") }
-    }
-
-    /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-    public var fw_shouldPopController: (() -> Bool)? {
-        get { fw.property(forName: "fw_shouldPopController") as? () -> Bool }
-        set { fw.setPropertyCopy(newValue, forName: "fw_shouldPopController") }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer is UIScreenEdgePanGestureRecognizer
     }
     
 }
 
-@objc extension UIViewController {
-    
-    /// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认true
-    open var allowsPopGesture: Bool {
-        if let block = fw_allowsPopGesture {
-            return block()
-        }
-        return true
-    }
-    
-    /// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认true
-    open var shouldPopController: Bool {
-        if let block = fw_shouldPopController {
-            return block()
-        }
-        return true
-    }
-    
-}
-
-// MARK: - UINavigationController+Toolkit
+// MARK: - GestureRecognizerDelegateProxy
 @objc fileprivate protocol GestureRecognizerDelegateCompatible {
     
     @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
     
 }
 
-/// 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
-@_spi(FW) extension UINavigationController {
+fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
     
-    private class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
-        
-        private weak var navigationController: UINavigationController?
-        
-        init(navigationController: UINavigationController?) {
-            self.navigationController = navigationController
-        }
-        
-        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            guard let topController = navigationController?.topViewController else { return false }
-            return topController.shouldPopController && topController.allowsPopGesture
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return true
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return gestureRecognizer is UIScreenEdgePanGestureRecognizer
-        }
-        
+    weak var navigationController: UINavigationController?
+    
+    func shouldForceReceive() -> Bool {
+        if navigationController?.presentedViewController != nil { return false }
+        if (navigationController?.viewControllers.count ?? 0) <= 1 { return false }
+        if !(navigationController?.interactivePopGestureRecognizer?.isEnabled ?? false) { return false }
+        return navigationController?.topViewController?.allowsPopGesture ?? false
     }
     
-    fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
-        
-        weak var navigationController: UINavigationController?
-        
-        func shouldForceReceive() -> Bool {
-            if navigationController?.presentedViewController != nil { return false }
-            if (navigationController?.viewControllers.count ?? 0) <= 1 { return false }
-            if !(navigationController?.interactivePopGestureRecognizer?.isEnabled ?? false) { return false }
-            return navigationController?.topViewController?.allowsPopGesture ?? false
-        }
-        
-        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
-                // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
-                let shouldPop = navigationController?.topViewController?.shouldPopController ?? false
-                if shouldPop {
-                    if let shouldBegin = self.delegate?.gestureRecognizerShouldBegin?(gestureRecognizer) {
-                        return shouldBegin
-                    }
-                }
-                return false
-            }
-            return true
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
-                if let shouldReceive = self.delegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
-                    if !shouldReceive && shouldForceReceive() {
-                        return true
-                    }
-                    return shouldReceive
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
+            let shouldPop = navigationController?.topViewController?.shouldPopController ?? false
+            if shouldPop {
+                if let shouldBegin = self.delegate?.gestureRecognizerShouldBegin?(gestureRecognizer) {
+                    return shouldBegin
                 }
             }
-            return true
+            return false
         }
-        
-        @objc func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool {
-            // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
-            if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
-                if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
-                   let shouldReceive = self.target?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
-                    if !shouldReceive && shouldForceReceive() {
-                        return true
-                    }
-                    return shouldReceive
+        return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            if let shouldReceive = self.delegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
+                if !shouldReceive && shouldForceReceive() {
+                    return true
                 }
+                return shouldReceive
             }
-            return true
         }
-        
+        return true
     }
     
-    /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-    public func fw_enablePopProxy() {
-        self.interactivePopGestureRecognizer?.delegate = self.fw_popProxyTarget
-        fw.setPropertyBool(true, forName: "fw_popProxyEnabled")
-        FrameworkAutoloader.swizzleToolkitNavigationController()
-    }
-    
-    /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
-    public static func fw_enablePopProxy() {
-        fw_staticPopProxyEnabled = true
-        FrameworkAutoloader.swizzleToolkitNavigationController()
-    }
-    
-    fileprivate var fw_popProxyEnabled: Bool {
-        return fw.propertyBool(forName: "fw_popProxyEnabled")
-    }
-    
-    private var fw_popProxyTarget: PopProxyTarget {
-        if let proxy = fw.property(forName: "fw_popProxyTarget") as? PopProxyTarget {
-            return proxy
-        } else {
-            let proxy = PopProxyTarget(navigationController: self)
-            fw.setProperty(proxy, forName: "fw_popProxyTarget")
-            return proxy
+    @objc func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool {
+        // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
+            if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
+               let shouldReceive = self.target?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
+                if !shouldReceive && shouldForceReceive() {
+                    return true
+                }
+                return shouldReceive
+            }
         }
+        return true
     }
-    
-    fileprivate var fw_delegateProxy: GestureRecognizerDelegateProxy {
-        if let proxy = fw.property(forName: "fw_delegateProxy") as? GestureRecognizerDelegateProxy {
-            return proxy
-        } else {
-            let proxy = GestureRecognizerDelegateProxy()
-            fw.setProperty(proxy, forName: "fw_delegateProxy")
-            return proxy
-        }
-    }
-    
-    fileprivate static var fw_staticPopProxyEnabled = false
     
 }
 
@@ -2420,8 +2282,8 @@ extension FrameworkAutoloader {
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
             
             if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
+                viewController.fw.lifecycleState != nil {
+                viewController.fw.lifecycleState = .didInit
             }
             return viewController
         }}
@@ -2435,8 +2297,8 @@ extension FrameworkAutoloader {
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
             
             if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
+                viewController.fw.lifecycleState != nil {
+                viewController.fw.lifecycleState = .didInit
             }
             return viewController
         }}
@@ -2450,8 +2312,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLoad
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .didLoad
             }
         }}
         
@@ -2464,8 +2326,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, animated)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willAppear
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .willAppear
             }
         }}
         
@@ -2478,8 +2340,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, animated)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .isAppearing
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .isAppearing
             }
         }}
         
@@ -2492,8 +2354,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLayoutSubviews
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .didLayoutSubviews
             }
         }}
         
@@ -2506,8 +2368,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, animated)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didAppear
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .didAppear
             }
         }}
         
@@ -2520,8 +2382,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, animated)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willDisappear
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .willDisappear
             }
         }}
         
@@ -2534,8 +2396,8 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, animated)
             
             if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didDisappear
+                selfObject.fw.lifecycleState != nil {
+                selfObject.fw.lifecycleState = .didDisappear
             }
         }}
     }
@@ -2624,7 +2486,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
             swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
         ) { store in { selfObject, navigationBar, item in
-            if UINavigationController.fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled {
+            if UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled {
                 // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
                 if selfObject.viewControllers.count >= (navigationBar.items?.count ?? 0) &&
                     !(selfObject.topViewController?.shouldPopController ?? false) {
@@ -2642,13 +2504,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            if !UINavigationController.fw_staticPopProxyEnabled || selfObject.fw_popProxyEnabled { return }
+            if !UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled { return }
             
             // 拦截系统返回手势事件代理，加载自定义代理方法
-            if !(selfObject.interactivePopGestureRecognizer?.delegate is UINavigationController.GestureRecognizerDelegateProxy) {
-                selfObject.fw_delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
-                selfObject.fw_delegateProxy.navigationController = selfObject
-                selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw_delegateProxy
+            if !(selfObject.interactivePopGestureRecognizer?.delegate is GestureRecognizerDelegateProxy) {
+                selfObject.fw.delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
+                selfObject.fw.delegateProxy.navigationController = selfObject
+                selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw.delegateProxy
             }
         }}
         
@@ -2658,7 +2520,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
-            if UINavigationController.fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
                 return selfObject.topViewController
             } else {
                 return store.original(selfObject, store.selector)
@@ -2671,7 +2533,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
-            if UINavigationController.fw_staticPopProxyEnabled && selfObject.topViewController != nil {
+            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
                 return selfObject.topViewController
             } else {
                 return store.original(selfObject, store.selector)

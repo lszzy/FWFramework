@@ -91,7 +91,7 @@ public class Analyzer: NSObject {
     /// 初始化所有上报者，仅调用一次
     public func setupReporters() {
         if isLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========ANALYZER SETUP===========\n%@", !reporters.isEmpty ? reporters : "")
+            Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER SETUP===========\n%@", !reporters.isEmpty ? reporters : "")
         }
         
         queue.sync {
@@ -104,7 +104,7 @@ public class Analyzer: NSObject {
     /// 跟踪上报公共参数，公共参数发生变化时调用
     public func trackParameters(_ parameters: [AnyHashable: Any]? = nil) {
         if isLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========ANALYZER PARAMETERS===========\n%@", parameters ?? "")
+            Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER PARAMETERS===========\n%@", parameters ?? "")
         }
         
         queue.sync {
@@ -117,7 +117,7 @@ public class Analyzer: NSObject {
     /// 跟踪上报用户信息，用户信息发生变化时调用
     public func trackUser(_ parameters: [AnyHashable: Any]? = nil) {
         if isLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========ANALYZER USER===========\n%@%@", parameters ?? "")
+            Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER USER===========\n%@%@", parameters ?? "")
         }
         
         queue.sync {
@@ -130,7 +130,7 @@ public class Analyzer: NSObject {
     /// 跟踪上报事件，支持分组，事件发生时调用
     public func trackEvent(group: String = "", _ name: String, parameters: [AnyHashable: Any]? = nil) {
         if isLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========ANALYZER EVENT===========\n%@%@:\n%@", !group.isEmpty ? "[\(group)] " : "", name, parameters ?? "")
+            Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER EVENT===========\n%@%@:\n%@", !group.isEmpty ? "[\(group)] " : "", name, parameters ?? "")
         }
         
         queue.async { [weak self] in
@@ -143,7 +143,7 @@ public class Analyzer: NSObject {
     /// 跟踪上报错误，支持分组，错误发生时调用
     public func trackError(group: String = "", _ name: String, error: Error, parameters: [AnyHashable: Any]? = nil) {
         if isLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========ANALYZER ERROR===========\n%@%@: %@\n%@", !group.isEmpty ? "[\(group)] " : "", name, error.localizedDescription, parameters ?? "")
+            Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER ERROR===========\n%@%@: %@\n%@", !group.isEmpty ? "[\(group)] " : "", name, error.localizedDescription, parameters ?? "")
         }
         
         queue.async { [weak self] in

@@ -1163,7 +1163,7 @@ public class StatisticalEvent: NSObject, NSCopying {
             guard !exposureObserved else { return }
             exposureObserved = true
             
-            viewController?.fw_observeLifecycleState { vc, state, _ in
+            viewController?.fw.observeLifecycleState { vc, state in
                 if state == .didAppear {
                     vc.fw_statisticalCheckExposure()
                 } else if state == .didDisappear {

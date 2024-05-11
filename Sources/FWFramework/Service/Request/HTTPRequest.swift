@@ -930,7 +930,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
 
@@ -1214,7 +1214,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
         
         #if DEBUG
         if config.debugLogEnabled {
-            Logger.debug(group: Logger.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
         
