@@ -177,14 +177,14 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
         case .horizontal:
             var pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.left
             if !isPagingCenter {
-                pageOffset = min(pageOffset, collectionView.fw_contentOffset(of: .right).x)
+                pageOffset = min(pageOffset, collectionView.fw.contentOffset(of: .right).x)
             }
             proposedContentOffset = CGPoint(x: pageOffset, y: collectionView.contentOffset.y)
             shouldAnimate = abs(collectionView.contentOffset.x - pageOffset) > 1 ? animated : false
         case .vertical:
             var pageOffset = CGFloat(index) * pageWidth - collectionView.contentInset.top
             if !isPagingCenter {
-                pageOffset = min(pageOffset, collectionView.fw_contentOffset(of: .bottom).y)
+                pageOffset = min(pageOffset, collectionView.fw.contentOffset(of: .bottom).y)
             }
             proposedContentOffset = CGPoint(x: collectionView.contentOffset.x, y: pageOffset)
             shouldAnimate = abs(collectionView.contentOffset.y - pageOffset) > 1 ? animated : false

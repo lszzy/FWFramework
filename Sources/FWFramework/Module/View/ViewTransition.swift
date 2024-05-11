@@ -796,9 +796,9 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
         guard let scrollView = scrollView, scrollView.isScrollEnabled else { return }
         
         if direction == .up || direction == .down {
-            if !scrollView.fw_canScrollVertical { return }
+            if !scrollView.fw.canScrollVertical { return }
         } else {
-            if !scrollView.fw_canScrollHorizontal { return }
+            if !scrollView.fw.canScrollHorizontal { return }
         }
         
         if state == .failed { return }
@@ -817,28 +817,28 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
         var isFailed = false
         switch direction {
         case .down:
-            let edgeOffset = scrollView.fw_contentOffset(of: .top).y
+            let edgeOffset = scrollView.fw.contentOffset(of: .top).y
             if (abs(velocity.x) < abs(velocity.y)) && (location.y > prevLocation.y) && (scrollView.contentOffset.y <= edgeOffset) {
                 isFailed = false
             } else if scrollView.contentOffset.y >= edgeOffset {
                 isFailed = true
             }
         case .up:
-            let edgeOffset = scrollView.fw_contentOffset(of: .bottom).y
+            let edgeOffset = scrollView.fw.contentOffset(of: .bottom).y
             if (abs(velocity.x) < abs(velocity.y)) && (location.y < prevLocation.y) && (scrollView.contentOffset.y >= edgeOffset) {
                 isFailed = false
             } else if scrollView.contentOffset.y <= edgeOffset {
                 isFailed = true
             }
         case .right:
-            let edgeOffset = scrollView.fw_contentOffset(of: .left).x
+            let edgeOffset = scrollView.fw.contentOffset(of: .left).x
             if (abs(velocity.y) < abs(velocity.x)) && (location.x > prevLocation.x) && (scrollView.contentOffset.x <= edgeOffset) {
                 isFailed = false
             } else if scrollView.contentOffset.x >= edgeOffset {
                 isFailed = true
             }
         case .left:
-            let edgeOffset = scrollView.fw_contentOffset(of: .right).x
+            let edgeOffset = scrollView.fw.contentOffset(of: .right).x
             if (abs(velocity.y) < abs(velocity.x)) && (location.x < prevLocation.x) && (scrollView.contentOffset.x >= edgeOffset) {
                 isFailed = false
             } else if scrollView.contentOffset.x <= edgeOffset {
@@ -885,9 +885,9 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
            let otherScrollView = otherGestureRecognizer.view as? UIScrollView {
             if autoDetected {
                 if direction == .up || direction == .down {
-                    if otherScrollView.fw_canScrollHorizontal { return false }
+                    if otherScrollView.fw.canScrollHorizontal { return false }
                 } else {
-                    if otherScrollView.fw_canScrollVertical { return false }
+                    if otherScrollView.fw.canScrollVertical { return false }
                 }
                 
                 if otherScrollView != scrollView { scrollView = otherScrollView }
@@ -906,9 +906,9 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
            let otherScrollView = otherGestureRecognizer.view as? UIScrollView {
             if autoDetected {
                 if direction == .up || direction == .down {
-                    if otherScrollView.fw_canScrollHorizontal { return false }
+                    if otherScrollView.fw.canScrollHorizontal { return false }
                 } else {
-                    if otherScrollView.fw_canScrollVertical { return false }
+                    if otherScrollView.fw.canScrollVertical { return false }
                 }
                 
                 if otherScrollView != scrollView { scrollView = otherScrollView }
@@ -1069,7 +1069,7 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
     @discardableResult
     public func fw_transition(to viewController: UIViewController, pinEdges: Bool = true) -> UIView {
-        let ancestorView = viewController.fw_ancestorView
+        let ancestorView = viewController.fw.ancestorView
         ancestorView.addSubview(self)
         if pinEdges {
             self.fw.pinEdges()

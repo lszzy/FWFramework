@@ -617,11 +617,11 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     open override func statisticalViewContainerView() -> UIView? {
-        return fw_tableView
+        return fw.tableView
     }
     
     open override func statisticalViewIndexPath() -> IndexPath? {
-        return fw_tableView?.indexPath(for: self)
+        return fw.tableView?.indexPath(for: self)
     }
     
 }
@@ -643,11 +643,11 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     open override func statisticalViewContainerView() -> UIView? {
-        return fw_collectionView
+        return fw.collectionView
     }
     
     open override func statisticalViewIndexPath() -> IndexPath? {
-        return fw_collectionView?.indexPath(for: self)
+        return fw.collectionView?.indexPath(for: self)
     }
     
 }
@@ -1026,7 +1026,7 @@ public class StatisticalEvent: NSObject, NSCopying {
         
         let viewController = fw.viewController
         if let viewController = viewController,
-            !viewController.fw_isVisible {
+           !viewController.fw.isVisible {
             return .none
         }
         
@@ -1305,7 +1305,7 @@ public class StatisticalEvent: NSObject, NSCopying {
     }
     
     fileprivate var fw_statisticalExposureState: UIView.StatisticalState {
-        if !fw_isVisible {
+        if !fw.isVisible {
             return .none
         }
         

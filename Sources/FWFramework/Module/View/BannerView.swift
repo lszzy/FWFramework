@@ -690,7 +690,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             pageControl.pageIndicatorTintColor = pageDotColor
             pageControl.isUserInteractionEnabled = false
             pageControl.currentPage = indexOnPageControl
-            pageControl.fw_preferredSize = pageControlDotSize
+            pageControl.fw.preferredSize = pageControlDotSize
             addSubview(pageControl)
             self.pageControl = pageControl
             customPageControl?(pageControl)
