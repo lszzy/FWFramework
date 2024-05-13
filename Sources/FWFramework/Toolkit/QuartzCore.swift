@@ -693,33 +693,33 @@ extension Wrapper where Base: UIView {
     ) {
         // 是否是文本输入框
         let isTextField = base is UITextField
-        let strongBase = base
-        UIView.animate(withDuration: duration) {
+        UIView.animate(withDuration: duration) { [weak base] in
             if isTextField {
                 // 水平摇摆
-                strongBase.transform = CGAffineTransformMakeTranslation(delta * direction, 0)
+                base?.transform = CGAffineTransformMakeTranslation(delta * direction, 0)
                 // 垂直摇摆
-                // strongBase.transform = CGAffineTransformMakeTranslation(0, delta * direction)
+                // base?.transform = CGAffineTransformMakeTranslation(0, delta * direction)
             } else {
                 // 水平摇摆
-                strongBase.layer.setAffineTransform(CGAffineTransformMakeTranslation(delta * direction, 0))
+                base?.layer.setAffineTransform(CGAffineTransformMakeTranslation(delta * direction, 0))
                 // 垂直摇摆
-                // strongBase.layer.setAffineTransform(CGAffineTransformMakeTranslation(0, delta * direction))
+                // base?.layer.setAffineTransform(CGAffineTransformMakeTranslation(0, delta * direction))
             }
-        } completion: { finished in
+        } completion: { [weak base] finished in
             if currentTimes >= times {
                 UIView.animate(withDuration: duration) {
                     if isTextField {
-                        strongBase.transform = .identity
+                        base?.transform = .identity
                     } else {
-                        strongBase.layer.setAffineTransform(.identity)
+                        base?.layer.setAffineTransform(.identity)
                     }
                 } completion: { finished in
                     completion?(finished)
                 }
                 return
             }
-            strongBase.fw.shake(
+            
+            base?.fw.shake(
                 times: times - 1,
                 delta: delta,
                 duration: duration,
