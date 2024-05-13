@@ -67,7 +67,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         let emptyView = PlaceholderView(frame: view.bounds)
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
-        emptyView.fw.pinEdges(toSuperview: view.fw_emptyInsets)
+        emptyView.fw.pinEdges(toSuperview: view.fw.emptyInsets)
         
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)

@@ -662,7 +662,7 @@ open class InfiniteScrollView: UIView {
             return emptyDataBlock(scrollView)
         }
         
-        return scrollView.fw_totalDataCount <= 0
+        return scrollView.fw.totalDataCount <= 0
     }
     
     /// 上拉追加状态

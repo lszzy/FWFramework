@@ -201,11 +201,11 @@ extension View {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
-                    scrollView.fw_showEmptyView()
+                    scrollView.fw.showEmptyView()
                 }
             } else {
-                if scrollView.fw_hasEmptyView {
-                    scrollView.fw_hideEmptyView()
+                if scrollView.fw.hasEmptyView {
+                    scrollView.fw.hideEmptyView()
                 }
             }
         }
@@ -417,11 +417,11 @@ extension View {
                 if let customize = customize {
                     customize(scrollView)
                 } else {
-                    scrollView.fw_showEmptyView()
+                    scrollView.fw.showEmptyView()
                 }
             } else {
-                if scrollView.fw_hasEmptyView {
-                    scrollView.fw_hideEmptyView()
+                if scrollView.fw.hasEmptyView {
+                    scrollView.fw.hideEmptyView()
                 }
             }
         }

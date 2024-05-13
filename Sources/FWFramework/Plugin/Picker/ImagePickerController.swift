@@ -308,7 +308,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         } else {
             if albumControllerDelegate?.albumControllerWillShowEmpty?(self) != nil {
             } else {
-                fw_showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
+                fw.showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
             }
         }
         
@@ -326,7 +326,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         } else {
             let appName = UIApplication.fw.appDisplayName
             let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
-            fw_showEmptyView(text: tipText)
+            fw.showEmptyView(text: tipText)
         }
         
         albumsArrayLoaded?()
@@ -2102,12 +2102,12 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 } else {
                     let appName = UIApplication.fw.appDisplayName
                     let tipText = String(format: FrameworkBundle.pickerDeniedTitle, appName)
-                    fw_showEmptyView(text: tipText)
+                    fw.showEmptyView(text: tipText)
                 }
             } else {
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowEmpty?(self) != nil {
                 } else {
-                    fw_showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
+                    fw.showEmptyView(text: FrameworkBundle.pickerEmptyTitle)
                 }
             }
         }
