@@ -503,9 +503,9 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         if !onlyDisplayText, let imagePath = imagePath as? String {
             if imagePath.lowercased().hasPrefix("http") ||
                imagePath.lowercased().hasPrefix("data:") {
-                cell.imageView.fw_setImage(url: imagePath, placeholderImage: placeholderImage)
+                cell.imageView.fw.setImage(url: imagePath, placeholderImage: placeholderImage)
             } else {
-                let image = UIImage.fw_imageNamed(imagePath)
+                let image = UIImage.fw.imageNamed(imagePath)
                 cell.imageView.image = image ?? placeholderImage
             }
         } else if !onlyDisplayText, let imagePath = imagePath as? UIImage {
@@ -1059,7 +1059,7 @@ open class BannerViewCell: UICollectionViewCell {
     // MARK: - Subviews
     /// 图片视图
     open lazy var imageView: UIImageView = {
-        let result = UIImageView.fw_animatedImageView()
+        let result = UIImageView.fw.animatedImageView()
         result.layer.masksToBounds = true
         return result
     }()

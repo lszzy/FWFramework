@@ -122,7 +122,7 @@ extension WebImageView {
             guard !loadingSucceed else { return }
             
             loadingSucceed = true
-            receipt = UIImage.fw_downloadImage(url, completion: { [weak self] (image, data, error) in
+            receipt = UIImage.fw.downloadImage(url, completion: { [weak self] (image, data, error) in
                 guard let self = self else { return }
                 
                 if let image = image {
@@ -139,7 +139,7 @@ extension WebImageView {
         }
         
         public func cancel() {
-            UIImage.fw_cancelImageDownload(receipt)
+            UIImage.fw.cancelImageDownload(receipt)
         }
         
         func onCompletion(perform action: ((UIImage?, Error?) -> Void)?) {

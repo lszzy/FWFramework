@@ -1020,7 +1020,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             } else if imageAsset.assetSubType == .gif {
                 imageAsset.requestImageData { imageData, info, isGIF, isHEIC in
                     DispatchQueue.global(qos: .default).async {
-                        let resultImage = UIImage.fw_image(data: imageData, scale: 1)
+                        let resultImage = UIImage.fw.image(data: imageData, scale: 1)
                         DispatchQueue.main.async {
                             if resultImage != nil {
                                 zoomImageView.image = resultImage
@@ -1938,7 +1938,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 } else if asset.assetSubType == .gif {
                     asset.requestImageData { imageData, info, isGIF, isHEIC in
                         DispatchQueue.global(qos: .default).async {
-                            let resultImage = UIImage.fw_image(data: imageData, scale: 1)
+                            let resultImage = UIImage.fw.image(data: imageData, scale: 1)
                             completionHandler(asset, resultImage, info)
                         }
                     }
