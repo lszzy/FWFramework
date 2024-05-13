@@ -83,7 +83,7 @@ open class CollectionViewAlignLayout: UICollectionViewFlowLayout {
     
     open override func prepare() {
         super.prepare()
-        fw_sectionConfigPrepareLayout()
+        fw.sectionConfigPrepareLayout()
         cachedFrame = [:]
     }
     
@@ -98,7 +98,7 @@ open class CollectionViewAlignLayout: UICollectionViewFlowLayout {
                 }
             }
         }
-        let sectionAttributes = fw_sectionConfigLayoutAttributes(forElementsIn: rect)
+        let sectionAttributes = fw.sectionConfigLayoutAttributes(forElementsIn: rect)
         updatedAttributes.append(contentsOf: sectionAttributes)
         return updatedAttributes
     }

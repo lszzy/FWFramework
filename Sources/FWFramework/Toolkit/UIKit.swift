@@ -1296,7 +1296,7 @@ extension Wrapper where Base: UILabel {
         numberOfLines: Int? = nil,
         lineHeight: CGFloat? = nil
     ) -> Base {
-        let label = Base()
+        let label = Base.init()
         label.fw.setFont(font, textColor: textColor, text: text, textAlignment: textAlignment, numberOfLines: numberOfLines, lineHeight: lineHeight)
         return label
     }
@@ -1554,14 +1554,14 @@ extension Wrapper where Base: UIButton {
     
     /// 快速创建文本按钮
     public static func button(title: String?, font: UIFont?, titleColor: UIColor?) -> Base {
-        let button = Base(type: .custom)
+        let button = Base.init(type: .custom)
         button.fw.setTitle(title, font: font, titleColor: titleColor)
         return button
     }
 
     /// 快速创建图片按钮
     public static func button(image: UIImage?) -> Base {
-        let button = Base(type: .custom)
+        let button = Base.init(type: .custom)
         button.setImage(image, for: .normal)
         return button
     }

@@ -904,7 +904,7 @@ extension Wrapper where Base: NSAttributedString {
         let htmlData = htmlString.data(using: .utf8)
         guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
         
-        return try? Base(
+        return try? Base.init(
             data: htmlData,
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
@@ -962,7 +962,7 @@ extension Wrapper where Base: NSAttributedString {
         if let textColor = textColor {
             attributes[.foregroundColor] = textColor
         }
-        return Base(string: string, attributes: attributes)
+        return Base.init(string: string, attributes: attributes)
     }
     
     /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
@@ -978,7 +978,7 @@ extension Wrapper where Base: NSAttributedString {
         if let textColor = textColor {
             attributes[.foregroundColor] = textColor
         }
-        return Base(string: string, attributes: attributes)
+        return Base.init(string: string, attributes: attributes)
     }
     
     /// 快速创建指定行高、对齐方式和换行模式的段落样式对象

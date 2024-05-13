@@ -585,7 +585,7 @@ open class SkeletonLayout: SkeletonView {
 open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableViewDelegate {
     /// 表格视图，默认不可滚动
     open lazy var tableView: UITableView = {
-        let tableView = UITableView.fw_tableView(style)
+        let tableView = UITableView.fw.tableView(style)
         tableView.frame = bounds
         tableView.isScrollEnabled = false
         tableView.separatorStyle = .none
@@ -749,9 +749,9 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
     open lazy var collectionView: UICollectionView = {
         let collectionView: UICollectionView
         if let viewLayout = collectionViewLayout {
-            collectionView = UICollectionView.fw_collectionView(viewLayout)
+            collectionView = UICollectionView.fw.collectionView(viewLayout)
         } else {
-            collectionView = UICollectionView.fw_collectionView()
+            collectionView = UICollectionView.fw.collectionView()
         }
         collectionView.frame = bounds
         collectionView.isScrollEnabled = false

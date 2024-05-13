@@ -46,7 +46,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
-            let result = UICollectionView.fw_collectionView(setupCollectionViewLayout())
+            let result = UICollectionView.fw.collectionView(setupCollectionViewLayout())
             fw.setProperty(result, forName: "collectionView")
             return result
         }
@@ -54,7 +54,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
     
     /// 集合代理，同集合collectionDelegate，延迟加载
     public var collectionDelegate: CollectionViewDelegate {
-        return collectionView.fw_collectionDelegate
+        return collectionView.fw.collectionDelegate
     }
     
     /// 集合数据，默认空数组，延迟加载
