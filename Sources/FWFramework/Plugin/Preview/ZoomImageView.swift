@@ -409,7 +409,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
 
     /// 进度视图，居中显示
     open lazy var progressView: UIView & ProgressViewPlugin = {
-        let result = UIView.fw_progressView(style: .imagePreview)
+        let result = UIView.fw.progressView(style: .imagePreview)
         result.isHidden = true
         addSubview(result)
         (result as UIView).fw.alignCenter()

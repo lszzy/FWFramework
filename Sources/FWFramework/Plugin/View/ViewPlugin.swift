@@ -11,28 +11,41 @@ import UIKit
 extension Wrapper where Base: UIView {
     /// 自定义视图插件，未设置时自动从插件池加载
     public var viewPlugin: ViewPlugin! {
-        get { return base.fw_viewPlugin }
-        set { base.fw_viewPlugin = newValue }
+        get {
+            if let viewPlugin = property(forName: "viewPlugin") as? ViewPlugin {
+                return viewPlugin
+            } else if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) {
+                return viewPlugin
+            }
+            return ViewPluginImpl.shared
+        }
+        set {
+            setProperty(newValue, forName: "viewPlugin")
+        }
     }
 
     /// 统一进度视图工厂方法
     public func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
-        return base.fw_progressView(style: style)
+        let plugin = viewPlugin ?? ViewPluginImpl.shared
+        return plugin.progressView(style: style)
     }
 
     /// 统一指示器视图工厂方法
     public func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
-        return base.fw_indicatorView(style: style)
+        let plugin = viewPlugin ?? ViewPluginImpl.shared
+        return plugin.indicatorView(style: style)
     }
     
     /// 统一进度视图工厂方法
     public static func progressView(style: ProgressViewStyle = .default) -> UIView & ProgressViewPlugin {
-        return Base.fw_progressView(style: style)
+        let plugin = PluginManager.loadPlugin(ViewPlugin.self) ?? ViewPluginImpl.shared
+        return plugin.progressView(style: style)
     }
 
     /// 统一指示器视图工厂方法
     public static func indicatorView(style: IndicatorViewStyle = .default) -> UIView & IndicatorViewPlugin {
-        return Base.fw_indicatorView(style: style)
+        let plugin = PluginManager.loadPlugin(ViewPlugin.self) ?? ViewPluginImpl.shared
+        return plugin.indicatorView(style: style)
     }
 }
 
@@ -40,7 +53,10 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIActivityIndicatorView {
     /// 快速创建指示器，可指定颜色，默认白色
     public static func indicatorView(color: UIColor?) -> UIActivityIndicatorView {
-        return Base.fw_indicatorView(color: color)
+        let indicatorView = UIActivityIndicatorView(style: .medium)
+        indicatorView.color = color ?? .white
+        indicatorView.hidesWhenStopped = true
+        return indicatorView
     }
 }
 
@@ -237,64 +253,6 @@ extension ViewPlugin {
     /// 默认实现，指示器视图工厂方法
     public func indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
         return ViewPluginImpl.shared.indicatorView(style: style)
-    }
-    
-}
-
-// MARK: - UIView+ViewPlugin
-@_spi(FW) extension UIView {
-    
-    /// 自定义视图插件，未设置时自动从插件池加载
-    public var fw_viewPlugin: ViewPlugin! {
-        get {
-            if let viewPlugin = fw.property(forName: "fw_viewPlugin") as? ViewPlugin {
-                return viewPlugin
-            } else if let viewPlugin = PluginManager.loadPlugin(ViewPlugin.self) {
-                return viewPlugin
-            }
-            return ViewPluginImpl.shared
-        }
-        set {
-            fw.setProperty(newValue, forName: "fw_viewPlugin")
-        }
-    }
-
-    /// 统一进度视图工厂方法
-    public func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
-        let plugin = fw_viewPlugin ?? ViewPluginImpl.shared
-        return plugin.progressView(style: style)
-    }
-
-    /// 统一指示器视图工厂方法
-    public func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
-        let plugin = fw_viewPlugin ?? ViewPluginImpl.shared
-        return plugin.indicatorView(style: style)
-    }
-    
-    /// 统一进度视图工厂方法
-    public static func fw_progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
-        let plugin = PluginManager.loadPlugin(ViewPlugin.self) ?? ViewPluginImpl.shared
-        return plugin.progressView(style: style)
-    }
-
-    /// 统一指示器视图工厂方法
-    public static func fw_indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
-        let plugin = PluginManager.loadPlugin(ViewPlugin.self) ?? ViewPluginImpl.shared
-        return plugin.indicatorView(style: style)
-    }
-    
-}
-
-@_spi(FW) extension UIActivityIndicatorView {
-    
-    /// 快速创建指示器，可指定颜色，默认白色
-    public static func fw_indicatorView(color: UIColor?) -> UIActivityIndicatorView {
-        var indicatorStyle: UIActivityIndicatorView.Style
-        indicatorStyle = .medium
-        let indicatorView = UIActivityIndicatorView(style: indicatorStyle)
-        indicatorView.color = color ?? .white
-        indicatorView.hidesWhenStopped = true
-        return indicatorView
     }
     
 }

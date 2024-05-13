@@ -39,16 +39,16 @@ public struct LoadingPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
+        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw_showLoading(text: text, cancelBlock: cancelBlock)
+        uiView.fw.showLoading(text: text, cancelBlock: cancelBlock)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw_hideLoading()
+        uiView.fw.hideLoading()
     }
 }
 
@@ -88,21 +88,21 @@ public struct ProgressPluginView: UIViewRepresentable {
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
         if let progress = progress {
-            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
+            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
         }
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
         if let progress = progress {
-            uiView.fw_showProgress(progress, text: text, cancelBlock: cancelBlock)
+            uiView.fw.showProgress(progress, text: text, cancelBlock: cancelBlock)
         } else {
-            uiView.fw_hideProgress()
+            uiView.fw.hideProgress()
         }
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw_hideProgress()
+        uiView.fw.hideProgress()
     }
 }
 
@@ -253,11 +253,11 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw_showLoading()
+                    viewController.fw.showLoading()
                 }
             } else {
-                if viewController.fw_isShowingLoading {
-                    viewController.fw_hideLoading()
+                if viewController.fw.isShowingLoading {
+                    viewController.fw.hideLoading()
                 }
             }
         }, viewContext: viewContext)
@@ -273,8 +273,8 @@ extension View {
             if isShowing {
                 customize(viewController)
             } else {
-                if viewController.fw_isShowingProgress {
-                    viewController.fw_hideProgress()
+                if viewController.fw.isShowingProgress {
+                    viewController.fw.hideProgress()
                 }
             }
         }, viewContext: viewContext)

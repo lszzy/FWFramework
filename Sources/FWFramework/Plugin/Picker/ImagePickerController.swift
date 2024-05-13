@@ -254,7 +254,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     private func loadAlbumArray() {
         if albumControllerDelegate?.albumControllerWillStartLoading?(self) != nil {
         } else if showsDefaultLoading {
-            fw_showLoading()
+            fw.showLoading()
         }
         
         DispatchQueue.global(qos: .default).async { [weak self] in
@@ -291,7 +291,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     private func refreshAlbumGroups() {
         if albumControllerDelegate?.albumControllerDidFinishLoading?(self) != nil {
         } else if showsDefaultLoading {
-            fw_hideLoading()
+            fw.hideLoading()
         }
         
         if maximumTableViewHeight > 0 {
@@ -1167,13 +1167,13 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         if imagePickerController?.shouldRequestImage ?? false {
             if delegate?.imagePickerPreviewControllerWillStartLoading?(self) != nil {
             } else if showsDefaultLoading {
-                fw_showLoading()
+                fw.showLoading()
             }
             ImagePickerController.requestImagesAssetArray(selectedImageAssetArray, filterType: imagePickerController?.filterType ?? [], useOriginImage: shouldUseOriginImage, videoExportPreset: imagePickerController?.videoExportPreset, videoExportAVAsset: imagePickerController?.videoExportAVAsset ?? false) { [weak self] in
                 guard let self = self else { return }
                 if self.delegate?.imagePickerPreviewControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {
-                    self.fw_hideLoading()
+                    self.fw.hideLoading()
                 }
                 
                 self.dismiss(animated: true) { [weak self] in
@@ -1974,7 +1974,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             isImagesAssetLoading = true
             if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
             } else if showsDefaultLoading {
-                fw_showLoading()
+                fw.showLoading()
             }
         }
         if assetsGroup == nil {
@@ -2001,7 +2001,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         self.filterType = filterType
         if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
         } else if showsDefaultLoading {
-            fw_showLoading()
+            fw.showLoading()
         }
         isImagesAssetLoading = true
         initAlbumControllerIfNeeded()
@@ -2083,7 +2083,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         isImagesAssetLoaded = true
         if imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
         } else if showsDefaultLoading {
-            fw_hideLoading()
+            fw.hideLoading()
         }
         isImagesAssetLoading = false
         if imagesAssetArray.count > 0 {
@@ -2332,7 +2332,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         if shouldRequestImage {
             if imagePickerControllerDelegate?.imagePickerControllerWillStartLoading?(self) != nil {
             } else if showsDefaultLoading {
-                fw_showLoading()
+                fw.showLoading()
             }
             
             initPreviewViewControllerIfNeeded()
@@ -2340,7 +2340,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 guard let self = self else { return }
                 if self.imagePickerControllerDelegate?.imagePickerControllerDidFinishLoading?(self) != nil {
                 } else if self.showsDefaultLoading {
-                    self.fw_hideLoading()
+                    self.fw.hideLoading()
                 }
                 
                 self.dismiss(animated: true) { [weak self] in

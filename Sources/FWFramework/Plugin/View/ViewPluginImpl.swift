@@ -34,7 +34,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin {
     }
     
     open func indicatorView(style: IndicatorViewStyle) -> UIView & IndicatorViewPlugin {
-        let indicatorView = customIndicatorView?(style) ?? UIActivityIndicatorView.fw_indicatorView(color: nil)
+        let indicatorView = customIndicatorView?(style) ?? UIActivityIndicatorView.fw.indicatorView(color: nil)
         if let indicatorSize = style.indicatorSize {
             indicatorView.indicatorSize = indicatorSize
         }

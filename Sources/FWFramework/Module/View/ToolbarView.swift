@@ -710,7 +710,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
         didSet {
             if showsLoadingView {
                 if loadingView == nil {
-                    loadingView = UIActivityIndicatorView.fw_indicatorView(color: nil)
+                    loadingView = UIActivityIndicatorView.fw.indicatorView(color: nil)
                 } else {
                     refreshLayout()
                 }
