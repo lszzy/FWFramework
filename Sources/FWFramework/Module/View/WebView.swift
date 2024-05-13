@@ -1331,7 +1331,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
             return
         }
         
-        webView.fw_showAlert(title: nil, message: message, cancel: nil) {
+        webView.fw.showAlert(title: nil, message: message, cancel: nil) {
             completionHandler()
         }
     }
@@ -1341,7 +1341,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
             return
         }
         
-        webView.fw_showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
+        webView.fw.showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
             completionHandler(true)
         } cancelBlock: {
             completionHandler(false)
@@ -1353,7 +1353,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
             return
         }
         
-        webView.fw_showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
+        webView.fw.showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
             textField.text = defaultText
         } confirmBlock: { text in
             completionHandler(text)

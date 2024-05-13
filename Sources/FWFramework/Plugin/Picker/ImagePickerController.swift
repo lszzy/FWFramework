@@ -1097,7 +1097,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             if selectedImageAssetArray.count >= maximumSelectImageCount {
                 if delegate?.imagePickerPreviewControllerWillShowExceed?(self) != nil {
                 } else {
-                    fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
+                    fw.showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
                 }
                 return
             }
@@ -2048,7 +2048,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         if !selectedImageAssetArray.contains(imageAsset) && selectedImageAssetArray.count >= maximumSelectImageCount {
             if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
             } else {
-                fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
+                fw.showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
             }
             return
         }
@@ -2400,7 +2400,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             if selectedImageAssetArray.count >= maximumSelectImageCount {
                 if imagePickerControllerDelegate?.imagePickerControllerWillShowExceed?(self) != nil {
                 } else {
-                    fw_showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
+                    fw.showAlert(title: nil, message: String(format: FrameworkBundle.pickerExceedTitle, "\(maximumSelectImageCount)"), cancel: FrameworkBundle.closeButton)
                 }
                 return
             }
