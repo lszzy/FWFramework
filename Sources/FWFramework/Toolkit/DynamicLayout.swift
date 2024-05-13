@@ -453,9 +453,9 @@ extension Wrapper where Base: UITableView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(headerFooterViewClass).appending("FWDynamicLayoutReuseIdentifier")
-        if !base.fw.propertyBool(forName: identifier) {
+        if !propertyBool(forName: identifier) {
             base.register(headerFooterViewClass, forHeaderFooterViewReuseIdentifier: identifier)
-            base.fw.setPropertyBool(true, forName: identifier)
+            setPropertyBool(true, forName: identifier)
         }
         return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
     }
@@ -669,9 +669,9 @@ extension Wrapper where Base: UICollectionView {
         reuseIdentifier: String? = nil
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
-        if !base.fw.propertyBool(forName: identifier) {
+        if !propertyBool(forName: identifier) {
             base.register(cellClass, forCellWithReuseIdentifier: identifier)
-            base.fw.setPropertyBool(true, forName: identifier)
+            setPropertyBool(true, forName: identifier)
         }
         return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
     }
@@ -721,9 +721,9 @@ extension Wrapper where Base: UICollectionView {
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(reusableViewClass).appending("FWDynamicLayoutReuseIdentifier")
         let kindIdentifier = identifier + kind
-        if !base.fw.propertyBool(forName: kindIdentifier) {
+        if !propertyBool(forName: kindIdentifier) {
             base.register(reusableViewClass, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
-            base.fw.setPropertyBool(true, forName: kindIdentifier)
+            setPropertyBool(true, forName: kindIdentifier)
         }
         return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
     }
