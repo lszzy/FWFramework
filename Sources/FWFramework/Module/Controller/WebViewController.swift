@@ -48,7 +48,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
             if let reuseIdentifier = ViewControllerManager.shared.webViewReuseIdentifier {
                 result = ReusableViewPool.shared.dequeueReusableView(with: WebView.self, viewHolder: self, reuseIdentifier: reuseIdentifier)
             } else {
-                let configuration = WKWebView.fw_defaultConfiguration()
+                let configuration = WKWebView.fw.defaultConfiguration()
                 setupWebConfiguration(configuration)
                 result = WebView(frame: .zero, configuration: configuration)
             }
@@ -120,12 +120,12 @@ internal extension ViewControllerManager {
         webView.setNeedsLayout()
         webView.layoutIfNeeded()
         
-        if webView.fw_jsBridgeEnabled, let bridge = webView.fw_setupJsBridge() {
+        if webView.fw.jsBridgeEnabled, let bridge = webView.fw.setupJsBridge() {
             webController.setupWebBridge(bridge)
         }
         
-        if webView.fw_navigationItems != nil {
-            webView.fw_setupNavigationItems(viewController)
+        if webView.fw.navigationItems != nil {
+            webView.fw.setupNavigationItems(viewController)
         }
         
         webView.webRequest = webController.webRequest
