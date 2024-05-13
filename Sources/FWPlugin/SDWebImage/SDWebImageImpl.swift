@@ -223,7 +223,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
 open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
-        let result = UIView.fw_indicatorView(style: style)
+        let result = UIView.fw.indicatorView(style: style)
         if style.indicatorColor == nil {
             result.indicatorColor = (style == .image) ? .gray : .white
         }
@@ -273,7 +273,7 @@ open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
 open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
-        let result = UIView.fw_progressView(style: style)
+        let result = UIView.fw.progressView(style: style)
         return result
     }() {
         didSet {

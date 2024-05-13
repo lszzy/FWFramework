@@ -90,7 +90,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                     indicatorView = customIndicatorBlock?(view, placeholder != nil)
                 } else {
                     let style: IndicatorViewStyle = placeholder != nil ? .imagePlaceholder : .image
-                    indicatorView = UIView.fw_indicatorView(style: style)
+                    indicatorView = UIView.fw.indicatorView(style: style)
                     if style.indicatorColor == nil {
                         indicatorView?.indicatorColor = (style == .image) ? .gray : .white
                     }
