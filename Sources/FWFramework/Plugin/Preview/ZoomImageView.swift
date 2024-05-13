@@ -365,7 +365,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             return result
         }
         
-        let result = UIImageView.fw_animatedImageView()
+        let result = UIImageView.fw.animatedImageView()
         _imageView = result
         scrollView.addSubview(result)
         return result
@@ -460,7 +460,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     private func didInitialize() {
         videoPlayButtonImage = FrameworkBundle.videoPlayImage
         videoCloseButtonImage = FrameworkBundle.navCloseImage
-        fw_hidesImageIndicator = true
+        fw.hidesImageIndicator = true
         
         addSubview(scrollView)
         
@@ -614,17 +614,17 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             imageURL = AVPlayerItem(url: url)
         }
         
-        fw_cancelImageRequest()
+        fw.cancelImageRequest()
         if let url = imageURL as? URL {
             progress = 0.01
             // 默认缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
             var placeholderImage = aPlaceholderImage
             if !ignoreImageCache {
-                if let cachedImage = fw_loadImageCache(url: url) {
+                if let cachedImage = fw.loadImageCache(url: url) {
                     placeholderImage = cachedImage
                 }
             }
-            fw_setImage(url: isUrlRequest ? (aImageURL as? URLRequest) : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
+            fw.setImage(url: isUrlRequest ? (aImageURL as? URLRequest) : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
                 self?.image = image
             } completion: { [weak self] image, error in
                 self?.progress = 1

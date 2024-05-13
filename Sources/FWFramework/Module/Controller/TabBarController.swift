@@ -924,7 +924,7 @@ open class TabBarItemContentView: UIView {
             currentImage = targetImage.withRenderingMode(renderingMode).fw.image(insets: imageInsets)
         }
         if let currentImageURL = selected ? (selectedImageURL ?? imageURL) : imageURL {
-            imageView.fw_setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
+            imageView.fw.setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
                 guard var image = image else { return }
                 if let cgImage = image.cgImage {
                     image = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: image.imageOrientation)
