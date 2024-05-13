@@ -172,16 +172,16 @@ public struct EmptyPluginView: UIViewRepresentable {
     
     public func makeUIView(context: Context) -> UIView {
         let uiView = UIView()
-        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
         return uiView
     }
     
     public func updateUIView(_ uiView: UIView, context: Context) {
-        uiView.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
+        uiView.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block)
     }
     
     public static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        uiView.fw_hideEmptyView()
+        uiView.fw.hideEmptyView()
     }
 }
 
@@ -232,11 +232,11 @@ extension View {
                 if let customize = customize {
                     customize(viewController)
                 } else {
-                    viewController.fw_showEmptyView()
+                    viewController.fw.showEmptyView()
                 }
             } else {
-                if viewController.fw_hasEmptyView {
-                    viewController.fw_hideEmptyView()
+                if viewController.fw.hasEmptyView {
+                    viewController.fw.hideEmptyView()
                 }
             }
         }, viewContext: viewContext)
