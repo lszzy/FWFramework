@@ -147,7 +147,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         }
         
         /*
-        UIDevice.fw_setDeviceTokenData(deviceToken)
+        UIDevice.fw.setDeviceTokenData(deviceToken)
          */
     }
     
@@ -159,7 +159,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         }
         
         /*
-        UIDevice.fw_setDeviceTokenData(nil)
+        UIDevice.fw.setDeviceTokenData(nil)
          */
     }
     
