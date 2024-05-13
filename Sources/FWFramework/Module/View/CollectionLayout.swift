@@ -74,7 +74,7 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     open override func prepare() {
         super.prepare()
-        self.fw_sectionConfigPrepareLayout()
+        fw.sectionConfigPrepareLayout()
         guard let collectionView = collectionView,
               itemRenderVertical,
               verticalColumnCount > 0,
@@ -132,7 +132,7 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
             }
         }
         
-        let sectionAttributes = fw_sectionConfigLayoutAttributes(forElementsIn: rect)
+        let sectionAttributes = fw.sectionConfigLayoutAttributes(forElementsIn: rect)
         newAttributes.append(contentsOf: sectionAttributes)
         return newAttributes
     }

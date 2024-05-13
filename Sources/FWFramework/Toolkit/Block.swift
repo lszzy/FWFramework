@@ -118,7 +118,7 @@ extension Wrapper where Base: Timer {
 extension Wrapper where Base: UIGestureRecognizer {
     /// 从事件句柄初始化
     public static func gestureRecognizer(block: @escaping (Base) -> Void) -> Base {
-        let gestureRecognizer = Base()
+        let gestureRecognizer = Base.init()
         gestureRecognizer.fw.addBlock(block)
         return gestureRecognizer
     }
@@ -303,25 +303,25 @@ extension Wrapper where Base: UIBarButtonItem {
     public static func item(object: Any?, target: Any?, action: Selector?) -> Base {
         var barItem: Base
         if let title = object as? String {
-            barItem = Base(title: title, style: .plain, target: target, action: action)
+            barItem = Base.init(title: title, style: .plain, target: target, action: action)
         } else if let attributedString = object as? NSAttributedString {
-            barItem = Base(title: attributedString.string, style: .plain, target: target, action: action)
+            barItem = Base.init(title: attributedString.string, style: .plain, target: target, action: action)
             barItem.fw.titleAttributes = attributedString.attributes(at: 0, effectiveRange: nil)
         } else if let image = object as? UIImage {
-            barItem = Base(image: image, style: .plain, target: target, action: action)
+            barItem = Base.init(image: image, style: .plain, target: target, action: action)
         } else if let systemItem = object as? UIBarButtonItem.SystemItem {
-            barItem = Base(barButtonSystemItem: systemItem, target: target, action: action)
+            barItem = Base.init(barButtonSystemItem: systemItem, target: target, action: action)
         } else if let value = object as? Int {
-            barItem = Base(barButtonSystemItem: .init(rawValue: value) ?? .done, target: target, action: action)
+            barItem = Base.init(barButtonSystemItem: .init(rawValue: value) ?? .done, target: target, action: action)
         } else if let number = object as? NSNumber {
-            barItem = Base(barButtonSystemItem: .init(rawValue: number.intValue) ?? .done, target: target, action: action)
+            barItem = Base.init(barButtonSystemItem: .init(rawValue: number.intValue) ?? .done, target: target, action: action)
         } else if let customView = object as? UIView {
-            barItem = Base(customView: customView)
+            barItem = Base.init(customView: customView)
             barItem.target = target as? AnyObject
             barItem.action = action
             barItem.fw.addItemEvent(customView)
         } else {
-            barItem = Base()
+            barItem = Base.init()
             barItem.target = target as? AnyObject
             barItem.action = action
         }

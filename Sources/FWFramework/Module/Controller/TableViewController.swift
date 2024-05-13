@@ -46,7 +46,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
         if let result = fw.property(forName: "tableView") as? UITableView {
             return result
         } else {
-            let result = UITableView.fw_tableView(setupTableStyle())
+            let result = UITableView.fw.tableView(setupTableStyle())
             fw.setProperty(result, forName: "tableView")
             return result
         }
@@ -54,7 +54,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 表格代理，同表格tableDelegate，延迟加载
     public var tableDelegate: TableViewDelegate {
-        return tableView.fw_tableDelegate
+        return tableView.fw.tableDelegate
     }
     
     /// 表格数据，默认空数组，延迟加载

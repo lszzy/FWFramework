@@ -11,37 +11,38 @@ import UIKit
 extension Wrapper where Base: UIView {
     /// 视图持有者对象，弱引用
     public weak var viewHolder: NSObject? {
-        get { return base.fw_viewHolder }
-        set { base.fw_viewHolder = newValue }
+        get { return property(forName: "viewHolder") as? NSObject }
+        set { setPropertyWeak(newValue, forName: "viewHolder") }
     }
     
     /// 重用唯一标志，默认nil
     public var reuseIdentifier: String? {
-        get { return base.fw_reuseIdentifier }
-        set { base.fw_reuseIdentifier = newValue }
+        get { return property(forName: "reuseIdentifier") as? String }
+        set { setProperty(newValue, forName: "reuseIdentifier") }
     }
     
     /// 视图已重用次数，默认0
     public var reusedTimes: Int {
-        get { return base.fw_reusedTimes }
-        set { base.fw_reusedTimes = newValue }
+        get { return propertyInt(forName: "reusedTimes") }
+        set { setPropertyInt(newValue, forName: "reusedTimes") }
     }
     
     /// 标记重用准备中(true)，准备中的视图在完成(false)之前都不会被dequeue，默认false
-    public var reusePrepareing: Bool {
-        get { return base.fw_reusePreparing }
-        set { base.fw_reusePreparing = newValue }
+    public var reusePreparing: Bool {
+        get { return propertyBool(forName: "reusePreparing") }
+        set { setPropertyBool(newValue, forName: "reusePreparing") }
     }
     
     /// 标记重用失效，将自动从缓存池移除
     public var reuseInvalid: Bool {
-        get { return base.fw_reuseInvalid }
-        set { base.fw_reuseInvalid = newValue }
+        get { return propertyBool(forName: "reuseInvalid") }
+        set { setPropertyBool(newValue, forName: "reuseInvalid") }
     }
     
     /// 按需预加载下一个可重用视图，仅当前视图可重用时生效
     public func preloadReusableView() {
-        base.fw_preloadReusableView()
+        guard let reuseIdentifier = reuseIdentifier else { return }
+        ReusableViewPool.shared.preloadReusableView(with: type(of: base), reuseIdentifier: reuseIdentifier)
     }
 }
 
@@ -51,7 +52,7 @@ extension Wrapper where Base: UIView {
 /// 使用方式如下，代码示例详见WebView：
 /// 1. 应用启动完成时配置全局重用初始化句柄并调用enqueueReusableView(with: ReusableViewType.self)预加载第一个视图
 /// 2. 重用视图初始化时调用：let reusableView = ReusableViewPool.shared.dequeueReusableView(with: ReusableViewType.self, viewHolder: self)
-/// 3. 在需要预加载的场景中调用：reusableView.fw_preloadReusableView() 预加载下一个视图
+/// 3. 在需要预加载的场景中调用：reusableView.fw.preloadReusableView() 预加载下一个视图
 /// 4. 在需要回收到缓存池时(一般控制器deinit)调用：ReusableViewPool.shared.enqueueReusableView(reusableView)
 open class ReusableViewPool: NSObject {
     
@@ -108,7 +109,7 @@ open class ReusableViewPool: NSObject {
     open func dequeueReusableView<T: UIView>(with reusableViewType: T.Type, viewHolder: NSObject?, reuseIdentifier: String = "") -> T {
         recycleInvalidHolderReusableViews()
         let reusableView = getReusableView(with: reusableViewType, reuseIdentifier: reuseIdentifier)
-        reusableView.fw_viewHolder = viewHolder
+        reusableView.fw.viewHolder = viewHolder
         return reusableView
     }
     
@@ -132,10 +133,10 @@ open class ReusableViewPool: NSObject {
     /// 回收可复用的视图
     open func recycleReusableView(_ reusableView: UIView?) {
         guard let reusableView = reusableView,
-              let reuseIdentifier = reusableView.fw_reuseIdentifier else { return }
+              let reuseIdentifier = reusableView.fw.reuseIdentifier else { return }
         
         reusableView.removeFromSuperview()
-        if reusableView.fw_reusedTimes >= maxReuseTimes || reusableView.fw_reuseInvalid {
+        if reusableView.fw.reusedTimes >= maxReuseTimes || reusableView.fw.reuseInvalid {
             clearReusableView(reusableView)
             return
         }
@@ -160,7 +161,7 @@ open class ReusableViewPool: NSObject {
     /// 销毁指定的复用视图，并且从回收池里删除
     open func clearReusableView(_ reusableView: UIView?) {
         guard let reusableView = reusableView,
-              let reuseIdentifier = reusableView.fw_reuseIdentifier else { return }
+              let reuseIdentifier = reusableView.fw.reuseIdentifier else { return }
         
         lock.wait()
         let classIdentifier = NSStringFromClass(type(of: reusableView)) + reuseIdentifier
@@ -226,7 +227,7 @@ open class ReusableViewPool: NSObject {
         if reusableViewDict.count > 0 {
             for reusableViews in reusableViewDict.values {
                 for reusableView in reusableViews {
-                    if reusableView.fw_viewHolder == nil {
+                    if reusableView.fw.viewHolder == nil {
                         recycleReusableView(reusableView)
                     }
                 }
@@ -239,7 +240,7 @@ open class ReusableViewPool: NSObject {
         var enqueueReusableView: T?
         lock.wait()
         if var reusableViews = enqueueReusableViews[classIdentifier],
-           let enqueueIndex = reusableViews.firstIndex(where: { !$0.fw_reusePreparing }) {
+           let enqueueIndex = reusableViews.firstIndex(where: { !$0.fw.reusePreparing }) {
             enqueueReusableView = reusableViews.remove(at: enqueueIndex) as? T
             enqueueReusableViews[classIdentifier] = reusableViews
         }
@@ -256,7 +257,7 @@ open class ReusableViewPool: NSObject {
     
     private func initializeReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
         let reusableView = reusableViewType.reusableViewInitialize(reuseIdentifier: reuseIdentifier)
-        reusableView.fw_reuseIdentifier = reuseIdentifier
+        reusableView.fw.reuseIdentifier = reuseIdentifier
         return reusableView
     }
     
@@ -283,52 +284,12 @@ public protocol ReusableViewProtocol {
     
     /// 即将回收视图，默认清空viewHolder，必须调用super
     open func reusableViewWillRecycle() {
-        fw_viewHolder = nil
+        fw.viewHolder = nil
     }
     
     /// 即将重用视图，默认重用次数+1，必须调用super
     open func reusableViewWillReuse() {
-        fw_reusedTimes += 1
-    }
-    
-}
-
-@_spi(FW) extension UIView {
-    
-    /// 视图持有者对象，弱引用
-    public weak var fw_viewHolder: NSObject? {
-        get { return fw.property(forName: "fw_viewHolder") as? NSObject }
-        set { fw.setPropertyWeak(newValue, forName: "fw_viewHolder") }
-    }
-    
-    /// 重用唯一标志，默认nil
-    public var fw_reuseIdentifier: String? {
-        get { return fw.property(forName: "fw_reuseIdentifier") as? String }
-        set { fw.setProperty(newValue, forName: "fw_reuseIdentifier") }
-    }
-    
-    /// 视图已重用次数，默认0
-    public var fw_reusedTimes: Int {
-        get { return fw.propertyInt(forName: "fw_reusedTimes") }
-        set { fw.setPropertyInt(newValue, forName: "fw_reusedTimes") }
-    }
-    
-    /// 标记重用准备中(true)，准备中的视图在完成(false)之前都不会被dequeue，默认false
-    public var fw_reusePreparing: Bool {
-        get { return fw.propertyBool(forName: "fw_reusePreparing") }
-        set { fw.setPropertyBool(newValue, forName: "fw_reusePreparing") }
-    }
-    
-    /// 标记重用失效，将自动从缓存池移除
-    public var fw_reuseInvalid: Bool {
-        get { return fw.propertyBool(forName: "fw_reuseInvalid") }
-        set { fw.setPropertyBool(newValue, forName: "fw_reuseInvalid") }
-    }
-    
-    /// 按需预加载下一个可重用视图，仅当前视图可重用时生效
-    public func fw_preloadReusableView() {
-        guard let reuseIdentifier = fw_reuseIdentifier else { return }
-        ReusableViewPool.shared.preloadReusableView(with: type(of: self), reuseIdentifier: reuseIdentifier)
+        fw.reusedTimes += 1
     }
     
 }

@@ -10,16 +10,33 @@ import UIKit
 // MARK: - Wrapper+UITableView
 extension Wrapper where Base: UITableView {
     public var tableDelegate: TableViewDelegate {
-        get { base.fw_tableDelegate }
-        set { base.fw_tableDelegate = newValue }
+        get {
+            if let result = property(forName: "tableDelegate") as? TableViewDelegate {
+                return result
+            } else {
+                let result = TableViewDelegate()
+                setProperty(result, forName: "tableDelegate")
+                return result
+            }
+        }
+        set {
+            setProperty(newValue, forName: "tableDelegate")
+        }
     }
     
     public static func tableView() -> Base {
-        return Base.fw_tableView()
+        return tableView(.plain)
     }
     
     public static func tableView(_ style: UITableView.Style) -> Base {
-        return Base.fw_tableView(style)
+        let tableView = Base.init(frame: .zero, style: style)
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.tableFooterView = UIView(frame: .zero)
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
+        return tableView
     }
 }
 
@@ -378,37 +395,5 @@ open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDel
         }
         
         didEndScrollingAnimation?(scrollView)
-    }
-}
-
-@_spi(FW) extension UITableView {
-    public var fw_tableDelegate: TableViewDelegate {
-        get {
-            if let result = fw.property(forName: "fw_tableDelegate") as? TableViewDelegate {
-                return result
-            } else {
-                let result = TableViewDelegate()
-                fw.setProperty(result, forName: "fw_tableDelegate")
-                return result
-            }
-        }
-        set {
-            fw.setProperty(newValue, forName: "fw_tableDelegate")
-        }
-    }
-    
-    public static func fw_tableView() -> Self {
-        return fw_tableView(.plain)
-    }
-    
-    public static func fw_tableView(_ style: UITableView.Style) -> Self {
-        let tableView = Self(frame: .zero, style: style)
-        tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.tableFooterView = UIView(frame: .zero)
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
-        }
-        return tableView
     }
 }

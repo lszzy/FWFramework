@@ -240,14 +240,14 @@ open class WebView: WKWebView {
             }
             
             if let webView = webView as? WebView, webView.isFirstLoad,
-               !webView.fw_reusePreparing {
+               !webView.fw.reusePreparing {
                 webView.isFirstLoad = false
-                webView.fw_preloadReusableView()
+                webView.fw.preloadReusableView()
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
+            if let webView = webView as? WebView, webView.fw.reusePreparing {
                 webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
+                webView.fw.reusePreparing = false
             }
         }
         
@@ -256,9 +256,9 @@ open class WebView: WKWebView {
                 return
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
+            if let webView = webView as? WebView, webView.fw.reusePreparing {
                 webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
+                webView.fw.reusePreparing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -270,9 +270,9 @@ open class WebView: WKWebView {
                 return
             }
             
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
+            if let webView = webView as? WebView, webView.fw.reusePreparing {
                 webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
+                webView.fw.reusePreparing = false
             }
             
             if (error as NSError).code == NSURLErrorCancelled { return }
@@ -281,7 +281,7 @@ open class WebView: WKWebView {
         
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
             if let webView = webView as? WebView {
-                webView.fw_reuseInvalid = true
+                webView.fw.reuseInvalid = true
             }
             
             if self.delegate?.webViewWebContentProcessDidTerminate?(webView) != nil {
@@ -562,16 +562,16 @@ open class WebView: WKWebView {
         
         super.reusableViewWillRecycle()
         
-        if fw_reusedTimes < 1,
-           !fw_reusePreparing,
-           let reuseIdentifier = fw_reuseIdentifier,
+        if fw.reusedTimes < 1,
+           !fw.reusePreparing,
+           let reuseIdentifier = fw.reuseIdentifier,
            !WebView.preloadedReuseIdentifiers.contains(reuseIdentifier),
            let preloadUrl = WebView.reusePreloadUrlBlock?(reuseIdentifier) {
             WebView.preloadedReuseIdentifiers.append(reuseIdentifier)
             
-            fw_reusePreparing = true
+            fw.reusePreparing = true
             reusableViewWillReuse()
-            fw_loadRequest(preloadUrl)
+            fw.loadRequest(preloadUrl)
         }
     }
     
@@ -1275,7 +1275,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         fw_jsBridge = nil
         fw_jsBridgeEnabled = false
         fw_navigationItems = nil
-        guard fw_reusedTimes > 0 else { return }
+        guard fw.reusedTimes > 0 else { return }
         
         scrollView.delegate = nil
         scrollView.isScrollEnabled = true
