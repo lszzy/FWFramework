@@ -250,7 +250,7 @@ open class PullRefreshView: UIView {
         super.willMove(toSuperview: newSuperview)
         
         if let scrollView = superview as? UIScrollView, newSuperview == nil,
-           scrollView.fw_showPullRefresh {
+           scrollView.fw.showPullRefresh {
             if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
@@ -353,7 +353,7 @@ open class PullRefreshView: UIView {
         if keyPath == "contentOffset" {
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw_infiniteScrollView?.isActive ?? false) ||
+            if (scrollView.fw.infiniteScrollView?.isActive ?? false) ||
                 (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
                 if pullingPercent > 0 { pullingPercent = 0 }
                 if state != .idle {
@@ -379,7 +379,7 @@ open class PullRefreshView: UIView {
     @objc open func gestureRecognizerStateChanged(_ gestureRecognizer: UIPanGestureRecognizer) {
         if gestureRecognizer.state == .began {
             isActive = false
-            scrollView?.fw_infiniteScrollView?.isActive = false
+            scrollView?.fw.infiniteScrollView?.isActive = false
         }
     }
     
@@ -810,7 +810,7 @@ open class InfiniteScrollView: UIView {
         super.willMove(toSuperview: newSuperview)
         
         if let scrollView = superview as? UIScrollView, newSuperview == nil,
-           scrollView.fw_showInfiniteScroll {
+           scrollView.fw.showInfiniteScroll {
             if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
@@ -838,7 +838,7 @@ open class InfiniteScrollView: UIView {
             if finished { return }
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw_pullRefreshView?.isActive ?? false) ||
+            if (scrollView.fw.pullRefreshView?.isActive ?? false) ||
                 (contentOffset.y + ceil(scrollView.adjustedContentInset.top) - scrollView.contentInset.top) < 0 {
                 if state != .idle {
                     state = .idle
@@ -859,7 +859,7 @@ open class InfiniteScrollView: UIView {
 
         if gestureRecognizer.state == .began {
             isActive = false
-            scrollView?.fw_pullRefreshView?.isActive = false
+            scrollView?.fw.pullRefreshView?.isActive = false
         } else if gestureRecognizer.state == .ended && state == .triggered {
             if let scrollView = scrollView, (scrollView.contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) >= 0 {
                 state = .loading

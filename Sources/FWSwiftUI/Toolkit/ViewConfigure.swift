@@ -129,11 +129,11 @@ extension View {
             if !scrollView.fw.propertyBool(forName: "scrollViewRefreshing") {
                 scrollView.fw.setPropertyBool(true, forName: "scrollViewRefreshing")
                 
-                scrollView.fw_setRefreshing { [weak scrollView] in
+                scrollView.fw.setRefreshing { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw_endRefreshing()
+                        scrollView?.fw.endRefreshing()
                         if let finished = finished {
-                            scrollView?.fw_loadingFinished = finished
+                            scrollView?.fw.loadingFinished = finished
                         }
                     })
                 }
@@ -143,15 +143,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw_isRefreshing {
-                    scrollView.fw_beginRefreshing()
+                if !scrollView.fw.isRefreshing {
+                    scrollView.fw.beginRefreshing()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw_loadingFinished = finished
+                scrollView.fw.loadingFinished = finished
             }
         }
     }
@@ -167,11 +167,11 @@ extension View {
             if !scrollView.fw.propertyBool(forName: "scrollViewLoading") {
                 scrollView.fw.setPropertyBool(true, forName: "scrollViewLoading")
                 
-                scrollView.fw_setLoading { [weak scrollView] in
+                scrollView.fw.setLoading { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw_endLoading()
+                        scrollView?.fw.endLoading()
                         if let finished = finished {
-                            scrollView?.fw_loadingFinished = finished
+                            scrollView?.fw.loadingFinished = finished
                         }
                     })
                 }
@@ -181,15 +181,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw_isLoading {
-                    scrollView.fw_beginLoading()
+                if !scrollView.fw.isLoading {
+                    scrollView.fw.beginLoading()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw_loadingFinished = finished
+                scrollView.fw.loadingFinished = finished
             }
         }
     }
@@ -345,11 +345,11 @@ extension View {
             if !scrollView.fw.propertyBool(forName: "listViewRefreshing") {
                 scrollView.fw.setPropertyBool(true, forName: "listViewRefreshing")
                 
-                scrollView.fw_setRefreshing { [weak scrollView] in
+                scrollView.fw.setRefreshing { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw_endRefreshing()
+                        scrollView?.fw.endRefreshing()
                         if let finished = finished {
-                            scrollView?.fw_loadingFinished = finished
+                            scrollView?.fw.loadingFinished = finished
                         }
                     })
                 }
@@ -359,15 +359,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw_isRefreshing {
-                    scrollView.fw_beginRefreshing()
+                if !scrollView.fw.isRefreshing {
+                    scrollView.fw.beginRefreshing()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw_loadingFinished = finished
+                scrollView.fw.loadingFinished = finished
             }
         }
     }
@@ -383,11 +383,11 @@ extension View {
             if !scrollView.fw.propertyBool(forName: "listViewLoading") {
                 scrollView.fw.setPropertyBool(true, forName: "listViewLoading")
                 
-                scrollView.fw_setLoading { [weak scrollView] in
+                scrollView.fw.setLoading { [weak scrollView] in
                     action({ finished in
-                        scrollView?.fw_endLoading()
+                        scrollView?.fw.endLoading()
                         if let finished = finished {
-                            scrollView?.fw_loadingFinished = finished
+                            scrollView?.fw.loadingFinished = finished
                         }
                     })
                 }
@@ -397,15 +397,15 @@ extension View {
             if shouldBegin?.wrappedValue == true {
                 shouldBegin?.wrappedValue = false
                 
-                if !scrollView.fw_isLoading {
-                    scrollView.fw_beginLoading()
+                if !scrollView.fw.isLoading {
+                    scrollView.fw.beginLoading()
                 }
             }
             
             if let finished = loadingFinished?.wrappedValue {
                 loadingFinished?.wrappedValue = nil
                 
-                scrollView.fw_loadingFinished = finished
+                scrollView.fw.loadingFinished = finished
             }
         }
     }
