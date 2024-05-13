@@ -654,7 +654,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
             ratioValues.append(.presetCustom)
         }
         
-        fw_showSheet(title: nil, message: nil, cancel: cancelButtonTitle, actions: itemStrings) { [weak self] index in
+        fw.showSheet(title: nil, message: nil, cancel: cancelButtonTitle, actions: itemStrings) { [weak self] index in
             self?.setAspectRatioPreset(ratioValues[index], animated: true)
             self?.aspectRatioLockEnabled = true
         }
