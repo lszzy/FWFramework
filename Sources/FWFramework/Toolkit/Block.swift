@@ -564,46 +564,68 @@ public typealias BlockIntParam = (Int, Any?) -> ()
 ///
 /// 串行安全：读sync，写async
 /// 并行安全：读sync，写async， 用flags:.barrier加共享互斥锁
-public class MulticastBlock: NSObject {
+public class MulticastBlock {
     
-    /// 调用后是否自动移除句柄，默认false可重复执行
-    public var autoRemoved = false
+    /// 句柄可扩展优先级
+    public struct Priority: RawRepresentable, Equatable, Hashable {
+        
+        public typealias RawValue = Int
+        
+        public static let veryLow: Priority = .init(-8)
+        public static let low: Priority = .init(-4)
+        public static let normal: Priority = .init(0)
+        public static let high: Priority = .init(4)
+        public static let veryHigh: Priority = .init(8)
+        
+        public var rawValue: Int
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+        
+        public init(_ rawValue: Int) {
+            self.rawValue = rawValue
+        }
+        
+    }
+    
+    private class Target {
+        let block: (() -> Void)?
+        let asyncBlock: ((@escaping () -> Void) -> Void)?
+        let priority: Priority
+        
+        init(block: (() -> Void)? = nil, asyncBlock: ((@escaping () -> Void) -> Void)? = nil, priority: Priority) {
+            self.block = block
+            self.asyncBlock = asyncBlock
+            self.priority = priority
+        }
+    }
     
     /// 是否只能invoke一次，开启时invoke后再append会立即执行而不是添加，默认false
     public var invokeOnce = false
     
+    /// 调用后是否自动移除句柄，默认false可重复执行
+    public var autoRemoved = false
+    
     /// 是否在主线程执行，会阻碍UI渲染，默认false
     public var onMainThread = false
     
-    private var blocks: [() -> Void] = []
+    private var targets: [Target] = []
     private var isInvoked = false
     private var queue = DispatchQueue(label: "site.wuyong.queue.block.multicast")
     
-    private static var instances: [AnyHashable: MulticastBlock] = [:]
-    
-    /// 指定Key并返回代理单例
-    public static func sharedBlock(_ key: AnyHashable) -> MulticastBlock {
-        objc_sync_enter(self)
-        defer { objc_sync_exit(self) }
-        
-        if let instance = instances[key] {
-            return instance
-        } else {
-            let instance = MulticastBlock()
-            instances[key] = instance
-            return instance
-        }
+    /// 初始化方法
+    public init(invokeOnce: Bool = false, autoRemoved: Bool = false, onMainThread: Bool = false) {
+        self.invokeOnce = invokeOnce
+        self.autoRemoved = autoRemoved
+        self.onMainThread = onMainThread
     }
     
-    /// 添加句柄，invokeOnce开启且调用了invoke后会立即执行而不是添加
-    public func append(_ block: @escaping () -> Void) {
+    /// 添加同步句柄，优先级默认normal，注意invokeOnce开启且调用了invoke后会立即执行而不是添加
+    public func append(_ block: @escaping () -> Void, priority: Priority = .normal) {
         let targetBlock = !onMainThread ? block : {
-            if Thread.isMainThread {
+            DispatchQueue.fw.mainAsync {
                 block()
-            } else {
-                DispatchQueue.main.async {
-                    block()
-                }
             }
         }
         
@@ -613,14 +635,32 @@ public class MulticastBlock: NSObject {
                 return
             }
             
-            blocks.append(targetBlock)
+            targets.append(Target(block: targetBlock, priority: priority))
+        }
+    }
+    
+    /// 添加异步句柄，block必须调用completionHandler，优先级默认normal，注意invokeOnce开启且调用了invoke后会立即执行而不是添加
+    public func append(_ block: @escaping (_ completionHandler: @escaping () -> Void) -> Void, priority: Priority = .normal) {
+        let targetBlock = !onMainThread ? block : { completionHandler in
+            DispatchQueue.fw.mainAsync {
+                block(completionHandler)
+            }
+        }
+        
+        queue.sync {
+            if invokeOnce && isInvoked {
+                targetBlock({})
+                return
+            }
+            
+            targets.append(Target(asyncBlock: targetBlock, priority: priority))
         }
     }
     
     /// 手动清空所有句柄
     public func removeAll() {
         queue.sync {
-            blocks.removeAll()
+            targets.removeAll()
         }
     }
     
@@ -630,12 +670,21 @@ public class MulticastBlock: NSObject {
             if invokeOnce && isInvoked { return }
             isInvoked = true
             
-            blocks.forEach { block in
-                block()
+            let semaphore = DispatchSemaphore(value: 1)
+            let blocks = targets.sorted { $0.priority.rawValue > $1.priority.rawValue }
+            for target in blocks {
+                if let asyncBlock = target.asyncBlock {
+                    queue.async {
+                        semaphore.wait()
+                        asyncBlock({ semaphore.signal() })
+                    }
+                } else {
+                    target.block?()
+                }
             }
             
             if invokeOnce || autoRemoved {
-                blocks.removeAll()
+                targets.removeAll()
             }
         }
     }
