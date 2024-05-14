@@ -247,6 +247,8 @@ public struct WebImageOptions: OptionSet {
     public static let delayPlaceholder: WebImageOptions = .init(rawValue: 1 << 8)
     /// 禁止调用imageView.setImage:显示图片
     public static let avoidSetImage: WebImageOptions = .init(rawValue: 1 << 10)
+    /// 图片缓存存在时是否查询Data数据
+    public static let queryMemoryData: WebImageOptions = .init(rawValue: 1 << 12)
     /// 忽略图片缓存，始终重新请求
     public static let ignoreCache: WebImageOptions = .init(rawValue: 1 << 16)
     
