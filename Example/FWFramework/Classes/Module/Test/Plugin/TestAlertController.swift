@@ -265,27 +265,27 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     }
     
     func onAlertP() {
-        let taskManager = TaskManager(maxConcurrentTaskCount: 1)
+        let multicastBlock = MulticastBlock(invokeOnce: true, onMainThread: true)
         
-        let task = TaskOperation(onMainThread: true, queuePriority: .low) { [weak self] task in
+        multicastBlock.append({ [weak self] completionHandler in
             self?.app.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: {
-                task.finish()
+                completionHandler()
             })
-        }
+        }, priority: .low)
         
-        let task2 = TaskOperation(onMainThread: true, queuePriority: .normal) { [weak self] task in
+        multicastBlock.append({ [weak self] completionHandler in
             self?.app.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
-                task.finish()
+                completionHandler()
             })
-        }
+        }, priority: .normal)
         
-        let task3 = TaskOperation(onMainThread: true, queuePriority: .high) { [weak self] task in
+        multicastBlock.append({ [weak self] completionHandler in
             self?.app.showAlert(title: "高优先级", message: "警告框消息", cancel: nil, cancelBlock: {
-                task.finish()
+                completionHandler()
             })
-        }
+        }, priority: .high)
         
-        taskManager.addTasks([task, task2, task3])
+        multicastBlock.invoke()
     }
     
     func onSheetP() {
