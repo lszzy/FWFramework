@@ -75,7 +75,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
             }
         } else {
             app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
-                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
+                self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["不固定宽高", "固定宽度", "固定高度", "布局撑开", "布局不撑开", "切换瀑布流", "切换Header悬停", "reloadData", "重置图片缓存"], currentIndex: -1, actionBlock: { index in
                     if index < 3 {
                         self?.mode = index
                         self?.setupSubviews()
@@ -89,7 +89,10 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
                     } else if index < 7 {
                         self?.pinHeader = !(self?.pinHeader ?? false)
                         self?.setupSubviews()
+                    } else if index < 8 {
+                        self?.collectionView.reloadData()
                     } else {
+                        TestCollectionController.testRandomKey = "\(Date.app.currentTime)"
                         self?.collectionView.reloadData()
                     }
                 })
@@ -359,7 +362,8 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
             guard let object = object else { return }
             myTitleLabel.text = object.title
             if object.imageUrl.app.isValid(.isUrl) {
-                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
+                let imageUrl = object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(TestCollectionController.testRandomKey)"
+                myImageView.app.setImage(url: imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
                     self?.myImageView.image = image
                     if TestTableController.faceAware {
                         self?.myImageView.app.faceAware()
