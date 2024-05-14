@@ -2089,12 +2089,11 @@ public enum ViewControllerLifecycleState: Int {
     case didLoad = 1
     case willAppear = 2
     case isAppearing = 3
-    case didLayoutSubviews = 4
-    case didAppear = 5
-    case willDisappear = 6
-    case didDisappear = 7
+    case didAppear = 4
+    case willDisappear = 5
+    case didDisappear = 6
     /// didDeinit时请勿使用runtime关联属性(可能已被释放)，请使用object参数
-    case didDeinit = 8
+    case didDeinit = 7
 }
 
 // MARK: - TitleViewProtocol
@@ -2342,20 +2341,6 @@ extension FrameworkAutoloader {
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .isAppearing
-            }
-        }}
-        
-        NSObject.fw.swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLayoutSubviews),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw.lifecycleState != nil {
-                selfObject.fw.lifecycleState = .didLayoutSubviews
             }
         }}
         
