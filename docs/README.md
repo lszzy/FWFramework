@@ -23,7 +23,7 @@ iOS development framework, mainly solves the routine and pain points in native d
 All Swizzles in this framework will not take effect by default and will not affect existing projects. They need to be manually opened or invoked to take effect. This library has been used in formal projects, and will continue to be maintained and expanded in the future. Everyone is welcome to use and provide valuable comments to grow together.
 
 ## Installation
-It is recommended to use CocoaPods or Swift Package Manager to install and automatically manage dependencies. For manual import, please refer to Example project configuration.
+It is recommended to use CocoaPods or Swift Package Manager to install and automatically manage dependencies.
 
 ### CocoaPods
 This framework supports CocoaPods, Podfile example:
@@ -36,7 +36,7 @@ This framework supports CocoaPods, Podfile example:
 	  pod 'FWFramework'
 	  
       # Import the macro subspecs
-      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWExtension/Macros']   
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWPlugin/Macros']   
 	  # Import the specified subspecs, see the podspec file for the list of subspecs
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -50,17 +50,30 @@ This framework supports Swift Package Manager, just add and check the required m
 	import FWFramework
 	
     # Check and import the macro submodule
-    import FWExtensionMacros
+    import FWPluginMacros
 	# Check and import the specified sub-modules, see the Package.swift file for the list of sub-modules
 	import FWSwiftUI
 
 ## [Api](https://fwframework.wuyong.site)
 The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.
 
+Custom code prefix is app example:
+
+	public typealias APP = WrapperGlobal
+	
+	extension WrapperCompatible {
+		public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+		public var app: Wrapper<Self> { get { wrapperExtension } set {} }
+	}
+    
+Example of importing default fw code prefix:
+
+	@_spi(FW) import FWFramework
+
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.3.2'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.4.0'
 	2. Upgrade to the new version, please pay attention to the version update log
 
 ### Swift

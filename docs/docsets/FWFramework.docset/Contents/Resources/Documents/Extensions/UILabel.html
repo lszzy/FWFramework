@@ -17,7 +17,7 @@
     <a title="UILabel Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.3.2 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.4.0 Docs</a> (62% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -70,9 +70,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AnimatedTransition.html">AnimatedTransition</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/AppBundle.html">AppBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AppResponder.html">AppResponder</a>
@@ -237,9 +234,6 @@
                 <a href="../Classes/DelegateProxy.html">DelegateProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Detector.html">Detector</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/DotView.html">DotView</a>
               </li>
               <li class="nav-group-task">
@@ -258,7 +252,10 @@
                 <a href="../Classes/ExpandedTitleView.html">ExpandedTitleView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FloatLayoutView.html">FloatLayoutView</a>
+                <a href="../Classes/FloatingView.html">FloatingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FrameworkBundle.html">FrameworkBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/GradientView.html">GradientView</a>
@@ -351,6 +348,9 @@
                 <a href="../Classes/ImagePickerPreviewController.html">ImagePickerPreviewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/ImagePickerTitleView.html">ImagePickerTitleView</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ImagePluginImpl.html">ImagePluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -429,6 +429,9 @@
                 <a href="../Classes/MulticastBlock.html">MulticastBlock</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/MulticastBlock/Priority.html">– Priority</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/MulticastDelegate.html">MulticastDelegate</a>
               </li>
               <li class="nav-group-task">
@@ -451,9 +454,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/NotificationManager.html">NotificationManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/OcrResult.html">OcrResult</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PageControl.html">PageControl</a>
@@ -565,6 +565,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PullRefreshView.html">PullRefreshView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer.html">Recognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer/Result.html">– Result</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
@@ -1207,15 +1213,6 @@
                 <a href="../Extensions.html#/s:Sb">Bool</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Bundle.html">Bundle</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/CAAnimation.html">CAAnimation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/CADisplayLink.html">CADisplayLink</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/CALayer.html">CALayer</a>
               </li>
               <li class="nav-group-task">
@@ -1240,7 +1237,7 @@
                 <a href="../Extensions/Data.html">Data</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Date.html">Date</a>
+                <a href="../Extensions.html#/s:10Foundation4DateV">Date</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions.html#/c:objc(cs)NSDateFormatter">DateFormatter</a>
@@ -1253,9 +1250,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Dictionary.html">Dictionary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/DispatchQueue.html">DispatchQueue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Divider.html">Divider</a>
@@ -1274,9 +1268,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/EnvironmentValues.html">EnvironmentValues</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/FileManager.html">FileManager</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Float.html">Float</a>
@@ -1321,12 +1312,6 @@
                 <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/NSLayoutConstraint.html">NSLayoutConstraint</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/NSNumber.html">NSNumber</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/NSObject.html">NSObject</a>
               </li>
               <li class="nav-group-task">
@@ -1337,12 +1322,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Optional.html">Optional</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/PHPhotoLibrary.html">PHPhotoLibrary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/PHPickerViewController.html">PHPickerViewController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/PlatformView.html">PlatformView</a>
@@ -1372,31 +1351,7 @@
                 <a href="../Extensions/String.html">String</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Timer.html">Timer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIActivityIndicatorView.html">UIActivityIndicatorView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIAlertAction.html">UIAlertAction</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIAlertController.html">UIAlertController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIApplication.html">UIApplication</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBarButtonItem.html">UIBarButtonItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBarItem.html">UIBarItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBezierPath.html">UIBezierPath</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIButton.html">UIButton</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UICollectionReusableView.html">UICollectionReusableView</a>
@@ -1408,37 +1363,10 @@
                 <a href="../Extensions/UICollectionViewCell.html">UICollectionViewCell</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UICollectionViewFlowLayout.html">UICollectionViewFlowLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIColor.html">UIColor</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIControl.html">UIControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIDevice.html">UIDevice</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIEdgeInsets.html">UIEdgeInsets</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UIFont.html">UIFont</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIGestureRecognizer.html">UIGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIHostingController.html">UIHostingController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImage.html">UIImage</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImageAsset.html">UIImageAsset</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImagePickerController.html">UIImagePickerController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIImageView.html">UIImageView</a>
@@ -1453,40 +1381,10 @@
                 <a href="../Extensions/UINavigationBar.html">UINavigationBar</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UINavigationController.html">UINavigationController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIPageControl.html">UIPageControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIPanGestureRecognizer.html">UIPanGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIPresentationController.html">UIPresentationController</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UIProgressView.html">UIProgressView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIScreen.html">UIScreen</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIScrollView.html">UIScrollView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISearchBar.html">UISearchBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISlider.html">UISlider</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISwitch.html">UISwitch</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UITabBar.html">UITabBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UITabBarItem.html">UITabBarItem</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITableView.html">UITableView</a>
@@ -1496,9 +1394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITableViewHeaderFooterView.html">UITableViewHeaderFooterView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UITextField.html">UITextField</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITextView.html">UITextView</a>
@@ -1511,9 +1406,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIViewController.html">UIViewController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIWindow.html">UIWindow</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions.html#/s:Su">UInt</a>
@@ -1535,12 +1427,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/URLRequest.html">URLRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/URLSession.html">URLSession</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UserDefaults.html">UserDefaults</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/View.html">View</a>
@@ -1778,6 +1664,9 @@
                 <a href="../Protocols/ImagePickerPreviewControllerDelegate.html">ImagePickerPreviewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerTitleViewDelegate.html">ImagePickerTitleViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/ImagePlugin.html">ImagePlugin</a>
               </li>
               <li class="nav-group-task">
@@ -1971,9 +1860,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/URLParameter.html">URLParameter</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Protocols/URLRequestParameter.html">URLRequestParameter</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/URLRequestSerialization.html">URLRequestSerialization</a>
@@ -2562,475 +2448,10 @@
                 </li>
               </ul>
             </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/UILabel%2BUIKit"></a>
-                <a name="//apple_ref/swift/Section/UILabel+UIKit" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/UILabel%2BUIKit"></a>
-                  <h3 class="section-name"><span>UILabel+UIKit</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE17fw_textAttributesSDySo21NSAttributedStringKeyaypGSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_textAttributes" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE17fw_textAttributesSDySo21NSAttributedStringKeyaypGSgvp">fw_textAttributes</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_textAttributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE13fw_lineHeight14CoreFoundation7CGFloatVvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_lineHeight" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE13fw_lineHeight14CoreFoundation7CGFloatVvp">fw_lineHeight</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>快速设置文字的行高，优先级低于fwTextAttributes，设置后调用setText:会自动转发到setAttributedText:方法。小于等于0时恢复默认行高</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE15fw_contentInsetSo12UIEdgeInsetsVvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_contentInset" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE15fw_contentInsetSo12UIEdgeInsetsVvp">fw_contentInset</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自定义内容边距，未设置时为系统默认。当内容为空时不参与intrinsicContentSize和sizeThatFits:计算，方便自动布局</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_contentInset</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE20fw_verticalAlignmentSo024UIControlContentVerticalE0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_verticalAlignment" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE20fw_verticalAlignmentSo024UIControlContentVerticalE0Vvp">fw_verticalAlignment</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>纵向分布方式，默认居中</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_verticalAlignment</span><span class="p">:</span> <span class="kt">UIControl</span><span class="o">.</span><span class="kt">ContentVerticalAlignment</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE17fw_addLinkGesture5blockyyypSgc_tF"></a>
-                    <a name="//apple_ref/swift/Method/fw_addLinkGesture(block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE17fw_addLinkGesture5blockyyypSgc_tF">fw_addLinkGesture(block:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_addLinkGesture</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE13fw_attributes7gesture13allowsSpacingSDySo21NSAttributedStringKeyaypGSo19UIGestureRecognizerC_SbtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_attributes(gesture:allowsSpacing:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE13fw_attributes7gesture13allowsSpacingSDySo21NSAttributedStringKeyaypGSo19UIGestureRecognizerC_SbtF">fw_attributes(gesture:<wbr>allowsSpacing:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_attributes</span><span class="p">(</span>
-    <span class="nv">gesture</span><span class="p">:</span> <span class="kt">UIGestureRecognizer</span><span class="p">,</span>
-    <span class="nv">allowsSpacing</span><span class="p">:</span> <span class="kt">Bool</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLines10lineHeightySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_setFont(_:textColor:text:textAlignment:numberOfLines:lineHeight:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE10fw_setFont_9textColor0F00F9Alignment13numberOfLines10lineHeightySo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtF">fw_setFont(_:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>lineHeight:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>快速设置标签并指定文本</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_setFont</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="p">?,</span>
-    <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span>
-    <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLines10lineHeightABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/fw_label(font:textColor:text:textAlignment:numberOfLines:lineHeight:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE8fw_label4font9textColor0F00F9Alignment13numberOfLines10lineHeightABXDSo6UIFontCSg_So7UIColorCSgSSSgSo06NSTextH0VSgSiSg14CoreFoundation7CGFloatVSgtFZ">fw_label(font:<wbr>textColor:<wbr>text:<wbr>textAlignment:<wbr>numberOfLines:<wbr>lineHeight:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>快速创建标签并指定文本</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fw_label</span><span class="p">(</span>
-    <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="p">?,</span>
-    <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span>
-    <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE18fw_adjustsFontSize18minimumScaleFactor18baselineAdjustmenty14CoreFoundation7CGFloatVSg_So010UIBaselineK0VSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_adjustsFontSize(minimumScaleFactor:baselineAdjustment:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE18fw_adjustsFontSize18minimumScaleFactor18baselineAdjustmenty14CoreFoundation7CGFloatVSg_So010UIBaselineK0VSgtF">fw_adjustsFontSize(minimumScaleFactor:<wbr>baselineAdjustment:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>自适应字体大小，可设置缩放因子等</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_adjustsFontSize</span><span class="p">(</span>
-    <span class="nv">minimumScaleFactor</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">baselineAdjustment</span><span class="p">:</span> <span class="kt">UIBaselineAdjustment</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE13fw_isNotEmptySbvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_isNotEmpty" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE13fw_isNotEmptySbvp">fw_isNotEmpty</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>获取当前标签是否非空，兼容attributedText|text</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_isNotEmpty</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE22fw_actualNumberOfLinesSivp"></a>
-                    <a name="//apple_ref/swift/Property/fw_actualNumberOfLines" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE22fw_actualNumberOfLinesSivp">fw_actualNumberOfLines</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算当前标签实际显示行数，兼容contentInset|lineHeight</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_actualNumberOfLines</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE22fw_actualNumberOfLines8drawSize12contentInset10lineHeight06numberfG0SiSo6CGSizeV_So12UIEdgeInsetsVSg14CoreFoundation7CGFloatVSgSiSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_actualNumberOfLines(drawSize:contentInset:lineHeight:numberOfLines:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE22fw_actualNumberOfLines8drawSize12contentInset10lineHeight06numberfG0SiSo6CGSizeV_So12UIEdgeInsetsVSg14CoreFoundation7CGFloatVSgSiSgtF">fw_actualNumberOfLines(drawSize:<wbr>contentInset:<wbr>lineHeight:<wbr>numberOfLines:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算指定边界、内边距、行高、行数时，当前标签实际显示行数</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_actualNumberOfLines</span><span class="p">(</span><span class="nv">drawSize</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">,</span> <span class="nv">contentInset</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">numberOfLines</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE11fw_textSizeSo6CGSizeVvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_textSize" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE11fw_textSizeSo6CGSizeVvp">fw_textSize</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算当前文本所占尺寸，需frame或者宽度布局完整</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_textSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE11fw_textSize04drawE012contentInsetSo6CGSizeVAH_So12UIEdgeInsetsVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_textSize(drawSize:contentInset:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE11fw_textSize04drawE012contentInsetSo6CGSizeVAH_So12UIEdgeInsetsVSgtF">fw_textSize(drawSize:<wbr>contentInset:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算指定边界时，当前文本所占尺寸</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_textSize</span><span class="p">(</span><span class="nv">drawSize</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">,</span> <span class="nv">contentInset</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGSize</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE21fw_attributedTextSizeSo6CGSizeVvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_attributedTextSize" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE21fw_attributedTextSizeSo6CGSizeVvp">fw_attributedTextSize</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算当前属性文本所占尺寸，需frame或者宽度布局完整，attributedText需指定字体</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_attributedTextSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7UILabelC11FWFrameworkE21fw_attributedTextSize04drawF012contentInsetSo6CGSizeVAH_So12UIEdgeInsetsVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_attributedTextSize(drawSize:contentInset:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7UILabelC11FWFrameworkE21fw_attributedTextSize04drawF012contentInsetSo6CGSizeVAH_So12UIEdgeInsetsVSgtF">fw_attributedTextSize(drawSize:<wbr>contentInset:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>计算指定边界时，当前属性文本所占尺寸，attributedText需指定字体</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_attributedTextSize</span><span class="p">(</span><span class="nv">drawSize</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">,</span> <span class="nv">contentInset</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGSize</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-28)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-14)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
