@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.4.0] - 2024-05-14
+
+### Changed
+* Split the second-level sub-modules, CocoaPods can introduce the required sub-modules on demand
+* Reconstruct the FWExtension submodule into FWPlugin, which is compatible with CocoaPods and SPM and needs to be migrated and adapted.
+* Split rarely used Views and Services into FWPlugin/Module sub-modules, which can be introduced as needed
+* Code reconstruction, remove all classification extension methods starting with fw_, only support Wrapper(fw.) method calling
+* Reconstruct MulticastBlock to support priority and asynchronous calls
+* Remove the didLayoutSubviews state from the controller life cycle
+
 ## [5.3.2] - 2024-04-29
 
 ### Changed

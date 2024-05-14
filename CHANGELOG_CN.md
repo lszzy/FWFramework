@@ -1,5 +1,15 @@
 # 更新日志
 
+## [5.4.0] - 2024-05-14
+
+### Changed
+* 拆分二级子模块，CocoaPods可按需引入所需子模块
+* 重构FWExtension子模块为FWPlugin，兼容CocoaPods和SPM使用，需迁移适配
+* 拆分不常用View和Service到FWPlugin/Module子模块，可按需引入
+* 代码重构，去掉所有fw_开头分类扩展方法，仅支持Wrapper(fw.)方式调用
+* 重构MulticastBlock，支持优先级和异步调用
+* 控制器生命周期去掉didLayoutSubviews状态
+
 ## [5.3.2] - 2024-04-29
 
 ### Changed
