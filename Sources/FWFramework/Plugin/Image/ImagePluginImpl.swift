@@ -179,7 +179,9 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     ) -> Any? {
         return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { request, response, responseObject in
             let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
-            ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+            if !options.contains(.queryMemoryData) {
+                ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+            }
             completion(responseObject, imageData, nil)
         }, failure: { request, response, error in
             completion(nil, nil, error)
