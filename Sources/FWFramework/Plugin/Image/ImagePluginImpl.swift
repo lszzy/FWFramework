@@ -177,12 +177,21 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         completion: @escaping (UIImage?, Data?, Error?) -> Void,
         progress: ((Double) -> Void)? = nil
     ) -> Any? {
-        return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { request, response, responseObject in
-            let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
-            if !options.contains(.queryMemoryData) {
-                ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+        return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { [weak self] request, response, responseObject in
+            var imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
+            if options.contains(.queryMemoryData), imageData == nil {
+                DispatchQueue.global().async {
+                    imageData = self?.imageEncode(responseObject)
+                    DispatchQueue.main.async {
+                        completion(responseObject, imageData, nil)
+                    }
+                }
+            } else {
+                if !options.contains(.queryMemoryData) {
+                    ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+                }
+                completion(responseObject, imageData, nil)
             }
-            completion(responseObject, imageData, nil)
         }, failure: { request, response, error in
             completion(nil, nil, error)
         }, progress: progress != nil ? { downloadProgress in
