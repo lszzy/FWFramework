@@ -62,7 +62,7 @@ class TestController: UIViewController {
             ["JSBridge", "TestBridgeController"],
             ["ViewController", "TestSwiftController"],
             ["ViewTransition", "TestTransitionController"],
-            ["FloatLayoutView", "TestFloatController"],
+            ["FloatingView", "TestFloatingController"],
             ["GridView", "TestGridController"],
             ["PagingView", "TestPagingController"],
             ["PasscodeView", "TestPasscodeController"],

@@ -341,3 +341,31 @@ extension Promise {
     }
     
 }
+
+// MARK: - Concurrency+Promise
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension Promise {
+    
+    /// 异步获取结果值
+    public var value: Any {
+        get async throws {
+            try await withCheckedThrowingContinuation { continuation in
+                done { value in
+                    continuation.resume(returning: value)
+                } catch: { error in
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    /// 异步获取结果值，可声明类型
+    public func value<T: Any>() async throws -> T {
+        guard let value = (try await value) as? T else {
+            throw Promise.failedError
+        }
+        return value
+    }
+    
+}
+#endif

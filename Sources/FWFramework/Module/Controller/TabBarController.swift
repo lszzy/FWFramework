@@ -524,7 +524,7 @@ internal extension TabBar {
                     accessibilityTitle = item.accessibilityLabel ?? item.title ?? ""
                 }
                 if self.isMoreItem(idx) {
-                    accessibilityTitle = AppBundle.moreButton
+                    accessibilityTitle = FrameworkBundle.moreButton
                 }
                 container.accessibilityLabel = accessibilityTitle
             }
@@ -921,15 +921,15 @@ open class TabBarItemContentView: UIView {
     open func updateDisplay() {
         var currentImage = selected ? (selectedImage ?? image) : image
         if let targetImage = currentImage, targetImage.size.width > 0, targetImage.size.height > 0 {
-            currentImage = targetImage.withRenderingMode(renderingMode).fw_image(insets: imageInsets)
+            currentImage = targetImage.withRenderingMode(renderingMode).fw.image(insets: imageInsets)
         }
         if let currentImageURL = selected ? (selectedImageURL ?? imageURL) : imageURL {
-            imageView.fw_setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
+            imageView.fw.setImage(url: currentImageURL, placeholderImage: currentImage, options: .avoidSetImage, context: nil, completion: { [weak self] (image, error) in
                 guard var image = image else { return }
                 if let cgImage = image.cgImage {
                     image = UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: image.imageOrientation)
                 }
-                self?.imageView.image = image.withRenderingMode(self?.renderingMode ?? .alwaysTemplate).fw_image(insets: self?.imageInsets ?? .zero)
+                self?.imageView.image = image.withRenderingMode(self?.renderingMode ?? .alwaysTemplate).fw.image(insets: self?.imageInsets ?? .zero)
                 self?.updateLayout()
             }, progress: nil)
         } else {
@@ -951,7 +951,7 @@ open class TabBarItemContentView: UIView {
             var s: CGFloat = 0.0 // image size
             var f: CGFloat = 0.0 // font
             var isLandscape = false
-            if let window = UIWindow.fw_mainWindow {
+            if let window = UIWindow.fw.main {
                 isLandscape = window.bounds.width > window.bounds.height
             }
             let isWide = isLandscape || traitCollection.horizontalSizeClass == .regular // is landscape or regular
@@ -1130,7 +1130,7 @@ open class TabBarItemMoreContentView: TabBarItemContentView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.title = AppBundle.moreButton
+        self.title = FrameworkBundle.moreButton
         self.image = systemMore(highlighted: false)
         self.selectedImage = systemMore(highlighted: true)
     }

@@ -11,54 +11,104 @@ import UIKit
 extension Wrapper where Base: UIView {
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var emptyPlugin: EmptyPlugin! {
-        get { return base.fw_emptyPlugin }
-        set { base.fw_emptyPlugin = newValue }
+        get {
+            if let emptyPlugin = property(forName: "emptyPlugin") as? EmptyPlugin {
+                return emptyPlugin
+            } else if let emptyPlugin = PluginManager.loadPlugin(EmptyPlugin.self) {
+                return emptyPlugin
+            }
+            return EmptyPluginImpl.shared
+        }
+        set {
+            setProperty(newValue, forName: "emptyPlugin")
+        }
     }
     
     /// 设置空界面外间距，默认zero
     public var emptyInsets: UIEdgeInsets {
-        get { return base.fw_emptyInsets }
-        set { base.fw_emptyInsets = newValue }
+        get {
+            var view: UIView = base
+            if let scrollView = base as? UIScrollView {
+                view = scrollView.fw.overlayView
+            }
+            if let value = view.fw.property(forName: "emptyInsets") as? NSValue {
+                return value.uiEdgeInsetsValue
+            }
+            return .zero
+        }
+        set {
+            var view: UIView = base
+            if let scrollView = base as? UIScrollView {
+                view = scrollView.fw.overlayView
+            }
+            view.fw.setProperty(NSValue(uiEdgeInsets: newValue), forName: "emptyInsets")
+        }
     }
     
     /// 获取正在显示的空界面视图
     public var showingEmptyView: UIView? {
-        return base.fw_showingEmptyView
+        let plugin = emptyPlugin ?? EmptyPluginImpl.shared
+        if let scrollView = base as? UIScrollView {
+            if scrollView.fw.hasOverlayView {
+                return plugin.showingEmptyView(in: scrollView.fw.overlayView)
+            }
+            return nil
+        } else {
+            return plugin.showingEmptyView(in: base)
+        }
     }
 
     /// 是否显示空界面
     public var hasEmptyView: Bool {
-        return base.fw_hasEmptyView
+        return showingEmptyView != nil
     }
 
     /// 显示空界面加载视图
     public func showEmptyLoading() {
-        base.fw_showEmptyLoading()
+        showEmptyView(text: nil, detail: nil, image: nil, loading: true, action: nil, block: nil)
     }
     
     /// 显示错误空界面
     public func showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(error: error, action: action, block: block)
+        showEmptyView(
+            text: EmptyPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
+            detail: EmptyPluginImpl.shared.errorDetailFormatter?(error),
+            image: EmptyPluginImpl.shared.errorImageFormatter?(error),
+            action: block != nil ? (action ?? EmptyPluginImpl.shared.errorActionFormatter?(error)) : nil,
+            block: block
+        )
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
     public func showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
+        showEmptyView(text: text, detail: detail, image: image, loading: false, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
     public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
+        showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { _, sender in block?(sender) } : nil, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
     public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
+        let plugin = emptyPlugin ?? EmptyPluginImpl.shared
+        if let scrollView = base as? UIScrollView {
+            scrollView.fw.showOverlayView()
+            plugin.showEmptyView(text: text?.attributedStringValue, detail: detail?.attributedStringValue, image: image, loading: loading, actions: actions?.map({ $0.attributedStringValue }), block: block, customBlock: customBlock, in: scrollView.fw.overlayView)
+        } else {
+            plugin.showEmptyView(text: text?.attributedStringValue, detail: detail?.attributedStringValue, image: image, loading: loading, actions: actions?.map({ $0.attributedStringValue }), block: block, customBlock: customBlock, in: base)
+        }
     }
 
     /// 隐藏空界面
     public func hideEmptyView() {
-        base.fw_hideEmptyView()
+        let plugin = emptyPlugin ?? EmptyPluginImpl.shared
+        if let scrollView = base as? UIScrollView {
+            plugin.hideEmptyView(in: scrollView.fw.overlayView)
+            scrollView.fw.hideOverlayView()
+        } else {
+            plugin.hideEmptyView(in: base)
+        }
     }
 }
 
@@ -66,54 +116,54 @@ extension Wrapper where Base: UIView {
 extension Wrapper where Base: UIViewController {
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var emptyPlugin: EmptyPlugin! {
-        get { return base.fw_emptyPlugin }
-        set { base.fw_emptyPlugin = newValue }
+        get { return base.view.fw.emptyPlugin }
+        set { base.view.fw.emptyPlugin = newValue }
     }
     
     /// 设置空界面外间距，默认zero
     public var emptyInsets: UIEdgeInsets {
-        get { return base.fw_emptyInsets }
-        set { base.fw_emptyInsets = newValue }
+        get { return base.view.fw.emptyInsets }
+        set { base.view.fw.emptyInsets = newValue }
     }
     
     /// 获取正在显示的空界面视图
     public var showingEmptyView: UIView? {
-        return base.fw_showingEmptyView
+        return base.view.fw.showingEmptyView
     }
 
     /// 是否显示空界面
     public var hasEmptyView: Bool {
-        return base.fw_hasEmptyView
+        return base.view.fw.hasEmptyView
     }
 
     /// 显示空界面加载视图
     public func showEmptyLoading() {
-        base.fw_showEmptyLoading()
+        base.view.fw.showEmptyLoading()
     }
     
     /// 显示错误空界面
     public func showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(error: error, action: action, block: block)
+        base.view.fw.showEmptyView(error: error, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片和动作按钮
     public func showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
+        base.view.fw.showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
     public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
+        base.view.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
     
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
     public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        base.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
+        base.view.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
     /// 隐藏空界面
     public func hideEmptyView() {
-        base.fw_hideEmptyView()
+        base.view.fw.hideEmptyView()
     }
 }
 
@@ -121,41 +171,140 @@ extension Wrapper where Base: UIViewController {
 extension Wrapper where Base: UIScrollView {
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
     public weak var emptyViewDelegate: EmptyViewDelegate? {
-        get { return base.fw_emptyViewDelegate }
-        set { base.fw_emptyViewDelegate = newValue }
+        get {
+            return property(forName: "emptyViewDelegate") as? EmptyViewDelegate
+        }
+        set {
+            if newValue == nil { invalidateEmptyView() }
+            setPropertyWeak(newValue, forName: "emptyViewDelegate")
+            
+            FrameworkAutoloader.swizzleEmptyPlugin()
+        }
     }
 
     /// 刷新空界面
     public func reloadEmptyView() {
-        base.fw_reloadEmptyView()
+        guard let emptyViewDelegate = emptyViewDelegate else { return }
+        
+        var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(base)
+        if !shouldDisplay {
+            shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay(base) && totalDataCount == 0
+        }
+        
+        let hideSuccess = invalidateEmptyView()
+        if shouldDisplay {
+            setPropertyBool(true, forName: "invalidateEmptyView")
+            
+            base.isScrollEnabled = emptyViewDelegate.emptyViewShouldScroll(base)
+            
+            let fadeAnimated = EmptyPluginImpl.shared.fadeAnimated
+            EmptyPluginImpl.shared.fadeAnimated = hideSuccess ? false : fadeAnimated
+            emptyViewDelegate.showEmptyView(base)
+            EmptyPluginImpl.shared.fadeAnimated = fadeAnimated
+        }
     }
     
     /// 当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)
     ///
     /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
     public var totalDataCount: Int {
-        get { return base.fw_totalDataCount }
-        set { base.fw_totalDataCount = newValue }
+        get {
+            if let totalCount = propertyNumber(forName: "totalDataCount")?.intValue,
+               totalCount >= 0 {
+                return totalCount
+            }
+            
+            var totalCount: Int = 0
+            if let tableView = base as? UITableView {
+                let dataSource = tableView.dataSource
+                
+                var sections: Int = 1
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.numberOfSections(in:))) {
+                    sections = dataSource.numberOfSections!(in: tableView)
+                }
+                
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) {
+                    for section in 0 ..< sections {
+                        totalCount += dataSource.tableView(tableView, numberOfRowsInSection: section)
+                    }
+                }
+            } else if let collectionView = base as? UICollectionView {
+                let dataSource = collectionView.dataSource
+                
+                var sections: Int = 1
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.numberOfSections(in:))) {
+                    sections = dataSource.numberOfSections!(in: collectionView)
+                }
+                
+                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) {
+                    for section in 0 ..< sections {
+                        totalCount += dataSource.collectionView(collectionView, numberOfItemsInSection: section)
+                    }
+                }
+            }
+            return totalCount
+        }
+        set {
+            setPropertyNumber(NSNumber(value: newValue), forName: "totalDataCount")
+        }
+    }
+    
+    @discardableResult
+    private func invalidateEmptyView() -> Bool {
+        if !propertyBool(forName: "invalidateEmptyView") { return false }
+        setProperty(nil, forName: "invalidateEmptyView")
+        
+        base.isScrollEnabled = true
+        
+        if let emptyViewDelegate = emptyViewDelegate {
+            emptyViewDelegate.hideEmptyView(base)
+        } else {
+            hideEmptyView()
+        }
+        return true
     }
     
     /// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
     public var overlayView: UIView {
-        return base.fw_overlayView
+        if let overlayView = property(forName: "overlayView") as? UIView {
+            return overlayView
+        } else {
+            let overlayView = ScrollOverlayView()
+            overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            overlayView.isUserInteractionEnabled = true
+            overlayView.backgroundColor = .clear
+            overlayView.clipsToBounds = true
+            
+            setProperty(overlayView, forName: "overlayView")
+            return overlayView
+        }
     }
 
     /// 是否显示自定义浮层
     public var hasOverlayView: Bool {
-        return base.fw_hasOverlayView
+        let overlayView = property(forName: "overlayView") as? UIView
+        return overlayView != nil && overlayView?.superview != nil
     }
 
     /// 显示自定义浮层，默认不执行渐变动画，自动添加到滚动视图顶部、表格视图底部
     public func showOverlayView(animated: Bool = false) {
-        base.fw_showOverlayView(animated: animated)
+        let overlayView = overlayView
+        if overlayView.superview == nil {
+            (overlayView as? ScrollOverlayView)?.fadeAnimated = animated
+            if (base is UITableView || base is UICollectionView) && base.subviews.count > 1 {
+                base.insertSubview(overlayView, at: 0)
+            } else {
+                base.addSubview(overlayView)
+            }
+        }
     }
 
     /// 隐藏自定义浮层，自动从滚动视图移除
     public func hideOverlayView() {
-        base.fw_hideOverlayView()
+        let overlayView = property(forName: "overlayView") as? UIView
+        if overlayView != nil && overlayView?.superview != nil {
+            overlayView?.removeFromSuperview()
+        }
     }
 }
 
@@ -218,12 +367,12 @@ extension EmptyViewDelegate {
     
     /// 默认实现，显示空界面，默认调用UIScrollView.showEmptyView
     public func showEmptyView(_ scrollView: UIScrollView) {
-        scrollView.fw_showEmptyView()
+        scrollView.fw.showEmptyView()
     }
 
     /// 默认实现，隐藏空界面，默认调用UIScrollView.hideEmptyView
     public func hideEmptyView(_ scrollView: UIScrollView) {
-        scrollView.fw_hideEmptyView()
+        scrollView.fw.hideEmptyView()
     }
 
     /// 默认实现，显示空界面时是否允许滚动，默认NO
@@ -243,345 +392,44 @@ extension EmptyViewDelegate {
     
 }
 
-// MARK: - UIView+EmptyPlugin
-@_spi(FW) extension UIView {
+// MARK: - FrameworkAutoloader+EmptyPlugin
+extension FrameworkAutoloader {
     
-    /// 自定义空界面插件，未设置时自动从插件池加载
-    public var fw_emptyPlugin: EmptyPlugin! {
-        get {
-            if let emptyPlugin = fw_property(forName: "fw_emptyPlugin") as? EmptyPlugin {
-                return emptyPlugin
-            } else if let emptyPlugin = PluginManager.loadPlugin(EmptyPlugin.self) {
-                return emptyPlugin
-            }
-            return EmptyPluginImpl.shared
-        }
-        set {
-            fw_setProperty(newValue, forName: "fw_emptyPlugin")
-        }
-    }
+    private static var swizzleEmptyPluginFinished = false
     
-    /// 设置空界面外间距，默认zero
-    public var fw_emptyInsets: UIEdgeInsets {
-        get {
-            var view = self
-            if let scrollView = self as? UIScrollView {
-                view = scrollView.fw_overlayView
-            }
-            if let value = view.fw_property(forName: "fw_emptyInsets") as? NSValue {
-                return value.uiEdgeInsetsValue
-            }
-            return .zero
-        }
-        set {
-            var view = self
-            if let scrollView = self as? UIScrollView {
-                view = scrollView.fw_overlayView
-            }
-            view.fw_setProperty(NSValue(uiEdgeInsets: newValue), forName: "fw_emptyInsets")
-        }
-    }
-    
-    /// 获取正在显示的空界面视图
-    public var fw_showingEmptyView: UIView? {
-        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
-        if let scrollView = self as? UIScrollView {
-            if scrollView.fw_hasOverlayView {
-                return plugin.showingEmptyView(in: scrollView.fw_overlayView)
-            }
-            return nil
-        } else {
-            return plugin.showingEmptyView(in: self)
-        }
-    }
-
-    /// 是否显示空界面
-    public var fw_hasEmptyView: Bool {
-        return fw_showingEmptyView != nil
-    }
-
-    /// 显示空界面加载视图
-    public func fw_showEmptyLoading() {
-        fw_showEmptyView(text: nil, detail: nil, image: nil, loading: true, action: nil, block: nil)
-    }
-    
-    /// 显示错误空界面
-    public func fw_showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        fw_showEmptyView(
-            text: EmptyPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
-            detail: EmptyPluginImpl.shared.errorDetailFormatter?(error),
-            image: EmptyPluginImpl.shared.errorImageFormatter?(error),
-            action: block != nil ? (action ?? EmptyPluginImpl.shared.errorActionFormatter?(error)) : nil,
-            block: block
-        )
-    }
-
-    /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        fw_showEmptyView(text: text, detail: detail, image: image, loading: false, action: action, block: block)
-    }
-
-    /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { _, sender in block?(sender) } : nil, customBlock: customBlock)
-    }
-    
-    /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
-        if let scrollView = self as? UIScrollView {
-            scrollView.fw_showOverlayView()
-            plugin.showEmptyView(text: text?.attributedStringValue, detail: detail?.attributedStringValue, image: image, loading: loading, actions: actions?.map({ $0.attributedStringValue }), block: block, customBlock: customBlock, in: scrollView.fw_overlayView)
-        } else {
-            plugin.showEmptyView(text: text?.attributedStringValue, detail: detail?.attributedStringValue, image: image, loading: loading, actions: actions?.map({ $0.attributedStringValue }), block: block, customBlock: customBlock, in: self)
-        }
-    }
-
-    /// 隐藏空界面
-    public func fw_hideEmptyView() {
-        let plugin = self.fw_emptyPlugin ?? EmptyPluginImpl.shared
-        if let scrollView = self as? UIScrollView {
-            plugin.hideEmptyView(in: scrollView.fw_overlayView)
-            scrollView.fw_hideOverlayView()
-        } else {
-            plugin.hideEmptyView(in: self)
-        }
-    }
-    
-}
-
-@_spi(FW) extension UIViewController {
-    
-    /// 自定义空界面插件，未设置时自动从插件池加载
-    public var fw_emptyPlugin: EmptyPlugin! {
-        get { return self.view.fw_emptyPlugin }
-        set { self.view.fw_emptyPlugin = newValue }
-    }
-    
-    /// 设置空界面外间距，默认zero
-    public var fw_emptyInsets: UIEdgeInsets {
-        get { return self.view.fw_emptyInsets }
-        set { self.view.fw_emptyInsets = newValue }
-    }
-    
-    /// 获取正在显示的空界面视图
-    public var fw_showingEmptyView: UIView? {
-        return self.view.fw_showingEmptyView
-    }
-
-    /// 是否显示空界面
-    public var fw_hasEmptyView: Bool {
-        return self.view.fw_hasEmptyView
-    }
-
-    /// 显示空界面加载视图
-    public func fw_showEmptyLoading() {
-        self.view.fw_showEmptyLoading()
-    }
-    
-    /// 显示错误空界面
-    public func fw_showEmptyView(error: Error?, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        self.view.fw_showEmptyView(error: error, action: action, block: block)
-    }
-
-    /// 显示空界面，指定文本、详细文本、图片和动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, image: UIImage? = nil, action: AttributedStringParameter? = nil, block: ((Any) -> Void)? = nil) {
-        self.view.fw_showEmptyView(text: text, detail: detail, image: image, action: action, block: block)
-    }
-
-    /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: ((Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
-    }
-    
-    /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func fw_showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)? = nil) {
-        self.view.fw_showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
-    }
-
-    /// 隐藏空界面
-    public func fw_hideEmptyView() {
-        self.view.fw_hideEmptyView()
-    }
-    
-}
-
-// MARK: - UIScrollView+EmptyViewDelegate
-@_spi(FW) extension UIScrollView {
-    
-    /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
-    public weak var fw_emptyViewDelegate: EmptyViewDelegate? {
-        get {
-            return fw_property(forName: "fw_emptyViewDelegate") as? EmptyViewDelegate
-        }
-        set {
-            if newValue == nil { self.fw_invalidateEmptyView() }
-            fw_setPropertyWeak(newValue, forName: "fw_emptyViewDelegate")
-            
-            UIScrollView.fw_enableEmptyPlugin()
-        }
-    }
-
-    /// 刷新空界面
-    public func fw_reloadEmptyView() {
-        guard let emptyViewDelegate = self.fw_emptyViewDelegate else { return }
+    fileprivate static func swizzleEmptyPlugin() {
+        guard !swizzleEmptyPluginFinished else { return }
+        swizzleEmptyPluginFinished = true
         
-        var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(self)
-        if !shouldDisplay {
-            shouldDisplay = emptyViewDelegate.emptyViewShouldDisplay(self) && self.fw_totalDataCount == 0
-        }
-        
-        let hideSuccess = self.fw_invalidateEmptyView()
-        if shouldDisplay {
-            fw_setPropertyBool(true, forName: "fw_invalidateEmptyView")
-            
-            self.isScrollEnabled = emptyViewDelegate.emptyViewShouldScroll(self)
-            
-            let fadeAnimated = EmptyPluginImpl.shared.fadeAnimated
-            EmptyPluginImpl.shared.fadeAnimated = hideSuccess ? false : fadeAnimated
-            emptyViewDelegate.showEmptyView(self)
-            EmptyPluginImpl.shared.fadeAnimated = fadeAnimated
-        }
-    }
-    
-    /// 当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)
-    ///
-    /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
-    public var fw_totalDataCount: Int {
-        get {
-            if let totalCount = fw_propertyNumber(forName: "fw_totalDataCount")?.intValue,
-               totalCount >= 0 {
-                return totalCount
-            }
-            
-            var totalCount: Int = 0
-            if let tableView = self as? UITableView {
-                let dataSource = tableView.dataSource
-                
-                var sections: Int = 1
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.numberOfSections(in:))) {
-                    sections = dataSource.numberOfSections!(in: tableView)
-                }
-                
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) {
-                    for section in 0 ..< sections {
-                        totalCount += dataSource.tableView(tableView, numberOfRowsInSection: section)
-                    }
-                }
-            } else if let collectionView = self as? UICollectionView {
-                let dataSource = collectionView.dataSource
-                
-                var sections: Int = 1
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.numberOfSections(in:))) {
-                    sections = dataSource.numberOfSections!(in: collectionView)
-                }
-                
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) {
-                    for section in 0 ..< sections {
-                        totalCount += dataSource.collectionView(collectionView, numberOfItemsInSection: section)
-                    }
-                }
-            }
-            return totalCount
-        }
-        set {
-            fw_setPropertyNumber(NSNumber(value: newValue), forName: "fw_totalDataCount")
-        }
-    }
-    
-    @discardableResult
-    private func fw_invalidateEmptyView() -> Bool {
-        if !fw_propertyBool(forName: "fw_invalidateEmptyView") { return false }
-        fw_setProperty(nil, forName: "fw_invalidateEmptyView")
-        
-        self.isScrollEnabled = true
-        
-        if let emptyViewDelegate = self.fw_emptyViewDelegate {
-            emptyViewDelegate.hideEmptyView(self)
-        } else {
-            self.fw_hideEmptyView()
-        }
-        return true
-    }
-    
-    private static func fw_enableEmptyPlugin() {
-        guard !fw_staticEmptyPluginEnabled else { return }
-        fw_staticEmptyPluginEnabled = true
-        
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
             selector: #selector(UITableView.reloadData),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
             swizzleSignature: (@convention(block) (UITableView) -> Void).self
         ) { store in { selfObject in
-            selfObject.fw_reloadEmptyView()
+            selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
             selector: #selector(UITableView.endUpdates),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
             swizzleSignature: (@convention(block) (UITableView) -> Void).self
         ) { store in { selfObject in
-            selfObject.fw_reloadEmptyView()
+            selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
         }}
         
-        NSObject.fw_swizzleInstanceMethod(
+        NSObject.fw.swizzleInstanceMethod(
             UICollectionView.self,
             selector: #selector(UICollectionView.reloadData),
             methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
             swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
         ) { store in { selfObject in
-            selfObject.fw_reloadEmptyView()
+            selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
         }}
-    }
-    
-    private static var fw_staticEmptyPluginEnabled = false
-    
-    /// 滚动视图自定义浮层，用于显示空界面等，兼容UITableView|UICollectionView
-    public var fw_overlayView: UIView {
-        if let overlayView = fw_property(forName: "fw_overlayView") as? UIView {
-            return overlayView
-        } else {
-            let overlayView = ScrollOverlayView()
-            overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            overlayView.isUserInteractionEnabled = true
-            overlayView.backgroundColor = .clear
-            overlayView.clipsToBounds = true
-            
-            fw_setProperty(overlayView, forName: "fw_overlayView")
-            return overlayView
-        }
-    }
-
-    /// 是否显示自定义浮层
-    public var fw_hasOverlayView: Bool {
-        let overlayView = fw_property(forName: "fw_overlayView") as? UIView
-        return overlayView != nil && overlayView?.superview != nil
-    }
-
-    /// 显示自定义浮层，默认不执行渐变动画，自动添加到滚动视图顶部、表格视图底部
-    public func fw_showOverlayView(animated: Bool = false) {
-        let overlayView = self.fw_overlayView
-        if overlayView.superview == nil {
-            (overlayView as? ScrollOverlayView)?.fadeAnimated = animated
-            if (self is UITableView || self is UICollectionView) && self.subviews.count > 1 {
-                self.insertSubview(overlayView, at: 0)
-            } else {
-                self.addSubview(overlayView)
-            }
-        }
-    }
-
-    /// 隐藏自定义浮层，自动从滚动视图移除
-    public func fw_hideOverlayView() {
-        let overlayView = fw_property(forName: "fw_overlayView") as? UIView
-        if overlayView != nil && overlayView?.superview != nil {
-            overlayView?.removeFromSuperview()
-        }
     }
     
 }

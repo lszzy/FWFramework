@@ -1,0 +1,50 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '13.0'
+use_frameworks!
+
+target "FWFramework_Plugin" do
+  pod 'FWFramework/FWFramework/Kernel', :path => '../../'
+  pod 'FWFramework/FWFramework/Toolkit', :path => '../../'
+  pod 'FWFramework/FWFramework/Service', :path => '../../'
+  pod 'FWFramework/FWFramework/Plugin', :path => '../../'
+  pod 'FWFramework/FWFramework/Module', :path => '../../'
+  pod 'FWFramework/FWSwiftUI/Toolkit', :path => '../../'
+  pod 'FWFramework/FWSwiftUI/Plugin', :path => '../../'
+  pod 'FWFramework/FWSwiftUI/Module', :path => '../../'
+  pod 'FWFramework/FWPlugin/Module', :path => '../../'
+  pod 'FWFramework/FWPlugin/Contacts', :path => '../../'
+  pod 'FWFramework/FWPlugin/Microphone', :path => '../../'
+  pod 'FWFramework/FWPlugin/Calendar', :path => '../../'
+  pod 'FWFramework/FWPlugin/Tracking', :path => '../../'
+  pod 'FWFramework/FWPlugin/Macros', :path => '../../'
+  pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
+  pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
+  pod 'FWFramework/FWPlugin/Lottie', :path => '../../'
+
+  pod 'FWDebug', :configurations => ['Debug']
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+      target.build_configurations.each do |config|
+          config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
+    end
+  end
+  
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      end
+    end
+  end
+  
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
+      config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
+    end
+  end
+end

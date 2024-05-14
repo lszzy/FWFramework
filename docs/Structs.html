@@ -17,7 +17,7 @@
     <a title="Structures  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.3.2 Docs</a> (67% documented)</p>
+        <p><a href="index.html">FWFramework 5.4.0 Docs</a> (62% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -70,9 +70,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/AnimatedTransition.html">AnimatedTransition</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/AppBundle.html">AppBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/AppResponder.html">AppResponder</a>
@@ -237,9 +234,6 @@
                 <a href="Classes/DelegateProxy.html">DelegateProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/Detector.html">Detector</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Classes/DotView.html">DotView</a>
               </li>
               <li class="nav-group-task">
@@ -258,7 +252,10 @@
                 <a href="Classes/ExpandedTitleView.html">ExpandedTitleView</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/FloatLayoutView.html">FloatLayoutView</a>
+                <a href="Classes/FloatingView.html">FloatingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/FrameworkBundle.html">FrameworkBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/GradientView.html">GradientView</a>
@@ -351,6 +348,9 @@
                 <a href="Classes/ImagePickerPreviewController.html">ImagePickerPreviewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/ImagePickerTitleView.html">ImagePickerTitleView</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/ImagePluginImpl.html">ImagePluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -429,6 +429,9 @@
                 <a href="Classes/MulticastBlock.html">MulticastBlock</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/MulticastBlock/Priority.html">– Priority</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/MulticastDelegate.html">MulticastDelegate</a>
               </li>
               <li class="nav-group-task">
@@ -451,9 +454,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/NotificationManager.html">NotificationManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Classes/OcrResult.html">OcrResult</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/PageControl.html">PageControl</a>
@@ -565,6 +565,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/PullRefreshView.html">PullRefreshView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Recognizer.html">Recognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Recognizer/Result.html">– Result</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
@@ -1207,15 +1213,6 @@
                 <a href="Extensions.html#/s:Sb">Bool</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/Bundle.html">Bundle</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/CAAnimation.html">CAAnimation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/CADisplayLink.html">CADisplayLink</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/CALayer.html">CALayer</a>
               </li>
               <li class="nav-group-task">
@@ -1240,7 +1237,7 @@
                 <a href="Extensions/Data.html">Data</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/Date.html">Date</a>
+                <a href="Extensions.html#/s:10Foundation4DateV">Date</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions.html#/c:objc(cs)NSDateFormatter">DateFormatter</a>
@@ -1253,9 +1250,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Dictionary.html">Dictionary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/DispatchQueue.html">DispatchQueue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Divider.html">Divider</a>
@@ -1274,9 +1268,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/EnvironmentValues.html">EnvironmentValues</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/FileManager.html">FileManager</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Float.html">Float</a>
@@ -1321,12 +1312,6 @@
                 <a href="Extensions/NSAttributedString.html">NSAttributedString</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/NSLayoutConstraint.html">NSLayoutConstraint</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/NSNumber.html">NSNumber</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/NSObject.html">NSObject</a>
               </li>
               <li class="nav-group-task">
@@ -1337,12 +1322,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Optional.html">Optional</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/PHPhotoLibrary.html">PHPhotoLibrary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/PHPickerViewController.html">PHPickerViewController</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/PlatformView.html">PlatformView</a>
@@ -1372,31 +1351,7 @@
                 <a href="Extensions/String.html">String</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/Timer.html">Timer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/UIActivityIndicatorView.html">UIActivityIndicatorView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIAlertAction.html">UIAlertAction</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIAlertController.html">UIAlertController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIApplication.html">UIApplication</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIBarButtonItem.html">UIBarButtonItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIBarItem.html">UIBarItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIBezierPath.html">UIBezierPath</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIButton.html">UIButton</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UICollectionReusableView.html">UICollectionReusableView</a>
@@ -1408,37 +1363,10 @@
                 <a href="Extensions/UICollectionViewCell.html">UICollectionViewCell</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/UICollectionViewFlowLayout.html">UICollectionViewFlowLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIColor.html">UIColor</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIControl.html">UIControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIDevice.html">UIDevice</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/UIEdgeInsets.html">UIEdgeInsets</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/UIFont.html">UIFont</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIGestureRecognizer.html">UIGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/UIHostingController.html">UIHostingController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIImage.html">UIImage</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIImageAsset.html">UIImageAsset</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIImagePickerController.html">UIImagePickerController</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UIImageView.html">UIImageView</a>
@@ -1453,40 +1381,10 @@
                 <a href="Extensions/UINavigationBar.html">UINavigationBar</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/UINavigationController.html">UINavigationController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIPageControl.html">UIPageControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIPanGestureRecognizer.html">UIPanGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/UIPresentationController.html">UIPresentationController</a>
               </li>
               <li class="nav-group-task">
-                <a href="Extensions/UIProgressView.html">UIProgressView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIScreen.html">UIScreen</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIScrollView.html">UIScrollView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UISearchBar.html">UISearchBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UISlider.html">UISlider</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UISwitch.html">UISwitch</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Extensions/UITabBar.html">UITabBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UITabBarItem.html">UITabBarItem</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UITableView.html">UITableView</a>
@@ -1496,9 +1394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UITableViewHeaderFooterView.html">UITableViewHeaderFooterView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UITextField.html">UITextField</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UITextView.html">UITextView</a>
@@ -1511,9 +1406,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/UIViewController.html">UIViewController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UIWindow.html">UIWindow</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions.html#/s:Su">UInt</a>
@@ -1535,12 +1427,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/URLRequest.html">URLRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/URLSession.html">URLSession</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/UserDefaults.html">UserDefaults</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/View.html">View</a>
@@ -1778,6 +1664,9 @@
                 <a href="Protocols/ImagePickerPreviewControllerDelegate.html">ImagePickerPreviewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/ImagePickerTitleViewDelegate.html">ImagePickerTitleViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/ImagePlugin.html">ImagePlugin</a>
               </li>
               <li class="nav-group-task">
@@ -1971,9 +1860,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/URLParameter.html">URLParameter</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Protocols/URLRequestParameter.html">URLRequestParameter</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/URLRequestSerialization.html">URLRequestSerialization</a>
@@ -2527,47 +2413,6 @@
           <section class="section task-group-section">
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/AuthorizeType"></a>
-                <a name="//apple_ref/swift/Section/AuthorizeType" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/AuthorizeType"></a>
-                  <h3 class="section-name"><span>AuthorizeType</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework13AuthorizeTypeV"></a>
-                    <a name="//apple_ref/swift/Struct/AuthorizeType" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework13AuthorizeTypeV">AuthorizeType</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>可扩展权限类型</p>
-
-                        <a href="Structs/AuthorizeType.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AuthorizeType</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/Logger"></a>
                 <a name="//apple_ref/swift/Section/Logger" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -2708,176 +2553,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">NavigatorOptions</span> <span class="p">:</span> <span class="kt">OptionSet</span><span class="p">,</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework13JSONModelEnumP">JSONModelEnum</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/NavigationStyle"></a>
-                <a name="//apple_ref/swift/Section/NavigationStyle" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/NavigationStyle"></a>
-                  <h3 class="section-name"><span>NavigationStyle</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework18NavigationBarStyleV"></a>
-                    <a name="//apple_ref/swift/Struct/NavigationBarStyle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework18NavigationBarStyleV">NavigationBarStyle</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>导航栏可扩展全局样式</p>
-
-                        <a href="Structs/NavigationBarStyle.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">NavigationBarStyle</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/JSON"></a>
-                <a name="//apple_ref/swift/Section/JSON" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/JSON"></a>
-                  <h3 class="section-name"><span>JSON</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework4JSONV"></a>
-                    <a name="//apple_ref/swift/Struct/JSON" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework4JSONV">JSON</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>JSON</p>
-<div class="aside aside-see">
-    <p class="aside-title">See</p>
-    <a href="https://github.com/SwiftyJSON/SwiftyJSON">SwiftyJSON</a>
-
-</div>
-
-                        <a href="Structs/JSON.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@dynamicMemberLookup</span>
-<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">JSON</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt"><a href="Protocols/AnyModel.html">AnyModel</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Collection</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByStringLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByIntegerLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByBooleanLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByFloatLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByDictionaryLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByArrayLiteral</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">RawRepresentable</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">CustomDebugStringConvertible</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Comparable</span></code></pre>
-<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Codable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Configuration"></a>
-                <a name="//apple_ref/swift/Section/Configuration" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Configuration"></a>
-                  <h3 class="section-name"><span>Configuration</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework18DeserializeOptionsV"></a>
-                    <a name="//apple_ref/swift/Struct/DeserializeOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework18DeserializeOptionsV">DeserializeOptions</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Structs/DeserializeOptions.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DeserializeOptions</span> <span class="p">:</span> <span class="kt">OptionSet</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework22JSONModelConfigurationV"></a>
-                    <a name="//apple_ref/swift/Struct/JSONModelConfiguration" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationV">JSONModelConfiguration</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Structs/JSONModelConfiguration.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">JSONModelConfiguration</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">NavigatorOptions</span> <span class="p">:</span> <span class="kt">OptionSet</span></code></pre>
 
                         </div>
                       </div>
@@ -2966,34 +2642,6 @@
                 </div>
               </div>
               <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework17ImageCoderOptionsV"></a>
-                    <a name="//apple_ref/swift/Struct/ImageCoderOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17ImageCoderOptionsV">ImageCoderOptions</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>本地图片解码编码选项，默认兼容SDWebImage</p>
-
-                        <a href="Structs/ImageCoderOptions.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageCoderOptions</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -3231,84 +2879,15 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/ThemeManager"></a>
-                <a name="//apple_ref/swift/Section/ThemeManager" class="dashAnchor"></a>
+                <a name="/CacheType"></a>
+                <a name="//apple_ref/swift/Section/CacheType" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/ThemeManager"></a>
-                  <h3 class="section-name"><span>ThemeManager</span>
+                  <a class="section-name-link" href="#/CacheType"></a>
+                  <h3 class="section-name"><span>CacheType</span>
 </h3>
                 </div>
               </div>
               <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9ThemeModeV"></a>
-                    <a name="//apple_ref/swift/Struct/ThemeMode" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ThemeModeV">ThemeMode</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>可扩展主题模式(扩展值与样式值相同即可)</p>
-
-                        <a href="Structs/ThemeMode.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ThemeMode</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Validator"></a>
-                <a name="//apple_ref/swift/Section/Validator" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Validator"></a>
-                  <h3 class="section-name"><span>Validator</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9ValidatorV"></a>
-                    <a name="//apple_ref/swift/Struct/Validator" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV">Validator</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>规则验证器，可扩展</p>
-
-                        <a href="Structs/Validator.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -3341,11 +2920,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/AnyCodingKey"></a>
-                <a name="//apple_ref/swift/Section/AnyCodingKey" class="dashAnchor"></a>
+                <a name="/CachedValue"></a>
+                <a name="//apple_ref/swift/Section/CachedValue" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/AnyCodingKey"></a>
-                  <h3 class="section-name"><span>AnyCodingKey</span>
+                  <a class="section-name-link" href="#/CachedValue"></a>
+                  <h3 class="section-name"><span>CachedValue</span>
 </h3>
                 </div>
               </div>
@@ -3353,9 +2932,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AnyCodingKeyV"></a>
-                    <a name="//apple_ref/swift/Struct/AnyCodingKey" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AnyCodingKeyV">AnyCodingKey</a>
+                    <a name="/s:11FWFramework11CachedValueV"></a>
+                    <a name="//apple_ref/swift/Struct/CachedValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11CachedValueV">CachedValue</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3363,15 +2942,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>缓存属性包装器注解，默认为手工指定或初始值</p>
 
-                        <a href="Structs/AnyCodingKey.html" class="slightly-smaller">See more</a>
+<p>使用示例：
+@CachedValue(&ldquo;cacheKey&rdquo;)
+static var cacheValue: String = &ldquo;&rdquo;</p>
+
+                        <a href="Structs/CachedValue.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyCodingKey</span> <span class="p">:</span> <span class="kt">CodingKey</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@propertyWrapper</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CachedValue</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -3382,11 +2966,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/ImageFormat"></a>
-                <a name="//apple_ref/swift/Section/ImageFormat" class="dashAnchor"></a>
+                <a name="/JSON"></a>
+                <a name="//apple_ref/swift/Section/JSON" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/ImageFormat"></a>
-                  <h3 class="section-name"><span>ImageFormat</span>
+                  <a class="section-name-link" href="#/JSON"></a>
+                  <h3 class="section-name"><span>JSON</span>
 </h3>
                 </div>
               </div>
@@ -3394,9 +2978,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11ImageFormatV"></a>
-                    <a name="//apple_ref/swift/Struct/ImageFormat" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11ImageFormatV">ImageFormat</a>
+                    <a name="/s:11FWFramework4JSONV"></a>
+                    <a name="//apple_ref/swift/Struct/JSON" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework4JSONV">JSON</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3404,15 +2988,102 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>图片格式可扩展枚举</p>
+                        <p>JSON</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://github.com/SwiftyJSON/SwiftyJSON">SwiftyJSON</a>
 
-                        <a href="Structs/ImageFormat.html" class="slightly-smaller">See more</a>
+</div>
+
+                        <a href="Structs/JSON.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageFormat</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@dynamicMemberLookup</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">JSON</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt"><a href="Protocols/AnyModel.html">AnyModel</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Collection</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByStringLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByIntegerLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByBooleanLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByFloatLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByDictionaryLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">ExpressibleByArrayLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">RawRepresentable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">CustomDebugStringConvertible</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Comparable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">JSON</span><span class="p">:</span> <span class="kt">Codable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Configuration"></a>
+                <a name="//apple_ref/swift/Section/Configuration" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Configuration"></a>
+                  <h3 class="section-name"><span>Configuration</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework18DeserializeOptionsV"></a>
+                    <a name="//apple_ref/swift/Struct/DeserializeOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18DeserializeOptionsV">DeserializeOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Structs/DeserializeOptions.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DeserializeOptions</span> <span class="p">:</span> <span class="kt">OptionSet</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework22JSONModelConfigurationV"></a>
+                    <a name="//apple_ref/swift/Struct/JSONModelConfiguration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationV">JSONModelConfiguration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Structs/JSONModelConfiguration.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">JSONModelConfiguration</span></code></pre>
 
                         </div>
                       </div>
@@ -3507,11 +3178,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/WebSocket"></a>
-                <a name="//apple_ref/swift/Section/WebSocket" class="dashAnchor"></a>
+                <a name="/ImageCoderOptions"></a>
+                <a name="//apple_ref/swift/Section/ImageCoderOptions" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/WebSocket"></a>
-                  <h3 class="section-name"><span>WebSocket</span>
+                  <a class="section-name-link" href="#/ImageCoderOptions"></a>
+                  <h3 class="section-name"><span>ImageCoderOptions</span>
 </h3>
                 </div>
               </div>
@@ -3519,9 +3190,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework14WebSocketErrorV"></a>
-                    <a name="//apple_ref/swift/Struct/WebSocketError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework14WebSocketErrorV">WebSocketError</a>
+                    <a name="/s:11FWFramework17ImageCoderOptionsV"></a>
+                    <a name="//apple_ref/swift/Struct/ImageCoderOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17ImageCoderOptionsV">ImageCoderOptions</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3529,15 +3200,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>本地图片解码编码选项，默认兼容SDWebImage</p>
 
-                        <a href="Structs/WebSocketError.html" class="slightly-smaller">See more</a>
+                        <a href="Structs/ImageCoderOptions.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageCoderOptions</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
 
                         </div>
                       </div>
@@ -3548,11 +3219,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Framer"></a>
-                <a name="//apple_ref/swift/Section/Framer" class="dashAnchor"></a>
+                <a name="/ImageFormat"></a>
+                <a name="//apple_ref/swift/Section/ImageFormat" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Framer"></a>
-                  <h3 class="section-name"><span>Framer</span>
+                  <a class="section-name-link" href="#/ImageFormat"></a>
+                  <h3 class="section-name"><span>ImageFormat</span>
 </h3>
                 </div>
               </div>
@@ -3560,9 +3231,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework14WebSocketFrameV"></a>
-                    <a name="//apple_ref/swift/Struct/WebSocketFrame" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
+                    <a name="/s:11FWFramework11ImageFormatV"></a>
+                    <a name="//apple_ref/swift/Struct/ImageFormat" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11ImageFormatV">ImageFormat</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3570,69 +3241,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>图片格式可扩展枚举</p>
 
+                        <a href="Structs/ImageFormat.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketFrame</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework19WebSocketHTTPHeaderV"></a>
-                    <a name="//apple_ref/swift/Struct/WebSocketHTTPHeader" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19WebSocketHTTPHeaderV">WebSocketHTTPHeader</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Structs/WebSocketHTTPHeader.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketHTTPHeader</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework17WebSocketURLPartsV"></a>
-                    <a name="//apple_ref/swift/Struct/WebSocketURLParts" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketURLParts</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageFormat</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
 
                         </div>
                       </div>
@@ -3643,11 +3260,52 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/UIScreen%2BAdaptive"></a>
-                <a name="//apple_ref/swift/Section/UIScreen+Adaptive" class="dashAnchor"></a>
+                <a name="/AuthorizeType"></a>
+                <a name="//apple_ref/swift/Section/AuthorizeType" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/UIScreen%2BAdaptive"></a>
-                  <h3 class="section-name"><span>UIScreen+Adaptive</span>
+                  <a class="section-name-link" href="#/AuthorizeType"></a>
+                  <h3 class="section-name"><span>AuthorizeType</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework13AuthorizeTypeV"></a>
+                    <a name="//apple_ref/swift/Struct/AuthorizeType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework13AuthorizeTypeV">AuthorizeType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>可扩展权限类型</p>
+
+                        <a href="Structs/AuthorizeType.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AuthorizeType</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ScreenInch"></a>
+                <a name="//apple_ref/swift/Section/ScreenInch" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ScreenInch"></a>
+                  <h3 class="section-name"><span>ScreenInch</span>
 </h3>
                 </div>
               </div>
@@ -3720,52 +3378,6 @@ static var userName: String = &ldquo;&rdquo;</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@propertyWrapper</span>
 <span class="kd">public</span> <span class="kd">struct</span> <span class="kt">StoredValue</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/CachedValue"></a>
-                <a name="//apple_ref/swift/Section/CachedValue" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/CachedValue"></a>
-                  <h3 class="section-name"><span>CachedValue</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework11CachedValueV"></a>
-                    <a name="//apple_ref/swift/Struct/CachedValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11CachedValueV">CachedValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>缓存属性包装器注解，默认为手工指定或初始值</p>
-
-<p>使用示例：
-@CachedValue(&ldquo;cacheKey&rdquo;)
-static var cacheValue: String = &ldquo;&rdquo;</p>
-
-                        <a href="Structs/CachedValue.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@propertyWrapper</span>
-<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CachedValue</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -3910,6 +3522,306 @@ static var pluginUrl: String = &ldquo;app://plugin/:id&rdquo;</p>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/NavigationStyle"></a>
+                <a name="//apple_ref/swift/Section/NavigationStyle" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/NavigationStyle"></a>
+                  <h3 class="section-name"><span>NavigationStyle</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework18NavigationBarStyleV"></a>
+                    <a name="//apple_ref/swift/Struct/NavigationBarStyle" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18NavigationBarStyleV">NavigationBarStyle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>导航栏可扩展全局样式</p>
+
+                        <a href="Structs/NavigationBarStyle.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">NavigationBarStyle</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/AnyCodingKey"></a>
+                <a name="//apple_ref/swift/Section/AnyCodingKey" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/AnyCodingKey"></a>
+                  <h3 class="section-name"><span>AnyCodingKey</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12AnyCodingKeyV"></a>
+                    <a name="//apple_ref/swift/Struct/AnyCodingKey" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12AnyCodingKeyV">AnyCodingKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Structs/AnyCodingKey.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyCodingKey</span> <span class="p">:</span> <span class="kt">CodingKey</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ThemeManager"></a>
+                <a name="//apple_ref/swift/Section/ThemeManager" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ThemeManager"></a>
+                  <h3 class="section-name"><span>ThemeManager</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ThemeModeV"></a>
+                    <a name="//apple_ref/swift/Struct/ThemeMode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ThemeModeV">ThemeMode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>可扩展主题模式(扩展值与样式值相同即可)</p>
+
+                        <a href="Structs/ThemeMode.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ThemeMode</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Validator"></a>
+                <a name="//apple_ref/swift/Section/Validator" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Validator"></a>
+                  <h3 class="section-name"><span>Validator</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ValidatorV"></a>
+                    <a name="//apple_ref/swift/Struct/Validator" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV">Validator</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>规则验证器，可扩展</p>
+
+                        <a href="Structs/Validator.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/WebSocket"></a>
+                <a name="//apple_ref/swift/Section/WebSocket" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/WebSocket"></a>
+                  <h3 class="section-name"><span>WebSocket</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework14WebSocketErrorV"></a>
+                    <a name="//apple_ref/swift/Struct/WebSocketError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework14WebSocketErrorV">WebSocketError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Structs/WebSocketError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Framer"></a>
+                <a name="//apple_ref/swift/Section/Framer" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Framer"></a>
+                  <h3 class="section-name"><span>Framer</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework14WebSocketFrameV"></a>
+                    <a name="//apple_ref/swift/Struct/WebSocketFrame" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketFrame</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework19WebSocketHTTPHeaderV"></a>
+                    <a name="//apple_ref/swift/Struct/WebSocketHTTPHeader" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework19WebSocketHTTPHeaderV">WebSocketHTTPHeader</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Structs/WebSocketHTTPHeader.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketHTTPHeader</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17WebSocketURLPartsV"></a>
+                    <a name="//apple_ref/swift/Struct/WebSocketURLParts" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebSocketURLParts</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -4014,6 +3926,198 @@ static var pluginUrl: String = &ldquo;app://plugin/:id&rdquo;</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">InvisibleView</span> <span class="p">:</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ImageView"></a>
+                <a name="//apple_ref/swift/Section/ImageView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ImageView"></a>
+                  <h3 class="section-name"><span>ImageView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ImageViewV"></a>
+                    <a name="//apple_ref/swift/Struct/ImageView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ImageViewV">ImageView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>图片视图，支持网络图片和动图</p>
+
+                        <a href="Structs/ImageView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/LoadingPluginView"></a>
+                <a name="//apple_ref/swift/Section/LoadingPluginView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LoadingPluginView"></a>
+                  <h3 class="section-name"><span>LoadingPluginView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17LoadingPluginViewV"></a>
+                    <a name="//apple_ref/swift/Struct/LoadingPluginView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17LoadingPluginViewV">LoadingPluginView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>加载插件视图包装器</p>
+
+                        <a href="Structs/LoadingPluginView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LoadingPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ProgressPluginView"></a>
+                <a name="//apple_ref/swift/Section/ProgressPluginView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ProgressPluginView"></a>
+                  <h3 class="section-name"><span>ProgressPluginView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework18ProgressPluginViewV"></a>
+                    <a name="//apple_ref/swift/Struct/ProgressPluginView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18ProgressPluginViewV">ProgressPluginView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>进度插件视图包装器</p>
+
+                        <a href="Structs/ProgressPluginView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ProgressPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/EmptyPluginView"></a>
+                <a name="//apple_ref/swift/Section/EmptyPluginView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/EmptyPluginView"></a>
+                  <h3 class="section-name"><span>EmptyPluginView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15EmptyPluginViewV"></a>
+                    <a name="//apple_ref/swift/Struct/EmptyPluginView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15EmptyPluginViewV">EmptyPluginView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可</p>
+
+                        <a href="Structs/EmptyPluginView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">EmptyPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12WebImageViewV"></a>
+                    <a name="//apple_ref/swift/Struct/WebImageView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12WebImageViewV">WebImageView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>网络图片视图，仅支持静态图</p>
+
+                        <a href="Structs/WebImageView.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebImageView</span> <span class="p">:</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -6392,6 +6496,145 @@ or the closest ancestor view controller if missing.</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/View%2BToolkit"></a>
+                <a name="//apple_ref/swift/Section/View+Toolkit" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/View%2BToolkit"></a>
+                  <h3 class="section-name"><span>View+Toolkit</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9LineShapeV"></a>
+                    <a name="//apple_ref/swift/Struct/LineShape" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9LineShapeV">LineShape</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>线条形状，用于分割线、虚线等。自定义路径形状：Path { (path) in &hellip; }
+常用分割线：Rectangle.foregroundColor替代Divider组件</p>
+
+                        <a href="Structs/LineShape.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LineShape</span> <span class="p">:</span> <span class="kt">Shape</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework18RoundedCornerShapeV"></a>
+                    <a name="//apple_ref/swift/Struct/RoundedCornerShape" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18RoundedCornerShapeV">RoundedCornerShape</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>不规则圆角形状</p>
+
+                        <a href="Structs/RoundedCornerShape.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">RoundedCornerShape</span> <span class="p">:</span> <span class="kt">Shape</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17RemovableModifierV"></a>
+                    <a name="//apple_ref/swift/Struct/RemovableModifier" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17RemovableModifierV">RemovableModifier</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>视图移除性修改器</p>
+
+                        <a href="Structs/RemovableModifier.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">RemovableModifier</span> <span class="p">:</span> <span class="kt">ViewModifier</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Button%2BToolkit"></a>
+                <a name="//apple_ref/swift/Section/Button+Toolkit" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Button%2BToolkit"></a>
+                  <h3 class="section-name"><span>Button+Toolkit</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework18OpacityButtonStyleV"></a>
+                    <a name="//apple_ref/swift/Struct/OpacityButtonStyle" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework18OpacityButtonStyleV">OpacityButtonStyle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>透明度按钮样式，支持设置高亮和禁用时的透明度</p>
+
+                        <a href="Structs/OpacityButtonStyle.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">OpacityButtonStyle</span> <span class="p">:</span> <span class="kt">ButtonStyle</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/ViewWrapper"></a>
                 <a name="//apple_ref/swift/Section/ViewWrapper" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -6472,367 +6715,10 @@ or the closest ancestor view controller if missing.</p>
                 </li>
               </ul>
             </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ImageView"></a>
-                <a name="//apple_ref/swift/Section/ImageView" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/ImageView"></a>
-                  <h3 class="section-name"><span>ImageView</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9ImageViewV"></a>
-                    <a name="//apple_ref/swift/Struct/ImageView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ImageViewV">ImageView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>图片视图，支持网络图片和动图</p>
-
-                        <a href="Structs/ImageView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/LoadingPluginView"></a>
-                <a name="//apple_ref/swift/Section/LoadingPluginView" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/LoadingPluginView"></a>
-                  <h3 class="section-name"><span>LoadingPluginView</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework17LoadingPluginViewV"></a>
-                    <a name="//apple_ref/swift/Struct/LoadingPluginView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17LoadingPluginViewV">LoadingPluginView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>加载插件视图包装器</p>
-
-                        <a href="Structs/LoadingPluginView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LoadingPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ProgressPluginView"></a>
-                <a name="//apple_ref/swift/Section/ProgressPluginView" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/ProgressPluginView"></a>
-                  <h3 class="section-name"><span>ProgressPluginView</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework18ProgressPluginViewV"></a>
-                    <a name="//apple_ref/swift/Struct/ProgressPluginView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework18ProgressPluginViewV">ProgressPluginView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>进度插件视图包装器</p>
-
-                        <a href="Structs/ProgressPluginView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ProgressPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/EmptyPluginView"></a>
-                <a name="//apple_ref/swift/Section/EmptyPluginView" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/EmptyPluginView"></a>
-                  <h3 class="section-name"><span>EmptyPluginView</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework15EmptyPluginViewV"></a>
-                    <a name="//apple_ref/swift/Struct/EmptyPluginView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework15EmptyPluginViewV">EmptyPluginView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可</p>
-
-                        <a href="Structs/EmptyPluginView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">EmptyPluginView</span> <span class="p">:</span> <span class="kt">UIViewRepresentable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework12WebImageViewV"></a>
-                    <a name="//apple_ref/swift/Struct/WebImageView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12WebImageViewV">WebImageView</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>网络图片视图，仅支持静态图</p>
-
-                        <a href="Structs/WebImageView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WebImageView</span> <span class="p">:</span> <span class="kt">View</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/OpacityButtonStyle"></a>
-                <a name="//apple_ref/swift/Section/OpacityButtonStyle" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/OpacityButtonStyle"></a>
-                  <h3 class="section-name"><span>OpacityButtonStyle</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework18OpacityButtonStyleV"></a>
-                    <a name="//apple_ref/swift/Struct/OpacityButtonStyle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework18OpacityButtonStyleV">OpacityButtonStyle</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>透明度按钮样式，支持设置高亮和禁用时的透明度</p>
-
-                        <a href="Structs/OpacityButtonStyle.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">OpacityButtonStyle</span> <span class="p">:</span> <span class="kt">ButtonStyle</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/LineShape"></a>
-                <a name="//apple_ref/swift/Section/LineShape" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/LineShape"></a>
-                  <h3 class="section-name"><span>LineShape</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9LineShapeV"></a>
-                    <a name="//apple_ref/swift/Struct/LineShape" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9LineShapeV">LineShape</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>线条形状，用于分割线、虚线等。自定义路径形状：Path { (path) in &hellip; }
-常用分割线：Rectangle.foregroundColor替代Divider组件</p>
-
-                        <a href="Structs/LineShape.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LineShape</span> <span class="p">:</span> <span class="kt">Shape</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/RoundedCornerShape"></a>
-                <a name="//apple_ref/swift/Section/RoundedCornerShape" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/RoundedCornerShape"></a>
-                  <h3 class="section-name"><span>RoundedCornerShape</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework18RoundedCornerShapeV"></a>
-                    <a name="//apple_ref/swift/Struct/RoundedCornerShape" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework18RoundedCornerShapeV">RoundedCornerShape</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>不规则圆角形状</p>
-
-                        <a href="Structs/RoundedCornerShape.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">RoundedCornerShape</span> <span class="p">:</span> <span class="kt">Shape</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/RemovableModifier"></a>
-                <a name="//apple_ref/swift/Section/RemovableModifier" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/RemovableModifier"></a>
-                  <h3 class="section-name"><span>RemovableModifier</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework17RemovableModifierV"></a>
-                    <a name="//apple_ref/swift/Struct/RemovableModifier" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17RemovableModifierV">RemovableModifier</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>视图移除性修改器</p>
-
-                        <a href="Structs/RemovableModifier.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">RemovableModifier</span> <span class="p">:</span> <span class="kt">ViewModifier</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-28)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-14)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

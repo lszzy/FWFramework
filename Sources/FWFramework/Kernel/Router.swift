@@ -37,7 +37,7 @@ public class Router: NSObject {
         /// 路由URL解析参数字典
         public fileprivate(set) lazy var urlParameters: [AnyHashable: Any] = {
             var urlParameters: [String: String] = [:]
-            if let queryUrl = URL.fw_url(string: url),
+            if let queryUrl = URL.fw.url(string: url),
                let queryItems = URLComponents(url: queryUrl, resolvingAgainstBaseURL: false)?.queryItems {
                 // queryItems.value会自动进行URL参数解码
                 for item in queryItems {
@@ -72,8 +72,8 @@ public class Router: NSObject {
     /// 路由完成回调句柄
     public typealias Completion = (Any?) -> Void
     
-    /// 默认路由参数类，可继承使用，也可完全自定义
-    open class Parameter: ObjectParameter, JSONModel, KeyMappable {
+    /// 路由参数类，可直接使用，也可完全自定义
+    open class Parameter: ObjectParameter {
         
         /// 路由信息来源Key，兼容字典传参，默认未使用
         public static let routerSourceKey = "routerSource"
@@ -85,15 +85,33 @@ public class Router: NSObject {
         public static let routerHandlerKey = "routerHandler"
         
         /// 路由信息来源，默认未使用
-        @MappedValue open var routerSource: String?
+        open var routerSource: String?
         /// 路由信息选项，支持NavigationOptions
-        @MappedValue open var routerOptions: NavigatorOptions?
+        open var routerOptions: NavigatorOptions?
         /// 路由动画选项，仅open生效
-        @MappedValue open var routerAnimated: Bool?
+        open var routerAnimated: Bool?
         /// 路由信息句柄，仅open生效
-        @MappedValue open var routerHandler: ((Context, UIViewController) -> Void)?
+        open var routerHandler: (@convention(block) (Context, UIViewController) -> Void)?
         
         public required init() {}
+        
+        public required init(dictionaryValue: [AnyHashable : Any]) {
+            routerSource = dictionaryValue[Self.routerSourceKey].string
+            if let options = dictionaryValue[Self.routerOptionsKey] {
+                routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
+            }
+            routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
+            routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) (Context, UIViewController) -> Void
+        }
+        
+        public var dictionaryValue: [AnyHashable: Any] {
+            var dictionary: [AnyHashable: Any] = [:]
+            dictionary[Self.routerSourceKey] = routerSource
+            dictionary[Self.routerOptionsKey] = routerOptions
+            dictionary[Self.routerAnimatedKey] = routerAnimated
+            dictionary[Self.routerHandlerKey] = routerHandler
+            return dictionary
+        }
     }
     
     // MARK: - Accessor
@@ -233,7 +251,7 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                UIWindow.fw_mainWindow?.fw_open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
+                UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
             }
             return nil
         }
@@ -362,19 +380,19 @@ public class Router: NSObject {
             for idx in 0 ..< placeholders.count {
                 if idx < paramArray.count {
                     let value = paramArray[idx]
-                    parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw_safeString(value))
+                    parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw.safeString(value))
                 }
             }
         } else if let paramDict = parameters as? [AnyHashable: Any] {
             for idx in 0 ..< placeholders.count {
                 let value = paramDict[placeholders[idx].replacingOccurrences(of: routeParameterCharacter, with: "").replacingOccurrences(of: routeWildcardCharacter, with: "")]
                 if let value = value {
-                    parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw_safeString(value))
+                    parsedResult = parsedResult.replacingOccurrences(of: placeholders[idx], with: String.fw.safeString(value))
                 }
             }
         } else if let parameters = parameters {
             for placeholder in placeholders {
-                parsedResult = parsedResult.replacingOccurrences(of: placeholder, with: String.fw_safeString(parameters))
+                parsedResult = parsedResult.replacingOccurrences(of: placeholder, with: String.fw.safeString(parameters))
             }
         }
         return parsedResult
@@ -403,11 +421,11 @@ public class Router: NSObject {
     }
     
     private class func routeClass(with clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        guard let metaClass = NSObject.fw_metaClass(clazz) else {
+        guard let metaClass = NSObject.fw.metaClass(clazz) else {
             return [:]
         }
         
-        let methods = NSObject.fw_classMethods(metaClass)
+        let methods = NSObject.fw.classMethods(metaClass)
         if let mapper = mapper {
             return mapper(methods)
         }
@@ -493,7 +511,7 @@ public class Router: NSObject {
         var pathComponents: [String] = []
         // 解析scheme://path格式
         var urlRange = (url as NSString).range(of: "://")
-        let fullUrl = URL.fw_url(string: url)
+        let fullUrl = URL.fw.url(string: url)
         if urlRange.location == NSNotFound {
             // 解析scheme:path格式
             let urlScheme = (fullUrl?.scheme?.appending(":") ?? "") as NSString
@@ -517,7 +535,7 @@ public class Router: NSObject {
             }
         }
         
-        let pathUrl = URL.fw_url(string: formatUrl)
+        let pathUrl = URL.fw.url(string: formatUrl)
         var components = pathUrl?.pathComponents ?? []
         if components.count < 1 && urlRange.location != NSNotFound && !formatUrl.isEmpty, let fullUrl = fullUrl {
             let urlComponents = NSURLComponents(url: fullUrl, resolvingAgainstBaseURL: false)
@@ -621,7 +639,7 @@ public class Router: NSObject {
             }
         }
         
-        if let nsurl = URL.fw_url(string: url),
+        if let nsurl = URL.fw.url(string: url),
            let queryItems = URLComponents(url: nsurl, resolvingAgainstBaseURL: false)?.queryItems {
             // queryItems.value会自动进行URL参数解码
             for item in queryItems {

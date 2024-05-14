@@ -46,11 +46,11 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
     open func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
         var pickerController: UIImagePickerController?
         if cropControllerEnabled, filterType == .image, allowsEditing {
-            pickerController = UIImagePickerController.fw_pickerController(sourceType: .camera, cropController: cropControllerBlock, completion: { image, info, cancel in
+            pickerController = UIImagePickerController.fw.pickerController(sourceType: .camera, cropController: cropControllerBlock, completion: { image, info, cancel in
                 completion(image, info, cancel)
             })
         } else {
-            pickerController = UIImagePickerController.fw_pickerController(sourceType: .camera, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, object, info, cancel in
+            pickerController = UIImagePickerController.fw.pickerController(sourceType: .camera, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, object, info, cancel in
                 completion(object, info, cancel)
             })
         }
@@ -80,21 +80,21 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
         }
         if usePhotoPicker {
             if cropControllerEnabled, filterType == .image, allowsEditing {
-                pickerController = PHPhotoLibrary.fw_pickerController(selectionLimit: selectionLimit, cropController: cropControllerBlock, completion: { images, results, cancel in
+                pickerController = PHPhotoLibrary.fw.pickerController(selectionLimit: selectionLimit, cropController: cropControllerBlock, completion: { images, results, cancel in
                     completion(images, results, cancel)
                 })
             } else {
-                pickerController = PHPhotoLibrary.fw_pickerController(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, objects, results, cancel in
+                pickerController = PHPhotoLibrary.fw.pickerController(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, objects, results, cancel in
                     completion(objects, results, cancel)
                 })
             }
         } else {
             if cropControllerEnabled, filterType == .image, allowsEditing {
-                pickerController = UIImagePickerController.fw_pickerController(sourceType: .photoLibrary, cropController: cropControllerBlock, completion: { image, info, cancel in
+                pickerController = UIImagePickerController.fw.pickerController(sourceType: .photoLibrary, cropController: cropControllerBlock, completion: { image, info, cancel in
                     completion(image != nil ? [image!] : [], info != nil ? [info!] : [], cancel)
                 })
             } else {
-                pickerController = UIImagePickerController.fw_pickerController(sourceType: .photoLibrary, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, object, info, cancel in
+                pickerController = UIImagePickerController.fw.pickerController(sourceType: .photoLibrary, filterType: filterType, allowsEditing: allowsEditing, shouldDismiss: true, completion: { picker, object, info, cancel in
                     completion(object != nil ? [object!] : [], info != nil ? [info!] : [], cancel)
                 })
             }
@@ -113,7 +113,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
         if #available(iOS 14.0, *) {
             if let progressBlock = exportProgressBlock,
                let picker = pickerController as? PHPickerViewController {
-                picker.fw_exportProgressBlock = { picker, finishedCount, totalCount in
+                picker.fw.exportProgressBlock = { picker, finishedCount, totalCount in
                     let controller: UIViewController = picker.navigationController ?? picker
                     progressBlock(controller, finishedCount, totalCount)
                 }

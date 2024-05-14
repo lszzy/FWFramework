@@ -41,18 +41,18 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
     public var webView: WebView {
-        if let result = fw_property(forName: "webView") as? WebView {
+        if let result = fw.property(forName: "webView") as? WebView {
             return result
         } else {
             var result: WebView
             if let reuseIdentifier = ViewControllerManager.shared.webViewReuseIdentifier {
                 result = ReusableViewPool.shared.dequeueReusableView(with: WebView.self, viewHolder: self, reuseIdentifier: reuseIdentifier)
             } else {
-                let configuration = WKWebView.fw_defaultConfiguration()
+                let configuration = WKWebView.fw.defaultConfiguration()
                 setupWebConfiguration(configuration)
                 result = WebView(frame: .zero, configuration: configuration)
             }
-            fw_setProperty(result, forName: "webView")
+            fw.setProperty(result, forName: "webView")
             return result
         }
     }
@@ -60,10 +60,10 @@ extension WebViewControllerProtocol where Self: UIViewController {
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     public var webRequest: Any? {
         get {
-            return fw_property(forName: "webRequest")
+            return fw.property(forName: "webRequest")
         }
         set {
-            fw_setProperty(newValue, forName: "webRequest")
+            fw.setProperty(newValue, forName: "webRequest")
             
             if isViewLoaded {
                 webView.webRequest = newValue
@@ -79,7 +79,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
     
     /// 渲染网页视图布局，setupSubviews之前调用，默认铺满
     public func setupWebLayout() {
-        webView.fw_pinEdges()
+        webView.fw.pinEdges()
     }
     
     /// 渲染网页桥接，setupSubviews之前调用，默认空实现
@@ -91,45 +91,44 @@ extension WebViewControllerProtocol where Self: UIViewController {
 internal extension ViewControllerManager {
     
     func webViewControllerViewDidLoad(_ viewController: UIViewController) {
-        guard let viewController = viewController as? UIViewController & WebViewControllerProtocol else { return }
+        guard let webController = viewController as? UIViewController & WebViewControllerProtocol else { return }
         
-        let webView = viewController.webView
-        webView.delegate = viewController
-        viewController.view.addSubview(webView)
+        let webView = webController.webView
+        webView.delegate = webController
+        webController.view.addSubview(webView)
         
         if webViewReuseIdentifier != nil {
-            viewController.fw_observeLifecycleState(object: webView) { [weak self] _, state, webView in
+            viewController.fw.observeLifecycleState(object: webView) { [weak self] _, state, webView in
                 guard self?.webViewReuseIdentifier != nil,
-                      state == .didDeinit,
-                      let webView = webView as? WebView else { return }
+                      state == .didDeinit else { return }
                 
                 ReusableViewPool.shared.recycleReusableView(webView)
             }
         }
         
-        webView.fw.observeProperty(\.title) { [weak viewController] _, _ in
-            viewController?.navigationItem.title = viewController?.webView.title
+        webView.fw.observeProperty(\.title) { [weak webController] _, _ in
+            webController?.navigationItem.title = webController?.webView.title
         }
-        viewController.fw_allowsPopGesture = { [weak viewController] in
-            return !(viewController?.webView.canGoBack ?? false)
+        viewController.fw.allowsPopGesture = { [weak webController] in
+            return !(webController?.webView.canGoBack ?? false)
         }
         
-        hookWebViewController?(viewController)
+        hookWebViewController?(webController)
         
-        viewController.setupWebView()
-        viewController.setupWebLayout()
+        webController.setupWebView()
+        webController.setupWebLayout()
         webView.setNeedsLayout()
         webView.layoutIfNeeded()
         
-        if webView.fw_jsBridgeEnabled, let bridge = webView.fw_setupJsBridge() {
-            viewController.setupWebBridge(bridge)
+        if webView.fw.jsBridgeEnabled, let bridge = webView.fw.setupJsBridge() {
+            webController.setupWebBridge(bridge)
         }
         
-        if webView.fw_navigationItems != nil {
-            webView.fw_setupNavigationItems(viewController)
+        if webView.fw.navigationItems != nil {
+            webView.fw.setupNavigationItems(viewController)
         }
         
-        webView.webRequest = viewController.webRequest
+        webView.webRequest = webController.webRequest
     }
     
 }

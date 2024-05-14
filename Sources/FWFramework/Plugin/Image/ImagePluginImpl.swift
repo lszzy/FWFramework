@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - ImagePluginImpl
 /// 默认图片插件
 open class ImagePluginImpl: NSObject, ImagePlugin {
     
@@ -49,7 +50,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
     }
     
     open func imageEncode(_ image: UIImage, options: [ImageCoderOptions : Any]? = nil) -> Data? {
-        let imageFormat = image.fw_imageFormat
+        let imageFormat = image.fw.imageFormat
         let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
         if imageData != nil || imageFormat == .undefined {
             return imageData
@@ -80,7 +81,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         }
         
         var indicatorView: (UIView & IndicatorViewPlugin)?
-        if showsIndicator && !view.fw_hidesImageIndicator &&
+        if showsIndicator && !view.fw.hidesImageIndicator &&
             !(hidesPlaceholderIndicator && placeholder != nil) {
             if let indicator = view.viewWithTag(2061) as? (UIView & IndicatorViewPlugin) {
                 indicatorView = indicator
@@ -89,7 +90,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                     indicatorView = customIndicatorBlock?(view, placeholder != nil)
                 } else {
                     let style: IndicatorViewStyle = placeholder != nil ? .imagePlaceholder : .image
-                    indicatorView = UIView.fw_indicatorView(style: style)
+                    indicatorView = UIView.fw.indicatorView(style: style)
                     if style.indicatorColor == nil {
                         indicatorView?.indicatorColor = (style == .image) ? .gray : .white
                     }
@@ -97,7 +98,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
                 if let indicatorView = indicatorView {
                     indicatorView.tag = 2061
                     view.addSubview(indicatorView)
-                    indicatorView.fw_alignCenter()
+                    (indicatorView as UIView).fw.alignCenter()
                 }
             }
         }
@@ -176,10 +177,21 @@ open class ImagePluginImpl: NSObject, ImagePlugin {
         completion: @escaping (UIImage?, Data?, Error?) -> Void,
         progress: ((Double) -> Void)? = nil
     ) -> Any? {
-        return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { request, response, responseObject in
-            let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
-            ImageResponseSerializer.clearCachedResponseData(for: responseObject)
-            completion(responseObject, imageData, nil)
+        return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { [weak self] request, response, responseObject in
+            var imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
+            if options.contains(.queryMemoryData), imageData == nil {
+                DispatchQueue.global().async {
+                    imageData = self?.imageEncode(responseObject)
+                    DispatchQueue.main.async {
+                        completion(responseObject, imageData, nil)
+                    }
+                }
+            } else {
+                if !options.contains(.queryMemoryData) {
+                    ImageResponseSerializer.clearCachedResponseData(for: responseObject)
+                }
+                completion(responseObject, imageData, nil)
+            }
         }, failure: { request, response, error in
             completion(nil, nil, error)
         }, progress: progress != nil ? { downloadProgress in

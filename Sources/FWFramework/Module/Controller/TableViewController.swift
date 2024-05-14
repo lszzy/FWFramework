@@ -43,24 +43,24 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 表格视图，默认不显示滚动条，Footer为空视图。Plain有悬停，Group无悬停
     public var tableView: UITableView {
-        if let result = fw_property(forName: "tableView") as? UITableView {
+        if let result = fw.property(forName: "tableView") as? UITableView {
             return result
         } else {
-            let result = UITableView.fw_tableView(setupTableStyle())
-            fw_setProperty(result, forName: "tableView")
+            let result = UITableView.fw.tableView(setupTableStyle())
+            fw.setProperty(result, forName: "tableView")
             return result
         }
     }
     
     /// 表格代理，同表格tableDelegate，延迟加载
     public var tableDelegate: TableViewDelegate {
-        return tableView.fw_tableDelegate
+        return tableView.fw.tableDelegate
     }
     
     /// 表格数据，默认空数组，延迟加载
     public var tableData: [TableElement] {
-        get { return fw_property(forName: "tableData") as? [TableElement] ?? [] }
-        set { fw_setProperty(newValue, forName: "tableData") }
+        get { return fw.property(forName: "tableData") as? [TableElement] ?? [] }
+        set { fw.setProperty(newValue, forName: "tableData") }
     }
     
     /// 渲染表格视图样式，默认Plain
@@ -73,7 +73,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 渲染表格视图布局，setupSubviews之前调用，默认铺满
     public func setupTableLayout() {
-        tableView.fw_pinEdges()
+        tableView.fw.pinEdges()
     }
     
 }

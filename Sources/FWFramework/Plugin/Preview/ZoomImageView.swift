@@ -172,7 +172,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             
             imageView.image = image
             // 更新 imageView 的大小时，imageView 可能已经被缩放过，所以要应用当前的缩放
-            imageView.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: image?.size.width ?? 0, height: image?.size.height ?? 0)
+            imageView.fw.frameApplyTransform = CGRect(x: 0, y: 0, width: image?.size.width ?? 0, height: image?.size.height ?? 0)
             hideViews()
             imageView.isHidden = false
             
@@ -199,7 +199,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             livePhotoView.livePhoto = livePhoto
             livePhotoView.isHidden = false
             // 更新 livePhotoView 的大小时，livePhotoView 可能已经被缩放过，所以要应用当前的缩放
-            livePhotoView.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: livePhoto?.size.width ?? 0, height: livePhoto?.size.height ?? 0)
+            livePhotoView.fw.frameApplyTransform = CGRect(x: 0, y: 0, width: livePhoto?.size.width ?? 0, height: livePhoto?.size.height ?? 0)
             
             revertZooming()
             delegate?.zoomImageView?(self, customContentView: livePhotoView)
@@ -240,7 +240,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             initVideoRelatedViewsIfNeeded()
             _videoPlayerLayer?.player = self.videoPlayer
             // 更新 videoPlayerView 的大小时，videoView 可能已经被缩放过，所以要应用当前的缩放
-            videoPlayerView?.fw_frameApplyTransform = CGRect(x: 0, y: 0, width: self.videoSize.width, height: self.videoSize.height)
+            videoPlayerView?.fw.frameApplyTransform = CGRect(x: 0, y: 0, width: self.videoSize.width, height: self.videoSize.height)
             
             NotificationCenter.default.addObserver(self, selector: #selector(handleVideoPlayToEndEvent), name: .AVPlayerItemDidPlayToEndTime, object: videoPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -365,7 +365,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             return result
         }
         
-        let result = UIImageView.fw_animatedImageView()
+        let result = UIImageView.fw.animatedImageView()
         _imageView = result
         scrollView.addSubview(result)
         return result
@@ -409,17 +409,17 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
 
     /// 进度视图，居中显示
     open lazy var progressView: UIView & ProgressViewPlugin = {
-        let result = UIView.fw_progressView(style: .imagePreview)
+        let result = UIView.fw.progressView(style: .imagePreview)
         result.isHidden = true
         addSubview(result)
-        result.fw_alignCenter()
+        (result as UIView).fw.alignCenter()
         return result
     }() {
         didSet {
             oldValue.removeFromSuperview()
             progressView.isHidden = true
             addSubview(progressView)
-            progressView.fw_alignCenter()
+            (progressView as UIView).fw.alignCenter()
         }
     }
     
@@ -458,9 +458,9 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     private func didInitialize() {
-        videoPlayButtonImage = AppBundle.videoPlayImage
-        videoCloseButtonImage = AppBundle.navCloseImage
-        fw_hidesImageIndicator = true
+        videoPlayButtonImage = FrameworkBundle.videoPlayImage
+        videoCloseButtonImage = FrameworkBundle.navCloseImage
+        fw.hidesImageIndicator = true
         
         addSubview(scrollView)
         
@@ -512,7 +512,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         if let _videoCloseButton = _videoCloseButton {
             _videoCloseButton.sizeToFit()
-            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw_safeAreaInsets.left + 24, y: UIScreen.fw_statusBarHeight + UIScreen.fw_navigationBarHeight / 2)
+            let videoCloseButtonCenter = videoCloseButtonCenter?() ?? CGPoint(x: UIScreen.fw.safeAreaInsets.left + 24, y: UIScreen.fw.statusBarHeight + UIScreen.fw.navigationBarHeight / 2)
             _videoCloseButton.center = videoCloseButtonCenter
         }
         
@@ -604,7 +604,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             if (urlString as NSString).isAbsolutePath {
                 imageURL = URL(fileURLWithPath: urlString)
             } else {
-                imageURL = URL.fw_url(string: urlString)
+                imageURL = URL.fw.url(string: urlString)
             }
         } else if let urlRequest = imageURL as? URLRequest {
             imageURL = urlRequest.url
@@ -614,17 +614,17 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             imageURL = AVPlayerItem(url: url)
         }
         
-        fw_cancelImageRequest()
+        fw.cancelImageRequest()
         if let url = imageURL as? URL {
             progress = 0.01
             // 默认缓存图片存在时使用缓存图片为placeholder，解决偶现快速切换image时转场动画异常问题
             var placeholderImage = aPlaceholderImage
             if !ignoreImageCache {
-                if let cachedImage = fw_loadImageCache(url: url) {
+                if let cachedImage = fw.loadImageCache(url: url) {
                     placeholderImage = cachedImage
                 }
             }
-            fw_setImage(url: isUrlRequest ? (aImageURL as? URLRequest) : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
+            fw.setImage(url: isUrlRequest ? (aImageURL as? URLRequest) : url, placeholderImage: placeholderImage, options: .avoidSetImage, context: nil) { [weak self] image in
                 self?.image = image
             } completion: { [weak self] image, error in
                 self?.progress = 1
@@ -779,7 +779,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         _videoPlayButton = {
             let playButton = UIButton()
-            playButton.fw_touchInsets = UIEdgeInsets(top: 60, left: 60, bottom: 60, right: 60)
+            playButton.fw.touchInsets = UIEdgeInsets(top: 60, left: 60, bottom: 60, right: 60)
             playButton.tag = 1
             playButton.setImage(videoPlayButtonImage, for: .normal)
             playButton.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchUpInside)
@@ -794,7 +794,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         _videoCloseButton = {
             let closeButton = UIButton()
-            closeButton.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            closeButton.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
             closeButton.setImage(videoCloseButtonImage, for: .normal)
             closeButton.addTarget(self, action: #selector(handleCloseButton(_:)), for: .touchUpInside)
             closeButton.isHidden = true
@@ -897,7 +897,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
     
     @objc private func handleCloseButton(_ button: UIButton) {
-        if let viewController = fw_viewController, viewController.fw_isPresented {
+        if let viewController = fw.viewController, viewController.fw.isPresented {
             viewController.dismiss(animated: true)
         }
     }
@@ -1042,7 +1042,7 @@ open class ZoomImageVideoToolbar: UIView {
     
     open lazy var playButton: UIButton = {
         let result = UIButton()
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.setImage(playButtonImage, for: .normal)
         return result
     }()
@@ -1050,7 +1050,7 @@ open class ZoomImageVideoToolbar: UIView {
     open lazy var pauseButton: UIButton = {
         let result = UIButton()
         result.isHidden = true
-        result.fw_touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        result.fw.touchInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.setImage(pauseButtonImage, for: .normal)
         return result
     }()
@@ -1059,8 +1059,8 @@ open class ZoomImageVideoToolbar: UIView {
         let result = UISlider()
         result.minimumTrackTintColor = UIColor(red: 195.0 / 255.0, green: 195.0 / 255.0, blue: 195.0 / 255.0, alpha: 1.0)
         result.maximumTrackTintColor = UIColor(red: 95.0 / 255.0, green: 95.0 / 255.0, blue: 95.0 / 255.0, alpha: 1.0)
-        result.fw_thumbSize = CGSize(width: 12, height: 12)
-        result.fw_thumbColor = UIColor.white
+        result.fw.thumbSize = CGSize(width: 12, height: 12)
+        result.fw.thumbColor = UIColor.white
         return result
     }()
     
@@ -1093,8 +1093,8 @@ open class ZoomImageVideoToolbar: UIView {
     }
     
     private func didInitialize() {
-        playButtonImage = AppBundle.videoStartImage
-        pauseButtonImage = AppBundle.videoPauseImage
+        playButtonImage = FrameworkBundle.videoStartImage
+        pauseButtonImage = FrameworkBundle.videoPauseImage
         
         addSubview(playButton)
         addSubview(pauseButton)

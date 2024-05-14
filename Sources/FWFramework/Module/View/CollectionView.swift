@@ -10,16 +10,33 @@ import UIKit
 // MARK: - Wrapper+UICollectionView
 extension Wrapper where Base: UICollectionView {
     public var collectionDelegate: CollectionViewDelegate {
-        get { base.fw_collectionDelegate }
-        set { base.fw_collectionDelegate = newValue }
+        get {
+            if let result = property(forName: "collectionDelegate") as? CollectionViewDelegate {
+                return result
+            } else {
+                let result = CollectionViewDelegate()
+                setProperty(result, forName: "collectionDelegate")
+                return result
+            }
+        }
+        set {
+            setProperty(newValue, forName: "collectionDelegate")
+        }
     }
     
     public static func collectionView() -> Base {
-        return Base.fw_collectionView()
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        
+        return collectionView(flowLayout)
     }
     
     public static func collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Base {
-        return Base.fw_collectionView(collectionViewLayout)
+        let collectionView = Base.init(frame: .zero, collectionViewLayout: collectionViewLayout)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
     }
 }
 
@@ -27,12 +44,59 @@ extension Wrapper where Base: UICollectionView {
 extension Wrapper where Base: UICollectionViewFlowLayout {
     /// 初始化布局section配置，在prepareLayout调用即可
     public func sectionConfigPrepareLayout() {
-        base.fw_sectionConfigPrepareLayout()
+        guard let collectionView = base.collectionView,
+              let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
+              delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }
+        
+        base.register(CollectionViewReusableView.self, forDecorationViewOfKind: "FWCollectionViewElementKind")
+        sectionConfigAttributes.removeAll()
+        let sectionCount = collectionView.numberOfSections
+        for section in 0 ..< sectionCount {
+            let itemCount = collectionView.numberOfItems(inSection: section)
+            if itemCount < 1 { continue }
+            
+            guard let firstAttr = base.layoutAttributesForItem(at: IndexPath(item: 0, section: section)),
+                  let lastAttr = base.layoutAttributesForItem(at: IndexPath(item: itemCount - 1, section: section)) else { continue }
+            
+            var sectionInset = base.sectionInset
+            if let inset = delegate.collectionView?(collectionView, layout: base, insetForSectionAt: section),
+               inset != sectionInset {
+                sectionInset = inset
+            }
+            
+            var sectionFrame = firstAttr.frame.union(lastAttr.frame)
+            sectionFrame.origin.x -= sectionInset.left
+            sectionFrame.origin.y -= sectionInset.top
+            if base.scrollDirection == .horizontal {
+                sectionFrame.size.width += sectionInset.left + sectionInset.right
+                sectionFrame.size.height = collectionView.frame.size.height
+            } else {
+                sectionFrame.size.width = collectionView.frame.size.width
+                sectionFrame.size.height += sectionInset.top + sectionInset.bottom
+            }
+            
+            let attributes = CollectionViewLayoutAttributes(forDecorationViewOfKind: "FWCollectionViewElementKind", with: IndexPath(item: 0, section: section))
+            attributes.frame = sectionFrame
+            attributes.zIndex = -1
+            attributes.sectionConfig = delegate.collectionView?(collectionView, layout: base, configForSectionAt: section)
+            sectionConfigAttributes.append(attributes)
+        }
     }
 
     /// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
     public func sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
-        return base.fw_sectionConfigLayoutAttributes(forElementsIn: rect)
+        var attrs: [UICollectionViewLayoutAttributes] = []
+        for attr in sectionConfigAttributes {
+            if CGRectIntersectsRect(rect, attr.frame) {
+                attrs.append(attr)
+            }
+        }
+        return attrs
+    }
+    
+    private var sectionConfigAttributes: [UICollectionViewLayoutAttributes] {
+        get { return property(forName: "sectionConfigAttributes") as? [UICollectionViewLayoutAttributes] ?? [] }
+        set { setProperty(newValue, forName: "sectionConfigAttributes") }
     }
 }
 
@@ -172,8 +236,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             return cell
         }
         let cellClass = cellClassForItem?(collectionView, indexPath) ?? (cellClass ?? UICollectionViewCell.self)
-        // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-        let cell = cellClass.fw_cell(collectionView: collectionView, indexPath: indexPath)
+        // 注意：此处必须使用collectionView.fw.cell创建，否则返回的对象类型不对
+        let cell = collectionView.fw.cell(of: cellClass, indexPath: indexPath)
         cellConfiguration?(cell, indexPath)
         return cell
     }
@@ -193,8 +257,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
                 return UICollectionReusableView()
             }
             
-            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用collectionView.fw.reusableView创建，否则返回的对象类型不对
+            let view = collectionView.fw.reusableView(of: viewClass, kind: kind, indexPath: indexPath)
             headerConfiguration?(view, indexPath)
             return view
         }
@@ -208,8 +272,8 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
                 return UICollectionReusableView()
             }
             
-            // 注意：此处必须使用.fw_创建，否则返回的对象类型不对
-            let view = viewClass.fw_reusableView(collectionView: collectionView, kind: kind, indexPath: indexPath)
+            // 注意：此处必须使用collectionView.fw.reusableView创建，否则返回的对象类型不对
+            let view = collectionView.fw.reusableView(of: viewClass, kind: kind, indexPath: indexPath)
             footerConfiguration?(view, indexPath)
             return view
         }
@@ -244,7 +308,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
             width = collectionView.frame.size.width - sectionInset.left - sectionInset.right
         }
         let cacheKey = cacheKeyForItem?(indexPath) ?? (sizeCacheEnabled ? indexPath : nil)
-        return collectionView.fw_size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
+        return collectionView.fw.size(cellClass: cellClass, width: width, cacheBy: cacheKey) { [weak self] (cell) in
             self?.cellConfiguration?(cell, indexPath)
         }
     }
@@ -338,7 +402,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         let cacheKey = cacheKeyForHeader?(section) ?? (sizeCacheEnabled ? section : nil)
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
+        return collectionView.fw.size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionHeader, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.headerConfiguration?(reusableView, indexPath)
         }
     }
@@ -375,7 +439,7 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
         }
         
         let cacheKey = cacheKeyForFooter?(section) ?? (sizeCacheEnabled ? section : nil)
-        return collectionView.fw_size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
+        return collectionView.fw.size(reusableViewClass: viewClass, kind: UICollectionView.elementKindSectionFooter, cacheBy: cacheKey) { [weak self] (reusableView) in
             self?.footerConfiguration?(reusableView, indexPath)
         }
     }
@@ -455,114 +519,23 @@ open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICo
     }
 }
 
-@_spi(FW) extension UICollectionView {
-    public var fw_collectionDelegate: CollectionViewDelegate {
-        get {
-            if let result = fw_property(forName: "fw_collectionDelegate") as? CollectionViewDelegate {
-                return result
-            } else {
-                let result = CollectionViewDelegate()
-                fw_setProperty(result, forName: "fw_collectionDelegate")
-                return result
-            }
-        }
-        set {
-            fw_setProperty(newValue, forName: "fw_collectionDelegate")
-        }
-    }
+// MARK: - CollectionViewLayoutAttributes
+fileprivate class CollectionViewLayoutAttributes: UICollectionViewLayoutAttributes {
     
-    public static func fw_collectionView() -> Self {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 0
-        flowLayout.minimumInteritemSpacing = 0
-        
-        return fw_collectionView(flowLayout)
-    }
+    var sectionConfig: CollectionViewSectionConfig?
     
-    public static func fw_collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Self {
-        let collectionView = Self(frame: .zero, collectionViewLayout: collectionViewLayout)
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }
 }
 
-@_spi(FW) extension UICollectionViewFlowLayout {
+// MARK: - CollectionViewReusableView
+private class CollectionViewReusableView: UICollectionReusableView {
     
-    private class CollectionViewLayoutAttributes: UICollectionViewLayoutAttributes {
+    override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+        super.apply(layoutAttributes)
+        guard let layoutAttributes = layoutAttributes as? CollectionViewLayoutAttributes,
+              let sectionConfig = layoutAttributes.sectionConfig else { return }
         
-        var sectionConfig: CollectionViewSectionConfig?
-        
-    }
-    
-    private class CollectionViewReusableView: UICollectionReusableView {
-        
-        override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
-            super.apply(layoutAttributes)
-            guard let layoutAttributes = layoutAttributes as? CollectionViewLayoutAttributes,
-                  let sectionConfig = layoutAttributes.sectionConfig else { return }
-            
-            self.backgroundColor = sectionConfig.backgroundColor
-            sectionConfig.customBlock?(self)
-        }
-        
-    }
-    
-    /// 初始化布局section配置，在prepareLayout调用即可
-    public func fw_sectionConfigPrepareLayout() {
-        guard let collectionView = self.collectionView,
-              let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
-              delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }
-        
-        self.register(CollectionViewReusableView.self, forDecorationViewOfKind: "FWCollectionViewElementKind")
-        self.fw_sectionConfigAttributes.removeAll()
-        let sectionCount = collectionView.numberOfSections
-        for section in 0 ..< sectionCount {
-            let itemCount = collectionView.numberOfItems(inSection: section)
-            if itemCount < 1 { continue }
-            
-            guard let firstAttr = self.layoutAttributesForItem(at: IndexPath(item: 0, section: section)),
-                  let lastAttr = self.layoutAttributesForItem(at: IndexPath(item: itemCount - 1, section: section)) else { continue }
-            
-            var sectionInset = self.sectionInset
-            if let inset = delegate.collectionView?(collectionView, layout: self, insetForSectionAt: section),
-               inset != sectionInset {
-                sectionInset = inset
-            }
-            
-            var sectionFrame = firstAttr.frame.union(lastAttr.frame)
-            sectionFrame.origin.x -= sectionInset.left
-            sectionFrame.origin.y -= sectionInset.top
-            if self.scrollDirection == .horizontal {
-                sectionFrame.size.width += sectionInset.left + sectionInset.right
-                sectionFrame.size.height = collectionView.frame.size.height
-            } else {
-                sectionFrame.size.width = collectionView.frame.size.width
-                sectionFrame.size.height += sectionInset.top + sectionInset.bottom
-            }
-            
-            let attributes = CollectionViewLayoutAttributes(forDecorationViewOfKind: "FWCollectionViewElementKind", with: IndexPath(item: 0, section: section))
-            attributes.frame = sectionFrame
-            attributes.zIndex = -1
-            attributes.sectionConfig = delegate.collectionView?(collectionView, layout: self, configForSectionAt: section)
-            self.fw_sectionConfigAttributes.append(attributes)
-        }
-    }
-
-    /// 获取布局section属性，在layoutAttributesForElementsInRect:调用并添加即可
-    public func fw_sectionConfigLayoutAttributes(forElementsIn rect: CGRect) -> [UICollectionViewLayoutAttributes] {
-        var attrs: [UICollectionViewLayoutAttributes] = []
-        for attr in self.fw_sectionConfigAttributes {
-            if CGRectIntersectsRect(rect, attr.frame) {
-                attrs.append(attr)
-            }
-        }
-        return attrs
-    }
-    
-    private var fw_sectionConfigAttributes: [UICollectionViewLayoutAttributes] {
-        get { return fw_property(forName: "fw_sectionConfigAttributes") as? [UICollectionViewLayoutAttributes] ?? [] }
-        set { fw_setProperty(newValue, forName: "fw_sectionConfigAttributes") }
+        self.backgroundColor = sectionConfig.backgroundColor
+        sectionConfig.customBlock?(self)
     }
     
 }

@@ -48,8 +48,8 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     open func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = self.customAlertAppearance
-        let alertController = UIAlertController.fw_alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
-        alertController.fw_alertStyle = style
+        let alertController = UIAlertController.fw.alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
+        alertController.fw.alertStyle = style
         
         // 添加输入框
         for promptIndex in 0 ..< promptCount {
@@ -60,7 +60,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         
         // 添加动作按钮
         for actionIndex in 0 ..< (actions?.count ?? 0) {
-            let alertAction = UIAlertAction.fw_action(object: actions?[actionIndex], style: .default, appearance: customAppearance) { action in
+            let alertAction = UIAlertAction.fw.action(object: actions?[actionIndex], style: .default, appearance: customAppearance) { action in
                 if actionBlock != nil {
                     var values: [String] = []
                     for fieldIndex in 0 ..< promptCount {
@@ -75,14 +75,14 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         
         // 添加取消按钮
         if cancel != nil {
-            let cancelAction = UIAlertAction.fw_action(object: cancel, style: .cancel, appearance: customAppearance) { action in
+            let cancelAction = UIAlertAction.fw.action(object: cancel, style: .cancel, appearance: customAppearance) { action in
                 cancelBlock?()
             }
             alertController.addAction(cancelAction)
         }
         
         // 添加首选按钮
-        if let preferredActionBlock = alertController.fw_alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
+        if let preferredActionBlock = alertController.fw.alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
             let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
@@ -98,11 +98,11 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
     open func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         // 初始化Alert
         let customAppearance = customSheetAppearance
-        let alertController = UIAlertController.fw_alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
+        let alertController = UIAlertController.fw.alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
         
         // 添加动作按钮
         for actionIndex in 0 ..< (actions?.count ?? 0) {
-            let alertAction = UIAlertAction.fw_action(object: actions?[actionIndex], style: .default, appearance: customAppearance) { action in
+            let alertAction = UIAlertAction.fw.action(object: actions?[actionIndex], style: .default, appearance: customAppearance) { action in
                 actionBlock?(actionIndex)
             }
             alertController.addAction(alertAction)
@@ -110,7 +110,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         
         // 添加取消按钮
         if cancel != nil {
-            let cancelAction = UIAlertAction.fw_action(object: cancel, style: .cancel, appearance: customAppearance) { action in
+            let cancelAction = UIAlertAction.fw.action(object: cancel, style: .cancel, appearance: customAppearance) { action in
                 cancelBlock?()
             }
             alertController.addAction(cancelAction)
@@ -119,7 +119,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         // 添加首选按钮
         if currentIndex >= 0, alertController.actions.count > currentIndex {
             alertController.preferredAction = alertController.actions[currentIndex]
-        } else if let preferredActionBlock = alertController.fw_alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
+        } else if let preferredActionBlock = alertController.fw.alertAppearance.preferredActionBlock, alertController.actions.count > 0 {
             let preferredAction = preferredActionBlock(alertController)
             if preferredAction != nil {
                 alertController.preferredAction = preferredAction
@@ -129,7 +129,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin {
         // 兼容iPad，默认居中显示ActionSheet。注意点击视图(如UIBarButtonItem)必须是sourceView及其子视图
         if UIDevice.current.userInterfaceIdiom == .pad,
            let popoverController = alertController.popoverPresentationController {
-            let ancestorView = viewController.fw_ancestorView
+            let ancestorView = viewController.fw.ancestorView
             popoverController.sourceView = ancestorView
             popoverController.sourceRect = CGRect(x: ancestorView.center.x, y: ancestorView.center.y, width: 0, height: 0)
             popoverController.permittedArrowDirections = []

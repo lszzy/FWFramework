@@ -178,13 +178,17 @@ open class RequestContextAccessory: RequestAccessory {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
+    static var showErrorBlock: ((_ context: AnyObject?, _ error: Error) -> Void)?
+    static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    
     public override init() {
         super.init()
         
         self.willStartBlock = { [weak self] request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if (request.autoShowLoading || request.autoShowError),
                    self?.autoSetupContext == true, request.context == nil {
                     self?.setupContext(for: request)
@@ -207,7 +211,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.didStopBlock = { request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw_mainAsync {
+            DispatchQueue.fw.mainAsync {
                 if request.autoShowLoading {
                     request.hideLoading()
                 }
@@ -222,19 +226,19 @@ open class RequestContextAccessory: RequestAccessory {
     open func setupContext(for request: HTTPRequest) {
         guard request.context == nil else { return }
         
-        request.context = UIWindow.fw_mainWindow?.fw_topViewController
+        request.context = UIWindow.fw.main?.fw.topViewController
     }
     
     /// 监听请求上下文，默认context控制器释放时自动停止请求
     open func observeContext(for request: HTTPRequest) {
         var viewController = request.context as? UIViewController
         if viewController == nil, let view = request.context as? UIView {
-            viewController = view.fw_viewController
+            viewController = view.fw.viewController
         }
         guard let viewController = viewController else { return }
         
-        viewController.fw_observeLifecycleState(object: request) { _, state, request in
-            guard state == .didDeinit, let request = request as? HTTPRequest else { return }
+        viewController.fw.observeLifecycleState(object: request) { _, state, request in
+            guard state == .didDeinit else { return }
             guard !request.isFinished, !request.isFailed, !request.isCancelled else { return }
             
             request.cancel()
@@ -250,14 +254,8 @@ open class RequestContextAccessory: RequestAccessory {
             return
         }
         
-        DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_showMessage(error: error)
-            } else if let view = request.context as? UIView {
-                view.fw_showMessage(error: error)
-            } else {
-                UIWindow.fw_showMessage(error: error)
-            }
+        DispatchQueue.fw.mainAsync {
+            RequestContextAccessory.showErrorBlock?(request.context, error)
         }
     }
     
@@ -271,12 +269,8 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_showLoading()
-            } else if let view = request.context as? UIView {
-                view.fw_showLoading()
-            }
+        DispatchQueue.fw.mainAsync {
+            RequestContextAccessory.showLoadingBlock?(request.context)
         }
     }
     
@@ -288,12 +282,8 @@ open class RequestContextAccessory: RequestAccessory {
         }
         
         guard request.context != nil else { return }
-        DispatchQueue.fw_mainAsync {
-            if let viewController = request.context as? UIViewController {
-                viewController.fw_hideLoading()
-            } else if let view = request.context as? UIView {
-                view.fw_hideLoading()
-            }
+        DispatchQueue.fw.mainAsync {
+            RequestContextAccessory.hideLoadingBlock?(request.context)
         }
     }
 }
@@ -465,13 +455,13 @@ open class RequestCache: RequestCacheProtocol {
     
     /// 获取请求缓存基础路径
     open func cacheFilePath(for request: HTTPRequest) -> String {
-        var filePath = FileManager.fw_pathCaches.fw_appendingPath(["FWFramework", "RequestCache"])
+        var filePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "RequestCache"])
         if let filterPath = cacheFilePathFilter?(request, filePath) {
             filePath = filterPath
         }
         
-        FileManager.fw_createDirectory(atPath: filePath)
-        FileManager.fw_skipBackup(filePath)
+        FileManager.fw.createDirectory(atPath: filePath)
+        FileManager.fw.skipBackup(filePath)
         return filePath
     }
     

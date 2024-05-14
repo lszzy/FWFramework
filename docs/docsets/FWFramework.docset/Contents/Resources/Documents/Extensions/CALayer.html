@@ -17,7 +17,7 @@
     <a title="CALayer Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.3.2 Docs</a> (67% documented)</p>
+        <p><a href="../index.html">FWFramework 5.4.0 Docs</a> (62% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -70,9 +70,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AnimatedTransition.html">AnimatedTransition</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/AppBundle.html">AppBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AppResponder.html">AppResponder</a>
@@ -237,9 +234,6 @@
                 <a href="../Classes/DelegateProxy.html">DelegateProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Detector.html">Detector</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/DotView.html">DotView</a>
               </li>
               <li class="nav-group-task">
@@ -258,7 +252,10 @@
                 <a href="../Classes/ExpandedTitleView.html">ExpandedTitleView</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/FloatLayoutView.html">FloatLayoutView</a>
+                <a href="../Classes/FloatingView.html">FloatingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FrameworkBundle.html">FrameworkBundle</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/GradientView.html">GradientView</a>
@@ -351,6 +348,9 @@
                 <a href="../Classes/ImagePickerPreviewController.html">ImagePickerPreviewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/ImagePickerTitleView.html">ImagePickerTitleView</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ImagePluginImpl.html">ImagePluginImpl</a>
               </li>
               <li class="nav-group-task">
@@ -429,6 +429,9 @@
                 <a href="../Classes/MulticastBlock.html">MulticastBlock</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/MulticastBlock/Priority.html">– Priority</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/MulticastDelegate.html">MulticastDelegate</a>
               </li>
               <li class="nav-group-task">
@@ -451,9 +454,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/NotificationManager.html">NotificationManager</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/OcrResult.html">OcrResult</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PageControl.html">PageControl</a>
@@ -565,6 +565,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/PullRefreshView.html">PullRefreshView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer.html">Recognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer/Result.html">– Result</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
@@ -1207,15 +1213,6 @@
                 <a href="../Extensions.html#/s:Sb">Bool</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Bundle.html">Bundle</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/CAAnimation.html">CAAnimation</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/CADisplayLink.html">CADisplayLink</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/CALayer.html">CALayer</a>
               </li>
               <li class="nav-group-task">
@@ -1240,7 +1237,7 @@
                 <a href="../Extensions/Data.html">Data</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Date.html">Date</a>
+                <a href="../Extensions.html#/s:10Foundation4DateV">Date</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions.html#/c:objc(cs)NSDateFormatter">DateFormatter</a>
@@ -1253,9 +1250,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Dictionary.html">Dictionary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/DispatchQueue.html">DispatchQueue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Divider.html">Divider</a>
@@ -1274,9 +1268,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/EnvironmentValues.html">EnvironmentValues</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/FileManager.html">FileManager</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Float.html">Float</a>
@@ -1321,12 +1312,6 @@
                 <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/NSLayoutConstraint.html">NSLayoutConstraint</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/NSNumber.html">NSNumber</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/NSObject.html">NSObject</a>
               </li>
               <li class="nav-group-task">
@@ -1337,12 +1322,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Optional.html">Optional</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/PHPhotoLibrary.html">PHPhotoLibrary</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/PHPickerViewController.html">PHPickerViewController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/PlatformView.html">PlatformView</a>
@@ -1372,31 +1351,7 @@
                 <a href="../Extensions/String.html">String</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/Timer.html">Timer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIActivityIndicatorView.html">UIActivityIndicatorView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIAlertAction.html">UIAlertAction</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIAlertController.html">UIAlertController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIApplication.html">UIApplication</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBarButtonItem.html">UIBarButtonItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBarItem.html">UIBarItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIBezierPath.html">UIBezierPath</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIButton.html">UIButton</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UICollectionReusableView.html">UICollectionReusableView</a>
@@ -1408,37 +1363,10 @@
                 <a href="../Extensions/UICollectionViewCell.html">UICollectionViewCell</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UICollectionViewFlowLayout.html">UICollectionViewFlowLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIColor.html">UIColor</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIControl.html">UIControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIDevice.html">UIDevice</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIEdgeInsets.html">UIEdgeInsets</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UIFont.html">UIFont</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIGestureRecognizer.html">UIGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIHostingController.html">UIHostingController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImage.html">UIImage</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImageAsset.html">UIImageAsset</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIImagePickerController.html">UIImagePickerController</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIImageView.html">UIImageView</a>
@@ -1453,40 +1381,10 @@
                 <a href="../Extensions/UINavigationBar.html">UINavigationBar</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UINavigationController.html">UINavigationController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIPageControl.html">UIPageControl</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIPanGestureRecognizer.html">UIPanGestureRecognizer</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UIPresentationController.html">UIPresentationController</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Extensions/UIProgressView.html">UIProgressView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIScreen.html">UIScreen</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIScrollView.html">UIScrollView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISearchBar.html">UISearchBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISlider.html">UISlider</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UISwitch.html">UISwitch</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Extensions/UITabBar.html">UITabBar</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UITabBarItem.html">UITabBarItem</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITableView.html">UITableView</a>
@@ -1496,9 +1394,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITableViewHeaderFooterView.html">UITableViewHeaderFooterView</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UITextField.html">UITextField</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UITextView.html">UITextView</a>
@@ -1511,9 +1406,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIViewController.html">UIViewController</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UIWindow.html">UIWindow</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions.html#/s:Su">UInt</a>
@@ -1535,12 +1427,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/URLRequest.html">URLRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/URLSession.html">URLSession</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/UserDefaults.html">UserDefaults</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/View.html">View</a>
@@ -1778,6 +1664,9 @@
                 <a href="../Protocols/ImagePickerPreviewControllerDelegate.html">ImagePickerPreviewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerTitleViewDelegate.html">ImagePickerTitleViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/ImagePlugin.html">ImagePlugin</a>
               </li>
               <li class="nav-group-task">
@@ -1971,9 +1860,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/URLParameter.html">URLParameter</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Protocols/URLRequestParameter.html">URLRequestParameter</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/URLRequestSerialization.html">URLRequestSerialization</a>
@@ -2524,7 +2410,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">@_spi</span><span class="p">(</span><span class="kt"><a href="../Typealiases.html#/s:11FWFramework2FWa">FW</a></span><span class="p">)</span> <span class="kd">extension</span> <span class="kt">CALayer</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">CALayer</span></code></pre>
 
                 </div>
               </div>
@@ -2533,195 +2419,6 @@
           <section class="section task-group-section">
             <div class="task-group">
               <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE23fw_themeBackgroundColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_themeBackgroundColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE23fw_themeBackgroundColorSo7UIColorCSgvp">fw_themeBackgroundColor</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置主题背景色，启用主题订阅后可跟随系统改变，清空时需置为nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_themeBackgroundColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE19fw_themeBorderColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_themeBorderColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE19fw_themeBorderColorSo7UIColorCSgvp">fw_themeBorderColor</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置主题边框色，启用主题订阅后可跟随系统改变，清空时需置为nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_themeBorderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE19fw_themeShadowColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_themeShadowColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE19fw_themeShadowColorSo7UIColorCSgvp">fw_themeShadowColor</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置主题阴影色，启用主题订阅后可跟随系统改变，清空时需置为nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_themeShadowColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE16fw_themeContentsSo7UIImageCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_themeContents" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE16fw_themeContentsSo7UIImageCSgvp">fw_themeContents</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置主题内容图片，启用主题订阅后可跟随系统改变，清空时需置为nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_themeContents</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE17fw_setShadowColor_6offset6radiusySo7UIColorCSg_So6CGSizeV14CoreFoundation7CGFloatVtF"></a>
-                    <a name="//apple_ref/swift/Method/fw_setShadowColor(_:offset:radius:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE17fw_setShadowColor_6offset6radiusySo7UIColorCSg_So6CGSizeV14CoreFoundation7CGFloatVtF">fw_setShadowColor(_:<wbr>offset:<wbr>radius:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置阴影颜色、偏移和半径</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_setShadowColor</span><span class="p">(</span><span class="n">_</span> <span class="nv">color</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">,</span> <span class="nv">radius</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE26fw_removeDefaultAnimationsyyF"></a>
-                    <a name="//apple_ref/swift/Method/fw_removeDefaultAnimations()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE26fw_removeDefaultAnimationsyyF">fw_removeDefaultAnimations()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>移除所有支持动画属性的默认动画，需要一个不带动画的layer时使用</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_removeDefaultAnimations</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So7CALayerC11FWFrameworkE16fw_snapshotImage4sizeSo7UIImageCSgSo6CGSizeV_tF"></a>
-                    <a name="//apple_ref/swift/Method/fw_snapshotImage(size:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So7CALayerC11FWFrameworkE16fw_snapshotImage4sizeSo7UIImageCSgSo6CGSizeV_tF">fw_snapshotImage(size:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>生成图片截图，默认大小为frame.size</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fw_snapshotImage</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -2764,73 +2461,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:So15CAGradientLayerC11FWFrameworkE14fw_themeColorsSaySo7UIColorCGSgvp"></a>
-                    <a name="//apple_ref/swift/Property/fw_themeColors" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So15CAGradientLayerC11FWFrameworkE14fw_themeColorsSaySo7UIColorCGSgvp">fw_themeColors</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>设置主题渐变色，启用主题订阅后可跟随系统改变，清空时需置为nil</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fw_themeColors</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIColor</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:So15CAGradientLayerC11FWFrameworkE011fw_gradientB0_6colors9locations10startPoint03endI0ABSo6CGRectV_SayypGSaySo8NSNumberCGSgSo7CGPointVAQtFZ"></a>
-                    <a name="//apple_ref/swift/Method/fw_gradientLayer(_:colors:locations:startPoint:endPoint:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:So15CAGradientLayerC11FWFrameworkE011fw_gradientB0_6colors9locations10startPoint03endI0ABSo6CGRectV_SayypGSaySo8NSNumberCGSgSo7CGPointVAQtFZ">fw_gradientLayer(_:<wbr>colors:<wbr>locations:<wbr>startPoint:<wbr>endPoint:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>创建渐变层，需手工addLayer</p>
-
-<p>@param frame      渐变区域
-  @param colors     渐变颜色，CGColor数组，如[黑，白，黑]
-  @param locations  渐变位置，0~1，如[0.25, 0.5, 0.75]对应颜色为[0-0.25黑,0.25-0.5黑渐变白,0.5-0.75白渐变黑,0.75-1黑]
-  @param startPoint 渐变开始点，设置渐变方向，左上点为(0,0)，右下点为(1,1)
-  @param endPoint   渐变结束点
-  @return 渐变Layer</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fw_gradientLayer</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span>
-    <span class="nv">colors</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">],</span>
-    <span class="nv">locations</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span><span class="p">]?,</span>
-    <span class="nv">startPoint</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span>
-    <span class="nv">endPoint</span><span class="p">:</span> <span class="kt">CGPoint</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CAGradientLayer</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:@CM@FWFramework@@objc(cs)CAGradientLayer(im)themeChanged:"></a>
                     <a name="//apple_ref/swift/Method/themeChanged(_:)" class="dashAnchor"></a>
                     <a class="token" href="#/c:@CM@FWFramework@@objc(cs)CAGradientLayer(im)themeChanged:">themeChanged(_:<wbr>)</a>
@@ -2859,7 +2489,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-04-28)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-14)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

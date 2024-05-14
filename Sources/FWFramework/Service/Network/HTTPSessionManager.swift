@@ -96,7 +96,7 @@ open class HTTPSessionManager: URLSessionManager {
         success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
         failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
-        let url = URL.fw_url(string: urlString, relativeTo: baseURL)
+        let url = URL.fw.url(string: urlString, relativeTo: baseURL)
         var request: URLRequest
         do {
             request = try requestSerializer.multipartFormRequest(method: "POST", urlString: url?.absoluteString ?? "", parameters: parameters as? [String: Any], constructingBody: block)
@@ -171,7 +171,7 @@ open class HTTPSessionManager: URLSessionManager {
         success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
         failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
-        let url = URL.fw_url(string: urlString, relativeTo: baseURL)
+        let url = URL.fw.url(string: urlString, relativeTo: baseURL)
         var request: URLRequest
         do {
             request = try requestSerializer.request(method: httpMethod, urlString: url?.absoluteString ?? "", parameters: parameters)

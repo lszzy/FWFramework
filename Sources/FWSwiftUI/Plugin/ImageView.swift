@@ -64,10 +64,10 @@ public struct ImageView: UIViewRepresentable {
     public typealias UIViewType = ResizableView<UIImageView>
     
     public func makeUIView(context: Context) -> ResizableView<UIImageView> {
-        let imageView = UIImageView.fw_animatedImageView()
+        let imageView = UIImageView.fw.animatedImageView()
         let uiView = ResizableView(imageView)
         uiView.content.contentMode = contentMode
-        uiView.content.fw_setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
+        uiView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
         return uiView
     }
     
@@ -76,7 +76,7 @@ public struct ImageView: UIViewRepresentable {
     }
     
     public static func dismantleUIView(_ uiView: ResizableView<UIImageView>, coordinator: ()) {
-        uiView.content.fw_cancelImageRequest()
+        uiView.content.fw.cancelImageRequest()
     }
     
 }

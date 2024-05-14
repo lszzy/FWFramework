@@ -60,14 +60,14 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         }
         let emptyMoreAction = (actions?.count ?? 0) > 1 ? actions?[1] : nil
         
-        let previousView = view.fw_subview(tag: emptyViewTag) as? PlaceholderView
+        let previousView = view.fw.subview(tag: emptyViewTag) as? PlaceholderView
         let fadeAnimated = self.fadeAnimated && previousView == nil
         previousView?.removeFromSuperview()
         
         let emptyView = PlaceholderView(frame: view.bounds)
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
-        emptyView.fw_pinEdges(toSuperview: view.fw_emptyInsets)
+        emptyView.fw.pinEdges(toSuperview: view.fw.emptyInsets)
         
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)
@@ -76,12 +76,12 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         emptyView.setActionButtonTitle(emptyAction)
         emptyView.setMoreActionButtonTitle(emptyMoreAction)
         if block != nil {
-            emptyView.actionButton.fw_addTouch { sender in
+            emptyView.actionButton.fw.addTouch { sender in
                 block?(0, sender)
             }
         }
         if block != nil, emptyMoreAction != nil {
-            emptyView.moreActionButton.fw_addTouch { sender in
+            emptyView.moreActionButton.fw.addTouch { sender in
                 block?(1, sender)
             }
         }
@@ -98,7 +98,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     }
     
     open func hideEmptyView(in view: UIView) {
-        guard let emptyView = view.fw_subview(tag: emptyViewTag) else { return }
+        guard let emptyView = view.fw.subview(tag: emptyViewTag) else { return }
         
         if let overlayView = emptyView.superview as? ScrollOverlayView {
             emptyView.removeFromSuperview()
@@ -109,7 +109,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
     }
     
     open func showingEmptyView(in view: UIView) -> UIView? {
-        let emptyView = view.fw_subview(tag: emptyViewTag)
+        let emptyView = view.fw.subview(tag: emptyViewTag)
         return emptyView
     }
     

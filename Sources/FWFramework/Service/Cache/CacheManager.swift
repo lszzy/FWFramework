@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - CacheType
 /// 缓存类型枚举
 public struct CacheType: RawRepresentable, Equatable, Hashable {
     
@@ -37,6 +38,7 @@ public struct CacheType: RawRepresentable, Equatable, Hashable {
     
 }
 
+// MARK: - CacheManager
 /// 缓存管理器
 public class CacheManager: NSObject {
     
@@ -67,4 +69,53 @@ public class CacheManager: NSObject {
         }
     }
     
+}
+
+// MARK: - CachedValue
+/// 缓存属性包装器注解，默认为手工指定或初始值
+///
+/// 使用示例：
+/// @CachedValue("cacheKey")
+/// static var cacheValue: String = ""
+@propertyWrapper
+public struct CachedValue<Value> {
+    private let key: String
+    private let defaultValue: Value
+    private let type: CacheType
+    
+    public init(
+        wrappedValue: Value,
+        _ key: String,
+        defaultValue: Value? = nil,
+        type: CacheType = .default
+    ) {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.type = type
+    }
+    
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: Value? = nil,
+        type: CacheType = .default
+    ) where WrappedValue? == Value {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.type = type
+    }
+    
+    public var wrappedValue: Value {
+        get {
+            let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
+        }
+        set {
+            if !Optional<Any>.isNil(newValue) {
+                CacheManager.manager(type: type)?.setObject(newValue, forKey: key)
+            } else {
+                CacheManager.manager(type: type)?.removeObject(forKey: key)
+            }
+        }
+    }
 }
