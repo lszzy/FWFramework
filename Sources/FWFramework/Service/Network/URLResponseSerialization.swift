@@ -21,11 +21,11 @@ open class HTTPResponseSerializer: NSObject, URLResponseSerialization {
     }
     
     open func setUserInfo(_ userInfo: [AnyHashable: Any]?, for response: URLResponse?) {
-        response?.fw_setPropertyCopy(userInfo, forName: "userInfo")
+        response?.fw.setPropertyCopy(userInfo, forName: "userInfo")
     }
     
     open func userInfo(for response: URLResponse?) -> [AnyHashable: Any]? {
-        return response?.fw_property(forName: "userInfo") as? [AnyHashable: Any]
+        return response?.fw.property(forName: "userInfo") as? [AnyHashable: Any]
     }
     
     open func validateResponse(_ response: URLResponse?, data: Data) throws {
@@ -133,7 +133,7 @@ open class JSONResponseSerializer: HTTPResponseSerializer {
             throw NSError(domain: Self.URLResponseSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: userInfo)
         }
         
-        var responseObject = try Data.fw_jsonDecode(data, options: readingOptions)
+        var responseObject = try Data.fw.jsonDecode(data, options: readingOptions)
         if removesKeysWithNullValues {
             responseObject = Self.removingKeysWithNullValues(responseObject)
         }
@@ -169,13 +169,16 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
     
+    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
+    private static var imageLock = NSLock()
+    
     public override init() {
         super.init()
         acceptableContentTypes = ["application/octet-stream", "application/pdf", "image/tiff", "image/jpeg", "image/gif", "image/png", "image/ico", "image/x-icon", "image/bmp", "image/x-bmp", "image/x-xbitmap", "image/x-ms-bmp", "image/x-win-bitmap", "image/heic", "image/heif", "image/webp", "image/svg+xml"]
     }
     
     public static func cachedResponseData(for image: UIImage) -> Data? {
-        return image.fw_property(forName: "cachedResponseData") as? Data
+        return image.fw.property(forName: "cachedResponseData") as? Data
     }
     
     public static func clearCachedResponseData(for image: UIImage) {
@@ -183,10 +186,8 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     }
     
     private static func setCachedResponseData(_ data: Data?, for image: UIImage) {
-        image.fw_setProperty(data, forName: "cachedResponseData")
+        image.fw.setProperty(data, forName: "cachedResponseData")
     }
-    
-    private static var imageLock = NSLock()
     
     private static func image(data: Data?, scale: CGFloat, options: [ImageCoderOptions : Any]?) -> UIImage? {
         guard let data = data, data.count > 0 else {
@@ -195,15 +196,15 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         
         var image: UIImage?
         imageLock.lock()
-        image = UIImage.fw_image(data: data, scale: scale, options: options)
+        if imageDecodeBlock != nil {
+            image = imageDecodeBlock?(data, scale, options)
+        } else {
+            image = UIImage(data: data)
+            if image?.images == nil, let cgImage = image?.cgImage {
+                image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
+            }
+        }
         imageLock.unlock()
-        
-        /*
-        image = UIImage(data: data)
-        if image?.images == nil, let cgImage = image?.cgImage {
-            image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
-        }*/
-        
         return image
     }
     

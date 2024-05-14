@@ -49,7 +49,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
             loadingText = defaultLoadingText?()
         }
         
-        if let toastView = view.fw_subview(tag: loadingViewTag) as? ToastView {
+        if let toastView = view.fw.subview(tag: loadingViewTag) as? ToastView {
             toastView.invalidateTimer()
             view.bringSubviewToFront(toastView)
             toastView.attributedTitle = loadingText
@@ -64,7 +64,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.attributedTitle = loadingText
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
-        toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
+        toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
         customBlock?(toastView)
@@ -72,7 +72,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     }
     
     open func hideLoading(delayed: Bool, in view: UIView) {
-        guard let toastView = view.fw_subview(tag: loadingViewTag) as? ToastView else { return }
+        guard let toastView = view.fw.subview(tag: loadingViewTag) as? ToastView else { return }
         
         if delayed {
             toastView.hide(afterDelay: delayHideTime)
@@ -82,7 +82,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     }
     
     open func showingLoadingView(in view: UIView) -> UIView? {
-        let toastView = view.fw_subview(tag: loadingViewTag) as? ToastView
+        let toastView = view.fw.subview(tag: loadingViewTag) as? ToastView
         return toastView
     }
     
@@ -92,7 +92,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
             progressText = defaultProgressText?()
         }
         
-        if let toastView = view.fw_subview(tag: progressViewTag) as? ToastView {
+        if let toastView = view.fw.subview(tag: progressViewTag) as? ToastView {
             toastView.invalidateTimer()
             view.bringSubviewToFront(toastView)
             toastView.attributedTitle = progressText
@@ -109,7 +109,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.progress = progress
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
-        toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
+        toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
         customBlock?(toastView)
@@ -117,12 +117,12 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     }
     
     open func hideProgress(in view: UIView) {
-        let toastView = view.fw_subview(tag: progressViewTag) as? ToastView
+        let toastView = view.fw.subview(tag: progressViewTag) as? ToastView
         toastView?.hide()
     }
     
     open func showingProgressView(in view: UIView) -> UIView? {
-        let toastView = view.fw_subview(tag: progressViewTag) as? ToastView
+        let toastView = view.fw.subview(tag: progressViewTag) as? ToastView
         return toastView
     }
     
@@ -133,7 +133,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         }
         guard (messageText?.length ?? 0) > 0 else { return }
         
-        let previousView = view.fw_subview(tag: messageViewTag) as? ToastView
+        let previousView = view.fw.subview(tag: messageViewTag) as? ToastView
         let fadeAnimated = self.fadeAnimated && previousView == nil
         previousView?.hide()
         
@@ -142,7 +142,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.isUserInteractionEnabled = !interactive
         toastView.attributedTitle = messageText
         view.addSubview(toastView)
-        toastView.fw_pinEdges(toSuperview: view.fw_toastInsets)
+        toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
         customBlock?(toastView)
@@ -153,12 +153,12 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     }
     
     open func hideMessage(in view: UIView) {
-        let toastView = view.fw_subview(tag: messageViewTag) as? ToastView
+        let toastView = view.fw.subview(tag: messageViewTag) as? ToastView
         toastView?.hide()
     }
     
     open func showingMessageView(in view: UIView) -> UIView? {
-        let toastView = view.fw_subview(tag: messageViewTag) as? ToastView
+        let toastView = view.fw.subview(tag: messageViewTag) as? ToastView
         return toastView
     }
     

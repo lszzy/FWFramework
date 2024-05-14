@@ -171,7 +171,7 @@ open class PullRefreshView: UIView {
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let style: IndicatorViewStyle = .refreshPulldown
-        let result = UIView.fw_indicatorView(style: style)
+        let result = UIView.fw.indicatorView(style: style)
         if style.indicatorColor == nil {
             result.indicatorColor = .gray
         }
@@ -200,9 +200,9 @@ open class PullRefreshView: UIView {
     }()
     
     private var titles: [String] = [
-        AppBundle.localizedString("fw.refreshIdle"),
-        AppBundle.localizedString("fw.refreshTriggered"),
-        AppBundle.localizedString("fw.refreshLoading"),
+        FrameworkBundle.localizedString("fw.refreshIdle"),
+        FrameworkBundle.localizedString("fw.refreshTriggered"),
+        FrameworkBundle.localizedString("fw.refreshLoading"),
     ]
     private var subtitles: [String] = ["", "", ""]
     private var viewForState: [Any] = ["", "", ""]
@@ -250,7 +250,7 @@ open class PullRefreshView: UIView {
         super.willMove(toSuperview: newSuperview)
         
         if let scrollView = superview as? UIScrollView, newSuperview == nil,
-           scrollView.fw_showPullRefresh {
+           scrollView.fw.showPullRefresh {
             if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
@@ -353,7 +353,7 @@ open class PullRefreshView: UIView {
         if keyPath == "contentOffset" {
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw_infiniteScrollView?.isActive ?? false) ||
+            if (scrollView.fw.infiniteScrollView?.isActive ?? false) ||
                 (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
                 if pullingPercent > 0 { pullingPercent = 0 }
                 if state != .idle {
@@ -379,7 +379,7 @@ open class PullRefreshView: UIView {
     @objc open func gestureRecognizerStateChanged(_ gestureRecognizer: UIPanGestureRecognizer) {
         if gestureRecognizer.state == .began {
             isActive = false
-            scrollView?.fw_infiniteScrollView?.isActive = false
+            scrollView?.fw.infiniteScrollView?.isActive = false
         }
     }
     
@@ -662,7 +662,7 @@ open class InfiniteScrollView: UIView {
             return emptyDataBlock(scrollView)
         }
         
-        return scrollView.fw_totalDataCount <= 0
+        return scrollView.fw.totalDataCount <= 0
     }
     
     /// 上拉追加状态
@@ -754,7 +754,7 @@ open class InfiniteScrollView: UIView {
     /// 指示器视图
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let style: IndicatorViewStyle = .refreshPullup
-        let result = UIView.fw_indicatorView(style: style)
+        let result = UIView.fw.indicatorView(style: style)
         if style.indicatorColor == nil {
             result.indicatorColor = .gray
         }
@@ -776,7 +776,7 @@ open class InfiniteScrollView: UIView {
         result.font = UIFont.systemFont(ofSize: 14)
         result.textAlignment = .center
         result.textColor = .gray
-        result.text = AppBundle.localizedString("fw.refreshFinished")
+        result.text = FrameworkBundle.localizedString("fw.refreshFinished")
         result.sizeToFit()
         return result
     }()
@@ -810,7 +810,7 @@ open class InfiniteScrollView: UIView {
         super.willMove(toSuperview: newSuperview)
         
         if let scrollView = superview as? UIScrollView, newSuperview == nil,
-           scrollView.fw_showInfiniteScroll {
+           scrollView.fw.showInfiniteScroll {
             if isObserving {
                 scrollView.removeObserver(self, forKeyPath: "contentOffset")
                 scrollView.removeObserver(self, forKeyPath: "contentSize")
@@ -838,7 +838,7 @@ open class InfiniteScrollView: UIView {
             if finished { return }
             guard let contentOffset = change?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw_pullRefreshView?.isActive ?? false) ||
+            if (scrollView.fw.pullRefreshView?.isActive ?? false) ||
                 (contentOffset.y + ceil(scrollView.adjustedContentInset.top) - scrollView.contentInset.top) < 0 {
                 if state != .idle {
                     state = .idle
@@ -859,7 +859,7 @@ open class InfiniteScrollView: UIView {
 
         if gestureRecognizer.state == .began {
             isActive = false
-            scrollView?.fw_pullRefreshView?.isActive = false
+            scrollView?.fw.pullRefreshView?.isActive = false
         } else if gestureRecognizer.state == .ended && state == .triggered {
             if let scrollView = scrollView, (scrollView.contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) >= 0 {
                 state = .loading

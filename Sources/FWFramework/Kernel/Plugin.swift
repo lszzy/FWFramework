@@ -68,7 +68,7 @@ public class PluginManager: NSObject {
         var debugCount = 0
         for (pluginId, target) in pluginPool {
             debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), pluginId, String.fw_safeString(target.instance ?? target.object)))
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), pluginId, String(describing: (target.instance ?? target.object) as AnyObject)))
         }
         return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
     }
@@ -89,7 +89,7 @@ public class PluginManager: NSObject {
     }
     
     private static func registerPlugin<T>(_ type: T.Type, object: Any, isPreset: Bool) -> Bool {
-        let pluginId = String.fw_safeString(type)
+        let pluginId = String(describing: type as AnyObject)
         if let target = pluginPool[pluginId] {
             if target.locked { return false }
             if isPreset { return false }
@@ -103,7 +103,7 @@ public class PluginManager: NSObject {
     
     /// 取消插件注册，仅当插件未使用时生效
     public static func unregisterPlugin<T>(_ type: T.Type) {
-        let pluginId = String.fw_safeString(type)
+        let pluginId = String(describing: type as AnyObject)
         guard let target = pluginPool[pluginId] else { return }
         if target.locked { return }
         
@@ -112,7 +112,7 @@ public class PluginManager: NSObject {
     
     /// 延迟加载插件对象，调用后不可再注册该插件
     public static func loadPlugin<T>(_ type: T.Type) -> T? {
-        let pluginId = String.fw_safeString(type)
+        let pluginId = String(describing: type as AnyObject)
         var target = pluginPool[pluginId]
         if target == nil {
             guard let object = sharedLoader.load(type) else { return nil }
@@ -151,7 +151,7 @@ public class PluginManager: NSObject {
     
     /// 释放插件对象并标记为未使用，释放后可重新注册该插件
     public static func unloadPlugin<T>(_ type: T.Type) {
-        let pluginId = String.fw_safeString(type)
+        let pluginId = String(describing: type as AnyObject)
         guard let plugin = pluginPool[pluginId] else { return }
         
         (plugin.instance as? PluginProtocol)?.pluginDidUnload()

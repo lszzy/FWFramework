@@ -223,7 +223,7 @@ open class PopupMenuDeviceOrientationManager: NSObject {
     
     @objc func deviceOrientationDidChange(_ notify: Notification) {
         guard autoRotateWhenDeviceOrientationChanged else { return }
-        let orientation = UIWindow.fw_mainScene?.interfaceOrientation
+        let orientation = UIWindow.fw.mainScene?.interfaceOrientation
         if let orientation = orientation, orientation != .unknown {
             DispatchQueue.main.async { [weak self] in
                 self?.deviceOrientationDidChangeHandler?(orientation)
@@ -536,7 +536,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     /// 自定义容器视图，需show之前调用
     open weak var containerView: UIView? {
         get {
-            return _containerView ?? UIWindow.fw_mainWindow
+            return _containerView ?? UIWindow.fw.main
         }
         set {
             _containerView = newValue

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - ObjCBridge
 @objc internal protocol ObjCObjectBridge {
     @objc(instanceMethodSignatureForSelector:)
     static func objcInstanceMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge

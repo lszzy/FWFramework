@@ -51,7 +51,7 @@ open class RequestManager {
         
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
     }
@@ -73,7 +73,7 @@ open class RequestManager {
     /// 构建请求URL
     open func buildRequestUrl(for request: HTTPRequest) -> URL {
         var requestUrl = request.requestUrl()
-        if let url = URL.fw_url(string: requestUrl), url.host != nil, url.scheme != nil {
+        if let url = URL.fw.url(string: requestUrl), url.host != nil, url.scheme != nil {
             return url
         }
         
@@ -89,11 +89,11 @@ open class RequestManager {
             baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : request.config.baseUrl
         }
         
-        var url = URL.fw_url(string: baseUrl)
+        var url = URL.fw.url(string: baseUrl)
         if !baseUrl.isEmpty, !baseUrl.hasSuffix("/") {
             url = url?.appendingPathComponent("")
         }
-        return URL.fw_url(string: requestUrl, relativeTo: url) ?? URL()
+        return URL.fw.url(string: requestUrl, relativeTo: url) ?? URL()
     }
     
     /// 过滤URL请求
@@ -150,7 +150,7 @@ open class RequestManager {
             return nil
         }
         
-        tempPath = (tempPath as NSString).appendingPathComponent(downloadPath.fw_md5Encode)
+        tempPath = (tempPath as NSString).appendingPathComponent(downloadPath.fw.md5Encode)
         return URL(fileURLWithPath: tempPath)
     }
     
@@ -171,7 +171,7 @@ open class RequestManager {
     private func startRequest(_ request: HTTPRequest) {
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw_safeString(request.requestArgument()))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
         
@@ -340,7 +340,7 @@ open class RequestManager {
     private func requestDidSucceed(_ request: HTTPRequest) {
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.responseString))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.responseString))
         }
         #endif
         
@@ -362,7 +362,7 @@ open class RequestManager {
         request.error = error
         #if DEBUG
         if request.config.debugLogEnabled {
-            Logger.debug(group: Logger.fw_moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw_safeString(request.responseJSONObject ?? request.error))
+            Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.error))
         }
         #endif
         

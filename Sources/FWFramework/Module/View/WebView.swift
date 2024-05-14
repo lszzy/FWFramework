@@ -13,89 +13,200 @@ import JavaScriptCore
 extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return Base.fw_reuseConfigurationBlock }
-        set { Base.fw_reuseConfigurationBlock = newValue }
+        get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (WKWebViewConfiguration, String) -> Void }
+        set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
     
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
     public static var processPool: WKProcessPool {
-        get { return Base.fw_processPool }
-        set { Base.fw_processPool = newValue }
+        get { return WKWebView.innerProcessPool }
+        set { WKWebView.innerProcessPool = newValue }
     }
     
     /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
     public static func defaultConfiguration() -> WKWebViewConfiguration {
-        return Base.fw_defaultConfiguration()
+        let configuration = WKWebViewConfiguration()
+        configuration.applicationNameForUserAgent = extensionUserAgent
+        configuration.processPool = processPool
+        return configuration
     }
     
     /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
     public static var browserUserAgent: String {
-        return Base.fw_browserUserAgent
+        let platformUserAgent = String(format: "Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", UIDevice.current.model, UIDevice.current.systemVersion.replacingOccurrences(of: ".", with: "_"))
+        let userAgent = String(format: "%@ %@", platformUserAgent, extensionUserAgent)
+        return userAgent
     }
 
     /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
     public static var extensionUserAgent: String {
-        return Base.fw_extensionUserAgent
+        let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion)
+        return userAgent
     }
 
     /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
     public static var requestUserAgent: String {
-        return Base.fw_requestUserAgent
+        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
+        return userAgent
     }
     
     /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
     public var userAgent: String {
-        return base.fw_userAgent
+        if let userAgent = base.customUserAgent, !userAgent.isEmpty {
+            return userAgent
+        }
+        if let userAgent = invokeGetter("userAgent") as? String, !userAgent.isEmpty {
+            return userAgent
+        }
+        return WKWebView.fw.browserUserAgent
     }
     
     /// 加载网页请求，支持String|URL|URLRequest等
     @discardableResult
     public func loadRequest(_ request: Any?) -> WKNavigation? {
-        return base.fw_loadRequest(request)
+        guard let request = request else { return nil }
+        if let urlRequest = request as? URLRequest {
+            return base.load(urlRequest)
+        }
+        
+        var requestUrl = request as? URL
+        if requestUrl == nil, let urlString = request as? String {
+            requestUrl = URL.fw.url(string: urlString)
+        }
+        guard let requestUrl = requestUrl else { return nil }
+        
+        if requestUrl.isFileURL {
+            if let htmlString = try? String(contentsOf: requestUrl, encoding: .utf8) {
+                return base.loadHTMLString(htmlString, baseURL: requestUrl)
+            }
+        } else {
+            return base.load(URLRequest(url: requestUrl))
+        }
+        return nil
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
     public static func clearCache(_ completion: (() -> Void)? = nil) {
-        Base.fw_clearCache(completion)
-    }
-    
-    /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
-    public static func evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
-        return Base.fw_evaluateScript(script, variables: variables)
+        let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+        let sinceDate = Date(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
+            completion?()
+        }
     }
     
     /// 清空WebView后退和前进的网页栈
     public func clearBackForwardList() {
-        base.fw_clearBackForwardList()
+        let selector = NSSelectorFromString(String(format: "%@%@%@", "_r", "emoveA", "llItems"))
+        if base.backForwardList.responds(to: selector) {
+            base.backForwardList.perform(selector)
+        }
+    }
+    
+    /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
+    public static func evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
+        var javascript = script
+        if !variables.isEmpty {
+            for (key, value) in variables {
+                javascript = javascript.replacingOccurrences(of: key, with: value)
+            }
+        }
+        
+        let context = JSContext()
+        let value = context?.evaluateScript(javascript)
+        return value
     }
     
     /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
     public var jsBridge: WebViewJSBridge? {
-        get { return base.fw_jsBridge }
-        set { base.fw_jsBridge = newValue }
+        get { property(forName: "jsBridge") as? WebViewJSBridge }
+        set { setProperty(newValue, forName: "jsBridge") }
     }
     
     /// 是否启用Javascript桥接器，需结合setupJsBridge使用
     public var jsBridgeEnabled: Bool {
-        get { return base.fw_jsBridgeEnabled }
-        set { base.fw_jsBridgeEnabled = newValue }
+        get { propertyBool(forName: "jsBridgeEnabled") }
+        set { setPropertyBool(newValue, forName: "jsBridgeEnabled") }
     }
     
     /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
     @discardableResult
     public func setupJsBridge() -> WebViewJSBridge? {
-        return base.fw_setupJsBridge()
+        guard jsBridgeEnabled else { return nil }
+        let bridge = WebViewJSBridge(webView: base)
+        jsBridge = bridge
+        return bridge
     }
     
     /// 绑定控制器导航栏左侧按钮组，需结合setupNavigationItems使用
     public var navigationItems: [Any]? {
-        get { return base.fw_navigationItems }
-        set { base.fw_navigationItems = newValue }
+        get { property(forName: "navigationItems") as? [Any] }
+        set { setProperty(newValue, forName: "navigationItems") }
     }
     
     /// 自动初始化控制器导航栏左侧按钮组，navigationItems设置后生效
     public func setupNavigationItems(_ viewController: UIViewController) {
-        base.fw_setupNavigationItems(viewController)
+        guard let navigationItems = navigationItems,
+              !navigationItems.isEmpty,
+              let navigationController = viewController.navigationController else { return }
+        
+        var leftItems: [UIBarButtonItem] = []
+        for (i, navigationItem) in navigationItems.enumerated() {
+            if let leftItem = navigationItem as? UIBarButtonItem {
+                leftItems.append(leftItem)
+            } else {
+                if i == 0 {
+                    let leftItem = UIBarButtonItem.fw.item(object: navigationItem) { [weak base, weak viewController] _ in
+                        if base?.canGoBack ?? false {
+                            base?.goBack()
+                        } else {
+                            if let navigationController = viewController?.navigationController,
+                               navigationController.popViewController(animated: true) != nil    {
+                                return
+                            }
+                            if viewController?.presentingViewController != nil {
+                                viewController?.dismiss(animated: true, completion: nil)
+                                return
+                            }
+                            
+                            if let firstItem = base?.backForwardList.backList.first {
+                                base?.go(to: firstItem)
+                            }
+                        }
+                    }
+                    leftItems.append(leftItem)
+                } else {
+                    let leftItem = UIBarButtonItem.fw.item(object: navigationItem) { [weak base, weak viewController] _ in
+                        if let navigationController = viewController?.navigationController,
+                           navigationController.popViewController(animated: true) != nil    {
+                            return
+                        }
+                        if viewController?.presentingViewController != nil {
+                            viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
+                        if let firstItem = base?.backForwardList.backList.first {
+                            base?.go(to: firstItem)
+                        }
+                    }
+                    leftItems.append(leftItem)
+                }
+            }
+        }
+        
+        var showClose = true
+        if navigationController.viewControllers.first == viewController,
+           navigationController.presentingViewController?.presentedViewController != navigationController {
+            showClose = false
+        }
+        viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+        observeProperty(\.canGoBack) { [weak viewController] webView, _ in
+            if webView.canGoBack {
+                viewController?.navigationItem.leftBarButtonItems = leftItems
+            } else {
+                viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+            }
+        }
     }
 }
 
@@ -103,8 +214,31 @@ extension Wrapper where Base: WKWebView {
 extension Wrapper where Base: UIProgressView {
     /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
     public var webProgress: Float {
-        get { return base.fw_webProgress }
-        set { base.fw_webProgress = newValue }
+        get {
+            return base.progress
+        }
+        set {
+            if newValue <= 0 {
+                base.alpha = 0
+            } else if newValue > 0 && newValue < 1.0 {
+                if base.alpha == 0 {
+                    base.progress = 0
+                    let strongBase = base
+                    UIView.animate(withDuration: 0.2) {
+                        strongBase.alpha = 1.0
+                    }
+                }
+            } else {
+                base.alpha = 1.0
+                let strongBase = base
+                UIView.animate(withDuration: 0.2) {
+                    strongBase.alpha = 0
+                } completion: { _ in
+                    strongBase.progress = 0
+                }
+            }
+            base.setProgress(newValue, animated: true)
+        }
     }
 }
 
@@ -147,290 +281,6 @@ extension WebViewDelegate {
 /// 4. 如果遇到Cookie丢失问题，可尝试开启cookieEnabled或自行设置Cookie等
 open class WebView: WKWebView {
     
-    private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
-        
-        // MARK: - WKNavigationDelegate
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            if let webView = webView as? WebView,
-               webView.cookieEnabled,
-               let request = navigationAction.request as? NSMutableURLRequest {
-                WebViewCookieManager.syncRequestCookie(request)
-            }
-            
-            if self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler) != nil {
-                return
-            }
-            
-            if let delegate = self.delegate,
-               !delegate.webViewShouldLoad(navigationAction) {
-                decisionHandler(.cancel)
-                return
-            }
-            
-            if UIApplication.fw_isSystemURL(navigationAction.request.url) {
-                UIApplication.fw_openURL(navigationAction.request.url)
-                decisionHandler(.cancel)
-                return
-            }
-            
-            if #available(iOS 14.5, *) {
-                if let webView = webView as? WebView,
-                   let url = navigationAction.request.url,
-                   webView.allowsDownloadUrl?(url) == true {
-                    decisionHandler(.download)
-                    return
-                }
-            }
-            
-            if let webView = webView as? WebView,
-               !webView.allowsUrlSchemes.isEmpty,
-               UIApplication.fw_isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
-                UIApplication.fw_openURL(navigationAction.request.url)
-                decisionHandler(.cancel)
-                return
-            }
-            
-            if let webView = webView as? WebView,
-               !webView.allowsRouterSchemes.isEmpty,
-               let url = navigationAction.request.url,
-               UIApplication.fw_isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
-                Router.openURL(url)
-                decisionHandler(.cancel)
-                return
-            }
-            
-            if let webView = webView as? WebView,
-               webView.allowsUniversalLinks,
-               navigationAction.request.url?.scheme == "https" {
-                UIApplication.fw_openUniversalLinks(navigationAction.request.url) { success in
-                    decisionHandler(success ? .cancel : .allow)
-                }
-                return
-            }
-            
-            decisionHandler(.allow)
-        }
-        
-        func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-            if let webView = webView as? WebView,
-               webView.cookieEnabled {
-                WebViewCookieManager.copyWebViewCookie(webView)
-            }
-            
-            if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler) != nil {
-                return
-            }
-            
-            if #available(iOS 14.5, *) {
-                if let webView = webView as? WebView,
-                   let url = navigationResponse.response.url,
-                   webView.allowsDownloadUrl?(url) == true {
-                    decisionHandler(.download)
-                    return
-                }
-            }
-            
-            decisionHandler(.allow)
-        }
-        
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            if self.delegate?.webView?(webView, didFinish: navigation) != nil {
-            } else {
-                self.delegate?.webViewFinishLoad()
-            }
-            
-            if let webView = webView as? WebView, webView.isFirstLoad,
-               !webView.fw_reusePreparing {
-                webView.isFirstLoad = false
-                webView.fw_preloadReusableView()
-            }
-            
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
-            }
-        }
-        
-        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            if self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error) != nil {
-                return
-            }
-            
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
-            }
-            
-            if (error as NSError).code == NSURLErrorCancelled { return }
-            self.delegate?.webViewFailLoad(error)
-        }
-        
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            if self.delegate?.webView?(webView, didFail: navigation, withError: error) != nil {
-                return
-            }
-            
-            if let webView = webView as? WebView, webView.fw_reusePreparing {
-                webView.reusableViewWillRecycle()
-                webView.fw_reusePreparing = false
-            }
-            
-            if (error as NSError).code == NSURLErrorCancelled { return }
-            self.delegate?.webViewFailLoad(error)
-        }
-        
-        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            if let webView = webView as? WebView {
-                webView.fw_reuseInvalid = true
-            }
-            
-            if self.delegate?.webViewWebContentProcessDidTerminate?(webView) != nil {
-                return
-            }
-            
-            // 默认调用reload解决内存过大引起的白屏问题，可重写
-            webView.reload()
-        }
-        
-        @available(iOS 14.5, *)
-        func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
-            if self.delegate?.webView?(webView, navigationAction: navigationAction, didBecome: download) != nil {
-                return
-            }
-            
-            download.delegate = self
-        }
-        
-        @available(iOS 14.5, *)
-        func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
-            if self.delegate?.webView?(webView, navigationResponse: navigationResponse, didBecome: download) != nil {
-                return
-            }
-            
-            download.delegate = self
-        }
-        
-        func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-            if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: completionHandler) != nil {
-                return
-            }
-            
-            if let webView = webView as? WebView, webView.allowsArbitraryLoads,
-               challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-                if let serverTrust = challenge.protectionSpace.serverTrust {
-                    let credential = URLCredential(trust: serverTrust)
-                    completionHandler(.useCredential, credential)
-                } else {
-                    completionHandler(.useCredential, nil)
-                }
-                return
-            }
-            
-            completionHandler(.performDefaultHandling, nil)
-        }
-        
-        // MARK: - WKUIDelegate
-        func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-            if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-                return
-            }
-            
-            webView.fw_showAlert(title: nil, message: message, cancel: nil) {
-                completionHandler()
-            }
-        }
-        
-        func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-            if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-                return
-            }
-            
-            webView.fw_showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
-                completionHandler(true)
-            } cancelBlock: {
-                completionHandler(false)
-            }
-        }
-        
-        func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-            if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-                return
-            }
-            
-            webView.fw_showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
-                textField.text = defaultText
-            } confirmBlock: { text in
-                completionHandler(text)
-            } cancelBlock: {
-                completionHandler(nil)
-            }
-        }
-        
-        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-            if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:createWebViewWith:for:windowFeatures:))) ?? false {
-                return self.delegate?.webView?(webView, createWebViewWith: configuration, for: navigationAction, windowFeatures: windowFeatures)
-            }
-            
-            if !(navigationAction.targetFrame?.isMainFrame ?? false) {
-                if let webView = webView as? WebView, webView.cookieEnabled {
-                    webView.load(WebViewCookieManager.fixRequest(navigationAction.request))
-                } else {
-                    webView.load(navigationAction.request)
-                }
-            }
-            return nil
-        }
-        
-        func webViewDidClose(_ webView: WKWebView) {
-            if self.delegate?.webViewDidClose?(webView) != nil {
-                return
-            }
-            
-            if let webView = webView as? WebView, webView.allowsWindowClose {
-                webView.fw_viewController?.fw_close()
-            }
-        }
-        
-        // MARK: - WKDownloadDelegate
-        @available(iOS 14.5, *)
-        func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
-            let downloadDelegate = self.delegate as? WKDownloadDelegate
-            if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
-                return
-            }
-            
-            let fileExt = (suggestedFilename as NSString).pathExtension
-            var fileName = (suggestedFilename as NSString).deletingPathExtension
-            fileName = (UUID().uuidString + fileName).fw_md5Encode
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
-            download.fw_setProperty(url, forName: "downloadUrl")
-            completionHandler(url)
-        }
-        
-        @available(iOS 14.5, *)
-        func downloadDidFinish(_ download: WKDownload) {
-            let downloadDelegate = self.delegate as? WKDownloadDelegate
-            if downloadDelegate?.downloadDidFinish?(download) != nil {
-                return
-            }
-            
-            guard let url = download.fw_property(forName: "downloadUrl") as? URL else {
-                return
-            }
-            
-            DispatchQueue.fw_mainAsync {
-                if let presentedController = download.webView?.fw_viewController?.presentedViewController {
-                    presentedController.dismiss(animated: true) {
-                        UIApplication.fw_openActivityItems([url])
-                    }
-                } else {
-                    UIApplication.fw_openActivityItems([url])
-                }
-            }
-        }
-        
-    }
-    
     /// 事件代理，包含navigationDelegate和UIDelegate
     open weak var delegate: WebViewDelegate? {
         get { return delegateProxy.delegate }
@@ -448,7 +298,7 @@ open class WebView: WKWebView {
     open private(set) lazy var progressView: UIProgressView = {
         let result = UIProgressView(frame: .zero)
         result.trackTintColor = .clear
-        result.fw_webProgress = 0
+        result.fw.webProgress = 0
         return result
     }()
     
@@ -478,7 +328,7 @@ open class WebView: WKWebView {
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     open var webRequest: Any? {
         didSet {
-            fw_loadRequest(webRequest)
+            fw.loadRequest(webRequest)
         }
     }
     
@@ -499,7 +349,7 @@ open class WebView: WKWebView {
     }
     
     public convenience init(frame: CGRect) {
-        let configuration = WKWebView.fw_defaultConfiguration()
+        let configuration = WKWebView.fw.defaultConfiguration()
         self.init(frame: frame, configuration: configuration)
     }
     
@@ -519,14 +369,14 @@ open class WebView: WKWebView {
         #endif
         
         addSubview(progressView)
-        progressView.fw_pinEdges(excludingEdge: .bottom)
-        progressView.fw_setDimension(.height, size: 2.0)
+        progressView.fw.pinEdges(excludingEdge: .bottom)
+        progressView.fw.setDimension(.height, size: 2.0)
         fw.observeProperty(\.estimatedProgress) { webView, _ in
-            webView.progressView.fw_webProgress = Float(webView.estimatedProgress)
+            webView.progressView.fw.webProgress = Float(webView.estimatedProgress)
         }
         fw.observeProperty(\.isLoading) { webView, _ in
-            if !webView.isLoading && webView.progressView.fw_webProgress < 1.0 {
-                webView.progressView.fw_webProgress = 1.0
+            if !webView.isLoading && webView.progressView.fw.webProgress < 1.0 {
+                webView.progressView.fw.webProgress = 1.0
             }
         }
     }
@@ -562,16 +412,16 @@ open class WebView: WKWebView {
         
         super.reusableViewWillRecycle()
         
-        if fw_reusedTimes < 1,
-           !fw_reusePreparing,
-           let reuseIdentifier = fw_reuseIdentifier,
+        if fw.reusedTimes < 1,
+           !fw.reusePreparing,
+           let reuseIdentifier = fw.reuseIdentifier,
            !WebView.preloadedReuseIdentifiers.contains(reuseIdentifier),
            let preloadUrl = WebView.reusePreloadUrlBlock?(reuseIdentifier) {
             WebView.preloadedReuseIdentifiers.append(reuseIdentifier)
             
-            fw_reusePreparing = true
+            fw.reusePreparing = true
             reusableViewWillReuse()
-            fw_loadRequest(preloadUrl)
+            fw.loadRequest(preloadUrl)
         }
     }
     
@@ -822,7 +672,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         removeScriptMessageHandlers()
         
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
     }
     
@@ -919,11 +769,11 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     // MARK: - Private
     private func getClassBridges(_ clazz: Any, mapper: (([String]) -> [String: String])?) -> [String: String] {
-        guard let metaClass = NSObject.fw_metaClass(clazz) else {
+        guard let metaClass = NSObject.fw.metaClass(clazz) else {
             return [:]
         }
         
-        let methods = NSObject.fw_classMethods(metaClass)
+        let methods = NSObject.fw.classMethods(metaClass)
         if let mapper = mapper {
             return mapper(methods)
         }
@@ -1095,7 +945,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
-        Logger.debug(group: Logger.fw_moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
     }
     
@@ -1252,19 +1102,16 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
 }
 
 // MARK: - WKWebView+WebView
-@_spi(FW) extension WKWebView {
+extension WKWebView {
+    
+    fileprivate static var innerProcessPool = WKProcessPool()
     
     // MARK: - ReusableViewProtocol
-    /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
-    public class var fw_reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return self.fw_property(forName: "fw_reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
-        set { self.fw_setPropertyCopy(newValue, forName: "fw_reuseConfigurationBlock") }
-    }
-    
     /// 初始化WKWebView可重用视图
     open override class func reusableViewInitialize(reuseIdentifier: String) -> Self {
-        let configuration = WKWebView.fw_defaultConfiguration()
-        self.fw_reuseConfigurationBlock?(configuration, reuseIdentifier)
+        let configuration = WKWebView.fw.defaultConfiguration()
+        let reuseBlock = NSObject.fw.getAssociatedObject(self, key: #function) as? (WKWebViewConfiguration, String) -> Void
+        reuseBlock?(configuration, reuseIdentifier)
         return self.init(frame: .zero, configuration: configuration)
     }
     
@@ -1272,10 +1119,10 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     open override func reusableViewWillRecycle() {
         super.reusableViewWillRecycle()
         
-        fw_jsBridge = nil
-        fw_jsBridgeEnabled = false
-        fw_navigationItems = nil
-        guard fw_reusedTimes > 0 else { return }
+        fw.jsBridge = nil
+        fw.jsBridgeEnabled = false
+        fw.navigationItems = nil
+        guard fw.reusedTimes > 0 else { return }
         
         scrollView.delegate = nil
         scrollView.isScrollEnabled = true
@@ -1290,228 +1137,291 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     open override func reusableViewWillReuse() {
         super.reusableViewWillReuse()
         
-        fw_clearBackForwardList()
-    }
-    
-    // MARK: - WebView
-    /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
-    public static var fw_processPool = WKProcessPool()
-    
-    /// 快捷创建WKWebView默认配置，自动初始化User-Agent和共享processPool
-    public static func fw_defaultConfiguration() -> WKWebViewConfiguration {
-        let configuration = WKWebViewConfiguration()
-        configuration.applicationNameForUserAgent = fw_extensionUserAgent
-        configuration.processPool = fw_processPool
-        return configuration
-    }
-    
-    /// 获取默认浏览器UserAgent，包含应用信息，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/605.1.15 Example/1.0.0
-    public static var fw_browserUserAgent: String {
-        let platformUserAgent = String(format: "Mozilla/5.0 (%@; CPU OS %@ like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)", UIDevice.current.model, UIDevice.current.systemVersion.replacingOccurrences(of: ".", with: "_"))
-        let userAgent = String(format: "%@ %@", platformUserAgent, fw_extensionUserAgent)
-        return userAgent
-    }
-
-    /// 获取默认浏览器扩展UserAgent，不含平台信息，可用于applicationNameForUserAgent，示例：Mobile/15E148 Safari/605.1.15 Example/1.0.0
-    public static var fw_extensionUserAgent: String {
-        let userAgent = String(format: "Mobile/15E148 Safari/605.1.15 %@/%@", UIApplication.fw_appExecutable, UIApplication.fw_appVersion)
-        return userAgent
-    }
-
-    /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
-    public static var fw_requestUserAgent: String {
-        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw_appExecutable, UIApplication.fw_appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
-        return userAgent
-    }
-    
-    /// 获取当前UserAgent，未自定义时为默认，示例：Mozilla/5.0 (iPhone; CPU OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-    public var fw_userAgent: String {
-        if let userAgent = customUserAgent, !userAgent.isEmpty {
-            return userAgent
-        }
-        if let userAgent = fw_invokeGetter("userAgent") as? String, !userAgent.isEmpty {
-            return userAgent
-        }
-        return WKWebView.fw_browserUserAgent
-    }
-    
-    /// 加载网页请求，支持String|URL|URLRequest等
-    @discardableResult
-    public func fw_loadRequest(_ request: Any?) -> WKNavigation? {
-        guard let request = request else { return nil }
-        if let urlRequest = request as? URLRequest {
-            return load(urlRequest)
-        }
-        
-        var requestUrl = request as? URL
-        if requestUrl == nil, let urlString = request as? String {
-            requestUrl = URL.fw_url(string: urlString)
-        }
-        guard let requestUrl = requestUrl else { return nil }
-        
-        if requestUrl.isFileURL {
-            if let htmlString = try? String(contentsOf: requestUrl, encoding: .utf8) {
-                return loadHTMLString(htmlString, baseURL: requestUrl)
-            }
-        } else {
-            return load(URLRequest(url: requestUrl))
-        }
-        return nil
-    }
-    
-    /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
-    public static func fw_clearCache(_ completion: (() -> Void)? = nil) {
-        let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
-        let sinceDate = Date(timeIntervalSince1970: 0)
-        WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
-            completion?()
-        }
-    }
-    
-    /// 清空WebView后退和前进的网页栈
-    public func fw_clearBackForwardList() {
-        let selector = NSSelectorFromString(String(format: "%@%@%@", "_r", "emoveA", "llItems"))
-        if backForwardList.responds(to: selector) {
-            backForwardList.perform(selector)
-        }
-    }
-    
-    /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
-    public static func fw_evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
-        var javascript = script
-        if !variables.isEmpty {
-            for (key, value) in variables {
-                javascript = javascript.replacingOccurrences(of: key, with: value)
-            }
-        }
-        
-        let context = JSContext()
-        let value = context?.evaluateScript(javascript)
-        return value
-    }
-    
-    /// 设置Javascript桥接器强引用属性，防止使用过程中被释放
-    public var fw_jsBridge: WebViewJSBridge? {
-        get { fw_property(forName: "fw_jsBridge") as? WebViewJSBridge }
-        set { fw_setProperty(newValue, forName: "fw_jsBridge") }
-    }
-    
-    /// 是否启用Javascript桥接器，需结合setupJsBridge使用
-    public var fw_jsBridgeEnabled: Bool {
-        get { fw_propertyBool(forName: "fw_jsBridgeEnabled") }
-        set { fw_setPropertyBool(newValue, forName: "fw_jsBridgeEnabled") }
-    }
-    
-    /// 自动初始化Javascript桥接器，jsBridgeEnabled开启时生效
-    @discardableResult
-    public func fw_setupJsBridge() -> WebViewJSBridge? {
-        guard fw_jsBridgeEnabled else { return nil }
-        let jsBridge = WebViewJSBridge(webView: self)
-        self.fw_jsBridge = jsBridge
-        return jsBridge
-    }
-    
-    /// 绑定控制器导航栏左侧按钮组，需结合setupNavigationItems使用
-    public var fw_navigationItems: [Any]? {
-        get { fw_property(forName: "fw_navigationItems") as? [Any] }
-        set { fw_setProperty(newValue, forName: "fw_navigationItems") }
-    }
-    
-    /// 自动初始化控制器导航栏左侧按钮组，navigationItems设置后生效
-    public func fw_setupNavigationItems(_ viewController: UIViewController) {
-        guard let navigationItems = fw_navigationItems,
-              !navigationItems.isEmpty,
-              let navigationController = viewController.navigationController else { return }
-        
-        var leftItems: [UIBarButtonItem] = []
-        for (i, navigationItem) in navigationItems.enumerated() {
-            if let leftItem = navigationItem as? UIBarButtonItem {
-                leftItems.append(leftItem)
-            } else {
-                if i == 0 {
-                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
-                        if self?.canGoBack ?? false {
-                            self?.goBack()
-                        } else {
-                            if let navigationController = viewController?.navigationController,
-                               navigationController.popViewController(animated: true) != nil    {
-                                return
-                            }
-                            if viewController?.presentingViewController != nil {
-                                viewController?.dismiss(animated: true, completion: nil)
-                                return
-                            }
-                            
-                            if let firstItem = self?.backForwardList.backList.first {
-                                self?.go(to: firstItem)
-                            }
-                        }
-                    }
-                    leftItems.append(leftItem)
-                } else {
-                    let leftItem = UIBarButtonItem.fw_item(object: navigationItem) { [weak self, weak viewController] _ in
-                        if let navigationController = viewController?.navigationController,
-                           navigationController.popViewController(animated: true) != nil    {
-                            return
-                        }
-                        if viewController?.presentingViewController != nil {
-                            viewController?.dismiss(animated: true, completion: nil)
-                            return
-                        }
-                        
-                        if let firstItem = self?.backForwardList.backList.first {
-                            self?.go(to: firstItem)
-                        }
-                    }
-                    leftItems.append(leftItem)
-                }
-            }
-        }
-        
-        var showClose = true
-        if navigationController.viewControllers.first == viewController,
-           navigationController.presentingViewController?.presentedViewController != navigationController {
-            showClose = false
-        }
-        viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
-        fw.observeProperty(\.canGoBack) { [weak viewController] webView, _ in
-            if webView.canGoBack {
-                viewController?.navigationItem.leftBarButtonItems = leftItems
-            } else {
-                viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
-            }
-        }
+        fw.clearBackForwardList()
     }
     
 }
 
-// MARK: - UIProgressView+WebView
-@_spi(FW) extension UIProgressView {
+// MARK: - WebViewDelegateProxy
+fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
     
-    /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
-    public var fw_webProgress: Float {
-        get {
-            return self.progress
+    // MARK: - WKNavigationDelegate
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let webView = webView as? WebView,
+           webView.cookieEnabled,
+           let request = navigationAction.request as? NSMutableURLRequest {
+            WebViewCookieManager.syncRequestCookie(request)
         }
-        set {
-            if newValue <= 0 {
-                self.alpha = 0
-            } else if newValue > 0 && newValue < 1.0 {
-                if self.alpha == 0 {
-                    self.progress = 0
-                    UIView.animate(withDuration: 0.2) {
-                        self.alpha = 1.0
-                    }
+        
+        if self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler) != nil {
+            return
+        }
+        
+        if let delegate = self.delegate,
+           !delegate.webViewShouldLoad(navigationAction) {
+            decisionHandler(.cancel)
+            return
+        }
+        
+        if UIApplication.fw.isSystemURL(navigationAction.request.url) {
+            UIApplication.fw.openURL(navigationAction.request.url)
+            decisionHandler(.cancel)
+            return
+        }
+        
+        if #available(iOS 14.5, *) {
+            if let webView = webView as? WebView,
+               let url = navigationAction.request.url,
+               webView.allowsDownloadUrl?(url) == true {
+                decisionHandler(.download)
+                return
+            }
+        }
+        
+        if let webView = webView as? WebView,
+           !webView.allowsUrlSchemes.isEmpty,
+           UIApplication.fw.isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
+            UIApplication.fw.openURL(navigationAction.request.url)
+            decisionHandler(.cancel)
+            return
+        }
+        
+        if let webView = webView as? WebView,
+           !webView.allowsRouterSchemes.isEmpty,
+           let url = navigationAction.request.url,
+           UIApplication.fw.isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
+            Router.openURL(url)
+            decisionHandler(.cancel)
+            return
+        }
+        
+        if let webView = webView as? WebView,
+           webView.allowsUniversalLinks,
+           navigationAction.request.url?.scheme == "https" {
+            UIApplication.fw.openUniversalLinks(navigationAction.request.url) { success in
+                decisionHandler(success ? .cancel : .allow)
+            }
+            return
+        }
+        
+        decisionHandler(.allow)
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if let webView = webView as? WebView,
+           webView.cookieEnabled {
+            WebViewCookieManager.copyWebViewCookie(webView)
+        }
+        
+        if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler) != nil {
+            return
+        }
+        
+        if #available(iOS 14.5, *) {
+            if let webView = webView as? WebView,
+               let url = navigationResponse.response.url,
+               webView.allowsDownloadUrl?(url) == true {
+                decisionHandler(.download)
+                return
+            }
+        }
+        
+        decisionHandler(.allow)
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if self.delegate?.webView?(webView, didFinish: navigation) != nil {
+        } else {
+            self.delegate?.webViewFinishLoad()
+        }
+        
+        if let webView = webView as? WebView, webView.isFirstLoad,
+           !webView.fw.reusePreparing {
+            webView.isFirstLoad = false
+            webView.fw.preloadReusableView()
+        }
+        
+        if let webView = webView as? WebView, webView.fw.reusePreparing {
+            webView.reusableViewWillRecycle()
+            webView.fw.reusePreparing = false
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        if self.delegate?.webView?(webView, didFailProvisionalNavigation: navigation, withError: error) != nil {
+            return
+        }
+        
+        if let webView = webView as? WebView, webView.fw.reusePreparing {
+            webView.reusableViewWillRecycle()
+            webView.fw.reusePreparing = false
+        }
+        
+        if (error as NSError).code == NSURLErrorCancelled { return }
+        self.delegate?.webViewFailLoad(error)
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        if self.delegate?.webView?(webView, didFail: navigation, withError: error) != nil {
+            return
+        }
+        
+        if let webView = webView as? WebView, webView.fw.reusePreparing {
+            webView.reusableViewWillRecycle()
+            webView.fw.reusePreparing = false
+        }
+        
+        if (error as NSError).code == NSURLErrorCancelled { return }
+        self.delegate?.webViewFailLoad(error)
+    }
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        if let webView = webView as? WebView {
+            webView.fw.reuseInvalid = true
+        }
+        
+        if self.delegate?.webViewWebContentProcessDidTerminate?(webView) != nil {
+            return
+        }
+        
+        // 默认调用reload解决内存过大引起的白屏问题，可重写
+        webView.reload()
+    }
+    
+    @available(iOS 14.5, *)
+    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        if self.delegate?.webView?(webView, navigationAction: navigationAction, didBecome: download) != nil {
+            return
+        }
+        
+        download.delegate = self
+    }
+    
+    @available(iOS 14.5, *)
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        if self.delegate?.webView?(webView, navigationResponse: navigationResponse, didBecome: download) != nil {
+            return
+        }
+        
+        download.delegate = self
+    }
+    
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: completionHandler) != nil {
+            return
+        }
+        
+        if let webView = webView as? WebView, webView.allowsArbitraryLoads,
+           challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+            if let serverTrust = challenge.protectionSpace.serverTrust {
+                let credential = URLCredential(trust: serverTrust)
+                completionHandler(.useCredential, credential)
+            } else {
+                completionHandler(.useCredential, nil)
+            }
+            return
+        }
+        
+        completionHandler(.performDefaultHandling, nil)
+    }
+    
+    // MARK: - WKUIDelegate
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+        if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
+            return
+        }
+        
+        webView.fw.showAlert(title: nil, message: message, cancel: nil) {
+            completionHandler()
+        }
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
+            return
+        }
+        
+        webView.fw.showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
+            completionHandler(true)
+        } cancelBlock: {
+            completionHandler(false)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+        if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
+            return
+        }
+        
+        webView.fw.showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
+            textField.text = defaultText
+        } confirmBlock: { text in
+            completionHandler(text)
+        } cancelBlock: {
+            completionHandler(nil)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if self.delegate?.responds(to: #selector(WebViewDelegate.webView(_:createWebViewWith:for:windowFeatures:))) ?? false {
+            return self.delegate?.webView?(webView, createWebViewWith: configuration, for: navigationAction, windowFeatures: windowFeatures)
+        }
+        
+        if !(navigationAction.targetFrame?.isMainFrame ?? false) {
+            if let webView = webView as? WebView, webView.cookieEnabled {
+                webView.load(WebViewCookieManager.fixRequest(navigationAction.request))
+            } else {
+                webView.load(navigationAction.request)
+            }
+        }
+        return nil
+    }
+    
+    func webViewDidClose(_ webView: WKWebView) {
+        if self.delegate?.webViewDidClose?(webView) != nil {
+            return
+        }
+        
+        if let webView = webView as? WebView, webView.allowsWindowClose {
+            webView.fw.viewController?.fw.close()
+        }
+    }
+    
+    // MARK: - WKDownloadDelegate
+    @available(iOS 14.5, *)
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        let downloadDelegate = self.delegate as? WKDownloadDelegate
+        if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
+            return
+        }
+        
+        let fileExt = (suggestedFilename as NSString).pathExtension
+        var fileName = (suggestedFilename as NSString).deletingPathExtension
+        fileName = (UUID().uuidString + fileName).fw.md5Encode
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
+        download.fw.setProperty(url, forName: "downloadUrl")
+        completionHandler(url)
+    }
+    
+    @available(iOS 14.5, *)
+    func downloadDidFinish(_ download: WKDownload) {
+        let downloadDelegate = self.delegate as? WKDownloadDelegate
+        if downloadDelegate?.downloadDidFinish?(download) != nil {
+            return
+        }
+        
+        guard let url = download.fw.property(forName: "downloadUrl") as? URL else {
+            return
+        }
+        
+        DispatchQueue.fw.mainAsync {
+            if let presentedController = download.webView?.fw.viewController?.presentedViewController {
+                presentedController.dismiss(animated: true) {
+                    UIApplication.fw.openActivityItems([url])
                 }
             } else {
-                self.alpha = 1.0
-                UIView.animate(withDuration: 0.2) {
-                    self.alpha = 0
-                } completion: { _ in
-                    self.progress = 0
-                }
+                UIApplication.fw.openActivityItems([url])
             }
-            self.setProgress(newValue, animated: true)
         }
     }
     

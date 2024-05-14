@@ -362,7 +362,7 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
         backgroundColor = .clear
         contentView.addSubview(zoomImageView)
         contentViewBounds = contentView.bounds
-        zoomImageView.fw_frameApplyTransform = contentView.bounds
+        zoomImageView.fw.frameApplyTransform = contentView.bounds
     }
     
     required init?(coder: NSCoder) {
@@ -374,7 +374,7 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
         
         if !contentView.bounds.equalTo(contentViewBounds) {
             contentViewBounds = contentView.bounds
-            zoomImageView.fw_frameApplyTransform = contentView.bounds
+            zoomImageView.fw.frameApplyTransform = contentView.bounds
         }
     }
     
@@ -515,18 +515,18 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        imagePreviewView.fw_frameApplyTransform = view.bounds
+        imagePreviewView.fw.frameApplyTransform = view.bounds
         if (pageLabel.text?.count ?? 0) < 1 && imagePreviewView.imageCount > 0 {
             updatePageLabel()
         }
-        let pageLabelCenter = self.pageLabelCenter?() ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - (UIScreen.fw_safeAreaInsets.bottom + 18))
+        let pageLabelCenter = self.pageLabelCenter?() ?? CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - (UIScreen.fw.safeAreaInsets.bottom + 18))
         pageLabel.center = pageLabelCenter
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if fw_isPresented {
+        if fw.isPresented {
             initObjectsForZoomStyleIfNeeded()
         }
         imagePreviewView.collectionView.reloadData()
@@ -537,7 +537,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         super.viewDidAppear(animated)
         useOriginalStatusBarHidden = false
         
-        if fw_isPresented {
+        if fw.isPresented {
             statusBarHidden = true
         }
         setNeedsStatusBarAppearanceUpdate()
@@ -589,7 +589,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     
     /// 处理单击关闭事件，子类可重写
     open func dismissingWhenTapped(_ zoomImageView: ZoomImageView) {
-        guard fw_isPresented else { return }
+        guard fw.isPresented else { return }
         
         var shouldDismiss = false
         if zoomImageView.videoPlayerItem != nil {
@@ -748,7 +748,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     /// 当 sourceImageView 本身带圆角时，动画过程中会通过这个 layer 来处理圆角的动画
     open lazy var cornerRadiusMaskLayer: CALayer = {
         let result = CALayer()
-        result.fw_removeDefaultAnimations()
+        result.fw.removeDefaultAnimations()
         result.backgroundColor = UIColor.white.cgColor
         return result
     }()

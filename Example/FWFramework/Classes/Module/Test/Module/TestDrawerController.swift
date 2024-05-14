@@ -221,7 +221,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         guard let cgImage = image?.cgImage else { return }
         
         UIWindow.app.showLoading()
-        Detector.recognizeText(in: cgImage) { request in
+        Recognizer.recognizeText(in: cgImage) { request in
             request.recognitionLanguages = ["zh-CN", "en-US"]
             request.usesLanguageCorrection = true
         } completion: { results in

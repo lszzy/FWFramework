@@ -105,7 +105,7 @@ open class TagCollectionView: UIView {
         return result
     }()
     
-    private lazy var containerView: UIView = {
+    @_spi(FW) open lazy var containerView: UIView = {
         let result = UIView(frame: scrollView.bounds)
         result.backgroundColor = .clear
         result.isUserInteractionEnabled = true
@@ -166,7 +166,7 @@ open class TagCollectionView: UIView {
         setNeedsLayoutTagViews()
         layoutTagViews()
         
-        fw_statisticalCheckExposure()
+        BannerView.trackExposureBlock?(self)
     }
     
     open func indexOfTagAt(_ point: CGPoint) -> Int? {
@@ -201,11 +201,11 @@ open class TagCollectionView: UIView {
                 if let shouldSelect = delegate.tagCollectionView?(self, shouldSelectTag: tagView, at: i) {
                     if shouldSelect {
                         delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                        fw_statisticalTrackClick(indexPath: IndexPath(row: i, section: 0), event: nil)
+                        _ = BannerView.trackClickBlock?(self, IndexPath(row: i, section: 0))
                     }
                 } else {
                     delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                    fw_statisticalTrackClick(indexPath: IndexPath(row: i, section: 0), event: nil)
+                    _ = BannerView.trackClickBlock?(self, IndexPath(row: i, section: 0))
                 }
             }
         }
@@ -426,20 +426,6 @@ open class TagCollectionView: UIView {
         return delegate != nil && dataSource != nil
     }
     
-    // MARK: - StatisticalViewProtocol
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        return true
-    }
-    
-    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        var indexPaths: [IndexPath] = []
-        let subviewsCount = containerView.subviews.count
-        for idx in 0..<subviewsCount {
-            indexPaths.append(IndexPath(row: idx, section: 0))
-        }
-        return indexPaths
-    }
-    
 }
 
 open class TextTagConfig: NSObject, NSCopying {
@@ -616,7 +602,7 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
         return tagCollectionView.scrollView
     }
     
-    private lazy var tagCollectionView: TagCollectionView = {
+    @_spi(FW) open lazy var tagCollectionView: TagCollectionView = {
         let result = TagCollectionView(frame: bounds)
         result.delegate = self
         result.dataSource = self
@@ -845,7 +831,7 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
         delegate?.textTagCollectionView?(self, didTapTag: label.label.text ?? "", at: index, selected: label.selected, tagConfig: label.config)
         onTapTag?(label.label.text ?? "", index, label.selected)
         
-        fw_statisticalTrackClick(indexPath: IndexPath(row: index, section: 0), event: nil)
+        _ = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0))
     }
     
     open func tagCollectionView(_ tagCollectionView: TagCollectionView, sizeForTagAt index: Int) -> CGSize {
@@ -875,15 +861,6 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
     private func newLabel(for tagText: String, config: TextTagConfig) -> TextTagLabel {
         let label = TextTagLabel(tagText: tagText, config: config)
         return label
-    }
-    
-    // MARK: - StatisticalViewProtocol
-    open override func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool {
-        return true
-    }
-    
-    open override func statisticalViewVisibleIndexPaths() -> [IndexPath]? {
-        return tagCollectionView.statisticalViewVisibleIndexPaths()
     }
     
 }

@@ -91,7 +91,7 @@ open class ToastView: UIControl {
                 touchEnabled = true
                 
                 contentView.isUserInteractionEnabled = true
-                contentView.fw_addTapGesture { [weak self] _ in
+                contentView.fw.addTapGesture { [weak self] _ in
                     if let cancelBlock = self?.cancelBlock {
                         self?.hide()
                         cancelBlock()
@@ -124,7 +124,7 @@ open class ToastView: UIControl {
     
     /// 指示器视图，可自定义，仅Indicator生效
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
-        let result = UIView.fw_indicatorView(style: .toast)
+        let result = UIView.fw.indicatorView(style: .toast)
         result.isUserInteractionEnabled = false
         return result
     }() {
@@ -140,7 +140,7 @@ open class ToastView: UIControl {
     
     /// 进度条视图，可自定义，仅Progress生效
     open lazy var progressView: UIView & ProgressViewPlugin = {
-        let result = UIView.fw_progressView(style: .toast)
+        let result = UIView.fw.progressView(style: .toast)
         result.isUserInteractionEnabled = false
         return result
     }() {
@@ -366,7 +366,7 @@ open class ToastView: UIControl {
     open func hide(afterDelay delay: TimeInterval, completion: (() -> Void)? = nil) -> Bool {
         if superview != nil {
             invalidateTimer()
-            hideTimer = Timer.fw_commonTimer(timeInterval: delay, block: { [weak self] _ in
+            hideTimer = Timer.fw.commonTimer(timeInterval: delay, block: { [weak self] _ in
                 let hideSuccess = self?.hide() ?? false
                 if hideSuccess {
                     completion?()

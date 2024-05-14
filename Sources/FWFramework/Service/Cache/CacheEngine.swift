@@ -120,11 +120,11 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     
     // MARK: - Archive
     open func archivedData(_ object: Any) -> Data? {
-        return Data.fw_archivedData(object)
+        return Data.fw.archivedData(object)
     }
     
     open func unarchivedObject(_ data: Data) -> Any? {
-        return data.fw_unarchivedObject()
+        return data.fw.unarchivedObject()
     }
     
     // MARK: - CacheEngineProtocol

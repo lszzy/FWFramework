@@ -113,7 +113,7 @@ open class ToolbarView: UIView {
     open lazy var backgroundView: UIImageView = {
         let result = UIImageView()
         result.clipsToBounds = true
-        result.fw_autoScaleLayout = false
+        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -121,12 +121,12 @@ open class ToolbarView: UIView {
     open lazy var topView: UIView = {
         let result = UIView()
         result.clipsToBounds = true
-        result.fw_autoScaleLayout = false
+        result.fw.autoScaleLayout = false
         addSubview(result)
         
-        result.fw_pinHorizontal()
-        result.fw_pinEdge(toSuperview: .top)
-        result.fw_pinEdge(.bottom, toEdge: .top, ofView: menuView)
+        result.fw.pinHorizontal()
+        result.fw.pinEdge(toSuperview: .top)
+        result.fw.pinEdge(.bottom, toEdge: .top, ofView: menuView)
         return result
     }()
     
@@ -135,7 +135,7 @@ open class ToolbarView: UIView {
         let result = ToolbarMenuView()
         result.equalWidth = (type == .tabBar)
         result.titleView = (type == .navBar) ? ToolbarTitleView() : nil
-        result.fw_autoScaleLayout = false
+        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -143,12 +143,12 @@ open class ToolbarView: UIView {
     open lazy var bottomView: UIView = {
         let result = UIView()
         result.clipsToBounds = true
-        result.fw_autoScaleLayout = false
+        result.fw.autoScaleLayout = false
         addSubview(result)
         
-        result.fw_pinHorizontal()
-        result.fw_pinEdge(toSuperview: .bottom)
-        result.fw_pinEdge(.top, toEdge: .bottom, ofView: menuView)
+        result.fw.pinHorizontal()
+        result.fw.pinEdge(toSuperview: .bottom)
+        result.fw.pinEdge(.top, toEdge: .bottom, ofView: menuView)
         return result
     }()
     
@@ -178,28 +178,28 @@ open class ToolbarView: UIView {
         
         addSubview(backgroundView)
         addSubview(menuView)
-        backgroundView.fw_pinEdges()
-        menuView.fw_pinHorizontal()
-        menuView.fw_pinEdge(toSuperview: .top, inset: topHeight)
-        menuView.fw_pinEdge(toSuperview: .bottom, inset: bottomHeight)
-        menuView.fw_setDimension(.height, size: menuHeight)
+        backgroundView.fw.pinEdges()
+        menuView.fw.pinHorizontal()
+        menuView.fw.pinEdge(toSuperview: .top, inset: topHeight)
+        menuView.fw.pinEdge(toSuperview: .bottom, inset: bottomHeight)
+        menuView.fw.setDimension(.height, size: menuHeight)
     }
     
     private func updateHeight(_ isFirst: Bool) {
         switch type {
         case .navBar:
-            topHeight = UIScreen.fw_statusBarHeight
-            menuHeight = UIScreen.fw_navigationBarHeight
+            topHeight = UIScreen.fw.statusBarHeight
+            menuHeight = UIScreen.fw.navigationBarHeight
         case .tabBar:
-            menuHeight = UIScreen.fw_tabBarHeight - UIScreen.fw_safeAreaInsets.bottom
-            bottomHeight = UIScreen.fw_safeAreaInsets.bottom
+            menuHeight = UIScreen.fw.tabBarHeight - UIScreen.fw.safeAreaInsets.bottom
+            bottomHeight = UIScreen.fw.safeAreaInsets.bottom
         case .custom:
             if isFirst {
                 menuHeight = 44
             }
         default:
-            menuHeight = UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom
-            bottomHeight = UIScreen.fw_safeAreaInsets.bottom
+            menuHeight = UIScreen.fw.toolBarHeight - UIScreen.fw.safeAreaInsets.bottom
+            bottomHeight = UIScreen.fw.safeAreaInsets.bottom
         }
     }
     
@@ -217,7 +217,7 @@ open class ToolbarView: UIView {
     open override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         
-        let isLandscape = UIDevice.fw_isLandscape
+        let isLandscape = UIDevice.fw.isLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             updateHeight(false)
@@ -229,9 +229,9 @@ open class ToolbarView: UIView {
         super.updateConstraints()
         
         let toolbarHidden = self.isHidden || self.toolbarHidden
-        menuView.fw_pinEdge(toSuperview: .top, inset: toolbarHidden || topHidden ? 0 : topHeight)
-        menuView.fw_pinEdge(toSuperview: .bottom, inset: toolbarHidden || bottomHidden ? 0 : bottomHeight)
-        menuView.fw_setDimension(.height, size: toolbarHidden || menuHidden ? 0 : menuHeight)
+        menuView.fw.pinEdge(toSuperview: .top, inset: toolbarHidden || topHidden ? 0 : topHeight)
+        menuView.fw.pinEdge(toSuperview: .bottom, inset: toolbarHidden || bottomHidden ? 0 : bottomHeight)
+        menuView.fw.setDimension(.height, size: toolbarHidden || menuHidden ? 0 : menuHeight)
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -299,7 +299,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let leftButton = leftButton {
                 addSubview(leftButton)
-                leftButton.fw_autoScaleLayout = false
+                leftButton.fw.autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -313,7 +313,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let leftMoreButton = leftMoreButton {
                 addSubview(leftMoreButton)
-                leftMoreButton.fw_autoScaleLayout = false
+                leftMoreButton.fw.autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -327,7 +327,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let centerButton = centerButton {
                 addSubview(centerButton)
-                centerButton.fw_autoScaleLayout = false
+                centerButton.fw.autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -341,7 +341,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let rightMoreButton = rightMoreButton {
                 addSubview(rightMoreButton)
-                rightMoreButton.fw_autoScaleLayout = false
+                rightMoreButton.fw.autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -355,7 +355,7 @@ open class ToolbarMenuView: UIView {
             oldValue?.removeFromSuperview()
             if let rightButton = rightButton {
                 addSubview(rightButton)
-                rightButton.fw_autoScaleLayout = false
+                rightButton.fw.autoScaleLayout = false
             }
             setNeedsUpdateConstraints()
         }
@@ -439,14 +439,14 @@ open class ToolbarMenuView: UIView {
         super.init(frame: frame)
         
         clipsToBounds = true
-        fw_autoScaleLayout = false
+        fw.autoScaleLayout = false
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         clipsToBounds = true
-        fw_autoScaleLayout = false
+        fw.autoScaleLayout = false
     }
     
     open override func safeAreaInsetsDidChange() {
@@ -488,18 +488,18 @@ open class ToolbarMenuView: UIView {
             var constraints: [NSLayoutConstraint] = []
             var previousButton: UIView?
             for subviewButton in subviewButtons {
-                constraints.append(subviewButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: verticalOverflow ? .lessThanOrEqual : .equal))
-                constraints.append(subviewButton.fw_pinEdge(toSuperview: .bottom))
+                constraints.append(subviewButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: verticalOverflow ? .lessThanOrEqual : .equal))
+                constraints.append(subviewButton.fw.pinEdge(toSuperview: .bottom))
                 if let previousButton = previousButton {
-                    constraints.append(subviewButton.fw_pinEdge(.left, toEdge: .right, ofView: previousButton))
-                    constraints.append(subviewButton.fw_matchDimension(.width, toDimension: .width, ofView: previousButton))
+                    constraints.append(subviewButton.fw.pinEdge(.left, toEdge: .right, ofView: previousButton))
+                    constraints.append(subviewButton.fw.matchDimension(.width, toDimension: .width, ofView: previousButton))
                 } else {
-                    constraints.append(subviewButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left))
+                    constraints.append(subviewButton.fw.pinEdge(toSuperview: .left, inset: UIScreen.fw.safeAreaInsets.left))
                 }
                 previousButton = subviewButton
             }
             if let previousButton = previousButton {
-                constraints.append(previousButton.fw_pinEdge(toSuperview: .right, inset: UIScreen.fw_safeAreaInsets.right))
+                constraints.append(previousButton.fw.pinEdge(toSuperview: .right, inset: UIScreen.fw.safeAreaInsets.right))
             }
             subviewConstraints = constraints
             return
@@ -511,18 +511,18 @@ open class ToolbarMenuView: UIView {
         let leftButton = self.leftButton ?? self.leftMoreButton
         let leftMoreButton = self.leftButton != nil && self.leftMoreButton != nil ? self.leftMoreButton : nil
         if let leftButton = leftButton {
-            constraints.append(leftButton.fw_pinEdge(toSuperview: .left, inset: UIScreen.fw_safeAreaInsets.left + horizontalSpacing))
-            constraints.append(leftButton.fw_alignAxis(toSuperview: .centerY))
-            constraints.append(leftButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(leftButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftButton.fw.pinEdge(toSuperview: .left, inset: UIScreen.fw.safeAreaInsets.left + horizontalSpacing))
+            constraints.append(leftButton.fw.alignAxis(toSuperview: .centerY))
+            constraints.append(leftButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftButton.fw.pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = leftButton.frame.size.width > 0 ? leftButton.frame.size.width : leftButton.sizeThatFits(fitsSize).width
-            leftWidth += UIScreen.fw_safeAreaInsets.left + horizontalSpacing + buttonWidth + buttonSpacing
+            leftWidth += UIScreen.fw.safeAreaInsets.left + horizontalSpacing + buttonWidth + buttonSpacing
         }
         if let leftButton = leftButton, let leftMoreButton = leftMoreButton {
-            constraints.append(leftMoreButton.fw_pinEdge(.left, toEdge: .right, ofView: leftButton, offset: buttonSpacing))
-            constraints.append(leftMoreButton.fw_alignAxis(toSuperview: .centerY))
-            constraints.append(leftMoreButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(leftMoreButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftMoreButton.fw.pinEdge(.left, toEdge: .right, ofView: leftButton, offset: buttonSpacing))
+            constraints.append(leftMoreButton.fw.alignAxis(toSuperview: .centerY))
+            constraints.append(leftMoreButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(leftMoreButton.fw.pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = leftMoreButton.frame.size.width > 0 ? leftMoreButton.frame.size.width : leftMoreButton.sizeThatFits(fitsSize).width
             leftWidth += buttonWidth + buttonSpacing
         }
@@ -531,31 +531,31 @@ open class ToolbarMenuView: UIView {
         let rightButton = self.rightButton ?? self.rightMoreButton
         let rightMoreButton = self.rightButton != nil && self.rightMoreButton != nil ? self.rightMoreButton : nil
         if let rightButton = rightButton {
-            constraints.append(rightButton.fw_pinEdge(toSuperview: .right, inset: horizontalSpacing + UIScreen.fw_safeAreaInsets.right))
-            constraints.append(rightButton.fw_alignAxis(toSuperview: .centerY))
-            constraints.append(rightButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(rightButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightButton.fw.pinEdge(toSuperview: .right, inset: horizontalSpacing + UIScreen.fw.safeAreaInsets.right))
+            constraints.append(rightButton.fw.alignAxis(toSuperview: .centerY))
+            constraints.append(rightButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightButton.fw.pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = rightButton.frame.size.width > 0 ? rightButton.frame.size.width : rightButton.sizeThatFits(fitsSize).width
-            rightWidth += buttonSpacing + buttonWidth + horizontalSpacing + UIScreen.fw_safeAreaInsets.right
+            rightWidth += buttonSpacing + buttonWidth + horizontalSpacing + UIScreen.fw.safeAreaInsets.right
         }
         if let rightButton = rightButton, let rightMoreButton = rightMoreButton {
-            constraints.append(rightMoreButton.fw_pinEdge(.right, toEdge: .left, ofView: rightButton, offset: -buttonSpacing))
-            constraints.append(rightMoreButton.fw_alignAxis(toSuperview: .centerY))
-            constraints.append(rightMoreButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(rightMoreButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightMoreButton.fw.pinEdge(.right, toEdge: .left, ofView: rightButton, offset: -buttonSpacing))
+            constraints.append(rightMoreButton.fw.alignAxis(toSuperview: .centerY))
+            constraints.append(rightMoreButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(rightMoreButton.fw.pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
             let buttonWidth = rightMoreButton.frame.size.width > 0 ? rightMoreButton.frame.size.width : rightMoreButton.sizeThatFits(fitsSize).width
             rightWidth += buttonSpacing + buttonWidth
         }
         
         if let centerButton = self.centerButton {
             if !alignmentLeft {
-                constraints.append(centerButton.fw_alignAxis(toSuperview: .centerX))
+                constraints.append(centerButton.fw.alignAxis(toSuperview: .centerX))
             }
-            constraints.append(centerButton.fw_alignAxis(toSuperview: .centerY))
-            constraints.append(centerButton.fw_pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(centerButton.fw_pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
-            constraints.append(centerButton.fw_pinEdge(toSuperview: .left, inset: leftWidth, relation: .greaterThanOrEqual))
-            constraints.append(centerButton.fw_pinEdge(toSuperview: .right, inset: rightWidth, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw.alignAxis(toSuperview: .centerY))
+            constraints.append(centerButton.fw.pinEdge(toSuperview: .top, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw.pinEdge(toSuperview: .bottom, inset: 0, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw.pinEdge(toSuperview: .left, inset: leftWidth, relation: .greaterThanOrEqual))
+            constraints.append(centerButton.fw.pinEdge(toSuperview: .right, inset: rightWidth, relation: .greaterThanOrEqual))
         }
         subviewConstraints = constraints
     }
@@ -563,12 +563,6 @@ open class ToolbarMenuView: UIView {
 }
 
 // MARK: - ToolbarTitleView
-/// 自定义titleView协议
-@objc public protocol TitleViewProtocol {
-    /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
-    var title: String? { get set }
-}
-
 /// 自定义titleView事件代理
 @objc public protocol ToolbarTitleViewDelegate {
     /// 点击 titleView 后的回调，只需设置 titleView.isUserInteractionEnabled = true 后即可使用
@@ -716,7 +710,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
         didSet {
             if showsLoadingView {
                 if loadingView == nil {
-                    loadingView = UIActivityIndicatorView.fw_indicatorView(color: nil)
+                    loadingView = UIActivityIndicatorView.fw.indicatorView(color: nil)
                 } else {
                     refreshLayout()
                 }
@@ -1198,7 +1192,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
             let secondLineWidth = secondLineWidthInVerticalStyle
             size.width = max(firstLineWidth, secondLineWidth)
             size.height = titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom) + subtitleLabelSize.height + (subtitleEdgeInsetsIfShowingSubtitleLabel.top + subtitleEdgeInsetsIfShowingSubtitleLabel.bottom)
-            return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+            return CGSize(width: UIScreen.fw.flatValue(size.width), height: UIScreen.fw.flatValue(size.height))
         } else {
             var size = CGSize.zero
             size.width = titleLabelSize.width + (titleEdgeInsetsIfShowingTitleLabel.left + titleEdgeInsetsIfShowingTitleLabel.right) + subtitleLabelSize.width + (subtitleEdgeInsetsIfShowingSubtitleLabel.left + subtitleEdgeInsetsIfShowingSubtitleLabel.right)
@@ -1206,7 +1200,7 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
             size.height = max(titleLabelSize.height + (titleEdgeInsetsIfShowingTitleLabel.top + titleEdgeInsetsIfShowingTitleLabel.bottom), subtitleLabelSize.height + (subtitleEdgeInsetsIfShowingSubtitleLabel.top + subtitleEdgeInsetsIfShowingSubtitleLabel.bottom))
             size.height = max(size.height, loadingViewSpacingSizeIfNeedsPlaceholder.height)
             size.height = max(size.height, accessorySpacingSizeIfNeedesPlaceholder.height)
-            return CGSize(width: UIScreen.fw_flatValue(size.width), height: UIScreen.fw_flatValue(size.height))
+            return CGSize(width: UIScreen.fw.flatValue(size.width), height: UIScreen.fw.flatValue(size.height))
         }
     }
     
@@ -1254,78 +1248,6 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
         delegate?.didTouchTitleView?(self, isActive: active)
         setActive(active, animated: true)
         refreshLayout()
-    }
-    
-    fileprivate static func swizzleToolbarTitleView() {
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationBar.self,
-            selector: #selector(UINavigationBar.layoutSubviews),
-            methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
-        ) { store in { selfObject in
-            guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
-                store.original(selfObject, store.selector)
-                return
-            }
-            
-            let titleMaximumWidth = titleView.bounds.width
-            var titleViewSize = titleView.sizeThatFits(CGSize(width: titleMaximumWidth, height: CGFloat.greatestFiniteMagnitude))
-            titleViewSize.height = ceil(titleViewSize.height)
-            
-            if titleView.bounds.height != titleViewSize.height {
-                let titleViewMinY: CGFloat = UIScreen.fw_flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
-                titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
-            }
-            
-            if titleView.bounds.width != titleViewSize.width {
-                var titleFrame = titleView.frame
-                titleFrame.size.width = titleViewSize.width
-                titleView.frame = titleFrame
-            }
-            
-            store.original(selfObject, store.selector)
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(setter: UIViewController.title),
-            methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.navigationItem.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.title),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
-        ) { store in { selfObject, title in
-            store.original(selfObject, store.selector, title)
-            
-            if let titleView = selfObject.titleView as? TitleViewProtocol {
-                titleView.title = title
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UINavigationItem.self,
-            selector: #selector(setter: UINavigationItem.titleView),
-            methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
-        ) { store in { selfObject, titleView in
-            store.original(selfObject, store.selector, titleView)
-            
-            if let titleView = titleView as? TitleViewProtocol {
-                if (titleView.title?.count ?? 0) <= 0 {
-                    titleView.title = selfObject.title
-                }
-            }
-        }}
     }
     
 }
@@ -1397,7 +1319,7 @@ open class ToolbarButton: UIButton {
             self.init(image: object as? UIImage, title: object as? String)
         }
         if let block = block {
-            fw_addTouch(block: block)
+            fw.addTouch(block: block)
         }
     }
     
@@ -1431,9 +1353,9 @@ open class ToolbarButton: UIButton {
         
         if let image = image, self.image(for: state) != image {
             if state == .normal {
-                self.highlightedImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                self.highlightedImage = image.fw.image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
                 setImage(self.highlightedImage, for: .highlighted)
-                self.disabledImage = image.fw_image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
+                self.disabledImage = image.fw.image(alpha: 0.2)?.withRenderingMode(image.renderingMode)
                 setImage(self.disabledImage, for: .disabled)
             } else {
                 if image != self.highlightedImage && image != self.disabledImage {
@@ -1461,7 +1383,7 @@ open class ToolbarButton: UIButton {
         super.layoutSubviews()
         
         // 横竖屏方向改变时才修改默认contentEdgeInsets，方便项目使用
-        let isLandscape = UIDevice.fw_isLandscape
+        let isLandscape = UIDevice.fw.isLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             var edgeInsets = self.contentEdgeInsets
@@ -1516,8 +1438,8 @@ open class ExpandedTitleView: UIView {
             oldValue?.removeFromSuperview()
             if let contentView = contentView, contentView.superview == nil {
                 addSubview(contentView)
-                contentView.fw_autoScaleLayout = false
-                contentView.fw_pinEdges(toSuperview: contentInset)
+                contentView.fw.autoScaleLayout = false
+                contentView.fw.pinEdges(toSuperview: contentInset)
                 setNeedsLayout()
             }
         }
@@ -1527,7 +1449,7 @@ open class ExpandedTitleView: UIView {
     open var contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) {
         didSet {
             if let contentView = contentView {
-                contentView.fw_pinEdges(toSuperview: contentInset)
+                contentView.fw.pinEdges(toSuperview: contentInset)
                 setNeedsLayout()
             }
         }
@@ -1538,7 +1460,7 @@ open class ExpandedTitleView: UIView {
     
     /// 初始化，默认导航栏尺寸
     public required init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.fw_screenWidth, height: UIScreen.fw_navigationBarHeight))
+        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight))
     }
     
     /// 指定frame并初始化
@@ -1549,7 +1471,7 @@ open class ExpandedTitleView: UIView {
     /// 解码初始化，默认导航栏尺寸
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        frame = CGRect(x: 0, y: 0, width: UIScreen.fw_screenWidth, height: UIScreen.fw_navigationBarHeight)
+        frame = CGRect(x: 0, y: 0, width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight)
     }
     
     open override var intrinsicContentSize: CGSize {
@@ -1572,22 +1494,13 @@ open class ExpandedTitleView: UIView {
         if rightSpacing >= 0 && rightSpacing <= maximumFittingSpacing {
             inset.right = contentInset.right - rightSpacing
         }
-        contentView?.fw_pinEdges(toSuperview: inset)
+        contentView?.fw.pinEdges(toSuperview: inset)
     }
     
     private func searchNavigationBar(_ child: UIView) -> UINavigationBar? {
         guard let parent = child.superview else { return nil }
         if let navigationBar = parent as? UINavigationBar { return navigationBar }
         return searchNavigationBar(parent)
-    }
-    
-}
-
-// MARK: - FrameworkAutoloader+ToolbarView
-@objc extension FrameworkAutoloader {
-    
-    static func loadModule_ToolbarView() {
-        ToolbarTitleView.swizzleToolbarTitleView()
     }
     
 }

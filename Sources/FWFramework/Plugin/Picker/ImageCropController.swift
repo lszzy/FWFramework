@@ -60,7 +60,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         set { cropView.minimumAspectRatio = newValue }
     }
     open var toolbarHeight: CGFloat {
-        get { return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw_toolBarHeight - UIScreen.fw_safeAreaInsets.bottom }
+        get { return _toolbarHeight > 0 ? _toolbarHeight : UIScreen.fw.toolBarHeight - UIScreen.fw.safeAreaInsets.bottom }
         set { _toolbarHeight = newValue }
     }
     private var _toolbarHeight: CGFloat = 0
@@ -627,8 +627,8 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         }
         
         let verticalCropBox = cropView.cropBoxAspectRatioIsPortrait
-        let cancelButtonTitle = self.cancelButtonTitle ?? AppBundle.cancelButton
-        let originalButtonTitle = self.originalAspectRatioName ?? AppBundle.originalButton
+        let cancelButtonTitle = self.cancelButtonTitle ?? FrameworkBundle.cancelButton
+        let originalButtonTitle = self.originalAspectRatioName ?? FrameworkBundle.originalButton
         
         let portraitRatioTitles = [originalButtonTitle, "1:1", "2:3", "3:5", "3:4", "4:5", "5:7", "9:16"]
         let landscapeRatioTitles = [originalButtonTitle, "1:1", "3:2", "5:3", "4:3", "5:4", "7:5", "16:9"]
@@ -654,7 +654,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
             ratioValues.append(.presetCustom)
         }
         
-        fw_showSheet(title: nil, message: nil, cancel: cancelButtonTitle, actions: itemStrings) { [weak self] index in
+        fw.showSheet(title: nil, message: nil, cancel: cancelButtonTitle, actions: itemStrings) { [weak self] index in
             self?.setAspectRatioPreset(ratioValues[index], animated: true)
             self?.aspectRatioLockEnabled = true
         }
@@ -706,7 +706,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         let isDidCropToImageHandled = delegate?.responds(to: #selector(ImageCropControllerDelegate.cropController(_:didCropToImage:rect:angle:))) == true || onDidCropToImage != nil
         
         if croppingStyle == .circular && isCircularImageHandled {
-            if let image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: true) {
+            if let image = self.image.fw.croppedImage(frame: cropFrame, angle: angle, circular: true) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
                     self.delegate?.cropController?(self, didCropToCircularImage: image, rect: cropFrame, angle: angle)
                     self.onDidCropToCircularImage?(image, cropFrame, angle)
@@ -719,7 +719,7 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
             if angle == 0 && cropFrame == CGRect(origin: .zero, size: self.image.size) {
                 image = self.image
             } else {
-                image = self.image.fw_croppedImage(frame: cropFrame, angle: angle, circular: false)
+                image = self.image.fw.croppedImage(frame: cropFrame, angle: angle, circular: false)
             }
             
             if let image = image {
@@ -1010,7 +1010,7 @@ open class ImageCropToolbar: UIView {
     
     open lazy var doneTextButton: UIButton = {
         let result = UIButton(type: .system)
-        result.setTitle(doneTextButtonTitle ?? AppBundle.doneButton, for: .normal)
+        result.setTitle(doneTextButtonTitle ?? FrameworkBundle.doneButton, for: .normal)
         result.setTitleColor(.white, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -1028,7 +1028,7 @@ open class ImageCropToolbar: UIView {
     
     open lazy var cancelTextButton: UIButton = {
         let result = UIButton(type: .system)
-        result.setTitle(cancelTextButtonTitle ?? AppBundle.cancelButton, for: .normal)
+        result.setTitle(cancelTextButtonTitle ?? FrameworkBundle.cancelButton, for: .normal)
         result.setTitleColor(.white, for: .normal)
         result.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         result.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)

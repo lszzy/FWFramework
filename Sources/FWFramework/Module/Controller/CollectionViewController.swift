@@ -43,24 +43,24 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
     
     /// 集合视图，默认不显示滚动条
     public var collectionView: UICollectionView {
-        if let result = fw_property(forName: "collectionView") as? UICollectionView {
+        if let result = fw.property(forName: "collectionView") as? UICollectionView {
             return result
         } else {
-            let result = UICollectionView.fw_collectionView(setupCollectionViewLayout())
-            fw_setProperty(result, forName: "collectionView")
+            let result = UICollectionView.fw.collectionView(setupCollectionViewLayout())
+            fw.setProperty(result, forName: "collectionView")
             return result
         }
     }
     
     /// 集合代理，同集合collectionDelegate，延迟加载
     public var collectionDelegate: CollectionViewDelegate {
-        return collectionView.fw_collectionDelegate
+        return collectionView.fw.collectionDelegate
     }
     
     /// 集合数据，默认空数组，延迟加载
     public var collectionData: [CollectionElement] {
-        get { return fw_property(forName: "collectionData") as? [CollectionElement] ?? [] }
-        set { fw_setProperty(newValue, forName: "collectionData") }
+        get { return fw.property(forName: "collectionData") as? [CollectionElement] ?? [] }
+        set { fw.setProperty(newValue, forName: "collectionData") }
     }
     
     /// 渲染集合视图内容布局，只调用一次
@@ -76,7 +76,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
 
     /// 渲染集合视图布局，setupSubviews之前调用，默认铺满
     public func setupCollectionLayout() {
-        collectionView.fw_pinEdges()
+        collectionView.fw.pinEdges()
     }
     
 }

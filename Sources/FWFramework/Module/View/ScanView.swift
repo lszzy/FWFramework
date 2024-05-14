@@ -190,7 +190,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     
     #if DEBUG
     deinit {
-        Logger.debug(group: Logger.fw_moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
     }
     #endif
     
@@ -319,7 +319,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
 
     /// 播放音效
     open class func playSoundEffect(_ file: String) {
-        UIApplication.fw_playSystemSound(file)
+        UIApplication.fw.playSystemSound(file)
     }
 
     // MARK: - Read
@@ -333,8 +333,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
-                compressImage = compressImage?.fw_compressImage(maxWidth: 1080)
-                compressImage = compressImage?.fw_compressImage(maxLength: 512 * 1024)
+                compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
+                compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
             
             var ciImage = compressImage?.ciImage
@@ -374,8 +374,8 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
-                compressImage = compressImage?.fw_compressImage(maxWidth: 1080)
-                compressImage = compressImage?.fw_compressImage(maxLength: 512 * 1024)
+                compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
+                compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
             
             guard let cgImage = compressImage?.cgImage else {

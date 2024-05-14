@@ -18,15 +18,16 @@ open class Configuration: NSObject {
     
     /// 单例模式对象，子类可直接调用
     public class var shared: Self {
-        return fw_synchronized {
-            if let instance = self.fw_property(forName: #function) as? Self {
-                return instance
-            } else {
-                let instance = self.init()
-                self.fw_setProperty(instance, forName: #function)
-                instance.initializeConfiguration()
-                return instance
-            }
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if let instance = NSObject.fw.getAssociatedObject(self, key: #function) as? Self {
+            return instance
+        } else {
+            let instance = self.init()
+            NSObject.fw.setAssociatedObject(self, key: #function, value: instance)
+            instance.initializeConfiguration()
+            return instance
         }
     }
     
@@ -82,13 +83,13 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
     /// 应用配置方法，子类重写
     open func applyConfiguration() {
         // 启用全局导航栏返回拦截
-        // UINavigationController.fw_enablePopProxy()
+        // UINavigationController.fw.enablePopProxy()
         // 启用全局导航栏转场优化
-        // UINavigationController.fw_enableBarTransition()
+        // UINavigationController.fw.enableBarTransition()
         
         // 设置默认导航栏样式
         // let defaultAppearance = NavigationBarAppearance()
-        // defaultAppearance.foregroundColor = UIColor.fw_color(hex: 0x111111)
+        // defaultAppearance.foregroundColor = UIColor.fw.color(hex: 0x111111)
         // 1. 指定导航栏背景色
         // defaultAppearance.backgroundColor = UIColor.white
         // 2. 设置导航栏样式全透明
@@ -97,10 +98,10 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         // NavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
         
         // 配置通用样式和兼容性
-        // UITableView.fw_resetTableStyle()
-        // UITableView.fw_resetTableConfiguration = nil
-        // UIButton.fw_highlightedAlpha = 0.5
-        // UIButton.fw_disabledAlpha = 0.3
+        // UITableView.fw.resetTableStyle()
+        // UITableView.fw.resetTableConfiguration = nil
+        // UIButton.fw.highlightedAlpha = 0.5
+        // UIButton.fw.disabledAlpha = 0.3
         
         // 配置弹窗插件及默认文案
         // PluginManager.registerPlugin(AlertPlugin.self, with: AlertControllerImpl.self)

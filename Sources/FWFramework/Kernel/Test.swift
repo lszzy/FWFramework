@@ -90,13 +90,13 @@ fileprivate class UnitTest: NSObject {
             let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
             queue.async {
                 unitTest.run()
-                Logger.debug(group: Logger.fw_moduleName, "%@", unitTest.debugDescription)
+                Logger.debug(group: Logger.fw.moduleName, "%@", unitTest.debugDescription)
             }
         }
     }
     
     private func testSuite() -> [AnyClass] {
-        let testCases = NSObject.fw_allSubclasses(TestCase.self)
+        let testCases = NSObject.fw.allSubclasses(TestCase.self)
             .sorted { obj1, obj2 in
                 return NSStringFromClass(obj1) < NSStringFromClass(obj2)
             }
@@ -105,7 +105,7 @@ fileprivate class UnitTest: NSObject {
     
     private func testMethods(_ clazz: AnyClass) -> [String] {
         var methodNames: [String] = []
-        let selectorNames = NSObject.fw_classMethods(clazz)
+        let selectorNames = NSObject.fw.classMethods(clazz)
         for selectorName in selectorNames {
             if selectorName.hasPrefix("test"), !selectorName.contains(":") {
                 methodNames.append(selectorName)
@@ -189,9 +189,9 @@ fileprivate class UnitTest: NSObject {
 }
 
 // MARK: - FrameworkAutoloader+Test
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadKernel_Test() {
+    @objc static func loadKernel_Test() {
         UnitTest.runTests()
     }
     

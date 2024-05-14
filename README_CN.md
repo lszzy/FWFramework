@@ -23,7 +23,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 本框架所有Swizzle默认不会生效，不会对现有项目产生影响，需要手工开启或调用才会生效。本库已经在正式项目使用，后续也会一直维护扩展，欢迎大家使用并提出宝贵意见，共同成长。
 
 ## 安装教程
-推荐使用CocoaPods或Swift Package Manager安装，自动管理依赖。如需手工导入请参考Example项目配置。
+推荐使用CocoaPods或Swift Package Manager安装，自动管理依赖。
 
 ### CocoaPods
 本框架支持CocoaPods，Podfile示例：
@@ -36,7 +36,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	  pod 'FWFramework'
    
       # 引入宏子模块
-      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWExtension/Macros']   
+      # pod 'FWFramework', :subspecs => ['FWFramework', 'FWPlugin/Macros']   
 	  # 引入指定子模块，子模块列表详见podspec文件
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
@@ -50,17 +50,30 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	import FWFramework
  
     # 勾选并引入宏子模块
-    import FWExtensionMacros 
+    import FWPluginMacros 
 	# 勾选并引入指定子模块，子模块列表详见Package.swift文件
 	import FWSwiftUI
 
 ## [Api文档](https://fwframework.wuyong.site)
 文档位于docs文件夹，浏览器打开index.html即可，也可运行docs.sh自动生成Api文档。
 
+自定义代码前缀为app示例：
+
+	public typealias APP = WrapperGlobal
+	
+	extension WrapperCompatible {
+	    public static var app: Wrapper<Self>.Type { get { wrapperExtension } set {} }
+	    public var app: Wrapper<Self> { get { wrapperExtension } set {} }
+	}
+	
+导入默认fw代码前缀示例：
+
+	@_spi(FW) import FWFramework
+
 ## [更新日志](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
-	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.3.2'
+	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.4.0'
 	2. 升级迁移到新版本，请留意版本更新日志
 
 ### Swift

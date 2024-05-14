@@ -11,7 +11,21 @@ import UIKit
 extension Wrapper where Base: NSObject {
     /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
     public func applyAppearance() {
-        base.fw_applyAppearance()
+        let aClass: AnyClass = type(of: base)
+        guard aClass.responds(to: NSSelectorFromString("appearance")) else { return }
+        
+        let appearanceGuideClassSelector = NSSelectorFromString(String(format: "%@%@%@", "_a", "ppearanceG", "uideClass"))
+        if !class_respondsToSelector(aClass, appearanceGuideClassSelector) {
+            let typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.self, appearanceGuideClassSelector)!)
+            let impBlock: @convention(block) () -> AnyClass? = { nil }
+            class_addMethod(aClass, appearanceGuideClassSelector, imp_implementationWithBlock(impBlock), typeEncoding)
+        }
+        
+        let selector = NSSelectorFromString(String(format: "_%@:%@:", "applyInvocationsTo", "window"))
+        if let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
+           appearanceClass.responds(to: selector) {
+            _ = (appearanceClass as AnyObject).perform(selector, with: base, with: nil)
+        }
     }
 }
 
@@ -61,30 +75,6 @@ public class Appearance: NSObject {
             return viewClass
         }
         return type(of: appearance)
-    }
-    
-}
-
-// MARK: - NSObject+Appearance
-@_spi(FW) extension NSObject {
-    
-    /// 从 appearance 里取值并赋值给当前实例，通常在对象的 init 里调用。支持的属性需标记为\@objc dynamic才生效
-    public func fw_applyAppearance() {
-        let aClass: AnyClass = type(of: self)
-        guard aClass.responds(to: NSSelectorFromString("appearance")) else { return }
-        
-        let appearanceGuideClassSelector = NSSelectorFromString(String(format: "%@%@%@", "_a", "ppearanceG", "uideClass"))
-        if !class_respondsToSelector(aClass, appearanceGuideClassSelector) {
-            let typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.self, appearanceGuideClassSelector)!)
-            let impBlock: @convention(block) () -> AnyClass? = { nil }
-            class_addMethod(aClass, appearanceGuideClassSelector, imp_implementationWithBlock(impBlock), typeEncoding)
-        }
-        
-        let selector = NSSelectorFromString(String(format: "_%@:%@:", "applyInvocationsTo", "window"))
-        if let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
-           appearanceClass.responds(to: selector) {
-            _ = (appearanceClass as AnyObject).perform(selector, with: self, with: nil)
-        }
     }
     
 }

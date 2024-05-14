@@ -116,7 +116,7 @@ public class ViewControllerManager: NSObject {
     ///   - type: 控制器协议类型，必须继承ViewControllerProtocol
     ///   - intercepter: 控制器拦截器对象，传nil时取消注册
     public func registerProtocol<T>(_ type: T.Type, intercepter: ViewControllerIntercepter?) {
-        let intercepterId = String.fw_safeString(type)
+        let intercepterId = String.fw.safeString(type)
         if let intercepter = intercepter {
             intercepter.intercepterValidator = { $0 is T }
             intercepters[intercepterId] = intercepter
@@ -134,7 +134,7 @@ public class ViewControllerManager: NSObject {
         
         // 解析拦截器列表，ViewControllerProtocol始终位于第一位
         var intercepterNames: [String] = []
-        intercepterNames.append(String.fw_safeString(ViewControllerProtocol.self))
+        intercepterNames.append(String.fw.safeString(ViewControllerProtocol.self))
         for (intercepterName, intercepter) in intercepters {
             if intercepter.intercepterValidator?(viewController) ?? false,
                !intercepterNames.contains(intercepterName) {
@@ -145,163 +145,6 @@ public class ViewControllerManager: NSObject {
         // 写入类拦截器缓存
         classIntercepters[className] = intercepterNames
         return intercepterNames
-    }
-    
-    fileprivate static func swizzleViewController() {
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.init(nibName:bundle:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
-        ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
-            let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
-            
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
-            if viewController is ViewControllerProtocol {
-                ViewControllerManager.shared.hookInit(viewController)
-            }
-            return viewController
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.init(coder:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
-        ) { store in { selfObject, coder in
-            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
-            
-            if viewController is ViewControllerLifecycleObservable ||
-                viewController.fw_lifecycleState != nil {
-                viewController.fw_lifecycleState = .didInit
-            }
-            if viewController is ViewControllerProtocol {
-                ViewControllerManager.shared.hookInit(viewController)
-            }
-            return viewController
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLoad),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLoad
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewDidLoad(selfObject)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willAppear
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: NSSelectorFromString("viewIsAppearing:"),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .isAppearing
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidLayoutSubviews),
-            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
-        ) { store in { selfObject in
-            store.original(selfObject, store.selector)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didLayoutSubviews
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidAppear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didAppear
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewWillDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .willDisappear
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
-            }
-        }}
-        
-        NSObject.fw_swizzleInstanceMethod(
-            UIViewController.self,
-            selector: #selector(UIViewController.viewDidDisappear(_:)),
-            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
-        ) { store in { selfObject, animated in
-            store.original(selfObject, store.selector, animated)
-            
-            if selfObject is ViewControllerLifecycleObservable ||
-                selfObject.fw_lifecycleState != nil {
-                selfObject.fw_lifecycleState = .didDisappear
-            }
-            if selfObject is ViewControllerProtocol {
-                ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
-            }
-        }}
     }
     
     fileprivate static func registerDefaultIntercepters() {
@@ -331,7 +174,7 @@ public class ViewControllerManager: NSObject {
     }
     
     // MARK: - Hook
-    private func hookInit(_ viewController: UIViewController) {
+    fileprivate func hookInit(_ viewController: UIViewController) {
         /*
         // ViewControllerProtocol全局拦截器init方法示例：
         // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
@@ -359,7 +202,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewDidLoad(_ viewController: UIViewController) {
+    fileprivate func hookViewDidLoad(_ viewController: UIViewController) {
         // 1. 默认viewDidLoad
         hookViewDidLoad?(viewController)
         
@@ -381,7 +224,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
+    fileprivate func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillAppear
         hookViewWillAppear?(viewController, animated)
         
@@ -394,7 +237,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
+    fileprivate func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewIsAppearing
         hookViewIsAppearing?(viewController, animated)
         
@@ -407,7 +250,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
+    fileprivate func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
         // 1. 默认viewDidLayoutSubviews
         hookViewDidLayoutSubviews?(viewController)
         
@@ -420,7 +263,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
+    fileprivate func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidAppear
         hookViewDidAppear?(viewController, animated)
         
@@ -433,7 +276,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
+    fileprivate func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillDisappear
         hookViewWillDisappear?(viewController, animated)
         
@@ -446,7 +289,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    private func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+    fileprivate func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidDisappear
         hookViewDidDisappear?(viewController, animated)
         
@@ -462,11 +305,132 @@ public class ViewControllerManager: NSObject {
 }
 
 // MARK: - FrameworkAutoloader+ViewController
-@objc extension FrameworkAutoloader {
+extension FrameworkAutoloader {
     
-    static func loadModule_ViewController() {
-        ViewControllerManager.swizzleViewController()
+    @objc static func loadModule_ViewController() {
+        swizzleViewController()
         ViewControllerManager.registerDefaultIntercepters()
+    }
+    
+    private static func swizzleViewController() {
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(nibName:bundle:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
+            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+        ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
+            let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
+            
+            if viewController is ViewControllerProtocol {
+                ViewControllerManager.shared.hookInit(viewController)
+            }
+            return viewController
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.init(coder:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+        ) { store in { selfObject, coder in
+            guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
+            
+            if viewController is ViewControllerProtocol {
+                ViewControllerManager.shared.hookInit(viewController)
+            }
+            return viewController
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLoad),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewDidLoad(selfObject)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: NSSelectorFromString("viewIsAppearing:"),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidLayoutSubviews),
+            methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+        ) { store in { selfObject in
+            store.original(selfObject, store.selector)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidAppear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewWillDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIViewController.self,
+            selector: #selector(UIViewController.viewDidDisappear(_:)),
+            methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
+            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+        ) { store in { selfObject, animated in
+            store.original(selfObject, store.selector, animated)
+            
+            if selfObject is ViewControllerProtocol {
+                ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
+            }
+        }}
     }
     
 }

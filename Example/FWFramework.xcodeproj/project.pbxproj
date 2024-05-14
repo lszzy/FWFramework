@@ -51,7 +51,7 @@
 		2F6E0C4528E691D500C77153 /* TestCompatibleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */; };
 		2F91AA2D28CDD876000A6FA2 /* WebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F91AA2C28CDD876000A6FA2 /* WebController.swift */; };
 		2FB11EF128DAE16500DCB965 /* TestAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EF028DAE16500DCB965 /* TestAnimationController.swift */; };
-		2FB11EF328DB023B00DCB965 /* TestFloatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EF228DB023B00DCB965 /* TestFloatController.swift */; };
+		2FB11EF328DB023B00DCB965 /* TestFloatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EF228DB023B00DCB965 /* TestFloatingController.swift */; };
 		2FB11EF528DB055C00DCB965 /* TestGridController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EF428DB055C00DCB965 /* TestGridController.swift */; };
 		2FB11EF728DB090F00DCB965 /* TestBadgeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EF628DB090F00DCB965 /* TestBadgeController.swift */; };
 		2FB11EFB28E2999C00DCB965 /* TestCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB11EFA28E2999C00DCB965 /* TestCollectionController.swift */; };
@@ -140,7 +140,7 @@
 		2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCompatibleController.swift; sourceTree = "<group>"; };
 		2F91AA2C28CDD876000A6FA2 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
 		2FB11EF028DAE16500DCB965 /* TestAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnimationController.swift; sourceTree = "<group>"; };
-		2FB11EF228DB023B00DCB965 /* TestFloatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFloatController.swift; sourceTree = "<group>"; };
+		2FB11EF228DB023B00DCB965 /* TestFloatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFloatingController.swift; sourceTree = "<group>"; };
 		2FB11EF428DB055C00DCB965 /* TestGridController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGridController.swift; sourceTree = "<group>"; };
 		2FB11EF628DB090F00DCB965 /* TestBadgeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBadgeController.swift; sourceTree = "<group>"; };
 		2FB11EFA28E2999C00DCB965 /* TestCollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionController.swift; sourceTree = "<group>"; };
@@ -167,6 +167,10 @@
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
 		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
 		2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCodableController.swift; sourceTree = "<group>"; };
+		2FE6E8832BE0B97700F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../README_CN.md; sourceTree = "<group>"; };
+		2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../CHANGELOG_CN.md; sourceTree = "<group>"; };
+		2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		2FE6E88F2BE0BBCC00F0CC00 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		2FF08B1128ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2FF08B1328ADDC000074895A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2FF08B1428ADDC000074895A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -273,7 +277,7 @@
 				2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */,
 				2FB9E30728C5A03800C78850 /* TestBridgeController.swift */,
 				2FB11F0628E441F400DCB965 /* TestDrawerController.swift */,
-				2FB11EF228DB023B00DCB965 /* TestFloatController.swift */,
+				2FB11EF228DB023B00DCB965 /* TestFloatingController.swift */,
 				2FB11EF428DB055C00DCB965 /* TestGridController.swift */,
 				2F49EE1D28FE7B6E00F229BB /* TestPagingController.swift */,
 				2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */,
@@ -536,7 +540,11 @@
 			isa = PBXGroup;
 			children = (
 				EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */,
+				2FE6E88F2BE0BBCC00F0CC00 /* Package.swift */,
 				9A618471107F1D6CF1E47FF0 /* README.md */,
+				2FE6E8832BE0B97700F0CC00 /* README_CN.md */,
+				2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */,
+				2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */,
 				E91AE76AA686014704EDE554 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
@@ -596,7 +604,6 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 3SPQYAJQY3;
 						LastSwiftMigration = 1340;
 					};
 				};
@@ -767,7 +774,7 @@
 				2F6A41DD28B9E8FF003719E7 /* TestSocketController.swift in Sources */,
 				2F06D15D28D46F81007E53EC /* TestPluginController.swift in Sources */,
 				2FB11EF728DB090F00DCB965 /* TestBadgeController.swift in Sources */,
-				2FB11EF328DB023B00DCB965 /* TestFloatController.swift in Sources */,
+				2FB11EF328DB023B00DCB965 /* TestFloatingController.swift in Sources */,
 				2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */,
 				2F49EE2428FFB7D000F229BB /* TestTransitionController.swift in Sources */,
 			);
@@ -869,7 +876,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -951,7 +958,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1092,7 +1099,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1121,7 +1128,7 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.ExampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = site.wuyong.FWFramework.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
