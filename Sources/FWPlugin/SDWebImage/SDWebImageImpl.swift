@@ -204,8 +204,17 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
                     }
                 }
             } : nil,
-            completed: { image, data, error, _, _, _ in
-                completion(image, data, error)
+            completed: { [weak self] image, data, error, _, _, _ in
+                if options.contains(.queryMemoryData), data == nil, let image = image {
+                    DispatchQueue.global().async {
+                        let imageData = self?.imageEncode(image)
+                        DispatchQueue.main.async {
+                            completion(image, imageData, error)
+                        }
+                    }
+                } else {
+                    completion(image, data, error)
+                }
             }
         )
     }
