@@ -71,6 +71,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
                     self?.tableView.reloadData()
                 } else {
                     TestTableController.testRandomKey = "\(Date.app.currentTime)"
+                    self?.tableView.reloadData()
                 }
             })
         }
@@ -284,7 +285,8 @@ class TestTableDynamicLayoutCell: UITableViewCell {
             guard let object = object else { return }
             myTitleLabel.text = object.title
             if object.imageUrl.app.isValid(.isUrl) {
-                myImageView.app.setImage(url: object.imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
+                let imageUrl = object.imageUrl + (object.imageUrl.contains("?") ? "&" : "?") + "t=\(TestTableController.testRandomKey)"
+                myImageView.app.setImage(url: imageUrl, placeholderImage: UIImage.app.appIconImage()) { [weak self] image, _ in
                     self?.myImageView.image = image
                     if TestTableController.faceAware {
                         self?.myImageView.app.faceAware()
