@@ -9,6 +9,7 @@
 * Code reconstruction, remove all classification extension methods starting with fw_, only support Wrapper(fw.) method calling
 * Reconstruct MulticastBlock to support priority and asynchronous calls
 * Remove the didLayoutSubviews state from the controller life cycle
+* ImagePlugin adds queryMemoryData option
 
 ## [5.3.2] - 2024-04-29
 
