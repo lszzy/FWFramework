@@ -55,7 +55,12 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     }
     
     override func requestArgument() -> Any? {
-        return ["optional": optional]
+        let isNull = [true, false].randomElement()!
+        if isNull {
+            return ["optional": NSNull()]
+        } else {
+            return ["optional": optional]
+        }
     }
     
     override func responseSerializerType() -> ResponseSerializerType {
