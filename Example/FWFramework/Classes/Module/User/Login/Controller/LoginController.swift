@@ -15,6 +15,32 @@ class LoginController: UIViewController {
     
     private var viewModel = LoginViewModel()
     
+    // MARK: - Subviews
+    private lazy var nicknameField: UITextField = {
+        let result = UITextField()
+        result.font = UIFont.app.font(ofSize: 15)
+        result.textColor = AppTheme.textColor
+        result.tintColor = AppTheme.textColor
+        result.backgroundColor = AppTheme.backgroundColor
+        result.placeholder = "mediatorPlaceholder".app.localized
+        result.clearButtonMode = .whileEditing
+        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 0))
+        result.leftViewMode = .always
+        result.app.keyboardManager = true
+        result.app.touchResign = true
+        result.app.keyboardResign = true
+        result.app.returnResign = true
+        return result
+    }()
+    
+    private lazy var loginButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle(APP.localized("mediatorLogin"), for: .normal)
+        button.app.addTouch(target: self, action: #selector(loginButtonClicked))
+        return button
+    }()
+    
 }
 
 // MARK: - ViewControllerProtocol
@@ -28,12 +54,20 @@ extension LoginController: ViewControllerProtocol {
     }
     
     func setupSubviews() {
-        let button = UIButton(type: .system)
-        button.setTitle(APP.localized("mediatorLogin"), for: .normal)
-        button.setImage(APP.iconImage("zmdi-var-account", 25), for: .normal)
-        button.app.addTouch(target: self, action: #selector(loginButtonClicked))
-        view.addSubview(button)
-        button.app.layoutChain.center()
+        view.addSubview(nicknameField)
+        view.addSubview(loginButton)
+    }
+    
+    func setupLayout() {
+        nicknameField.chain
+            .width(APP.screenWidth - 30)
+            .height(50)
+            .top(toSafeArea: 20)
+            .centerX()
+        
+        loginButton.chain
+            .top(toViewBottom: nicknameField, offset: 20)
+            .centerX()
     }
     
 }
@@ -42,11 +76,10 @@ extension LoginController: ViewControllerProtocol {
 private extension LoginController {
     
     @objc func loginButtonClicked() {
-        app.showPrompt(title: "mediatorPlaceholder".app.localized, message: nil) { [weak self] nickName in
-            self?.viewModel.login(nickName: nickName, completion: {
-                self?.dismiss(animated: true, completion: self?.completion)
-            })
-        }
+        let nickname = nicknameField.text?.app.trimString ?? ""
+        viewModel.login(nickName: nickname, completion: { [weak self] in
+            self?.dismiss(animated: true, completion: self?.completion)
+        })
     }
     
 }
