@@ -24,6 +24,7 @@ class LoginController: UIViewController {
         result.backgroundColor = AppTheme.backgroundColor
         result.placeholder = "mediatorPlaceholder".app.localized
         result.clearButtonMode = .whileEditing
+        result.returnKeyType = .done
         result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
         result.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 0))
         result.leftViewMode = .always
