@@ -77,11 +77,15 @@ class AppDelegate: AppResponder {
     
     // MARK: - UIApplicationDelegate
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        super.application(app, open: url, options: options)
+        
         Router.openURL(url.absoluteString)
         return true
     }
     
     override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        super.application(application, continue: userActivity, restorationHandler: restorationHandler)
+        
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
            let webpageURL = userActivity.webpageURL {
             Router.openURL(webpageURL.absoluteString)
@@ -91,6 +95,8 @@ class AppDelegate: AppResponder {
     }
     
     override func applicationDidEnterBackground(_ application: UIApplication) {
+        super.applicationDidEnterBackground(application)
+        
         if let backgroundTask = backgroundTask {
             UIApplication.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
         }
