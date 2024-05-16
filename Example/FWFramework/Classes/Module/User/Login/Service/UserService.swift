@@ -8,52 +8,63 @@
 
 import FWFramework
 
-class UserService {
+public class UserService {
     
-    class UserInfo {
-        public var userId: String = ""
-        public var userName: String = ""
+    public static let shared = UserService()
+    
+    // MARK: - Accessor
+    private var userModel: UserModel?
+    
+    @StoredValue("userData")
+    private var userData: Data?
+    
+    // MARK: - Lifecycle
+    private init() {
+        if let userData = userData {
+            userModel = try? UserModel.decoded(from: userData)
+        }
     }
-    
-    static let shared = UserService()
-    
-    @StoredValue("userId")
-    private var userId: String = ""
-    @StoredValue("userName")
-    private var userName: String = ""
     
 }
 
 extension UserService {
     
     public func isLogin() -> Bool {
-        return userId.count > 0
+        return userModel != nil
     }
     
-    public func userInfo() -> UserInfo? {
-        if userId.count < 1 { return nil }
+    public func getUserModel() -> UserModel? {
+        guard var model = userModel else { return nil }
         
-        let userInfo = UserInfo()
-        userInfo.userId = userId
-        userInfo.userName = userName
-        return userInfo
+        if model.userName.isEmpty {
+            model.userName = APP.localized("mediatorNickname")
+        }
+        return model
+    }
+    
+    public func saveUserModel(_ model: UserModel) {
+        userModel = model
+        userData = try? model.encoded()
+    }
+    
+    public func clearUserModel() {
+        userModel = nil
+        userData = nil
     }
     
     public func login(_ completion: (() -> Void)?) {
         let viewController = LoginController()
-        viewController.completion = { [weak self] in
-            self?.userId = "1"
-            self?.userName = "test"
-            completion?()
-        }
+        viewController.completion = completion
         let navigationController = UINavigationController(rootViewController: viewController)
         Navigator.present(navigationController, animated: true, completion: nil)
     }
     
     public func logout(_ completion: (() -> Void)?) {
-        userId = ""
-        userName = ""
-        completion?()
+        let viewController = Navigator.topViewController
+        viewController?.app.showConfirm(title: APP.localized("logoutConfirm"), message: nil) { [weak self] in
+            self?.clearUserModel()
+            completion?()
+        }
     }
     
 }

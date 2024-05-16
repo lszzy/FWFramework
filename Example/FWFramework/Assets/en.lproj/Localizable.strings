@@ -8,6 +8,8 @@
 
 "mediatorLogin" = "Login";
 "mediatorLogout" = "Logout";
+"mediatorPlaceholder" = "Please enter your nickname";
+"mediatorNickname" = "dear";
 "homeTitle" = "Home";
 "testTitle" = "Test";
 "settingTitle" = "Settings";
@@ -19,7 +21,7 @@
 "themeDark" = "Dark";
 "themeGray" = "Gray";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
-"backTitle" = "Welcome back, dear";
+"backTitle" = "Welcome back, %@";
 "logoutConfirm" = "Are you sure you want to log out?";
 "envDevelopment" = "Development";
 "envTesting" = "Testing";

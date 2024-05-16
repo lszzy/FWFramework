@@ -8,6 +8,8 @@
 
 "mediatorLogin" = "登录";
 "mediatorLogout" = "退出登录";
+"mediatorPlaceholder" = "请输入你的昵称";
+"mediatorNickname" = "亲";
 "homeTitle" = "首页";
 "testTitle" = "测试";
 "settingTitle" = "设置";
@@ -19,7 +21,7 @@
 "themeDark" = "深色";
 "themeGray" = "灰色";
 "welcomeTitle" = "你知道我在等你吗？";
-"backTitle" = "欢迎回来，亲";
+"backTitle" = "欢迎回来，%@";
 "logoutConfirm" = "确定要退出当前账号吗?";
 "envDevelopment" = "开发";
 "envTesting" = "测试";

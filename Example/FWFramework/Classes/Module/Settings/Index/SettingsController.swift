@@ -125,21 +125,11 @@ private extension SettingsController {
     
     @objc func onMediator() {
         if UserService.shared.isLogin() {
-            onLogout()
+            UserService.shared.logout { [weak self] in
+                self?.renderData()
+            }
         } else {
-            onLogin()
-        }
-    }
-    
-    @objc func onLogin() {
-        UserService.shared.login { [weak self] in
-            self?.renderData()
-        }
-    }
-    
-    @objc func onLogout() {
-        app.showConfirm(title: APP.localized("logoutConfirm"), message: nil, cancel: nil, confirm: nil) { [weak self] in
-            UserService.shared.logout {
+            UserService.shared.login { [weak self] in
                 self?.renderData()
             }
         }
