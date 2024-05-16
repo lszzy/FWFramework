@@ -12,6 +12,10 @@ public class UserService {
     
     public static let shared = UserService()
     
+    // MARK: - Notification
+    public static let loginNotification = Notification.Name("loginNotification")
+    public static let logoutNotification = Notification.Name("logoutNotification")
+    
     // MARK: - Accessor
     private var userModel: UserModel?
     
@@ -45,21 +49,25 @@ extension UserService {
     public func saveUserModel(_ model: UserModel) {
         userModel = model
         userData = try? model.encoded()
+        
+        NSObject.app.postNotification(UserService.loginNotification)
     }
     
     public func clearUserModel() {
         userModel = nil
         userData = nil
+        
+        NSObject.app.postNotification(UserService.logoutNotification)
     }
     
-    public func login(_ completion: (() -> Void)?) {
+    public func login(_ completion: (() -> Void)? = nil) {
         let viewController = LoginController()
         viewController.completion = completion
         let navigationController = UINavigationController(rootViewController: viewController)
         Navigator.present(navigationController, animated: true, completion: nil)
     }
     
-    public func logout(_ completion: (() -> Void)?) {
+    public func logout(_ completion: (() -> Void)? = nil) {
         let viewController = Navigator.topViewController
         viewController?.app.showConfirm(title: APP.localized("logoutConfirm"), message: nil) { [weak self] in
             self?.clearUserModel()
