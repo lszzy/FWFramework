@@ -8,6 +8,8 @@
 
 "mediatorLogin" = "登入";
 "mediatorLogout" = "退出登入";
+"mediatorPlaceholder" = "請輸入你的暱稱";
+"mediatorNickname" = "親";
 "homeTitle" = "首頁";
 "testTitle" = "測試";
 "settingTitle" = "設定";
@@ -19,7 +21,7 @@
 "themeDark" = "深色";
 "themeGray" = "灰色";
 "welcomeTitle" = "你知道我在等你嗎？";
-"backTitle" = "歡迎回來，親";
+"backTitle" = "歡迎回來，%@";
 "logoutConfirm" = "確定要退出目前帳號嗎?";
 "envDevelopment" = "開發";
 "envTesting" = "測試";

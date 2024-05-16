@@ -13,6 +13,8 @@ class LoginController: UIViewController {
     // MARK: - Accessor
     var completion: (() -> Void)?
     
+    private var viewModel = LoginViewModel()
+    
 }
 
 // MARK: - ViewControllerProtocol
@@ -29,11 +31,22 @@ extension LoginController: ViewControllerProtocol {
         let button = UIButton(type: .system)
         button.setTitle(APP.localized("mediatorLogin"), for: .normal)
         button.setImage(APP.iconImage("zmdi-var-account", 25), for: .normal)
-        button.app.addTouch { [weak self] (sender) in
-            self?.dismiss(animated: true, completion: self?.completion)
-        }
+        button.app.addTouch(target: self, action: #selector(loginButtonClicked))
         view.addSubview(button)
         button.app.layoutChain.center()
+    }
+    
+}
+
+// MARK: - Action
+private extension LoginController {
+    
+    @objc func loginButtonClicked() {
+        app.showPrompt(title: "mediatorPlaceholder".app.localized, message: nil) { [weak self] nickName in
+            self?.viewModel.login(nickName: nickName, completion: {
+                self?.dismiss(animated: true, completion: self?.completion)
+            })
+        }
     }
     
 }

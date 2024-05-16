@@ -19,6 +19,8 @@
 		2F0F09272B3186F4000C3F5E /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09232B3186F4000C3F5E /* Video.mp4 */; };
 		2F0F09292B328E24000C3F5E /* Audio2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2F0F09282B328E24000C3F5E /* Audio2.m4a */; };
 		2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */; };
+		2F30926B2BF5B51100F64898 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F30926A2BF5B51100F64898 /* LoginViewModel.swift */; };
+		2F30926E2BF5B60200F64898 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F30926D2BF5B60200F64898 /* UserModel.swift */; };
 		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
 		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
 		2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */; };
@@ -108,6 +110,8 @@
 		2F2969772BD11D6C00F23645 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		2F2969782BD11D6C00F23645 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDatabaseController.swift; sourceTree = "<group>"; };
+		2F30926A2BF5B51100F64898 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		2F30926D2BF5B60200F64898 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
 		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
 		2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEncodeController.swift; sourceTree = "<group>"; };
@@ -209,6 +213,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F3092692BF5B4BA00F64898 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2F30926A2BF5B51100F64898 /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2F30926C2BF5B5E600F64898 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2F30926D2BF5B60200F64898 /* UserModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		2F6A411B28B5F80A003719E7 /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,6 +505,8 @@
 			isa = PBXGroup;
 			children = (
 				2F6A412128B5FF07003719E7 /* Controller */,
+				2F3092692BF5B4BA00F64898 /* ViewModel */,
+				2F30926C2BF5B5E600F64898 /* Model */,
 				2FF08B7428ADE7690074895A /* Service */,
 			);
 			path = Login;
@@ -726,6 +748,7 @@
 				2FB11F0128E2FB0000DCB965 /* TestQrcodeController.swift in Sources */,
 				2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */,
 				2F49EE2228FFA25D00F229BB /* TestStatisticalController.swift in Sources */,
+				2F30926E2BF5B60200F64898 /* UserModel.swift in Sources */,
 				2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */,
 				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
@@ -756,6 +779,7 @@
 				2FF08B7928ADE7690074895A /* UserService.swift in Sources */,
 				2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */,
 				2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */,
+				2F30926B2BF5B51100F64898 /* LoginViewModel.swift in Sources */,
 				2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,
