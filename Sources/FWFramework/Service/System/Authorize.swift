@@ -321,3 +321,28 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         UIApplication.shared.registerForRemoteNotifications()
     }
 }
+
+// MARK: - Concurrency+Authorize
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension AuthorizeProtocol {
+    
+    /// 异步查询权限状态
+    public func authorizeStatus() async -> (AuthorizeStatus, Error?) {
+        await withCheckedContinuation { continuation in
+            authorizeStatus { status, error in
+                continuation.resume(returning: (status, error))
+            }
+        }
+    }
+    
+    /// 异步执行权限授权
+    public func requestAuthorize() async -> (AuthorizeStatus, Error?) {
+        await withCheckedContinuation { continuation in
+            requestAuthorize { status, error in
+                continuation.resume(returning: (status, error))
+            }
+        }
+    }
+    
+}
+#endif
