@@ -38,6 +38,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
             ["提醒", AuthorizeType.reminders],
             ["通知", AuthorizeType.notifications],
             ["广告追踪", AuthorizeType.tracking],
+            ["生物识别", AuthorizeType.biometry],
         ]
         tableData.append(contentsOf: authorizeList)
     }
@@ -76,7 +77,16 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
         let type = rowData[1] as! AuthorizeType
         
         let manager = AuthorizeManager.manager(type: type)
-        if manager?.authorizeStatus() == .notDetermined {
+        if type == .biometry {
+            manager?.requestAuthorize({ [weak self] status, error in
+                self?.tableView.reloadRows(at: [indexPath], with: .fade)
+                if status == .authorized {
+                    self?.app.showMessage(text: "验证成功")
+                } else {
+                    self?.app.showAlert(error: error)
+                }
+            })
+        } else if manager?.authorizeStatus() == .notDetermined {
             manager?.requestAuthorize({ [weak self] _, _ in
                 self?.tableView.reloadRows(at: [indexPath], with: .fade)
             })

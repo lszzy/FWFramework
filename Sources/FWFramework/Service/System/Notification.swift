@@ -26,7 +26,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         set { AuthorizeNotifications.shared.authorizeOptions = newValue }
     }
     
-    /// 异步查询通知权限状态，当前线程回调
+    /// 异步查询通知权限状态，主线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
         AuthorizeNotifications.shared.authorizeStatus(completion != nil ? { status, _ in
             completion?(status)

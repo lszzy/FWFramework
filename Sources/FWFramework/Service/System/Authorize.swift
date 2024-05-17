@@ -62,14 +62,17 @@ public protocol AuthorizeProtocol {
     /// 异步执行权限授权，主线程回调，必须实现
     func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
     
-    /// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
+    /// 异步查询权限状态，主线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
     func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
 }
 
 extension AuthorizeProtocol {
-    /// 默认实现异步查询权限状态
+    /// 默认实现异步查询权限状态，主线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
-        completion?(authorizeStatus(), nil)
+        let status = authorizeStatus()
+        DispatchQueue.fw.mainAsync {
+            completion?(status, nil)
+        }
     }
 }
 
@@ -124,7 +127,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     public static let shared = AuthorizeLocation()
     public static let always = AuthorizeLocation(isAlways: true)
     
-    private lazy var locationManager: CLLocationManager = {
+    public lazy var locationManager: CLLocationManager = {
         let result = CLLocationManager()
         result.delegate = self
         return result
@@ -300,10 +303,8 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
                 status = .notDetermined
             }
             
-            if completion != nil {
-                DispatchQueue.main.async {
-                    completion?(status, nil)
-                }
+            DispatchQueue.fw.mainAsync {
+                completion?(status, nil)
             }
         }
     }
