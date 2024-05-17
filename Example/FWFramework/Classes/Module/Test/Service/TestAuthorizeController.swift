@@ -7,16 +7,26 @@
 //
 
 import FWFramework
+import LocalAuthentication
 
 class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
+
+    @StoredValue("biometryPasscode")
+    var biometryPasscode: Bool = false
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
     
     func setupNavbar() {
-        app.setRightBarItem("设置") { _ in
-            UIApplication.app.openAppSettings()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["跳转设置", (self?.biometryPasscode ?? false) ? "关闭密码验证" : "打开密码验证"], actionBlock: { index in
+                if index == 0 {
+                    UIApplication.app.openAppSettings()
+                } else if index == 1 {
+                    self?.biometryPasscode = !(self?.biometryPasscode ?? false)
+                }
+            })
         }
         
         // 手工修改设置返回页面自动刷新权限，释放时自动移除监听
@@ -78,6 +88,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
         
         let manager = AuthorizeManager.manager(type: type)
         if type == .biometry {
+            AuthorizeBiometry.shared.policy = biometryPasscode ? .deviceOwnerAuthentication : .deviceOwnerAuthenticationWithBiometrics
             manager?.requestAuthorize({ [weak self] status, error in
                 self?.tableView.reloadRows(at: [indexPath], with: .fade)
                 if status == .authorized {
