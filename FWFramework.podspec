@@ -88,6 +88,11 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
+    ss.subspec 'Biometry' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Biometry/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
     ss.subspec 'Macros' do |sss|
       sss.source_files = 'Sources/FWPlugin/Macros/FWPluginMacros/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'

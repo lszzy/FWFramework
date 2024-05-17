@@ -39,6 +39,10 @@ let package = Package(
             targets: ["FWPluginTracking"]
         ),
         .library(
+            name: "FWPluginBiometry",
+            targets: ["FWPluginBiometry"]
+        ),
+        .library(
             name: "FWPluginMacros",
             targets: ["FWPluginMacros"]
         ),
@@ -120,6 +124,15 @@ let package = Package(
             name: "FWPluginTracking",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Tracking",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM"),
+            ]
+        ),
+        .target(
+            name: "FWPluginBiometry",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Biometry",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
