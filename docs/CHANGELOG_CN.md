@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.4.1] - 2024-05-17
+
+### Changed
+* 重构Authorize组件，开放实现类并新增Error参数，需迁移适配
+* 新增生物识别授权插件AuthorizeBiometry，需引入FWPlugin/Biometry子模块
+* 修复GET请求requestArgument嵌套Optional参数时编码为nil的问题
+
 ## [5.4.0] - 2024-05-14
 
 ### Changed
