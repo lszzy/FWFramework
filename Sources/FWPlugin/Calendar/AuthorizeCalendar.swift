@@ -65,7 +65,7 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
         let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(status, error)
                 }
             }
