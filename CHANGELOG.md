@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.1] - 2024-05-17
+
+### Changed
+* Reconstruct the Authorize component, open the implementation class and add the Error parameter, which requires migration and adaptation.
+* Added new biometric authorization plug-in AuthorizeBiometry, which needs to introduce the FWPlugin/Biometry submodule
+* Fixed the problem of encoding nil when requestArgument nested Optional parameters in GET request
+
 ## [5.4.0] - 2024-05-14
 
 ### Changed
