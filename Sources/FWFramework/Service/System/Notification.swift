@@ -156,3 +156,28 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
 }
+
+// MARK: - Concurrency+Notification
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension NotificationManager {
+    
+    /// 异步查询通知权限状态
+    public func authorizeStatus() async -> AuthorizeStatus {
+        await withCheckedContinuation { continuation in
+            authorizeStatus { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+    /// 执行通知权限授权
+    public func requestAuthorize() async -> AuthorizeStatus {
+        await withCheckedContinuation { continuation in
+            requestAuthorize { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+}
+#endif
