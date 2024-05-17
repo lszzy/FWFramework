@@ -106,17 +106,17 @@ public struct Validator<Value> {
 
 extension Validator {
     
-    /// Nil有效验证器，仅nil时返回true
+    /// Nil有效验证器，仅nil时返回true，兼容嵌套Optional
     public static var isNil: Self {
         .predicate { value in
-            value == nil
+            Optional<Any>.isNil(value)
         }
     }
     
-    /// 非Nil有效验证器，非nil时返回true
+    /// 非Nil有效验证器，非nil时返回true，兼容嵌套Optional
     public static var isNotNil: Self {
         .predicate { value in
-            value != nil
+            !Optional<Any>.isNil(value)
         }
     }
     

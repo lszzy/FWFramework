@@ -324,7 +324,7 @@ extension Optional {
     public var array: [Any]? { return self as? [Any] }
     public var dictionary: [AnyHashable: Any]? { return self as? [AnyHashable: Any] }
     
-    public var isNil: Bool { return self == nil }
+    public var isNil: Bool { return Optional<Any>.isNil(self) }
     public static func isNil(_ value: Wrapped?) -> Bool {
         if let value = value { return deepUnwrap(value) == nil }
         return true

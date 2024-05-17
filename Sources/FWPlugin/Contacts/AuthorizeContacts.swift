@@ -18,8 +18,10 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeContacts
 /// 通讯录授权
-private class AuthorizeContacts: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
+public class AuthorizeContacts: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeContacts()
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         let status = CNContactStore.authorizationStatus(for: .contacts)
         switch status {
         case .restricted:
@@ -33,12 +35,12 @@ private class AuthorizeContacts: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         CNContactStore().requestAccess(for: .contacts) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(status)
+                    completion?(status, error)
                 }
             }
         }
@@ -48,6 +50,6 @@ private class AuthorizeContacts: NSObject, AuthorizeProtocol {
 // MARK: - Autoloader+Contacts
 @objc extension Autoloader {
     static func loadPlugin_Contacts() {
-        AuthorizeManager.presetAuthorize(.contacts) { AuthorizeContacts() }
+        AuthorizeManager.presetAuthorize(.contacts) { AuthorizeContacts.shared }
     }
 }

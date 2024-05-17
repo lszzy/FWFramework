@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.4.0'
+  s.version               = '5.4.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.subspec 'FWFramework' do |ss|
     ss.subspec 'Kernel' do |sss|
       sss.source_files = 'Sources/FWFramework/Kernel/**/*.swift'
-      sss.resource_bundles = {'PrivacyInfo' => ['Sources/PrivacyInfo.xcprivacy']}
+      sss.resources = ['Sources/PrivacyInfo.xcprivacy']
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
       }
@@ -85,6 +85,11 @@ Pod::Spec.new do |s|
 
     ss.subspec 'Tracking' do |sss|
       sss.source_files = 'Sources/FWPlugin/Tracking/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
+    ss.subspec 'Biometry' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Biometry/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     

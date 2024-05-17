@@ -46,7 +46,6 @@ protocol AppModuleProtocol: ModuleProtocol {
     }
     
     // MARK: - UIApplicationDelegate
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         NotificationManager.shared.clearNotificationBadges()
         if let remoteNotification = launchOptions?[.remoteNotification] {
@@ -74,6 +73,10 @@ protocol AppModuleProtocol: ModuleProtocol {
             UIWindow.app.showMessage(text: "收到本地通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
         return true
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        NotificationManager.shared.clearNotificationBadges()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

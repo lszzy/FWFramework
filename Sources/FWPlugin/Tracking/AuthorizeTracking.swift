@@ -28,8 +28,10 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeTracking
 /// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
-private class AuthorizeTracking: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
+public class AuthorizeTracking: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeTracking()
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         if #available(iOS 14.0, *) {
             let status = ATTrackingManager.trackingAuthorizationStatus
             switch status {
@@ -47,19 +49,19 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {
                     DispatchQueue.main.async {
-                        completion?(self.authorizeStatus())
+                        completion?(self.authorizeStatus(), nil)
                     }
                 }
             }
         } else {
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(self.authorizeStatus())
+                    completion?(self.authorizeStatus(), nil)
                 }
             }
         }
@@ -69,6 +71,6 @@ private class AuthorizeTracking: NSObject, AuthorizeProtocol {
 // MARK: - Autoloader+Tracking
 @objc extension Autoloader {
     static func loadPlugin_Tracking() {
-        AuthorizeManager.presetAuthorize(.tracking) { AuthorizeTracking() }
+        AuthorizeManager.presetAuthorize(.tracking) { AuthorizeTracking.shared }
     }
 }

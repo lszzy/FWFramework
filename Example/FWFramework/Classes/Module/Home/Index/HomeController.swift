@@ -11,9 +11,9 @@ import FWFramework
 class HomeController: UIViewController {
     
     // MARK: - Accessor
-    private lazy var loginButton: UIButton = {
+    private lazy var mediatorButton: UIButton = {
         let button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(onLogin), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onMediator), for: .touchUpInside)
         return button
     }()
 
@@ -42,11 +42,11 @@ extension HomeController: ViewControllerProtocol {
     }
    
     func setupSubviews() {
-        view.addSubview(loginButton)
+        view.addSubview(mediatorButton)
     }
     
     func setupLayout() {
-        loginButton.app.layoutChain
+        mediatorButton.app.layoutChain
             .horizontal()
             .top(toSafeArea: 20)
             .height(30)
@@ -54,10 +54,11 @@ extension HomeController: ViewControllerProtocol {
     
     private func renderData() {
         setupNavbar()
+        
         if UserService.shared.isLogin() {
-            loginButton.setTitle(APP.localized("backTitle"), for: .normal)
+            mediatorButton.setTitle(String(format: APP.localized("backTitle"), UserService.shared.getUserModel()?.userName ?? ""), for: .normal)
         } else {
-            loginButton.setTitle(APP.localized("welcomeTitle"), for: .normal)
+            mediatorButton.setTitle(APP.localized("welcomeTitle"), for: .normal)
         }
     }
     
@@ -66,11 +67,15 @@ extension HomeController: ViewControllerProtocol {
 // MARK: - Action
 extension HomeController {
     
-    @objc func onLogin() {
-        if UserService.shared.isLogin() { return }
-        
-        UserService.shared.login { [weak self] in
-            self?.renderData()
+    @objc func onMediator() {
+        if UserService.shared.isLogin() {
+            UserService.shared.logout { [weak self] in
+                self?.renderData()
+            }
+        } else {
+            UserService.shared.login { [weak self] in
+                self?.renderData()
+            }
         }
     }
     

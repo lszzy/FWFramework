@@ -120,6 +120,10 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), arguments: [application])
         }
+        
+        /*
+        NotificationManager.shared.clearNotificationBadges()
+         */
     }
     
     open func applicationDidBecomeActive(_ application: UIApplication) {

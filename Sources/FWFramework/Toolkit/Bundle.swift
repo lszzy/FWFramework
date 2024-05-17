@@ -221,6 +221,8 @@ public class FrameworkBundle: ModuleBundle {
     public static var refreshLoadingTitle: String { localizedString("fw.refreshLoading") }
     /// 多语言，已经全部加载完毕，fw.refreshFinished
     public static var refreshFinishedTitle: String { localizedString("fw.refreshFinished") }
+    /// 多语言，身份验证，fw.biometryReason
+    public static var biometryReasonTitle: String { localizedString("fw.biometryReason") }
     
     // MARK: - Override
     public override class func didInitialize() {
@@ -373,6 +375,7 @@ public class FrameworkBundle: ModuleBundle {
             "fw.refreshTriggered": "松开立即刷新   ",
             "fw.refreshLoading": "正在刷新数据...",
             "fw.refreshFinished": "已经全部加载完毕",
+            "fw.biometryReason": "身份验证",
         ])
         
         addStrings("zh-Hant", strings: [
@@ -392,6 +395,7 @@ public class FrameworkBundle: ModuleBundle {
             "fw.refreshTriggered": "鬆開立即刷新   ",
             "fw.refreshLoading": "正在刷新數據...",
             "fw.refreshFinished": "已經全部加載完畢",
+            "fw.biometryReason": "身份驗證",
         ])
         
         addStrings("en", strings: [
@@ -411,6 +415,7 @@ public class FrameworkBundle: ModuleBundle {
             "fw.refreshTriggered": "Release to refresh",
             "fw.refreshLoading": "Loading...",
             "fw.refreshFinished": "No more data",
+            "fw.biometryReason": "Authenticate",
         ])
     }
     

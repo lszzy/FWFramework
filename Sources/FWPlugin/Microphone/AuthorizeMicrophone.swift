@@ -18,8 +18,10 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeMicrophone
 /// 麦克风授权
-private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
+public class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeMicrophone()
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         let status = AVAudioSession.sharedInstance().recordPermission
         switch status {
         case .denied:
@@ -31,12 +33,12 @@ private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(status)
+                    completion?(status, nil)
                 }
             }
         }
@@ -46,6 +48,6 @@ private class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
 // MARK: - Autoloader+Microphone
 @objc extension Autoloader {
     static func loadPlugin_Microphone() {
-        AuthorizeManager.presetAuthorize(.microphone) { AuthorizeMicrophone() }
+        AuthorizeManager.presetAuthorize(.microphone) { AuthorizeMicrophone.shared }
     }
 }
