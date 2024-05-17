@@ -37,7 +37,7 @@ public class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(status, nil)
                 }
             }
