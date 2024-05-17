@@ -77,7 +77,7 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
         
         let manager = AuthorizeManager.manager(type: type)
         if manager?.authorizeStatus() == .notDetermined {
-            manager?.authorize({ [weak self] _ in
+            manager?.requestAuthorize({ [weak self] _, _ in
                 self?.tableView.reloadRows(at: [indexPath], with: .fade)
             })
         } else if type == .notifications {

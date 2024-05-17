@@ -56,20 +56,20 @@ public enum AuthorizeStatus: Int {
 // MARK: - AuthorizeProtocol
 /// 权限授权协议
 public protocol AuthorizeProtocol {
-    /// 查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
+    /// 同步查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知
     func authorizeStatus() -> AuthorizeStatus
     
-    /// 执行权限授权，主线程回调，必须实现
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?)
+    /// 异步执行权限授权，主线程回调，必须实现
+    func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
     
     /// 异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
-    func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?)
+    func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
 }
 
 extension AuthorizeProtocol {
     /// 默认实现异步查询权限状态
-    public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
-        completion?(authorizeStatus())
+    public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+        completion?(authorizeStatus(), nil)
     }
 }
 
@@ -77,10 +77,9 @@ extension AuthorizeProtocol {
 /// 权限管理器。由于打包上传ipa时会自动检查隐私库并提供Info.plist描述，所以默认关闭隐私库声明
 ///
 /// 开启指定权限方法示例：
-/// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWExtension/Contacts']
-/// 2. SPM项目勾选并引入指定子模块：import FWExtensionContacts
+/// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWPlugin/Contacts']
+/// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
 public class AuthorizeManager: NSObject {
-    private static var managers: [AuthorizeType: AuthorizeProtocol] = [:]
     private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
     
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
@@ -98,28 +97,21 @@ public class AuthorizeManager: NSObject {
     
     /// 获取指定类型的权限管理器单例，部分权限未启用时返回nil
     public static func manager(type: AuthorizeType) -> AuthorizeProtocol? {
-        if let manager = managers[type] { return manager }
-        guard let manager = factory(type: type) else { return nil }
-        managers[type] = manager
-        return manager
-    }
-    
-    private static func factory(type: AuthorizeType) -> AuthorizeProtocol? {
         if let block = blocks[type] {
             return block()
         }
         
         switch type {
         case .locationWhenInUse:
-            return AuthorizeLocation(isAlways: false)
+            return AuthorizeLocation.shared
         case .locationAlways:
-            return AuthorizeLocation(isAlways: true)
+            return AuthorizeLocation.always
         case .photoLibrary:
-            return AuthorizePhotoLibrary()
+            return AuthorizePhotoLibrary.shared
         case .camera:
-            return AuthorizeCamera()
+            return AuthorizeCamera.shared
         case .notifications:
-            return AuthorizeNotifications()
+            return AuthorizeNotifications.shared
         default:
             return nil
         }
@@ -128,23 +120,26 @@ public class AuthorizeManager: NSObject {
 
 // MARK: - AuthorizeLocation
 /// 定位授权
-private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDelegate {
+public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDelegate {
+    public static let shared = AuthorizeLocation()
+    public static let always = AuthorizeLocation(isAlways: true)
+    
     private lazy var locationManager: CLLocationManager = {
         let result = CLLocationManager()
         result.delegate = self
         return result
     }()
     
-    private var completionBlock: ((AuthorizeStatus) -> Void)?
+    private var completionBlock: ((AuthorizeStatus, Error?) -> Void)?
     private var changeIgnored: Bool = false
     private var isAlways: Bool = false
     
-    init(isAlways: Bool) {
+    public init(isAlways: Bool = false) {
         super.init()
         self.isAlways = isAlways
     }
     
-    func authorizeStatus() -> AuthorizeStatus {
+    public func authorizeStatus() -> AuthorizeStatus {
         // 定位功能未打开时返回Denied，可自行调用[CLLocationManager locationServicesEnabled]判断
         let status = CLLocationManager.authorizationStatus()
         switch status {
@@ -166,7 +161,7 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         completionBlock = completion
         
         if isAlways {
@@ -179,7 +174,7 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         // 如果请求always权限且当前已经是WhenInUse权限，系统会先回调此方法一次，忽略之
         if isAlways && !changeIgnored {
             if status == .notDetermined || status == .authorizedWhenInUse {
@@ -191,7 +186,7 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
         // 主线程回调，仅一次
         if completionBlock != nil {
             DispatchQueue.main.async {
-                self.completionBlock?(self.authorizeStatus())
+                self.completionBlock?(self.authorizeStatus(), nil)
                 self.completionBlock = nil
             }
         }
@@ -200,8 +195,10 @@ private class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerD
 
 // MARK: - AuthorizePhotoLibrary
 /// 相册授权
-private class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
+public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizePhotoLibrary()
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status {
         case .restricted:
@@ -215,11 +212,11 @@ private class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(self.authorizeStatus())
+                    completion?(self.authorizeStatus(), nil)
                 }
             }
         }
@@ -228,8 +225,10 @@ private class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeCamera
 /// 照相机授权
-private class AuthorizeCamera: NSObject, AuthorizeProtocol {
-    func authorizeStatus() -> AuthorizeStatus {
+public class AuthorizeCamera: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeCamera()
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         // 模拟器不支持照相机，返回受限制
         let mediaType = AVMediaType.video
         guard let device = AVCaptureDevice.default(for: mediaType) else { return .restricted }
@@ -248,11 +247,11 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(self.authorizeStatus())
+                    completion?(self.authorizeStatus(), nil)
                 }
             }
         }
@@ -261,10 +260,12 @@ private class AuthorizeCamera: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeNotifications
 /// 通知授权
-internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
-    static var authorizeOptions: UNAuthorizationOptions = [.badge, .sound, .alert]
+public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeNotifications()
     
-    func authorizeStatus() -> AuthorizeStatus {
+    public var authorizeOptions: UNAuthorizationOptions = [.badge, .sound, .alert]
+    
+    public func authorizeStatus() -> AuthorizeStatus {
         var status: AuthorizeStatus = .notDetermined
         // 由于查询授权为异步方法，此处使用信号量阻塞当前线程，同步返回查询结果
         let semaphore = DispatchSemaphore(value: 0)
@@ -285,7 +286,7 @@ internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         return status
     }
     
-    func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             var status: AuthorizeStatus = .notDetermined
             switch settings.authorizationStatus {
@@ -301,19 +302,18 @@ internal class AuthorizeNotifications: NSObject, AuthorizeProtocol {
             
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(status)
+                    completion?(status, nil)
                 }
             }
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        let options = AuthorizeNotifications.authorizeOptions
-        UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+        UNUserNotificationCenter.current().requestAuthorization(options: authorizeOptions) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(status)
+                    completion?(status, error)
                 }
             }
         }

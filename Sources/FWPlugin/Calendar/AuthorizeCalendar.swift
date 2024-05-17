@@ -22,17 +22,21 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeCalendar
 /// 日历授权
-private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
+public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
+    public static let shared = AuthorizeCalendar(type: .event)
+    public static let writeOnly = AuthorizeCalendar(type: .event, writeOnly: true)
+    public static let reminder = AuthorizeCalendar(type: .reminder)
+    
     private var type: EKEntityType = .event
     private var writeOnly: Bool = false
     
-    init(type: EKEntityType, writeOnly: Bool = false) {
+    public init(type: EKEntityType, writeOnly: Bool = false) {
         super.init()
         self.type = type
         self.writeOnly = writeOnly
     }
     
-    func authorizeStatus() -> AuthorizeStatus {
+    public func authorizeStatus() -> AuthorizeStatus {
         let status = EKEventStore.authorizationStatus(for: type)
         switch status {
         case .restricted:
@@ -57,12 +61,12 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
         }
     }
     
-    func authorize(_ completion: ((AuthorizeStatus) -> Void)?) {
+    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
                 DispatchQueue.main.async {
-                    completion?(status)
+                    completion?(status, error)
                 }
             }
         }
@@ -91,8 +95,8 @@ private class AuthorizeCalendar: NSObject, AuthorizeProtocol {
 // MARK: - Autoloader+Calendar
 @objc extension Autoloader {
     static func loadPlugin_Calendar() {
-        AuthorizeManager.presetAuthorize(.calendars) { AuthorizeCalendar(type: .event) }
-        AuthorizeManager.presetAuthorize(.calendarsWriteOnly) { AuthorizeCalendar(type: .event, writeOnly: true) }
-        AuthorizeManager.presetAuthorize(.reminders) { AuthorizeCalendar(type: .reminder) }
+        AuthorizeManager.presetAuthorize(.calendars) { AuthorizeCalendar.shared }
+        AuthorizeManager.presetAuthorize(.calendarsWriteOnly) { AuthorizeCalendar.writeOnly }
+        AuthorizeManager.presetAuthorize(.reminders) { AuthorizeCalendar.reminder }
     }
 }
