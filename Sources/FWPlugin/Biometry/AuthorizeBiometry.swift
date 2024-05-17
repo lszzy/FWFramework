@@ -30,39 +30,40 @@ public class AuthorizeBiometry: NSObject, AuthorizeProtocol {
     /// 自定义上下文配置句柄，默认nil
     public var customContextBlock: ((LAContext) -> Void)?
     /// 当前生物识别类型，如none|touchID|faceID|opticID，详见LAContext
-    public var biometryType: LABiometryType { context.biometryType }
+    public var biometryType: LABiometryType { checkContext.biometryType }
     
-    /// 由于一个LAContext对象仅能evaluatePolicy一次，本context仅用于检测状态
-    private lazy var context: LAContext = .init()
+    private lazy var checkContext: LAContext = .init()
     private var latestAuthorizeStatus: AuthorizeStatus?
     private var latestAuthorizeError: Error?
     
     /// 同步查询状态，默认返回最近一次认证状态，未认证时为notDetermined，不支持时为restricted
     public func authorizeStatus() -> AuthorizeStatus {
-        var status = latestAuthorizeStatus
-        if status == nil {
+        if latestAuthorizeStatus == nil {
             var nserror: NSError?
-            if !context.canEvaluatePolicy(policy, error: &nserror) {
-                status = .restricted
+            if !checkContext.canEvaluatePolicy(policy, error: &nserror) {
+                latestAuthorizeStatus = .restricted
+                latestAuthorizeError = nserror
             }
         }
-        return status ?? .notDetermined
+        
+        let status = latestAuthorizeStatus ?? .notDetermined
+        return status
     }
     
     /// 异步查询状态，主线程回调，默认返回最近一次认证状态，未认证时为notDetermined，不支持时为restricted
     public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
-        var status = latestAuthorizeStatus
-        var error = latestAuthorizeError
-        if status == nil {
+        if latestAuthorizeStatus == nil {
             var nserror: NSError?
-            if !context.canEvaluatePolicy(policy, error: &nserror) {
-                status = .restricted
-                error = nserror
+            if !checkContext.canEvaluatePolicy(policy, error: &nserror) {
+                latestAuthorizeStatus = .restricted
+                latestAuthorizeError = nserror
             }
         }
         
+        let status = latestAuthorizeStatus ?? .notDetermined
+        let error = latestAuthorizeError
         DispatchQueue.fw.mainAsync {
-            completion?(status ?? .notDetermined, error)
+            completion?(status, error)
         }
     }
     
