@@ -327,19 +327,19 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
 extension AuthorizeProtocol {
     
     /// 异步查询权限状态
-    public func authorizeStatus() async -> (AuthorizeStatus, Error?) {
+    public func authorizeStatus() async -> (status: AuthorizeStatus, error: Error?) {
         await withCheckedContinuation { continuation in
             authorizeStatus { status, error in
-                continuation.resume(returning: (status, error))
+                continuation.resume(returning: (status: status, error: error))
             }
         }
     }
     
     /// 异步执行权限授权
-    public func requestAuthorize() async -> (AuthorizeStatus, Error?) {
+    public func requestAuthorize() async -> (status: AuthorizeStatus, error: Error?) {
         await withCheckedContinuation { continuation in
             requestAuthorize { status, error in
-                continuation.resume(returning: (status, error))
+                continuation.resume(returning: (status: status, error: error))
             }
         }
     }
