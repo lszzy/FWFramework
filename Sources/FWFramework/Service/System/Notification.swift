@@ -22,18 +22,22 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Authorize
     /// 授权选项，默认[.badge, .sound, .alert]
     public var authorizeOptions: UNAuthorizationOptions {
-        get { return AuthorizeNotifications.authorizeOptions }
-        set { AuthorizeNotifications.authorizeOptions = newValue }
+        get { return AuthorizeNotifications.shared.authorizeOptions }
+        set { AuthorizeNotifications.shared.authorizeOptions = newValue }
     }
     
-    /// 异步查询通知权限状态，当前线程回调
+    /// 异步查询通知权限状态，主线程回调
     public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeManager.manager(type: .notifications)?.authorizeStatus(completion)
+        AuthorizeNotifications.shared.authorizeStatus(completion != nil ? { status, _ in
+            completion?(status)
+        } : nil)
     }
     
     /// 执行通知权限授权，主线程回调
     public func requestAuthorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeManager.manager(type: .notifications)?.authorize(completion)
+        AuthorizeNotifications.shared.requestAuthorize(completion != nil ? { status, _ in
+            completion?(status)
+        } : nil)
     }
     
     // MARK: - Badge

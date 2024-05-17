@@ -17,7 +17,7 @@
     <a title="AuthorizeProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.4.0 Docs</a> (62% documented)</p>
+        <p><a href="../index.html">FWFramework 5.4.1 Docs</a> (62% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -108,7 +108,34 @@
                 <a href="../Classes/AudioPlayer.html">AudioPlayer</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/AuthorizeBiometry.html">AuthorizeBiometry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeCalendar.html">AuthorizeCalendar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeCamera.html">AuthorizeCamera</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeContacts.html">AuthorizeContacts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeLocation.html">AuthorizeLocation</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/AuthorizeManager.html">AuthorizeManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeMicrophone.html">AuthorizeMicrophone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeNotifications.html">AuthorizeNotifications</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizePhotoLibrary.html">AuthorizePhotoLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeTracking.html">AuthorizeTracking</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/AutoPurgingImageCache.html">AutoPurgingImageCache</a>
@@ -2433,7 +2460,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知</p>
+                        <p>同步查询权限状态，必须实现。某些权限会阻塞当前线程，建议异步查询，如通知</p>
 
                       </div>
                       <div class="declaration">
@@ -2450,9 +2477,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework17AuthorizeProtocolP9authorizeyyyAA0B6StatusOcSgF"></a>
-                    <a name="//apple_ref/swift/Method/authorize(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17AuthorizeProtocolP9authorizeyyyAA0B6StatusOcSgF">authorize(_:<wbr>)</a>
+                    <a name="/s:11FWFramework17AuthorizeProtocolP07requestB0yyyAA0B6StatusO_s5Error_pSgtcSgF"></a>
+                    <a name="//apple_ref/swift/Method/requestAuthorize(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17AuthorizeProtocolP07requestB0yyyAA0B6StatusO_s5Error_pSgtcSgF">requestAuthorize(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2460,14 +2487,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>执行权限授权，主线程回调，必须实现</p>
+                        <p>异步执行权限授权，主线程回调，必须实现</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorize</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">requestAuthorize</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -2477,9 +2504,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework17AuthorizeProtocolP15authorizeStatusyyyAA0bE0OcSgF"></a>
+                    <a name="/s:11FWFramework17AuthorizeProtocolP15authorizeStatusyyyAA0bE0O_s5Error_pSgtcSgF"></a>
                     <a name="//apple_ref/swift/Method/authorizeStatus(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17AuthorizeProtocolP15authorizeStatusyyyAA0bE0OcSgF">authorizeStatus(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework17AuthorizeProtocolP15authorizeStatusyyyAA0bE0O_s5Error_pSgtcSgF">authorizeStatus(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Default implementation
@@ -2490,19 +2517,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>异步查询权限状态，当前线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知</p>
+                        <p>异步查询权限状态，主线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知</p>
 
                       </div>
                       <h4>Default Implementation</h4>
                       <div class="default_impl abstract">
-                        <p>默认实现异步查询权限状态</p>
+                        <p>默认实现异步查询权限状态，主线程回调</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorizeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authorizeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -2514,7 +2541,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-14)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

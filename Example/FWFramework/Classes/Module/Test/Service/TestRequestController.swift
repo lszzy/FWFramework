@@ -48,9 +48,19 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
     }*/
     
     var testFailed = false
+    var optional: String?
     
     override func requestUrl() -> String {
         "http://kvm.wuyong.site/test.json?t=\(Date.app.currentTime)"
+    }
+    
+    override func requestArgument() -> Any? {
+        let isNull = [true, false].randomElement()!
+        if isNull {
+            return ["optional": NSNull()]
+        } else {
+            return ["optional": optional]
+        }
     }
     
     override func responseSerializerType() -> ResponseSerializerType {

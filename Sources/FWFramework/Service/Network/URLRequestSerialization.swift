@@ -311,7 +311,7 @@ extension HTTPRequestSerializer {
         }
         
         var urlEncodedStringValue: String {
-            if value == nil || value is NSNull {
+            if Optional<Any>.isNil(value) || value is NSNull {
                 return HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field))
             } else {
                 return String(format: "%@=%@", HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field)), HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(value)))

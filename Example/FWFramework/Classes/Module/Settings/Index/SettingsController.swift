@@ -14,7 +14,7 @@ import FWDebug
 class SettingsController: UIViewController {
     
     // MARK: - Accessor
-    private lazy var loginButton: UIButton = {
+    private lazy var mediatorButton: UIButton = {
         let button = AppTheme.largeButton()
         button.app.addTouch(target: self, action: #selector(onMediator))
         return button
@@ -41,8 +41,8 @@ extension SettingsController: TableViewControllerProtocol {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: 90))
         tableView.tableFooterView = footerView
         
-        footerView.addSubview(loginButton)
-        loginButton.app.layoutChain.center()
+        footerView.addSubview(mediatorButton)
+        mediatorButton.app.layoutChain.center()
     }
     
     func setupTableLayout() {
@@ -61,9 +61,9 @@ extension SettingsController: TableViewControllerProtocol {
         #endif
 
         if UserService.shared.isLogin() {
-            loginButton.setTitle(APP.localized("mediatorLogout"), for: .normal)
+            mediatorButton.setTitle(APP.localized("mediatorLogout"), for: .normal)
         } else {
-            loginButton.setTitle(APP.localized("mediatorLogin"), for: .normal)
+            mediatorButton.setTitle(APP.localized("mediatorLogin"), for: .normal)
         }
 
         tableData.removeAll()
@@ -125,21 +125,11 @@ private extension SettingsController {
     
     @objc func onMediator() {
         if UserService.shared.isLogin() {
-            onLogout()
+            UserService.shared.logout { [weak self] in
+                self?.renderData()
+            }
         } else {
-            onLogin()
-        }
-    }
-    
-    @objc func onLogin() {
-        UserService.shared.login { [weak self] in
-            self?.renderData()
-        }
-    }
-    
-    @objc func onLogout() {
-        app.showConfirm(title: APP.localized("logoutConfirm"), message: nil, cancel: nil, confirm: nil) { [weak self] in
-            UserService.shared.logout {
+            UserService.shared.login { [weak self] in
                 self?.renderData()
             }
         }

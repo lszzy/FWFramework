@@ -996,49 +996,49 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 125,
+      "line": 129,
       "symbol": "AppResponder.applicationDidBecomeActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 133,
+      "line": 137,
       "symbol": "AppResponder.applicationWillTerminate(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 142,
+      "line": 146,
       "symbol": "AppResponder.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 154,
+      "line": 158,
       "symbol": "AppResponder.application(_:didFailToRegisterForRemoteNotificationsWithError:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 166,
+      "line": 170,
       "symbol": "AppResponder.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 181,
+      "line": 185,
       "symbol": "AppResponder.application(_:open:options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 202,
+      "line": 206,
       "symbol": "AppResponder.application(_:continue:restorationHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -13336,6 +13336,69 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 127,
+      "symbol": "AuthorizeLocation.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 128,
+      "symbol": "AuthorizeLocation.always",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 130,
+      "symbol": "AuthorizeLocation.locationManager",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 140,
+      "symbol": "AuthorizeLocation.init(isAlways:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 180,
+      "symbol": "AuthorizeLocation.locationManager(_:didChangeAuthorization:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 202,
+      "symbol": "AuthorizePhotoLibrary.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 232,
+      "symbol": "AuthorizeCamera.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 267,
+      "symbol": "AuthorizeNotifications.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Authorize.swift",
+      "line": 269,
+      "symbol": "AuthorizeNotifications.authorizeOptions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Location.swift",
       "line": 151,
       "symbol": "LocationManager.locationManager(_:didUpdateLocations:)",
@@ -15835,6 +15898,48 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Biometry/AuthorizeBiometry.swift",
+      "line": 22,
+      "symbol": "AuthorizeBiometry.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Calendar/AuthorizeCalendar.swift",
+      "line": 26,
+      "symbol": "AuthorizeCalendar.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Calendar/AuthorizeCalendar.swift",
+      "line": 27,
+      "symbol": "AuthorizeCalendar.writeOnly",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Calendar/AuthorizeCalendar.swift",
+      "line": 28,
+      "symbol": "AuthorizeCalendar.reminder",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Calendar/AuthorizeCalendar.swift",
+      "line": 33,
+      "symbol": "AuthorizeCalendar.init(type:writeOnly:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Contacts/AuthorizeContacts.swift",
+      "line": 22,
+      "symbol": "AuthorizeContacts.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Lottie/LottiePluginView.swift",
       "line": 74,
       "symbol": "LottiePluginView.init()",
@@ -15888,6 +15993,13 @@
       "line": 170,
       "symbol": "LottiePluginView.sizeThatFits(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Microphone/AuthorizeMicrophone.swift",
+      "line": 22,
+      "symbol": "AuthorizeMicrophone.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
@@ -20270,6 +20382,13 @@
       "line": 328,
       "symbol": "SDWebImageProgressPluginIndicator.updateProgress(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Tracking/AuthorizeTracking.swift",
+      "line": 32,
+      "symbol": "AuthorizeTracking.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {

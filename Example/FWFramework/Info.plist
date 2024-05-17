@@ -70,6 +70,8 @@
 	<string>请点击“好”以允许访问。</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>请点击“允许”以允许访问。</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
