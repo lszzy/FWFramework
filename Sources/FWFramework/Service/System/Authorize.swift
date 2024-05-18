@@ -127,12 +127,6 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     public static let shared = AuthorizeLocation()
     public static let always = AuthorizeLocation(isAlways: true)
     
-    /// 是否启用后台定位，默认NO。如果需要后台定位，设为YES即可
-    public var backgroundLocation: Bool {
-        get { locationManager.allowsBackgroundLocationUpdates }
-        set { locationManager.allowsBackgroundLocationUpdates = newValue }
-    }
-    
     public lazy var locationManager: CLLocationManager = {
         let result = CLLocationManager()
         result.delegate = self
@@ -147,10 +141,10 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         self.isAlways = isAlways
     }
     
-    public func authorizeStatus() -> AuthorizeStatus {
+    public static func authorizeStatus(for manager: CLLocationManager, isAlways: Bool = false) -> AuthorizeStatus {
         let status: CLAuthorizationStatus
         if #available(iOS 14.0, *) {
-            status = locationManager.authorizationStatus
+            status = manager.authorizationStatus
         } else {
             status = CLLocationManager.authorizationStatus()
         }
@@ -171,6 +165,10 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         default:
             return .notDetermined
         }
+    }
+    
+    public func authorizeStatus() -> AuthorizeStatus {
+        return AuthorizeLocation.authorizeStatus(for: locationManager, isAlways: isAlways)
     }
     
     public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
