@@ -12,22 +12,40 @@ extension Wrapper where Base == Data {
     /// 将对象归档为data数据
     public static func archivedData(_ object: Any?) -> Data? {
         guard let object = object else { return nil }
-        let data = try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
-        return data
+        do {
+            return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Archive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
     }
     
     /// 将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用
     public func unarchivedObject<T>(_ clazz: T.Type) -> T? where T : NSObject, T : NSCoding {
-        let object = try? NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: base)
-        return object
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: base)
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
     }
     
     /// 将数据解档为对象
     public func unarchivedObject() -> Any? {
-        guard let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: base) else { return nil }
-        unarchiver.requiresSecureCoding = false
-        let object = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
-        return object
+        do {
+            let unarchiver = try NSKeyedUnarchiver(forReadingFrom: base)
+            unarchiver.requiresSecureCoding = false
+            return unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
     }
     
     /// 将对象归档保存到文件
