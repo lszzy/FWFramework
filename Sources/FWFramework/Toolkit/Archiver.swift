@@ -54,3 +54,101 @@ extension Wrapper where Base == Data {
         return data.fw.unarchivedObject()
     }
 }
+
+// MARK: - ArchiveContainer
+public class ArchiveContainer: NSObject, NSSecureCoding {
+    public var archiveData: Data?
+    public var archiveType: AnyArchivable.Type?
+    
+    public override init() {
+        super.init()
+    }
+    
+    public static var supportsSecureCoding: Bool {
+        return true
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init()
+        archiveData = coder.decodeObject(forKey: "archiveData") as? Data
+        archiveType = coder.decodeObject(forKey: "archiveType") as? AnyArchivable.Type
+    }
+    
+    public func encode(with coder: NSCoder) {
+        coder.encode(archiveData, forKey: "archiveData")
+        coder.encode(archiveType, forKey: "archiveType")
+    }
+}
+
+// MARK: - AnyArchivable
+/// 任意可归档对象协议
+public protocol AnyArchivable: ObjectType {
+    /// 将Data数据解档为对象
+    static func unarchivedObject(from data: Data?) -> Self?
+    /// 将Data数据解档为安全对象
+    static func unarchivedSafeObject(from data: Data?) -> Self
+    /// 将对象归档为Data数据
+    func archivedData() -> Data?
+}
+
+extension AnyArchivable {
+    /// 默认实现将Data数据解档为安全对象
+    public static func unarchivedSafeObject(from data: Data?) -> Self {
+        return unarchivedObject(from: data) ?? .init()
+    }
+}
+
+extension AnyArchivable where Self: Codable {
+    /// 默认实现将Data数据解档为对象
+    public static func unarchivedObject(from data: Data?) -> Self? {
+        guard let data = data else { return nil }
+        
+        do {
+            return try data.decoded() as Self
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
+    }
+    
+    /// 默认实现将对象归档为Data数据
+    public func archivedData() -> Data? {
+        do {
+            return try encoded() as Data
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Archive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
+    }
+}
+
+extension Array: AnyArchivable where Element: AnyArchivable {
+    /// 将Data数据解档为对象
+    public static func unarchivedObject(from data: Data?) -> Self? {
+        guard let data = data,
+              let stringArray = try? Data.fw.jsonDecode(data) as? [String] else {
+            return nil
+        }
+        
+        let objectArray = stringArray.compactMap { Element.unarchivedObject(from: $0.data(using: .utf8)) }
+        return objectArray
+    }
+    
+    /// 将Data数据解档为安全对象
+    public static func unarchivedSafeObject(from data: Data?) -> Self {
+        return unarchivedObject(from: data) ?? []
+    }
+    
+    /// 将对象归档为Data数据
+    public func archivedData() -> Data? {
+        let stringArray: [String] = compactMap { element in
+            guard let data = element.archivedData() else { return nil }
+            return String(data: data, encoding: .utf8)
+        }
+        return try? Data.fw.jsonEncode(stringArray)
+    }
+}

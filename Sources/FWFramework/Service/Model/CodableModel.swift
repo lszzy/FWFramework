@@ -24,7 +24,7 @@ import Foundation
 ///
 /// KeyMappable模式三：自定义模式
 /// 1. 需完整实现Codable协议的encode和decode协议方法
-public protocol CodableModel: Codable, AnyModel {}
+public protocol CodableModel: Codable, AnyModel, AnyArchivable {}
 
 extension CodableModel where Self: AnyObject {
     /// 获取对象的内存hash字符串
