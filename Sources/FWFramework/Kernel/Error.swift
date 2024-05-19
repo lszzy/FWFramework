@@ -143,7 +143,7 @@ public class ErrorManager: NSObject {
         
         #if DEBUG
         let nserror = error as NSError
-        Logger.debug(group: Logger.fw.moduleName, "\n========== ERROR ==========\ndomain: %@\n  code: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrashed: %@\n========== ERROR ==========", nserror.domain, nserror.code, nserror.localizedDescription, fileName, line, function, remark ?? "", String(describing: crashed))
+        Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\ndomain: %@\n  code: %d\nreason: %@\nmethod: %@ #%d %@\nremark: %@\ncrashed: %@\n========== ERROR ==========", nserror.domain, nserror.code, nserror.localizedDescription, fileName, line, function, remark ?? "", String(describing: crashed))
         #endif
         
         NotificationCenter.default.post(name: .ErrorCaptured, object: error, userInfo: userInfo)

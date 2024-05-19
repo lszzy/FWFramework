@@ -6,9 +6,11 @@
 //  Copyright © 2024 CocoaPods. All rights reserved.
 //
 
-import Foundation
+import FWFramework
 
-public struct UserModel: Codable {
+public struct UserModel: Codable, AnyArchivable {
     public var userId: String = ""
     public var userName: String = ""
+    
+    public init() {}
 }

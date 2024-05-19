@@ -131,7 +131,7 @@ public class ArchiverContainer: NSObject, NSSecureCoding {
             }
             guard let resultType = resultType else {
                 #if DEBUG
-                Logger.debug(group: Logger.fw.moduleName, "Unarchive error: you must call ArchiverContainer.registerType(_:) to register %@ before using it", archiveType)
+                Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\nYou must call ArchiverContainer.registerType(_:) to register %@ before using it\n========== ERROR ==========", archiveType)
                 #endif
                 return nil
             }
