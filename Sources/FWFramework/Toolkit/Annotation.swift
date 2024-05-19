@@ -52,6 +52,50 @@ public struct StoredValue<Value> {
     }
 }
 
+// MARK: - ArchivedValue
+/// UserDefault归档属性包装器注解，默认为手工指定或初始值
+///
+/// 使用示例：
+/// @ArchivedValue("userName")
+/// static var userName: String = ""
+@propertyWrapper
+public struct ArchivedValue<Value> {
+    private let key: String
+    private let defaultValue: Value
+    
+    public init(
+        wrappedValue: Value,
+        _ key: String,
+        defaultValue: Value? = nil
+    ) {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+    }
+    
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: Value? = nil
+    ) where WrappedValue? == Value {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+    }
+    
+    public var wrappedValue: Value {
+        get {
+            let value = UserDefaults.standard.fw.archivableObject(forKey: key) as? Value
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
+        }
+        set {
+            if !Optional<Any>.isNil(newValue) {
+                UserDefaults.standard.fw.setArchivableObject(newValue, forKey: key)
+            } else {
+                UserDefaults.standard.fw.setArchivableObject(nil, forKey: key)
+            }
+        }
+    }
+}
+
 // MARK: - ValidatedValue
 /// ValidatedValue属性包装器注解，默认为手工指定或初始值
 ///
