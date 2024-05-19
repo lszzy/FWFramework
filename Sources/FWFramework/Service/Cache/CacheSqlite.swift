@@ -79,7 +79,7 @@ open class CacheSqlite: CacheEngine {
                         let dataSize = sqlite3_column_bytes(stmt, 0)
                         if let dataBuffer = dataBuffer {
                             let data = Data(bytes: dataBuffer, count: Int(dataSize))
-                            object = unarchivedObject(data)
+                            object = data.fw.unarchivedObject()
                         }
                     }
                 }
@@ -92,7 +92,7 @@ open class CacheSqlite: CacheEngine {
     }
     
     open override func writeCache(_ object: Any, forKey key: String) {
-        guard let data = archivedData(object) as? NSData else { return }
+        guard let data = Data.fw.archivedData(object) as? NSData else { return }
         
         autoreleasepool {
             if open() {
