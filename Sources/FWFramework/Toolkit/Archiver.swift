@@ -13,10 +13,10 @@ extension Wrapper where Base == Data {
     public static func archivedData(_ object: Any?) -> Data? {
         guard var object = object else { return nil }
         do {
-            if AnyArchiver.isArchivableObject(object) {
-                let archiver = AnyArchiver()
-                archiver.archivableObject = object
-                object = archiver
+            if ArchiveCoder.isArchivableObject(object) {
+                let archiveCoder = ArchiveCoder()
+                archiveCoder.archivableObject = object
+                object = archiveCoder
             }
             
             return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
@@ -43,8 +43,8 @@ extension Wrapper where Base == Data {
     /// 将数据解档为指定AnyArchivable对象，推荐使用
     public func unarchivedObject<T>(_ type: T.Type) -> T? where T : AnyArchivable {
         do {
-            let archiver = try NSKeyedUnarchiver.unarchivedObject(ofClass: AnyArchiver.self, from: base)
-            return archiver?.archivableObject as? T
+            let archiveCoder = try NSKeyedUnarchiver.unarchivedObject(ofClass: ArchiveCoder.self, from: base)
+            return archiveCoder?.archivableObject as? T
         } catch {
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
@@ -59,8 +59,8 @@ extension Wrapper where Base == Data {
             let unarchiver = try NSKeyedUnarchiver(forReadingFrom: base)
             unarchiver.requiresSecureCoding = false
             let result = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
-            if let archiver = result as? AnyArchiver {
-                return archiver.archivableObject
+            if let archiveCoder = result as? ArchiveCoder {
+                return archiveCoder.archivableObject
             }
             return result
         } catch {
@@ -102,9 +102,9 @@ extension Wrapper where Base == Data {
     }
 }
 
-// MARK: - AnyArchiver
-/// AnyArchivable归档容器，注意当archiveObject为struct时，必须先调用registerType注册
-public class AnyArchiver: NSObject, NSSecureCoding {
+// MARK: - ArchiveCoder
+/// AnyArchivable归档编码器，注意当archiveObject为struct时，必须先调用registerType注册
+public class ArchiveCoder: NSObject, NSSecureCoding {
     // MARK: - Static
     /// 是否是有效的AnyArchivable归档对象或对象数组
     public static func isArchivableObject(_ object: Any?) -> Bool {
@@ -151,31 +151,31 @@ public class AnyArchiver: NSObject, NSSecureCoding {
     public var archivableObject: Any? {
         get {
             guard let archiveType = archiveType else { return nil }
-            var resultType = AnyArchiver.registeredTypes[archiveType]
+            var resultType = ArchiveCoder.registeredTypes[archiveType]
             if resultType == nil {
                 resultType = NSClassFromString(archiveType) as? AnyArchivable.Type
             }
             guard let resultType = resultType else {
                 #if DEBUG
-                Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\nYou must call AnyArchiver.registerType(_:) to register %@ before using it\n========== ERROR ==========", archiveType)
+                Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\nYou must call ArchiveCoder.registerType(_:) to register %@ before using it\n========== ERROR ==========", archiveType)
                 #endif
                 return nil
             }
             
             if isCollection {
-                return AnyArchiver.decodeObjects(archiveData, as: resultType)
+                return ArchiveCoder.decodeObjects(archiveData, as: resultType)
             } else {
-                return AnyArchiver.decodeObject(archiveData, as: resultType)
+                return ArchiveCoder.decodeObject(archiveData, as: resultType)
             }
         }
         set {
             var object = newValue as? AnyArchivable
             if let objects = newValue as? [AnyArchivable] {
                 object = objects.first
-                archiveData = AnyArchiver.encodeObjects(objects)
+                archiveData = ArchiveCoder.encodeObjects(objects)
                 isCollection = true
             } else {
-                archiveData = AnyArchiver.encodeObject(object)
+                archiveData = ArchiveCoder.encodeObject(object)
                 isCollection = false
             }
             
@@ -282,7 +282,7 @@ extension AnyArchivable where Self: Codable {
 extension Array where Element: AnyArchivable {
     /// 将Data数据解码为对象数组，不调用NSKeyedUnarchiver
     public static func archiveDecode(_ data: Data?) -> Self? {
-        return AnyArchiver.decodeObjects(data)
+        return ArchiveCoder.decodeObjects(data)
     }
     
     /// 将Data数据解码为安全对象数组，不调用NSKeyedUnarchiver
@@ -292,6 +292,6 @@ extension Array where Element: AnyArchivable {
     
     /// 将对象数组编码为Data数据，不调用NSKeyedArchiver
     public func archiveEncode() -> Data? {
-        return AnyArchiver.encodeObjects(self)
+        return ArchiveCoder.encodeObjects(self)
     }
 }
