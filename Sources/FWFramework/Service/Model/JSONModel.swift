@@ -27,7 +27,7 @@ import UIKit
 /// 1. 需完整实现JSONModel协议的mappingValue(_:forKey:)协议方法
 ///
 /// [HandyJSON](https://github.com/alibaba/HandyJSON)
-public protocol JSONModel: _ExtendCustomModelType, AnyModel, AnyArchivable {}
+public protocol JSONModel: _ExtendCustomModelType, AnyModel {}
 
 public protocol JSONModelCustomTransformable: _ExtendCustomBasicType {}
 
@@ -2601,12 +2601,12 @@ extension ObjectParameter where Self: JSONModel {
 
 // MARK: - AnyArchivable
 extension AnyArchivable where Self: JSONModel {
-    public static func unarchivedObject(from data: Data?) -> Self? {
+    public static func archiveDecode(_ data: Data?) -> Self? {
         guard let data = data else { return nil }
         return deserialize(from: String(data: data, encoding: .utf8))
     }
     
-    public func archivedData() -> Data? {
+    public func archiveEncode() -> Data? {
         return toJSONString()?.data(using: .utf8)
     }
 }
