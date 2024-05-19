@@ -35,7 +35,7 @@ public class UserService {
         Logger.debug("UserModel: \(isArchived ? "AnyArchivable" : "Codable")")
         
         if isArchived {
-            ArchiverContainer.registerType(UserModel.self)
+            AnyArchiver.registerType(UserModel.self)
             userModel = archivableModel
         } else {
             if let userData = userData {
