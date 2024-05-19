@@ -19,13 +19,28 @@ public class UserService {
     // MARK: - Accessor
     private var userModel: UserModel?
     
+    // 测试方案1：无需处理，自动归档保存到UserDefaults
+    @ArchivedValue("userModel")
+    private var archivableModel: UserModel?
+    
+    // 测试方案2：自行解码Data并保存到UserDefaults
     @StoredValue("userData")
     private var userData: Data?
     
+    // 随机测试方案1和方案2
+    private var isArchived = [true, false].randomElement()!
+    
     // MARK: - Lifecycle
     private init() {
-        if let userData = userData {
-            userModel = try? UserModel.decoded(from: userData)
+        Logger.debug("UserModel: \(isArchived ? "AnyArchivable" : "Codable")")
+        
+        if isArchived {
+            ArchiverContainer.registerType(UserModel.self)
+            userModel = archivableModel
+        } else {
+            if let userData = userData {
+                userModel = try? UserModel.decoded(from: userData)
+            }
         }
     }
     
@@ -48,6 +63,9 @@ extension UserService {
     
     public func saveUserModel(_ model: UserModel) {
         userModel = model
+        
+        // 同时保存测试方案一和方案2数据
+        archivableModel = model
         userData = try? model.encoded()
         
         NSObject.app.postNotification(UserService.loginNotification)
@@ -55,6 +73,9 @@ extension UserService {
     
     public func clearUserModel() {
         userModel = nil
+        
+        // 同时清除测试方案一和方案2数据
+        archivableModel = nil
         userData = nil
         
         NSObject.app.postNotification(UserService.logoutNotification)
