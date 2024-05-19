@@ -150,42 +150,54 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     /// 指定AnyArchivable对象或对象数组，自动处理归档数据
     public var archivableObject: Any? {
         get {
-            guard let archiveType = archiveType else { return nil }
-            var resultType = ArchiveCoder.registeredTypes[archiveType]
-            if resultType == nil {
-                resultType = NSClassFromString(archiveType) as? AnyArchivable.Type
+            guard var archiveType = archiveType else { return nil }
+            var isArray = false
+            if archiveType.hasPrefix("["), archiveType.hasSuffix("]") {
+                archiveType = String(archiveType.dropFirst().dropLast())
+                isArray = true
             }
-            guard let resultType = resultType else {
+            var objectType = ArchiveCoder.registeredTypes[archiveType]
+            if objectType == nil {
+                objectType = NSClassFromString(archiveType) as? AnyArchivable.Type
+            }
+            guard let objectType = objectType else {
                 #if DEBUG
                 Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\nYou must call ArchiveCoder.registerType(_:) to register %@ before using it\n========== ERROR ==========", archiveType)
                 #endif
                 return nil
             }
             
-            if isCollection {
-                return ArchiveCoder.decodeObjects(archiveData, as: resultType)
+            if isArray {
+                return ArchiveCoder.decodeObjects(archiveData, as: objectType)
             } else {
-                return ArchiveCoder.decodeObject(archiveData, as: resultType)
+                return ArchiveCoder.decodeObject(archiveData, as: objectType)
             }
         }
         set {
             var object = newValue as? AnyArchivable
+            var isArray = false
             if let objects = newValue as? [AnyArchivable] {
                 object = objects.first
+                isArray = true
                 archiveData = ArchiveCoder.encodeObjects(objects)
-                isCollection = true
             } else {
                 archiveData = ArchiveCoder.encodeObject(object)
-                isCollection = false
+            }
+            guard let object = object else {
+                archiveType = nil
+                return
             }
             
-            if let object = object, let clazz = type(of: object) as? AnyClass {
-                archiveType = NSStringFromClass(clazz)
-            } else if let object = object {
-                archiveType = String(describing: type(of: object) as AnyObject)
+            var objectType: String = ""
+            if let clazz = type(of: object) as? AnyClass {
+                objectType = NSStringFromClass(clazz)
             } else {
-                archiveType = nil
+                objectType = String(describing: type(of: object) as AnyObject)
             }
+            if isArray {
+                objectType = "[\(objectType)]"
+            }
+            archiveType = objectType
         }
     }
     
@@ -193,25 +205,9 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     public private(set) var archiveData: Data?
     /// 归档类型，如果归档对象为struct时，必须先调用registerType注册
     public private(set) var archiveType: String?
-    /// 是否是归档集合，设置归档对象时自动处理
-    public private(set) var isCollection = false
     
-    // MARK: - Lifecycle
-    /// 默认初始化方法
     public override init() {
         super.init()
-    }
-    
-    /// 指定归档完整数据并初始化
-    public init<T: AnyArchivable>(archiveData: Data?, archiveType: T.Type?, isCollection: Bool = false) {
-        super.init()
-        self.archiveData = archiveData
-        if let archiveClass = archiveType as? AnyClass {
-            self.archiveType = NSStringFromClass(archiveClass)
-        } else if let archiveType = archiveType {
-            self.archiveType = String(describing: archiveType as AnyObject)
-        }
-        self.isCollection = isCollection
     }
     
     // MARK: - NSSecureCoding
@@ -223,13 +219,11 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         super.init()
         archiveData = coder.decodeObject(forKey: "archiveData") as? Data
         archiveType = coder.decodeObject(forKey: "archiveType") as? String
-        isCollection = coder.decodeBool(forKey: "isCollection")
     }
     
     public func encode(with coder: NSCoder) {
         coder.encode(archiveData, forKey: "archiveData")
         coder.encode(archiveType, forKey: "archiveType")
-        coder.encode(isCollection, forKey: "isCollection")
     }
 }
 
