@@ -502,6 +502,8 @@ private extension DatabaseManager {
                     propertyInfo = DatabasePropertyInfo(type: .dictionary, propertyName: propertyName, name: name)
                 } else if classType == NSDate.self {
                     propertyInfo = DatabasePropertyInfo(type: .date, propertyName: propertyName, name: name)
+                } else if classType is AnyArchivable.Type {
+                    propertyInfo = DatabasePropertyInfo(type: .archivable, propertyName: propertyName, name: name)
                 } else if (classType == NSSet.self ||
                            classType == NSValue.self ||
                            classType == NSError.self ||
@@ -534,6 +536,7 @@ private extension DatabaseManager {
     }
     
     static func isSubModel(_ modelClass: AnyClass) -> Bool {
+        if modelClass is AnyArchivable.Type { return false }
         return (
             modelClass != NSString.self &&
             modelClass != NSNumber.self &&
@@ -812,6 +815,8 @@ private extension DatabaseManager {
             switch properyInfo.type {
             case .data, .string, .char, .dictionary, .array, .mutableDictionary, .mutableArray:
                 createSql.append("NULL,")
+            case .archivable:
+                createSql.append("NULL,")
             case .boolean, .int:
                 createSql.append("0,")
             case .float, .double, .number, .date:
@@ -903,6 +908,15 @@ private extension DatabaseManager {
                                 log("query 查询异常 Array/Dictionary 元素没实现NSCoding协议解归档失败", error: true)
                             }
                         }
+                    case .archivable:
+                        let length = sqlite3_column_bytes(ppStmt, column)
+                        let blob = sqlite3_column_blob(ppStmt, column)
+                        if blob != nil {
+                            let value = NSData(bytes: blob, length: Int(length)) as Data
+                            if let fieldValue = value.fw.unarchivedObject() {
+                                currentModel.setValue(fieldValue, forKey: fieldName)
+                            }
+                        }
                     case .date:
                         let value = sqlite3_column_double(ppStmt, column)
                         if value > 0 {
@@ -991,6 +1005,8 @@ private extension DatabaseManager {
                         value = NSDictionary()
                     case .array:
                         value = NSArray()
+                    case .archivable:
+                        value = nil
                     case .int, .float, .double, .number, .char:
                         value = NSNumber(value: 0)
                     case .data:
@@ -1020,6 +1036,8 @@ private extension DatabaseManager {
                 case .dictionary:
                     let data = Data.fw.archivedData(NSDictionary())
                     valueArray.append(data ?? Data())
+                case .archivable:
+                    valueArray.append(Data())
                 case .data:
                     valueArray.append(Data())
                 case .string:
@@ -1072,6 +1090,15 @@ private extension DatabaseManager {
                     if data == nil {
                         log("insert 异常 Array/Dictionary类型元素未实现NSCoding协议归档失败", error: true)
                     }
+                case .archivable:
+                    var data: NSData?
+                    if value is AnyArchivable {
+                        data = Data.fw.archivedData(value) as? NSData
+                    } else {
+                        data = value as? NSData
+                    }
+                    let safeData = data ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                 case .data:
                     let data = value as? NSData ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, data.bytes, Int32(data.length), nil)
@@ -1158,6 +1185,11 @@ private extension DatabaseManager {
                     if data == nil {
                         log("update 操作异常 Array/Dictionary 元素没实现NSCoding协议归档失败", error: true)
                     }
+                case .archivable:
+                    let value = currentModel.value(forKey: actualField)
+                    let data = Data.fw.archivedData(value) as? NSData
+                    let safeData = data ?? NSData()
+                    sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
                 case .date:
                     let value = currentModel.value(forKey: actualField) as? Date
                     sqlite3_bind_double(ppStmt, index, value?.timeIntervalSince1970 ?? 0)
@@ -1285,6 +1317,7 @@ fileprivate enum DatabaseFieldType: Int {
     case dictionary
     case mutableArray
     case mutableDictionary
+    case archivable
     
     static func parseFieldType(attr: String) -> DatabaseFieldType {
         let subAttr = attr.components(separatedBy: ",").first ?? ""
@@ -1318,7 +1351,9 @@ fileprivate enum DatabaseFieldType: Int {
             return "NVARCHAR"
         case .data, .array, .dictionary, .mutableArray, .mutableDictionary:
             return "BLOB"
-        default:
+        case .archivable:
+            return "BLOB"
+        case .string:
             return "TEXT"
         }
     }
