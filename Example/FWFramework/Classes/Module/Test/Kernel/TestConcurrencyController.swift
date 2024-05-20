@@ -44,6 +44,10 @@ class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
             ["Request(Failure)", "onRequestFailure"],
             ["Request(Cancel)", "onRequestCancel"],
             ["Request(Clear)", "onRequestClear"],
+            ["Authorize(Location)", "onAuthorizeLocation"],
+            ["Authorize(Biometry)", "onAuthorizeBiometry"],
+            ["Toolkit(Safari)", "onToolkitSafari"],
+            ["Toolkit(App)", "onToolkitApp"],
         ])
     }
     
@@ -237,6 +241,60 @@ extension TestConcurrencyController {
                 DispatchQueue.app.mainAsync {
                     self.app.showMessage(error: error)
                 }
+            }
+        }
+    }
+    
+    @objc func onAuthorizeLocation() {
+        Task {
+            let result = await AuthorizeLocation.shared.requestAuthorize()
+            DispatchQueue.app.mainAsync {
+                switch result.status {
+                case .authorized:
+                    self.app.showMessage(text: "GPS已开启")
+                case .denied:
+                    self.app.showMessage(text: "GPS已关闭")
+                case .restricted:
+                    self.app.showMessage(text: "GPS受限制")
+                case .notDetermined:
+                    self.app.showMessage(text: "GPS未检测")
+                }
+            }
+        }
+    }
+    
+    @objc func onAuthorizeBiometry() {
+        Task {
+            let result = await AuthorizeBiometry.shared.requestAuthorize()
+            DispatchQueue.app.mainAsync {
+                switch result.status {
+                case .authorized:
+                    self.app.showMessage(text: "验证成功")
+                case .denied:
+                    self.app.showAlert(title: "验证失败", message: result.error?.localizedDescription)
+                case .restricted:
+                    self.app.showAlert(title: "验证受限制", message: result.error?.localizedDescription)
+                case .notDetermined:
+                    self.app.showAlert(title: "身份未验证", message: result.error?.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    @objc func onToolkitSafari() {
+        Task {
+            let success = await UIApplication.app.openURL("https://www.baidu.com")
+            DispatchQueue.app.mainAsync {
+                self.app.showAlert(title: success ? "打开Safari成功" : "打开Safari失败", message: nil)
+            }
+        }
+    }
+    
+    @objc func onToolkitApp() {
+        Task {
+            let success = await UIApplication.app.openUniversalLinks("https://v.douyin.com/JYmHJ9k/")
+            DispatchQueue.app.mainAsync {
+                self.app.showAlert(title: success ? "打开App成功" : "打开App失败", message: nil)
             }
         }
     }

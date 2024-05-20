@@ -17,7 +17,9 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     @objc var time: TimeInterval = Date.app.currentTime
     @objc var tag: String = ""
     @objc var tags: [String] = []
-    @objc var subs: [TestDatabaseSubModel] = []
+    @objc var codings: [TestDatabaseCodingModel] = []
+    @objc var archive: TestDatabaseArchivableModel?
+    @objc var archives: [TestDatabaseArchivableModel] = []
     
     static func databaseVersion() -> String? {
         return isLatest ? "2.0" : nil
@@ -40,7 +42,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     }
 }
 
-class TestDatabaseSubModel: NSObject, NSSecureCoding {
+class TestDatabaseCodingModel: NSObject, NSSecureCoding {
     @objc var id: Int = 0
     @objc var tag: String = ""
     
@@ -61,6 +63,15 @@ class TestDatabaseSubModel: NSObject, NSSecureCoding {
     func encode(with coder: NSCoder) {
         coder.encode(id, forKey: "id")
         coder.encode(tag, forKey: "tag")
+    }
+}
+
+class TestDatabaseArchivableModel: NSObject, Codable, AnyArchivable {
+    var id: Int = 0
+    var tag: String = ""
+    
+    required override init() {
+        super.init()
     }
 }
 
@@ -120,8 +131,10 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         cell.textLabel?.numberOfLines = 0
         let tag = !model.tag.isEmpty ? " - [\(model.tag)]" : ""
         let tags = !model.tags.isEmpty ? " - [\(model.tags.joined(separator: ","))]" : ""
-        let subs = !model.subs.isEmpty ? " - [\(model.subs.first?.id ?? 0):\(model.subs.first?.tag ?? "")]" : ""
-        cell.textLabel?.text = "\(model.id)\(tag)\(tags)\(subs)\n" + model.content
+        let cods = !model.codings.isEmpty ? " - [\(model.codings.map({ $0.tag }).joined(separator: ","))]" : ""
+        let arc = model.archive != nil ? " - [\(model.archive?.tag ?? "")]" : ""
+        let arcs = !model.archives.isEmpty ? " - [\(model.archives.map({ $0.tag }).joined(separator: ","))]" : ""
+        cell.textLabel?.text = "\(model.id)\(tag)\(tags)\(cods)\(arc)\(arcs)\n" + model.content
         cell.detailTextLabel?.text = Date(timeIntervalSince1970: model.time).app.stringValue
         return cell
     }
@@ -164,10 +177,25 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
             model.content = content
             model.tag = "新"
             model.tags = ["标签"]
-            let subModel = TestDatabaseSubModel()
-            subModel.id = Int(arc4random() % 1000)
-            subModel.tag = "子标签"
-            model.subs = [subModel]
+            
+            let tagMode = [0, 1, 2].randomElement()!
+            if tagMode == 0 {
+                let codingModel = TestDatabaseCodingModel()
+                codingModel.id = Int(arc4random() % 1000)
+                codingModel.tag = "归档1"
+                model.codings = [codingModel]
+            } else if tagMode == 1 {
+                let archivableModel = TestDatabaseArchivableModel()
+                archivableModel.id = Int(arc4random() % 1000)
+                archivableModel.tag = "归档2"
+                model.archive = archivableModel
+            } else {
+                let archivableModel = TestDatabaseArchivableModel()
+                archivableModel.id = Int(arc4random() % 1000)
+                archivableModel.tag = "归档3"
+                model.archives = [archivableModel]
+            }
+            
             DatabaseManager.insert(model)
             
             self?.setupSubviews()

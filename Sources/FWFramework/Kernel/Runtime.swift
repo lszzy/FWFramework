@@ -20,6 +20,21 @@ extension Wrapper where Base: WrapperObject {
         return Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
     }
     
+    /// 获取任意对象的类型字符串，含模块名称
+    public static func typeName(for object: Any) -> String {
+        if let clazz = object as? AnyClass {
+            return NSStringFromClass(clazz)
+        } else if let proto = object as? Protocol {
+            return NSStringFromProtocol(proto)
+        } else if let type = object as? Any.Type {
+            return String(describing: type as AnyObject)
+        } else if let clazz = type(of: object) as? AnyClass {
+            return NSStringFromClass(clazz)
+        } else {
+            return String(describing: type(of: object) as AnyObject)
+        }
+    }
+    
     // MARK: - Runtime
     /// 安全调用方法，支持多个参数
     /// - Parameters:

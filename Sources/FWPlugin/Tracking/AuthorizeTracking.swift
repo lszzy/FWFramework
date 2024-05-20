@@ -53,14 +53,14 @@ public class AuthorizeTracking: NSObject, AuthorizeProtocol {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {
-                    DispatchQueue.main.async {
+                    DispatchQueue.fw.mainAsync {
                         completion?(self.authorizeStatus(), nil)
                     }
                 }
             }
         } else {
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(self.authorizeStatus(), nil)
                 }
             }

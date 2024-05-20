@@ -39,7 +39,7 @@ public class AuthorizeContacts: NSObject, AuthorizeProtocol {
         CNContactStore().requestAccess(for: .contacts) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(status, error)
                 }
             }

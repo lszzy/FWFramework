@@ -180,7 +180,7 @@ extension AnyModel where Self: JSONModelEnum {
 // MARK: - AnyModel+Array
 extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         let object = NSObject.getInnerObject(inside: object, by: designatedPath)
         if let array = object as? [Any] {
             return array.compactMap { Element.decodeModel(from: $0) }
@@ -189,7 +189,7 @@ extension Array where Element: AnyModel {
     }
     
     /// 从Object安全解码成Model数组，当object为字典和数组时支持具体路径
-    public static func decodeSafeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element> {
+    public static func decodeSafeModel(from object: Any?, designatedPath: String? = nil) -> Self {
         return decodeModel(from: object, designatedPath: designatedPath) ?? []
     }
     
@@ -201,7 +201,7 @@ extension Array where Element: AnyModel {
 
 extension Array where Element: JSONModel {
     /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Array<Element>? {
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
         return deserializeAny(from: object, designatedPath: designatedPath)
     }
     

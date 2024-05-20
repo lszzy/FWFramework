@@ -17,16 +17,12 @@ public class UserService {
     public static let logoutNotification = Notification.Name("logoutNotification")
     
     // MARK: - Accessor
+    @ArchivedValue("userModel")
     private var userModel: UserModel?
-    
-    @StoredValue("userData")
-    private var userData: Data?
     
     // MARK: - Lifecycle
     private init() {
-        if let userData = userData {
-            userModel = try? UserModel.decoded(from: userData)
-        }
+        ArchiveCoder.registerType(UserModel.self)
     }
     
 }
@@ -39,7 +35,6 @@ extension UserService {
     
     public func getUserModel() -> UserModel? {
         guard var model = userModel else { return nil }
-        
         if model.userName.isEmpty {
             model.userName = APP.localized("mediatorNickname")
         }
@@ -48,15 +43,11 @@ extension UserService {
     
     public func saveUserModel(_ model: UserModel) {
         userModel = model
-        userData = try? model.encoded()
-        
         NSObject.app.postNotification(UserService.loginNotification)
     }
     
     public func clearUserModel() {
         userModel = nil
-        userData = nil
-        
         NSObject.app.postNotification(UserService.logoutNotification)
     }
     

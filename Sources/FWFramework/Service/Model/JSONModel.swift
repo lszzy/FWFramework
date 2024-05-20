@@ -2598,3 +2598,15 @@ extension ObjectParameter where Self: JSONModel {
         return result
     }
 }
+
+// MARK: - AnyArchivable
+extension AnyArchivable where Self: JSONModel {
+    public static func archiveDecode(_ data: Data?) -> Self? {
+        guard let data = data else { return nil }
+        return deserialize(from: String(data: data, encoding: .utf8))
+    }
+    
+    public func archiveEncode() -> Data? {
+        return toJSONString()?.data(using: .utf8)
+    }
+}
