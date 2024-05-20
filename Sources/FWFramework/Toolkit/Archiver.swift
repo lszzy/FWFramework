@@ -112,6 +112,15 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         return object is [AnyArchivable] || object is AnyArchivable
     }
     
+    /// 是否是有效的AnyArchivable归档数据(即ArchiveCoder归档数据)
+    public static func isArchivableData(_ data: Data?) -> Bool {
+        guard let data = data else { return false }
+        let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data)
+        unarchiver?.requiresSecureCoding = false
+        let result = unarchiver?.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+        return result is ArchiveCoder
+    }
+    
     /// 将AnyArchivable对象编码为Data数据，不调用NSKeyedArchiver
     public static func encodeObject(_ object: AnyArchivable?) -> Data? {
         return object?.archiveEncode()

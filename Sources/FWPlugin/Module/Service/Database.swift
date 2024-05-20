@@ -904,8 +904,8 @@ private extension DatabaseManager {
                                     break
                                 }
                                 currentModel.setValue(fieldValue, forKey: fieldName)
-                            } else {
-                                log("query 查询异常 Array/Dictionary 元素没实现NSCoding协议解归档失败", error: true)
+                            } else if !ArchiveCoder.isArchivableData(value) {
+                                log("query 查询异常 Array/Dictionary 元素 \(fieldName) 没实现NSCoding协议解归档失败", error: true)
                             }
                         }
                     case .archivable:
@@ -1087,8 +1087,8 @@ private extension DatabaseManager {
                     }
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
-                    if data == nil {
-                        log("insert 异常 Array/Dictionary类型元素未实现NSCoding协议归档失败", error: true)
+                    if data == nil, !ArchiveCoder.isArchivableObject(value) {
+                        log("insert 异常 Array/Dictionary类型元素 \(propertyInfo.propertyName) 未实现NSCoding协议归档失败", error: true)
                     }
                 case .archivable:
                     var data: NSData?
@@ -1182,8 +1182,8 @@ private extension DatabaseManager {
                     let data = Data.fw.archivedData(value) as? NSData
                     let safeData = data ?? NSData()
                     sqlite3_bind_blob(ppStmt, index, safeData.bytes, Int32(safeData.length), nil)
-                    if data == nil {
-                        log("update 操作异常 Array/Dictionary 元素没实现NSCoding协议归档失败", error: true)
+                    if data == nil, !ArchiveCoder.isArchivableObject(value) {
+                        log("update 操作异常 Array/Dictionary 元素 \(actualField) 没实现NSCoding协议归档失败", error: true)
                     }
                 case .archivable:
                     let value = currentModel.value(forKey: actualField)
