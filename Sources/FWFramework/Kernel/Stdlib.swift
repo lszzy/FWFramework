@@ -92,6 +92,7 @@ extension Wrapper where Base == String {
         if let object = value as? NSObject { return object.description }
         if let clazz = value as? AnyClass { return NSStringFromClass(clazz) }
         if let proto = value as? Protocol { return NSStringFromProtocol(proto) }
+        if let type = value as? Any.Type { return String(describing: type as AnyObject) }
         return String(describing: value)
     }
     
