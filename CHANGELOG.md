@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.5.0] - 2024-05-20
+
+### Added
+* Added AnyArchivable protocol, which can quickly archive models and is compatible with Codable, CodableModel and JSONModel
+* Archiver, UserDefault, Cache, Database, Keychain and other components are compatible with AnyArchivable protocol objects
+* Added ArchivedValue attribute annotation to quickly archive and save AnyArchivable objects to UserDefaults
+* Authorize and Toolkit related components support async|await coroutine calls
+* Reconstruct the AuthorizeLocation component to support async|await coroutine calls
+
 ## [5.4.1] - 2024-05-17
 
 ### Changed

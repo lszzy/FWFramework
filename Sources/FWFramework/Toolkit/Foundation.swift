@@ -1244,6 +1244,33 @@ extension Wrapper where Base: UserDefaults {
         }
         base.synchronize()
     }
+    
+    /// 从standard解档对象，兼容NSCoding和AnyArchivable
+    public static func archivableObject(forKey: String) -> Any? {
+        return UserDefaults.standard.fw.archivableObject(forKey: forKey)
+    }
+
+    /// 归档对象到standard，兼容NSCoding和AnyArchivable
+    public static func setArchivableObject(_ object: Any?, forKey: String) {
+        UserDefaults.standard.fw.setArchivableObject(object, forKey: forKey)
+    }
+    
+    /// 解档对象，兼容NSCoding和AnyArchivable
+    public func archivableObject(forKey: String) -> Any? {
+        let data = base.object(forKey: forKey) as? Data
+        return data?.fw.unarchivedObject()
+    }
+
+    /// 归档对象，兼容NSCoding和AnyArchivable
+    public func setArchivableObject(_ object: Any?, forKey: String) {
+        let data = Data.fw.archivedData(object)
+        if let data = data {
+            base.set(data, forKey: forKey)
+        } else {
+            base.removeObject(forKey: forKey)
+        }
+        base.synchronize()
+    }
 }
 
 // MARK: - NSObject+Foundation

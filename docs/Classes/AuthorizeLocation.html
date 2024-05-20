@@ -17,7 +17,7 @@
     <a title="AuthorizeLocation Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.4.1 Docs</a> (62% documented)</p>
+        <p><a href="../index.html">FWFramework 5.5.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -76,6 +76,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Appearance.html">Appearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ArchiveCoder.html">ArchiveCoder</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Asset.html">Asset</a>
@@ -1541,6 +1544,9 @@
                 <a href="../Protocols/AnalysisReporter.html">AnalysisReporter</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/AnyArchivable.html">AnyArchivable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/AnyDateFormatter.html">AnyDateFormatter</a>
               </li>
               <li class="nav-group-task">
@@ -2012,6 +2018,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AnyCodingKey.html">AnyCodingKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ArchivedValue.html">ArchivedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AuthorizeType.html">AuthorizeType</a>
@@ -2558,6 +2567,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework17AuthorizeLocationC15authorizeStatus3for8isAlwaysAA0bE0OSo17CLLocationManagerC_SbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/authorizeStatus(for:isAlways:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17AuthorizeLocationC15authorizeStatus3for8isAlwaysAA0bE0OSo17CLLocationManagerC_SbtFZ">authorizeStatus(for:<wbr>isAlways:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">authorizeStatus</span><span class="p">(</span><span class="k">for</span> <span class="nv">manager</span><span class="p">:</span> <span class="kt">CLLocationManager</span><span class="p">,</span> <span class="nv">isAlways</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework17AuthorizeProtocolP15authorizeStatusAA0bE0OyF"></a>
                     <a name="//apple_ref/swift/Method/authorizeStatus()" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework17AuthorizeProtocolP15authorizeStatusAA0bE0OyF">authorizeStatus()</a>
@@ -2610,6 +2646,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:@M@FWFramework@objc(cs)AuthorizeLocation(im)locationManagerDidChangeAuthorization:"></a>
+                    <a name="//apple_ref/swift/Method/locationManagerDidChangeAuthorization(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@FWFramework@objc(cs)AuthorizeLocation(im)locationManagerDidChangeAuthorization:">locationManagerDidChangeAuthorization(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">locationManagerDidChangeAuthorization</span><span class="p">(</span><span class="n">_</span> <span class="nv">manager</span><span class="p">:</span> <span class="kt">CLLocationManager</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@M@FWFramework@objc(cs)AuthorizeLocation(im)locationManager:didChangeAuthorizationStatus:"></a>
                     <a name="//apple_ref/swift/Method/locationManager(_:didChangeAuthorization:)" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@FWFramework@objc(cs)AuthorizeLocation(im)locationManager:didChangeAuthorizationStatus:">locationManager(_:<wbr>didChangeAuthorization:<wbr>)</a>
@@ -2639,7 +2702,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-17)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-20)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

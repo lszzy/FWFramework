@@ -1,5 +1,14 @@
 # 更新日志
 
+## [5.5.0] - 2024-05-20
+
+### Added
+* 新增AnyArchivable协议，可快速归档模型，兼容Codable、CodableModel、JSONModel
+* Archiver、UserDefault、Cache、Database、Keychain等组件兼容AnyArchivable协议对象
+* 新增ArchivedValue属性注解，快速将AnyArchivable对象归档并保存到UserDefaults
+* Authorize、Toolkit相关组件支持async|await协程调用
+* 重构AuthorizeLocation组件，支持async|await协程调用
+
 ## [5.4.1] - 2024-05-17
 
 ### Changed

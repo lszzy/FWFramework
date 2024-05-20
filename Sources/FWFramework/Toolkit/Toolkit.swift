@@ -123,13 +123,19 @@ extension Wrapper where Base: UIApplication {
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     public static func openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = url?.urlValue else { return }
+        guard let url = url?.urlValue else {
+            completionHandler?(false)
+            return
+        }
         UIApplication.shared.open(url, options: [:], completionHandler: completionHandler)
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
     public static func openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let url = url?.urlValue else { return }
+        guard let url = url?.urlValue else {
+            completionHandler?(false)
+            return
+        }
         UIApplication.shared.open(url, options: [.universalLinksOnly: true], completionHandler: completionHandler)
     }
 
@@ -2527,3 +2533,91 @@ extension FrameworkAutoloader {
     }
     
 }
+
+// MARK: - Concurrency+Toolkit
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension Wrapper where Base: UIApplication {
+    
+    /// 异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
+    public static func openURL(_ url: URLParameter?) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openURL(url) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
+    public static func openUniversalLinks(_ url: URLParameter?) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openUniversalLinks(url) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+    
+    /// 异步打开AppStore下载页
+    public static func openAppStore(_ appId: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openAppStore(appId) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开AppStore评价页
+    public static func openAppStoreReview(_ appId: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openAppStoreReview(appId) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开系统应用设置页
+    public static func openAppSettings() async -> Bool {
+        await withCheckedContinuation { continuation in
+            openAppSettings { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+    
+    /// 异步打开系统应用通知设置页
+    public static func openAppNotificationSettings() async -> Bool {
+        await withCheckedContinuation { continuation in
+            openAppNotificationSettings { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开系统邮件App
+    public static func openMailApp(_ email: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openMailApp(email) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开系统短信App
+    public static func openMessageApp(_ phone: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openMessageApp(phone) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+
+    /// 异步打开系统电话App
+    public static func openPhoneApp(_ phone: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            openPhoneApp(phone) { success in
+                continuation.resume(returning: success)
+            }
+        }
+    }
+    
+}
+#endif

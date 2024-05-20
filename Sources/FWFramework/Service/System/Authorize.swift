@@ -133,18 +133,22 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         return result
     }()
     
-    private var completionBlock: ((AuthorizeStatus, Error?) -> Void)?
-    private var changeIgnored: Bool = false
     private var isAlways: Bool = false
+    private var completionBlock: ((AuthorizeStatus, Error?) -> Void)?
     
     public init(isAlways: Bool = false) {
         super.init()
         self.isAlways = isAlways
     }
     
-    public func authorizeStatus() -> AuthorizeStatus {
-        // 定位功能未打开时返回Denied，可自行调用[CLLocationManager locationServicesEnabled]判断
-        let status = CLLocationManager.authorizationStatus()
+    public static func authorizeStatus(for manager: CLLocationManager, isAlways: Bool = false) -> AuthorizeStatus {
+        let status: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = manager.authorizationStatus
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+        
         switch status {
         case .restricted:
             return .restricted
@@ -154,8 +158,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
             return .authorized
         case .authorizedWhenInUse:
             if isAlways {
-                let isAuthorized = UserDefaults.standard.object(forKey: "FWAuthorizeLocation")
-                return isAuthorized != nil ? .denied : .notDetermined
+                return .denied
             } else {
                 return .authorized
             }
@@ -164,32 +167,44 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         }
     }
     
+    public func authorizeStatus() -> AuthorizeStatus {
+        return AuthorizeLocation.authorizeStatus(for: locationManager, isAlways: isAlways)
+    }
+    
     public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
-        completionBlock = completion
+        let authorizeStatus = authorizeStatus()
+        if authorizeStatus != .notDetermined {
+            if completion != nil {
+                DispatchQueue.fw.mainAsync {
+                    completion?(authorizeStatus, nil)
+                }
+            }
+            return
+        }
         
+        completionBlock = completion
         if isAlways {
             locationManager.requestAlwaysAuthorization()
-            // 标记已请求授权
-            UserDefaults.standard.set(NSNumber(value: 1), forKey: "FWAuthorizeLocation")
-            UserDefaults.standard.synchronize()
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
     }
     
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        // 如果请求always权限且当前已经是WhenInUse权限，系统会先回调此方法一次，忽略之
-        if isAlways && !changeIgnored {
-            if status == .notDetermined || status == .authorizedWhenInUse {
-                changeIgnored = true
-                return
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let authorizeStatus = authorizeStatus()
+        if authorizeStatus != .notDetermined, completionBlock != nil {
+            DispatchQueue.fw.mainAsync {
+                self.completionBlock?(authorizeStatus, nil)
+                self.completionBlock = nil
             }
         }
-        
-        // 主线程回调，仅一次
-        if completionBlock != nil {
-            DispatchQueue.main.async {
-                self.completionBlock?(self.authorizeStatus(), nil)
+    }
+    
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        let authorizeStatus = authorizeStatus()
+        if authorizeStatus != .notDetermined, completionBlock != nil {
+            DispatchQueue.fw.mainAsync {
+                self.completionBlock?(authorizeStatus, nil)
                 self.completionBlock = nil
             }
         }
@@ -218,7 +233,7 @@ public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
     public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(self.authorizeStatus(), nil)
                 }
             }
@@ -253,7 +268,7 @@ public class AuthorizeCamera: NSObject, AuthorizeProtocol {
     public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(self.authorizeStatus(), nil)
                 }
             }
@@ -313,7 +328,7 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         UNUserNotificationCenter.current().requestAuthorization(options: authorizeOptions) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     completion?(status, error)
                 }
             }
@@ -321,3 +336,28 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         UIApplication.shared.registerForRemoteNotifications()
     }
 }
+
+// MARK: - Concurrency+Authorize
+#if compiler(>=5.6.0) && canImport(_Concurrency)
+extension AuthorizeProtocol {
+    
+    /// 异步查询权限状态
+    public func authorizeStatus() async -> (status: AuthorizeStatus, error: Error?) {
+        await withCheckedContinuation { continuation in
+            authorizeStatus { status, error in
+                continuation.resume(returning: (status: status, error: error))
+            }
+        }
+    }
+    
+    /// 异步执行权限授权
+    public func requestAuthorize() async -> (status: AuthorizeStatus, error: Error?) {
+        await withCheckedContinuation { continuation in
+            requestAuthorize { status, error in
+                continuation.resume(returning: (status: status, error: error))
+            }
+        }
+    }
+    
+}
+#endif

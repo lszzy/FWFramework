@@ -118,15 +118,6 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         semaphore.signal()
     }
     
-    // MARK: - Archive
-    open func archivedData(_ object: Any) -> Data? {
-        return Data.fw.archivedData(object)
-    }
-    
-    open func unarchivedObject(_ data: Data) -> Any? {
-        return data.fw.unarchivedObject()
-    }
-    
     // MARK: - CacheEngineProtocol
     open func readCache(forKey key: String) -> Any? {
         // 子类重写

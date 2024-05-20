@@ -61,7 +61,7 @@ open class CacheKeychain: CacheEngine {
             return nil
         }
 
-        let object = unarchivedObject(passwordData)
+        let object = passwordData.fw.unarchivedObject()
         return object
     }
 
@@ -86,7 +86,7 @@ open class CacheKeychain: CacheEngine {
 
     @discardableResult
     private func setPasswordObject(_ passwordObject: Any, forService service: String, account: String?) -> Bool {
-        guard let passwordData = archivedData(passwordObject) else { return false }
+        guard let passwordData = Data.fw.archivedData(passwordObject) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }
 
