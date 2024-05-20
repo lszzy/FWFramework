@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.4.1 Docs</a> (62% documented)</p>
+        <p><a href="../index.html">FWFramework 5.5.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -76,6 +76,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Appearance.html">Appearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ArchiveCoder.html">ArchiveCoder</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Asset.html">Asset</a>
@@ -1541,6 +1544,9 @@
                 <a href="../Protocols/AnalysisReporter.html">AnalysisReporter</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/AnyArchivable.html">AnyArchivable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/AnyDateFormatter.html">AnyDateFormatter</a>
               </li>
               <li class="nav-group-task">
@@ -2012,6 +2018,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AnyCodingKey.html">AnyCodingKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ArchivedValue.html">ArchivedValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AuthorizeType.html">AuthorizeType</a>
@@ -5418,6 +5427,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">moduleName</span><span class="p">(</span><span class="k">for</span> <span class="nv">aClass</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE8typeName3forSSyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/typeName(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE8typeName3forSSyp_tFZ">typeName(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>获取任意对象的类型字符串，含模块名称</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">typeName</span><span class="p">(</span><span class="k">for</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -22833,6 +22869,236 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Available%20where%20%60Base%60%20%3D%3D%20%60Data%603"></a>
+                <a name="//apple_ref/swift/Section/Available where `Base` == `Data`" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%20%3D%3D%20%60Data%603"></a>
+                  <h3 class="section-name"><span>Available where <code>Base</code> == <code>Data</code></span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE08archivedD0yAFSgypSgFZ"></a>
+                    <a name="//apple_ref/swift/Method/archivedData(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE08archivedD0yAFSgypSgFZ">archivedData(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>将对象归档为data数据，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">archivedData</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mSo8NSObjectCRbd__So8NSCodingRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mSo8NSObjectCRbd__So8NSCodingRd__lF">unarchivedObject(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSCoding</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mAA13AnyArchivableRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mAA13AnyArchivableRd__lF">unarchivedObject(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>将数据解档为指定AnyArchivable对象，推荐使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyArchivable.html">AnyArchivable</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectypSgyF"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectypSgyF">unarchivedObject()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>将数据解档为对象，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unarchivedObject</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE13archiveObject_6toFileSbyp_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/archiveObject(_:toFile:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE13archiveObject_6toFileSbyp_SStFZ">archiveObject(_:<wbr>toFile:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>将对象归档保存到文件，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">archiveObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">toFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStSo8NSObjectCRbd__So8NSCodingRd__lFZ"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject(_:withFile:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStSo8NSObjectCRbd__So8NSCodingRd__lFZ">unarchivedObject(_:<wbr>withFile:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从文件解档指定类型对象，需实现NSSecureCoding，推荐使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="n">withFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSCoding</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStAA13AnyArchivableRd__lFZ"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject(_:withFile:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStAA13AnyArchivableRd__lFZ">unarchivedObject(_:<wbr>withFile:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从文件解档指定AnyArchivable对象，推荐使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="n">withFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AnyArchivable.html">AnyArchivable</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject8withFileypSgSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/unarchivedObject(withFile:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject8withFileypSgSS_tFZ">unarchivedObject(withFile:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从文件解档对象，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">unarchivedObject</span><span class="p">(</span><span class="n">withFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/AutoLayout"></a>
                 <a name="//apple_ref/swift/Section/AutoLayout" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -29142,10 +29408,10 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Available%20where%20%60Base%60%20%3D%3D%20%60Data%603"></a>
+                <a name="/Available%20where%20%60Base%60%20%3D%3D%20%60Data%604"></a>
                 <a name="//apple_ref/swift/Section/Available where `Base` == `Data`" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%20%3D%3D%20%60Data%603"></a>
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%20%3D%3D%20%60Data%604"></a>
                   <h3 class="section-name"><span>Available where <code>Base</code> == <code>Data</code></span>
 </h3>
                 </div>
@@ -29280,169 +29546,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">base64Decode</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE08archivedD0yAFSgypSgFZ"></a>
-                    <a name="//apple_ref/swift/Method/archivedData(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE08archivedD0yAFSgypSgFZ">archivedData(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>将对象归档为data数据</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">archivedData</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mSo8NSObjectCRbd__So8NSCodingRd__lF"></a>
-                    <a name="//apple_ref/swift/Method/unarchivedObject(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectyqd__Sgqd__mSo8NSObjectCRbd__So8NSCodingRd__lF">unarchivedObject(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSCoding</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectypSgyF"></a>
-                    <a name="//apple_ref/swift/Method/unarchivedObject()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObjectypSgyF">unarchivedObject()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>将数据解档为对象</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unarchivedObject</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE13archiveObject_6toFileSbyp_SStFZ"></a>
-                    <a name="//apple_ref/swift/Method/archiveObject(_:toFile:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE13archiveObject_6toFileSbyp_SStFZ">archiveObject(_:<wbr>toFile:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>将对象归档保存到文件</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">archiveObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">toFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStSo8NSObjectCRbd__So8NSCodingRd__lFZ"></a>
-                    <a name="//apple_ref/swift/Method/unarchivedObject(_:withFile:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject_8withFileqd__Sgqd__m_SStSo8NSObjectCRbd__So8NSCodingRd__lFZ">unarchivedObject(_:<wbr>withFile:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从文件解档指定类型对象，需实现NSSecureCoding，推荐使用</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">unarchivedObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="n">withFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">NSCoding</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject8withFileypSgSS_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/unarchivedObject(withFile:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAA10Foundation4DataVRszlE16unarchivedObject8withFileypSgSS_tFZ">unarchivedObject(withFile:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>从文件解档对象</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">unarchivedObject</span><span class="p">(</span><span class="n">withFile</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -34990,6 +35093,114 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE16archivableObject6forKeyypSgSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/archivableObject(forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE16archivableObject6forKeyypSgSS_tFZ">archivableObject(forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从standard解档对象，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">archivableObject</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE19setArchivableObject_6forKeyyypSg_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/setArchivableObject(_:forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE19setArchivableObject_6forKeyyypSg_SStFZ">setArchivableObject(_:<wbr>forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>归档对象到standard，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setArchivableObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE16archivableObject6forKeyypSgSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/archivableObject(forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE16archivableObject6forKeyypSgSS_tF">archivableObject(forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>解档对象，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">archivableObject</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE19setArchivableObject_6forKeyyypSg_SStF"></a>
+                    <a name="//apple_ref/swift/Method/setArchivableObject(_:forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo14NSUserDefaultsCRbzlE19setArchivableObject_6forKeyyypSg_SStF">setArchivableObject(_:<wbr>forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>归档对象，兼容NSCoding和AnyArchivable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setArchivableObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -43966,6 +44177,289 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Available%20where%20%60Base%60%3A%20%60UIApplication%603"></a>
+                <a name="//apple_ref/swift/Section/Available where `Base`: `UIApplication`" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60Base%60%3A%20%60UIApplication%603"></a>
+                  <h3 class="section-name"><span>Available where <code>Base</code>: <code>UIApplication</code></span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE7openURLySbAA12URLParameter_pSgYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openURL(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE7openURLySbAA12URLParameter_pSgYaFZ">openURL(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openURL</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt"><a href="../Protocols/URLParameter.html">URLParameter</a></span><span class="p">?)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openUniversalLinksySbAA12URLParameter_pSgYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openUniversalLinks(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openUniversalLinksySbAA12URLParameter_pSgYaFZ">openUniversalLinks(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openUniversalLinks</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt"><a href="../Protocols/URLParameter.html">URLParameter</a></span><span class="p">?)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStoreySbSSYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppStore(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openAppStoreySbSSYaFZ">openAppStore(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开AppStore下载页</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStore</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReviewySbSSYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppStoreReview(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE18openAppStoreReviewySbSSYaFZ">openAppStoreReview(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开AppStore评价页</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppStoreReview</span><span class="p">(</span><span class="n">_</span> <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsSbyYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppSettings()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE15openAppSettingsSbyYaFZ">openAppSettings()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开系统应用设置页</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppSettings</span><span class="p">()</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE27openAppNotificationSettingsSbyYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openAppNotificationSettings()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE27openAppNotificationSettingsSbyYaFZ">openAppNotificationSettings()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开系统应用通知设置页</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openAppNotificationSettings</span><span class="p">()</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailAppySbSSYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openMailApp(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE11openMailAppySbSSYaFZ">openMailApp(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开系统邮件App</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMailApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageAppySbSSYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openMessageApp(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE14openMessageAppySbSSYaFZ">openMessageApp(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开系统短信App</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openMessageApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneAppySbSSYaFZ"></a>
+                    <a name="//apple_ref/swift/Method/openPhoneApp(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo13UIApplicationCRbzlE12openPhoneAppySbSSYaFZ">openPhoneApp(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步打开系统电话App</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openPhoneApp</span><span class="p">(</span><span class="n">_</span> <span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Available%20where%20%60Base%60%3A%20%60UIBezierPath%60"></a>
                 <a name="//apple_ref/swift/Section/Available where `Base`: `UIBezierPath`" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -50756,7 +51250,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-17)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-20)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
