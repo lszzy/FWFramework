@@ -144,6 +144,9 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         registeredTypes[key] = type
     }
     
+    /// 归档类型加载器，加载未注册类型时会尝试调用并注册，block返回值为registerType方法type参数
+    public static let sharedLoader = Loader<String, AnyArchivable.Type>()
+    
     private static var registeredTypes: [String: AnyArchivable.Type] = [:]
     
     // MARK: - Accessor
@@ -158,7 +161,12 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
             }
             var objectType = ArchiveCoder.registeredTypes[archiveType]
             if objectType == nil {
-                objectType = NSClassFromString(archiveType) as? AnyArchivable.Type
+                if let loadType = ArchiveCoder.sharedLoader.load(archiveType) {
+                    ArchiveCoder.registerType(loadType)
+                    objectType = loadType
+                } else {
+                    objectType = NSClassFromString(archiveType) as? AnyArchivable.Type
+                }
             }
             guard let objectType = objectType else {
                 #if DEBUG
