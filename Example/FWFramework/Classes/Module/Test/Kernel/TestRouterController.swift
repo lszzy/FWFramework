@@ -514,7 +514,7 @@ class TestRouter: NSObject {
         return nil
     }
     
-    @objc static func closeRouter(_ context: Router.Context) -> Any? {
+    @objc static func closeDefaultRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
         return nil
