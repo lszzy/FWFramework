@@ -14,7 +14,7 @@ extension WrapperGlobal {
 }
 
 // MARK: - PluginProtocol
-/// 插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
+/// 插件协议，可不实现。未实现时默认调用sharedInstance > init方法
 public protocol PluginProtocol {
     /// 可选插件单例方法，优先级高，仅调用一次
     static func pluginInstance() -> Self?
