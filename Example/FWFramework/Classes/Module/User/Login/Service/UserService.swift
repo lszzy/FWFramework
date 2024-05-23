@@ -17,7 +17,7 @@ public class UserService {
     public static let logoutNotification = Notification.Name("logoutNotification")
     
     // MARK: - Accessor
-    @ArchivedValue("userModel")
+    @StoredValue("userModel")
     private var userModel: UserModel?
     
     // MARK: - Lifecycle
