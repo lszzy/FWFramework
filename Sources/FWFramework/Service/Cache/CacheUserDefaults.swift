@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// UserDefaults缓存
+/// UserDefaults缓存。复杂对象需遵循AnyArchivable协议
 open class CacheUserDefaults: CacheEngine {
     
     /// 单例模式

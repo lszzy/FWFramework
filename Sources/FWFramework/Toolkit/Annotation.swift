@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - StoredValue
-/// UserDefault存储属性包装器注解，默认为手工指定或初始值
+/// UserDefault存储属性包装器注解，兼容AnyArchivable协议，默认为手工指定或初始值
 ///
 /// 使用示例：
 /// @StoredValue("userName")
