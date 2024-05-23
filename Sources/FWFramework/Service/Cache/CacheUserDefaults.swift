@@ -34,11 +34,19 @@ open class CacheUserDefaults: CacheEngine {
     
     // MARK: - CacheEngineProtocol
     open override func readCache(forKey key: String) -> Any? {
-        return self.userDefaults.object(forKey: self.cacheKey(key))
+        var value = self.userDefaults.object(forKey: self.cacheKey(key))
+        if let data = value as? Data, ArchiveCoder.isArchivableData(data) {
+            value = data.fw.unarchivedObject()
+        }
+        return value
     }
     
     open override func writeCache(_ object: Any, forKey key: String) {
-        self.userDefaults.set(object, forKey: self.cacheKey(key))
+        var value: Any? = object
+        if ArchiveCoder.isArchivableObject(object) {
+            value = Data.fw.archivedData(object)
+        }
+        self.userDefaults.set(value, forKey: self.cacheKey(key))
         self.userDefaults.synchronize()
     }
     
