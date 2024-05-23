@@ -8,7 +8,7 @@
 import Foundation
 import SQLite3
 
-/// Sqlite缓存。复杂对象需遵循NSCoding协议
+/// Sqlite缓存。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheSqlite: CacheEngine {
     
     /// 单例模式
