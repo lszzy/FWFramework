@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.5.1] - 2024-05-23
+
+### Changed
+* JSBridge supports finding the default DefaultBridge: development
+* CacheKeychain supports custom Service names
+* CacheUserDefaults is compatible with AnyArchivable protocol
+* Remove the ArchivedValue attribute annotation, and the StoredValue attribute annotation is compatible with the AnyArchivable protocol
+
 ## [5.5.0] - 2024-05-20
 
 ### Added
