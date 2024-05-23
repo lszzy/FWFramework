@@ -35,8 +35,8 @@ open class CacheUserDefaults: CacheEngine {
     // MARK: - CacheEngineProtocol
     open override func readCache(forKey key: String) -> Any? {
         var value = self.userDefaults.object(forKey: self.cacheKey(key))
-        if let data = value as? Data, ArchiveCoder.isArchivableData(data) {
-            value = data.fw.unarchivedObject()
+        if let data = value as? Data, let coder = ArchiveCoder.unarchiveData(data) {
+            value = coder.archivableObject
         }
         return value
     }
