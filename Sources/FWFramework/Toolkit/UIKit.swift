@@ -2394,8 +2394,11 @@ extension Wrapper where Base: UITableView {
         let strongBase = base
         UIView.animate(withDuration: 0) {
             strongBase.reloadData()
+            strongBase.layoutIfNeeded()
         } completion: { _ in
-            completion?()
+            DispatchQueue.main.async {
+                completion?()
+            }
         }
     }
     
@@ -2536,8 +2539,11 @@ extension Wrapper where Base: UICollectionView {
         let strongBase = base
         UIView.animate(withDuration: 0) {
             strongBase.reloadData()
+            strongBase.layoutIfNeeded()
         } completion: { _ in
-            completion?()
+            DispatchQueue.main.async {
+                completion?()
+            }
         }
     }
     
