@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - CacheProtocol
-/// 缓存调用协议。复杂对象需遵循NSCoding协议
+/// 缓存调用协议。复杂对象需遵循NSCoding|AnyArchivable协议
 public protocol CacheProtocol {
     
     /// 读取某个缓存
@@ -25,7 +25,7 @@ public protocol CacheProtocol {
 }
 
 // MARK: - CacheEngineProtocol
-/// 缓存引擎内部协议。复杂对象需遵循NSCoding协议
+/// 缓存引擎内部协议。复杂对象需遵循NSCoding|AnyArchivable协议
 public protocol CacheEngineProtocol {
     
     /// 从引擎读取某个缓存，内部方法，必须实现
@@ -40,7 +40,7 @@ public protocol CacheEngineProtocol {
 }
 
 // MARK: - CacheEngine
-/// 缓存引擎基类，自动管理缓存有效期，线程安全。复杂对象需遵循NSCoding协议
+/// 缓存引擎基类，自动管理缓存有效期，线程安全。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     
     private var semaphore = DispatchSemaphore(value: 1)

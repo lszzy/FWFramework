@@ -683,7 +683,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     ///   - clazz: JS桥接处理类或对象
     ///   - package: 桥接包名，默认nil。示例：app.
     ///   - object: 自定义上下文，可通过context.object访问，示例：WebView控制器
-    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge:
+    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge: > xxxDefaultBridge:
     public func registerClass(_ clazz: Any, package: String? = nil, context object: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
         if let targetClass = clazz as? NSObject.Type {
@@ -710,7 +710,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     /// - Parameters:
     ///   - clazz: JS桥接处理类或对象
     ///   - package: 桥接包名，默认nil。示例：app.
-    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge:
+    ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge: > xxxDefaultBridge:
     public func unregisterClass(_ clazz: Any, package: String? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
         for (key, _) in bridges {
@@ -779,14 +779,22 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
         
         var bridges: [String: String] = [:]
+        let bridgeSuffix = "Bridge:"
         for method in methods {
-            guard method.hasSuffix("Bridge:"),
+            guard method.hasSuffix(bridgeSuffix),
                   method.components(separatedBy: ":").count == 2 else {
                 continue
             }
             
-            let name = method.replacingOccurrences(of: "Bridge:", with: "")
-            bridges[name] = method
+            if method.hasSuffix("Default" + bridgeSuffix) {
+                let name = method.replacingOccurrences(of: "Default" + bridgeSuffix, with: "")
+                if !methods.contains(name + bridgeSuffix) {
+                    bridges[name] = method
+                }
+            } else {
+                let name = method.replacingOccurrences(of: bridgeSuffix, with: "")
+                bridges[name] = method
+            }
         }
         return bridges
     }

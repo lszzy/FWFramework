@@ -89,13 +89,13 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         
         // 设置默认导航栏样式
         // let defaultAppearance = NavigationBarAppearance()
-        // defaultAppearance.foregroundColor = UIColor.fw.color(hex: 0x111111)
+        // defaultAppearance.foregroundColor = UIColor.black
         // 1. 指定导航栏背景色
         // defaultAppearance.backgroundColor = UIColor.white
         // 2. 设置导航栏样式全透明
         // defaultAppearance.backgroundTransparent = true
         // defaultAppearance.shadowColor = nil
-        // NavigationBarAppearance.setAppearance(defaultAppearance, forStyle: .default)
+        // NavigationBarAppearance.setAppearance(defaultAppearance, for: .default)
         
         // 配置通用样式和兼容性
         // UITableView.fw.resetTableStyle()
@@ -104,7 +104,7 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         // UIButton.fw.disabledAlpha = 0.3
         
         // 配置弹窗插件及默认文案
-        // PluginManager.registerPlugin(AlertPlugin.self, with: AlertControllerImpl.self)
+        // PluginManager.registerPlugin(AlertPlugin.self, object: AlertControllerImpl.self)
         // AlertPluginImpl.shared.defaultCloseButton = nil
         // AlertPluginImpl.shared.defaultCancelButton = nil
         // AlertPluginImpl.shared.defaultConfirmButton = nil
@@ -116,12 +116,12 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         // EmptyPluginImpl.shared.defaultAction = nil
         
         // 配置图片选择、浏览和下拉刷新插件
-        // PluginManager.registerPlugin(ImagePickerPlugin.self, with: ImagePickerControllerImpl.self)
-        // PluginManager.registerPlugin(ImagePreviewPlugin.self, with: ImagePreviewPluginImpl.self)
-        // PluginManager.registerPlugin(RefreshPlugin.self, with: RefreshPluginImpl.self)
+        // PluginManager.registerPlugin(ImagePickerPlugin.self, object: ImagePickerControllerImpl.self)
+        // PluginManager.registerPlugin(ImagePreviewPlugin.self, object: ImagePreviewPluginImpl.self)
+        // PluginManager.registerPlugin(RefreshPlugin.self, object: RefreshPluginImpl.self)
         
         // 配置吐司插件
-        // ToastPluginImpl.shared.delayTime = 2.0
+        // ToastPluginImpl.shared.delayHideTime = 2.0
         // ToastPluginImpl.shared.defaultLoadingText = nil
         // ToastPluginImpl.shared.defaultProgressText = nil
         // ToastPluginImpl.shared.defaultMessageText = nil

@@ -1,5 +1,13 @@
 # 更新日志
 
+## [5.5.1] - 2024-05-23
+
+### Changed
+* JSBridge支持查找默认DefaultBridge:开发
+* CacheKeychain支持自定义Service名称
+* CacheUserDefaults兼容AnyArchivable协议
+* 移除ArchivedValue属性注解，StoredValue属性注解兼容AnyArchivable协议
+
 ## [5.5.0] - 2024-05-20
 
 ### Added
