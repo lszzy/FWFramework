@@ -8,7 +8,7 @@
 import Foundation
 import CommonCrypto
 
-/// 文件缓存。复杂对象需遵循NSCoding协议
+/// 文件缓存。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheFile: CacheEngine {
     
     /// 单例模式
