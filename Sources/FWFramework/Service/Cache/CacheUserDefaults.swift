@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// UserDefaults缓存
+/// UserDefaults缓存。复杂对象需遵循AnyArchivable协议
 open class CacheUserDefaults: CacheEngine {
     
     /// 单例模式
@@ -34,11 +34,19 @@ open class CacheUserDefaults: CacheEngine {
     
     // MARK: - CacheEngineProtocol
     open override func readCache(forKey key: String) -> Any? {
-        return self.userDefaults.object(forKey: self.cacheKey(key))
+        var value = self.userDefaults.object(forKey: self.cacheKey(key))
+        if let data = value as? Data, let coder = ArchiveCoder.unarchiveData(data) {
+            value = coder.archivableObject
+        }
+        return value
     }
     
     open override func writeCache(_ object: Any, forKey key: String) {
-        self.userDefaults.set(object, forKey: self.cacheKey(key))
+        var value: Any? = object
+        if ArchiveCoder.isArchivableObject(object) {
+            value = Data.fw.archivedData(object)
+        }
+        self.userDefaults.set(value, forKey: self.cacheKey(key))
         self.userDefaults.synchronize()
     }
     

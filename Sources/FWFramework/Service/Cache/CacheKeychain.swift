@@ -7,39 +7,43 @@
 
 import Foundation
 
-/// Keychain缓存。复杂对象需遵循NSCoding协议
+/// Keychain缓存。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheKeychain: CacheEngine {
 
     /// 单例模式
     public static let shared = CacheKeychain()
     
     private var group: String?
+    private var service = "FWCache"
     
     public override init() {
         super.init()
     }
 
     /// 分组对象
-    public init(group: String?) {
+    public init(group: String?, service: String? = nil) {
         super.init()
         self.group = group
+        if let service = service, !service.isEmpty {
+            self.service = service
+        }
     }
 
     // MARK: - CacheEngineProtocol
     open override func readCache(forKey key: String) -> Any? {
-        return passwordObject(forService: "FWCache", account: key)
+        return passwordObject(forService: service, account: key)
     }
 
     open override func writeCache(_ object: Any, forKey key: String) {
-        setPasswordObject(object, forService: "FWCache", account: key)
+        setPasswordObject(object, forService: service, account: key)
     }
 
     open override func clearCache(forKey key: String) {
-        deletePassword(forService: "FWCache", account: key)
+        deletePassword(forService: service, account: key)
     }
 
     open override func clearAllCaches() {
-        deletePassword(forService: "FWCache", account: nil)
+        deletePassword(forService: service, account: nil)
     }
 
     // MARK: - Private

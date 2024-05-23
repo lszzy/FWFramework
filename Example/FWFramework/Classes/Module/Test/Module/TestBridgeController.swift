@@ -11,7 +11,7 @@ import WebKit
 
 class TestJavascriptBridge: NSObject {
     
-    @objc static func testObjcCallbackBridge(_ context: WebViewJSBridge.Context) {
+    @objc static func testObjcCallbackDefaultBridge(_ context: WebViewJSBridge.Context) {
         print("TestJavascriptBridge.testObjcCallback called: \(context.parameters)")
         context.completion?("Response from TestJavascriptBridge.testObjcCallback")
     }

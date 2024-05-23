@@ -16,6 +16,7 @@ target "FWFramework_Plugin" do
   pod 'FWFramework/FWPlugin/Microphone', :path => '../../'
   pod 'FWFramework/FWPlugin/Calendar', :path => '../../'
   pod 'FWFramework/FWPlugin/Tracking', :path => '../../'
+  pod 'FWFramework/FWPlugin/Biometry', :path => '../../'
   pod 'FWFramework/FWPlugin/Macros', :path => '../../'
   pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
   pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
