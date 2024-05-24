@@ -24,7 +24,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: RequestDelegate {
+open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
     
     /// 批量请求完成句柄
     public typealias Completion = (BatchRequest) -> Void
@@ -48,10 +48,6 @@ open class BatchRequest: RequestDelegate {
     }
     /// 已失败请求数组
     open private(set) var failedRequestArray: [HTTPRequest] = []
-    /// 当前网络错误
-    open var error: Error? {
-        return failedRequest?.error
-    }
     /// 请求是否已取消
     open private(set) var isCancelled = false
     /// 某个请求失败时，是否立即停止批量请求，默认true
@@ -147,6 +143,7 @@ open class BatchRequest: RequestDelegate {
         return self
     }
     
+    // MARK: - RequestDelegate
     open func requestFinished(_ request: HTTPRequest) {
         finishedCount += 1
         if finishedCount == requestArray.count {
@@ -168,6 +165,22 @@ open class BatchRequest: RequestDelegate {
         if finishedCount == requestArray.count {
             requestCompleted()
         }
+    }
+    
+    // MARK: - HTTPRequestProtocol
+    /// 是否自动显示错误信息
+    open var autoShowError: Bool {
+        return failedRequest?.autoShowError ?? false
+    }
+    
+    /// 当前网络错误
+    open var error: Error? {
+        return failedRequest?.error
+    }
+    
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        failedRequest?.showError()
     }
     
     // MARK: - Private
