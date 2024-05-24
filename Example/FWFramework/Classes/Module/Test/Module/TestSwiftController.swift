@@ -136,6 +136,8 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
 }
 
 class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol {
+    var dataModel: String?
+    
     func setupSubviews() {
         view.backgroundColor = AppTheme.backgroundColor
         
@@ -143,12 +145,14 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
     }
     
     func setupData() {
-        view.app.showEmptyView(text: "加载成功")
+        view.app.showEmptyView(text: dataModel)
     }
     
     func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             if [0, 1].randomElement() == 1 {
+                self?.dataModel = "加载成功"
+                
                 let request = HTTPRequest()
                 completion(request, true)
             } else {
