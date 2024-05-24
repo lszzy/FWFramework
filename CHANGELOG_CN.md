@@ -1,6 +1,6 @@
 # 更新日志
 
-## [5.5.2] - 2024-05-24
+## [5.6.0] - 2024-05-24
 
 ### Changed
 * 新增RequestViewControllerProtocol快速处理控制器网络请求
