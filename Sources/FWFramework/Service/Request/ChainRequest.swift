@@ -50,7 +50,8 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
     open private(set) var failedRequest: HTTPRequest?
     /// 是否自动显示错误信息
     open var autoShowError: Bool {
-        return failedRequest?.autoShowError ?? false
+        get { failedRequest?.autoShowError ?? false }
+        set { failedRequest?.autoShowError = newValue }
     }
     /// 当前网络错误
     open var error: Error? {
