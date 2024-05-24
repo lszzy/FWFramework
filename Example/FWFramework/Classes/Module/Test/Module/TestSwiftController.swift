@@ -136,7 +136,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
 }
 
 class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol {
-    var dataModel: String?
+    var dataModel: String = ""
     
     func setupSubviews() {
         view.backgroundColor = AppTheme.backgroundColor
@@ -148,18 +148,29 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
         view.app.showEmptyView(text: dataModel)
     }
     
-    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            if [0, 1].randomElement() == 1 {
-                self?.dataModel = "加载成功"
-                
-                let request = HTTPRequest()
+    func startDataRequest(isRefreshing: Bool, completion: @escaping Completion) {
+        let request = TestModelRequest()
+        request.testFailed = [0, 1].randomElement() == 0
+        request.start { request in
+            self.dataModel = Date(timeIntervalSince1970: request.responseServerTime).app.stringValue
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 completion(request, true)
-            } else {
-                let request = HTTPRequest()
-                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+            }
+        } failure: { request in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 completion(request, false)
             }
+        }
+    }
+    
+    func showRequestLoading(isShowing: Bool) {
+        if isShowing {
+            if !app.isDataLoaded {
+                app.showEmptyLoading()
+            }
+        } else {
+            app.hideEmptyView()
         }
     }
     
@@ -387,10 +398,10 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
         }
     }
     
-    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
+    func startDataRequest(isRefreshing: Bool, completion: @escaping Completion) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             if [0, 1, 2].randomElement() != 0 {
-                if !isLoading {
+                if isRefreshing {
                     self?.tableData.removeAll()
                 }
                 let count = self?.tableData.count ?? 0
