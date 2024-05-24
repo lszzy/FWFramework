@@ -8,17 +8,14 @@
 import UIKit
 
 // MARK: - RequestViewControllerProtocol
-/// 通用请求视图控制器协议，可覆写
+/// 通用请求视图控制器协议，可扩展重写
 public protocol RequestViewControllerProtocol {
     
     /// 请求数据完成句柄，回调数据是否追加完成
-    typealias Completion = (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void
+    typealias Completion = (_ request: HTTPRequestProtocol, _ finished: Bool) -> Void
     
     /// 自定义请求滚动视图，ViewControllerProtocol自动处理
     var requestScrollView: UIScrollView? { get }
-    
-    /// 是否自动显示加载吐司，默认true
-    var showsRequestLoading: Bool { get }
     
     /// 渲染数据，请求成功时调用
     func setupData()
@@ -30,7 +27,13 @@ public protocol RequestViewControllerProtocol {
     func loadingData()
     
     /// 开始数据请求，必须实现并调用completion句柄
-    func startDataRequest(isLoading: Bool, completion: @escaping Completion)
+    func startDataRequest(isRefreshing: Bool, completion: @escaping Completion)
+    
+    /// 显示或隐藏加载器，默认加载吐司
+    func showRequestLoading(isShowing: Bool)
+    
+    /// 显示网络请求错误，默认显示空界面和提示吐司
+    func showRequestError(_ request: HTTPRequestProtocol, isRefreshing: Bool)
     
 }
 
@@ -40,11 +43,6 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     public var requestScrollView: UIScrollView? {
         get { fw.property(forName: #function) as? UIScrollView }
         set { fw.setPropertyWeak(newValue, forName: #function) }
-    }
-    
-    /// 是否自动显示加载吐司，默认true
-    public var showsRequestLoading: Bool {
-        return true
     }
     
     /// 默认实现渲染数据，显示并调用reloadData
@@ -61,52 +59,66 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     
     /// 默认实现请求或刷新数据
     public func requestData() {
-        if !fw.isDataLoaded, showsRequestLoading {
-            if let scrollView = requestScrollView {
-                if !scrollView.fw.isRefreshing {
-                    fw.showLoading()
-                }
-            } else {
-                fw.showLoading()
-            }
-        }
-        
-        startDataRequest(isLoading: false) { [weak self] request, finished in
-            guard let self = self else { return }
-            self.fw.hideLoading()
-            self.requestScrollView?.fw.endRefreshing()
+        showRequestLoading(isShowing: true)
+        startDataRequest(isRefreshing: true) { [weak self] request, finished in
+            self?.showRequestLoading(isShowing: false)
             
-            if request?.error == nil {
-                self.fw.isDataLoaded = true
-                self.setupData()
-                self.requestScrollView?.fw.loadingFinished = finished
+            if request.error == nil {
+                self?.fw.isDataLoaded = true
+                self?.setupData()
+                self?.requestScrollView?.fw.endRefreshing(finished: finished)
             } else {
-                if !self.fw.isDataLoaded {
-                    request?.autoShowError = false
-                    self.fw.showEmptyView(error: request?.error) { [weak self] _ in
-                        self?.fw.hideEmptyView()
-                        self?.requestData()
-                    }
-                } else if let request = request, !request.autoShowError {
-                    request.showError()
-                }
+                self?.requestScrollView?.fw.endRefreshing()
+                self?.showRequestError(request, isRefreshing: true)
             }
         }
     }
     
     /// 默认实现追加数据
     public func loadingData() {
-        startDataRequest(isLoading: true) { [weak self] request, finished in
-            guard let self = self else { return }
-            self.requestScrollView?.fw.endLoading()
-            
-            if request?.error == nil {
-                self.setupData()
-                self.requestScrollView?.fw.loadingFinished = finished
+        startDataRequest(isRefreshing: false) { [weak self] request, finished in
+            if request.error == nil {
+                self?.setupData()
+                self?.requestScrollView?.fw.endLoading(finished: finished)
             } else {
-                if let request = request, !request.autoShowError {
-                    request.showError()
+                self?.requestScrollView?.fw.endLoading()
+                self?.showRequestError(request, isRefreshing: false)
+            }
+        }
+    }
+    
+    /// 默认实现显示或隐藏加载器
+    public func showRequestLoading(isShowing: Bool) {
+        if isShowing {
+            if !fw.isDataLoaded {
+                if let scrollView = requestScrollView {
+                    if !scrollView.fw.isRefreshing {
+                        fw.showLoading()
+                    }
+                } else {
+                    fw.showLoading()
                 }
+            }
+        } else {
+            fw.hideLoading()
+        }
+    }
+    
+    /// 默认实现显示网络请求错误
+    public func showRequestError(_ request: HTTPRequestProtocol, isRefreshing: Bool) {
+        if isRefreshing {
+            if !fw.isDataLoaded {
+                request.autoShowError = false
+                fw.showEmptyView(error: request.error) { [weak self] _ in
+                    self?.fw.hideEmptyView()
+                    self?.requestData()
+                }
+            } else if !request.autoShowError {
+                request.showError()
+            }
+        } else {
+            if !request.autoShowError {
+                request.showError()
             }
         }
     }
