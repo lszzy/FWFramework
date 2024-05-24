@@ -11,8 +11,14 @@ import UIKit
 /// 通用请求视图控制器协议，可覆写
 public protocol RequestViewControllerProtocol {
     
+    /// 请求数据完成句柄，回调数据是否追加完成
+    typealias Completion = (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void
+    
     /// 自定义请求滚动视图，ViewControllerProtocol自动处理
     var requestScrollView: UIScrollView? { get }
+    
+    /// 是否自动显示加载吐司，默认true
+    var showsRequestLoading: Bool { get }
     
     /// 渲染数据，请求成功时调用
     func setupData()
@@ -23,8 +29,8 @@ public protocol RequestViewControllerProtocol {
     /// 追加数据，用于上拉追加时分页请求
     func loadingData()
     
-    /// 开始数据请求，回调数据是否追加完成，必须实现并调用completion句柄
-    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> HTTPRequestProtocol?
+    /// 开始数据请求，必须实现并调用completion句柄
+    func startDataRequest(isLoading: Bool, completion: @escaping Completion)
     
 }
 
@@ -34,6 +40,11 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     public var requestScrollView: UIScrollView? {
         get { fw.property(forName: #function) as? UIScrollView }
         set { fw.setPropertyWeak(newValue, forName: #function) }
+    }
+    
+    /// 是否自动显示加载吐司，默认true
+    public var showsRequestLoading: Bool {
+        return true
     }
     
     /// 默认实现渲染数据，显示并调用reloadData
@@ -50,7 +61,7 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     
     /// 默认实现请求或刷新数据
     public func requestData() {
-        if !fw.isDataLoaded {
+        if !fw.isDataLoaded, showsRequestLoading {
             if let scrollView = requestScrollView {
                 if !scrollView.fw.isRefreshing {
                     fw.showLoading()
@@ -60,8 +71,7 @@ extension RequestViewControllerProtocol where Self: UIViewController {
             }
         }
         
-        var request: HTTPRequestProtocol?
-        request = startDataRequest(isLoading: false) { [weak self] finished in
+        startDataRequest(isLoading: false) { [weak self] request, finished in
             guard let self = self else { return }
             self.fw.hideLoading()
             self.requestScrollView?.fw.endRefreshing()
@@ -82,15 +92,11 @@ extension RequestViewControllerProtocol where Self: UIViewController {
                 }
             }
         }
-        if let request = request as? HTTPRequest {
-            request.autoShowLoading = false
-        }
     }
     
     /// 默认实现追加数据
     public func loadingData() {
-        var request: HTTPRequestProtocol?
-        request = startDataRequest(isLoading: true) { [weak self] finished in
+        startDataRequest(isLoading: true) { [weak self] request, finished in
             guard let self = self else { return }
             self.requestScrollView?.fw.endLoading()
             
@@ -102,9 +108,6 @@ extension RequestViewControllerProtocol where Self: UIViewController {
                     request.showError()
                 }
             }
-        }
-        if let request = request as? HTTPRequest {
-            request.autoShowLoading = false
         }
     }
     

@@ -146,17 +146,17 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
         view.app.showEmptyView(text: "加载成功")
     }
     
-    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> (any HTTPRequestProtocol)? {
-        let request = HTTPRequest()
+    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             if [0, 1].randomElement() == 1 {
-                completion(true)
+                let request = HTTPRequest()
+                completion(request, true)
             } else {
+                let request = HTTPRequest()
                 request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
-                completion(false)
+                completion(request, false)
             }
         }
-        return request
     }
     
 }
@@ -383,8 +383,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
         }
     }
     
-    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> (any HTTPRequestProtocol)? {
-        let request = HTTPRequest()
+    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             if [0, 1, 2].randomElement() != 0 {
                 if !isLoading {
@@ -393,13 +392,14 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
                 let count = self?.tableData.count ?? 0
                 self?.tableData.append(contentsOf: [count, count + 1, count + 2])
                 
-                completion(count >= 12)
+                let request = HTTPRequest()
+                completion(request, count >= 12)
             } else {
+                let request = HTTPRequest()
                 request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
-                completion(false)
+                completion(request, false)
             }
         }
-        return request
     }
 }
 
