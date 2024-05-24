@@ -24,6 +24,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             "ScrollViewController",
             "TableViewController",
             "WebViewController",
+            "RequestViewController",
             "TestSwiftProtocol默认实现",
             "TestSwiftProtocol类实现",
             "TestSwiftProtocol继承实现",
@@ -60,22 +61,24 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         case 4:
             viewController = SwiftTestWebViewController()
         case 5:
-            viewController = TestSwiftProtocolDefaultController()
+            viewController = SwiftTestRequestViewController()
         case 6:
-            viewController = TestSwiftProtocolBaseController()
+            viewController = TestSwiftProtocolDefaultController()
         case 7:
-            viewController = TestSwiftProtocolViewController()
+            viewController = TestSwiftProtocolBaseController()
         case 8:
-            viewController = TestObjcProtocolDefaultController()
+            viewController = TestSwiftProtocolViewController()
         case 9:
-            viewController = TestObjcProtocolBaseController()
+            viewController = TestObjcProtocolDefaultController()
         case 10:
-            viewController = TestObjcProtocolViewController()
+            viewController = TestObjcProtocolBaseController()
         case 11:
+            viewController = TestObjcProtocolViewController()
+        case 12:
             let value = app.invokeMethod(#selector(self.onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), "3"])?.takeUnretainedValue() as? String
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
-        case 12:
+        case 13:
             let value = app.invokeMethod(#selector(self.onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 3)])?.takeUnretainedValue() as? Int
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
@@ -126,6 +129,36 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
                 self?.view.app.hideEmptyView()
                 
                 self?.state = .loading
+            }
+        }
+    }
+    
+}
+
+class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol {
+    var dataModel: String?
+    
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+        
+        requestData()
+    }
+    
+    func setupData() {
+        view.app.showEmptyView(text: dataModel)
+    }
+    
+    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            if [0, 1].randomElement() == 1 {
+                self?.dataModel = "加载成功"
+                
+                let request = HTTPRequest()
+                completion(request, true)
+            } else {
+                let request = HTTPRequest()
+                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                completion(request, false)
             }
         }
     }
@@ -320,7 +353,7 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
     }
 }
 
-class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol {
+class SwiftTestTableViewController: UIViewController, TableDelegateControllerProtocol, RequestViewControllerProtocol {
     class Cell: UITableViewCell {
         var index: Int = 0
     }
@@ -337,10 +370,40 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
             cell.index = indexPath.row
             cell.textLabel?.text = "\(indexPath.row)"
         }
+        tableView.app.setRefreshing { [weak self] in
+            self?.requestData()
+        }
+        tableView.app.setLoading { [weak self] in
+            self?.loadingData()
+        }
     }
     
     func setupSubviews() {
-        tableData.append(contentsOf: [0, 1, 2])
+        if [0, 1].randomElement() == 1 {
+            tableView.app.beginRefreshing()
+        } else {
+            tableView.isHidden = true
+            requestData()
+        }
+    }
+    
+    func startDataRequest(isLoading: Bool, completion: @escaping Completion) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            if [0, 1, 2].randomElement() != 0 {
+                if !isLoading {
+                    self?.tableData.removeAll()
+                }
+                let count = self?.tableData.count ?? 0
+                self?.tableData.append(contentsOf: [count, count + 1, count + 2])
+                
+                let request = HTTPRequest()
+                completion(request, count >= 12)
+            } else {
+                let request = HTTPRequest()
+                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                completion(request, false)
+            }
+        }
     }
 }
 

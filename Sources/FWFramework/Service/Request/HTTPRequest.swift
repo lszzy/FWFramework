@@ -57,6 +57,20 @@ extension RequestDelegate {
     public func requestFailed(_ request: HTTPRequest) {}
 }
 
+/// HTTP请求协议，主要用于处理方法中Self参数、错误处理等
+public protocol HTTPRequestProtocol: AnyObject {
+    /// 是否自动显示错误信息
+    var autoShowError: Bool { get set }
+    /// 当前网络错误
+    var error: Error? { get }
+    /// 显示网络错误，默认显示Toast提示
+    func showError()
+    /// 开始请求
+    func start() -> Self
+    /// 取消请求
+    func cancel()
+}
+
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
 ///
 /// 注意事项：
@@ -1280,10 +1294,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible 
     
 }
 
-// MARK: - HTTPRequestProtocol
-/// HTTP请求协议，主要用于处理方法中Self参数
-public protocol HTTPRequestProtocol {}
-
+// MARK: - HTTPRequestProtocol+HTTPRequest
 extension HTTPRequestProtocol where Self: HTTPRequest {
     
     /// 开始请求并指定成功、失败句柄

@@ -24,7 +24,7 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: RequestDelegate {
+open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
     
     /// 队列请求完成句柄
     public typealias Completion = (ChainRequest) -> Void
@@ -48,6 +48,11 @@ open class ChainRequest: RequestDelegate {
     open private(set) var succeedRequest: HTTPRequest?
     /// 最后一个导致队列请求失败的请求
     open private(set) var failedRequest: HTTPRequest?
+    /// 是否自动显示错误信息
+    open var autoShowError: Bool {
+        get { failedRequest?.autoShowError ?? false }
+        set { failedRequest?.autoShowError = newValue }
+    }
     /// 当前网络错误
     open var error: Error? {
         return failedRequest?.error
@@ -126,6 +131,11 @@ open class ChainRequest: RequestDelegate {
         failureCompletionBlock = nil
     }
     
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        failedRequest?.showError()
+    }
+    
     /// 添加请求配件
     @discardableResult
     open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
@@ -136,6 +146,7 @@ open class ChainRequest: RequestDelegate {
         return self
     }
     
+    /// 请求完成回调
     open func requestFinished(_ request: HTTPRequest) {
         succeedRequest = request
         failedRequest = nil
@@ -149,6 +160,7 @@ open class ChainRequest: RequestDelegate {
         }
     }
     
+    /// 请求失败回调
     open func requestFailed(_ request: HTTPRequest) {
         succeedRequest = nil
         failedRequest = request
