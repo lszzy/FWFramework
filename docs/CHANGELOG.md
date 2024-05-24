@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.5.2] - 2024-05-24
+
+### Changed
+* Added RequestViewControllerProtocol to quickly handle controller network requests
+* BatchRequest, ChainRequest implement HTTPRequestProtocol protocol
+* ViewModel moved to Module submodule, compatible with UIKit and SwiftUI
+* UITableView shortcut initialization method adds tableViewConfiguration configuration handle
+* Optimize the implementation of reloadData(completion:) method
+
 ## [5.5.1] - 2024-05-23
 
 ### Changed

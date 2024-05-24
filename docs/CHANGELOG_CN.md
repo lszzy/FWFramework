@@ -1,5 +1,14 @@
 # 更新日志
 
+## [5.5.2] - 2024-05-24
+
+### Changed
+* 新增RequestViewControllerProtocol快速处理控制器网络请求
+* BatchRequest、ChainRequest实现HTTPRequestProtocol协议
+* ViewModel移动到Module子模块，兼容UIKit和SwiftUI
+* UITableView快捷初始化方法新增tableViewConfiguration配置句柄
+* 优化reloadData(completion:)方法实现
+
 ## [5.5.1] - 2024-05-23
 
 ### Changed

@@ -2200,154 +2200,133 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 12,
-      "symbol": "Wrapper.collectionDelegate",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 27,
-      "symbol": "Wrapper.collectionView()",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 35,
-      "symbol": "Wrapper.collectionView(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 205,
+      "line": 208,
       "symbol": "CollectionViewDelegate.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 217,
+      "line": 220,
       "symbol": "CollectionViewDelegate.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 229,
+      "line": 232,
       "symbol": "CollectionViewDelegate.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 245,
+      "line": 248,
       "symbol": "CollectionViewDelegate.collectionView(_:viewForSupplementaryElementOfKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 285,
+      "line": 288,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:sizeForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 316,
+      "line": 319,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:insetForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 335,
+      "line": 338,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:minimumLineSpacingForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 354,
+      "line": 357,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:minimumInteritemSpacingForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 373,
+      "line": 376,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:referenceSizeForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 410,
+      "line": 413,
       "symbol": "CollectionViewDelegate.collectionView(_:layout:referenceSizeForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 448,
+      "line": 451,
       "symbol": "CollectionViewDelegate.collectionView(_:didSelectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 456,
+      "line": 459,
       "symbol": "CollectionViewDelegate.collectionView(_:willDisplay:forItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 464,
+      "line": 467,
       "symbol": "CollectionViewDelegate.collectionView(_:didEndDisplaying:forItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 473,
+      "line": 476,
       "symbol": "CollectionViewDelegate.scrollViewDidScroll(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 481,
+      "line": 484,
       "symbol": "CollectionViewDelegate.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 489,
+      "line": 492,
       "symbol": "CollectionViewDelegate.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 497,
+      "line": 500,
       "symbol": "CollectionViewDelegate.scrollViewDidEndDragging(_:willDecelerate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 505,
+      "line": 508,
       "symbol": "CollectionViewDelegate.scrollViewDidEndDecelerating(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
-      "line": 513,
+      "line": 516,
       "symbol": "CollectionViewDelegate.scrollViewDidEndScrollingAnimation(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -3824,168 +3803,147 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 12,
-      "symbol": "Wrapper.tableDelegate",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 27,
-      "symbol": "Wrapper.tableView()",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 31,
-      "symbol": "Wrapper.tableView(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 138,
+      "line": 143,
       "symbol": "TableViewDelegate.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 150,
+      "line": 155,
       "symbol": "TableViewDelegate.tableView(_:numberOfRowsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 162,
+      "line": 167,
       "symbol": "TableViewDelegate.tableView(_:cellForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 178,
+      "line": 183,
       "symbol": "TableViewDelegate.tableView(_:canEditRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 188,
+      "line": 193,
       "symbol": "TableViewDelegate.tableView(_:commit:forRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 200,
+      "line": 205,
       "symbol": "TableViewDelegate.tableView(_:heightForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 222,
+      "line": 227,
       "symbol": "TableViewDelegate.tableView(_:viewForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 239,
+      "line": 244,
       "symbol": "TableViewDelegate.tableView(_:heightForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 266,
+      "line": 271,
       "symbol": "TableViewDelegate.tableView(_:viewForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 283,
+      "line": 288,
       "symbol": "TableViewDelegate.tableView(_:heightForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 310,
+      "line": 315,
       "symbol": "TableViewDelegate.tableView(_:didSelectRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 318,
+      "line": 323,
       "symbol": "TableViewDelegate.tableView(_:titleForDeleteConfirmationButtonForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 326,
+      "line": 331,
       "symbol": "TableViewDelegate.tableView(_:editingStyleForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 335,
+      "line": 340,
       "symbol": "TableViewDelegate.tableView(_:willDisplay:forRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 343,
+      "line": 348,
       "symbol": "TableViewDelegate.tableView(_:didEndDisplaying:forRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 352,
+      "line": 357,
       "symbol": "TableViewDelegate.scrollViewDidScroll(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 360,
+      "line": 365,
       "symbol": "TableViewDelegate.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 368,
+      "line": 373,
       "symbol": "TableViewDelegate.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 376,
+      "line": 381,
       "symbol": "TableViewDelegate.scrollViewDidEndDragging(_:willDecelerate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 384,
+      "line": 389,
       "symbol": "TableViewDelegate.scrollViewDidEndDecelerating(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/TableView.swift",
-      "line": 392,
+      "line": 397,
       "symbol": "TableViewDelegate.scrollViewDidEndScrollingAnimation(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -11937,49 +11895,49 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 75,
+      "line": 80,
       "symbol": "BatchRequest.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 77,
+      "line": 82,
       "symbol": "BatchRequest.init(requestArray:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 221,
+      "line": 233,
       "symbol": "BatchRequestManager.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/BatchRequest.swift",
-      "line": 226,
+      "line": 238,
       "symbol": "BatchRequestManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/ChainRequest.swift",
-      "line": 72,
+      "line": 77,
       "symbol": "ChainRequest.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/ChainRequest.swift",
-      "line": 252,
+      "line": 264,
       "symbol": "ChainRequestManager.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/ChainRequest.swift",
-      "line": 257,
+      "line": 269,
       "symbol": "ChainRequestManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -12105,350 +12063,350 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 93,
+      "line": 107,
       "symbol": "HTTPRequest.Builder.requestUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 94,
+      "line": 108,
       "symbol": "HTTPRequest.Builder.cdnUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 95,
+      "line": 109,
       "symbol": "HTTPRequest.Builder.useCDN",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 96,
+      "line": 110,
       "symbol": "HTTPRequest.Builder.allowsCellularAccess",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 97,
+      "line": 111,
       "symbol": "HTTPRequest.Builder.requestTimeoutInterval",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 98,
+      "line": 112,
       "symbol": "HTTPRequest.Builder.requestCachePolicy",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 99,
+      "line": 113,
       "symbol": "HTTPRequest.Builder.requestMethod",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 100,
+      "line": 114,
       "symbol": "HTTPRequest.Builder.requestArgument",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 101,
+      "line": 115,
       "symbol": "HTTPRequest.Builder.constructingBodyBlock",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 102,
+      "line": 116,
       "symbol": "HTTPRequest.Builder.resumableDownloadPath",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 103,
+      "line": 117,
       "symbol": "HTTPRequest.Builder.requestSerializerType",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 104,
+      "line": 118,
       "symbol": "HTTPRequest.Builder.responseSerializerType",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 105,
+      "line": 119,
       "symbol": "HTTPRequest.Builder.requestAuthorizationHeaders",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 106,
+      "line": 120,
       "symbol": "HTTPRequest.Builder.requestHeaders",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 107,
+      "line": 121,
       "symbol": "HTTPRequest.Builder.requestPriority",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 108,
+      "line": 122,
       "symbol": "HTTPRequest.Builder.requestUserInfo",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 109,
+      "line": 123,
       "symbol": "HTTPRequest.Builder.customUrlRequest",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 110,
+      "line": 124,
       "symbol": "HTTPRequest.Builder.isSynchronously",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 111,
+      "line": 125,
       "symbol": "HTTPRequest.Builder.tag",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 112,
+      "line": 126,
       "symbol": "HTTPRequest.Builder.statusCodeValidator",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 113,
+      "line": 127,
       "symbol": "HTTPRequest.Builder.jsonValidator",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 114,
+      "line": 128,
       "symbol": "HTTPRequest.Builder.urlRequestFilter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 115,
+      "line": 129,
       "symbol": "HTTPRequest.Builder.responseFilter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 116,
+      "line": 130,
       "symbol": "HTTPRequest.Builder.responseMockValidator",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 117,
+      "line": 131,
       "symbol": "HTTPRequest.Builder.responseMockProcessor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 118,
+      "line": 132,
       "symbol": "HTTPRequest.Builder.requestRetryCount",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 119,
+      "line": 133,
       "symbol": "HTTPRequest.Builder.requestRetryInterval",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 120,
+      "line": 134,
       "symbol": "HTTPRequest.Builder.requestRetryTimeout",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 121,
+      "line": 135,
       "symbol": "HTTPRequest.Builder.requestRetryValidator",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 122,
+      "line": 136,
       "symbol": "HTTPRequest.Builder.requestRetryProcessor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 123,
+      "line": 137,
       "symbol": "HTTPRequest.Builder.requestCompletePreprocessor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 124,
+      "line": 138,
       "symbol": "HTTPRequest.Builder.requestCompleteFilter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 125,
+      "line": 139,
       "symbol": "HTTPRequest.Builder.requestFailedPreprocessor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 126,
+      "line": 140,
       "symbol": "HTTPRequest.Builder.requestFailedFilter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 127,
+      "line": 141,
       "symbol": "HTTPRequest.Builder.cacheTimeInSeconds",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 128,
+      "line": 142,
       "symbol": "HTTPRequest.Builder.cacheVersion",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 129,
+      "line": 143,
       "symbol": "HTTPRequest.Builder.cacheSensitiveData",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 130,
+      "line": 144,
       "symbol": "HTTPRequest.Builder.cacheArgumentFilter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 131,
+      "line": 145,
       "symbol": "HTTPRequest.Builder.writeCacheAsynchronously",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1463,
+      "line": 1474,
       "symbol": "UnderlyingErrorProtocol.underlyingError",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1468,
+      "line": 1479,
       "symbol": "RequestError.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1469,
+      "line": 1480,
       "symbol": "RequestError.cacheExpired",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1470,
+      "line": 1481,
       "symbol": "RequestError.cacheVersionMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1471,
+      "line": 1482,
       "symbol": "RequestError.cacheSensitiveDataMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1472,
+      "line": 1483,
       "symbol": "RequestError.cacheAppVersionMismatch",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1473,
+      "line": 1484,
       "symbol": "RequestError.cacheInvalidCacheTime",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1474,
+      "line": 1485,
       "symbol": "RequestError.cacheInvalidMetadata",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1475,
+      "line": 1486,
       "symbol": "RequestError.cacheInvalidCacheData",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1476,
+      "line": 1487,
       "symbol": "RequestError.validationInvalidStatusCode(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Request/HTTPRequest.swift",
-      "line": 1477,
+      "line": 1488,
       "symbol": "RequestError.validationInvalidJSONFormat",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -20554,35 +20512,35 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/StateView.swift",
-      "line": 18,
+      "line": 25,
       "symbol": "StateView.state",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/StateView.swift",
-      "line": 25,
+      "line": 32,
       "symbol": "StateView.init(content:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/StateView.swift",
-      "line": 34,
+      "line": 41,
       "symbol": "StateView.init(loading:content:failure:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/StateView.swift",
-      "line": 45,
+      "line": 52,
       "symbol": "StateView.init(ready:loading:content:failure:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Module/StateView.swift",
-      "line": 84,
+      "line": 91,
       "symbol": "InvisibleView.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
