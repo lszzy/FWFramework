@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - RequestViewControllerProtocol
-/// 通用请求视图控制器协议，可覆写
+/// 通用请求视图控制器协议，可扩展重写
 public protocol RequestViewControllerProtocol {
     
     /// 请求数据完成句柄，回调数据是否追加完成
@@ -74,13 +74,13 @@ extension RequestViewControllerProtocol where Self: UIViewController {
         startDataRequest(isLoading: false) { [weak self] request, finished in
             guard let self = self else { return }
             self.fw.hideLoading()
-            self.requestScrollView?.fw.endRefreshing()
             
             if request?.error == nil {
                 self.fw.isDataLoaded = true
                 self.setupData()
-                self.requestScrollView?.fw.loadingFinished = finished
+                self.requestScrollView?.fw.endRefreshing(finished: finished)
             } else {
+                self.requestScrollView?.fw.endRefreshing()
                 if !self.fw.isDataLoaded {
                     request?.autoShowError = false
                     self.fw.showEmptyView(error: request?.error) { [weak self] _ in
@@ -98,12 +98,12 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     public func loadingData() {
         startDataRequest(isLoading: true) { [weak self] request, finished in
             guard let self = self else { return }
-            self.requestScrollView?.fw.endLoading()
             
             if request?.error == nil {
                 self.setupData()
-                self.requestScrollView?.fw.loadingFinished = finished
+                self.requestScrollView?.fw.endLoading(finished: finished)
             } else {
+                self.requestScrollView?.fw.endLoading()
                 if let request = request, !request.autoShowError {
                     request.showError()
                 }
