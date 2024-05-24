@@ -45,9 +45,7 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     /// 默认实现渲染数据，显示并调用reloadData
     public func setupData() {
         if let scrollView = requestScrollView {
-            if scrollView.isHidden {
-                scrollView.isHidden = false
-            }
+            if scrollView.isHidden { scrollView.isHidden = false }
         }
         if let tableView = requestScrollView as? UITableView {
             tableView.reloadData()
@@ -79,6 +77,7 @@ extension RequestViewControllerProtocol where Self: UIViewController {
                 self.requestScrollView?.fw.loadingFinished = finished
             } else {
                 if !self.fw.isDataLoaded {
+                    request?.autoShowError = false
                     self.fw.showEmptyView(error: request?.error) { [weak self] _ in
                         self?.fw.hideEmptyView()
                         self?.requestData()
