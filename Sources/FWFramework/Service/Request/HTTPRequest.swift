@@ -65,6 +65,10 @@ public protocol HTTPRequestProtocol {
     var error: Error? { get }
     /// 显示网络错误，默认显示Toast提示
     func showError()
+    /// 开始请求
+    func start() -> Self
+    /// 取消请求
+    func cancel()
 }
 
 /// HTTP请求基类，支持缓存和重试机制，使用时继承即可
