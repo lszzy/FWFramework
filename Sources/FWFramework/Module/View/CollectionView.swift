@@ -9,6 +9,7 @@ import UIKit
 
 // MARK: - Wrapper+UICollectionView
 extension Wrapper where Base: UICollectionView {
+    /// 集合视图代理，延迟加载
     public var collectionDelegate: CollectionViewDelegate {
         get {
             if let result = property(forName: "collectionDelegate") as? CollectionViewDelegate {
@@ -24,6 +25,7 @@ extension Wrapper where Base: UICollectionView {
         }
     }
     
+    /// 快速创建collectionView
     public static func collectionView() -> Base {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
@@ -32,6 +34,7 @@ extension Wrapper where Base: UICollectionView {
         return collectionView(flowLayout)
     }
     
+    /// 快速创建collectionView，自定义collectionViewLayout
     public static func collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Base {
         let collectionView = Base.init(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.showsVerticalScrollIndicator = false

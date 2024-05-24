@@ -9,6 +9,7 @@ import UIKit
 
 // MARK: - Wrapper+UITableView
 extension Wrapper where Base: UITableView {
+    /// 表格代理，延迟加载
     public var tableDelegate: TableViewDelegate {
         get {
             if let result = property(forName: "tableDelegate") as? TableViewDelegate {
@@ -24,11 +25,8 @@ extension Wrapper where Base: UITableView {
         }
     }
     
-    public static func tableView() -> Base {
-        return tableView(.plain)
-    }
-    
-    public static func tableView(_ style: UITableView.Style) -> Base {
+    /// 快速创建tableView，可配置钩子句柄
+    public static func tableView(_ style: UITableView.Style = .plain) -> Base {
         let tableView = Base.init(frame: .zero, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -36,7 +34,14 @@ extension Wrapper where Base: UITableView {
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
+        tableViewConfiguration?(tableView)
         return tableView
+    }
+    
+    /// 配置创建tableView钩子句柄，默认nil
+    public static var tableViewConfiguration: ((Base) -> Void)? {
+        get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (Base) -> Void }
+        set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 }
 
