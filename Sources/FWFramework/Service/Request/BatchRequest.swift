@@ -46,6 +46,14 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
     open var failedRequest: HTTPRequest? {
         return failedRequestArray.first
     }
+    /// 是否自动显示错误信息
+    open var autoShowError: Bool {
+        return failedRequest?.autoShowError ?? false
+    }
+    /// 当前网络错误
+    open var error: Error? {
+        return failedRequest?.error
+    }
     /// 已失败请求数组
     open private(set) var failedRequestArray: [HTTPRequest] = []
     /// 请求是否已取消
@@ -133,6 +141,11 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
         failureCompletionBlock = nil
     }
     
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        failedRequest?.showError()
+    }
+    
     /// 添加请求配件
     @discardableResult
     open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
@@ -143,7 +156,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
         return self
     }
     
-    // MARK: - RequestDelegate
+    /// 请求完成回调
     open func requestFinished(_ request: HTTPRequest) {
         finishedCount += 1
         if finishedCount == requestArray.count {
@@ -151,6 +164,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
         }
     }
     
+    /// 请求失败回调
     open func requestFailed(_ request: HTTPRequest) {
         failedRequestArray.append(request)
         if stoppedOnFailure {
@@ -165,22 +179,6 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
         if finishedCount == requestArray.count {
             requestCompleted()
         }
-    }
-    
-    // MARK: - HTTPRequestProtocol
-    /// 是否自动显示错误信息
-    open var autoShowError: Bool {
-        return failedRequest?.autoShowError ?? false
-    }
-    
-    /// 当前网络错误
-    open var error: Error? {
-        return failedRequest?.error
-    }
-    
-    /// 显示网络错误，默认显示Toast提示
-    open func showError() {
-        failedRequest?.showError()
     }
     
     // MARK: - Private

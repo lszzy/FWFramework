@@ -48,6 +48,14 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
     open private(set) var succeedRequest: HTTPRequest?
     /// 最后一个导致队列请求失败的请求
     open private(set) var failedRequest: HTTPRequest?
+    /// 是否自动显示错误信息
+    open var autoShowError: Bool {
+        return failedRequest?.autoShowError ?? false
+    }
+    /// 当前网络错误
+    open var error: Error? {
+        return failedRequest?.error
+    }
     /// 请求是否已取消
     open private(set) var isCancelled = false
     /// 请求间的时间间隔
@@ -122,6 +130,11 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         failureCompletionBlock = nil
     }
     
+    /// 显示网络错误，默认显示Toast提示
+    open func showError() {
+        failedRequest?.showError()
+    }
+    
     /// 添加请求配件
     @discardableResult
     open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
@@ -132,7 +145,6 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         return self
     }
     
-    // MARK: - RequestDelegate
     /// 请求完成回调
     open func requestFinished(_ request: HTTPRequest) {
         succeedRequest = request
@@ -155,22 +167,6 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         if stoppedOnFailure || !startNextRequest(request) {
             requestCompleted()
         }
-    }
-    
-    // MARK: - HTTPRequestProtocol
-    /// 是否自动显示错误信息
-    open var autoShowError: Bool {
-        return failedRequest?.autoShowError ?? false
-    }
-    
-    /// 当前网络错误
-    open var error: Error? {
-        return failedRequest?.error
-    }
-    
-    /// 显示网络错误，默认显示Toast提示
-    open func showError() {
-        failedRequest?.showError()
     }
     
     // MARK: - Private
