@@ -17,7 +17,7 @@
     <a title="Protocols  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.5.1 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 5.5.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1835,6 +1835,9 @@
                 <a href="Protocols/RequestValidatorProtocol.html">RequestValidatorProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/RequestViewControllerProtocol.html">RequestViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/ResponseModelRequest.html">ResponseModelRequest</a>
               </li>
               <li class="nav-group-task">
@@ -3089,6 +3092,47 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/RequestViewControllerProtocol"></a>
+                <a name="//apple_ref/swift/Section/RequestViewControllerProtocol" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/RequestViewControllerProtocol"></a>
+                  <h3 class="section-name"><span>RequestViewControllerProtocol</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework29RequestViewControllerProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/RequestViewControllerProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework29RequestViewControllerProtocolP">RequestViewControllerProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>通用请求视图控制器协议，可覆写</p>
+
+                        <a href="Protocols/RequestViewControllerProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RequestViewControllerProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/ScrollViewControllerProtocol"></a>
                 <a name="//apple_ref/swift/Section/ScrollViewControllerProtocol" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -3973,6 +4017,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebViewDelegate</span> <span class="p">:</span> <span class="kt">WKNavigationDelegate</span><span class="p">,</span> <span class="kt">WKUIDelegate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ViewModelP"></a>
+                    <a name="//apple_ref/swift/Protocol/ViewModel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ViewModelP">ViewModel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit和SwiftUI使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewModel</span> <span class="p">:</span> <span class="kt">ObservableObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5887,19 +5958,6 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/HTTPRequestProtocol"></a>
-                <a name="//apple_ref/swift/Section/HTTPRequestProtocol" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/HTTPRequestProtocol"></a>
-                  <h3 class="section-name"><span>HTTPRequestProtocol</span>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -5913,7 +5971,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>HTTP请求协议，主要用于处理方法中Self参数</p>
+                        <p>HTTP请求协议，主要用于处理方法中Self参数、错误处理等</p>
 
                         <a href="Protocols/HTTPRequestProtocol.html" class="slightly-smaller">See more</a>
                       </div>
@@ -5921,7 +5979,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">HTTPRequestProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">HTTPRequestProtocol</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -8241,41 +8299,6 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                     </section>
                   </div>
                 </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9ViewModelP"></a>
-                    <a name="//apple_ref/swift/Protocol/ViewModel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ViewModelP">ViewModel</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit使用
-注意：iOS13系统使用时不能继承实现ObservableObject协议的ViewModel类，需直接实现ObservableObject协议，否则\@Published监听不会触发View刷新</p>
-
-<p>\@State: 内部值传递，赋值时会触发View刷新
-\@Binding: 外部引用传递，实现向外传递引用
-\@ObservableObject: 可被订阅的对象，属性标记@Published时生效
-\@ObservedObject: View订阅监听，收到通知时刷新View，不被View持有，随时可能被销毁，适合外部数据
-\@EnvironmentObject: 全局环境对象，使用environmentObject方法绑定，View及其子层级可直接读取
-\@StateObject: View引用对象，生命周期和View保持一致，刷新时数据会保持直到View被销毁</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewModel</span> <span class="p">:</span> <span class="kt">ObservableObject</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -8404,7 +8427,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-24)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

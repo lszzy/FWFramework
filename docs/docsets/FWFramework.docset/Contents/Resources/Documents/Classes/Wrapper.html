@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.5.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.5.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1833,6 +1833,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/RequestValidatorProtocol.html">RequestValidatorProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestViewControllerProtocol.html">RequestViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ResponseModelRequest.html">ResponseModelRequest</a>
@@ -10487,7 +10490,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>集合视图代理，延迟加载</p>
 
                       </div>
                       <div class="declaration">
@@ -10514,7 +10517,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>快速创建collectionView</p>
 
                       </div>
                       <div class="declaration">
@@ -10541,7 +10544,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>快速创建collectionView，自定义collectionViewLayout</p>
 
                       </div>
                       <div class="declaration">
@@ -10996,7 +10999,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>表格代理，延迟加载</p>
 
                       </div>
                       <div class="declaration">
@@ -11004,33 +11007,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tableDelegate</span><span class="p">:</span> <span class="kt"><a href="../Classes/TableViewDelegate.html">TableViewDelegate</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0xyFZ"></a>
-                    <a name="//apple_ref/swift/Method/tableView()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0xyFZ">tableView()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
 
                         </div>
                       </div>
@@ -11050,14 +11026,41 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>快速创建tableView，可配置钩子句柄</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">Style</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n">plain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD13ConfigurationyxcSgvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/tableViewConfiguration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD13ConfigurationyxcSgvpZ">tableViewConfiguration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>配置创建tableView钩子句柄，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">tableViewConfiguration</span><span class="p">:</span> <span class="p">((</span><span class="kt">Base</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -51247,7 +51250,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-24)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
