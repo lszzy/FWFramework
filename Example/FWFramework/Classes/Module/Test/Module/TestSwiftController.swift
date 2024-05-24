@@ -146,16 +146,17 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
         view.app.showEmptyView(text: "加载成功")
     }
     
-    func requestData(completion: @escaping Completion) {
+    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> (any HTTPRequestProtocol)? {
+        let request = HTTPRequest()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             if [0, 1].randomElement() == 1 {
-                completion(nil, true)
+                completion(true)
             } else {
-                let request = HTTPRequest()
-                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "加载失败"])
-                completion(request, false)
+                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                completion(false)
             }
         }
+        return request
     }
     
 }
@@ -382,33 +383,23 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
         }
     }
     
-    func requestData(completion: @escaping Completion) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            if [0, 1].randomElement() == 1 {
-                self?.tableData = [0, 1, 2]
-                
-                completion(nil, false)
-            } else {
-                let request = HTTPRequest()
-                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
-                completion(request, false)
-            }
-        }
-    }
-    
-    func loadingData(completion: @escaping Completion) {
+    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> (any HTTPRequestProtocol)? {
+        let request = HTTPRequest()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             if [0, 1, 2].randomElement() != 0 {
+                if !isLoading {
+                    self?.tableData.removeAll()
+                }
                 let count = self?.tableData.count ?? 0
                 self?.tableData.append(contentsOf: [count, count + 1, count + 2])
                 
-                completion(nil, count + 3 >= 15)
+                completion(count >= 12)
             } else {
-                let request = HTTPRequest()
-                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "追加失败"])
-                completion(request, false)
+                request.error = NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                completion(false)
             }
         }
+        return request
     }
 }
 
