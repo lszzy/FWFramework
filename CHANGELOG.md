@@ -1,6 +1,6 @@
 # Changelog
 
-## [5.5.2] - 2024-05-24
+## [5.6.0] - 2024-05-24
 
 ### Changed
 * Added RequestViewControllerProtocol to quickly handle controller network requests
