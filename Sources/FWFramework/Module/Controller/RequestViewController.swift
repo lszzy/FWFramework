@@ -11,6 +11,9 @@ import UIKit
 /// 通用请求视图控制器协议，可覆写
 public protocol RequestViewControllerProtocol {
     
+    /// 请求数据完成回调句柄
+    typealias Completion = (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void
+    
     /// 自定义请求滚动视图，ViewControllerProtocol自动处理
     var requestScrollView: UIScrollView? { get }
     
@@ -24,10 +27,10 @@ public protocol RequestViewControllerProtocol {
     func loadingData()
     
     /// 请求或刷新数据原始方法
-    func requestData(completion: @escaping (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void)
+    func requestData(completion: @escaping Completion)
     
     /// 追加数据原始方法
-    func loadingData(completion: @escaping (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void)
+    func loadingData(completion: @escaping Completion)
     
 }
 
@@ -41,11 +44,14 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     
     /// 默认实现渲染数据，显示并调用reloadData
     public func setupData() {
+        if let scrollView = requestScrollView {
+            if scrollView.isHidden {
+                scrollView.isHidden = false
+            }
+        }
         if let tableView = requestScrollView as? UITableView {
-            tableView.isHidden = false
             tableView.reloadData()
         } else if let collectionView = requestScrollView as? UICollectionView {
-            collectionView.isHidden = false
             collectionView.reloadData()
         }
     }
@@ -102,12 +108,12 @@ extension RequestViewControllerProtocol where Self: UIViewController {
     }
     
     /// 默认实现请求或刷新数据原始方法
-    public func requestData(completion: @escaping (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void) {
+    public func requestData(completion: @escaping Completion) {
         completion(nil, true)
     }
     
     /// 默认实现追加数据原始方法
-    public func loadingData(completion: @escaping (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void) {
+    public func loadingData(completion: @escaping Completion) {
         completion(nil, true)
     }
     
@@ -121,7 +127,7 @@ extension RequestViewControllerProtocol where Self: UIViewController & ScrollVie
     
 }
 
-extension RequestViewControllerProtocol where Self: UIViewController & TableViewControllerProtocol {
+extension RequestViewControllerProtocol where Self: UIViewController & TableDelegateControllerProtocol {
     
     public var requestScrollView: UIScrollView? {
         tableView
@@ -129,7 +135,7 @@ extension RequestViewControllerProtocol where Self: UIViewController & TableView
     
 }
 
-extension RequestViewControllerProtocol where Self: UIViewController & CollectionViewControllerProtocol {
+extension RequestViewControllerProtocol where Self: UIViewController & CollectionDelegateControllerProtocol {
     
     public var requestScrollView: UIScrollView? {
         collectionView
