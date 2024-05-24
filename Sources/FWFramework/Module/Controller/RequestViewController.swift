@@ -11,26 +11,20 @@ import UIKit
 /// 通用请求视图控制器协议，可覆写
 public protocol RequestViewControllerProtocol {
     
-    /// 请求数据完成回调句柄
-    typealias Completion = (_ request: HTTPRequestProtocol?, _ finished: Bool) -> Void
-    
     /// 自定义请求滚动视图，ViewControllerProtocol自动处理
     var requestScrollView: UIScrollView? { get }
     
-    /// 渲染数据
+    /// 渲染数据，请求成功时调用
     func setupData()
     
-    /// 请求或刷新数据
+    /// 请求数据(含刷新)，用于进入或下拉刷新时请求
     func requestData()
     
-    /// 追加数据
+    /// 追加数据，用于上拉追加时分页请求
     func loadingData()
     
-    /// 请求或刷新数据原始方法
-    func requestData(completion: @escaping Completion)
-    
-    /// 追加数据原始方法
-    func loadingData(completion: @escaping Completion)
+    /// 开始数据请求，回调数据是否追加完成，必须实现并调用completion句柄
+    func startDataRequest(isLoading: Bool, completion: @escaping (Bool) -> Void) -> HTTPRequestProtocol?
     
 }
 
@@ -66,7 +60,8 @@ extension RequestViewControllerProtocol where Self: UIViewController {
             }
         }
         
-        requestData { [weak self] request, finished in
+        var request: HTTPRequestProtocol?
+        request = startDataRequest(isLoading: false) { [weak self] finished in
             guard let self = self else { return }
             self.fw.hideLoading()
             self.requestScrollView?.fw.endRefreshing()
@@ -87,11 +82,15 @@ extension RequestViewControllerProtocol where Self: UIViewController {
                 }
             }
         }
+        if let request = request as? HTTPRequest {
+            request.autoShowLoading = false
+        }
     }
     
     /// 默认实现追加数据
     public func loadingData() {
-        loadingData { [weak self] request, finished in
+        var request: HTTPRequestProtocol?
+        request = startDataRequest(isLoading: true) { [weak self] finished in
             guard let self = self else { return }
             self.requestScrollView?.fw.endLoading()
             
@@ -104,16 +103,9 @@ extension RequestViewControllerProtocol where Self: UIViewController {
                 }
             }
         }
-    }
-    
-    /// 默认实现请求或刷新数据原始方法
-    public func requestData(completion: @escaping Completion) {
-        completion(nil, true)
-    }
-    
-    /// 默认实现追加数据原始方法
-    public func loadingData(completion: @escaping Completion) {
-        completion(nil, true)
+        if let request = request as? HTTPRequest {
+            request.autoShowLoading = false
+        }
     }
     
 }
