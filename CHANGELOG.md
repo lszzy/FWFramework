@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.1] - 2024-05-27
+
+### Changed
+* setBorderView disables automatic layout scaling
+* emptyInsets|toastInsets disables automatic layout scaling
+* PasscodeView|WebView disables automatic layout scaling
+
 ## [5.6.0] - 2024-05-24
 
 ### Changed
