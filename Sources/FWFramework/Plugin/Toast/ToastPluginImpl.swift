@@ -65,6 +65,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
+            .forEach { $0.fw.autoScaleLayout = false }
         
         self.customBlock?(toastView)
         customBlock?(toastView)
@@ -144,6 +145,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.attributedTitle = messageText
         view.addSubview(toastView)
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
+            .forEach { $0.fw.autoScaleLayout = false }
         
         self.customBlock?(toastView)
         customBlock?(toastView)
