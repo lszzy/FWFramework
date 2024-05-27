@@ -568,6 +568,7 @@ extension Wrapper where Base: UIView {
             return borderView
         } else {
             let borderView = UIView()
+            borderView.fw.autoScaleLayout = false
             base.addSubview(borderView)
             setProperty(borderView, forName: edgeKey)
             
