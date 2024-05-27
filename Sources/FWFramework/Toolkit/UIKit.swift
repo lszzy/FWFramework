@@ -1753,12 +1753,10 @@ extension Wrapper where Base: UIScrollView {
             if view.superview != toSuperview {
                 view.removeFromSuperview()
                 toSuperview.addSubview(view)
+                view.fw.autoScaleLayout = false
                 view.fw.pinEdge(toSuperview: .left, inset: 0)
-                    .fw.autoScaleLayout = false
                 view.fw.pinEdge(toSuperview: .top, inset: toPosition)
-                    .fw.autoScaleLayout = false
                 view.fw.setDimensions(view.bounds.size)
-                    .forEach { $0.fw.autoScaleLayout = false }
             }
         } else {
             if view.superview != fromSuperview {

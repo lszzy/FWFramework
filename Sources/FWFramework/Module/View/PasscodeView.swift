@@ -855,6 +855,7 @@ open class PasscodeLineView: UIView {
         result.layer.shadowOpacity = 1
         result.layer.shadowOffset = CGSize(width: 0, height: 2)
         result.layer.shadowRadius = 4
+        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -878,7 +879,6 @@ open class PasscodeLineView: UIView {
     
     private func setupSubviews() {
         addSubview(lineView)
-        lineView.fw.autoScaleLayout = false
         lineView.fw.pinEdges(excludingEdge: .top)
         lineView.fw.setDimension(.height, size: 4)
     }
