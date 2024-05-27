@@ -64,6 +64,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.attributedTitle = loadingText
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
+        toastView.fw.autoScaleLayout = false
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
@@ -109,6 +110,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.progress = progress
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
+        toastView.fw.autoScaleLayout = false
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
@@ -142,6 +144,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.isUserInteractionEnabled = !interactive
         toastView.attributedTitle = messageText
         view.addSubview(toastView)
+        toastView.fw.autoScaleLayout = false
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets)
         
         self.customBlock?(toastView)
