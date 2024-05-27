@@ -579,6 +579,7 @@ open class PasscodeCellProperty: NSObject, NSCopying {
             circleView.backgroundColor = .black
             circleView.layer.cornerRadius = 4
             securityView.addSubview(circleView)
+            circleView.fw.autoScaleLayout = false
             circleView.fw.setDimensions(CGSize(width: 20, height: 20))
             circleView.fw.alignCenter()
             return securityView
@@ -586,6 +587,7 @@ open class PasscodeCellProperty: NSObject, NSCopying {
         
         customLineViewBlock = {
             let lineView = PasscodeLineView()
+            lineView.fw.autoScaleLayout = false
             return lineView
         }
     }
@@ -638,6 +640,7 @@ open class PasscodeCell: UICollectionViewCell {
     
     open lazy var cursorView: UIView = {
         let result = UIView()
+        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -875,6 +878,7 @@ open class PasscodeLineView: UIView {
     
     private func setupSubviews() {
         addSubview(lineView)
+        lineView.fw.autoScaleLayout = false
         lineView.fw.pinEdges(excludingEdge: .top)
         lineView.fw.setDimension(.height, size: 4)
     }
@@ -904,6 +908,7 @@ open class PasscodeSecrectImageView: UIView {
     
     private lazy var lockImageView: UIImageView = {
         let result = UIImageView()
+        result.fw.autoScaleLayout = false
         return result
     }()
     
