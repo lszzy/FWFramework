@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.6.1] - 2024-05-27
+
+### Changed
+* setBorderView禁用自动布局等比例缩放
+* emptyInsets|toastInsets禁用自动布局等比例缩放
+* PasscodeView|WebView禁用自动布局等比例缩放
+
 ## [5.6.0] - 2024-05-24
 
 ### Changed

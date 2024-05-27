@@ -568,6 +568,7 @@ extension Wrapper where Base: UIView {
             return borderView
         } else {
             let borderView = UIView()
+            borderView.fw.autoScaleLayout = false
             base.addSubview(borderView)
             setProperty(borderView, forName: edgeKey)
             
@@ -1752,6 +1753,7 @@ extension Wrapper where Base: UIScrollView {
             if view.superview != toSuperview {
                 view.removeFromSuperview()
                 toSuperview.addSubview(view)
+                view.fw.autoScaleLayout = false
                 view.fw.pinEdge(toSuperview: .left, inset: 0)
                 view.fw.pinEdge(toSuperview: .top, inset: toPosition)
                 view.fw.setDimensions(view.bounds.size)
