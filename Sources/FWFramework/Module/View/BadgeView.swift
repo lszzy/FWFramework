@@ -285,6 +285,7 @@ extension FrameworkAutoloader {
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if let imageView = UITabBarItem.fw.imageView(for: selfObject) {
                         subview.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+                            .fw.autoScaleLayout = false
                     }
                     break
                 }

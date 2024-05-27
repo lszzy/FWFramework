@@ -299,6 +299,7 @@ open class WebView: WKWebView {
         let result = UIProgressView(frame: .zero)
         result.trackTintColor = .clear
         result.fw.webProgress = 0
+        result.fw.autoScaleLayout = false
         return result
     }()
     
