@@ -68,6 +68,7 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin {
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
         emptyView.fw.pinEdges(toSuperview: view.fw.emptyInsets)
+            .forEach { $0.fw.autoScaleLayout = false }
         
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)
