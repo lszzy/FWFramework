@@ -804,6 +804,30 @@ extension Wrapper where Base: UIView {
             }
         }
     }
+    
+    /// 定义类通用样式实现句柄，默认名称default
+    public static func defineStyle(_ name: String = "default", block: @escaping (Base) -> Void) {
+        let styleBlock: (UIView) -> Void = { view in
+            if let target = view as? Base { block(target) }
+        }
+        let styleKey = "viewStyleBlock_\(name)"
+        NSObject.fw.setAssociatedObject(Base.self, key: styleKey, value: styleBlock, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    }
+    
+    /// 应用类通用样式，默认名称default
+    public func addStyle(_ name: String = "default") {
+        let styleKey = "viewStyleBlock_\(name)"
+        var styleBlock: ((UIView) -> Void)?
+        var styleClass: AnyClass? = type(of: base)
+        while let targetClass = styleClass, targetClass != UIResponder.self {
+            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? (UIView) -> Void
+            if styleBlock != nil {
+                break
+            }
+            styleClass = targetClass.superclass()
+        }
+        styleBlock?(base)
+    }
 }
 
 // MARK: - Wrapper+UIImageView
