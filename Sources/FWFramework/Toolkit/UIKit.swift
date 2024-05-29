@@ -804,6 +804,30 @@ extension Wrapper where Base: UIView {
             }
         }
     }
+    
+    /// 定义类通用样式实现句柄，默认样式default
+    public static func defineStyle(_ style: ViewStyle = .default, block: @escaping (Base) -> Void) {
+        let styleBlock: (UIView) -> Void = { view in
+            if let target = view as? Base { block(target) }
+        }
+        let styleKey = "viewStyleBlock_\(style.rawValue)"
+        NSObject.fw.setAssociatedObject(Base.self, key: styleKey, value: styleBlock, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
+    }
+    
+    /// 应用类通用样式，默认样式default
+    public func addStyle(_ style: ViewStyle = .default) {
+        let styleKey = "viewStyleBlock_\(style.rawValue)"
+        var styleBlock: ((UIView) -> Void)?
+        var styleClass: AnyClass? = type(of: base)
+        while let targetClass = styleClass, targetClass != UIResponder.self {
+            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? (UIView) -> Void
+            if styleBlock != nil {
+                break
+            }
+            styleClass = targetClass.superclass()
+        }
+        styleBlock?(base)
+    }
 }
 
 // MARK: - Wrapper+UIImageView
@@ -2926,6 +2950,27 @@ extension Wrapper where Base: UIViewController {
         
         base.present(popover, animated: animated, completion: completion)
     }
+}
+
+// MARK: - ViewStyle
+/// 视图样式可扩展枚举
+public struct ViewStyle: RawRepresentable, Equatable, Hashable {
+    
+    public typealias RawValue = String
+    
+    /// 默认视图样式
+    public static let `default`: ViewStyle = .init("default")
+    
+    public var rawValue: String
+    
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+    
+    public init(_ rawValue: String) {
+        self.rawValue = rawValue
+    }
+    
 }
 
 // MARK: - UIDevice+UIKit
