@@ -17,7 +17,7 @@
     <a title="Structures  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.6.1 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 5.6.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2341,6 +2341,9 @@
                 <a href="Structs/ViewControllerWrapper.html">ViewControllerWrapper</a>
               </li>
               <li class="nav-group-task">
+                <a href="Structs/ViewStyle.html">ViewStyle</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework8ViewTypeV">ViewType</a>
               </li>
               <li class="nav-group-task">
@@ -3685,6 +3688,47 @@ static var pluginUrl: String = &ldquo;app://plugin/:id&rdquo;</p>
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/ViewStyle"></a>
+                <a name="//apple_ref/swift/Section/ViewStyle" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ViewStyle"></a>
+                  <h3 class="section-name"><span>ViewStyle</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ViewStyleV"></a>
+                    <a name="//apple_ref/swift/Struct/ViewStyle" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ViewStyleV">ViewStyle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>视图样式可扩展枚举</p>
+
+                        <a href="Structs/ViewStyle.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ViewStyle</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Validator"></a>
                 <a name="//apple_ref/swift/Section/Validator" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -4419,7 +4463,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">color</span> <span class="o">=</span> <span class="kt">Color</span><span class="o">.</span><span class="n">red</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">ColorPicker</span><span class="p">(</span><span class="s">"Pick a color"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">color</span><span class="p">)</span>
+        <span class="kt">ColorPicker</span><span class="p">(</span><span class="s">"Pick a color"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$color</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">colorPicker</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIColorPicker</span>
             <span class="p">}</span>
@@ -4470,7 +4514,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">()</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">date</span><span class="p">)</span>
+        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$date</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">datePicker</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIDatePicker</span>
             <span class="p">}</span>
@@ -4521,7 +4565,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">()</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">date</span><span class="p">)</span>
+        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$date</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">datePickerStyle</span><span class="p">(</span><span class="o">.</span><span class="n">compact</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="nf">datePicker</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">compact</span><span class="p">),</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIDatePicker</span>
@@ -4574,7 +4618,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">()</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">date</span><span class="p">)</span>
+        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$date</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">datePickerStyle</span><span class="p">(</span><span class="o">.</span><span class="n">graphical</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="nf">datePicker</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">graphical</span><span class="p">),</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIDatePicker</span>
@@ -4627,7 +4671,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">()</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">date</span><span class="p">)</span>
+        <span class="kt">DatePicker</span><span class="p">(</span><span class="s">"Pick a date"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$date</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">datePickerStyle</span><span class="p">(</span><span class="o">.</span><span class="n">wheel</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="nf">datePicker</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">wheel</span><span class="p">),</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIDatePicker</span>
@@ -4792,7 +4836,7 @@ modifier.</p>
 
     <span class="kd">public</span> <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
         <span class="kt">Button</span><span class="p">(</span><span class="s">"Present"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">})</span>
-            <span class="o">.</span><span class="nf">fullScreenCover</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">isPresented</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">.</span><span class="nf">fullScreenCover</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="n">$isPresented</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kt">Button</span><span class="p">(</span><span class="s">"Dismiss"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">false</span> <span class="p">})</span>
                     <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">fullScreenCover</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                         <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIPresentationController</span>
@@ -5455,7 +5499,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">selection</span> <span class="o">=</span> <span class="s">"1"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Picker</span><span class="p">(</span><span class="s">"Pick a number"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">selection</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">Picker</span><span class="p">(</span><span class="s">"Pick a number"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$selection</span><span class="p">)</span> <span class="p">{</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
@@ -5512,7 +5556,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">selection</span> <span class="o">=</span> <span class="s">"1"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Picker</span><span class="p">(</span><span class="s">"Pick a number"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="err">$</span><span class="n">selection</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">Picker</span><span class="p">(</span><span class="s">"Pick a number"</span><span class="p">,</span> <span class="nv">selection</span><span class="p">:</span> <span class="n">$selection</span><span class="p">)</span> <span class="p">{</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"2"</span><span class="p">)</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span><span class="o">.</span><span class="nf">tag</span><span class="p">(</span><span class="s">"3"</span><span class="p">)</span>
@@ -5570,7 +5614,7 @@ modifier.</p>
 
     <span class="kd">public</span> <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
         <span class="kt">Button</span><span class="p">(</span><span class="s">"Present"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">})</span>
-            <span class="o">.</span><span class="nf">popover</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">isPresented</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">.</span><span class="nf">popover</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="n">$isPresented</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kt">Button</span><span class="p">(</span><span class="s">"Dismiss"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">false</span> <span class="p">})</span>
                     <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">popover</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                         <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIPopoverPresentationController</span>
@@ -5779,7 +5823,7 @@ modifier.</p>
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
         <span class="kt">NavigationView</span> <span class="p">{</span>
             <span class="kt">Text</span><span class="p">(</span><span class="s">"Root"</span><span class="p">)</span>
-                <span class="o">.</span><span class="nf">searchable</span><span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="err">$</span><span class="n">searchTerm</span><span class="p">)</span>
+                <span class="o">.</span><span class="nf">searchable</span><span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="n">$searchTerm</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="o">.</span><span class="nf">navigationViewStyle</span><span class="p">(</span><span class="o">.</span><span class="n">stack</span><span class="p">)</span>
         <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">searchField</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
@@ -5832,7 +5876,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"Lorem ipsum"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">SecureField</span><span class="p">(</span><span class="s">"Secure Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="err">$</span><span class="n">text</span><span class="p">)</span>
+        <span class="kt">SecureField</span><span class="p">(</span><span class="s">"Secure Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="n">$text</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">secureField</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v13</span><span class="p">,</span> <span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UISecureField</span>
             <span class="p">}</span>
@@ -5884,7 +5928,7 @@ modifier.</p>
 
     <span class="kd">public</span> <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
         <span class="kt">Button</span><span class="p">(</span><span class="s">"Present"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">})</span>
-            <span class="o">.</span><span class="nf">sheet</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">isPresented</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">.</span><span class="nf">sheet</span><span class="p">(</span><span class="nv">isPresented</span><span class="p">:</span> <span class="n">$isPresented</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kt">Button</span><span class="p">(</span><span class="s">"Dismiss"</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="p">{</span> <span class="n">isPresented</span> <span class="o">=</span> <span class="kc">false</span> <span class="p">})</span>
                     <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">sheet</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                         <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIPresentationController</span>
@@ -5938,7 +5982,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">selection</span> <span class="o">=</span> <span class="mf">0.5</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Slider</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="err">$</span><span class="n">selection</span><span class="p">,</span> <span class="nv">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">...</span><span class="mi">1</span><span class="p">)</span>
+        <span class="kt">Slider</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">$selection</span><span class="p">,</span> <span class="nv">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">...</span><span class="mi">1</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">slider</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UISlider</span>
             <span class="p">}</span>
@@ -5990,7 +6034,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">selection</span> <span class="o">=</span> <span class="mi">5</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Stepper</span><span class="p">(</span><span class="s">"Select a number"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="err">$</span><span class="n">selection</span><span class="p">,</span> <span class="nv">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">...</span><span class="mi">10</span><span class="p">)</span>
+        <span class="kt">Stepper</span><span class="p">(</span><span class="s">"Select a number"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">$selection</span><span class="p">,</span> <span class="nv">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">...</span><span class="mi">10</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">stepper</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UIStepper</span>
             <span class="p">}</span>
@@ -6215,7 +6259,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"Lorem ipsum"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">TextEditor</span><span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="err">$</span><span class="n">text</span><span class="p">)</span>
+        <span class="kt">TextEditor</span><span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="n">$text</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">textEditor</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v14</span><span class="p">,</span> <span class="o">.</span><span class="n">v15</span><span class="p">,</span> <span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UITextView</span>
             <span class="p">}</span>
@@ -6266,7 +6310,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"Lorem ipsum"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">TextField</span><span class="p">(</span><span class="s">"Text Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="err">$</span><span class="n">text</span><span class="p">)</span>
+        <span class="kt">TextField</span><span class="p">(</span><span class="s">"Text Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="n">$text</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">textField</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UITextField</span>
             <span class="p">}</span>
@@ -6317,7 +6361,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">text</span> <span class="o">=</span> <span class="s">"Lorem ipsum"</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">TextField</span><span class="p">(</span><span class="s">"Text Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="err">$</span><span class="n">text</span><span class="p">,</span> <span class="nv">axis</span><span class="p">:</span> <span class="o">.</span><span class="n">vertical</span><span class="p">)</span>
+        <span class="kt">TextField</span><span class="p">(</span><span class="s">"Text Field"</span><span class="p">,</span> <span class="nv">text</span><span class="p">:</span> <span class="n">$text</span><span class="p">,</span> <span class="nv">axis</span><span class="p">:</span> <span class="o">.</span><span class="n">vertical</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="nf">textField</span><span class="p">(</span><span class="nv">axis</span><span class="p">:</span> <span class="o">.</span><span class="n">vertical</span><span class="p">),</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">v16</span><span class="p">,</span> <span class="o">.</span><span class="n">v17</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UITextView</span>
             <span class="p">}</span>
@@ -6369,7 +6413,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">isOn</span> <span class="o">=</span> <span class="kc">false</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Toggle</span><span class="p">(</span><span class="s">"Toggle"</span><span class="p">,</span> <span class="nv">isOn</span><span class="p">:</span> <span class="err">$</span><span class="n">isOn</span><span class="p">)</span>
+        <span class="kt">Toggle</span><span class="p">(</span><span class="s">"Toggle"</span><span class="p">,</span> <span class="nv">isOn</span><span class="p">:</span> <span class="n">$isOn</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="n">toggle</span><span class="p">,</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UISwitch</span>
             <span class="p">}</span>
@@ -6420,7 +6464,7 @@ modifier.</p>
     <span class="kd">@State</span> <span class="k">var</span> <span class="nv">isOn</span> <span class="o">=</span> <span class="kc">false</span>
 
     <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
-        <span class="kt">Toggle</span><span class="p">(</span><span class="s">"Switch"</span><span class="p">,</span> <span class="nv">isOn</span><span class="p">:</span> <span class="err">$</span><span class="n">isOn</span><span class="p">)</span>
+        <span class="kt">Toggle</span><span class="p">(</span><span class="s">"Switch"</span><span class="p">,</span> <span class="nv">isOn</span><span class="p">:</span> <span class="n">$isOn</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">toggleStyle</span><span class="p">(</span><span class="o">.</span><span class="k">switch</span><span class="p">)</span>
             <span class="o">.</span><span class="nf">introspect</span><span class="p">(</span><span class="o">.</span><span class="nf">toggle</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">switch</span><span class="p">),</span> <span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="nf">iOS</span><span class="p">(</span><span class="o">.</span><span class="n">all</span><span class="p">))</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="nv">$0</span><span class="p">))</span> <span class="c1">// UISwitch</span>
@@ -6761,7 +6805,7 @@ or the closest ancestor view controller if missing.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-27)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

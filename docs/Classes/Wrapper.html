@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.6.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.6.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2341,6 +2341,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/ViewControllerWrapper.html">ViewControllerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ViewStyle.html">ViewStyle</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework8ViewTypeV">ViewType</a>
@@ -8817,7 +8820,7 @@
 <p>Swift实现代码示例：</p>
 <pre class="highlight swift"><code><span class="kt">NSObject</span><span class="o">.</span><span class="n">fw</span><span class="o">.</span><span class="nf">swizzleMethod</span><span class="p">(</span>
     <span class="kt">UIViewController</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
-    <span class="nv">selector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UIViewController.viewDidLoad</span><span class="kd">)</span>
+    <span class="nv">selector</span><span class="p">:</span> <span class="k">#selector</span><span class="p">(</span><span class="kt">UIViewController</span><span class="o">.</span><span class="n">viewDidLoad</span><span class="p">)</span>
 <span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">store</span><span class="p">:</span> <span class="kt">SwizzleStore</span>
      <span class="o">&lt;</span><span class="kd">@convention</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">Selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
      <span class="kd">@convention</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="o">&gt;</span><span class="p">)</span> <span class="k">in</span> <span class="p">{</span>
@@ -8947,7 +8950,7 @@
 <p>Swift实现代码示例：</p>
 <pre class="highlight swift"><code><span class="kt">NSObject</span><span class="o">.</span><span class="n">fw</span><span class="o">.</span><span class="nf">swizzleInstanceMethod</span><span class="p">(</span>
     <span class="kt">UIViewController</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
-    <span class="nv">selector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">UIViewController.viewDidLoad</span><span class="kd">)</span><span class="p">,</span>
+    <span class="nv">selector</span><span class="p">:</span> <span class="k">#selector</span><span class="p">(</span><span class="kt">UIViewController</span><span class="o">.</span><span class="n">viewDidLoad</span><span class="p">),</span>
     <span class="nv">methodSignature</span><span class="p">:</span> <span class="p">(</span><span class="kd">@convention</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">Selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
     <span class="nv">swizzleSignature</span><span class="p">:</span> <span class="p">(</span><span class="kd">@convention</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span><span class="o">.</span><span class="k">self</span>
 <span class="p">)</span> <span class="p">{</span> <span class="n">store</span> <span class="k">in</span> <span class="p">{</span> <span class="n">selfObject</span> <span class="k">in</span>
@@ -34570,7 +34573,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">attributedString</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="p">?,</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span> <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Classes/Wrapper.html#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE4left14CoreFoundation7CGFloatVvp">left</a></span><span class="p">,</span> <span class="nv">lineBreakMode</span><span class="p">:</span> <span class="kt">NSLineBreakMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">byWordWrapping</span><span class="p">,</span> <span class="nv">attributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">attributedString</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="p">?,</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?,</span> <span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="k">left</span><span class="p">,</span> <span class="nv">lineBreakMode</span><span class="p">:</span> <span class="kt">NSLineBreakMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">byWordWrapping</span><span class="p">,</span> <span class="nv">attributes</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSAttributedString</span><span class="o">.</span><span class="kt">Key</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
 
                         </div>
                       </div>
@@ -34597,7 +34600,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">paragraphStyle</span><span class="p">(</span><span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Classes/Wrapper.html#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE4left14CoreFoundation7CGFloatVvp">left</a></span><span class="p">,</span> <span class="nv">lineBreakMode</span><span class="p">:</span> <span class="kt">NSLineBreakMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">byWordWrapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSMutableParagraphStyle</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">paragraphStyle</span><span class="p">(</span><span class="nv">lineHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">textAlignment</span><span class="p">:</span> <span class="kt">NSTextAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="k">left</span><span class="p">,</span> <span class="nv">lineBreakMode</span><span class="p">:</span> <span class="kt">NSLineBreakMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">byWordWrapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSMutableParagraphStyle</span></code></pre>
 
                         </div>
                       </div>
@@ -45903,6 +45906,60 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11defineStyle_5blockyAA04ViewE0V_yxctFZ"></a>
+                    <a name="//apple_ref/swift/Method/defineStyle(_:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11defineStyle_5blockyAA04ViewE0V_yxctFZ">defineStyle(_:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>定义类通用样式实现句柄，默认样式default</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">defineStyle</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ViewStyle.html">ViewStyle</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Base</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8addStyleyyAA04ViewE0VF"></a>
+                    <a name="//apple_ref/swift/Method/addStyle(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8addStyleyyAA04ViewE0VF">addStyle(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>应用类通用样式，默认样式default</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addStyle</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ViewStyle.html">ViewStyle</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -50506,7 +50563,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
     <span class="n">_</span> <span class="nv">popover</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
     <span class="nv">sourcePoint</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span>
     <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">delegate</span><span class="p">:</span> <span class="p">(</span><span class="n">any</span> <span class="kt">UIPopoverPresentationControllerDelegate</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="p">(</span><span class="kd">any</span> <span class="kt">UIPopoverPresentationControllerDelegate</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
@@ -51252,7 +51309,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-27)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-05-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
