@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.6.2] - 2024-05-29
+
+### Added
+* Added ViewStyle and methods for defining and using common view styles
+
 ## [5.6.1] - 2024-05-27
 
 ### Changed
