@@ -18,20 +18,8 @@ class LoginController: UIViewController {
     // MARK: - Subviews
     private lazy var nicknameField: UITextField = {
         let result = UITextField()
-        result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
-        result.tintColor = AppTheme.textColor
-        result.backgroundColor = AppTheme.backgroundColor
+        result.app.addStyle(.default)
         result.placeholder = "mediatorPlaceholder".app.localized
-        result.clearButtonMode = .whileEditing
-        result.returnKeyType = .done
-        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
-        result.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 0))
-        result.leftViewMode = .always
-        result.app.keyboardManager = true
-        result.app.touchResign = true
-        result.app.keyboardResign = true
-        result.app.returnResign = true
         return result
     }()
     
