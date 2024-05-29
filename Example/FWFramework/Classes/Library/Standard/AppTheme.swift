@@ -84,6 +84,7 @@ extension AppTheme {
     static func setupTheme() {
         setupAppearance()
         setupPlugin()
+        setupStyle()
     }
     
     private static func setupAppearance() {
@@ -151,6 +152,24 @@ extension AppTheme {
         }
         EmptyPluginImpl.shared.defaultAction = {
             return "重新加载"
+        }
+    }
+    
+    private static func setupStyle() {
+        UITextField.app.defineStyle(.default) { textField in
+            textField.font = UIFont.app.font(ofSize: 15)
+            textField.textColor = AppTheme.textColor
+            textField.tintColor = AppTheme.textColor
+            textField.backgroundColor = AppTheme.backgroundColor
+            textField.clearButtonMode = .whileEditing
+            textField.returnKeyType = .done
+            textField.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 0))
+            textField.leftViewMode = .always
+            textField.app.keyboardManager = true
+            textField.app.touchResign = true
+            textField.app.keyboardResign = true
+            textField.app.returnResign = true
         }
     }
     
