@@ -6582,889 +6582,882 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 214,
+      "line": 201,
       "symbol": "ImageCropController.init(image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 218,
+      "line": 205,
       "symbol": "ImageCropController.init(croppingStyle:image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 226,
+      "line": 213,
       "symbol": "ImageCropController.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 230,
+      "line": 217,
       "symbol": "ImageCropController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 260,
+      "line": 247,
       "symbol": "ImageCropController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 287,
+      "line": 269,
       "symbol": "ImageCropController.viewDidAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 311,
+      "line": 290,
       "symbol": "ImageCropController.viewWillDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 325,
-      "symbol": "ImageCropController.viewDidDisappear(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 332,
-      "symbol": "ImageCropController.title",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 347,
-      "symbol": "ImageCropController.preferredStatusBarStyle",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 354,
+      "line": 299,
       "symbol": "ImageCropController.prefersStatusBarHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 361,
+      "line": 303,
+      "symbol": "ImageCropController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
+      "line": 307,
+      "symbol": "ImageCropController.title",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
+      "line": 322,
       "symbol": "ImageCropController.preferredScreenEdgesDeferringSystemGestures",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 365,
+      "line": 326,
       "symbol": "ImageCropController.viewSafeAreaInsetsDidChange()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 371,
+      "line": 332,
       "symbol": "ImageCropController.viewDidLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 395,
+      "line": 356,
       "symbol": "ImageCropController.viewWillTransition(to:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 412,
+      "line": 373,
       "symbol": "ImageCropController.resetCropViewLayout()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 420,
+      "line": 381,
       "symbol": "ImageCropController.setAspectRatioPreset(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 456,
+      "line": 417,
       "symbol": "ImageCropController.cropViewDidBecomeResettable(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 460,
+      "line": 421,
       "symbol": "ImageCropController.cropViewDidBecomeNonResettable(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 742,
+      "line": 703,
       "symbol": "ImageCropOverlayView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 744,
+      "line": 705,
       "symbol": "ImageCropOverlayView.gridHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 749,
+      "line": 710,
       "symbol": "ImageCropOverlayView.displayHorizontalGridLines",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 760,
+      "line": 721,
       "symbol": "ImageCropOverlayView.displayVerticalGridLines",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 781,
+      "line": 742,
       "symbol": "ImageCropOverlayView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 786,
+      "line": 747,
       "symbol": "ImageCropOverlayView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 804,
+      "line": 765,
       "symbol": "ImageCropOverlayView.frame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 812,
+      "line": 773,
       "symbol": "ImageCropOverlayView.didMoveToSuperview()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 819,
+      "line": 780,
       "symbol": "ImageCropOverlayView.setGridHidden(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 917,
+      "line": 878,
       "symbol": "ImageCropScrollView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 918,
+      "line": 879,
       "symbol": "ImageCropScrollView.touchesBegan",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 919,
+      "line": 880,
       "symbol": "ImageCropScrollView.touchesCancelled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 920,
+      "line": 881,
       "symbol": "ImageCropScrollView.touchesEnded",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 922,
+      "line": 883,
       "symbol": "ImageCropScrollView.touchesBegan(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 927,
+      "line": 888,
       "symbol": "ImageCropScrollView.touchesEnded(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 932,
+      "line": 893,
       "symbol": "ImageCropScrollView.touchesCancelled(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 938,
+      "line": 899,
       "symbol": "ImageCropToolbar",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 939,
+      "line": 900,
       "symbol": "ImageCropToolbar.statusBarHeightInset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 942,
+      "line": 903,
       "symbol": "ImageCropToolbar.buttonInsetPadding",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 945,
+      "line": 906,
       "symbol": "ImageCropToolbar.backgroundViewOutsets",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 946,
+      "line": 907,
       "symbol": "ImageCropToolbar.doneTextButtonTitle",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 952,
+      "line": 913,
       "symbol": "ImageCropToolbar.cancelTextButtonTitle",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 959,
+      "line": 920,
       "symbol": "ImageCropToolbar.cancelButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 960,
+      "line": 921,
       "symbol": "ImageCropToolbar.doneButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 961,
+      "line": 922,
       "symbol": "ImageCropToolbar.rotateCounterClockwiseButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 962,
+      "line": 923,
       "symbol": "ImageCropToolbar.rotateClockwiseButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 963,
+      "line": 924,
       "symbol": "ImageCropToolbar.clampButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 964,
+      "line": 925,
       "symbol": "ImageCropToolbar.resetButtonTapped",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 966,
+      "line": 927,
       "symbol": "ImageCropToolbar.clampButtonGlowing",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 971,
+      "line": 932,
       "symbol": "ImageCropToolbar.clampButtonFrame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 975,
+      "line": 936,
       "symbol": "ImageCropToolbar.clampButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 978,
+      "line": 939,
       "symbol": "ImageCropToolbar.rotateCounterClockwiseButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 981,
+      "line": 942,
       "symbol": "ImageCropToolbar.rotateClockwiseButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 984,
+      "line": 945,
       "symbol": "ImageCropToolbar.resetButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 987,
+      "line": 948,
       "symbol": "ImageCropToolbar.doneButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 990,
+      "line": 951,
       "symbol": "ImageCropToolbar.cancelButtonHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 994,
+      "line": 955,
       "symbol": "ImageCropToolbar.resetButtonEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 998,
+      "line": 959,
       "symbol": "ImageCropToolbar.doneButtonFrame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1005,
+      "line": 966,
       "symbol": "ImageCropToolbar.backgroundView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1011,
+      "line": 972,
       "symbol": "ImageCropToolbar.doneTextButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1021,
+      "line": 982,
       "symbol": "ImageCropToolbar.doneIconButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1029,
+      "line": 990,
       "symbol": "ImageCropToolbar.cancelTextButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1039,
+      "line": 1000,
       "symbol": "ImageCropToolbar.cancelIconButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1046,
+      "line": 1007,
       "symbol": "ImageCropToolbar.visibleCancelButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1053,
+      "line": 1014,
       "symbol": "ImageCropToolbar.rotateCounterClockwiseButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1062,
+      "line": 1023,
       "symbol": "ImageCropToolbar.resetButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1072,
+      "line": 1033,
       "symbol": "ImageCropToolbar.clampButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1081,
+      "line": 1042,
       "symbol": "ImageCropToolbar.rotateClockwiseButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1090,
+      "line": 1051,
       "symbol": "ImageCropToolbar.rotateButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1096,
+      "line": 1057,
       "symbol": "ImageCropToolbar.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1101,
+      "line": 1062,
       "symbol": "ImageCropToolbar.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1119,
+      "line": 1080,
       "symbol": "ImageCropToolbar.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1421,
+      "line": 1382,
       "symbol": "ImageCropViewDelegate",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1422,
+      "line": 1383,
       "symbol": "ImageCropViewDelegate.cropViewDidBecomeResettable(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1423,
+      "line": 1384,
       "symbol": "ImageCropViewDelegate.cropViewDidBecomeNonResettable(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1426,
+      "line": 1387,
       "symbol": "ImageCropView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1428,
+      "line": 1389,
       "symbol": "ImageCropView.image",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1429,
+      "line": 1390,
       "symbol": "ImageCropView.croppingStyle",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1430,
+      "line": 1391,
       "symbol": "ImageCropView.delegate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1431,
+      "line": 1392,
       "symbol": "ImageCropView.cropBoxResizeEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1436,
+      "line": 1397,
       "symbol": "ImageCropView.canBeReset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1447,
+      "line": 1408,
       "symbol": "ImageCropView.cropBoxFrame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1511,
+      "line": 1472,
       "symbol": "ImageCropView.imageViewFrame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1518,
+      "line": 1479,
       "symbol": "ImageCropView.cropRegionInsets",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1519,
+      "line": 1480,
       "symbol": "ImageCropView.simpleRenderMode",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1524,
+      "line": 1485,
       "symbol": "ImageCropView.internalLayoutDisabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1525,
+      "line": 1486,
       "symbol": "ImageCropView.aspectRatio",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1530,
+      "line": 1491,
       "symbol": "ImageCropView.aspectRatioLockEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1531,
+      "line": 1492,
       "symbol": "ImageCropView.aspectRatioLockDimensionSwapEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1532,
+      "line": 1493,
       "symbol": "ImageCropView.resetAspectRatioEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1533,
+      "line": 1494,
       "symbol": "ImageCropView.cropBoxAspectRatioIsPortrait",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1537,
+      "line": 1498,
       "symbol": "ImageCropView.angle",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1564,
+      "line": 1525,
       "symbol": "ImageCropView.croppingViewsHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1569,
+      "line": 1530,
       "symbol": "ImageCropView.imageCropFrame",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1600,
+      "line": 1561,
       "symbol": "ImageCropView.gridOverlayHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1605,
+      "line": 1566,
       "symbol": "ImageCropView.cropViewPadding",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1606,
+      "line": 1567,
       "symbol": "ImageCropView.cropAdjustingDelay",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1607,
+      "line": 1568,
       "symbol": "ImageCropView.minimumAspectRatio",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1608,
+      "line": 1569,
       "symbol": "ImageCropView.maximumZoomScale",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1609,
+      "line": 1570,
       "symbol": "ImageCropView.alwaysShowCroppingGrid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1616,
+      "line": 1577,
       "symbol": "ImageCropView.translucencyAlwaysHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1622,
+      "line": 1583,
       "symbol": "ImageCropView.gridOverlayView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1629,
+      "line": 1590,
       "symbol": "ImageCropView.foregroundContainerView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1748,
+      "line": 1709,
       "symbol": "ImageCropView.init(image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1752,
+      "line": 1713,
       "symbol": "ImageCropView.init(croppingStyle:image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1759,
+      "line": 1720,
       "symbol": "ImageCropView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1792,
+      "line": 1753,
       "symbol": "ImageCropView.performInitialSetup()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1812,
+      "line": 1773,
       "symbol": "ImageCropView.setSimpleRenderMode(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1827,
+      "line": 1788,
       "symbol": "ImageCropView.prepareForRotation()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1833,
+      "line": 1794,
       "symbol": "ImageCropView.performRelayoutForRotation()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1877,
+      "line": 1838,
       "symbol": "ImageCropView.resetLayoutToDefaultAnimated(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 1917,
+      "line": 1878,
       "symbol": "ImageCropView.setAspectRatio(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2005,
+      "line": 1966,
       "symbol": "ImageCropView.rotateImageNinetyDegreesAnimated(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2009,
+      "line": 1970,
       "symbol": "ImageCropView.rotateImageNinetyDegreesAnimated(_:clockwise:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2160,
+      "line": 2121,
       "symbol": "ImageCropView.setGridOverlayHidden(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2169,
+      "line": 2130,
       "symbol": "ImageCropView.setCroppingViewsHidden(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2190,
+      "line": 2151,
       "symbol": "ImageCropView.setBackgroundImageViewHidden(_:animated:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2209,
+      "line": 2170,
       "symbol": "ImageCropView.moveCroppedContentToCenterAnimated(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2297,
+      "line": 2258,
       "symbol": "ImageCropView.gestureRecognizerShouldBegin(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2310,
+      "line": 2271,
       "symbol": "ImageCropView.gestureRecognizer(_:shouldReceive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2318,
+      "line": 2279,
       "symbol": "ImageCropView.viewForZooming(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2322,
+      "line": 2283,
       "symbol": "ImageCropView.scrollViewDidScroll(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2326,
+      "line": 2287,
       "symbol": "ImageCropView.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2331,
+      "line": 2292,
       "symbol": "ImageCropView.scrollViewWillBeginZooming(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2336,
+      "line": 2297,
       "symbol": "ImageCropView.scrollViewDidEndDecelerating(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2341,
+      "line": 2302,
       "symbol": "ImageCropView.scrollViewDidEndZooming(_:with:atScale:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2346,
+      "line": 2307,
       "symbol": "ImageCropView.scrollViewDidZoom(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 2355,
+      "line": 2316,
       "symbol": "ImageCropView.scrollViewDidEndDragging(_:willDecelerate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -7758,434 +7751,441 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 840,
+      "line": 814,
+      "symbol": "ImagePickerPreviewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
+      "line": 844,
       "symbol": "ImagePickerPreviewController.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 844,
+      "line": 848,
       "symbol": "ImagePickerPreviewController.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 848,
+      "line": 852,
       "symbol": "ImagePickerPreviewController.collectionView(_:layout:sizeForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 852,
+      "line": 856,
       "symbol": "ImagePickerPreviewController.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 867,
+      "line": 871,
       "symbol": "ImagePickerPreviewController.collectionView(_:didSelectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1430,
+      "line": 1434,
       "symbol": "ImagePickerPreviewCollectionCell.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1435,
+      "line": 1439,
       "symbol": "ImagePickerPreviewCollectionCell.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1446,
+      "line": 1450,
       "symbol": "ImagePickerPreviewCollectionCell.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1537,
+      "line": 1541,
       "symbol": "ImagePickerControllerDelegate",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1610,
+      "line": 1614,
       "symbol": "ImagePickerController",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1612,
+      "line": 1616,
       "symbol": "ImagePickerController.imagePickerControllerDelegate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1625,
+      "line": 1629,
       "symbol": "ImagePickerController.toolbarBackgroundColor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1630,
+      "line": 1634,
       "symbol": "ImagePickerController.toolbarTintColor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1655,
+      "line": 1659,
       "symbol": "ImagePickerController.toolbarPaddingHorizontal",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1668,
+      "line": 1672,
       "symbol": "ImagePickerController.imagesAssetArray",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1669,
+      "line": 1673,
       "symbol": "ImagePickerController.assetsGroup",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1718,
+      "line": 1722,
       "symbol": "ImagePickerController.collectionView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1732,
+      "line": 1736,
       "symbol": "ImagePickerController.collectionViewLayout",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1741,
+      "line": 1745,
       "symbol": "ImagePickerController.operationToolbarView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1749,
+      "line": 1753,
       "symbol": "ImagePickerController.sendButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1764,
+      "line": 1768,
       "symbol": "ImagePickerController.previewButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1787,
+      "line": 1791,
       "symbol": "ImagePickerController.init(nibName:bundle:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1792,
+      "line": 1796,
       "symbol": "ImagePickerController.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1803,
+      "line": 1807,
       "symbol": "ImagePickerController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1813,
+      "line": 1817,
       "symbol": "ImagePickerController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1834,
+      "line": 1838,
       "symbol": "ImagePickerController.viewDidLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1859,
+      "line": 1863,
       "symbol": "ImagePickerController.prefersStatusBarHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 1863,
+      "line": 1867,
       "symbol": "ImagePickerController.preferredStatusBarStyle",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2011,
+      "line": 2015,
       "symbol": "ImagePickerController.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2015,
+      "line": 2019,
       "symbol": "ImagePickerController.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2019,
+      "line": 2023,
       "symbol": "ImagePickerController.collectionView(_:layout:sizeForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2023,
+      "line": 2027,
       "symbol": "ImagePickerController.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2046,
+      "line": 2050,
       "symbol": "ImagePickerController.collectionView(_:didSelectItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2071,
+      "line": 2075,
       "symbol": "ImagePickerController.didTouchTitleView(_:isActive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2079,
+      "line": 2083,
       "symbol": "ImagePickerController.didChangedActive(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2517,
+      "line": 2521,
       "symbol": "ImagePickerCollectionCell.editedIconImage",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2523,
+      "line": 2527,
       "symbol": "ImagePickerCollectionCell.videoIconImage",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2529,
+      "line": 2533,
       "symbol": "ImagePickerCollectionCell.iconImageViewMargins",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2591,
+      "line": 2595,
       "symbol": "ImagePickerCollectionCell.selectable",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2600,
+      "line": 2604,
       "symbol": "ImagePickerCollectionCell.checked",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2610,
+      "line": 2614,
       "symbol": "ImagePickerCollectionCell.disabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2623,
+      "line": 2627,
       "symbol": "ImagePickerCollectionCell.checkedIndex",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2662,
+      "line": 2666,
       "symbol": "ImagePickerCollectionCell.contentImageView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2669,
+      "line": 2673,
       "symbol": "ImagePickerCollectionCell.checkboxButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2680,
+      "line": 2684,
       "symbol": "ImagePickerCollectionCell.videoDurationLabel",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2691,
+      "line": 2695,
       "symbol": "ImagePickerCollectionCell.checkedIndexLabel",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2705,
+      "line": 2709,
       "symbol": "ImagePickerCollectionCell.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2710,
+      "line": 2714,
       "symbol": "ImagePickerCollectionCell.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2722,
+      "line": 2726,
       "symbol": "ImagePickerCollectionCell.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2831,
+      "line": 2835,
       "symbol": "ImagePickerTitleViewDelegate",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2832,
+      "line": 2836,
       "symbol": "ImagePickerTitleViewDelegate.didTouchTitleView(_:isActive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2833,
+      "line": 2837,
       "symbol": "ImagePickerTitleViewDelegate.didChangedActive(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2836,
+      "line": 2840,
       "symbol": "ImagePickerTitleView",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2948,
+      "line": 2952,
       "symbol": "ImagePickerTitleView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2953,
+      "line": 2957,
       "symbol": "ImagePickerTitleView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2968,
+      "line": 2972,
       "symbol": "ImagePickerTitleView.contentHorizontalAlignment",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2978,
+      "line": 2982,
       "symbol": "ImagePickerTitleView.isHighlighted",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2988,
+      "line": 2992,
       "symbol": "ImagePickerTitleView.setNeedsLayout()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2993,
+      "line": 2997,
       "symbol": "ImagePickerTitleView.sizeThatFits(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 2999,
+      "line": 3003,
       "symbol": "ImagePickerTitleView.intrinsicContentSize",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 3003,
+      "line": 3007,
       "symbol": "ImagePickerTitleView.tintColorDidChange()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImagePickerController.swift",
-      "line": 3011,
+      "line": 3015,
       "symbol": "ImagePickerTitleView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -8318,154 +8318,147 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 489,
+      "line": 486,
       "symbol": "ImagePreviewController.init(nibName:bundle:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 494,
+      "line": 491,
       "symbol": "ImagePreviewController.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 507,
+      "line": 503,
       "symbol": "ImagePreviewController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 515,
+      "line": 511,
       "symbol": "ImagePreviewController.viewDidLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 526,
+      "line": 522,
       "symbol": "ImagePreviewController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 536,
-      "symbol": "ImagePreviewController.viewDidAppear(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 546,
-      "symbol": "ImagePreviewController.viewWillDisappear(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 553,
+      "line": 532,
       "symbol": "ImagePreviewController.viewDidDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 561,
+      "line": 539,
       "symbol": "ImagePreviewController.prefersStatusBarHidden",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 573,
+      "line": 543,
+      "symbol": "ImagePreviewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
+      "line": 547,
       "symbol": "ImagePreviewController.dismiss(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 623,
+      "line": 597,
       "symbol": "ImagePreviewController.animationController(forPresented:presenting:source:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 627,
+      "line": 601,
       "symbol": "ImagePreviewController.animationController(forDismissed:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 793,
+      "line": 759,
       "symbol": "ImagePreviewTransitionAnimator.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 915,
+      "line": 881,
       "symbol": "ImagePreviewTransitionAnimator.animateTransition(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 987,
+      "line": 953,
       "symbol": "ImagePreviewTransitionAnimator.transitionDuration(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1033,
+      "line": 999,
       "symbol": "CollectionViewPagingLayout.init(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1040,
+      "line": 1006,
       "symbol": "CollectionViewPagingLayout.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1046,
+      "line": 1012,
       "symbol": "CollectionViewPagingLayout.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1057,
+      "line": 1023,
       "symbol": "CollectionViewPagingLayout.prepare()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1068,
+      "line": 1034,
       "symbol": "CollectionViewPagingLayout.shouldInvalidateLayout(forBoundsChange:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1075,
+      "line": 1041,
       "symbol": "CollectionViewPagingLayout.layoutAttributesForElements(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1107,
+      "line": 1073,
       "symbol": "CollectionViewPagingLayout.targetContentOffset(forProposedContentOffset:withScrollingVelocity:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
