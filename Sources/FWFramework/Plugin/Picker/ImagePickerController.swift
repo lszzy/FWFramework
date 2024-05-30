@@ -208,11 +208,11 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     }
     
     open override var prefersStatusBarHidden: Bool {
-        return false
+        false
     }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        .lightContent
     }
     
     // MARK: - UITableView
@@ -808,7 +808,11 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
     }
     
     open override var prefersStatusBarHidden: Bool {
-        return true
+        true
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     /// 更新数据并刷新 UI，手工调用
@@ -1857,11 +1861,11 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
     }
     
     open override var prefersStatusBarHidden: Bool {
-        return false
+        false
     }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        .lightContent
     }
     
     /// 图片过滤类型转换为相册内容类型

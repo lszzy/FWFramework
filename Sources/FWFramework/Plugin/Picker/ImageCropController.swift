@@ -181,25 +181,12 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     private var toolbarSnapshotView: UIView?
     private var navigationBarHidden: Bool = false
     private var toolbarHidden: Bool = false
-    private var inTransition: Bool = false
     private var verticalLayout: Bool {
         return view.bounds.width < view.bounds.height
     }
-    private var overrideStatusBar: Bool {
-        if navigationController != nil { return false }
-        if presentingViewController?.prefersStatusBarHidden == true { return false }
-        return true
-    }
-    private var statusBarHidden: Bool {
-        if let navController = navigationController {
-            return navController.prefersStatusBarHidden
-        }
-        if presentingViewController?.prefersStatusBarHidden == true { return true }
-        return true
-    }
     private var statusBarHeight: CGFloat {
         var height: CGFloat = view.safeAreaInsets.top
-        if statusBarHidden && view.safeAreaInsets.bottom <= .ulpOfOne {
+        if prefersStatusBarHidden && view.safeAreaInsets.bottom <= .ulpOfOne {
             height = 0
         }
         return height
@@ -260,11 +247,6 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if animated {
-            inTransition = true
-            setNeedsStatusBarAppearanceUpdate()
-        }
-        
         if let navController = navigationController {
             if hidesNavigationBar {
                 navigationBarHidden = navController.isNavigationBarHidden
@@ -287,16 +269,13 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        inTransition = false
         cropView.simpleRenderMode = false
         
         if animated {
             UIView.animate(withDuration: 0.3) {
-                self.setNeedsStatusBarAppearanceUpdate()
                 self.titleLabel?.alpha = 1.0
             }
         } else {
-            setNeedsStatusBarAppearanceUpdate()
             titleLabel?.alpha = 1.0
         }
         
@@ -311,22 +290,18 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        inTransition = true
-        UIView.animate(withDuration: 0.5) {
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
-        
         if let navController = navigationController, hidesNavigationBar {
             navController.setNavigationBarHidden(navigationBarHidden, animated: animated)
             navController.setToolbarHidden(toolbarHidden, animated: animated)
         }
     }
     
-    open override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        inTransition = false
-        setNeedsStatusBarAppearanceUpdate()
+    open override var prefersStatusBarHidden: Bool {
+        true
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     open override var title: String? {
@@ -342,20 +317,6 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
             titleLabel?.sizeToFit()
             titleLabel?.frame = frameForTitleLabel(size: titleLabel?.frame.size ?? .zero, verticalLayout: verticalLayout)
         }
-    }
-    
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        if navigationController != nil {
-            return .lightContent
-        }
-        return .default
-    }
-    
-    open override var prefersStatusBarHidden: Bool {
-        if !overrideStatusBar {
-            return statusBarHidden
-        }
-        return !inTransition && view.superview != nil
     }
     
     open override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
