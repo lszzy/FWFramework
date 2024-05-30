@@ -135,6 +135,8 @@ extension Wrapper where Base: UIViewController {
             targetController.modalPresentationStyle = .fullScreen
         } else if options.contains(.stylePageSheet) {
             targetController.modalPresentationStyle = .pageSheet
+        } else if options.contains(.styleCustom) {
+            targetController.modalPresentationStyle = .custom
         }
         
         var isPush = false
@@ -503,10 +505,12 @@ public struct NavigatorOptions: OptionSet {
     /// 同时pop到根控制器，仅push|pop生效
     public static let popToRoot = NavigatorOptions(rawValue: 7 << 20)
     
-    /// 指定present样式为ullScreen，仅present生效，默认自动使用系统present样式
+    /// 指定present样式为fullScreen，仅present生效，默认自动使用系统present样式
     public static let styleFullScreen = NavigatorOptions(rawValue: 1 << 24)
     /// 指定present样式为pageSheet，仅present生效
     public static let stylePageSheet = NavigatorOptions(rawValue: 2 << 24)
+    /// 指定present样式为custom，仅present生效
+    public static let styleCustom = NavigatorOptions(rawValue: 3 << 24)
     
     public init(rawValue: Int) {
         self.rawValue = rawValue
