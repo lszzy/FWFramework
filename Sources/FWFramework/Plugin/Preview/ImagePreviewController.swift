@@ -760,6 +760,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
         super.init()
         
         self.animationEnteringBlock = { animator, isPresenting, style, sourceImageRect, zoomImageView, transitionContext in
+            animator.imagePreviewViewController?.modalPresentationCapturesStatusBarAppearance = true
             let previewView = animator.imagePreviewViewController?.view
             
             if style == .fade {
@@ -866,6 +867,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
 
         self.animationCompletionBlock = { animator, isPresenting, style, sourceImageRect, zoomImageView, transitionContext in
             // fade清理，由于支持 zoom presenting 和 fade dismissing 搭配使用，所以这里不管是哪种 style 都要做相同的清理工作
+            animator.imagePreviewViewController?.modalPresentationCapturesStatusBarAppearance = false
             animator.imagePreviewViewController?.view.alpha = 1
             
             // zoom清理
