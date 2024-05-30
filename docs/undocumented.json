@@ -8402,63 +8402,63 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 881,
+      "line": 883,
       "symbol": "ImagePreviewTransitionAnimator.animateTransition(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 953,
+      "line": 955,
       "symbol": "ImagePreviewTransitionAnimator.transitionDuration(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 999,
+      "line": 1001,
       "symbol": "CollectionViewPagingLayout.init(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1006,
+      "line": 1008,
       "symbol": "CollectionViewPagingLayout.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1012,
+      "line": 1014,
       "symbol": "CollectionViewPagingLayout.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1023,
+      "line": 1025,
       "symbol": "CollectionViewPagingLayout.prepare()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1034,
+      "line": 1036,
       "symbol": "CollectionViewPagingLayout.shouldInvalidateLayout(forBoundsChange:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1041,
+      "line": 1043,
       "symbol": "CollectionViewPagingLayout.layoutAttributesForElements(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Preview/ImagePreviewController.swift",
-      "line": 1073,
+      "line": 1075,
       "symbol": "CollectionViewPagingLayout.targetContentOffset(forProposedContentOffset:withScrollingVelocity:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

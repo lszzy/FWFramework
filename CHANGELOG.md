@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.6.4] - 2024-05-31
+
+### Changed
+* Optimize the status bar style processing of ImagePreview components
+
 ## [5.6.3] - 2024-05-30
 
 ### Changed
