@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.6.3] - 2024-05-30
+
+### Changed
+* Optimize the status bar style processing of ImagePicker and ImagePreview components
+* Optimize the status bar style processing of navigation controller child
+
 ## [5.6.2] - 2024-05-29
 
 ### Added
