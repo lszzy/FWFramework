@@ -497,7 +497,6 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         transitioningAnimator = ImagePreviewTransitionAnimator()
         transitioningAnimator?.imagePreviewViewController = self
         modalPresentationStyle = .custom
-        modalPresentationCapturesStatusBarAppearance = true
         transitioningDelegate = self
     }
     
@@ -538,7 +537,11 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     }
     
     open override var prefersStatusBarHidden: Bool {
-        return true
+        true
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
