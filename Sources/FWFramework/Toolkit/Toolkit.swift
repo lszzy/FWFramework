@@ -2504,6 +2504,32 @@ extension FrameworkAutoloader {
                 selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw.delegateProxy
             }
         }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarHidden),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UINavigationController.self,
+            selector: #selector(getter: UINavigationController.childForStatusBarStyle),
+            methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
+            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+        ) { store in { selfObject in
+            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
+                return selfObject.topViewController
+            } else {
+                return store.original(selfObject, store.selector)
+            }
+        }}
     }
     
 }
