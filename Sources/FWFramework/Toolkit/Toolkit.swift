@@ -2511,11 +2511,11 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
-            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
-                return selfObject.topViewController
-            } else {
-                return store.original(selfObject, store.selector)
+            var child = store.original(selfObject, store.selector)
+            if UINavigationController.innerPopProxyEnabled, child == nil, let visible = selfObject.visibleViewController {
+                child = visible.childForStatusBarHidden ?? visible
             }
+            return child
         }}
         
         NSObject.fw.swizzleInstanceMethod(
@@ -2524,11 +2524,11 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
-            if UINavigationController.innerPopProxyEnabled && selfObject.topViewController != nil {
-                return selfObject.topViewController
-            } else {
-                return store.original(selfObject, store.selector)
+            var child = store.original(selfObject, store.selector)
+            if UINavigationController.innerPopProxyEnabled, child == nil, let visible = selfObject.visibleViewController {
+                child = visible.childForStatusBarStyle ?? visible
             }
+            return child
         }}
     }
     

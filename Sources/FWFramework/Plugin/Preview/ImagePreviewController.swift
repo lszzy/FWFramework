@@ -482,9 +482,6 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     private var dismissingGesture: UIPanGestureRecognizer?
     private var gestureBeganLocation: CGPoint = .zero
     private weak var gestureZoomImageView: ZoomImageView?
-    private var originalStatusBarHidden = false
-    private var statusBarHidden = false
-    private var useOriginalStatusBarHidden = true
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -500,7 +497,6 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         transitioningAnimator = ImagePreviewTransitionAnimator()
         transitioningAnimator?.imagePreviewViewController = self
         modalPresentationStyle = .custom
-        modalPresentationCapturesStatusBarAppearance = true
         transitioningDelegate = self
     }
     
@@ -533,41 +529,19 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
         imagePreviewView.collectionView.layoutIfNeeded()
     }
     
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        useOriginalStatusBarHidden = false
-        
-        if fw.isPresented {
-            statusBarHidden = true
-        }
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        statusBarHidden = originalStatusBarHidden
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        useOriginalStatusBarHidden = true
         
         removeObjectsForZoomStyle()
         resetDismissingGesture()
     }
     
     open override var prefersStatusBarHidden: Bool {
-        if useOriginalStatusBarHidden {
-            // 在 present/dismiss 动画过程中，都使用原界面的状态栏显隐状态
-            if presentingViewController != nil {
-                originalStatusBarHidden = presentingViewController?.view.window?.windowScene?.statusBarManager?.isStatusBarHidden ?? false
-                return originalStatusBarHidden
-            }
-            return super.prefersStatusBarHidden
-        }
-        return statusBarHidden
+        true
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -687,12 +661,6 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
             gestureZoomImageView?.transform = transform
             view.backgroundColor = view.backgroundColor?.withAlphaComponent(alpha)
             
-            let statusBarHidden = alpha >= 1 ? true : originalStatusBarHidden
-            if statusBarHidden != self.statusBarHidden {
-                self.statusBarHidden = statusBarHidden
-                setNeedsStatusBarAppearanceUpdate()
-            }
-            
         case .ended:
             let location = gesture.location(in: view)
             let verticalDistance = location.y - gestureBeganLocation.y
@@ -715,9 +683,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     
     private func cancelDismissingGesture() {
         // 手势判定失败，恢复到手势前的状态
-        statusBarHidden = true
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-            self.setNeedsStatusBarAppearanceUpdate()
             self.resetDismissingGesture()
         }
     }
