@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.6.5] - 2024-06-03
+
+### Fixed
+* Fixed the issue that the ImageCropController custom toolbar button is invalid after clicking
+* Added navigation bar childProxyEnabled switch to control the child status bar style
+
 ## [5.6.4] - 2024-05-31
 
 ### Changed

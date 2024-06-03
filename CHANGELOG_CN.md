@@ -1,5 +1,11 @@
 # 更新日志
 
+## [5.6.5] - 2024-06-03
+
+### Fixed
+* 修复ImageCropController自定义toolbar按钮后点击无效问题
+* 新增导航栏childProxyEnabled开关控制child状态栏样式
+
 ## [5.6.4] - 2024-05-31
 
 ### Changed
