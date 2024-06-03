@@ -1,5 +1,10 @@
 # 更新日志
 
+## [5.6.6] - 2024-06-03
+
+### Fixed
+* 修复开启BUILD_LIBRARY_FOR_DISTRIBUTION时编译报错问题
+
 ## [5.6.5] - 2024-06-03
 
 ### Fixed

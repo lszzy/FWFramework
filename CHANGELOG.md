@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.6.6] - 2024-06-03
+
+### Fixed
+* Fixed compilation error when BUILD_LIBRARY_FOR_DISTRIBUTION is enabled
+
 ## [5.6.5] - 2024-06-03
 
 ### Fixed
