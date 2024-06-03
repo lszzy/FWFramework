@@ -41,6 +41,7 @@ extension WrapperGlobal {
 /// [Material](https://google.github.io/material-design-icons/#icons-for-ios)
 ///
 /// [FontAwesomeKit](https://github.com/PrideChung/FontAwesomeKit)
+@objc(ObjCIconBridge)
 open class Icon: NSObject {
     
     private static var iconMappers: [String: Icon.Type] = [:]

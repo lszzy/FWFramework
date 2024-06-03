@@ -9,14 +9,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Logger.swift",
-      "line": 353,
+      "line": 354,
       "symbol": "LoggerPluginNSLog.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Logger.swift",
-      "line": 403,
+      "line": 404,
       "symbol": "LoggerPluginOSLog.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
@@ -317,168 +317,168 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 14,
+      "line": 15,
       "symbol": "WeakProxy.target",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 16,
+      "line": 17,
       "symbol": "WeakProxy.init(target:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 21,
+      "line": 22,
       "symbol": "WeakProxy.forwardingTarget(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 25,
+      "line": 26,
       "symbol": "WeakProxy.responds(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 29,
+      "line": 30,
       "symbol": "WeakProxy.isEqual(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 33,
+      "line": 34,
       "symbol": "WeakProxy.hash",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 37,
+      "line": 38,
       "symbol": "WeakProxy.superclass",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 41,
+      "line": 42,
       "symbol": "WeakProxy.isProxy()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 45,
+      "line": 46,
       "symbol": "WeakProxy.isKind(of:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 49,
+      "line": 50,
       "symbol": "WeakProxy.isMember(of:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 53,
+      "line": 54,
       "symbol": "WeakProxy.conforms(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 57,
+      "line": 58,
       "symbol": "WeakProxy.description",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 61,
+      "line": 62,
       "symbol": "WeakProxy.debugDescription",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 71,
+      "line": 72,
       "symbol": "DelegateProxy.target",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 73,
+      "line": 74,
       "symbol": "DelegateProxy.delegate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 78,
+      "line": 79,
       "symbol": "DelegateProxy.isProxy()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 82,
+      "line": 83,
       "symbol": "DelegateProxy.forwardingTarget(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 86,
+      "line": 87,
       "symbol": "DelegateProxy.conforms(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 93,
+      "line": 94,
       "symbol": "DelegateProxy.responds(to:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 106,
+      "line": 108,
       "symbol": "WeakObject.object",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 108,
+      "line": 110,
       "symbol": "WeakObject.init(object:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Router.swift",
-      "line": 96,
+      "line": 97,
       "symbol": "Router.Parameter.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Router.swift",
-      "line": 98,
+      "line": 99,
       "symbol": "Router.Parameter.init(dictionaryValue:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Router.swift",
-      "line": 107,
+      "line": 108,
       "symbol": "Router.Parameter.dictionaryValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -12601,6 +12601,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Analyzer.swift",
+      "line": 67,
+      "symbol": "Analyzer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AnimatedImage.swift",
       "line": 106,
       "symbol": "ImageCoderOptions.init(_:)",
@@ -12791,49 +12798,49 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1003,
+      "line": 1002,
       "symbol": "AssetLivePhoto.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1299,
+      "line": 1298,
       "symbol": "AssetSessionExporterError.setupFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1300,
+      "line": 1299,
       "symbol": "AssetSessionExporterError.readingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1301,
+      "line": 1300,
       "symbol": "AssetSessionExporterError.writingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1302,
+      "line": 1301,
       "symbol": "AssetSessionExporterError.cancelled",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1464,
+      "line": 1463,
       "symbol": "AssetSessionExporter.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1481,
+      "line": 1480,
       "symbol": "AssetSessionExporter.validateVideoOutputConfiguration()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

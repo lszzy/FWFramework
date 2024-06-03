@@ -62,11 +62,6 @@ public protocol WrapperCompatible {
     /// wrapperExtension对象包装器属性
     var wrapperExtension: Wrapper<WrapperBase> { get set }
     
-    /// fw类包装器属性
-    @_spi(FW) static var fw: Wrapper<WrapperBase>.Type { get set }
-    /// fw对象包装器属性
-    @_spi(FW) var fw: Wrapper<WrapperBase> { get set }
-    
 }
 
 /// 注意事项：
