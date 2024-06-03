@@ -520,7 +520,7 @@ public struct NavigatorOptions: OptionSet {
 
 // MARK: - Navigator
 /// 导航管理器
-public class Navigator: NSObject {
+public class Navigator {
     
     fileprivate static var staticWindow: UIWindow?
     fileprivate static var staticScene: UIWindowScene?

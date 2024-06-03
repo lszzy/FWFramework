@@ -35,7 +35,7 @@ extension Wrapper where Base: NSObject {
 /// 系统默认时机是在didMoveToWindow处理UIAppearance
 /// 注意：Swift只有标记\@objc dynamic的属性才支持UIAppearance
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-public class Appearance: NSObject {
+public class Appearance {
     
     private static var appearances: [String: AnyObject] = [:]
     

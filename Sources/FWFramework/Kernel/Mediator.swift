@@ -92,6 +92,7 @@ extension ModuleProtocol where Self: NSObject {
 /// 模式二：Runtime模式，详见方法：checkAllModules(selector:arguments:)
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
+@objc(ObjCMediatorBridge)
 public class Mediator: NSObject {
     
     private static var modulePool: [String: ModuleProtocol.Type] = [:]
