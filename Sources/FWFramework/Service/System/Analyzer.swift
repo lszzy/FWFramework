@@ -47,7 +47,7 @@ extension AnalysisReporter {
 }
 
 /// 事件分析器
-public class Analyzer: NSObject {
+public class Analyzer {
     
     /// 单例模式
     public static let shared = Analyzer()
@@ -63,6 +63,8 @@ public class Analyzer: NSObject {
     
     private var reporters: [AnalysisReporter] = []
     private var queue = DispatchQueue(label: "site.wuyong.queue.analyzer")
+    
+    public init() {}
     
     /// 添加上报者
     public func addReporter(_ reporter: AnalysisReporter) {

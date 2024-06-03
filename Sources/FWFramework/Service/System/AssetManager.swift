@@ -38,6 +38,7 @@ public enum AssetDownloadStatus: UInt {
 /// 相册里某一个资源的包装对象，该资源可能是图片、视频等
 ///
 /// Asset 重写了 isEqual: 方法，只要两个 Asset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 Asset 进行遍历查找等操作
+@objc(ObjCAssetBridge)
 public class Asset: NSObject {
     
     /// 只读PHAsset对象
@@ -461,8 +462,7 @@ public class Asset: NSObject {
 
 // MARK: - AssetGroup
 /// 相册展示内容的类型
-@objc
-public enum AlbumContentType: UInt {
+@objc public enum AlbumContentType: UInt {
     /// 展示所有资源
     case all = 0
     /// 只展示照片
@@ -476,8 +476,7 @@ public enum AlbumContentType: UInt {
 }
 
 /// 相册展示内容按日期排序的方式
-@objc
-public enum AlbumSortType: UInt {
+@objc public enum AlbumSortType: UInt {
     /// 日期最新的内容排在后面
     case positive = 0
     /// 日期最新的内容排在前面
