@@ -6568,42 +6568,42 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 156,
+      "line": 155,
       "symbol": "ImageCropController.toolbar",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 162,
+      "line": 160,
       "symbol": "ImageCropController.titleLabel",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 201,
+      "line": 199,
       "symbol": "ImageCropController.init(image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 205,
+      "line": 203,
       "symbol": "ImageCropController.init(croppingStyle:image:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 213,
+      "line": 211,
       "symbol": "ImageCropController.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Picker/ImageCropController.swift",
-      "line": 217,
+      "line": 215,
       "symbol": "ImageCropController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -15794,77 +15794,77 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2047,
+      "line": 2060,
       "symbol": "ViewState.ready",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2048,
+      "line": 2061,
       "symbol": "ViewState.loading",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2049,
+      "line": 2062,
       "symbol": "ViewState.success(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2050,
+      "line": 2063,
       "symbol": "ViewState.failure(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2094,
+      "line": 2107,
       "symbol": "ViewControllerLifecycleState.didInit",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2095,
+      "line": 2108,
       "symbol": "ViewControllerLifecycleState.didLoad",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2096,
+      "line": 2109,
       "symbol": "ViewControllerLifecycleState.willAppear",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2097,
+      "line": 2110,
       "symbol": "ViewControllerLifecycleState.isAppearing",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2098,
+      "line": 2111,
       "symbol": "ViewControllerLifecycleState.didAppear",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2099,
+      "line": 2112,
       "symbol": "ViewControllerLifecycleState.willDisappear",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Toolkit.swift",
-      "line": 2100,
+      "line": 2113,
       "symbol": "ViewControllerLifecycleState.didDisappear",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
