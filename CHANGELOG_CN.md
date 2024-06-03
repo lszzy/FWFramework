@@ -4,6 +4,7 @@
 
 ### Fixed
 * 修复开启BUILD_LIBRARY_FOR_DISTRIBUTION时编译报错问题
+* 修复部分OC项目可能与框架自动生成的Swift.h桥接头文件冲突的问题
 
 ## [5.6.5] - 2024-06-03
 

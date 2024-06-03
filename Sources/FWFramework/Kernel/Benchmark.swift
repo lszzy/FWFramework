@@ -28,7 +28,7 @@ extension WrapperGlobal {
 
 // MARK: - Benchmark
 /// 时间调试器
-public class Benchmark: NSObject {
+public class Benchmark {
     
     // MARK: - Accessor
     private static var beginTimes: [String : TimeInterval] = [:]
