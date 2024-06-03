@@ -149,13 +149,11 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         let result = ImageCropView(croppingStyle: croppingStyle, image: image)
         result.delegate = self
         result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(result)
         return result
     }()
     
     open lazy var toolbar: ImageCropToolbar = {
         let result = ImageCropToolbar(frame: .zero)
-        view.addSubview(result)
         return result
     }()
     
@@ -218,6 +216,8 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
         super.viewDidLoad()
         
         view.backgroundColor = cropView.backgroundColor
+        view.addSubview(cropView)
+        view.addSubview(toolbar)
         let circularMode = croppingStyle == .circular
         cropView.frame = frameForCropView(verticalLayout: verticalLayout)
         toolbar.frame = frameForToolbar(verticalLayout: verticalLayout)

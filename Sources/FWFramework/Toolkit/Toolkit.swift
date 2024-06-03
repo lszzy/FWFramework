@@ -1933,7 +1933,19 @@ extension Wrapper where Base: UINavigationController {
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func enablePopProxy() {
         UINavigationController.innerPopProxyEnabled = true
+        UINavigationController.innerChildProxyEnabled = true
         FrameworkAutoloader.swizzleToolkitNavigationController()
+    }
+    
+    /// 是否全局启用child状态栏样式代理，enablePopProxy时自动启用，默认false
+    public static var childProxyEnabled: Bool {
+        get {
+            return UINavigationController.innerChildProxyEnabled
+        }
+        set {
+            UINavigationController.innerChildProxyEnabled = newValue
+            FrameworkAutoloader.swizzleToolkitNavigationController()
+        }
     }
     
     fileprivate var popProxyEnabled: Bool {
@@ -2037,6 +2049,7 @@ extension UIImage {
 extension UINavigationController {
     
     fileprivate static var innerPopProxyEnabled = false
+    fileprivate static var innerChildProxyEnabled = false
     
 }
 
@@ -2512,7 +2525,8 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
-            if UINavigationController.innerPopProxyEnabled, child == nil {
+            if UINavigationController.innerChildProxyEnabled, child == nil {
+                // visible兼容presented导航栏页面，而top仅兼容当前堆栈页面
                 child = selfObject.visibleViewController
             }
             return child
@@ -2525,7 +2539,8 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
-            if UINavigationController.innerPopProxyEnabled, child == nil {
+            if UINavigationController.innerChildProxyEnabled, child == nil {
+                // visible兼容presented导航栏页面，而top仅兼容当前堆栈页面
                 child = selfObject.visibleViewController
             }
             return child
