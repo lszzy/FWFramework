@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - StateObject
 /// 状态类
-public class StateObject: NSObject {
+public class StateObject {
     
     /// 状态名称，只读
     public private(set) var name: String
@@ -29,14 +29,13 @@ public class StateObject: NSObject {
     /// 从名称初始化
     public init(name: String) {
         self.name = name
-        super.init()
     }
     
 }
 
 // MARK: - StateEvent
 /// 状态事件类
-public class StateEvent: NSObject {
+public class StateEvent {
     
     /// 事件名称，只读
     public private(set) var name: String
@@ -64,14 +63,13 @@ public class StateEvent: NSObject {
         self.name = name
         self.sourceStates = states
         self.targetState = state
-        super.init()
     }
     
 }
 
 // MARK: - StateTransition
 /// 状态转换器
-public class StateTransition: NSObject {
+public class StateTransition {
     
     /// 有限状态机，只读
     public private(set) var machine: StateMachine
@@ -96,7 +94,6 @@ public class StateTransition: NSObject {
         self.event = event
         self.sourceState = state
         self.object = object
-        super.init()
     }
     
 }
@@ -112,7 +109,7 @@ extension Notification.Name {
 /// 有限状态机
 ///
 /// [TransitionKit](https://github.com/blakewatters/TransitionKit)
-public class StateMachine: NSObject {
+public class StateMachine {
     
     /// 状态列表，只读
     public private(set) var states: [StateObject] = []
@@ -142,6 +139,9 @@ public class StateMachine: NSObject {
     public private(set) var isActive = false
     
     private var lock = NSRecursiveLock()
+    
+    /// 初始化方法
+    public init() {}
     
     /// 添加状态，未激活时生效
     /// - Parameter object: 状态对象
@@ -188,7 +188,8 @@ public class StateMachine: NSObject {
         if let name = object as? String {
             targetState = stateNamed(name)
         }
-        return state?.isEqual(targetState) ?? false
+        guard let targetState = targetState else { return false }
+        return state === targetState
     }
     
     /// 添加事件，未激活时生效
@@ -252,7 +253,7 @@ public class StateMachine: NSObject {
             event = eventNamed(name)
         }
         guard let event = event, let state = state else { return false }
-        return event.sourceStates.contains(state)
+        return event.sourceStates.contains { $0 === state }
     }
     
     /// 触发事件，未激活时自动激活
@@ -270,7 +271,7 @@ public class StateMachine: NSObject {
             event = eventNamed(name)
         }
         guard let event = event, let state = state,
-              event.sourceStates.contains(state) else {
+              event.sourceStates.contains(where: { $0 === state }) else {
             lock.unlock()
             return false
         }
