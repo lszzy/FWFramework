@@ -277,7 +277,7 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 导航栏样式配置
-open class NavigationBarAppearance: NSObject {
+open class NavigationBarAppearance {
     
     static var appearanceChanged: ((UIViewController) -> Void)?
     private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
@@ -316,6 +316,8 @@ open class NavigationBarAppearance: NSObject {
     open var leftBackImage: UIImage?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
     open var appearanceBlock: ((UINavigationBar) -> Void)?
+    
+    public init() {}
     
 }
 
