@@ -8,7 +8,7 @@
 
 import FWFramework
 
-@objc extension Icon {
+extension Icon {
     
     static var backImage: UIImage? {
         APP.iconImage("zmdi-var-chevron-left", 36)?
