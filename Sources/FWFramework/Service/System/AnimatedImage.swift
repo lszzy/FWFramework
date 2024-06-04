@@ -254,7 +254,7 @@ public class ImageFrame {
 /// 图片解码器，支持动图
 ///
 /// [SDWebImage](https://github.com/SDWebImage/SDWebImage)
-open class ImageCoder: NSObject {
+open class ImageCoder {
     
     /// 单例模式
     public static let shared = ImageCoder()
@@ -277,6 +277,8 @@ open class ImageCoder: NSObject {
         let result = CGImageDestinationCopyTypeIdentifiers() as? [String]
         return Set(result ?? [])
     }()
+    
+    public init() {}
 
     /// 解析图片数据到Image，可指定scale
     open func decodedImage(data: Data?, scale: CGFloat, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {

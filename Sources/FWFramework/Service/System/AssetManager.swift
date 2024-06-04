@@ -594,7 +594,7 @@ public enum AssetAuthorizationStatus: UInt {
 ///  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，AssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取PHCachingImageManager 的实例。
 ///
 ///  [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-public class AssetManager: NSObject {
+public class AssetManager {
     
     // MARK: - Static
     /// 获取 AssetManager 的单例
@@ -786,6 +786,9 @@ public class AssetManager: NSObject {
     // MARK: - Public
     /// 获取一个 PHCachingImageManager 的实例
     public lazy var phCachingImageManager = PHCachingImageManager()
+    
+    /// 初始化方法
+    public init() {}
     
     /// 获取所有的相册，包括个人收藏，最近添加，自拍这类“智能相册”
     ///
