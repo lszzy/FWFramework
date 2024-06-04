@@ -167,15 +167,15 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
             fromValue = 0.6
             toValue = 1
         default:
-            let lightColor = UIColor.fw.color(hex: 0xEEEEEE)
-            let lightBrightness: CGFloat = 0.92
-            let darkColor = UIColor.fw.color(hex: 0x282828)
-            let darkBrightness: CGFloat = 0.5
-            colors = [
-                UIColor.fw.themeLight(lightColor, dark: darkColor),
-                UIColor.fw.themeLight(lightColor.fw.brightnessColor(lightBrightness), dark: darkColor.fw.brightnessColor(darkBrightness)),
-                UIColor.fw.themeLight(lightColor, dark: darkColor)
-            ]
+            let lightColor = UIColor(red: 238.0 / 255.0, green: 238.0 / 255.0, blue: 238.0 / 255.0, alpha: 1)
+            let darkColor = UIColor(red: 40.0 / 255.0, green: 40.0 / 255.0, blue: 40.0 / 255.0, alpha: 1)
+            let themeColor = UIColor { traitCollection in
+                return traitCollection.userInterfaceStyle == .dark ? darkColor : lightColor
+            }
+            let brightnessThemeColor = UIColor { traitCollection in
+                return traitCollection.userInterfaceStyle == .dark ? darkColor.fw.brightnessColor(0.5) : lightColor.fw.brightnessColor(0.92)
+            }
+            colors = [themeColor, brightnessThemeColor, themeColor]
         }
     }
     
@@ -272,9 +272,15 @@ public class SkeletonAppearance: NSObject {
     public var animation: SkeletonAnimationProtocol?
     
     /// 骨架背景色，默认自动适配
-    public var backgroundColor: UIColor = UIColor.fw.themeLight(UIColor.white, dark: UIColor.black)
+    public var backgroundColor: UIColor = UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? .black : .white
+    }
     /// 骨架颜色，默认自动适配
-    public var skeletonColor: UIColor = UIColor.fw.themeLight(UIColor.fw.color(hex: 0xEEEEEE), dark: UIColor.fw.color(hex: 0x282828))
+    public var skeletonColor: UIColor = UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ?
+            UIColor(red: 40.0 / 255.0, green: 40.0 / 255.0, blue: 40.0 / 255.0, alpha: 1) :
+            UIColor(red: 238.0 / 255.0, green: 238.0 / 255.0, blue: 238.0 / 255.0, alpha: 1)
+    }
     
     /// 多行标签行高，默认15
     public var lineHeight: CGFloat = 15
