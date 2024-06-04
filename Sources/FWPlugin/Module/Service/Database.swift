@@ -49,7 +49,7 @@ import SQLite3
 /// 备注：查询条件、排序条件、限制条件等语法和SQL语法一致，为空则无条件
 ///
 /// [WHC_ModelSqliteKit](https://github.com/netyouli/WHC_ModelSqliteKit)
-public class DatabaseManager: NSObject {
+public class DatabaseManager {
     
     /// 全局数据库模型版本号，默认1.0
     ///
@@ -1359,7 +1359,7 @@ fileprivate enum DatabaseFieldType: Int {
     }
 }
 
-fileprivate class DatabasePropertyInfo: NSObject {
+fileprivate class DatabasePropertyInfo {
     let type: DatabaseFieldType
     let name: String
     let propertyName: String
@@ -1376,6 +1376,5 @@ fileprivate class DatabasePropertyInfo: NSObject {
         self.type = type
         self.name = name
         self.propertyName = propertyName
-        super.init()
     }
 }
