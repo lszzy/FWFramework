@@ -870,7 +870,7 @@ public enum HeaderFooterViewType: Int {
 @_spi(FW) extension UICollectionReusableView: DynamicLayoutViewProtocol {}
 
 // MARK: - DynamicLayoutHeightCache
-fileprivate class DynamicLayoutHeightCache: NSObject {
+fileprivate class DynamicLayoutHeightCache {
     
     var heightHorizontalDictionary: [AnyHashable: CGFloat] = [:]
     var heightVerticalDictionary: [AnyHashable: CGFloat] = [:]
@@ -884,7 +884,7 @@ fileprivate class DynamicLayoutHeightCache: NSObject {
 }
 
 // MARK: - DynamicLayoutSizeCache
-fileprivate class DynamicLayoutSizeCache: NSObject {
+fileprivate class DynamicLayoutSizeCache {
     
     var sizeHorizontalDictionary: [AnyHashable: CGSize] = [:]
     var sizeVerticalDictionary: [AnyHashable: CGSize] = [:]
