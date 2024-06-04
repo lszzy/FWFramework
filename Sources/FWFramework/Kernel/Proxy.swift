@@ -9,7 +9,6 @@ import Foundation
 
 // MARK: - WeakProxy
 /// 弱引用代理类，用于解决NSTimer等循环引用target问题(默认NSTimer会强引用target,直到invalidate)
-@objc(ObjCWeakProxyBridge)
 public class WeakProxy: NSObject {
     
     public weak var target: AnyObject?
@@ -102,13 +101,11 @@ open class DelegateProxy<T>: NSObject {
 
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等
-@objc(ObjCWeakObjectBridge)
-public class WeakObject: NSObject {
+public class WeakObject {
     
     public private(set) weak var object: AnyObject?
     
     public init(object: AnyObject?) {
-        super.init()
         self.object = object
     }
     

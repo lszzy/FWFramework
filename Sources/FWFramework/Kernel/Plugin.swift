@@ -49,7 +49,7 @@ extension PluginProtocol {
 /// 和Mediator对比如下：
 /// Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
 /// Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
-public class PluginManager: NSObject {
+public class PluginManager {
     
     /// 内部Target类
     private class Target {
@@ -63,7 +63,7 @@ public class PluginManager: NSObject {
     private static var pluginPool: [String: Target] = [:]
     
     /// 插件调试描述
-    public override class func debugDescription() -> String {
+    public class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
         for (pluginId, target) in pluginPool {
