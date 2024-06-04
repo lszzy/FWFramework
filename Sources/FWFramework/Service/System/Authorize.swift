@@ -82,7 +82,7 @@ extension AuthorizeProtocol {
 /// 开启指定权限方法示例：
 /// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWPlugin/Contacts']
 /// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
-public class AuthorizeManager: NSObject {
+public class AuthorizeManager {
     private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
     
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
