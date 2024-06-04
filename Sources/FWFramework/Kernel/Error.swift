@@ -20,7 +20,7 @@ extension Notification.Name {
 ///
 /// [JJException](https://github.com/jezzmemo/JJException)
 /// [AvoidCrash](https://github.com/chenfanfang/AvoidCrash)
-public class ErrorManager: NSObject {
+public class ErrorManager {
     
     /// 自定义需要捕获未定义方法异常的类，默认[NSNull, NSNumber, NSString, NSArray, NSDictionary]
     public static var captureClasses: [AnyClass] = [

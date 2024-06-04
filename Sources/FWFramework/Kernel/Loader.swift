@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// 通用加载器，添加处理句柄后指定输入即可加载输出结果
-public class Loader<Input, Output>: NSObject {
+/// 通用加载器，添加处理句柄后指定输入即可加载输出结果，如需比较请使用"==="或ObjectIdentifier即可
+public class Loader<Input, Output> {
     
     private class Target {
         let identifier = UUID().uuidString
