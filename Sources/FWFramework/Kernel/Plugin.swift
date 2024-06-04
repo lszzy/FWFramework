@@ -14,7 +14,7 @@ extension WrapperGlobal {
 }
 
 // MARK: - PluginProtocol
-/// 插件协议，可不实现。未实现时默认调用sharedInstance > init方法
+/// 插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
 public protocol PluginProtocol {
     /// 可选插件单例方法，优先级高，仅调用一次
     static func pluginInstance() -> Self?
@@ -41,6 +41,13 @@ extension PluginProtocol {
     public func pluginDidLoad() {}
     /// 默认实现插件unload时钩子方法
     public func pluginDidUnload() {}
+}
+
+// MARK: - SingletonProtocol
+/// 单例协议，可不实现。未实现时默认调用sharedInstance > init方法
+public protocol SingletonProtocol {
+    /// 单例对象
+    static var shared: Self { get }
 }
 
 // MARK: - PluginManager
@@ -134,6 +141,8 @@ public class PluginManager {
             (plugin.instance as? PluginProtocol)?.pluginDidUnload()
             plugin.instance = instance
             plugin.isFactory = true
+        } else if let pluginSingleton = plugin.object as? SingletonProtocol.Type {
+            plugin.instance = pluginSingleton.shared
         } else if let pluginClass = plugin.object as? NSObject.Type {
             let selector = NSSelectorFromString("sharedInstance")
             if pluginClass.responds(to: selector) {
