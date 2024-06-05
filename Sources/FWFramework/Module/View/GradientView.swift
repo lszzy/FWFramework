@@ -8,6 +8,7 @@
 import UIKit
 import QuartzCore
 
+// MARK: - GradientView
 /// 渐变View，无需设置渐变Layer的frame等，支持自动布局
 open class GradientView: UIView {
 
@@ -61,6 +62,7 @@ open class GradientView: UIView {
 
 }
 
+// MARK: - RoundedCornerView
 /// 半圆圆角View，无需frame快捷设置半圆圆角、边框等
 open class RoundedCornerView: UIView {
     
