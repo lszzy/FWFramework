@@ -30,6 +30,7 @@ public protocol AutoloadProtocol {
 ///
 /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高，使用简单，使用方法：
 /// 新增Autoloader objc扩展，以load开头且无参静态方法即会自动调用，方法名建议[load模块名_文件名|类名]
+@objc(ObjCAutoloader)
 public class Autoloader: NSObject, AutoloadProtocol {
     
     private static var isAutoloaded = false

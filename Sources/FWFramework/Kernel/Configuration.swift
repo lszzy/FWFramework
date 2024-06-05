@@ -14,6 +14,7 @@ import Foundation
 /// 1. 当前模块.[配置类]+Template
 /// 2. 主项目.[配置类]+Template
 /// 3. 当前模块.[配置类]+DefaultTemplate
+@objc(ObjCConfiguration)
 open class Configuration: NSObject {
     
     /// 单例模式对象，子类可直接调用
@@ -73,6 +74,7 @@ public protocol ConfigurationTemplateProtocol {
 
 // MARK: - ConfigurationTemplate
 /// 配置模板基类，使用时继承即可
+@objc(ObjCConfigurationTemplate)
 open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
     
     /// 初始化方法

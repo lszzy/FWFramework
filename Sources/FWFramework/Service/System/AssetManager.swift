@@ -38,6 +38,7 @@ public enum AssetDownloadStatus: UInt {
 /// 相册里某一个资源的包装对象，该资源可能是图片、视频等
 ///
 /// Asset 重写了 isEqual: 方法，只要两个 Asset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 Asset 进行遍历查找等操作
+@objc(ObjCAsset)
 public class Asset: NSObject {
     
     /// 只读PHAsset对象
@@ -483,6 +484,7 @@ public enum AlbumContentType: UInt {
 }
 
 /// 资源分组
+@objc(ObjCAssetGroup)
 public class AssetGroup: NSObject {
     
     /// 只读PHAssetCollection对象
