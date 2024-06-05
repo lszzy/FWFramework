@@ -13,32 +13,32 @@ import UIKit
 /// 如果需要支持继承，建议基类在非extension中实现该协议的所有方法，从而忽略协议扩展的默认实现
 public protocol ViewControllerProtocol: ViewControllerLifecycleObservable {
     
-    /// 初始化完成方法，init自动调用，默认空实现
+    /// 初始化完成，init自动调用，默认空实现
     func didInitialize()
 
-    /// 初始化导航栏方法，viewDidLoad自动调用，默认空实现
+    /// 初始化导航栏，viewDidLoad自动调用，默认空实现
     func setupNavbar()
 
-    /// 初始化子视图方法，viewDidLoad自动调用，默认空实现
+    /// 初始化子视图，viewDidLoad自动调用，默认空实现
     func setupSubviews()
 
-    /// 初始化布局方法，viewDidLoad自动调用，默认空实现
+    /// 初始化布局，viewDidLoad自动调用，默认空实现
     func setupLayout()
     
 }
 
 extension ViewControllerProtocol where Self: UIViewController {
     
-    /// 初始化完成方法，init自动调用，默认空实现
+    /// 初始化完成，init自动调用，默认空实现
     public func didInitialize() {}
 
-    /// 初始化导航栏方法，viewDidLoad自动调用，默认空实现
+    /// 初始化导航栏，viewDidLoad自动调用，默认空实现
     public func setupNavbar() {}
 
-    /// 初始化子视图方法，viewDidLoad自动调用，默认空实现
+    /// 初始化子视图，viewDidLoad自动调用，默认空实现
     public func setupSubviews() {}
 
-    /// 初始化布局方法，viewDidLoad自动调用，默认空实现
+    /// 初始化布局，viewDidLoad自动调用，默认空实现
     public func setupLayout() {}
     
 }
