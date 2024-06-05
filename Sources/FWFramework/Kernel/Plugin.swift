@@ -14,7 +14,7 @@ extension WrapperGlobal {
 }
 
 // MARK: - PluginProtocol
-/// 插件协议，可不实现。未实现时默认调用sharedInstance > init方法
+/// 插件协议，可不实现。未实现时默认调用SingletonProtocol > sharedInstance > init方法
 public protocol PluginProtocol {
     /// 可选插件单例方法，优先级高，仅调用一次
     static func pluginInstance() -> Self?
@@ -43,13 +43,20 @@ extension PluginProtocol {
     public func pluginDidUnload() {}
 }
 
+// MARK: - SingletonProtocol
+/// 单例协议，可不实现。未实现时默认调用sharedInstance > init方法
+public protocol SingletonProtocol {
+    /// 单例对象
+    static var shared: Self { get }
+}
+
 // MARK: - PluginManager
 /// 插件管理器类。支持插件冷替换(使用插件前)和热替换(先释放插件)
 ///
 /// 和Mediator对比如下：
 /// Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
 /// Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
-public class PluginManager: NSObject {
+public class PluginManager {
     
     /// 内部Target类
     private class Target {
@@ -63,7 +70,7 @@ public class PluginManager: NSObject {
     private static var pluginPool: [String: Target] = [:]
     
     /// 插件调试描述
-    public override class func debugDescription() -> String {
+    public class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
         for (pluginId, target) in pluginPool {
@@ -134,6 +141,8 @@ public class PluginManager: NSObject {
             (plugin.instance as? PluginProtocol)?.pluginDidUnload()
             plugin.instance = instance
             plugin.isFactory = true
+        } else if let pluginSingleton = plugin.object as? SingletonProtocol.Type {
+            plugin.instance = pluginSingleton.shared
         } else if let pluginClass = plugin.object as? NSObject.Type {
             let selector = NSSelectorFromString("sharedInstance")
             if pluginClass.responds(to: selector) {

@@ -92,8 +92,7 @@ extension ModuleProtocol where Self: NSObject {
 /// 模式二：Runtime模式，详见方法：checkAllModules(selector:arguments:)
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
-@objc(ObjCMediatorBridge)
-public class Mediator: NSObject {
+public class Mediator {
     
     private static var modulePool: [String: ModuleProtocol.Type] = [:]
     private static var moduleInvokePool: [String: Bool] = [:]
@@ -104,7 +103,7 @@ public class Mediator: NSObject {
     public static var delegateModeEnabled = false
     
     /// 插件调试描述
-    public override class func debugDescription() -> String {
+    public class func debugDescription() -> String {
         let sortedModules = modulePool.sorted { module1, module2 in
             let priority1 = module1.value.priority().rawValue
             let priority2 = module2.value.priority().rawValue

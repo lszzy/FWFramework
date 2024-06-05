@@ -399,7 +399,7 @@ extension Notification.Name {
 ///
 /// 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发themeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fw.themeContext才能生效。
 /// 注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fw.color相关方法
-public class ThemeManager: NSObject {
+public class ThemeManager {
     
     /// 单例模式
     public static let shared = ThemeManager()
@@ -448,8 +448,7 @@ public class ThemeManager: NSObject {
     private var _overrideWindow = false
     
     /// 初始化方法
-    public override init() {
-        super.init()
+    public init() {
         _mode = .init(UserDefaults.standard.integer(forKey: "FWThemeMode"))
     }
     
@@ -471,13 +470,12 @@ public class ThemeManager: NSObject {
 }
 
 /// 主题动态对象，可获取当前主题静态对象
-public class ThemeObject<T>: NSObject {
+public class ThemeObject<T> {
     
     private var provider: ((ThemeStyle) -> T?)?
     
     /// 创建主题动态对象，指定提供句柄
     public init(provider: @escaping (ThemeStyle) -> T?) {
-        super.init()
         self.provider = provider
     }
     

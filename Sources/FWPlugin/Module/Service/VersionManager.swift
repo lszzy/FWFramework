@@ -20,7 +20,7 @@ public enum VersionStatus: Int {
 
 // MARK: - VersionManager
 /// 版本管理器
-public class VersionManager: NSObject {
+public class VersionManager {
     
     // MARK: - Accessor
     /// 单例模式
@@ -55,8 +55,7 @@ public class VersionManager: NSObject {
     private var dataMigrations: [String: () -> Void] = [:]
     
     // MARK: - Lifecycle
-    public override init() {
-        super.init()
+    public init() {
         currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         checkDate = UserDefaults.standard.object(forKey: "FWVersionManagerCheckDate") as? Date
         dataVersion = UserDefaults.standard.object(forKey: "FWVersionManagerDataVersion") as? String

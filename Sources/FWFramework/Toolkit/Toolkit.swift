@@ -2123,7 +2123,7 @@ public enum ViewControllerLifecycleState: Int {
 }
 
 // MARK: - LifecycleStateTarget
-fileprivate class LifecycleStateTarget: NSObject {
+fileprivate class LifecycleStateTarget {
     unowned(unsafe) var viewController: UIViewController?
     var handlers: [LifecycleStateHandler] = []
     var completionResult: Any?

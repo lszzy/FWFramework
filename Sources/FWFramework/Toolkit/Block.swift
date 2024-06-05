@@ -451,55 +451,75 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 快捷设置导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
-    public func setLeftBarItem(_ object: Any?, target: Any, action: Selector) {
-        base.navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
+    @discardableResult
+    public func setLeftBarItem(_ object: Any?, target: Any, action: Selector) -> UIBarButtonItem {
+        let barItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
+        base.navigationItem.leftBarButtonItem = barItem
+        return barItem
     }
     
     /// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func setLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
-        base.navigationItem.leftBarButtonItem = UIBarButtonItem.fw.item(object: object, block: block)
+    @discardableResult
+    public func setLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+        let barItem = UIBarButtonItem.fw.item(object: object, block: block)
+        base.navigationItem.leftBarButtonItem = barItem
+        return barItem
     }
     
     /// 快捷设置导航栏右侧按钮
-    public func setRightBarItem(_ object: Any?, target: Any, action: Selector) {
-        base.navigationItem.rightBarButtonItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
+    @discardableResult
+    public func setRightBarItem(_ object: Any?, target: Any, action: Selector) -> UIBarButtonItem {
+        let barItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
+        base.navigationItem.rightBarButtonItem = barItem
+        return barItem
     }
     
     /// 快捷设置导航栏右侧按钮，block事件
-    public func setRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
-        base.navigationItem.rightBarButtonItem = UIBarButtonItem.fw.item(object: object, block: block)
+    @discardableResult
+    public func setRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+        let barItem = UIBarButtonItem.fw.item(object: object, block: block)
+        base.navigationItem.rightBarButtonItem = barItem
+        return barItem
     }
 
     /// 快捷添加导航栏左侧按钮。注意自定义left按钮之后，系统返回手势失效
-    public func addLeftBarItem(_ object: Any?, target: Any, action: Selector) {
+    @discardableResult
+    public func addLeftBarItem(_ object: Any?, target: Any, action: Selector) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
         var items = base.navigationItem.leftBarButtonItems ?? []
         items.append(barItem)
         base.navigationItem.leftBarButtonItems = items
+        return barItem
     }
 
     /// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
-    public func addLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
+    @discardableResult
+    public func addLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         var items = base.navigationItem.leftBarButtonItems ?? []
         items.append(barItem)
         base.navigationItem.leftBarButtonItems = items
+        return barItem
     }
 
     /// 快捷添加导航栏右侧按钮
-    public func addRightBarItem(_ object: Any?, target: Any, action: Selector) {
+    @discardableResult
+    public func addRightBarItem(_ object: Any?, target: Any, action: Selector) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, target: target, action: action)
         var items = base.navigationItem.rightBarButtonItems ?? []
         items.append(barItem)
         base.navigationItem.rightBarButtonItems = items
+        return barItem
     }
 
     /// 快捷添加导航栏右侧按钮，block事件
-    public func addRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) {
+    @discardableResult
+    public func addRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         var items = base.navigationItem.rightBarButtonItems ?? []
         items.append(barItem)
         base.navigationItem.rightBarButtonItems = items
+        return barItem
     }
 }
 

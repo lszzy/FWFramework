@@ -217,7 +217,7 @@ open class TaskOperation: Operation {
 }
 
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
-open class TaskManager: NSObject {
+open class TaskManager {
     
     /// 单例模式
     public static let shared = TaskManager()
@@ -239,6 +239,8 @@ open class TaskManager: NSObject {
         queue.name = "FWTaskManager.taskQueue"
         return queue
     }()
+    
+    public init() {}
     
     public convenience init(maxConcurrentTaskCount: Int, isSuspended: Bool = false) {
         self.init()

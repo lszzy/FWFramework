@@ -41,8 +41,7 @@ extension WrapperGlobal {
 /// [Material](https://google.github.io/material-design-icons/#icons-for-ios)
 ///
 /// [FontAwesomeKit](https://github.com/PrideChung/FontAwesomeKit)
-@objc(ObjCIconBridge)
-open class Icon: NSObject {
+open class Icon {
     
     private static var iconMappers: [String: Icon.Type] = [:]
     
@@ -164,7 +163,6 @@ open class Icon: NSObject {
     
     /// 根据字符编码和大小创建图标对象
     public init(code: String, size: CGFloat) {
-        super.init()
         let font = Self.iconFont(size: size)
         self.mutableAttributedString = NSMutableAttributedString(string: code, attributes: [.font: font])
     }

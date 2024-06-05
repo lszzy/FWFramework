@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.7.0] - 2024-06-05
+
+### Added
+* Added ViewProtocol view specification protocol, optional use
+* Added SingletonProtocol for plug-in to find singleton
+* Added setupBusiness business initialization hook to AppResponder
+* Added ignorable return value to the method of setting navigation bar button
+* Optimized framework class to no longer inherit NSObject when not necessary
+
 ## [5.6.6] - 2024-06-03
 
 ### Fixed

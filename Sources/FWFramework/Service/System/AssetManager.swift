@@ -38,7 +38,7 @@ public enum AssetDownloadStatus: UInt {
 /// 相册里某一个资源的包装对象，该资源可能是图片、视频等
 ///
 /// Asset 重写了 isEqual: 方法，只要两个 Asset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 Asset 进行遍历查找等操作
-@objc(ObjCAssetBridge)
+@objc(ObjCAsset)
 public class Asset: NSObject {
     
     /// 只读PHAsset对象
@@ -462,7 +462,7 @@ public class Asset: NSObject {
 
 // MARK: - AssetGroup
 /// 相册展示内容的类型
-@objc public enum AlbumContentType: UInt {
+public enum AlbumContentType: UInt {
     /// 展示所有资源
     case all = 0
     /// 只展示照片
@@ -484,6 +484,7 @@ public class Asset: NSObject {
 }
 
 /// 资源分组
+@objc(ObjCAssetGroup)
 public class AssetGroup: NSObject {
     
     /// 只读PHAssetCollection对象
@@ -595,7 +596,7 @@ public enum AssetAuthorizationStatus: UInt {
 ///  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，AssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取PHCachingImageManager 的实例。
 ///
 ///  [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-public class AssetManager: NSObject {
+public class AssetManager {
     
     // MARK: - Static
     /// 获取 AssetManager 的单例
@@ -787,6 +788,9 @@ public class AssetManager: NSObject {
     // MARK: - Public
     /// 获取一个 PHCachingImageManager 的实例
     public lazy var phCachingImageManager = PHCachingImageManager()
+    
+    /// 初始化方法
+    public init() {}
     
     /// 获取所有的相册，包括个人收藏，最近添加，自拍这类“智能相册”
     ///

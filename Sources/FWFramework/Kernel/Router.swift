@@ -19,7 +19,7 @@ extension WrapperGlobal {
 /// 由于Function也是闭包，Handler参数支持静态方法，示例：AppRouter.routePlugin(_:)
 /// [MGJRouter](https://github.com/meili/MGJRouter)
 /// [FFRouter](https://github.com/imlifengfeng/FFRouter)
-@objc(ObjCRouterBridge)
+@objc(ObjCRouter)
 public class Router: NSObject {
     
     // MARK: - Typealias

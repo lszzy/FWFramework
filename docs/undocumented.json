@@ -450,14 +450,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 108,
+      "line": 107,
       "symbol": "WeakObject.object",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Proxy.swift",
-      "line": 110,
+      "line": 109,
       "symbol": "WeakObject.init(object:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -955,90 +955,97 @@
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Task.swift",
       "line": 243,
+      "symbol": "TaskManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Task.swift",
+      "line": 245,
       "symbol": "TaskManager.init(maxConcurrentTaskCount:isSuspended:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 74,
+      "line": 81,
       "symbol": "AppResponder.application(_:willFinishLaunchingWithOptions:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 88,
+      "line": 95,
       "symbol": "AppResponder.application(_:didFinishLaunchingWithOptions:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 101,
+      "line": 110,
       "symbol": "AppResponder.applicationWillResignActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 109,
+      "line": 118,
       "symbol": "AppResponder.applicationDidEnterBackground(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 117,
+      "line": 126,
       "symbol": "AppResponder.applicationWillEnterForeground(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 129,
+      "line": 138,
       "symbol": "AppResponder.applicationDidBecomeActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 137,
+      "line": 146,
       "symbol": "AppResponder.applicationWillTerminate(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 146,
+      "line": 155,
       "symbol": "AppResponder.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 158,
+      "line": 167,
       "symbol": "AppResponder.application(_:didFailToRegisterForRemoteNotificationsWithError:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 170,
+      "line": 179,
       "symbol": "AppResponder.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 185,
+      "line": 194,
       "symbol": "AppResponder.application(_:open:options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
-      "line": 206,
+      "line": 215,
       "symbol": "AppResponder.application(_:continue:restorationHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -2340,21 +2347,21 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/GradientView.swift",
-      "line": 106,
+      "line": 108,
       "symbol": "RoundedCornerView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/GradientView.swift",
-      "line": 111,
+      "line": 113,
       "symbol": "RoundedCornerView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/GradientView.swift",
-      "line": 116,
+      "line": 118,
       "symbol": "RoundedCornerView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -12713,6 +12720,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AnimatedImage.swift",
+      "line": 281,
+      "symbol": "ImageCoder.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
       "line": 16,
       "symbol": "AssetType.unknown",
@@ -12798,49 +12812,49 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1002,
+      "line": 1006,
       "symbol": "AssetLivePhoto.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1298,
+      "line": 1302,
       "symbol": "AssetSessionExporterError.setupFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1299,
+      "line": 1303,
       "symbol": "AssetSessionExporterError.readingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1300,
+      "line": 1304,
       "symbol": "AssetSessionExporterError.writingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1301,
+      "line": 1305,
       "symbol": "AssetSessionExporterError.cancelled",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1463,
+      "line": 1467,
       "symbol": "AssetSessionExporter.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1480,
+      "line": 1484,
       "symbol": "AssetSessionExporter.validateVideoOutputConfiguration()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -14407,85 +14421,92 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/BarStyle.swift",
+      "line": 320,
+      "symbol": "NavigationBarAppearance.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 574,
+      "line": 594,
       "symbol": "MulticastBlock.Priority.veryLow",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 575,
+      "line": 595,
       "symbol": "MulticastBlock.Priority.low",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 576,
+      "line": 596,
       "symbol": "MulticastBlock.Priority.normal",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 577,
+      "line": 597,
       "symbol": "MulticastBlock.Priority.high",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 578,
+      "line": 598,
       "symbol": "MulticastBlock.Priority.veryHigh",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 586,
+      "line": 606,
       "symbol": "MulticastBlock.Priority.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 747,
+      "line": 767,
       "symbol": "TapGestureRecognizer.isEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 758,
+      "line": 778,
       "symbol": "TapGestureRecognizer.state",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 768,
+      "line": 788,
       "symbol": "TapGestureRecognizer.touchesBegan(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 773,
+      "line": 793,
       "symbol": "TapGestureRecognizer.touchesEnded(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 778,
+      "line": 798,
       "symbol": "TapGestureRecognizer.touchesCancelled(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 783,
+      "line": 803,
       "symbol": "TapGestureRecognizer.reset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -20071,210 +20092,210 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 318,
+      "line": 324,
       "symbol": "SkeletonView.layerClass",
       "symbol_kind": "source.lang.swift.decl.var.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 322,
+      "line": 328,
       "symbol": "SkeletonView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 327,
+      "line": 333,
       "symbol": "SkeletonView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 452,
+      "line": 458,
       "symbol": "SkeletonLayout.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 456,
+      "line": 462,
       "symbol": "SkeletonLayout.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 621,
+      "line": 627,
       "symbol": "SkeletonTableView.init(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 630,
+      "line": 636,
       "symbol": "SkeletonTableView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 634,
+      "line": 640,
       "symbol": "SkeletonTableView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 646,
+      "line": 652,
       "symbol": "SkeletonTableView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 655,
+      "line": 661,
       "symbol": "SkeletonTableView.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 660,
+      "line": 666,
       "symbol": "SkeletonTableView.tableView(_:numberOfRowsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 668,
+      "line": 674,
       "symbol": "SkeletonTableView.tableView(_:cellForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 690,
+      "line": 696,
       "symbol": "SkeletonTableView.tableView(_:heightForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 694,
+      "line": 700,
       "symbol": "SkeletonTableView.tableView(_:viewForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 715,
+      "line": 721,
       "symbol": "SkeletonTableView.tableView(_:heightForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 719,
+      "line": 725,
       "symbol": "SkeletonTableView.tableView(_:viewForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 740,
+      "line": 746,
       "symbol": "SkeletonTableView.tableView(_:heightForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 768,
+      "line": 774,
       "symbol": "SkeletonCollectionView.init(collectionViewLayout:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 777,
+      "line": 783,
       "symbol": "SkeletonCollectionView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 781,
+      "line": 787,
       "symbol": "SkeletonCollectionView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 793,
+      "line": 799,
       "symbol": "SkeletonCollectionView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 802,
+      "line": 808,
       "symbol": "SkeletonCollectionView.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 807,
+      "line": 813,
       "symbol": "SkeletonCollectionView.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 820,
+      "line": 826,
       "symbol": "SkeletonCollectionView.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 841,
+      "line": 847,
       "symbol": "SkeletonCollectionView.collectionView(_:layout:sizeForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 845,
+      "line": 851,
       "symbol": "SkeletonCollectionView.collectionView(_:layout:insetForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 849,
+      "line": 855,
       "symbol": "SkeletonCollectionView.collectionView(_:viewForSupplementaryElementOfKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 895,
+      "line": 901,
       "symbol": "SkeletonCollectionView.collectionView(_:layout:referenceSizeForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 899,
+      "line": 905,
       "symbol": "SkeletonCollectionView.collectionView(_:layout:referenceSizeForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/SkeletonView.swift",
-      "line": 1038,
+      "line": 1044,
       "symbol": "UICollectionViewCell.skeletonViewLayout(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
