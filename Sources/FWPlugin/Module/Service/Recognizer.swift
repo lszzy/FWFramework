@@ -11,7 +11,7 @@ import Vision
 #endif
 
 /// 图像文本识别器
-public class Recognizer: NSObject {
+public class Recognizer {
     
     /// 识别结果
     public struct Result {

@@ -74,12 +74,12 @@ open class TestCase: NSObject {
 
 // MARK: - UnitTest
 /// 单元测试启动器
-fileprivate class UnitTest: NSObject {
+fileprivate class UnitTest: CustomDebugStringConvertible {
     
     private static let shared = UnitTest()
     
     private var testCases: [AnyClass] = []
-    private var testLogs: String?
+    private var testLogs: String = ""
     
     static func runTests() {
         DispatchQueue.main.async {
@@ -181,9 +181,8 @@ fileprivate class UnitTest: NSObject {
         self.testLogs = String(format: "\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : "")
     }
     
-    override var debugDescription: String {
-        if let testLogs = testLogs { return testLogs }
-        return super.debugDescription
+    var debugDescription: String {
+        return testLogs
     }
     
 }

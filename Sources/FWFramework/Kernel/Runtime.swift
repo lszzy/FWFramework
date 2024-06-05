@@ -339,11 +339,11 @@ extension Wrapper where Base: WrapperObject {
     /// - Parameters:
     ///   - object: 对象，会被 strong 强引用
     ///   - forKey: 键名
-    public func bindObject(_ object: Any?, forKey: String) {
+    public func bindObject(_ object: Any?, forKey key: String) {
         if let object = object {
-            allBoundObjects.setObject(object, forKey: forKey as NSString)
+            allBoundObjects[key] = object
         } else {
-            allBoundObjects.removeObject(forKey: forKey)
+            allBoundObjects.removeValue(forKey: key)
         }
     }
     
@@ -351,19 +351,19 @@ extension Wrapper where Base: WrapperObject {
     /// - Parameters:
     ///   - object: 对象，不会被 strong 强引用
     ///   - forKey: 键名
-    public func bindObjectWeak(_ object: AnyObject?, forKey: String) {
+    public func bindObjectWeak(_ object: AnyObject?, forKey key: String) {
         if let object = object {
-            allBoundObjects.setObject(WeakObject(object: object), forKey: forKey as NSString)
+            allBoundObjects[key] = WeakObject(object: object)
         } else {
-            allBoundObjects.removeObject(forKey: forKey)
+            allBoundObjects.removeValue(forKey: key)
         }
     }
     
     /// 取出之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的对象
-    public func boundObject(forKey: String) -> Any? {
-        let object = allBoundObjects.object(forKey: forKey)
+    public func boundObject(forKey key: String) -> Any? {
+        let object = allBoundObjects[key]
         if let weakObject = object as? WeakObject {
             return weakObject.object
         }
@@ -438,35 +438,30 @@ extension Wrapper where Base: WrapperObject {
     
     /// 移除之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
-    public func removeBinding(forKey: String) {
-        allBoundObjects.removeObject(forKey: forKey)
+    public func removeBinding(forKey key: String) {
+        allBoundObjects.removeValue(forKey: key)
     }
     
     /// 移除之前使用 bind 方法绑定的所有对象
     public func removeAllBindings() {
-        allBoundObjects.removeAllObjects()
+        allBoundObjects.removeAll()
     }
 
     /// 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
     public func allBindingKeys() -> [String] {
-        return allBoundObjects.allKeys as? [String] ?? []
+        return Array(allBoundObjects.keys)
     }
     
     /// 返回是否设置了某个 key
     /// - Parameter key: 键名
     /// - Returns: 是否绑定
     public func hasBindingKey(_ key: String) -> Bool {
-        return allBindingKeys().contains(key)
+        return allBoundObjects.index(forKey: key) != nil
     }
     
-    private var allBoundObjects: NSMutableDictionary {
-        if let boundObjects = property(forName: #function) as? NSMutableDictionary {
-            return boundObjects
-        }
-        
-        let boundObjects = NSMutableDictionary()
-        setProperty(boundObjects, forName: #function)
-        return boundObjects
+    private var allBoundObjects: [String: Any] {
+        get { return property(forName: #function) as? [String: Any] ?? [:] }
+        set { setProperty(newValue, forName: #function) }
     }
     
     // MARK: - Hash

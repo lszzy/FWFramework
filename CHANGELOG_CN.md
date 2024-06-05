@@ -1,5 +1,14 @@
 # 更新日志
 
+## [5.7.0] - 2024-06-05
+
+### Added
+* 新增ViewProtocol视图规范协议，可选使用
+* 新增SingletonProtocol用于插件查找单例
+* AppResponder新增setupBusiness业务初始化钩子
+* 设置导航栏按钮方法新增可忽略返回值
+* 优化非必要时框架类不再继承NSObject
+
 ## [5.6.6] - 2024-06-03
 
 ### Fixed

@@ -10,7 +10,7 @@ import Security
 
 // MARK: - KeychainManager
 /// Keychain管理器
-public class KeychainManager: NSObject {
+public class KeychainManager {
     
     // MARK: - Accessor
     /// 单例模式
@@ -20,13 +20,10 @@ public class KeychainManager: NSObject {
     
     // MARK: - Lifecycle
     /// 公用对象
-    public override init() {
-        super.init()
-    }
+    public init() {}
     
     /// 分组对象
     public init(group: String?) {
-        super.init()
         self.group = group
     }
     
