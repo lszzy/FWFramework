@@ -195,7 +195,8 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable {
 }
 
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
-public class Logger: WrapperCompatible {
+@objc(ObjCLogger)
+public class Logger: NSObject {
     
     /// 全局日志级别，默认调试为All，正式为Off
     public static var level: LogLevel = {
