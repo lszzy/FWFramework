@@ -19,7 +19,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     open var window: UIWindow?
     
     // MARK: - Override
-    /// 初始化应用环境，优先级1，willFinishLaunching调用，子类重写
+    /// 初始化应用环境，优先级1，willFinishLaunching子模块之前调用，子类重写
     open func setupEnvironment() {
         /*
         Mediator.delegateModeEnabled = true
@@ -27,7 +27,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
          */
     }
     
-    /// 初始化应用配置，优先级2，didFinishLaunching调用，子类重写
+    /// 初始化应用配置，优先级2，didFinishLaunching子模块之前调用，子类重写
     open func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         /*
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -50,21 +50,28 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
          */
     }
     
-    /// 初始化根控制器，优先级3，didFinishLaunching调用，子类重写
+    /// 初始化根控制器，优先级3，didFinishLaunching子模块之前调用，子类重写
     open func setupController() {
         /*
         window?.rootViewController = TabBarController()
          */
     }
     
-    /// 初始化应用服务，优先级4，didFinishLaunching调用，子类重写
+    /// 初始化应用服务，优先级4，didFinishLaunching子模块之前调用，子类重写
     open func setupService(options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
         /*
-        预加载启动广告、检查App更新等
+        定制应用服务、初始化三方SDK等
          */
     }
     
-    /// 重新加载根控制器，优先级5，按需使用，子类可重写
+    /// 初始化应用业务，优先级5，didFinishLaunching子模块之后调用，子类可重写
+    open func setupBusiness() {
+        /*
+        检查App更新、预加载启动广告等
+         */
+    }
+    
+    /// 重新加载根控制器，优先级6，按需使用，子类可重写
     open func reloadController() {
         setupController()
     }
@@ -95,6 +102,8 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         }
+        
+        setupBusiness()
         return true
     }
     
