@@ -205,24 +205,19 @@ internal extension ViewControllerManager {
         switch popupConfiguration.position {
         case .top:
             viewController.popupView.fw.pinEdge(toSuperview: .top)
-            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding)
-                .forEach { $0.fw.autoScaleLayout = false }
+            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         case .left:
             viewController.popupView.fw.pinEdge(toSuperview: .left)
-            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding)
-                .forEach { $0.fw.autoScaleLayout = false }
+            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
         case .right:
             viewController.popupView.fw.pinEdge(toSuperview: .right)
-            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding)
-                .forEach { $0.fw.autoScaleLayout = false }
+            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
         case .center:
             viewController.popupView.fw.alignAxis(toSuperview: .centerY)
-            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding)
-                .forEach { $0.fw.autoScaleLayout = false }
+            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         default:
             viewController.popupView.fw.pinEdge(toSuperview: .bottom)
-            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding)
-                .forEach { $0.fw.autoScaleLayout = false }
+            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         }
         
         hookPopupViewController?(viewController)
