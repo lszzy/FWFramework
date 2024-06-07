@@ -305,14 +305,14 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     // MARK: - Interactive
-    /// 是否启用交互pan手势进行pop|dismiss，默认NO。可使用父类属性设置交互动画
+    /// 是否启用交互pan手势进行pop|dismiss，默认false。可使用父类属性设置交互动画
     open var interactEnabled = false {
         didSet {
             _gestureRecognizer?.isEnabled = interactEnabled
         }
     }
 
-    /// 是否启用screenEdge交互手势，默认NO，gestureRecognizer加载前设置生效
+    /// 是否启用screenEdge交互手势，默认false，gestureRecognizer加载前设置生效
     open var interactScreenEdge = false
 
     /// 指定交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
@@ -358,7 +358,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     // MARK: - Presentation
-    /// 是否启用默认展示控制器，启用后自动设置presentationBlock返回PresentationController，默认NO
+    /// 是否启用默认展示控制器，启用后自动设置presentationBlock返回PresentationController，默认false
     open var presentationEnabled: Bool {
         get {
             return presentationBlock != nil
@@ -746,22 +746,24 @@ open class TransformAnimatedTransition: AnimatedTransition {
 /// 自定义展示控制器。默认显示暗色背景动画且弹出视图占满容器，可通过属性自定义
 open class PresentationController: UIPresentationController {
     
-    /// 是否显示暗色背景，默认YES
+    /// 是否显示暗色背景，默认true
     open var showDimming = true {
         didSet {
             dimmingView.isHidden = !showDimming
         }
     }
-    /// 是否可以点击暗色背景关闭，默认YES。如果弹出视图占满容器，手势不生效(因为弹出视图挡住了暗色背景)
+    /// 是否可以点击暗色背景关闭，默认true。如果弹出视图占满容器，手势不生效(因为弹出视图挡住了暗色背景)，也可开启弹出视图isPenetrable让手势强制生效
     open var dimmingClick = true {
         didSet {
             dimmingView.isUserInteractionEnabled = dimmingClick
         }
     }
-    /// 是否执行暗黑背景透明度动画，默认YES
+    /// 是否执行暗黑背景透明度动画，默认true
     open var dimmingAnimated = true
     /// 暗色背景颜色，默认黑色，透明度0.5
     open var dimmingColor: UIColor? = UIColor.black.withAlphaComponent(0.5)
+    /// 设置点击暗色背景关闭时是否执行动画，默认true
+    open var dismissAnimated = true
     /// 设置点击暗色背景关闭完成回调，默认nil
     open var dismissCompletion: (() -> Void)?
 
@@ -791,7 +793,7 @@ open class PresentationController: UIPresentationController {
     }()
     
     @objc func onTapAction(_ sender: Any) {
-        presentedViewController.dismiss(animated: true, completion: dismissCompletion)
+        presentedViewController.dismiss(animated: dismissAnimated, completion: dismissCompletion)
     }
     
     // MARK: - Override
@@ -866,10 +868,10 @@ open class PresentationController: UIPresentationController {
 /// 自动处理与滚动视图pan手势在指定方向的冲突，默认设置delegate为自身。如果找到滚动视图则处理之，否则同父类
 open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDelegate {
     
-    /// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
+    /// 是否自动检测滚动视图，默认true。如需手工指定，请禁用之
     open var autoDetected = true
 
-    /// 是否按下就立即转换Began状态，默认NO，需要等待移动才会触发Began
+    /// 是否按下就立即转换Began状态，默认false，需要等待移动才会触发Began
     open var instantBegan = false
 
     /// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身
