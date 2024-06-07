@@ -44,7 +44,7 @@ open class PopupConfiguration {
     open var animationDuration: TimeInterval = 0.35
     /// 动画完成速度，默认0.35
     open var completionSpeed: CGFloat = 0.35
-    /// 底部弹窗时是否启用screenEdge交互手势，默认false，仅bottom生效
+    /// 底部|顶部弹窗时是否启用screenEdge交互手势，默认false，仅bottom|top生效
     open var interactScreenEdge = false
     
     /// 设置点击暗色背景关闭时是否执行动画，默认true
@@ -146,9 +146,11 @@ internal extension ViewControllerManager {
         
         let popupConfiguration = popupController.popupConfiguration
         let modalTransition: AnimatedTransition
+        var interactEnabled = false
         switch popupConfiguration.position {
         case .top:
             modalTransition = SwipeAnimatedTransition(inDirection: .down, outDirection: .up)
+            interactEnabled = true
         case .left:
             modalTransition = SwipeAnimatedTransition(inDirection: .right, outDirection: .left)
         case .right:
@@ -157,11 +159,13 @@ internal extension ViewControllerManager {
             modalTransition = popupConfiguration.alertAnimation ? TransformAnimatedTransition.alertTransition() : AnimatedTransition()
         default:
             modalTransition = SwipeAnimatedTransition()
-            if popupConfiguration.interactScreenEdge {
-                modalTransition.interactEnabled = true
-                modalTransition.interactScreenEdge = true
-                modalTransition.dismissCompletion = popupConfiguration.dismissCompletion
-            }
+            interactEnabled = true
+        }
+        
+        if popupConfiguration.interactScreenEdge, interactEnabled {
+            modalTransition.interactEnabled = true
+            modalTransition.interactScreenEdge = true
+            modalTransition.dismissCompletion = popupConfiguration.dismissCompletion
         }
         
         modalTransition.transitionDuration = popupConfiguration.animationDuration

@@ -56,7 +56,11 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             viewController = SwiftTestWebViewController()
         case 5:
             let popupController = SwiftTestPopupViewController()
-            present(popupController, animated: true)
+            if [true, false].randomElement()! {
+                present(popupController, animated: true)
+            } else {
+                present(popupController.wrappedNavigationController(), animated: true)
+            }
             return
         case 6:
             viewController = SwiftTestRequestViewController()
@@ -437,6 +441,15 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
         configuration.interactScreenEdge = [true, false].randomElement()!
         configuration.dismissCompletion = {
             UIWindow.app.showMessage(text: "Popup已关闭")
+        }
+    }
+    
+    func setupPopupView() {
+        guard navigationController != nil else { return }
+        
+        popupView.backgroundColor = UIColor.app.randomColor
+        popupView.app.addTapGesture { _ in
+            Router.openURL("https://www.baidu.com")
         }
     }
     
