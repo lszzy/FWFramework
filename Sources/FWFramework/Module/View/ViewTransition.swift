@@ -50,7 +50,7 @@ extension Wrapper where Base: UIViewController {
     /// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
     @discardableResult
     public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
-        let animatedTransition = TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+        let animatedTransition = TransformAnimatedTransition.alertTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
             presentationBlock?(presentationController)
@@ -704,6 +704,11 @@ open class SwipeAnimatedTransition: AnimatedTransition {
 // MARK: - TransformAnimatedTransition
 /// 形变转场动画类，默认缩放
 open class TransformAnimatedTransition: AnimatedTransition {
+    
+    /// 创建Alert转场动画
+    public static func alertTransition() -> TransformAnimatedTransition {
+        return TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+    }
     
     /// 创建形变转场，指定进入(push|present)和消失(pop|dismiss)形变
     public convenience init(inTransform: CGAffineTransform, outTransform: CGAffineTransform) {

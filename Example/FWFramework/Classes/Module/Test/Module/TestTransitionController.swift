@@ -402,7 +402,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
         modalPresentationStyle = .custom
         
         // 也可以封装present方法，手工指定UIPresentationController，无需使用block
-        let transition = TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+        let transition = TransformAnimatedTransition.alertTransition()
         transition.presentationBlock = { [weak self] presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.cornerRadius = 10
