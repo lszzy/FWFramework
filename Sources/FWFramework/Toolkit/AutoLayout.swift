@@ -1140,29 +1140,37 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，适用于间距固定场景，尺寸未设置(可手工指定)，若只有一个则间距不生效
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        itemSpacing: CGFloat,
+        leadSpacing: CGFloat? = nil,
+        tailSpacing: CGFloat? = nil,
+        itemLength: CGFloat? = nil,
+        equalLength: Bool = false,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if let prev = prev {
-                    view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing)
+                    view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing, autoScale: autoScale)
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.width, size: itemLength)
+                        view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
-                        view.fw.matchDimension(.width, toDimension: .width, ofView: prev)
+                        view.fw.matchDimension(.width, toDimension: .width, ofView: prev, autoScale: autoScale)
                     }
                 } else {
                     if let leadSpacing = leadSpacing {
-                        view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                        view.fw.pinEdge(toSuperview: .left, inset: leadSpacing, autoScale: autoScale)
                     }
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.width, size: itemLength)
+                        view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     }
                 }
                 if index == base.count - 1, let tailSpacing = tailSpacing {
-                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1170,22 +1178,22 @@ extension Wrapper where Base == Array<UIView> {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if let prev = prev {
-                    view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing)
+                    view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing, autoScale: autoScale)
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.height, size: itemLength)
+                        view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
-                        view.fw.matchDimension(.height, toDimension: .height, ofView: prev)
+                        view.fw.matchDimension(.height, toDimension: .height, ofView: prev, autoScale: autoScale)
                     }
                 } else {
                     if let leadSpacing = leadSpacing {
-                        view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                        view.fw.pinEdge(toSuperview: .top, inset: leadSpacing, autoScale: autoScale)
                     }
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.height, size: itemLength)
+                        view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     }
                 }
                 if index == base.count - 1, let tailSpacing = tailSpacing {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1193,27 +1201,33 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        itemLength: CGFloat,
+        leadSpacing: CGFloat,
+        tailSpacing: CGFloat,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if base.count > 1 {
-                    view.fw.setDimension(.width, size: itemLength)
+                    view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                 }
                 if prev != nil {
                     if index < base.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset)
+                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset, autoScale: autoScale)
                     }
                 } else {
-                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing, autoScale: autoScale)
                 }
                 if index == base.count - 1 {
-                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1221,20 +1235,20 @@ extension Wrapper where Base == Array<UIView> {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if base.count > 1 {
-                    view.fw.setDimension(.height, size: itemLength)
+                    view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                 }
                 if prev != nil {
                     if index < base.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset)
+                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset, autoScale: autoScale)
                     }
                 } else {
-                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing, autoScale: autoScale)
                 }
                 if index == base.count - 1 {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1242,37 +1256,44 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，用于补齐Along之后该方向上的其他约束
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        alignCenter: Bool = false,
+        itemWidth: CGFloat? = nil,
+        leftSpacing: CGFloat? = nil,
+        rightSpacing: CGFloat? = nil,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             for view in base {
                 if alignCenter {
-                    view.fw.alignAxis(toSuperview: .centerY)
+                    view.fw.alignAxis(toSuperview: .centerY, autoScale: autoScale)
                 }
                 if let itemWidth = itemWidth {
-                    view.fw.setDimension(.height, size: itemWidth)
+                    view.fw.setDimension(.height, size: itemWidth, autoScale: autoScale)
                 }
                 if let leftSpacing = leftSpacing {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing, autoScale: autoScale)
                 }
                 if let rightSpacing = rightSpacing {
-                    view.fw.pinEdge(toSuperview: .top, inset: rightSpacing)
+                    view.fw.pinEdge(toSuperview: .top, inset: rightSpacing, autoScale: autoScale)
                 }
             }
         } else {
             for view in base {
                 if alignCenter {
-                    view.fw.alignAxis(toSuperview: .centerX)
+                    view.fw.alignAxis(toSuperview: .centerX, autoScale: autoScale)
                 }
                 if let itemWidth = itemWidth {
-                    view.fw.setDimension(.width, size: itemWidth)
+                    view.fw.setDimension(.width, size: itemWidth, autoScale: autoScale)
                 }
                 if let leftSpacing = leftSpacing {
-                    view.fw.pinEdge(toSuperview: .left, inset: leftSpacing)
+                    view.fw.pinEdge(toSuperview: .left, inset: leftSpacing, autoScale: autoScale)
                 }
                 if let rightSpacing = rightSpacing {
-                    view.fw.pinEdge(toSuperview: .right, inset: rightSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: rightSpacing, autoScale: autoScale)
                 }
             }
         }
