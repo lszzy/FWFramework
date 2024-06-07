@@ -68,7 +68,11 @@ internal extension ViewControllerManager {
         guard let viewController = viewController as? UIViewController & ScrollViewControllerProtocol else { return }
         
         let scrollView = viewController.scrollView
-        viewController.view.addSubview(scrollView)
+        if let popupController = viewController as? PopupViewControllerProtocol {
+            popupController.popupView.addSubview(scrollView)
+        } else {
+            viewController.view.addSubview(scrollView)
+        }
         
         let contentView = viewController.contentView
         scrollView.addSubview(contentView)

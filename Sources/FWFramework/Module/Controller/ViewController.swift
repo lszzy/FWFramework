@@ -96,6 +96,8 @@ public class ViewControllerManager: NSObject {
     public var hookCollectionViewController: ((any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
     public var hookWebViewController: ((UIViewController & WebViewControllerProtocol) -> Void)?
+    /// 默认全局popupViewController钩子句柄，viewDidLoad自动调用，先于setupPopupView
+    public var hookPopupViewController: ((UIViewController & PopupViewControllerProtocol) -> Void)?
     
     /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
     public var webViewReuseIdentifier: String? {
@@ -171,6 +173,18 @@ public class ViewControllerManager: NSObject {
             ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
         }
         ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
+        
+        let popupIntercepter = ViewControllerIntercepter()
+        popupIntercepter.initIntercepter = { viewController in
+            ViewControllerManager.shared.popupViewControllerInit(viewController)
+        }
+        popupIntercepter.viewDidLoadIntercepter = { viewController in
+            ViewControllerManager.shared.popupViewControllerViewDidLoad(viewController)
+        }
+        popupIntercepter.viewDidLayoutSubviewsIntercepter = { viewController in
+            ViewControllerManager.shared.popupViewControllerViewDidLayoutSubviews(viewController)
+        }
+        ViewControllerManager.shared.registerProtocol(PopupViewControllerProtocol.self, intercepter: popupIntercepter)
     }
     
     // MARK: - Hook

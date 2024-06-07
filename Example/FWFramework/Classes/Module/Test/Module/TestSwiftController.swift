@@ -10,13 +10,6 @@ import FWFramework
 
 class TestSwiftController: UIViewController, TableViewControllerProtocol {
     
-    func setupNavbar() {
-        app.setRightBarItem("Popup") { _ in
-            let viewController = SwiftTestPopupViewController()
-            Navigator.present(viewController, animated: true)
-        }
-    }
-    
     func setupSubviews() {
         tableData.append(contentsOf: [
             "ViewController",
@@ -24,6 +17,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             "ScrollViewController",
             "TableViewController",
             "WebViewController",
+            "PopupViewController",
             "RequestViewController",
             "TestSwiftProtocol默认实现",
             "TestSwiftProtocol类实现",
@@ -61,24 +55,28 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         case 4:
             viewController = SwiftTestWebViewController()
         case 5:
-            viewController = SwiftTestRequestViewController()
+            let popupController = SwiftTestPopupViewController()
+            present(popupController, animated: true)
+            return
         case 6:
-            viewController = TestSwiftProtocolDefaultController()
+            viewController = SwiftTestRequestViewController()
         case 7:
-            viewController = TestSwiftProtocolBaseController()
+            viewController = TestSwiftProtocolDefaultController()
         case 8:
-            viewController = TestSwiftProtocolViewController()
+            viewController = TestSwiftProtocolBaseController()
         case 9:
-            viewController = TestObjcProtocolDefaultController()
+            viewController = TestSwiftProtocolViewController()
         case 10:
-            viewController = TestObjcProtocolBaseController()
+            viewController = TestObjcProtocolDefaultController()
         case 11:
-            viewController = TestObjcProtocolViewController()
+            viewController = TestObjcProtocolBaseController()
         case 12:
+            viewController = TestObjcProtocolViewController()
+        case 13:
             let value = app.invokeMethod(#selector(self.onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), "3"])?.takeUnretainedValue() as? String
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
-        case 13:
+        case 14:
             let value = app.invokeMethod(#selector(self.onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 3)])?.takeUnretainedValue() as? Int
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
@@ -429,46 +427,25 @@ class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
     }
 }
 
-class SwiftTestPopupViewController: UIViewController, ViewControllerProtocol {
-    // MARK: - Accessor
-    lazy var backgroundView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.app.addTapGesture { [weak self] _ in
-            self?.app.close()
+class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtocol {
+    func setupPopupConfiguration(_ configuration: PopupConfiguration) {
+        let positions: [PopupConfiguration.Position] = [.bottom, .top, .left, .right, .center]
+        configuration.position = positions.randomElement()!
+        configuration.padding = configuration.position == .center ? 50 : 0
+        configuration.cornerRadius = 8
+        configuration.alertAnimation = [true, false].randomElement()!
+        configuration.interactScreenEdge = [true, false].randomElement()!
+        configuration.dismissCompletion = {
+            UIWindow.app.showMessage(text: "Popup已关闭")
         }
-        return view
-    }()
-    
-    lazy var contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    // MARK: - Lifecycle
-    func didInitialize() {
-        modalPresentationStyle = .custom
-        app.navigationBarHidden = true
-        app.setPresentTransition(nil)
     }
     
-    func setupSubviews() {
-        view.backgroundColor = .clear
-        view.addSubview(backgroundView)
-        view.addSubview(contentView)
-        backgroundView.app.layoutChain
-            .edges(excludingEdge: .bottom)
-        contentView.app.layoutChain
-            .edges(excludingEdge: .top)
-            .top(toViewBottom: backgroundView)
-        
-        contentView.app.layoutChain.height(APP.screenHeight / 2.0)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        contentView.app.setCornerLayer([.topLeft, .topRight], radius: 8)
+    func setupPopupLayout() {
+        if popupConfiguration.position == .left || popupConfiguration.position == .right {
+            popupView.app.layoutChain.width(APP.screenWidth / 2.0)
+        } else {
+            popupView.app.layoutChain.height(APP.screenHeight / 2.0)
+        }
     }
 }
 

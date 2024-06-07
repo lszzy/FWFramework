@@ -93,7 +93,11 @@ internal extension ViewControllerManager {
             tableView.dataSource = viewController.tableDelegate
             tableView.delegate = viewController.tableDelegate
         }
-        viewController.view.addSubview(tableView)
+        if let popupController = viewController as? PopupViewControllerProtocol {
+            popupController.popupView.addSubview(tableView)
+        } else {
+            viewController.view.addSubview(tableView)
+        }
         
         hookTableViewController?(viewController)
         

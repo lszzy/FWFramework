@@ -96,7 +96,11 @@ internal extension ViewControllerManager {
             collectionView.dataSource = viewController.collectionDelegate
             collectionView.delegate = viewController.collectionDelegate
         }
-        viewController.view.addSubview(collectionView)
+        if let popupController = viewController as? PopupViewControllerProtocol {
+            popupController.popupView.addSubview(collectionView)
+        } else {
+            viewController.view.addSubview(collectionView)
+        }
         
         hookCollectionViewController?(viewController)
         
