@@ -778,6 +778,8 @@ open class PresentationController: UIPresentationController {
     open var presentedSize: CGSize = .zero
     /// 设置弹出视图的顶部距离，默认0占满容器，优先级低
     open var verticalInset: CGFloat = 0
+    /// 设置弹出视图的横向距离，默认0占满容器，优先级低
+    open var horizontalInset: CGFloat = 0
     
     private lazy var dimmingView: UIView = {
         let result = UIView(frame: containerView?.bounds ?? .zero)
@@ -844,13 +846,17 @@ open class PresentationController: UIPresentationController {
             frame.origin.x = ((containerView?.bounds.size.width ?? .zero) - presentedSize.width) / 2
             frame.origin.y = ((containerView?.bounds.size.height ?? .zero) - presentedSize.height) / 2
             return frame
-        } else if verticalInset != 0 {
-            var frame = containerView?.bounds ?? .zero
-            frame.origin.y = verticalInset
-            frame.size.height -= verticalInset
-            return frame
         } else {
-            return containerView?.bounds ?? .zero
+            var frame = containerView?.bounds ?? .zero
+            if verticalInset != 0 {
+                frame.origin.y = verticalInset
+                frame.size.height -= verticalInset
+            }
+            if horizontalInset != 0 {
+                frame.origin.x = horizontalInset
+                frame.size.width -= horizontalInset * 2
+            }
+            return frame
         }
     }
     
