@@ -50,8 +50,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupCollectionLayout() {
-        tableView.app.pinEdges(toSuperview: .zero, excludingEdge: .top)
-        tableView.app.pinEdge(toSafeArea: .top)
+        tableView.chain.edges(excludingEdge: .top).top(toSafeArea: .zero)
     }
     
     func setupNavbar() {
@@ -351,25 +350,22 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.app.pinEdge(toSuperview: .left, inset: 15)
-        myTitleLabel.app.pinEdge(toSuperview: .right, inset: 15)
-        myTitleLabel.app.pinEdge(toSuperview: .top, inset: 15)
+        myTitleLabel.chain
+            .horizontal(15)
+            .top(15)
         
-        myTextLabel.app.pinEdge(toSuperview: .left, inset: 15)
-        myTextLabel.app.pinEdge(toSuperview: .right, inset: 15)
-        var constraint = myTextLabel.app.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
-        myTextLabel.app.addCollapseConstraint(constraint)
-        myTextLabel.app.autoCollapse = true
+        myTextLabel.chain
+            .horizontal(15)
+            .top(toViewBottom: myTitleLabel, offset: 10).collapse()
+            .autoCollapse(true)
         
-        myImageView.app.pinEdge(toSuperview: .left, inset: 15)
-        myImageView.app.pinEdge(toSuperview: .bottom, inset: 15)
-        constraint = myImageView.app.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
-        myImageView.app.addCollapseConstraint(constraint)
-        constraint = myImageView.app.setDimension(.width, size: 100)
-        myImageView.app.addCollapseConstraint(constraint)
-        constraint = myImageView.app.setDimension(.height, size: 100)
-        myImageView.app.addCollapseConstraint(constraint)
-        myImageView.app.autoCollapse = true
+        myImageView.chain
+            .left(15)
+            .bottom(15)
+            .top(toViewBottom: myTextLabel, offset: 10).collapse()
+            .width(100).collapse()
+            .height(100).collapse()
+            .autoCollapse(true)
     }
     
     required init?(coder: NSCoder) {
