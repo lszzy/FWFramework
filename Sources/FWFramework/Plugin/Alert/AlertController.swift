@@ -488,8 +488,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         }
         alertControllerView.addSubview(result)
         if preferredStyle == .actionSheet, alertAppearance.sheetContainerTransparent {
-            result.fw.autoScaleLayout = false
-            result.fw.pinEdges(toSuperview: alertAppearance.sheetContainerInsets)
+            result.fw.pinEdges(toSuperview: alertAppearance.sheetContainerInsets, autoScale: false)
         } else {
             result.frame = alertControllerView.bounds
             result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
