@@ -201,22 +201,22 @@ internal extension ViewControllerManager {
         popupView.backgroundColor = popupConfiguration.backgroundColor
         viewController.view.addSubview(popupView)
         
-        popupBackground.fw.pinEdges()
+        popupBackground.fw.pinEdges(autoScale: false)
         switch popupConfiguration.position {
         case .top:
-            viewController.popupView.fw.pinEdge(toSuperview: .top)
+            viewController.popupView.fw.pinEdge(toSuperview: .top, autoScale: false)
             viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         case .left:
-            viewController.popupView.fw.pinEdge(toSuperview: .left)
+            viewController.popupView.fw.pinEdge(toSuperview: .left, autoScale: false)
             viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
         case .right:
-            viewController.popupView.fw.pinEdge(toSuperview: .right)
+            viewController.popupView.fw.pinEdge(toSuperview: .right, autoScale: false)
             viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
         case .center:
-            viewController.popupView.fw.alignAxis(toSuperview: .centerY)
+            viewController.popupView.fw.alignAxis(toSuperview: .centerY, autoScale: false)
             viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         default:
-            viewController.popupView.fw.pinEdge(toSuperview: .bottom)
+            viewController.popupView.fw.pinEdge(toSuperview: .bottom, autoScale: false)
             viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
         }
         

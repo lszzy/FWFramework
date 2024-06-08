@@ -182,14 +182,14 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         if collectionView.superview == nil {
             addSubview(collectionView)
-            collectionView.fw.pinEdges()
+            collectionView.fw.pinEdges(autoScale: false)
         }
         
         if textField.superview == nil {
             addSubview(textField)
-            textField.fw.setDimensions(.zero)
-            textField.fw.pinEdge(toSuperview: .left)
-            textField.fw.pinEdge(toSuperview: .top)
+            textField.fw.setDimensions(.zero, autoScale: false)
+            textField.fw.pinEdge(toSuperview: .left, autoScale: false)
+            textField.fw.pinEdge(toSuperview: .top, autoScale: false)
         }
         
         if tapGesture.view != self {
@@ -579,15 +579,13 @@ open class PasscodeCellProperty: NSObject, NSCopying {
             circleView.backgroundColor = .black
             circleView.layer.cornerRadius = 4
             securityView.addSubview(circleView)
-            circleView.fw.autoScaleLayout = false
-            circleView.fw.setDimensions(CGSize(width: 20, height: 20))
-            circleView.fw.alignCenter()
+            circleView.fw.setDimensions(CGSize(width: 20, height: 20), autoScale: false)
+            circleView.fw.alignCenter(autoScale: false)
             return securityView
         }
         
         customLineViewBlock = {
             let lineView = PasscodeLineView()
-            lineView.fw.autoScaleLayout = false
             return lineView
         }
     }
@@ -640,7 +638,6 @@ open class PasscodeCell: UICollectionViewCell {
     
     open lazy var cursorView: UIView = {
         let result = UIView()
-        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -738,10 +735,10 @@ open class PasscodeCell: UICollectionViewCell {
         isUserInteractionEnabled = false
         
         contentView.addSubview(valueLabel)
-        valueLabel.fw.alignCenter()
+        valueLabel.fw.alignCenter(autoScale: false)
         
         contentView.addSubview(cursorView)
-        cursorView.fw.alignCenter()
+        cursorView.fw.alignCenter(autoScale: false)
         
         applyCellProperty()
     }
@@ -751,7 +748,7 @@ open class PasscodeCell: UICollectionViewCell {
             lineView = cellProperty.customLineViewBlock?()
             if let lineView = lineView {
                 contentView.addSubview(lineView)
-                lineView.fw.pinEdges()
+                lineView.fw.pinEdges(autoScale: false)
             }
         }
         
@@ -764,8 +761,8 @@ open class PasscodeCell: UICollectionViewCell {
     
     private func applyCellProperty() {
         cursorView.backgroundColor = cellProperty.cellCursorColor
-        cursorView.fw.setDimension(.width, size: cellProperty.cellCursorWidth)
-        cursorView.fw.setDimension(.height, size: cellProperty.cellCursorHeight)
+        cursorView.fw.setDimension(.width, size: cellProperty.cellCursorWidth, autoScale: false)
+        cursorView.fw.setDimension(.height, size: cellProperty.cellCursorHeight, autoScale: false)
         layer.cornerRadius = cellProperty.cornerRadius
         layer.borderWidth = cellProperty.borderWidth
         
@@ -820,7 +817,7 @@ open class PasscodeCell: UICollectionViewCell {
         if let customSecurityView = customSecurityView,
            customSecurityView.superview == nil {
             contentView.addSubview(customSecurityView)
-            customSecurityView.fw.pinEdges()
+            customSecurityView.fw.pinEdges(autoScale: false)
         }
         
         customSecurityView?.alpha = 1
@@ -855,7 +852,6 @@ open class PasscodeLineView: UIView {
         result.layer.shadowOpacity = 1
         result.layer.shadowOffset = CGSize(width: 0, height: 2)
         result.layer.shadowRadius = 4
-        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -879,8 +875,8 @@ open class PasscodeLineView: UIView {
     
     private func setupSubviews() {
         addSubview(lineView)
-        lineView.fw.pinEdges(excludingEdge: .top)
-        lineView.fw.setDimension(.height, size: 4)
+        lineView.fw.pinEdges(excludingEdge: .top, autoScale: false)
+        lineView.fw.setDimension(.height, size: 4, autoScale: false)
     }
     
 }
@@ -896,19 +892,18 @@ open class PasscodeSecrectImageView: UIView {
     
     open var imageWidth: CGFloat = 0 {
         didSet {
-            lockImageView.fw.setDimension(.width, size: imageWidth)
+            lockImageView.fw.setDimension(.width, size: imageWidth, autoScale: false)
         }
     }
     
     open var imageHeight: CGFloat = 0 {
         didSet {
-            lockImageView.fw.setDimension(.height, size: imageHeight)
+            lockImageView.fw.setDimension(.height, size: imageHeight, autoScale: false)
         }
     }
     
     private lazy var lockImageView: UIImageView = {
         let result = UIImageView()
-        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -926,7 +921,7 @@ open class PasscodeSecrectImageView: UIView {
     
     private func setupSubviews() {
         addSubview(lockImageView)
-        lockImageView.fw.alignCenter()
+        lockImageView.fw.alignCenter(autoScale: false)
     }
     
 }

@@ -299,7 +299,6 @@ open class WebView: WKWebView {
         let result = UIProgressView(frame: .zero)
         result.trackTintColor = .clear
         result.fw.webProgress = 0
-        result.fw.autoScaleLayout = false
         return result
     }()
     
@@ -370,8 +369,8 @@ open class WebView: WKWebView {
         #endif
         
         addSubview(progressView)
-        progressView.fw.pinEdges(excludingEdge: .bottom)
-        progressView.fw.setDimension(.height, size: 2.0)
+        progressView.fw.pinEdges(excludingEdge: .bottom, autoScale: false)
+        progressView.fw.setDimension(.height, size: 2.0, autoScale: false)
         fw.observeProperty(\.estimatedProgress) { webView, _ in
             webView.progressView.fw.webProgress = Float(webView.estimatedProgress)
         }

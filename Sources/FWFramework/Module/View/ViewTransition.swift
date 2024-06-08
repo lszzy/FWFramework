@@ -116,7 +116,7 @@ extension Wrapper where Base: UIView {
         let ancestorView = viewController.fw.ancestorView
         ancestorView.addSubview(base)
         if aPinEdges {
-            pinEdges()
+            pinEdges(autoScale: false)
             ancestorView.setNeedsLayout()
             ancestorView.layoutIfNeeded()
         }
@@ -128,7 +128,7 @@ extension Wrapper where Base: UIView {
         let viewController = UIViewController()
         viewController.view.addSubview(base)
         if aPinEdges {
-            pinEdges()
+            pinEdges(autoScale: false)
             viewController.view.setNeedsLayout()
             viewController.view.layoutIfNeeded()
         }
