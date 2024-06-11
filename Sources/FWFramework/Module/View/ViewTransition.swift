@@ -311,6 +311,13 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
             _gestureRecognizer?.isEnabled = interactEnabled
         }
     }
+    
+    /// 指定与滚动视图pan手势的冲突交互方向，默认向下
+    open var interactDirection: UISwipeGestureRecognizer.Direction = .down {
+        didSet {
+            (_gestureRecognizer as? PanGestureRecognizer)?.direction = interactDirection
+        }
+    }
 
     /// 是否启用screenEdge交互手势，默认false，gestureRecognizer加载前设置生效
     open var interactScreenEdge = false
@@ -328,6 +335,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
                     return gesture
                 } else {
                     let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                    gesture.direction = interactDirection
                     _gestureRecognizer = gesture
                     return gesture
                 }
@@ -628,14 +636,14 @@ open class SwipeAnimatedTransition: AnimatedTransition {
         self.init()
         self.inDirection = inDirection
         self.outDirection = outDirection
-        self.updateDirection()
+        self.interactDirection = outDirection
     }
 
     /// 指定进入(push|present)方向，默认上滑Up
     open var inDirection: UISwipeGestureRecognizer.Direction = .up
     /// 指定消失(pop|dismiss)方向，默认下滑Down
     open var outDirection: UISwipeGestureRecognizer.Direction = .down {
-        didSet { updateDirection() }
+        didSet { interactDirection = outDirection }
     }
     
     open override func animate() {
@@ -712,12 +720,6 @@ open class SwipeAnimatedTransition: AnimatedTransition {
         let offsetX = frame.size.width * offset.dx * flag
         let offsetY = frame.size.height * offset.dy * flag
         return CGRectOffset(frame, offsetX, offsetY)
-    }
-    
-    private func updateDirection() {
-        if let gestureRecognizer = gestureRecognizer as? PanGestureRecognizer {
-            gestureRecognizer.direction = outDirection
-        }
     }
     
 }

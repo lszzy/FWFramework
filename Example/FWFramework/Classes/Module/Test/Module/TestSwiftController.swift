@@ -444,8 +444,10 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
             configuration.padding = 0
         }
         configuration.cornerRadius = 8
+        configuration.interactEnabled = [true, false].randomElement()!
         configuration.interactScreenEdge = [true, false].randomElement()!
         configuration.dismissCompletion = {
+            print("Popup已关闭")
             UIWindow.app.showMessage(text: "Popup已关闭")
         }
     }
