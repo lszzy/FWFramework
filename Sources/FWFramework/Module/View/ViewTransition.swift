@@ -602,6 +602,27 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
 /// 滑动转场动画类，默认上下
 open class SwipeAnimatedTransition: AnimatedTransition {
     
+    /// 创建滑动转场，指定转场边缘方向
+    public convenience init(edge: UIRectEdge) {
+        let inDirection: UISwipeGestureRecognizer.Direction
+        let outDirection: UISwipeGestureRecognizer.Direction
+        switch edge {
+        case .top:
+            inDirection = .down
+            outDirection = .up
+        case .left:
+            inDirection = .right
+            outDirection = .left
+        case .right:
+            inDirection = .left
+            outDirection = .right
+        default:
+            inDirection = .up
+            outDirection = .down
+        }
+        self.init(inDirection: inDirection, outDirection: outDirection)
+    }
+    
     /// 创建滑动转场，指定进入(push|present)和消失(pop|dismiss)方向
     public convenience init(inDirection: UISwipeGestureRecognizer.Direction, outDirection: UISwipeGestureRecognizer.Direction) {
         self.init()
