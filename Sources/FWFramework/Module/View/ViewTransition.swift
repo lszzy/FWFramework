@@ -33,10 +33,10 @@ extension Wrapper where Base: UIViewController {
         }
     }
 
-    /// 自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition
+    /// 自定义控制器present系统转场(蒙层渐变，内容默认向上动画)，会设置fwModalTransition
     @discardableResult
-    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
-        let animatedTransition = SwipeAnimatedTransition()
+    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
+        let animatedTransition = SwipeAnimatedTransition(edge: edge)
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
             presentationBlock?(presentationController)
@@ -135,12 +135,24 @@ extension Wrapper where Base: UIView {
         return viewController
     }
 
-    /// 自定义视图模拟present系统转场(蒙层渐变，内容向上动画)
-    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, completion: ((Bool) -> Void)? = nil) {
+    /// 自定义视图模拟present系统转场(蒙层渐变，内容默认向上动画)
+    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: ((Bool) -> Void)? = nil) {
+        let transform: CGAffineTransform
+        switch edge {
+        case .top:
+            transform = .init(translationX: 0, y: -(contentView?.frame.size.height ?? 0))
+        case .left:
+            transform = .init(translationX: -(contentView?.frame.size.width ?? 0), y: 0)
+        case .right:
+            transform = .init(translationX: contentView?.frame.size.width ?? 0, y: 0)
+        default:
+            transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+        }
+        
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
-            contentView?.transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+            contentView?.transform = transform
             let strongBase = base
             UIView.animate(withDuration: 0.25) {
                 contentView?.transform = .identity
@@ -151,7 +163,7 @@ extension Wrapper where Base: UIView {
         } else {
             let strongBase = base
             UIView.animate(withDuration: 0.25) {
-                contentView?.transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+                contentView?.transform = transform
                 strongBase.alpha = 0
             } completion: { finished in
                 contentView?.transform = .identity
