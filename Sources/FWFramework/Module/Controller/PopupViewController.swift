@@ -11,23 +11,25 @@ import UIKit
 /// 弹窗配置类
 open class PopupConfiguration {
     
-    /// 弹出位置枚举
-    public enum Position: Int {
-        case bottom = 0
-        case top
-        case left
-        case right
-        case center
-    }
-    
-    /// 弹出位置，默认bottom
-    open var position: Position = .bottom
     /// 弹出视图的内边距，随位置变化，默认0
     open var padding: CGFloat = 0
     /// 弹出视图的圆角半径，随位置变化，默认0无圆角
     open var cornerRadius: CGFloat = 0
     /// 弹出视图的背景颜色，默认白色
     open var backgroundColor: UIColor? = UIColor.white
+    
+    /// 动画边缘方向，默认bottom，与centerAnimation互斥
+    open var animationEdge: UIRectEdge = .bottom
+    /// 是否中心弹窗动画，默认false，与animationEdge互斥
+    open var centerAnimation = false
+    /// 中心弹窗时是否执行alert动画，默认true，否则fade动画，仅centerAnimation生效
+    open var alertAnimation = true
+    /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
+    open var animationDuration: TimeInterval = 0.35
+    /// 动画完成速度，默认0.35
+    open var completionSpeed: CGFloat = 0.35
+    /// 底部|顶部弹窗时是否启用screenEdge交互手势，默认false，仅bottom|top生效
+    open var interactScreenEdge = false
     
     /// 是否显示暗色背景，默认YES
     open var showDimming = true
@@ -38,21 +40,13 @@ open class PopupConfiguration {
     /// 暗色背景颜色，默认黑色，透明度0.5
     open var dimmingColor: UIColor? = UIColor.black.withAlphaComponent(0.5)
     
-    /// 中心弹窗时是否执行alert动画，默认true，否则fade动画，仅center生效
-    open var alertAnimation = true
-    /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
-    open var animationDuration: TimeInterval = 0.35
-    /// 动画完成速度，默认0.35
-    open var completionSpeed: CGFloat = 0.35
-    /// 底部|顶部弹窗时是否启用screenEdge交互手势，默认false，仅bottom|top生效
-    open var interactScreenEdge = false
-    
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
     /// 设置点击暗色背景关闭完成回调，默认nil
     open var dismissCompletion: (() -> Void)?
     
     public init() {}
+    
 }
 
 // MARK: - PopupViewControllerProtocol
@@ -147,19 +141,11 @@ internal extension ViewControllerManager {
         let popupConfiguration = popupController.popupConfiguration
         let modalTransition: AnimatedTransition
         var interactEnabled = false
-        switch popupConfiguration.position {
-        case .top:
-            modalTransition = SwipeAnimatedTransition(inDirection: .down, outDirection: .up)
-            interactEnabled = true
-        case .left:
-            modalTransition = SwipeAnimatedTransition(inDirection: .right, outDirection: .left)
-        case .right:
-            modalTransition = SwipeAnimatedTransition(inDirection: .left, outDirection: .right)
-        case .center:
+        if popupConfiguration.centerAnimation {
             modalTransition = popupConfiguration.alertAnimation ? TransformAnimatedTransition.alertTransition() : AnimatedTransition()
-        default:
-            modalTransition = SwipeAnimatedTransition()
-            interactEnabled = true
+        } else {
+            modalTransition = SwipeAnimatedTransition(edge: popupConfiguration.animationEdge)
+            interactEnabled = popupConfiguration.animationEdge == .bottom || popupConfiguration.animationEdge == .top
         }
         
         if popupConfiguration.interactScreenEdge, interactEnabled {
@@ -202,22 +188,24 @@ internal extension ViewControllerManager {
         viewController.view.addSubview(popupView)
         
         popupBackground.fw.pinEdges(autoScale: false)
-        switch popupConfiguration.position {
-        case .top:
-            viewController.popupView.fw.pinEdge(toSuperview: .top, autoScale: false)
-            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
-        case .left:
-            viewController.popupView.fw.pinEdge(toSuperview: .left, autoScale: false)
-            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
-        case .right:
-            viewController.popupView.fw.pinEdge(toSuperview: .right, autoScale: false)
-            viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
-        case .center:
+        if popupConfiguration.centerAnimation {
             viewController.popupView.fw.alignAxis(toSuperview: .centerY, autoScale: false)
             viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
-        default:
-            viewController.popupView.fw.pinEdge(toSuperview: .bottom, autoScale: false)
-            viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
+        } else {
+            switch popupConfiguration.animationEdge {
+            case .top:
+                viewController.popupView.fw.pinEdge(toSuperview: .top, autoScale: false)
+                viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
+            case .left:
+                viewController.popupView.fw.pinEdge(toSuperview: .left, autoScale: false)
+                viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
+            case .right:
+                viewController.popupView.fw.pinEdge(toSuperview: .right, autoScale: false)
+                viewController.popupView.fw.pinVertical(toSuperview: popupConfiguration.padding, autoScale: false)
+            default:
+                viewController.popupView.fw.pinEdge(toSuperview: .bottom, autoScale: false)
+                viewController.popupView.fw.pinHorizontal(toSuperview: popupConfiguration.padding, autoScale: false)
+            }
         }
         
         hookPopupViewController?(viewController)
@@ -232,17 +220,19 @@ internal extension ViewControllerManager {
         guard let viewController = viewController as? UIViewController & PopupViewControllerProtocol else { return }
         
         let popupConfiguration = viewController.popupConfiguration
-        switch popupConfiguration.position {
-        case .top:
-            viewController.popupView.fw.setCornerLayer([.bottomLeft, .bottomRight], radius: popupConfiguration.cornerRadius)
-        case .left:
-            viewController.popupView.fw.setCornerLayer([.topRight, .bottomRight], radius: popupConfiguration.cornerRadius)
-        case .right:
-            viewController.popupView.fw.setCornerLayer([.topLeft, .bottomLeft], radius: popupConfiguration.cornerRadius)
-        case .center:
+        if popupConfiguration.centerAnimation {
             viewController.popupView.fw.setCornerRadius(popupConfiguration.cornerRadius)
-        default:
-            viewController.popupView.fw.setCornerLayer([.topLeft, .topRight], radius: popupConfiguration.cornerRadius)
+        } else {
+            switch popupConfiguration.animationEdge {
+            case .top:
+                viewController.popupView.fw.setCornerLayer([.bottomLeft, .bottomRight], radius: popupConfiguration.cornerRadius)
+            case .left:
+                viewController.popupView.fw.setCornerLayer([.topRight, .bottomRight], radius: popupConfiguration.cornerRadius)
+            case .right:
+                viewController.popupView.fw.setCornerLayer([.topLeft, .bottomLeft], radius: popupConfiguration.cornerRadius)
+            default:
+                viewController.popupView.fw.setCornerLayer([.topLeft, .topRight], radius: popupConfiguration.cornerRadius)
+            }
         }
     }
     

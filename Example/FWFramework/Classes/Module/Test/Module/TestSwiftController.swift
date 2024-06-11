@@ -433,11 +433,17 @@ class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
 
 class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtocol {
     func setupPopupConfiguration(_ configuration: PopupConfiguration) {
-        let positions: [PopupConfiguration.Position] = [.bottom, .top, .left, .right, .center]
-        configuration.position = positions.randomElement()!
-        configuration.padding = configuration.position == .center ? 50 : 0
+        let edges: [UIRectEdge] = [.bottom, .top, .left, .right, .all]
+        let edge = edges.randomElement()!
+        if edge == .all {
+            configuration.centerAnimation = true
+            configuration.alertAnimation = [true, false].randomElement()!
+            configuration.padding = 50
+        } else {
+            configuration.animationEdge = edge
+            configuration.padding = 0
+        }
         configuration.cornerRadius = 8
-        configuration.alertAnimation = [true, false].randomElement()!
         configuration.interactScreenEdge = [true, false].randomElement()!
         configuration.dismissCompletion = {
             UIWindow.app.showMessage(text: "Popup已关闭")
@@ -454,7 +460,8 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
     }
     
     func setupPopupLayout() {
-        if popupConfiguration.position == .left || popupConfiguration.position == .right {
+        let useWidth = popupConfiguration.animationEdge == .left || popupConfiguration.animationEdge == .right
+        if !popupConfiguration.centerAnimation, useWidth {
             popupView.app.layoutChain.width(APP.screenWidth / 2.0)
         } else {
             popupView.app.layoutChain.height(APP.screenHeight / 2.0)
