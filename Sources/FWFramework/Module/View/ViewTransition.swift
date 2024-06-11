@@ -347,14 +347,20 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         }
     }
     private var _gestureRecognizer: UIPanGestureRecognizer?
-
+    
     /// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
-    open private(set) var isInteractive = false
+    open private(set) var isInteracting = false
+    
+    /// 是否正在以交互方式dismiss|pop，需开启interactEnabled
+    open private(set) var isInteractDismissing = false
 
     /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
     open var interactBlock: ((UIPanGestureRecognizer) -> Bool)?
+    
+    /// 自定义交互时dismiss关闭动画完成回调(仅交互才会触发)，默认nil
+    open var interactDismissCompletion: (() -> Void)?
 
-    /// 自定义dismiss关闭动画完成回调，默认nil
+    /// 自定义dismiss关闭动画完成回调(交互和非交互都会触发)，默认nil
     open var dismissCompletion: (() -> Void)?
     
     /// 手工绑定交互控制器，添加pan手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
@@ -394,7 +400,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            isInteractive = true
+            isInteracting = true
             
             var shouldBegin = true
             if let interactBlock = interactBlock {
@@ -421,7 +427,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
                 self.update(percent)
             }
         case .cancelled, .failed, .ended:
-            isInteractive = false
+            isInteracting = false
             
             var interactEnded = true
             if let interactBlock = interactBlock {
@@ -467,10 +473,12 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     
     private func interactiveTransition(for transition: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if transitionType == .dismiss || transitionType == .pop {
-            if !isSystem && interactEnabled && isInteractive {
+            if !isSystem && interactEnabled && isInteracting {
+                isInteractDismissing = true
                 return self
             }
         }
+        isInteractDismissing = false
         return nil
     }
     
@@ -599,7 +607,8 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         let didComplete = !(transitionContext?.transitionWasCancelled ?? false)
         transitionContext?.completeTransition(didComplete)
         
-        if didComplete && dismissCompletion != nil && type == .dismiss {
+        if didComplete, type == .dismiss {
+            if isInteractDismissing { interactDismissCompletion?() }
             dismissCompletion?()
         }
     }
@@ -787,7 +796,7 @@ open class PresentationController: UIPresentationController {
     open var dimmingColor: UIColor? = UIColor.black.withAlphaComponent(0.5)
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
-    /// 设置点击暗色背景关闭完成回调，默认nil
+    /// 设置点击暗色背景关闭完成回调(非交互才会触发)，默认nil
     open var dismissCompletion: (() -> Void)?
 
     /// 设置弹出视图的圆角位置，默认左上和右上。如果弹出视图占满容器，不生效需弹出视图自定义

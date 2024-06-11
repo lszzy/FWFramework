@@ -28,7 +28,9 @@ open class PopupConfiguration {
     open var animationDuration: TimeInterval = 0.35
     /// 动画完成速度，默认0.35
     open var completionSpeed: CGFloat = 0.35
-    /// 底部|顶部弹窗时是否启用screenEdge交互手势，默认false，仅bottom|top生效
+    /// 是否启用交互pan手势进行pop|dismiss，默认false，仅animationEdge生效
+    open var interactEnabled = false
+    /// 是否启用screenEdge交互手势，默认false，仅animationEdge为left|right时生效
     open var interactScreenEdge = false
     
     /// 是否显示暗色背景，默认YES
@@ -42,7 +44,7 @@ open class PopupConfiguration {
     
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
-    /// 设置点击暗色背景关闭完成回调，默认nil
+    /// 设置弹窗关闭完成回调(交互和非交互都会触发)，默认nil
     open var dismissCompletion: (() -> Void)?
     
     public init() {}
@@ -140,18 +142,17 @@ internal extension ViewControllerManager {
         
         let popupConfiguration = popupController.popupConfiguration
         let modalTransition: AnimatedTransition
-        var interactEnabled = false
         if popupConfiguration.centerAnimation {
             modalTransition = popupConfiguration.alertAnimation ? TransformAnimatedTransition.alertTransition() : AnimatedTransition()
         } else {
             modalTransition = SwipeAnimatedTransition(edge: popupConfiguration.animationEdge)
-            interactEnabled = popupConfiguration.animationEdge == .bottom || popupConfiguration.animationEdge == .top
-        }
-        
-        if popupConfiguration.interactScreenEdge, interactEnabled {
-            modalTransition.interactEnabled = true
-            modalTransition.interactScreenEdge = true
-            modalTransition.dismissCompletion = popupConfiguration.dismissCompletion
+            if popupConfiguration.interactEnabled {
+                modalTransition.interactEnabled = true
+                modalTransition.interactDismissCompletion = popupConfiguration.dismissCompletion
+                if popupConfiguration.animationEdge == .top || popupConfiguration.animationEdge == .bottom {
+                    modalTransition.interactScreenEdge = popupConfiguration.interactScreenEdge
+                }
+            }
         }
         
         modalTransition.transitionDuration = popupConfiguration.animationDuration
