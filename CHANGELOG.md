@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.8.0] - 2024-06-12
+
+### Changed
+* Compatible with Xcode16, fix compilation errors
+* Added autoScale parameter to AutoLayout layout extension method
+* Disable autoScale automatic proportional scaling in all component layout codes of the framework
+* Optimize ViewTransition component, add edge parameter to support four directions
+* Added PopupViewControllerProtocol pop-up controller protocol, support bottom, center pop-up, etc.
+
 ## [5.7.0] - 2024-06-05
 
 ### Added
