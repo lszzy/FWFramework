@@ -133,7 +133,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     @objc func onPresentEdge() {
         let nav = UINavigationController(rootViewController: TestFullScreenViewController())
         let transition = nav.app.setPresentTransition()
-        transition.interactEnabled = true
         transition.interactScreenEdge = true
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
