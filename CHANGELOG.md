@@ -6,8 +6,10 @@
 * Compatible with Xcode16, fix compilation errors
 * Added autoScale parameter to AutoLayout layout extension method
 * Disable autoScale automatic proportional scaling in all component layout codes of the framework
-* Optimize ViewTransition component, add edge parameter to support four directions
-* Added PopupViewControllerProtocol pop-up controller protocol, support bottom, center pop-up, etc.
+* Added PopupViewControllerProtocol popup controller protocol, supporting bottom and center popups, etc.
+* Added RectCornerView to handle irregular rounded corners
+* Refactored ViewTransition component, added edge parameter to support four directions, etc.
+* Transition animation interactEnabled and interactScreenEdge interactive gestures can coexist
 
 ## [5.7.0] - 2024-06-05
 
