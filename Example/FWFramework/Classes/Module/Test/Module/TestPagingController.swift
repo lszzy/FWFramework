@@ -135,11 +135,10 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     func setupSubviews() {
         view.addSubview(self.pagerView)
-        pagerView.app.pinEdges()
+        pagerView.chain.edges()
         
         view.addSubview(cartView)
-        cartView.app.pinEdges(excludingEdge: .top)
-        cartView.app.setDimension(.height, size: TestPagingController.cartViewHeight)
+        cartView.chain.edges(excludingEdge: .top).height(TestPagingController.cartViewHeight)
     }
     
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int {
@@ -249,7 +248,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     var scrollCallback: ((UIScrollView) -> Void)?
     
     func setupTableLayout() {
-        tableView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
+        tableView.chain.edges(UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -263,8 +262,8 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     func setupCollectionLayout() {
         collectionView.backgroundColor = AppTheme.backgroundColor
-        collectionView.app.pinEdges(toSuperview: UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
-        collectionView.app.setDimension(.width, size: self.cart ? TestPagingController.categoryViewWidth : 0)
+        collectionView.chain.edges(UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
+        collectionView.chain.width(self.cart ? TestPagingController.categoryViewWidth : 0)
     }
     
     func setupSubviews() {

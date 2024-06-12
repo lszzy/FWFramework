@@ -202,24 +202,22 @@ class TestRefreshCell: UITableViewCell {
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.app.pinEdge(toSuperview: .left, inset: 15)
-        myTitleLabel.app.pinEdge(toSuperview: .right, inset: 15)
-        var constraint = myTitleLabel.app.pinEdge(toSuperview: .top, inset: 15)
-        myTitleLabel.app.addCollapseConstraint(constraint)
-        myTitleLabel.app.autoCollapse = true
+        myTitleLabel.chain
+            .horizontal(15)
+            .top(15).collapse()
+            .autoCollapse(true)
         
-        myTextLabel.app.hiddenCollapse = true
-        myTextLabel.app.pinEdge(toSuperview: .left, inset: 15)
-        myTextLabel.app.pinEdge(toSuperview: .right, inset: 15)
-        constraint = myTextLabel.app.pinEdge(.top, toEdge: .bottom, ofView: myTitleLabel, offset: 10)
-        myTextLabel.app.addCollapseConstraint(constraint)
+        myTextLabel.chain
+            .hiddenCollapse(true)
+            .horizontal(15)
+            .top(toViewBottom: myTitleLabel, offset: 10).collapse()
         
-        myImageView.app.pinEdge(toSuperview: .left, inset: 15)
-        myImageView.app.pinEdge(toSuperview: .right, inset: 15, relation: .greaterThanOrEqual)
-        myImageView.app.pinEdge(toSuperview: .bottom, inset: 15)
-        constraint = myImageView.app.pinEdge(.top, toEdge: .bottom, ofView: myTextLabel, offset: 10)
-        myImageView.app.addCollapseConstraint(constraint)
-        myImageView.app.autoCollapse = true
+        myImageView.chain
+            .left(15)
+            .right(15, relation: .greaterThanOrEqual)
+            .bottom(15)
+            .top(toViewBottom: myTextLabel, offset: 10).collapse()
+            .autoCollapse(true)
     }
     
     required init?(coder: NSCoder) {

@@ -133,7 +133,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
     @objc func onPresentEdge() {
         let nav = UINavigationController(rootViewController: TestFullScreenViewController())
         let transition = nav.app.setPresentTransition()
-        transition.interactEnabled = true
         transition.interactScreenEdge = true
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
@@ -143,10 +142,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         let transition = SwipeAnimatedTransition()
         transition.interactEnabled = true
         transition.interactScreenEdge = true
-        if let gesture = transition.gestureRecognizer as? PanGestureRecognizer {
-            gesture.direction = .right
-            gesture.maximumDistance = 44
-        }
         transition.presentationBlock = { presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.verticalInset = 200
@@ -356,8 +351,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         button.setTitleColor(AppTheme.textColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
         footerView.addSubview(button)
-        button.app.setDimensions(CGSize(width: 200, height: 100))
-        button.app.alignCenter()
+        button.chain.center().size(width: 200, height: 100)
     }
     
     override func viewDidLoad() {
@@ -402,7 +396,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
         modalPresentationStyle = .custom
         
         // 也可以封装present方法，手工指定UIPresentationController，无需使用block
-        let transition = TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+        let transition = TransformAnimatedTransition.alertTransition()
         transition.presentationBlock = { [weak self] presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.cornerRadius = 10

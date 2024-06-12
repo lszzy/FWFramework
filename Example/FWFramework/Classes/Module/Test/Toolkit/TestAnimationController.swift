@@ -166,6 +166,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
 class TestAnimationView: UIView {
     
     var transitionType: Int = 0
+    var edge: UIRectEdge = .bottom
     
     lazy var bottomView: UIView = {
         let result = UIView()
@@ -176,6 +177,10 @@ class TestAnimationView: UIView {
     init(transitionType: Int) {
         super.init(frame: .zero)
         self.transitionType = transitionType
+        if transitionType == 6 || transitionType == 9 {
+            let edges: [UIRectEdge] = [.top, .left, .right, .bottom]
+            edge = edges.randomElement()!
+        }
         if transitionType > 8 {
             backgroundColor = .clear
         } else {
@@ -184,7 +189,16 @@ class TestAnimationView: UIView {
         
         addSubview(bottomView)
         if transitionType == 6 || transitionType == 9 {
-            bottomView.app.layoutChain.horizontal().bottom().height(APP.screenHeight / 2)
+            switch edge {
+            case .top:
+                bottomView.app.layoutChain.horizontal().top().height(APP.screenHeight / 2)
+            case .left:
+                bottomView.app.layoutChain.vertical().left().width(APP.screenWidth / 2)
+            case .right:
+                bottomView.app.layoutChain.vertical().right().width(APP.screenWidth / 2)
+            default:
+                bottomView.app.layoutChain.horizontal().bottom().height(APP.screenHeight / 2)
+            }
         } else {
             bottomView.app.layoutChain.center().width(300).height(200)
         }
@@ -197,7 +211,7 @@ class TestAnimationView: UIView {
             }
             
             if self.transitionType == 6 {
-                self.app.setPresentTransition(.dismiss, contentView: self.bottomView, completion: nil)
+                self.app.setPresentTransition(.dismiss, contentView: self.bottomView, edge: edge, completion: nil)
             } else if self.transitionType == 7 {
                 self.app.setAlertTransition(.dismiss, completion: nil)
             } else {
@@ -214,7 +228,7 @@ class TestAnimationView: UIView {
         if transitionType > 8 {
             let wrappedVC = app.wrappedTransitionController(true)
             if transitionType == 9 {
-                wrappedVC.app.setPresentTransition(nil)
+                wrappedVC.app.setPresentTransition(edge: edge)
             } else if transitionType == 10 {
                 wrappedVC.app.setAlertTransition(nil)
             } else {
@@ -226,7 +240,7 @@ class TestAnimationView: UIView {
         
         app.transition(to: viewController, pinEdges: true)
         if transitionType == 6 {
-            app.setPresentTransition(.present, contentView: self.bottomView, completion: nil)
+            app.setPresentTransition(.present, contentView: self.bottomView, edge: edge, completion: nil)
         } else if transitionType == 7 {
             app.setAlertTransition(.present, completion: nil)
         } else {

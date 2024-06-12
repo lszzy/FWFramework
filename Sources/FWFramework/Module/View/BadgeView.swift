@@ -18,8 +18,8 @@ extension Wrapper where Base: UIView {
         base.addSubview(badgeView)
         base.bringSubviewToFront(badgeView)
         
-        badgeView.fw.pinEdge(toSuperview: .top, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.y))
-        badgeView.fw.pinEdge(toSuperview: .right, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.x))
+        badgeView.fw.pinEdge(toSuperview: .top, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.y), autoScale: false)
+        badgeView.fw.pinEdge(toSuperview: .right, inset: -(badgeView.badgeHeight / 2.0 + badgeView.badgeOffset.x), autoScale: false)
     }
 
     /// 隐藏提醒灯
@@ -83,8 +83,8 @@ extension Wrapper where Base: UIBarButtonItem {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw.pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y)
-            badgeView.fw.pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x)
+            badgeView.fw.pinEdge(toSuperview: .top, inset: -badgeView.badgeOffset.y, autoScale: false)
+            badgeView.fw.pinEdge(toSuperview: .right, inset: -badgeView.badgeOffset.x, autoScale: false)
         }
     }
 
@@ -121,8 +121,8 @@ extension Wrapper where Base: UITabBarItem {
             view.addSubview(badgeView)
             view.bringSubviewToFront(badgeView)
             
-            badgeView.fw.pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y)
-            badgeView.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+            badgeView.fw.pinEdge(toSuperview: .top, inset: 2.0 - badgeView.badgeOffset.y, autoScale: false)
+            badgeView.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0, autoScale: false)
         }
     }
 
@@ -231,8 +231,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw.autoScaleLayout = false
-        fw.setDimensions(CGSize(width: badgeHeight, height: badgeHeight))
+        fw.setDimensions(CGSize(width: badgeHeight, height: badgeHeight), autoScale: false)
     }
     
     private func setupLabel(badgeHeight: CGFloat, badgeOffset: CGPoint, textInset: CGFloat, fontSize: CGFloat) {
@@ -242,9 +241,8 @@ open class BadgeView: UIView, BadgeViewProtocol {
         isUserInteractionEnabled = false
         backgroundColor = UIColor.red
         layer.cornerRadius = badgeHeight / 2
-        fw.autoScaleLayout = false
-        fw.setDimension(.height, size: badgeHeight)
-        fw.setDimension(.width, size: badgeHeight, relation: .greaterThanOrEqual)
+        fw.setDimension(.height, size: badgeHeight, autoScale: false)
+        fw.setDimension(.width, size: badgeHeight, relation: .greaterThanOrEqual, autoScale: false)
         
         let badgeLabel = UILabel()
         self.badgeLabel = badgeLabel
@@ -252,10 +250,9 @@ open class BadgeView: UIView, BadgeViewProtocol {
         badgeLabel.font = UIFont.systemFont(ofSize: fontSize)
         badgeLabel.textAlignment = .center
         addSubview(badgeLabel)
-        badgeLabel.fw.autoScaleLayout = false
-        badgeLabel.fw.alignCenter()
-        badgeLabel.fw.pinEdge(toSuperview: .right, inset: textInset, relation: .greaterThanOrEqual)
-        badgeLabel.fw.pinEdge(toSuperview: .left, inset: textInset, relation: .greaterThanOrEqual)
+        badgeLabel.fw.alignCenter(autoScale: false)
+        badgeLabel.fw.pinEdge(toSuperview: .right, inset: textInset, relation: .greaterThanOrEqual, autoScale: false)
+        badgeLabel.fw.pinEdge(toSuperview: .left, inset: textInset, relation: .greaterThanOrEqual, autoScale: false)
     }
     
 }
@@ -284,7 +281,7 @@ extension FrameworkAutoloader {
                     
                     // 解决iOS13因为磨砂层切换导致的badgeView位置不对问题
                     if let imageView = UITabBarItem.fw.imageView(for: selfObject) {
-                        subview.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0)
+                        subview.fw.pinEdge(.left, toEdge: .right, ofView: imageView, offset: badgeView.badgeOffset.x - badgeView.badgeHeight / 2.0, autoScale: false)
                     }
                     break
                 }

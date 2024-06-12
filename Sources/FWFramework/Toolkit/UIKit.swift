@@ -532,33 +532,33 @@ extension Wrapper where Base: UIView {
     public func setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
         if edge.contains(.top) {
             let borderView = borderView("borderViewTop", edge: .top)
-            borderView.fw.setDimension(.height, size: width)
-            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.fw.setDimension(.height, size: width, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset, autoScale: false)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.left) {
             let borderView = borderView("borderViewLeft", edge: .left)
-            borderView.fw.setDimension(.width, size: width)
-            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.fw.setDimension(.width, size: width, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset, autoScale: false)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.bottom) {
             let borderView = borderView("borderViewBottom", edge: .bottom)
-            borderView.fw.setDimension(.height, size: width)
-            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset)
+            borderView.fw.setDimension(.height, size: width, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .left, inset: leftInset, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .right, inset: rightInset, autoScale: false)
             borderView.backgroundColor = color
         }
         
         if edge.contains(.right) {
             let borderView = borderView("borderViewRight", edge: .right)
-            borderView.fw.setDimension(.width, size: width)
-            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset)
-            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset)
+            borderView.fw.setDimension(.width, size: width, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .top, inset: leftInset, autoScale: false)
+            borderView.fw.pinEdge(toSuperview: .bottom, inset: rightInset, autoScale: false)
             borderView.backgroundColor = color
         }
     }
@@ -568,20 +568,19 @@ extension Wrapper where Base: UIView {
             return borderView
         } else {
             let borderView = UIView()
-            borderView.fw.autoScaleLayout = false
             base.addSubview(borderView)
             setProperty(borderView, forName: edgeKey)
             
             if edge == .top || edge == .bottom {
-                borderView.fw.pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0)
-                borderView.fw.setDimension(.height, size: 0)
-                borderView.fw.pinEdge(toSuperview: .left, inset: 0)
-                borderView.fw.pinEdge(toSuperview: .right, inset: 0)
+                borderView.fw.pinEdge(toSuperview: edge == .top ? .top : .bottom, inset: 0, autoScale: false)
+                borderView.fw.setDimension(.height, size: 0, autoScale: false)
+                borderView.fw.pinEdge(toSuperview: .left, inset: 0, autoScale: false)
+                borderView.fw.pinEdge(toSuperview: .right, inset: 0, autoScale: false)
             } else {
-                borderView.fw.pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0)
-                borderView.fw.setDimension(.width, size: 0)
-                borderView.fw.pinEdge(toSuperview: .top, inset: 0)
-                borderView.fw.pinEdge(toSuperview: .bottom, inset: 0)
+                borderView.fw.pinEdge(toSuperview: edge == .left ? .left : .right, inset: 0, autoScale: false)
+                borderView.fw.setDimension(.width, size: 0, autoScale: false)
+                borderView.fw.pinEdge(toSuperview: .top, inset: 0, autoScale: false)
+                borderView.fw.pinEdge(toSuperview: .bottom, inset: 0, autoScale: false)
             }
             return borderView
         }
@@ -632,7 +631,7 @@ extension Wrapper where Base: UIView {
             let effect = UIBlurEffect(style: style)
             let effectView = UIVisualEffectView(effect: effect)
             base.addSubview(effectView)
-            effectView.fw.pinEdges()
+            effectView.fw.pinEdges(autoScale: false)
             return effectView
         }
         return nil
@@ -793,7 +792,7 @@ extension Wrapper where Base: UIView {
         overlay.layer.compositingFilter = "saturationBlendMode"
         overlay.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
         base.addSubview(overlay)
-        overlay.fw.pinEdges()
+        overlay.fw.pinEdges(autoScale: false)
     }
     
     /// 隐藏灰色视图，仅支持iOS13+
@@ -1756,7 +1755,7 @@ extension Wrapper where Base: UIScrollView {
             let contentView = UIView()
             setProperty(contentView, forName: "contentView")
             base.addSubview(contentView)
-            contentView.fw.pinEdges()
+            contentView.fw.pinEdges(autoScale: false)
             return contentView
         }
     }
@@ -1777,16 +1776,15 @@ extension Wrapper where Base: UIScrollView {
             if view.superview != toSuperview {
                 view.removeFromSuperview()
                 toSuperview.addSubview(view)
-                view.fw.autoScaleLayout = false
-                view.fw.pinEdge(toSuperview: .left, inset: 0)
-                view.fw.pinEdge(toSuperview: .top, inset: toPosition)
-                view.fw.setDimensions(view.bounds.size)
+                view.fw.pinEdge(toSuperview: .left, inset: 0, autoScale: false)
+                view.fw.pinEdge(toSuperview: .top, inset: toPosition, autoScale: false)
+                view.fw.setDimensions(view.bounds.size, autoScale: false)
             }
         } else {
             if view.superview != fromSuperview {
                 view.removeFromSuperview()
                 fromSuperview.addSubview(view)
-                view.fw.pinEdges()
+                view.fw.pinEdges(autoScale: false)
             }
         }
         return distance
@@ -2923,7 +2921,7 @@ extension Wrapper where Base: UIViewController {
         if layout != nil {
             layout?(viewController.view)
         } else {
-            viewController.view.fw.pinEdges()
+            viewController.view.fw.pinEdges(autoScale: false)
         }
         viewController.didMove(toParent: base)
     }

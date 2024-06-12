@@ -65,7 +65,7 @@ extension Wrapper where Base: UIView {
         let layout = SkeletonLayout(layoutView: base)
         layout.tag = 2051
         base.addSubview(layout)
-        layout.fw.pinEdges()
+        layout.fw.pinEdges(autoScale: false)
         
         delegate?.skeletonViewLayout(layout)
         block?(layout)
@@ -646,7 +646,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
         tableView.backgroundColor = SkeletonAppearance.appearance.backgroundColor
         
         addSubview(tableView)
-        tableView.fw.pinEdges()
+        tableView.fw.pinEdges(autoScale: false)
     }
     
     open override func layoutSubviews() {
@@ -689,7 +689,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
         let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutCell)
         skeletonLayout.tag = 2052
         cell.contentView.addSubview(skeletonLayout)
-        skeletonLayout.fw.pinEdges()
+        skeletonLayout.fw.pinEdges(autoScale: false)
         return cell
     }
     
@@ -714,7 +714,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
         let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutHeader)
         skeletonLayout.tag = 2052
         header.contentView.addSubview(skeletonLayout)
-        skeletonLayout.fw.pinEdges()
+        skeletonLayout.fw.pinEdges(autoScale: false)
         return header
     }
     
@@ -739,7 +739,7 @@ open class SkeletonTableView: SkeletonLayout, UITableViewDataSource, UITableView
         let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutFooter)
         skeletonLayout.tag = 2052
         footer.contentView.addSubview(skeletonLayout)
-        skeletonLayout.fw.pinEdges()
+        skeletonLayout.fw.pinEdges(autoScale: false)
         return footer
     }
     
@@ -793,7 +793,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
         collectionView.backgroundColor = SkeletonAppearance.appearance.backgroundColor
         
         addSubview(collectionView)
-        collectionView.fw.pinEdges()
+        collectionView.fw.pinEdges(autoScale: false)
     }
     
     open override func layoutSubviews() {
@@ -840,7 +840,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
         let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutCell)
         skeletonLayout.tag = 2052
         cell.contentView.addSubview(skeletonLayout)
-        skeletonLayout.fw.pinEdges()
+        skeletonLayout.fw.pinEdges(autoScale: false)
         return cell
     }
     
@@ -870,7 +870,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
             let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutHeader)
             skeletonLayout.tag = 2052
             header.addSubview(skeletonLayout)
-            skeletonLayout.fw.pinEdges()
+            skeletonLayout.fw.pinEdges(autoScale: false)
             return header
         }
         
@@ -891,7 +891,7 @@ open class SkeletonCollectionView: SkeletonLayout, UICollectionViewDataSource, U
             let skeletonLayout = SkeletonLayout.parseSkeletonLayout(layoutFooter)
             skeletonLayout.tag = 2052
             footer.addSubview(skeletonLayout)
-            skeletonLayout.fw.pinEdges()
+            skeletonLayout.fw.pinEdges(autoScale: false)
             return footer
         }
         
