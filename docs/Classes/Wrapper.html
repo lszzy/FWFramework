@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.7.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.8.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -569,6 +569,9 @@
                 <a href="../Classes/PluginManager.html">PluginManager</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/PopupConfiguration.html">PopupConfiguration</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/PopupMenu.html">PopupMenu</a>
               </li>
               <li class="nav-group-task">
@@ -603,6 +606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Recognizer/Result.html">– Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RectCornerView.html">RectCornerView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
@@ -1520,7 +1526,7 @@
                 <a href="../Functions.html#/s:11FWFramework3gggoiyyAA13HelpingMapperC_xztlF">&gt;&gt;&gt;(_:_:)</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Functions.html#/s:11FWFramework30_getTypeByMangledNameInContext__07genericH00I9ArgumentsypXpSgSPys5UInt8VG_SiSVSgAItF">_getTypeByMangledNameInContext(_:_:genericContext:genericArguments:)</a>
+                <a href="../Functions.html#/s:11FWFramework30_getTypeByMangledNameInContext__07genericH00I9ArgumentsypXpSgSPys5UInt8VG_SuSVSgAItF">_getTypeByMangledNameInContext(_:_:genericContext:genericArguments:)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Functions.html#/s:11FWFramework11writeUint16_6offset5valueySays5UInt8VGz_Sis6UInt16VtF">writeUint16(_:offset:value:)</a>
@@ -1802,6 +1808,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/PopupMenuDelegate.html">PopupMenuDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PopupViewControllerProtocol.html">PopupViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ProgressViewPlugin.html">ProgressViewPlugin</a>
@@ -11308,9 +11317,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE20setPresentTransitionyAA08AnimatedG0CyAA012PresentationD0CcSgF"></a>
-                    <a name="//apple_ref/swift/Method/setPresentTransition(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE20setPresentTransitionyAA08AnimatedG0CyAA012PresentationD0CcSgF">setPresentTransition(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE20setPresentTransition_4edgeAA08AnimatedG0CyAA012PresentationD0CcSg_So10UIRectEdgeVtF"></a>
+                    <a name="//apple_ref/swift/Method/setPresentTransition(_:edge:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UIViewControllerCRbzlE20setPresentTransition_4edgeAA08AnimatedG0CyAA012PresentationD0CcSg_So10UIRectEdgeVtF">setPresentTransition(_:<wbr>edge:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -11318,7 +11327,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition</p>
+                        <p>自定义控制器present系统转场(蒙层渐变，内容默认向上动画)，会设置fwModalTransition</p>
 
                       </div>
                       <div class="declaration">
@@ -11326,7 +11335,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setPresentTransition</span><span class="p">(</span><span class="n">_</span> <span class="nv">presentationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/PresentationController.html">PresentationController</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/AnimatedTransition.html">AnimatedTransition</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setPresentTransition</span><span class="p">(</span><span class="n">_</span> <span class="nv">presentationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/PresentationController.html">PresentationController</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">UIRectEdge</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Classes/Wrapper.html#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE6bottom14CoreFoundation7CGFloatVvp">bottom</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/AnimatedTransition.html">AnimatedTransition</a></span></code></pre>
 
                         </div>
                       </div>
@@ -11514,9 +11523,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20setPresentTransition_11contentView10completionyAA08AnimatedF4TypeO_AESgySbcSgtF"></a>
-                    <a name="//apple_ref/swift/Method/setPresentTransition(_:contentView:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20setPresentTransition_11contentView10completionyAA08AnimatedF4TypeO_AESgySbcSgtF">setPresentTransition(_:<wbr>contentView:<wbr>completion:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20setPresentTransition_11contentView4edge10completionyAA08AnimatedF4TypeO_AESgSo10UIRectEdgeVySbcSgtF"></a>
+                    <a name="//apple_ref/swift/Method/setPresentTransition(_:contentView:edge:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE20setPresentTransition_11contentView4edge10completionyAA08AnimatedF4TypeO_AESgSo10UIRectEdgeVySbcSgtF">setPresentTransition(_:<wbr>contentView:<wbr>edge:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -11524,14 +11533,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>自定义视图模拟present系统转场(蒙层渐变，内容向上动画)</p>
+                        <p>自定义视图模拟present系统转场(蒙层渐变，内容默认向上动画)</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setPresentTransition</span><span class="p">(</span><span class="n">_</span> <span class="nv">transitionType</span><span class="p">:</span> <span class="kt"><a href="../Enums/AnimatedTransitionType.html">AnimatedTransitionType</a></span><span class="p">,</span> <span class="nv">contentView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setPresentTransition</span><span class="p">(</span><span class="n">_</span> <span class="nv">transitionType</span><span class="p">:</span> <span class="kt"><a href="../Enums/AnimatedTransitionType.html">AnimatedTransitionType</a></span><span class="p">,</span> <span class="nv">contentView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?,</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">UIRectEdge</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Classes/Wrapper.html#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE6bottom14CoreFoundation7CGFloatVvp">bottom</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -23671,9 +23680,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter11toSuperviewSaySo18NSLayoutConstraintCGSo7CGPointV_tF"></a>
-                    <a name="//apple_ref/swift/Method/alignCenter(toSuperview:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter11toSuperviewSaySo18NSLayoutConstraintCGSo7CGPointV_tF">alignCenter(toSuperview:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter11toSuperview9autoScaleSaySo18NSLayoutConstraintCGSo7CGPointV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignCenter(toSuperview:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter11toSuperview9autoScaleSaySo18NSLayoutConstraintCGSo7CGPointV_SbSgtF">alignCenter(toSuperview:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -23689,7 +23698,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignCenter</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGPoint</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignCenter</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGPoint</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -23709,6 +23721,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -23722,9 +23746,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis11toSuperview6offsetSo18NSLayoutConstraintCSo0I9AttributeV_14CoreFoundation7CGFloatVtF"></a>
-                    <a name="//apple_ref/swift/Method/alignAxis(toSuperview:offset:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis11toSuperview6offsetSo18NSLayoutConstraintCSo0I9AttributeV_14CoreFoundation7CGFloatVtF">alignAxis(toSuperview:<wbr>offset:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis11toSuperview6offset9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignAxis(toSuperview:offset:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis11toSuperview6offset9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSbSgtF">alignAxis(toSuperview:<wbr>offset:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -23740,7 +23764,11 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -23772,6 +23800,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -23785,9 +23825,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView6offsetSo18NSLayoutConstraintCSo0I9AttributeV_yp14CoreFoundation7CGFloatVtF"></a>
-                    <a name="//apple_ref/swift/Method/alignAxis(_:toView:offset:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView6offsetSo18NSLayoutConstraintCSo0I9AttributeV_yp14CoreFoundation7CGFloatVtF">alignAxis(_:<wbr>toView:<wbr>offset:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView6offset9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_yp14CoreFoundation7CGFloatVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignAxis(_:toView:offset:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView6offset9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_yp14CoreFoundation7CGFloatVSbSgtF">alignAxis(_:<wbr>toView:<wbr>offset:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -23803,7 +23843,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span><span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -23847,6 +23892,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -23860,9 +23917,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView10multiplierSo18NSLayoutConstraintCSo0I9AttributeV_yp14CoreFoundation7CGFloatVtF"></a>
-                    <a name="//apple_ref/swift/Method/alignAxis(_:toView:multiplier:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView10multiplierSo18NSLayoutConstraintCSo0I9AttributeV_yp14CoreFoundation7CGFloatVtF">alignAxis(_:<wbr>toView:<wbr>multiplier:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView10multiplier9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_yp14CoreFoundation7CGFloatVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignAxis(_:toView:multiplier:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis_6toView10multiplier9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_yp14CoreFoundation7CGFloatVSbSgtF">alignAxis(_:<wbr>toView:<wbr>multiplier:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -23878,7 +23935,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span><span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span>
+    <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -23922,6 +23984,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -23948,9 +24022,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperviewSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdges(toSuperview:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperviewSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_tF">pinEdges(toSuperview:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdges(toSuperview:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_SbSgtF">pinEdges(toSuperview:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -23966,7 +24040,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -23986,6 +24063,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -23999,9 +24088,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview13excludingEdgeSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0J9AttributeVtF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdges(toSuperview:excludingEdge:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview13excludingEdgeSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0J9AttributeVtF">pinEdges(toSuperview:<wbr>excludingEdge:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview13excludingEdge9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0L9AttributeVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdges(toSuperview:excludingEdge:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges11toSuperview13excludingEdge9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0L9AttributeVSbSgtF">pinEdges(toSuperview:<wbr>excludingEdge:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24017,7 +24106,11 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">excludingEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">excludingEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24049,6 +24142,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24062,9 +24167,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal11toSuperviewSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinHorizontal(toSuperview:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal11toSuperviewSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF">pinHorizontal(toSuperview:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal11toSuperview9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinHorizontal(toSuperview:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal11toSuperview9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF">pinHorizontal(toSuperview:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24080,7 +24185,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinHorizontal</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinHorizontal</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24100,6 +24208,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24113,9 +24233,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical11toSuperviewSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinVertical(toSuperview:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical11toSuperviewSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF">pinVertical(toSuperview:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical11toSuperview9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinVertical(toSuperview:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical11toSuperview9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF">pinVertical(toSuperview:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24131,7 +24251,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinVertical</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinVertical</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24151,6 +24274,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24164,9 +24299,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8prioritySo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSo0K8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(toSuperview:inset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8prioritySo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSo0K8RelationVSo16UILayoutPriorityatF">pinEdge(toSuperview:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0M9AttributeV_14CoreFoundation7CGFloatVSo0M8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(toSuperview:inset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge11toSuperview5inset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0M9AttributeV_14CoreFoundation7CGFloatVSo0M8RelationVSo16UILayoutPriorityaSbSgtF">pinEdge(toSuperview:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24182,7 +24317,13 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSuperview</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span>
+    <span class="n">toSuperview</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -24238,6 +24379,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24251,9 +24404,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(_:toEdge:ofView:offset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">pinEdge(_:<wbr>toEdge:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(_:toEdge:ofView:offset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF">pinEdge(_:<wbr>toEdge:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24269,7 +24422,15 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">_</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -24349,6 +24510,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24375,9 +24548,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter10toSafeAreaSaySo18NSLayoutConstraintCGSo7CGPointV_tF"></a>
-                    <a name="//apple_ref/swift/Method/alignCenter(toSafeArea:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter10toSafeAreaSaySo18NSLayoutConstraintCGSo7CGPointV_tF">alignCenter(toSafeArea:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter10toSafeArea9autoScaleSaySo18NSLayoutConstraintCGSo7CGPointV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignCenter(toSafeArea:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11alignCenter10toSafeArea9autoScaleSaySo18NSLayoutConstraintCGSo7CGPointV_SbSgtF">alignCenter(toSafeArea:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24393,7 +24566,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignCenter</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignCenter</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24413,6 +24589,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24426,9 +24614,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis10toSafeArea6offsetSo18NSLayoutConstraintCSo0J9AttributeV_14CoreFoundation7CGFloatVtF"></a>
-                    <a name="//apple_ref/swift/Method/alignAxis(toSafeArea:offset:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis10toSafeArea6offsetSo18NSLayoutConstraintCSo0J9AttributeV_14CoreFoundation7CGFloatVtF">alignAxis(toSafeArea:<wbr>offset:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis10toSafeArea6offset9autoScaleSo18NSLayoutConstraintCSo0L9AttributeV_14CoreFoundation7CGFloatVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/alignAxis(toSafeArea:offset:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9alignAxis10toSafeArea6offset9autoScaleSo18NSLayoutConstraintCSo0L9AttributeV_14CoreFoundation7CGFloatVSbSgtF">alignAxis(toSafeArea:<wbr>offset:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24444,7 +24632,11 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">alignAxis</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -24476,6 +24668,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24489,9 +24693,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeAreaSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdges(toSafeArea:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeAreaSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_tF">pinEdges(toSafeArea:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdges(toSafeArea:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_SbSgtF">pinEdges(toSafeArea:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24507,7 +24711,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24527,6 +24734,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24540,9 +24759,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea13excludingEdgeSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0K9AttributeVtF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdges(toSafeArea:excludingEdge:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea13excludingEdgeSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0K9AttributeVtF">pinEdges(toSafeArea:<wbr>excludingEdge:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea13excludingEdge9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0M9AttributeVSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdges(toSafeArea:excludingEdge:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE8pinEdges10toSafeArea13excludingEdge9autoScaleSaySo18NSLayoutConstraintCGSo12UIEdgeInsetsV_So0M9AttributeVSbSgtF">pinEdges(toSafeArea:<wbr>excludingEdge:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24558,7 +24777,11 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">,</span> <span class="nv">excludingEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdges</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">,</span>
+    <span class="nv">excludingEdge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24590,6 +24813,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24603,9 +24838,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal10toSafeAreaSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinHorizontal(toSafeArea:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal10toSafeAreaSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF">pinHorizontal(toSafeArea:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal10toSafeArea9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinHorizontal(toSafeArea:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13pinHorizontal10toSafeArea9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF">pinHorizontal(toSafeArea:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24621,7 +24856,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinHorizontal</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinHorizontal</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24641,6 +24879,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24654,9 +24904,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical10toSafeAreaSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF"></a>
-                    <a name="//apple_ref/swift/Method/pinVertical(toSafeArea:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical10toSafeAreaSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_tF">pinVertical(toSafeArea:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical10toSafeArea9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinVertical(toSafeArea:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE11pinVertical10toSafeArea9autoScaleSaySo18NSLayoutConstraintCG14CoreFoundation7CGFloatV_SbSgtF">pinVertical(toSafeArea:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24672,7 +24922,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinVertical</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinVertical</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24692,6 +24945,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24705,9 +24970,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/pinEdge(toSafeArea:inset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">pinEdge(toSafeArea:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pinEdge(toSafeArea:inset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7pinEdge10toSafeArea5inset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF">pinEdge(toSafeArea:<wbr>inset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24723,7 +24988,13 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span><span class="n">toSafeArea</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">pinEdge</span><span class="p">(</span>
+    <span class="n">toSafeArea</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">inset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -24779,6 +25050,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24805,9 +25088,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setDimensionsySaySo18NSLayoutConstraintCGSo6CGSizeVF"></a>
-                    <a name="//apple_ref/swift/Method/setDimensions(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setDimensionsySaySo18NSLayoutConstraintCGSo6CGSizeVF">setDimensions(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setDimensions_9autoScaleSaySo18NSLayoutConstraintCGSo6CGSizeV_SbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/setDimensions(_:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE13setDimensions_9autoScaleSaySo18NSLayoutConstraintCGSo6CGSizeV_SbSgtF">setDimensions(_:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24823,7 +25106,10 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimensions</span><span class="p">(</span><span class="n">_</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimensions</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSLayoutConstraint</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -24843,6 +25129,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24856,9 +25154,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8prioritySo18NSLayoutConstraintCSo0I9AttributeV_14CoreFoundation7CGFloatVSo0I8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/setDimension(_:size:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8prioritySo18NSLayoutConstraintCSo0I9AttributeV_14CoreFoundation7CGFloatVSo0I8RelationVSo16UILayoutPriorityatF">setDimension(_:<wbr>size:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8priority9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSo0K8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/setDimension(_:size:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE12setDimension_4size8relation8priority9autoScaleSo18NSLayoutConstraintCSo0K9AttributeV_14CoreFoundation7CGFloatVSo0K8RelationVSo16UILayoutPriorityaSbSgtF">setDimension(_:<wbr>size:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24874,7 +25172,13 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setDimension</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -24930,6 +25234,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -24943,9 +25259,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8prioritySo18NSLayoutConstraintCSo0J9AttributeV_AN14CoreFoundation7CGFloatVSo0J8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:multiplier:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8prioritySo18NSLayoutConstraintCSo0J9AttributeV_AN14CoreFoundation7CGFloatVSo0J8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8priority9autoScaleSo18NSLayoutConstraintCSo0L9AttributeV_AO14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:multiplier:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE010multiplier8relation8priority9autoScaleSo18NSLayoutConstraintCSo0L9AttributeV_AO14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityaSbSgtF">matchDimension(_:<wbr>toDimension:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -24961,7 +25277,14 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25029,6 +25352,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -25042,9 +25377,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:offset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:offset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25060,7 +25395,15 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25140,6 +25483,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -25153,9 +25508,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:multiplier:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8prioritySo18NSLayoutConstraintCSo0L9AttributeV_AOyp14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/matchDimension(_:toDimension:ofView:multiplier:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14matchDimension_02toE06ofView10multiplier8relation8priority9autoScaleSo18NSLayoutConstraintCSo0N9AttributeV_APyp14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF">matchDimension(_:<wbr>toDimension:<wbr>ofView:<wbr>multiplier:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25171,7 +25526,15 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span><span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">matchDimension</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">dimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toDimension</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span>
+    <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25251,6 +25614,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -25277,9 +25652,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:offset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8prioritySo18NSLayoutConstraintCSo0lE0V_AOypSg14CoreFoundation7CGFloatVSo0L8RelationVSo16UILayoutPriorityatF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0nE0V_APypSg14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:offset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0nE0V_APypSg14CoreFoundation7CGFloatVSo0N8RelationVSo16UILayoutPriorityaSbSgtF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25295,7 +25670,15 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25375,6 +25758,18 @@
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -25388,9 +25783,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier6offset8relation8prioritySo18NSLayoutConstraintCSo0mE0V_APypSg14CoreFoundation7CGFloatVATSo0M8RelationVSo16UILayoutPriorityatF"></a>
-                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:multiplier:offset:relation:priority:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier6offset8relation8prioritySo18NSLayoutConstraintCSo0mE0V_APypSg14CoreFoundation7CGFloatVATSo0M8RelationVSo16UILayoutPriorityatF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>multiplier:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0oE0V_AQypSg14CoreFoundation7CGFloatVAUSo0O8RelationVSo16UILayoutPriorityaSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/constrainAttribute(_:toAttribute:ofView:multiplier:offset:relation:priority:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18constrainAttribute_02toE06ofView10multiplier6offset8relation8priority9autoScaleSo18NSLayoutConstraintCSo0oE0V_AQypSg14CoreFoundation7CGFloatVAUSo0O8RelationVSo16UILayoutPriorityaSbSgtF">constrainAttribute(_:<wbr>toAttribute:<wbr>ofView:<wbr>multiplier:<wbr>offset:<wbr>relation:<wbr>priority:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -25406,7 +25801,16 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span> <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span> <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainAttribute</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">attribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">toAttribute</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Attribute</span><span class="p">,</span>
+    <span class="nv">ofView</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span>
+    <span class="nv">multiplier</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">offset</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span>
+    <span class="nv">relation</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Relation</span> <span class="o">=</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+    <span class="nv">priority</span><span class="p">:</span> <span class="kt">UILayoutPriority</span> <span class="o">=</span> <span class="o">.</span><span class="kd">required</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSLayoutConstraint</span></code></pre>
 
                         </div>
                       </div>
@@ -25495,6 +25899,18 @@
                               <td>
                                 <div>
                                   <p>约束优先级，默认required</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoScale</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>是否自动等比例缩放偏移值，未设置时检查视图和全局配置</p>
                                 </div>
                               </td>
                             </tr>
@@ -26520,9 +26936,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11itemSpacing04leadG004tailG00F6Length05equalJ0ySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVAQSgA2RSbtF"></a>
-                    <a name="//apple_ref/swift/Method/layoutAlong(_:itemSpacing:leadSpacing:tailSpacing:itemLength:equalLength:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11itemSpacing04leadG004tailG00F6Length05equalJ0ySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVAQSgA2RSbtF">layoutAlong(_:<wbr>itemSpacing:<wbr>leadSpacing:<wbr>tailSpacing:<wbr>itemLength:<wbr>equalLength:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11itemSpacing04leadG004tailG00F6Length05equalJ09autoScaleySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVARSgA2SS2bSgtF"></a>
+                    <a name="//apple_ref/swift/Method/layoutAlong(_:itemSpacing:leadSpacing:tailSpacing:itemLength:equalLength:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11itemSpacing04leadG004tailG00F6Length05equalJ09autoScaleySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVARSgA2SS2bSgtF">layoutAlong(_:<wbr>itemSpacing:<wbr>leadSpacing:<wbr>tailSpacing:<wbr>itemLength:<wbr>equalLength:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26537,7 +26953,15 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span><span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span> <span class="nv">itemSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">leadSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">tailSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">itemLength</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">equalLength</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span>
+    <span class="nv">itemSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">leadSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">tailSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">itemLength</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">equalLength</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -26547,9 +26971,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_10itemLength11leadSpacing04tailI0ySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVA2OtF"></a>
-                    <a name="//apple_ref/swift/Method/layoutAlong(_:itemLength:leadSpacing:tailSpacing:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_10itemLength11leadSpacing04tailI0ySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVA2OtF">layoutAlong(_:<wbr>itemLength:<wbr>leadSpacing:<wbr>tailSpacing:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_10itemLength11leadSpacing04tailI09autoScaleySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVA2PSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/layoutAlong(_:itemLength:leadSpacing:tailSpacing:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_10itemLength11leadSpacing04tailI09autoScaleySo22UILayoutConstraintAxisV_14CoreFoundation7CGFloatVA2PSbSgtF">layoutAlong(_:<wbr>itemLength:<wbr>leadSpacing:<wbr>tailSpacing:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26564,7 +26988,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span><span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span> <span class="nv">itemLength</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">leadSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">tailSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span>
+    <span class="nv">itemLength</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">leadSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">tailSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -26574,9 +27004,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11alignCenter9itemWidth11leftSpacing05rightK0ySo22UILayoutConstraintAxisV_Sb14CoreFoundation7CGFloatVSgA2QtF"></a>
-                    <a name="//apple_ref/swift/Method/layoutAlong(_:alignCenter:itemWidth:leftSpacing:rightSpacing:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11alignCenter9itemWidth11leftSpacing05rightK0ySo22UILayoutConstraintAxisV_Sb14CoreFoundation7CGFloatVSgA2QtF">layoutAlong(_:<wbr>alignCenter:<wbr>itemWidth:<wbr>leftSpacing:<wbr>rightSpacing:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11alignCenter9itemWidth11leftSpacing05rightK09autoScaleySo22UILayoutConstraintAxisV_Sb14CoreFoundation7CGFloatVSgA2RSbSgtF"></a>
+                    <a name="//apple_ref/swift/Method/layoutAlong(_:alignCenter:itemWidth:leftSpacing:rightSpacing:autoScale:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASaySo6UIViewCGRszlE11layoutAlong_11alignCenter9itemWidth11leftSpacing05rightK09autoScaleySo22UILayoutConstraintAxisV_Sb14CoreFoundation7CGFloatVSgA2RSbSgtF">layoutAlong(_:<wbr>alignCenter:<wbr>itemWidth:<wbr>leftSpacing:<wbr>rightSpacing:<wbr>autoScale:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -26591,7 +27021,14 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span><span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span> <span class="nv">alignCenter</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">itemWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">leftSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">rightSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutAlong</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">axis</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="kt">Axis</span><span class="p">,</span>
+    <span class="nv">alignCenter</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">itemWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">leftSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">rightSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -51350,7 +51787,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-05)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -17,7 +17,7 @@
     <a title="TabBarItemContentView Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.7.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.8.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -569,6 +569,9 @@
                 <a href="../Classes/PluginManager.html">PluginManager</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/PopupConfiguration.html">PopupConfiguration</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/PopupMenu.html">PopupMenu</a>
               </li>
               <li class="nav-group-task">
@@ -603,6 +606,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Recognizer/Result.html">– Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RectCornerView.html">RectCornerView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
@@ -1520,7 +1526,7 @@
                 <a href="../Functions.html#/s:11FWFramework3gggoiyyAA13HelpingMapperC_xztlF">&gt;&gt;&gt;(_:_:)</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Functions.html#/s:11FWFramework30_getTypeByMangledNameInContext__07genericH00I9ArgumentsypXpSgSPys5UInt8VG_SiSVSgAItF">_getTypeByMangledNameInContext(_:_:genericContext:genericArguments:)</a>
+                <a href="../Functions.html#/s:11FWFramework30_getTypeByMangledNameInContext__07genericH00I9ArgumentsypXpSgSPys5UInt8VG_SuSVSgAItF">_getTypeByMangledNameInContext(_:_:genericContext:genericArguments:)</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Functions.html#/s:11FWFramework11writeUint16_6offset5valueySays5UInt8VGz_Sis6UInt16VtF">writeUint16(_:offset:value:)</a>
@@ -1802,6 +1808,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/PopupMenuDelegate.html">PopupMenuDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PopupViewControllerProtocol.html">PopupViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ProgressViewPlugin.html">ProgressViewPlugin</a>
@@ -2457,7 +2466,8 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TabBarItemContentView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">TabBarItemContentView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                 </div>
               </div>
@@ -2496,7 +2506,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2523,7 +2534,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2550,7 +2562,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">imageURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">imageURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2577,7 +2590,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">selectedImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">selectedImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2604,7 +2618,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">selectedImageURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">selectedImageURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2631,7 +2646,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">enabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">enabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2658,7 +2674,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">selected</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">selected</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2685,7 +2702,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">highlighted</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">highlighted</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2712,7 +2730,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2739,7 +2758,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightTextColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightTextColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2766,7 +2786,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">iconColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">iconColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2793,7 +2814,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightIconColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightIconColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2820,7 +2842,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">backdropColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">backdropColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2847,7 +2870,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightBackdropColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">highlightBackdropColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2874,7 +2898,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">renderingMode</span><span class="p">:</span> <span class="kt">UIImage</span><span class="o">.</span><span class="kt">RenderingMode</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">renderingMode</span><span class="p">:</span> <span class="kt">UIImage</span><span class="o">.</span><span class="kt">RenderingMode</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2901,7 +2926,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">itemContentMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TabBarItemContentMode.html">TabBarItemContentMode</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">itemContentMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/TabBarItemContentMode.html">TabBarItemContentMode</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2928,7 +2954,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">titlePositionAdjustment</span><span class="p">:</span> <span class="kt">UIOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">titlePositionAdjustment</span><span class="p">:</span> <span class="kt">UIOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2955,7 +2982,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">insets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2982,7 +3010,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">imageInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">imageInsets</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3009,7 +3038,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span></code></pre>
 
                         </div>
                       </div>
@@ -3036,7 +3066,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">titleLabel</span><span class="p">:</span> <span class="kt">UILabel</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">titleLabel</span><span class="p">:</span> <span class="kt">UILabel</span></code></pre>
 
                         </div>
                       </div>
@@ -3063,7 +3094,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeValue</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3090,7 +3122,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3117,7 +3150,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeView</span><span class="p">:</span> <span class="kt"><a href="../Classes/TabBarItemBadgeView.html">TabBarItemBadgeView</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeView</span><span class="p">:</span> <span class="kt"><a href="../Classes/TabBarItemBadgeView.html">TabBarItemBadgeView</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3144,7 +3178,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeOffset</span><span class="p">:</span> <span class="kt">UIOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">badgeOffset</span><span class="p">:</span> <span class="kt">UIOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3175,7 +3210,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3202,7 +3238,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3229,7 +3266,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateDisplay</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateDisplay</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3256,7 +3294,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateLayout</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateLayout</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3296,7 +3335,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">selectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">selectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3323,7 +3363,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">deselectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">deselectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3350,7 +3391,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">reselectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">reselectAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3377,7 +3419,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">highlightAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">highlightAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3404,7 +3447,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">dehighlightAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">dehighlightAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3431,7 +3475,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">badgeChangedAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">badgeChangedAnimation</span><span class="p">(</span><span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3443,7 +3488,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-05)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
