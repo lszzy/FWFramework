@@ -2187,7 +2187,7 @@ extension Metadata {
                 for i in 0..<self.numberOfFields {
                     let name = fieldRecords[i].fieldName
                     if let cMangledTypeName = fieldRecords[i].mangledTypeName,
-                        let fieldType = _getTypeByMangledNameInContext(cMangledTypeName, getMangledTypeNameSize(cMangledTypeName), genericContext: self.contextDescriptorPointer, genericArguments: self.genericArgumentVector) {
+                        let fieldType = _getTypeByMangledNameInContext(cMangledTypeName, UInt(getMangledTypeNameSize(cMangledTypeName)), genericContext: self.contextDescriptorPointer, genericArguments: self.genericArgumentVector) {
 
                         result.append(Property.Description(key: name, type: fieldType, offset: fieldOffsets[i]))
                     }
@@ -2490,7 +2490,7 @@ extension PointerType {
 @_silgen_name("swift_getTypeByMangledNameInContext")
 public func _getTypeByMangledNameInContext(
     _ name: UnsafePointer<UInt8>,
-    _ nameLength: Int,
+    _ nameLength: UInt,
     genericContext: UnsafeRawPointer?,
     genericArguments: UnsafeRawPointer?)
     -> Any.Type?

@@ -33,10 +33,10 @@ extension Wrapper where Base: UIViewController {
         }
     }
 
-    /// 自定义控制器present系统转场(蒙层渐变，内容向上动画)，会设置fwModalTransition
+    /// 自定义控制器present系统转场(蒙层渐变，内容默认向上动画)，会设置fwModalTransition
     @discardableResult
-    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
-        let animatedTransition = SwipeAnimatedTransition()
+    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
+        let animatedTransition = SwipeAnimatedTransition(edge: edge)
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
             presentationBlock?(presentationController)
@@ -50,7 +50,7 @@ extension Wrapper where Base: UIViewController {
     /// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
     @discardableResult
     public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
-        let animatedTransition = TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+        let animatedTransition = TransformAnimatedTransition.alertTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
             presentationBlock?(presentationController)
@@ -116,7 +116,7 @@ extension Wrapper where Base: UIView {
         let ancestorView = viewController.fw.ancestorView
         ancestorView.addSubview(base)
         if aPinEdges {
-            pinEdges()
+            pinEdges(autoScale: false)
             ancestorView.setNeedsLayout()
             ancestorView.layoutIfNeeded()
         }
@@ -128,19 +128,31 @@ extension Wrapper where Base: UIView {
         let viewController = UIViewController()
         viewController.view.addSubview(base)
         if aPinEdges {
-            pinEdges()
+            pinEdges(autoScale: false)
             viewController.view.setNeedsLayout()
             viewController.view.layoutIfNeeded()
         }
         return viewController
     }
 
-    /// 自定义视图模拟present系统转场(蒙层渐变，内容向上动画)
-    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, completion: ((Bool) -> Void)? = nil) {
+    /// 自定义视图模拟present系统转场(蒙层渐变，内容默认向上动画)
+    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: ((Bool) -> Void)? = nil) {
+        let transform: CGAffineTransform
+        switch edge {
+        case .top:
+            transform = .init(translationX: 0, y: -(contentView?.frame.size.height ?? 0))
+        case .left:
+            transform = .init(translationX: -(contentView?.frame.size.width ?? 0), y: 0)
+        case .right:
+            transform = .init(translationX: contentView?.frame.size.width ?? 0, y: 0)
+        default:
+            transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+        }
+        
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
-            contentView?.transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+            contentView?.transform = transform
             let strongBase = base
             UIView.animate(withDuration: 0.25) {
                 contentView?.transform = .identity
@@ -151,7 +163,7 @@ extension Wrapper where Base: UIView {
         } else {
             let strongBase = base
             UIView.animate(withDuration: 0.25) {
-                contentView?.transform = .init(translationX: 0, y: contentView?.frame.size.height ?? 0)
+                contentView?.transform = transform
                 strongBase.alpha = 0
             } completion: { finished in
                 contentView?.transform = .identity
@@ -305,32 +317,52 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     // MARK: - Interactive
-    /// 是否启用交互pan手势进行pop|dismiss，默认NO。可使用父类属性设置交互动画
+    /// 是否启用交互pan手势进行pop|dismiss，默认false。可使用父类属性设置交互动画
     open var interactEnabled = false {
         didSet {
             _gestureRecognizer?.isEnabled = interactEnabled
         }
     }
+    
+    /// 指定与滚动视图pan手势的冲突交互方向，默认向下
+    open var interactDirection: UISwipeGestureRecognizer.Direction = .down {
+        didSet {
+            (_gestureRecognizer as? PanGestureRecognizer)?.direction = interactDirection
+        }
+    }
 
-    /// 是否启用screenEdge交互手势，默认NO，gestureRecognizer加载前设置生效
-    open var interactScreenEdge = false
+    /// 是否启用screenEdge交互手势进行pop|dismiss，默认false。与gestureRecognizer可共存
+    open var interactScreenEdge = false {
+        didSet {
+            _screenEdgeGestureRecognizer?.isEnabled = interactScreenEdge
+        }
+    }
+    
+    /// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
+    open private(set) var isInteracting = false
+    
+    /// 是否正在以交互方式dismiss|pop，需开启交互pan手势或screenEdge手势
+    open private(set) var isInteractDismissing = false
 
-    /// 指定交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
+    /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
+    open var interactBlock: ((UIPanGestureRecognizer) -> Bool)?
+    
+    /// 自定义交互时dismiss关闭动画完成回调(仅交互才会触发)，默认nil
+    open var interactDismissCompletion: (() -> Void)?
+
+    /// 自定义dismiss关闭动画完成回调(交互和非交互都会触发)，默认nil
+    open var dismissCompletion: (() -> Void)?
+    
+    /// 当前交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
     open var gestureRecognizer: UIPanGestureRecognizer {
         get {
             if let gesture = _gestureRecognizer {
                 return gesture
             } else {
-                if interactScreenEdge {
-                    let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-                    gesture.edges = .left
-                    _gestureRecognizer = gesture
-                    return gesture
-                } else {
-                    let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-                    _gestureRecognizer = gesture
-                    return gesture
-                }
+                let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                gesture.direction = interactDirection
+                _gestureRecognizer = gesture
+                return gesture
             }
         }
         set {
@@ -339,26 +371,41 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         }
     }
     private var _gestureRecognizer: UIPanGestureRecognizer?
-
-    /// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
-    open private(set) var isInteractive = false
-
-    /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
-    open var interactBlock: ((UIPanGestureRecognizer) -> Bool)?
-
-    /// 自定义dismiss关闭动画完成回调，默认nil
-    open var dismissCompletion: (() -> Void)?
     
-    /// 手工绑定交互控制器，添加pan手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
+    /// 当前交互screenEdge手势对象，可设置交互边，默认left
+    open var screenEdgeGestureRecognizer: UIScreenEdgePanGestureRecognizer {
+        get {
+            if let screenEdgeGesture = _screenEdgeGestureRecognizer {
+                return screenEdgeGesture
+            } else {
+                let screenEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                screenEdgeGesture.edges = .left
+                _screenEdgeGestureRecognizer = screenEdgeGesture
+                return screenEdgeGesture
+            }
+        }
+        set {
+            _screenEdgeGestureRecognizer = newValue
+            newValue.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
+        }
+    }
+    private var _screenEdgeGestureRecognizer: UIScreenEdgePanGestureRecognizer?
+    
+    /// 手工绑定交互控制器，添加pan手势或screenEdge手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
     open func interact(with viewController: UIViewController) {
         guard viewController.view != nil else { return }
         
-        if viewController.view.gestureRecognizers?.contains(gestureRecognizer) ?? false { return }
-        viewController.view.addGestureRecognizer(gestureRecognizer)
+        let gestureRecognizers = viewController.view.gestureRecognizers ?? []
+        if interactEnabled, !gestureRecognizers.contains(gestureRecognizer) {
+            viewController.view.addGestureRecognizer(gestureRecognizer)
+        }
+        if interactScreenEdge, !gestureRecognizers.contains(screenEdgeGestureRecognizer) {
+            viewController.view.addGestureRecognizer(screenEdgeGestureRecognizer)
+        }
     }
 
     // MARK: - Presentation
-    /// 是否启用默认展示控制器，启用后自动设置presentationBlock返回PresentationController，默认NO
+    /// 是否启用默认展示控制器，启用后自动设置presentationBlock返回PresentationController，默认false
     open var presentationEnabled: Bool {
         get {
             return presentationBlock != nil
@@ -381,12 +428,16 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     // MARK: - Private
     private var isSystem = false
     
+    private var shouldInteract: Bool {
+        return !isSystem && (interactEnabled || interactScreenEdge)
+    }
+    
     private var interactBegan: (() -> Void)?
     
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            isInteractive = true
+            isInteracting = true
             
             var shouldBegin = true
             if let interactBlock = interactBlock {
@@ -413,7 +464,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
                 self.update(percent)
             }
         case .cancelled, .failed, .ended:
-            isInteractive = false
+            isInteracting = false
             
             var interactEnded = true
             if let interactBlock = interactBlock {
@@ -459,10 +510,12 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     
     private func interactiveTransition(for transition: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if transitionType == .dismiss || transitionType == .pop {
-            if !isSystem && interactEnabled && isInteractive {
+            if shouldInteract && isInteracting {
+                isInteractDismissing = true
                 return self
             }
         }
+        isInteractDismissing = false
         return nil
     }
     
@@ -470,7 +523,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transitionType = .present
         // 自动设置和绑定dismiss交互转场，在dismiss前设置生效
-        if !isSystem && interactEnabled && interactBlock == nil {
+        if shouldInteract && interactBlock == nil {
             interactBegan = { [weak presented] in
                 presented?.dismiss(animated: true, completion: nil)
             }
@@ -506,7 +559,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
             let transition = toVC.fw.viewTransition ?? self
             transition.transitionType = .push
             // 自动设置和绑定pop交互转场，在pop前设置生效
-            if !transition.isSystem && transition.interactEnabled && transition.interactBlock == nil {
+            if transition.shouldInteract && transition.interactBlock == nil {
                 transition.interactBegan = {
                     navigationController.popViewController(animated: true)
                 }
@@ -591,7 +644,8 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         let didComplete = !(transitionContext?.transitionWasCancelled ?? false)
         transitionContext?.completeTransition(didComplete)
         
-        if didComplete && dismissCompletion != nil && type == .dismiss {
+        if didComplete, type == .dismiss {
+            if isInteractDismissing { interactDismissCompletion?() }
             dismissCompletion?()
         }
     }
@@ -602,19 +656,40 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
 /// 滑动转场动画类，默认上下
 open class SwipeAnimatedTransition: AnimatedTransition {
     
+    /// 创建滑动转场，指定转场边缘方向
+    public convenience init(edge: UIRectEdge) {
+        let inDirection: UISwipeGestureRecognizer.Direction
+        let outDirection: UISwipeGestureRecognizer.Direction
+        switch edge {
+        case .top:
+            inDirection = .down
+            outDirection = .up
+        case .left:
+            inDirection = .right
+            outDirection = .left
+        case .right:
+            inDirection = .left
+            outDirection = .right
+        default:
+            inDirection = .up
+            outDirection = .down
+        }
+        self.init(inDirection: inDirection, outDirection: outDirection)
+    }
+    
     /// 创建滑动转场，指定进入(push|present)和消失(pop|dismiss)方向
     public convenience init(inDirection: UISwipeGestureRecognizer.Direction, outDirection: UISwipeGestureRecognizer.Direction) {
         self.init()
         self.inDirection = inDirection
         self.outDirection = outDirection
-        self.updateDirection()
+        self.interactDirection = outDirection
     }
 
     /// 指定进入(push|present)方向，默认上滑Up
     open var inDirection: UISwipeGestureRecognizer.Direction = .up
     /// 指定消失(pop|dismiss)方向，默认下滑Down
     open var outDirection: UISwipeGestureRecognizer.Direction = .down {
-        didSet { updateDirection() }
+        didSet { interactDirection = outDirection }
     }
     
     open override func animate() {
@@ -693,17 +768,16 @@ open class SwipeAnimatedTransition: AnimatedTransition {
         return CGRectOffset(frame, offsetX, offsetY)
     }
     
-    private func updateDirection() {
-        if let gestureRecognizer = gestureRecognizer as? PanGestureRecognizer {
-            gestureRecognizer.direction = outDirection
-        }
-    }
-    
 }
 
 // MARK: - TransformAnimatedTransition
 /// 形变转场动画类，默认缩放
 open class TransformAnimatedTransition: AnimatedTransition {
+    
+    /// 创建Alert转场动画
+    public static func alertTransition() -> TransformAnimatedTransition {
+        return TransformAnimatedTransition(inTransform: .init(scaleX: 1.1, y: 1.1), outTransform: .identity)
+    }
     
     /// 创建形变转场，指定进入(push|present)和消失(pop|dismiss)形变
     public convenience init(inTransform: CGAffineTransform, outTransform: CGAffineTransform) {
@@ -716,6 +790,8 @@ open class TransformAnimatedTransition: AnimatedTransition {
     open var inTransform: CGAffineTransform = .init(scaleX: 0.01, y: 0.01)
     /// 指定消失(pop|dismiss)形变，默认缩放0.01
     open var outTransform: CGAffineTransform = .init(scaleX: 0.01, y: 0.01)
+    /// 是否启用透明度动画，默认true
+    open var alphaAnimation = true
     
     open override func animate() {
         let type = self.transitionType
@@ -725,11 +801,15 @@ open class TransformAnimatedTransition: AnimatedTransition {
         self.start()
         if transitionIn {
             transitionView?.transform = inTransform
-            transitionView?.alpha = 0
+            if self.alphaAnimation {
+                transitionView?.alpha = 0
+            }
         }
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
             transitionView?.transform = transitionIn ? .identity : self.outTransform
-            transitionView?.alpha = transitionIn ? 1 : 0
+            if self.alphaAnimation {
+                transitionView?.alpha = transitionIn ? 1 : 0
+            }
         } completion: { _ in
             self.complete()
         }
@@ -741,23 +821,25 @@ open class TransformAnimatedTransition: AnimatedTransition {
 /// 自定义展示控制器。默认显示暗色背景动画且弹出视图占满容器，可通过属性自定义
 open class PresentationController: UIPresentationController {
     
-    /// 是否显示暗色背景，默认YES
+    /// 是否显示暗色背景，默认true
     open var showDimming = true {
         didSet {
             dimmingView.isHidden = !showDimming
         }
     }
-    /// 是否可以点击暗色背景关闭，默认YES。如果弹出视图占满容器，手势不生效(因为弹出视图挡住了暗色背景)
+    /// 是否可以点击暗色背景关闭，默认true。如果弹出视图占满容器，手势不生效(因为弹出视图挡住了暗色背景)，也可开启弹出视图isPenetrable让手势强制生效
     open var dimmingClick = true {
         didSet {
             dimmingView.isUserInteractionEnabled = dimmingClick
         }
     }
-    /// 是否执行暗黑背景透明度动画，默认YES
+    /// 是否执行暗黑背景透明度动画，默认true
     open var dimmingAnimated = true
     /// 暗色背景颜色，默认黑色，透明度0.5
     open var dimmingColor: UIColor? = UIColor.black.withAlphaComponent(0.5)
-    /// 设置点击暗色背景关闭完成回调，默认nil
+    /// 设置点击暗色背景关闭时是否执行动画，默认true
+    open var dismissAnimated = true
+    /// 设置点击暗色背景关闭完成回调(非交互才会触发)，默认nil
     open var dismissCompletion: (() -> Void)?
 
     /// 设置弹出视图的圆角位置，默认左上和右上。如果弹出视图占满容器，不生效需弹出视图自定义
@@ -773,6 +855,8 @@ open class PresentationController: UIPresentationController {
     open var presentedSize: CGSize = .zero
     /// 设置弹出视图的顶部距离，默认0占满容器，优先级低
     open var verticalInset: CGFloat = 0
+    /// 设置弹出视图的横向距离，默认0占满容器，优先级低
+    open var horizontalInset: CGFloat = 0
     
     private lazy var dimmingView: UIView = {
         let result = UIView(frame: containerView?.bounds ?? .zero)
@@ -784,7 +868,7 @@ open class PresentationController: UIPresentationController {
     }()
     
     @objc func onTapAction(_ sender: Any) {
-        presentedViewController.dismiss(animated: true, completion: dismissCompletion)
+        presentedViewController.dismiss(animated: dismissAnimated, completion: dismissCompletion)
     }
     
     // MARK: - Override
@@ -839,13 +923,17 @@ open class PresentationController: UIPresentationController {
             frame.origin.x = ((containerView?.bounds.size.width ?? .zero) - presentedSize.width) / 2
             frame.origin.y = ((containerView?.bounds.size.height ?? .zero) - presentedSize.height) / 2
             return frame
-        } else if verticalInset != 0 {
-            var frame = containerView?.bounds ?? .zero
-            frame.origin.y = verticalInset
-            frame.size.height -= verticalInset
-            return frame
         } else {
-            return containerView?.bounds ?? .zero
+            var frame = containerView?.bounds ?? .zero
+            if verticalInset != 0 {
+                frame.origin.y = verticalInset
+                frame.size.height -= verticalInset
+            }
+            if horizontalInset != 0 {
+                frame.origin.x = horizontalInset
+                frame.size.width -= horizontalInset * 2
+            }
+            return frame
         }
     }
     
@@ -855,10 +943,10 @@ open class PresentationController: UIPresentationController {
 /// 自动处理与滚动视图pan手势在指定方向的冲突，默认设置delegate为自身。如果找到滚动视图则处理之，否则同父类
 open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDelegate {
     
-    /// 是否自动检测滚动视图，默认YES。如需手工指定，请禁用之
+    /// 是否自动检测滚动视图，默认true。如需手工指定，请禁用之
     open var autoDetected = true
 
-    /// 是否按下就立即转换Began状态，默认NO，需要等待移动才会触发Began
+    /// 是否按下就立即转换Began状态，默认false，需要等待移动才会触发Began
     open var instantBegan = false
 
     /// 指定滚动视图，自动处理与滚动视图pan手势在指定方向的冲突。自动设置默认delegate为自身

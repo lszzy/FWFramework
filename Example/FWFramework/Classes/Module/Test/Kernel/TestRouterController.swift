@@ -107,7 +107,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func setupTableLayout() {
-        tableView.app.pinEdges()
+        tableView.chain.edges()
     }
     
     func setupNavbar() {

@@ -199,13 +199,18 @@ extension Wrapper where Base: UIView {
     
     // MARK: - Axis
     /// 父视图居中，可指定偏移距离
-    /// - Parameter offset: 偏移距离，默认zero
+    /// - Parameters:
+    ///   - offset: 偏移距离，默认zero
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func alignCenter(toSuperview offset: CGPoint = .zero) -> [NSLayoutConstraint] {
+    public func alignCenter(
+        toSuperview offset: CGPoint = .zero,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(alignAxis(toSuperview: .centerX, offset: offset.x))
-        constraints.append(alignAxis(toSuperview: .centerY, offset: offset.y))
+        constraints.append(alignAxis(toSuperview: .centerX, offset: offset.x, autoScale: autoScale))
+        constraints.append(alignAxis(toSuperview: .centerY, offset: offset.y, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -214,10 +219,15 @@ extension Wrapper where Base: UIView {
     /// - Parameters:
     ///   - axis: 居中属性
     ///   - offset: 偏移距离，默认0
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(toSuperview axis: NSLayoutConstraint.Attribute, offset: CGFloat = 0) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview, offset: offset, relation: .equal, priority: .required)
+    public func alignAxis(
+        toSuperview axis: NSLayoutConstraint.Attribute,
+        offset: CGFloat = 0,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(axis, toSuperview: base.superview, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
     }
     
     /// 与另一视图居中相同，可指定偏移距离
@@ -225,10 +235,16 @@ extension Wrapper where Base: UIView {
     ///   - axis: 居中属性
     ///   - toView: 另一视图或UILayoutGuide，下同
     ///   - offset: 偏移距离，默认0
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, offset: CGFloat = 0) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset)
+    public func alignAxis(
+        _ axis: NSLayoutConstraint.Attribute,
+        toView: Any,
+        offset: CGFloat = 0,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset, autoScale: autoScale)
     }
 
     /// 与另一视图居中指定比例
@@ -236,23 +252,34 @@ extension Wrapper where Base: UIView {
     ///   - axis: 居中属性
     ///   - toView: 另一视图
     ///   - multiplier: 指定比例
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(_ axis: NSLayoutConstraint.Attribute, toView: Any, multiplier: CGFloat) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier)
+    public func alignAxis(
+        _ axis: NSLayoutConstraint.Attribute,
+        toView: Any,
+        multiplier: CGFloat,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier, autoScale: autoScale)
     }
     
     // MARK: - Edge
     /// 与父视图四条边属性相同，可指定insets距离
-    /// - Parameter insets: 指定距离insets，默认zero
+    /// - Parameters:
+    ///   - insets: 指定距离insets，默认zero
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperview insets: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
+    public func pinEdges(
+        toSuperview insets: UIEdgeInsets = .zero,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .top, inset: insets.top))
-        constraints.append(pinEdge(toSuperview: .left, inset: insets.left))
-        constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom))
-        constraints.append(pinEdge(toSuperview: .right, inset: insets.right))
+        constraints.append(pinEdge(toSuperview: .top, inset: insets.top, autoScale: autoScale))
+        constraints.append(pinEdge(toSuperview: .left, inset: insets.left, autoScale: autoScale))
+        constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom, autoScale: autoScale))
+        constraints.append(pinEdge(toSuperview: .right, inset: insets.right, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -261,21 +288,26 @@ extension Wrapper where Base: UIView {
     /// - Parameters:
     ///   - insets: 指定距离insets
     ///   - excludingEdge: 排除的边
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSuperview insets: UIEdgeInsets = .zero, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+    public func pinEdges(
+        toSuperview insets: UIEdgeInsets = .zero,
+        excludingEdge: NSLayoutConstraint.Attribute,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         if excludingEdge != .top {
-            constraints.append(pinEdge(toSuperview: .top, inset: insets.top))
+            constraints.append(pinEdge(toSuperview: .top, inset: insets.top, autoScale: autoScale))
         }
         if excludingEdge != .leading && excludingEdge != .left {
-            constraints.append(pinEdge(toSuperview: .left, inset: insets.left))
+            constraints.append(pinEdge(toSuperview: .left, inset: insets.left, autoScale: autoScale))
         }
         if excludingEdge != .bottom {
-            constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom))
+            constraints.append(pinEdge(toSuperview: .bottom, inset: insets.bottom, autoScale: autoScale))
         }
         if excludingEdge != .trailing && excludingEdge != .right {
-            constraints.append(pinEdge(toSuperview: .right, inset: insets.right))
+            constraints.append(pinEdge(toSuperview: .right, inset: insets.right, autoScale: autoScale))
         }
         lastConstraints = constraints
         return constraints
@@ -284,12 +316,16 @@ extension Wrapper where Base: UIView {
     /// 与父视图水平方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinHorizontal(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func pinHorizontal(
+        toSuperview inset: CGFloat = .zero,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .left, inset: inset))
-        constraints.append(pinEdge(toSuperview: .right, inset: inset))
+        constraints.append(pinEdge(toSuperview: .left, inset: inset, autoScale: autoScale))
+        constraints.append(pinEdge(toSuperview: .right, inset: inset, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -297,12 +333,16 @@ extension Wrapper where Base: UIView {
     /// 与父视图垂直方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinVertical(toSuperview inset: CGFloat = .zero) -> [NSLayoutConstraint] {
+    public func pinVertical(
+        toSuperview inset: CGFloat = .zero,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSuperview: .top, inset: inset))
-        constraints.append(pinEdge(toSuperview: .bottom, inset: inset))
+        constraints.append(pinEdge(toSuperview: .top, inset: inset, autoScale: autoScale))
+        constraints.append(pinEdge(toSuperview: .bottom, inset: inset, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -313,10 +353,17 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSuperview edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview, offset: inset, relation: relation, priority: priority)
+    public func pinEdge(
+        toSuperview edge: NSLayoutConstraint.Attribute,
+        inset: CGFloat = .zero,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(edge, toSuperview: base.superview, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图边属性相同，可指定偏移距离和关系
@@ -327,21 +374,35 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(_ edge: NSLayoutConstraint.Attribute, toEdge: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority)
+    public func pinEdge(
+        _ edge: NSLayoutConstraint.Attribute,
+        toEdge: NSLayoutConstraint.Attribute,
+        ofView: Any,
+        offset: CGFloat = 0,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
     
     // MARK: - SafeArea
     /// 父视图安全区域居中，可指定偏移距离。iOS11以下使用Superview实现，下同
-    /// - Parameter offset: 偏移距离
+    /// - Parameters:
+    ///   - offset: 偏移距离
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func alignCenter(toSafeArea offset: CGPoint) -> [NSLayoutConstraint] {
+    public func alignCenter(
+        toSafeArea offset: CGPoint,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(alignAxis(toSafeArea: .centerX, offset: offset.x))
-        constraints.append(alignAxis(toSafeArea: .centerY, offset: offset.y))
+        constraints.append(alignAxis(toSafeArea: .centerX, offset: offset.x, autoScale: autoScale))
+        constraints.append(alignAxis(toSafeArea: .centerY, offset: offset.y, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -350,22 +411,32 @@ extension Wrapper where Base: UIView {
     /// - Parameters:
     ///   - axis: 居中属性
     ///   - offset: 偏移距离，默认0
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func alignAxis(toSafeArea axis: NSLayoutConstraint.Attribute, offset: CGFloat = .zero) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required)
+    public func alignAxis(
+        toSafeArea axis: NSLayoutConstraint.Attribute,
+        offset: CGFloat = .zero,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(axis, toSuperview: base.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
     }
 
     /// 与父视图安全区域四条边属性相同，可指定距离insets
-    /// - Parameter insets: 指定距离insets
+    /// - Parameters:
+    ///   - insets: 指定距离insets
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeArea insets: UIEdgeInsets) -> [NSLayoutConstraint] {
+    public func pinEdges(
+        toSafeArea insets: UIEdgeInsets,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .top, inset: insets.top))
-        constraints.append(pinEdge(toSafeArea: .left, inset: insets.left))
-        constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom))
-        constraints.append(pinEdge(toSafeArea: .right, inset: insets.right))
+        constraints.append(pinEdge(toSafeArea: .top, inset: insets.top, autoScale: autoScale))
+        constraints.append(pinEdge(toSafeArea: .left, inset: insets.left, autoScale: autoScale))
+        constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom, autoScale: autoScale))
+        constraints.append(pinEdge(toSafeArea: .right, inset: insets.right, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -374,21 +445,26 @@ extension Wrapper where Base: UIView {
     /// - Parameters:
     ///   - insets: 指定距离insets
     ///   - excludingEdge: 排除的边
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinEdges(toSafeArea insets: UIEdgeInsets, excludingEdge: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+    public func pinEdges(
+        toSafeArea insets: UIEdgeInsets,
+        excludingEdge: NSLayoutConstraint.Attribute,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
         if excludingEdge != .top {
-            constraints.append(pinEdge(toSafeArea: .top, inset: insets.top))
+            constraints.append(pinEdge(toSafeArea: .top, inset: insets.top, autoScale: autoScale))
         }
         if excludingEdge != .leading && excludingEdge != .left {
-            constraints.append(pinEdge(toSafeArea: .left, inset: insets.left))
+            constraints.append(pinEdge(toSafeArea: .left, inset: insets.left, autoScale: autoScale))
         }
         if excludingEdge != .bottom {
-            constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom))
+            constraints.append(pinEdge(toSafeArea: .bottom, inset: insets.bottom, autoScale: autoScale))
         }
         if excludingEdge != .trailing && excludingEdge != .right {
-            constraints.append(pinEdge(toSafeArea: .right, inset: insets.right))
+            constraints.append(pinEdge(toSafeArea: .right, inset: insets.right, autoScale: autoScale))
         }
         lastConstraints = constraints
         return constraints
@@ -397,12 +473,16 @@ extension Wrapper where Base: UIView {
     /// 与父视图安全区域水平方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinHorizontal(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinHorizontal(
+        toSafeArea inset: CGFloat,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .left, inset: inset))
-        constraints.append(pinEdge(toSafeArea: .right, inset: inset))
+        constraints.append(pinEdge(toSafeArea: .left, inset: inset, autoScale: autoScale))
+        constraints.append(pinEdge(toSafeArea: .right, inset: inset, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -410,12 +490,16 @@ extension Wrapper where Base: UIView {
     /// 与父视图安全区域垂直方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func pinVertical(toSafeArea inset: CGFloat) -> [NSLayoutConstraint] {
+    public func pinVertical(
+        toSafeArea inset: CGFloat,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(pinEdge(toSafeArea: .top, inset: inset))
-        constraints.append(pinEdge(toSafeArea: .bottom, inset: inset))
+        constraints.append(pinEdge(toSafeArea: .top, inset: inset, autoScale: autoScale))
+        constraints.append(pinEdge(toSafeArea: .bottom, inset: inset, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -426,21 +510,33 @@ extension Wrapper where Base: UIView {
     ///   - inset: 偏移距离，默认0
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func pinEdge(toSafeArea edge: NSLayoutConstraint.Attribute, inset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority)
+    public func pinEdge(
+        toSafeArea edge: NSLayoutConstraint.Attribute,
+        inset: CGFloat = .zero,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(edge, toSuperview: base.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
     }
     
     // MARK: - Dimension
     /// 设置宽高尺寸
-    /// - Parameter size: 尺寸大小
+    /// - Parameters:
+    ///   - size: 尺寸大小
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 约束数组
     @discardableResult
-    public func setDimensions(_ size: CGSize) -> [NSLayoutConstraint] {
+    public func setDimensions(
+        _ size: CGSize,
+        autoScale: Bool? = nil
+    ) -> [NSLayoutConstraint] {
         var constraints: [NSLayoutConstraint] = []
-        constraints.append(setDimension(.width, size: size.width))
-        constraints.append(setDimension(.height, size: size.height))
+        constraints.append(setDimension(.width, size: size.width, autoScale: autoScale))
+        constraints.append(setDimension(.height, size: size.height, autoScale: autoScale))
         lastConstraints = constraints
         return constraints
     }
@@ -451,10 +547,17 @@ extension Wrapper where Base: UIView {
     ///   - size: 尺寸大小
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func setDimension(_ dimension: NSLayoutConstraint.Attribute, size: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority)
+    public func setDimension(
+        _ dimension: NSLayoutConstraint.Attribute,
+        size: CGFloat,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与视图自身尺寸属性指定比例，指定关系
@@ -464,10 +567,18 @@ extension Wrapper where Base: UIView {
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return matchDimension(dimension, toDimension: toDimension, ofView: base, multiplier: multiplier, relation: relation, priority: priority)
+    public func matchDimension(
+        _ dimension: NSLayoutConstraint.Attribute,
+        toDimension: NSLayoutConstraint.Attribute,
+        multiplier: CGFloat,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return matchDimension(dimension, toDimension: toDimension, ofView: base, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图尺寸属性相同，可指定相差大小和关系
@@ -478,10 +589,19 @@ extension Wrapper where Base: UIView {
     ///   - offset: 相差大小，默认0
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority)
+    public func matchDimension(
+        _ dimension: NSLayoutConstraint.Attribute,
+        toDimension: NSLayoutConstraint.Attribute,
+        ofView: Any,
+        offset: CGFloat = .zero,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图尺寸属性指定比例，可指定关系
@@ -492,10 +612,19 @@ extension Wrapper where Base: UIView {
     ///   - multiplier: 指定比例
     ///   - relation: 约束关系，默认相等
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func matchDimension(_ dimension: NSLayoutConstraint.Attribute, toDimension: NSLayoutConstraint.Attribute, ofView: Any, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority)
+    public func matchDimension(
+        _ dimension: NSLayoutConstraint.Attribute,
+        toDimension: NSLayoutConstraint.Attribute,
+        ofView: Any,
+        multiplier: CGFloat,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
     }
     
     // MARK: - Constrain
@@ -507,10 +636,19 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离
     ///   - relation: 约束关系
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority)
+    public func constrainAttribute(
+        _ attribute: NSLayoutConstraint.Attribute,
+        toAttribute: NSLayoutConstraint.Attribute,
+        ofView: Any?,
+        offset: CGFloat = .zero,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图属性指定比例，指定关系
@@ -522,10 +660,20 @@ extension Wrapper where Base: UIView {
     ///   - offset: 偏移距离
     ///   - relation: 约束关系
     ///   - priority: 约束优先级，默认required
+    ///   - autoScale: 是否自动等比例缩放偏移值，未设置时检查视图和全局配置
     /// - Returns: 布局约束
     @discardableResult
-    public func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat = .zero, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority, isOpposite: false)
+    public func constrainAttribute(
+        _ attribute: NSLayoutConstraint.Attribute,
+        toAttribute: NSLayoutConstraint.Attribute,
+        ofView: Any?,
+        multiplier: CGFloat,
+        offset: CGFloat = .zero,
+        relation: NSLayoutConstraint.Relation = .equal,
+        priority: UILayoutPriority = .required,
+        autoScale: Bool? = nil
+    ) -> NSLayoutConstraint {
+        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority, isOpposite: false, autoScale: autoScale)
     }
     
     // MARK: - Constraint
@@ -653,7 +801,7 @@ extension Wrapper where Base: UIView {
         lastConstraints.removeAll()
     }
     
-    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority) -> NSLayoutConstraint {
+    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, autoScale: Bool?) -> NSLayoutConstraint {
         assert(base.superview != nil, "View's superview must not be nil.\nView: \(base)")
         var isOpposite = false
         var targetRelation = relation
@@ -666,10 +814,10 @@ extension Wrapper where Base: UIView {
             }
         }
         
-        return constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: offset, relation: targetRelation, priority: priority, isOpposite: isOpposite)
+        return constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: offset, relation: targetRelation, priority: priority, isOpposite: isOpposite, autoScale: autoScale)
     }
     
-    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool) -> NSLayoutConstraint {
+    private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool, autoScale: Bool?) -> NSLayoutConstraint {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
         if UIView.innerAutoLayoutRTL {
@@ -713,6 +861,9 @@ extension Wrapper where Base: UIView {
             allConstraints.append(targetConstraint)
         }
         lastConstraints = [targetConstraint]
+        if let autoScale = autoScale {
+            targetConstraint.fw.autoScaleLayout = autoScale
+        }
         targetConstraint.fw.offset = offset
         if targetConstraint.priority != priority {
             targetConstraint.priority = priority
@@ -989,29 +1140,37 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，适用于间距固定场景，尺寸未设置(可手工指定)，若只有一个则间距不生效
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        itemSpacing: CGFloat,
+        leadSpacing: CGFloat? = nil,
+        tailSpacing: CGFloat? = nil,
+        itemLength: CGFloat? = nil,
+        equalLength: Bool = false,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if let prev = prev {
-                    view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing)
+                    view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing, autoScale: autoScale)
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.width, size: itemLength)
+                        view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
-                        view.fw.matchDimension(.width, toDimension: .width, ofView: prev)
+                        view.fw.matchDimension(.width, toDimension: .width, ofView: prev, autoScale: autoScale)
                     }
                 } else {
                     if let leadSpacing = leadSpacing {
-                        view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                        view.fw.pinEdge(toSuperview: .left, inset: leadSpacing, autoScale: autoScale)
                     }
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.width, size: itemLength)
+                        view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     }
                 }
                 if index == base.count - 1, let tailSpacing = tailSpacing {
-                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1019,22 +1178,22 @@ extension Wrapper where Base == Array<UIView> {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if let prev = prev {
-                    view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing)
+                    view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing, autoScale: autoScale)
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.height, size: itemLength)
+                        view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
-                        view.fw.matchDimension(.height, toDimension: .height, ofView: prev)
+                        view.fw.matchDimension(.height, toDimension: .height, ofView: prev, autoScale: autoScale)
                     }
                 } else {
                     if let leadSpacing = leadSpacing {
-                        view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                        view.fw.pinEdge(toSuperview: .top, inset: leadSpacing, autoScale: autoScale)
                     }
                     if let itemLength = itemLength {
-                        view.fw.setDimension(.height, size: itemLength)
+                        view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     }
                 }
                 if index == base.count - 1, let tailSpacing = tailSpacing {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1042,27 +1201,33 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        itemLength: CGFloat,
+        leadSpacing: CGFloat,
+        tailSpacing: CGFloat,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if base.count > 1 {
-                    view.fw.setDimension(.width, size: itemLength)
+                    view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                 }
                 if prev != nil {
                     if index < base.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset)
+                        view.fw.constrainAttribute(.right, toAttribute: .right, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset, autoScale: autoScale)
                     }
                 } else {
-                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing)
+                    view.fw.pinEdge(toSuperview: .left, inset: leadSpacing, autoScale: autoScale)
                 }
                 if index == base.count - 1 {
-                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1070,20 +1235,20 @@ extension Wrapper where Base == Array<UIView> {
             var prev: UIView?
             for (index, view) in base.enumerated() {
                 if base.count > 1 {
-                    view.fw.setDimension(.height, size: itemLength)
+                    view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                 }
                 if prev != nil {
                     if index < base.count - 1 {
                         let offset = (CGFloat(1) - (CGFloat(index) / CGFloat(base.count - 1))) *
                             (itemLength + leadSpacing) -
                             CGFloat(index) * tailSpacing / CGFloat(base.count - 1)
-                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset)
+                        view.fw.constrainAttribute(.bottom, toAttribute: .bottom, ofView: view.superview, multiplier: CGFloat(index) / CGFloat(base.count - 1), offset: offset, autoScale: autoScale)
                     }
                 } else {
-                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing)
+                    view.fw.pinEdge(toSuperview: .top, inset: leadSpacing, autoScale: autoScale)
                 }
                 if index == base.count - 1 {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
@@ -1091,37 +1256,44 @@ extension Wrapper where Base == Array<UIView> {
     }
     
     /// 批量对齐布局，用于补齐Along之后该方向上的其他约束
-    public func layoutAlong(_ axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) {
+    public func layoutAlong(
+        _ axis: NSLayoutConstraint.Axis,
+        alignCenter: Bool = false,
+        itemWidth: CGFloat? = nil,
+        leftSpacing: CGFloat? = nil,
+        rightSpacing: CGFloat? = nil,
+        autoScale: Bool? = nil
+    ) {
         guard base.count > 0 else { return }
         
         if axis == .horizontal {
             for view in base {
                 if alignCenter {
-                    view.fw.alignAxis(toSuperview: .centerY)
+                    view.fw.alignAxis(toSuperview: .centerY, autoScale: autoScale)
                 }
                 if let itemWidth = itemWidth {
-                    view.fw.setDimension(.height, size: itemWidth)
+                    view.fw.setDimension(.height, size: itemWidth, autoScale: autoScale)
                 }
                 if let leftSpacing = leftSpacing {
-                    view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing)
+                    view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing, autoScale: autoScale)
                 }
                 if let rightSpacing = rightSpacing {
-                    view.fw.pinEdge(toSuperview: .top, inset: rightSpacing)
+                    view.fw.pinEdge(toSuperview: .top, inset: rightSpacing, autoScale: autoScale)
                 }
             }
         } else {
             for view in base {
                 if alignCenter {
-                    view.fw.alignAxis(toSuperview: .centerX)
+                    view.fw.alignAxis(toSuperview: .centerX, autoScale: autoScale)
                 }
                 if let itemWidth = itemWidth {
-                    view.fw.setDimension(.width, size: itemWidth)
+                    view.fw.setDimension(.width, size: itemWidth, autoScale: autoScale)
                 }
                 if let leftSpacing = leftSpacing {
-                    view.fw.pinEdge(toSuperview: .left, inset: leftSpacing)
+                    view.fw.pinEdge(toSuperview: .left, inset: leftSpacing, autoScale: autoScale)
                 }
                 if let rightSpacing = rightSpacing {
-                    view.fw.pinEdge(toSuperview: .right, inset: rightSpacing)
+                    view.fw.pinEdge(toSuperview: .right, inset: rightSpacing, autoScale: autoScale)
                 }
             }
         }

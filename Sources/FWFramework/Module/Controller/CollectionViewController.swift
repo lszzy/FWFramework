@@ -76,7 +76,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
 
     /// 渲染集合视图布局，setupSubviews之前调用，默认铺满
     public func setupCollectionLayout() {
-        collectionView.fw.pinEdges()
+        collectionView.fw.pinEdges(autoScale: false)
     }
     
 }
@@ -96,7 +96,11 @@ internal extension ViewControllerManager {
             collectionView.dataSource = viewController.collectionDelegate
             collectionView.delegate = viewController.collectionDelegate
         }
-        viewController.view.addSubview(collectionView)
+        if let popupController = viewController as? PopupViewControllerProtocol {
+            popupController.popupView.addSubview(collectionView)
+        } else {
+            viewController.view.addSubview(collectionView)
+        }
         
         hookCollectionViewController?(viewController)
         

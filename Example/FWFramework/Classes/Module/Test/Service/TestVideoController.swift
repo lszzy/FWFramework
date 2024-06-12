@@ -31,7 +31,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         
         self.addChild(self.player)
         self.view.addSubview(self.player.view)
-        self.player.view.app.pinEdges()
+        self.player.view.chain.edges()
         self.player.didMove(toParent: self)
         
         self.playVideo()

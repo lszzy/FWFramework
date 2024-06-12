@@ -73,7 +73,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
     
     /// 渲染表格视图布局，setupSubviews之前调用，默认铺满
     public func setupTableLayout() {
-        tableView.fw.pinEdges()
+        tableView.fw.pinEdges(autoScale: false)
     }
     
 }
@@ -93,7 +93,11 @@ internal extension ViewControllerManager {
             tableView.dataSource = viewController.tableDelegate
             tableView.delegate = viewController.tableDelegate
         }
-        viewController.view.addSubview(tableView)
+        if let popupController = viewController as? PopupViewControllerProtocol {
+            popupController.popupView.addSubview(tableView)
+        } else {
+            viewController.view.addSubview(tableView)
+        }
         
         hookTableViewController?(viewController)
         

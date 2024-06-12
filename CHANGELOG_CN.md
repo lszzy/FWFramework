@@ -1,5 +1,16 @@
 # 更新日志
 
+## [5.8.0] - 2024-06-12
+
+### Changed
+* 兼容Xcode16，修复编译报错
+* AutoLayout布局扩展方法新增autoScale参数
+* 框架所有组件布局代码禁用autoScale自动等比例缩放
+* 新增PopupViewControllerProtocol弹窗控制器协议，支持底部、中心弹窗等
+* 新增RectCornerView处理不规则圆角问题
+* 重构ViewTransition组件，新增edge参数支持四个方向等
+* 转场动画interactEnabled与interactScreenEdge交互手势可共存
+
 ## [5.7.0] - 2024-06-05
 
 ### Added
