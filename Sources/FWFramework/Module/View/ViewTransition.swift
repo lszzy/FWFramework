@@ -331,39 +331,17 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         }
     }
 
-    /// 是否启用screenEdge交互手势，默认false，gestureRecognizer加载前设置生效
-    open var interactScreenEdge = false
-
-    /// 指定交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
-    open var gestureRecognizer: UIPanGestureRecognizer {
-        get {
-            if let gesture = _gestureRecognizer {
-                return gesture
-            } else {
-                if interactScreenEdge {
-                    let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-                    gesture.edges = .left
-                    _gestureRecognizer = gesture
-                    return gesture
-                } else {
-                    let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
-                    gesture.direction = interactDirection
-                    _gestureRecognizer = gesture
-                    return gesture
-                }
-            }
-        }
-        set {
-            _gestureRecognizer = newValue
-            newValue.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
+    /// 是否启用screenEdge交互手势进行pop|dismiss，默认false。与gestureRecognizer可共存
+    open var interactScreenEdge = false {
+        didSet {
+            _screenEdgeGestureRecognizer?.isEnabled = interactScreenEdge
         }
     }
-    private var _gestureRecognizer: UIPanGestureRecognizer?
     
     /// 是否正在交互中，手势开始才会标记为YES，手势结束标记为NO
     open private(set) var isInteracting = false
     
-    /// 是否正在以交互方式dismiss|pop，需开启interactEnabled
+    /// 是否正在以交互方式dismiss|pop，需开启交互pan手势或screenEdge手势
     open private(set) var isInteractDismissing = false
 
     /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
@@ -375,12 +353,55 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 自定义dismiss关闭动画完成回调(交互和非交互都会触发)，默认nil
     open var dismissCompletion: (() -> Void)?
     
-    /// 手工绑定交互控制器，添加pan手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
+    /// 当前交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
+    open var gestureRecognizer: UIPanGestureRecognizer {
+        get {
+            if let gesture = _gestureRecognizer {
+                return gesture
+            } else {
+                let gesture = PanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                gesture.direction = interactDirection
+                _gestureRecognizer = gesture
+                return gesture
+            }
+        }
+        set {
+            _gestureRecognizer = newValue
+            newValue.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
+        }
+    }
+    private var _gestureRecognizer: UIPanGestureRecognizer?
+    
+    /// 当前交互screenEdge手势对象，可设置交互边，默认left
+    open var screenEdgeGestureRecognizer: UIScreenEdgePanGestureRecognizer {
+        get {
+            if let screenEdgeGesture = _screenEdgeGestureRecognizer {
+                return screenEdgeGesture
+            } else {
+                let screenEdgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(gestureRecognizerAction(_:)))
+                screenEdgeGesture.edges = .left
+                _screenEdgeGestureRecognizer = screenEdgeGesture
+                return screenEdgeGesture
+            }
+        }
+        set {
+            _screenEdgeGestureRecognizer = newValue
+            newValue.addTarget(self, action: #selector(gestureRecognizerAction(_:)))
+        }
+    }
+    private var _screenEdgeGestureRecognizer: UIScreenEdgePanGestureRecognizer?
+    
+    /// 手工绑定交互控制器，添加pan手势或screenEdge手势，需要vc.view存在时调用才生效。默认自动绑定，如果自定义interactBlock，必须手工绑定
     open func interact(with viewController: UIViewController) {
         guard viewController.view != nil else { return }
         
-        if viewController.view.gestureRecognizers?.contains(gestureRecognizer) ?? false { return }
-        viewController.view.addGestureRecognizer(gestureRecognizer)
+        let gestureRecognizers = viewController.view.gestureRecognizers ?? []
+        if interactEnabled, !gestureRecognizers.contains(gestureRecognizer) {
+            viewController.view.addGestureRecognizer(gestureRecognizer)
+        }
+        if interactScreenEdge, !gestureRecognizers.contains(screenEdgeGestureRecognizer) {
+            viewController.view.addGestureRecognizer(screenEdgeGestureRecognizer)
+        }
     }
 
     // MARK: - Presentation
@@ -406,6 +427,10 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     
     // MARK: - Private
     private var isSystem = false
+    
+    private var shouldInteract: Bool {
+        return !isSystem && (interactEnabled || interactScreenEdge)
+    }
     
     private var interactBegan: (() -> Void)?
     
@@ -485,7 +510,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     
     private func interactiveTransition(for transition: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if transitionType == .dismiss || transitionType == .pop {
-            if !isSystem && interactEnabled && isInteracting {
+            if shouldInteract && isInteracting {
                 isInteractDismissing = true
                 return self
             }
@@ -498,7 +523,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transitionType = .present
         // 自动设置和绑定dismiss交互转场，在dismiss前设置生效
-        if !isSystem && interactEnabled && interactBlock == nil {
+        if shouldInteract && interactBlock == nil {
             interactBegan = { [weak presented] in
                 presented?.dismiss(animated: true, completion: nil)
             }
@@ -534,7 +559,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
             let transition = toVC.fw.viewTransition ?? self
             transition.transitionType = .push
             // 自动设置和绑定pop交互转场，在pop前设置生效
-            if !transition.isSystem && transition.interactEnabled && transition.interactBlock == nil {
+            if transition.shouldInteract && transition.interactBlock == nil {
                 transition.interactBegan = {
                     navigationController.popViewController(animated: true)
                 }
@@ -765,6 +790,8 @@ open class TransformAnimatedTransition: AnimatedTransition {
     open var inTransform: CGAffineTransform = .init(scaleX: 0.01, y: 0.01)
     /// 指定消失(pop|dismiss)形变，默认缩放0.01
     open var outTransform: CGAffineTransform = .init(scaleX: 0.01, y: 0.01)
+    /// 是否启用透明度动画，默认true
+    open var alphaAnimation = true
     
     open override func animate() {
         let type = self.transitionType
@@ -774,11 +801,15 @@ open class TransformAnimatedTransition: AnimatedTransition {
         self.start()
         if transitionIn {
             transitionView?.transform = inTransform
-            transitionView?.alpha = 0
+            if self.alphaAnimation {
+                transitionView?.alpha = 0
+            }
         }
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear) {
             transitionView?.transform = transitionIn ? .identity : self.outTransform
-            transitionView?.alpha = transitionIn ? 1 : 0
+            if self.alphaAnimation {
+                transitionView?.alpha = transitionIn ? 1 : 0
+            }
         } completion: { _ in
             self.complete()
         }
