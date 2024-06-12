@@ -30,7 +30,7 @@ open class PopupConfiguration {
     open var completionSpeed: CGFloat = 0.35
     /// 是否启用交互pan手势进行pop|dismiss，默认false，仅animationEdge生效
     open var interactEnabled = false
-    /// 是否启用screenEdge交互手势，默认false，仅animationEdge为left|right时生效
+    /// 是否启用screenEdge交互手势进行pop|dismiss，默认false，仅animationEdge为left|right时生效
     open var interactScreenEdge = false
     
     /// 是否显示暗色背景，默认YES
@@ -146,12 +146,10 @@ internal extension ViewControllerManager {
             modalTransition = popupConfiguration.alertAnimation ? TransformAnimatedTransition.alertTransition() : AnimatedTransition()
         } else {
             modalTransition = SwipeAnimatedTransition(edge: popupConfiguration.animationEdge)
-            if popupConfiguration.interactEnabled {
-                modalTransition.interactEnabled = true
-                modalTransition.interactDismissCompletion = popupConfiguration.dismissCompletion
-                if popupConfiguration.animationEdge == .top || popupConfiguration.animationEdge == .bottom {
-                    modalTransition.interactScreenEdge = popupConfiguration.interactScreenEdge
-                }
+            modalTransition.interactEnabled = popupConfiguration.interactEnabled
+            modalTransition.interactDismissCompletion = popupConfiguration.dismissCompletion
+            if popupConfiguration.animationEdge == .top || popupConfiguration.animationEdge == .bottom {
+                modalTransition.interactScreenEdge = popupConfiguration.interactScreenEdge
             }
         }
         
