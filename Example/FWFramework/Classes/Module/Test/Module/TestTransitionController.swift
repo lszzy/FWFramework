@@ -143,10 +143,6 @@ class TestTransitionController: UIViewController, TableViewControllerProtocol {
         let transition = SwipeAnimatedTransition()
         transition.interactEnabled = true
         transition.interactScreenEdge = true
-        if let gesture = transition.gestureRecognizer as? PanGestureRecognizer {
-            gesture.direction = .right
-            gesture.maximumDistance = 44
-        }
         transition.presentationBlock = { presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.verticalInset = 200
