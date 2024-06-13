@@ -206,11 +206,36 @@ extension Wrapper where Base: UIViewController {
     /// 标签栏是否隐藏，默认为true，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
     public var tabBarHidden: Bool {
         get {
+            #if compiler(>=6.0)
+            if #available(iOS 18.0, *) {
+                return base.tabBarController?.isTabBarHidden ?? true
+            }
+            #endif
+            
             return base.tabBarController?.tabBar.isHidden ?? true
         }
         set {
+            #if compiler(>=6.0)
+            if #available(iOS 18.0, *) {
+                base.tabBarController?.isTabBarHidden = newValue
+                return
+            }
+            #endif
+            
             base.tabBarController?.tabBar.isHidden = newValue
         }
+    }
+    
+    /// 动态隐藏标签栏。仅iOS18+支持animated参数，立即生效
+    public func setTabBarHidden(_ hidden: Bool, animated: Bool) {
+        #if compiler(>=6.0)
+        if #available(iOS 18.0, *) {
+            base.tabBarController?.setTabBarHidden(hidden, animated: animated)
+            return
+        }
+        #endif
+        
+        base.tabBarController?.tabBar.isHidden = hidden
     }
     
     /// 工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效
