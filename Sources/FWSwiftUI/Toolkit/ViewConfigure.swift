@@ -233,7 +233,7 @@ extension View {
                 }
             }
             .then(isPlainStyle && UIDevice.fw.iosVersion >= 16, body: { view in
-                view.introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
+                view.introspect(.list, on: .iOS(.v16Later)) { collectionView in
                     guard !collectionView.fw.propertyBool(forName: "resetListStyle") else { return }
                     collectionView.fw.setPropertyBool(true, forName: "resetListStyle")
                     
@@ -249,7 +249,7 @@ extension View {
                 }
             })
             .then(UIDevice.fw.iosVersion < 16) { view in
-                view.introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
+                view.introspect(.list, on: .iOS(.v15Earlier)) { tableView in
                     if !tableView.fw.propertyBool(forName: "resetListStyle") {
                         tableView.fw.setPropertyBool(true, forName: "resetListStyle")
                         
@@ -326,10 +326,10 @@ extension View {
         _ configuration: @escaping (UIScrollView) -> Void
     ) -> some View {
         return self
-            .introspect(.list, on: .iOS(.v13, .v14, .v15)) { tableView in
+            .introspect(.list, on: .iOS(.v15Earlier)) { tableView in
                 configuration(tableView)
             }
-            .introspect(.list, on: .iOS(.v16, .v17)) { collectionView in
+            .introspect(.list, on: .iOS(.v16Later)) { collectionView in
                 configuration(collectionView)
             }
     }
@@ -491,7 +491,7 @@ extension View {
     public func textViewConfigure(
         _ configuration: @escaping (UITextView) -> Void
     ) -> some View {
-        return introspect(.textEditor, on: .iOS(.v14, .v15, .v16)) { textView in
+        return introspect(.textEditor, on: .iOS(.v14Later)) { textView in
             configuration(textView)
         }
     }
