@@ -598,7 +598,7 @@ extension iOSVersion {
         }
         return .future
     }
-
+    
     public static let v18 = iOSVersion {
         if #available(iOS 18, *) {
             return .current
