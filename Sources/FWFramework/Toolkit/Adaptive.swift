@@ -604,8 +604,8 @@ extension Wrapper where Base: UIViewController {
 
     /// 当前标签栏布局高度，隐藏时为0，推荐使用
     public var tabBarHeight: CGFloat {
-        guard let tabController = base.tabBarController,
-              !tabController.tabBar.isHidden else { return 0 }
+        guard let tabController = base.tabBarController else { return 0 }
+        guard !tabBarHidden else { return 0 }
         if base.hidesBottomBarWhenPushed && !isHead { return 0 }
         return tabController.tabBar.frame.height
     }
@@ -616,8 +616,7 @@ extension Wrapper where Base: UIViewController {
               !navController.isToolbarHidden else { return 0 }
         // 如果未同时显示标签栏，高度需要加上安全区域高度
         var height = navController.toolbar.frame.height
-        if let tabController = base.tabBarController,
-           !tabController.tabBar.isHidden,
+        if base.tabBarController != nil, !tabBarHidden,
            !(base.hidesBottomBarWhenPushed && !isHead) {
         } else {
             height += UIScreen.fw.safeAreaInsets.bottom
