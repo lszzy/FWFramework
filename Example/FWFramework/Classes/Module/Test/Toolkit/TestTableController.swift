@@ -332,7 +332,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
     
     lazy var myImageView: UIImageView = {
         let result = UIImageView()
-        result.app.setContentModeAspectFill()
+        result.app.scaleAspectFill()
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onImageClick(_:)))
         return result
