@@ -334,7 +334,7 @@ class TestSkeletonTableHeaderView: UIView {
     lazy var imageView: UIImageView = {
         let result = UIImageView()
         result.image = UIImage.app.appIconImage()
-        result.app.setContentModeAspectFill()
+        result.app.scaleAspectFill()
         result.app.setCornerRadius(5)
         return result
     }()
