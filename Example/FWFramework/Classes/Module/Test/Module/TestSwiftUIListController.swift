@@ -123,7 +123,9 @@ struct TestSwiftUIListContent: View {
             }
         }
         .onAppear {
-            viewModel.beginRefreshing = true
+            DispatchQueue.main.async {
+                viewModel.beginRefreshing = true
+            }
         }
     }
     
