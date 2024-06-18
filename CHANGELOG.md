@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.8.1] - 2024-06-18
+
+### Changed
+* Added Later|Earlier related adaptation methods to the SwiftUI component ViewIntrospect, no need to hard-code each version number
+* ToolbarView opens updateHeight and updateLayout methods to allow subclasses to override
+* The setContentModeAspectFill method is renamed to scaleAspectFill
+
 ## [5.8.0] - 2024-06-12
 
 ### Changed

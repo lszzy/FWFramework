@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.8.1] - 2024-06-18
+
+### Changed
+* SwiftUI组件ViewIntrospect新增Later|Earlier相关适配方法，无需再写死每个版本号
+* ToolbarView开放updateHeight和updateLayout方法允许子类重写
+* setContentModeAspectFill方法重命名为scaleAspectFill
+
 ## [5.8.0] - 2024-06-12
 
 ### Changed
