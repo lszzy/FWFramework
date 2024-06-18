@@ -181,7 +181,8 @@ open class ToolbarView: UIView {
         menuView.fw.setDimension(.height, size: menuHeight, autoScale: false)
     }
     
-    private func updateHeight(_ isFirst: Bool) {
+    // MARK: - Public
+    open func updateHeight(_ isInitialize: Bool) {
         switch type {
         case .navBar:
             topHeight = UIScreen.fw.statusBarHeight
@@ -190,7 +191,7 @@ open class ToolbarView: UIView {
             menuHeight = UIScreen.fw.tabBarHeight - UIScreen.fw.safeAreaInsets.bottom
             bottomHeight = UIScreen.fw.safeAreaInsets.bottom
         case .custom:
-            if isFirst {
+            if isInitialize {
                 menuHeight = 44
             }
         default:
@@ -199,7 +200,7 @@ open class ToolbarView: UIView {
         }
     }
     
-    private func updateLayout(_ animated: Bool) {
+    open func updateLayout(_ animated: Bool) {
         setNeedsUpdateConstraints()
         invalidateIntrinsicContentSize()
         

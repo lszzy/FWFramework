@@ -831,9 +831,15 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIImageView
 extension Wrapper where Base: UIImageView {
-    /// 设置图片模式为ScaleAspectFill，自动拉伸不变形，超过区域隐藏
-    public func setContentModeAspectFill() {
+    /// 设置图片模式为scaleAspectFill，短边拉伸不变形，超过区域隐藏，一般用于宽度和高度都固定的场景
+    public func scaleAspectFill() {
         base.contentMode = .scaleAspectFill
+        base.layer.masksToBounds = true
+    }
+    
+    /// 设置图片模式为scaleAspectFit，长边拉伸不变形，超过区域隐藏，一般用于仅宽度或高度固定的场景
+    public func scaleAspectFit() {
+        base.contentMode = .scaleAspectFit
         base.layer.masksToBounds = true
     }
     
