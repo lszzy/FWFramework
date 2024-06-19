@@ -55,7 +55,7 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testBarItem.contentView = TestTabbarContentView()
         testBarItem.contentView.highlightTextColor = AppTheme.textColor
         testBarItem.contentView.highlightIconColor = AppTheme.textColor
-        testBarItem.image = Icon.iconImage("zmdi-var-bug", size: 50)
+        testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 50)
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
         

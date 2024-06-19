@@ -71,7 +71,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             self?.toggleMenu()
         }
         
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换内容高度", "contentInset撑开", "footerView撑开", "文字识别"], currentIndex: -1, actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {

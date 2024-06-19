@@ -84,7 +84,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     
     func setupNavbar() {
         app.extendedLayoutEdge = .bottom
-        app.setRightBarItem("切换") { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["默认适配", "等比例适配", "等比例缩放"], actionBlock: { index in
                 let vc = TestCompatibleController()
                 vc.mode = Mode(rawValue: index) ?? .default

@@ -76,7 +76,7 @@ class TestCacheController: UIViewController {
 extension TestCacheController: ViewControllerProtocol {
     
     func setupNavbar() {
-        app.setRightBarItem("切换") { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
                 if index == 0 {
                     self?.cache = CacheManager.manager(type: .memory)

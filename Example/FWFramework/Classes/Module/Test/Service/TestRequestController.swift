@@ -351,7 +351,7 @@ extension TestRequestController: ViewControllerProtocol {
     func setupNavbar() {
         URLSession.app.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
         
-        app.setRightBarItem("切换") { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "清理上传下载缓存"], actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {

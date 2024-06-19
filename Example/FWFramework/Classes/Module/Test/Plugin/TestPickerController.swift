@@ -56,7 +56,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["自定义选取样式", "切换PHPicker展示模式", "切换自定义选择器视频质量", "切换PHPicker导出进度", "清理缓存目录"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.setupPlugin()
