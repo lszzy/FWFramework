@@ -35,7 +35,7 @@ class TestSkeletonController: UIViewController, TableViewControllerProtocol, Ske
     }
     
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["shimmer", "solid", "scale", "none", "tableView滚动", "scrollView滚动", "添加数据"], actionBlock: { index in
                 guard let self = self else { return }
                 

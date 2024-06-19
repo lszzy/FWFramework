@@ -193,7 +193,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             }
         }
         
-        app.setRightBarItem("切换") { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换滚动", "切换滚动时收起键盘", "切换滚动视图", "自动添加-"], currentIndex: -1, actionBlock: { index in
                 guard let self = self else { return }
                 if index == 0 {

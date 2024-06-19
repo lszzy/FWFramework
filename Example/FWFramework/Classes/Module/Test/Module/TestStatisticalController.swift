@@ -176,7 +176,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     func setupLayout() {
         collectionView.isHidden = true
         StatisticalManager.shared.exposureTime = UserDefaults.app.object(forKey: "TestExposureTime").safeBool
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: [StatisticalManager.shared.exposureTime ? "关闭曝光时长" : "开启曝光时长", StatisticalManager.shared.exposureBecomeActive ? "回到前台时不重新曝光" : "回到前台时重新曝光", StatisticalManager.shared.exposureThresholds == 1 ? "设置曝光比率为0.5" : "设置曝光比率为1.0", "切换collectionView", "表格reloadData", "切换控制器statisticalExposure"], actionBlock: { [weak self] index in
                 if index == 0 {
                     StatisticalManager.shared.exposureTime = !StatisticalManager.shared.exposureTime

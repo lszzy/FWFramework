@@ -141,13 +141,6 @@ extension TestController: TableViewControllerProtocol {
     func setupNavbar() {
         let titleView = ExpandedTitleView.titleView(searchBar)
         navigationItem.titleView = titleView
-        
-        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.navigationItem.rightBarButtonItem = nil
-            self?.app.setLeftBarItem(UIBarButtonItem.SystemItem.action.rawValue, block: { _ in
-                self?.navigationItem.leftBarButtonItem = nil
-            })
-        }
     }
     
     func setupSubviews() {

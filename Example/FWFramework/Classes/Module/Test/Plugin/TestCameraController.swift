@@ -16,7 +16,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
     
     // MARK: - Setup
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] sender in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] sender in
             let allowsEditing = self?.allowsEditing ?? false
             self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
