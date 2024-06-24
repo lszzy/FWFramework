@@ -584,6 +584,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
+            ["Optional.isNil(<iOS18)", "onOptionalNil"],
         ])
     }
     
@@ -950,6 +951,17 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
         tests += testModel(model, encode: true)
+        showResults(tests)
+    }
+    
+    @objc func onOptionalNil() {
+        let dict: [String: Any?] = ["name": "John", "age": nil]
+        let value: Any? = dict["age"] as? Any
+        let value2: Any? = nil
+        
+        var tests: [Bool] = []
+        tests.append(APP.isNil(value))
+        tests.append(APP.isNil(value2))
         showResults(tests)
     }
     
