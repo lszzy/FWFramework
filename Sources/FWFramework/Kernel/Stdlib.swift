@@ -331,11 +331,18 @@ extension Optional {
         return true
     }
     public static func isOptional(_ value: Any) -> Bool {
-        return value is _OptionalProtocol
+        let mirror = Mirror(reflecting: value)
+        return mirror.displayStyle == .optional
     }
     public static func deepUnwrap(_ value: Any) -> Any? {
-        if let value = value as? _OptionalProtocol { return value.deepWrapped }
-        return value
+        let mirror = Mirror(reflecting: value)
+        if mirror.displayStyle != .optional {
+            return value
+        }
+        if let child = mirror.children.first {
+            return deepUnwrap(child.value)
+        }
+        return nil
     }
     public func then<T>(_ block: (Wrapped) throws -> T?) rethrows -> T? {
         guard let value = self else { return nil }
@@ -358,18 +365,6 @@ extension Optional {
         }
     }
     
-}
-
-private protocol _OptionalProtocol {
-    var deepWrapped: Any? { get }
-}
-
-extension Optional: _OptionalProtocol {
-    var deepWrapped: Any? {
-        guard case let .some(wrapped) = self else { return nil }
-        guard let wrapped = wrapped as? _OptionalProtocol else { return wrapped }
-        return wrapped.deepWrapped
-    }
 }
 
 // MARK: - ObjectType
