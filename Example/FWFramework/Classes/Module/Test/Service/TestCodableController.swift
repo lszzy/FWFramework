@@ -956,12 +956,14 @@ extension TestCodableController {
     
     @objc func onOptionalNil() {
         let dict: [String: Any?] = ["name": "John", "age": nil]
-        let value: Any? = dict["age"] as? Any
-        let value2: Any? = nil
+        let name: Any? = dict["name"] as? Any
+        let age: Any? = dict["age"] as? Any
+        let value: Any? = nil
         
         var tests: [Bool] = []
+        tests.append(!APP.isNil(name))
+        tests.append(APP.isNil(age))
         tests.append(APP.isNil(value))
-        tests.append(APP.isNil(value2))
         showResults(tests)
     }
     
