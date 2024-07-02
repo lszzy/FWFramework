@@ -238,7 +238,15 @@ extension String: _BuiltInBasicType {
 
 // MARK: Optional Support
 
-extension Optional: _BuiltInBasicType {
+#if compiler(>=6.0)
+extension Optional: _Measurable where Wrapped: _Measurable {}
+extension Optional: _Transformable where Wrapped: _Transformable {}
+extension Optional: _BuiltInBasicType where Wrapped: _Transformable {}
+#else
+extension Optional: _BuiltInBasicType {}
+#endif
+
+extension Optional {
 
     static func _transform(from object: Any) -> Optional? {
         if let value = (Wrapped.self as? _Transformable.Type)?.transform(from: object) as? Wrapped {
@@ -798,6 +806,15 @@ extension _ExtendCustomModelType {
                     continue
                 }
             }
+            
+            #if compiler(>=6.0)
+            if let info = property.1, (info.type as? _Transformable.Type) == nil {
+                if let result = extensions(of: info.type).takeValue(from: realValue) {
+                    dict[realKey] = result
+                    continue
+                }
+            }
+            #endif
 
             InternalLogger.logDebug("The value for key: \(key) is not transformable type")
         }
