@@ -40,6 +40,7 @@ extension TabController {
         let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
         homeController.hidesBottomBarWhenPushed = false
         let homeNav = UINavigationController(rootViewController: homeController)
+        homeNav.tabBarItem.accessibilityIdentifier = "id.home"
         homeNav.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
         homeNav.tabBarItem.title = APP.localized("homeTitle")
         homeNav.tabBarItem.app.showBadgeView(BadgeView(badgeStyle: .small), badgeValue: "1")
@@ -47,6 +48,7 @@ extension TabController {
         let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
         testController.hidesBottomBarWhenPushed = false
         let testNav = UINavigationController(rootViewController: testController)
+        testNav.tabBarItem.accessibilityIdentifier = "id.test"
         testNav.tabBarItem.image = Icon.iconImage("zmdi-var-toys", size: 26)
         testNav.tabBarItem.title = APP.localized("testTitle")
         
@@ -57,6 +59,7 @@ extension TabController {
         tabBarItem.contentView.highlightTextColor = AppTheme.textColor
         tabBarItem.contentView.highlightIconColor = AppTheme.textColor
         settingsNav.tabBarItem = tabBarItem
+        settingsNav.tabBarItem.accessibilityIdentifier = "id.settings"
         settingsNav.tabBarItem.badgeValue = ""
         settingsNav.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
         settingsNav.tabBarItem.title = APP.localized("settingTitle")
@@ -75,10 +78,21 @@ extension TabController {
 extension TabController: UITabBarControllerDelegate {
     
     public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        let animation = CAKeyframeAnimation(keyPath: "transform.scale")
-        animation.values = [1.0, 1.4, 0.9, 1.15, 0.95, 1.02, 1.0]
-        animation.duration = 0.3 * 2
-        animation.calculationMode = .cubic
+        let animation: CAAnimation
+        let identifier = viewController.tabBarItem.accessibilityIdentifier
+        if identifier == "id.test" {
+            let basicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+            basicAnimation.fromValue = NSNumber(value: 0)
+            basicAnimation.toValue = NSNumber(value: CGFloat.pi)
+            basicAnimation.duration = 0.3
+            animation = basicAnimation
+        } else {
+            let keyframeAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+            keyframeAnimation.values = [1.0, 1.4, 0.9, 1.15, 0.95, 1.02, 1.0]
+            keyframeAnimation.duration = 0.3 * 2
+            keyframeAnimation.calculationMode = .cubic
+            animation = keyframeAnimation
+        }
         
         var animationView = viewController.tabBarItem.app.imageView
         if let tabBarItem = viewController.tabBarItem as? TabBarItem {

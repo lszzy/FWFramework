@@ -111,6 +111,12 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
             testButton.tintColor = AppTheme.textColor
             settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
             
+            let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+            animation.fromValue = NSNumber(value: 0)
+            animation.toValue = NSNumber(value: CGFloat.pi)
+            animation.duration = 0.3
+            testButton.imageView?.layer.add(animation, forKey: nil)
+            
             child = testController
         } else {
             homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
