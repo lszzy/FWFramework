@@ -65,7 +65,7 @@ extension TestPreviewController: ViewControllerProtocol {
     }
     
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             guard let self = self else { return }
             let pluginText = self.usePlugin ? "不使用插件" : "使用插件"
             let progressText = self.mockProgress ? "关闭进度" : "开启进度"

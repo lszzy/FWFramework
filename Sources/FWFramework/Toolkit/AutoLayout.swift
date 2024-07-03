@@ -896,9 +896,9 @@ extension Wrapper where Base: UIView {
         }
     }
     
-    /// 布局调试Key
+    /// 布局调试Key，默认accessibilityIdentifier
     public var layoutKey: String? {
-        get { property(forName: "layoutKey") as? String }
+        get { property(forName: "layoutKey") as? String ?? base.accessibilityIdentifier }
         set { setPropertyCopy(newValue, forName: "layoutKey") }
     }
 }

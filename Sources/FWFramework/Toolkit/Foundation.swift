@@ -694,6 +694,18 @@ extension Wrapper where Base == String {
         }
     }
     
+    /// 检测链接并回调，NSAttributedString调用时请使用string防止range越界
+    public func detectLinks(types: NSTextCheckingTypes? = nil, block: (NSTextCheckingResult, String, UnsafeMutablePointer<ObjCBool>) -> Void) {
+        if let dataDetector = try? NSDataDetector(types: types ?? NSTextCheckingResult.CheckingType.link.rawValue) {
+            let string = base as NSString
+            dataDetector.enumerateMatches(in: base, range: NSMakeRange(0, string.length)) { result, flags, stop in
+                if let result = result {
+                    block(result, string.substring(with: result.range), stop)
+                }
+            }
+        }
+    }
+    
     /// 转义Html，如"a<"转义为"a&lt;"
     public var escapeHtml: String {
         let len = (base as NSString).length
@@ -872,7 +884,7 @@ extension Wrapper where Base: NSAttributedString {
     /// 获取全局样式(index为0的属性)
     public var attributes: [NSAttributedString.Key: Any]? {
         guard base.length > 0 else { return nil }
-        return base.attributes(at: 9, effectiveRange: nil)
+        return base.attributes(at: 0, effectiveRange: nil)
     }
     
     /// NSAttributedString对象转换为html字符串

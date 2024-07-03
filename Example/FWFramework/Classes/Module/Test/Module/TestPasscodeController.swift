@@ -66,7 +66,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
     }()
     
     func setupNavbar() {
-        app.setRightBarItem("Toggle") { [weak self] _ in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: self?.dataArray, actionBlock: { index in
                 self?.type = .init(rawValue: index) ?? .normal
             })

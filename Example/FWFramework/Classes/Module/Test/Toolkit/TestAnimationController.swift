@@ -27,7 +27,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
     }
     
     func setupNavbar() {
-        app.setRightBarItem(APP.localized("debugButton")) { _ in
+        app.setRightBarItem(Icon.iconImage("zmdi-var-bug", size: 24)) { _ in
             guard UIWindow.app.main?.app.subview(tag: 1000) == nil else {
                 UIWindow.app.main?.app.subview(tag: 1000)?.removeFromSuperview()
                 return

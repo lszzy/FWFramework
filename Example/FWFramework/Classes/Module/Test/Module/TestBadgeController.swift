@@ -21,7 +21,7 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
         var badgeView = BadgeView(badgeStyle: .dot)
         navigationItem.leftBarButtonItem?.app.showBadgeView(badgeView)
         
-        let rightItem = UIBarButtonItem.app.item(object: Icon.backImage, target: self, action: #selector(onClick(_:)))
+        let rightItem = UIBarButtonItem.app.item(object: Icon.closeImage, target: self, action: #selector(onClick(_:)))
         badgeView = BadgeView(badgeStyle: .small)
         rightItem.app.showBadgeView(badgeView, badgeValue: "1")
         

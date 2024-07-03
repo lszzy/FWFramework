@@ -35,7 +35,7 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
     }()
     
     private lazy var testButton: TestTabbarViewButton = {
-        let result = TestTabbarViewButton(image: Icon.iconImage("zmdi-var-bug", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil), title: APP.localized("testTitle"))
+        let result = TestTabbarViewButton(image: Icon.iconImage("zmdi-var-toys", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil), title: APP.localized("testTitle"))
         result.titleLabel?.font = APP.font(10)
         result.imageView?.backgroundColor = AppTheme.barColor
         result.imageView?.layer.cornerRadius = 35

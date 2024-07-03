@@ -55,7 +55,7 @@ extension SettingsController: TableViewControllerProtocol {
         navigationItem.title = APP.localized("settingTitle")
         
         #if DEBUG
-        app.setRightBarItem(APP.localized("debugButton")) { _ in
+        app.setRightBarItem(Icon.iconImage("zmdi-var-bug", size: 24)) { _ in
             FWDebugManager.sharedInstance().toggle()
         }
         #endif

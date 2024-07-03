@@ -47,7 +47,7 @@ extension TabController {
         let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
         testController.hidesBottomBarWhenPushed = false
         let testNav = UINavigationController(rootViewController: testController)
-        testNav.tabBarItem.image = Icon.iconImage("zmdi-var-bug", size: 26)
+        testNav.tabBarItem.image = Icon.iconImage("zmdi-var-toys", size: 26)
         testNav.tabBarItem.title = APP.localized("testTitle")
         
         let settingsControlelr = Router.object(forURL: AppRouter.settingsUrl) as! UIViewController
