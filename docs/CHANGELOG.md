@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.8.3] - 2024-07-03
+
+### Fixed
+* Fixed the issue of SDWebImage plugin rendering SDAnimatedImageView
+
 ## [5.8.2] - 2024-07-03
 
 ### Changed

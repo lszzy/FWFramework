@@ -20351,91 +20351,91 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 234,
+      "line": 236,
       "symbol": "SDWebImagePluginIndicator.indicatorView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 248,
+      "line": 250,
       "symbol": "SDWebImagePluginIndicator.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 254,
+      "line": 256,
       "symbol": "SDWebImagePluginIndicator.init(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 265,
+      "line": 267,
       "symbol": "SDWebImagePluginIndicator.startAnimatingIndicator()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 272,
+      "line": 274,
       "symbol": "SDWebImagePluginIndicator.stopAnimatingIndicator()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 282,
+      "line": 284,
       "symbol": "SDWebImageProgressPluginIndicator",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 284,
+      "line": 286,
       "symbol": "SDWebImageProgressPluginIndicator.indicatorView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 293,
+      "line": 295,
       "symbol": "SDWebImageProgressPluginIndicator.animated",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 297,
+      "line": 299,
       "symbol": "SDWebImageProgressPluginIndicator.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 303,
+      "line": 305,
       "symbol": "SDWebImageProgressPluginIndicator.init(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 314,
+      "line": 316,
       "symbol": "SDWebImageProgressPluginIndicator.startAnimatingIndicator()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 321,
+      "line": 323,
       "symbol": "SDWebImageProgressPluginIndicator.stopAnimatingIndicator()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/SDWebImage/SDWebImageImpl.swift",
-      "line": 328,
+      "line": 330,
       "symbol": "SDWebImageProgressPluginIndicator.updateProgress(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
