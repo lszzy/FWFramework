@@ -92,7 +92,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
             pagerView.mainTableView.app.pullRefreshView?.height = PullRefreshView.height + UIScreen.app.safeAreaInsets.top
             pagerView.mainTableView.app.pullRefreshView?.indicatorPadding = UIScreen.app.safeAreaInsets.top
             
-            app.setRightBarItem("测试") { [weak self] _ in
+            app.setRightBarItem(Icon.iconImage("zmdi-var-arrow-right", size: 24)) { [weak self] _ in
                 let vc = TestPagingController()
                 vc.refreshList = true
                 self?.app.open(vc)

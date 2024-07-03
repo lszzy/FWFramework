@@ -51,12 +51,14 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     
     func setupNavbar() {
         view.app.layoutKey = "view"
-        app.setRightBarItem("Debug") { [weak self] _ in
-            self?.debugView.app.layoutChain
-                .layoutKey("debugView")
-                .width(49, relation: .lessThanOrEqual).identifier("debugView.widthLess")
-                .left(19, relation: .lessThanOrEqual).identifier("debugView.leftLess")
-                .top(toSafeArea: 19, relation: .lessThanOrEqual).identifier("debugView.topLess")
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["自动布局冲突调试"], actionBlock: { _ in
+                self?.debugView.app.layoutChain
+                    .layoutKey("debugView")
+                    .width(49, relation: .lessThanOrEqual).identifier("debugView.widthLess")
+                    .left(19, relation: .lessThanOrEqual).identifier("debugView.leftLess")
+                    .top(toSafeArea: 19, relation: .lessThanOrEqual).identifier("debugView.topLess")
+            })
         }
     }
     

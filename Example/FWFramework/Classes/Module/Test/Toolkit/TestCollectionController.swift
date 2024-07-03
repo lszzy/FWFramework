@@ -62,7 +62,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     func setupNavbar() {
         Self.isExpanded = false
         if isWaterfall {
-            app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
                 self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换Header悬停", "reloadData"], currentIndex: -1, actionBlock: { index in
                     if index == 0 {
                         self?.pinHeader = !(self?.pinHeader ?? false)
