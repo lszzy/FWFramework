@@ -695,12 +695,12 @@ extension Wrapper where Base == String {
     }
     
     /// 检测链接并回调，NSAttributedString调用时请使用string防止range越界
-    public func detectLinks(types: NSTextCheckingTypes? = nil, block: (NSRange, String, UnsafeMutablePointer<ObjCBool>) -> Void) {
+    public func detectLinks(types: NSTextCheckingTypes? = nil, block: (NSTextCheckingResult, String, UnsafeMutablePointer<ObjCBool>) -> Void) {
         if let dataDetector = try? NSDataDetector(types: types ?? NSTextCheckingResult.CheckingType.link.rawValue) {
             let string = base as NSString
             dataDetector.enumerateMatches(in: base, range: NSMakeRange(0, string.length)) { result, flags, stop in
-                if let range = result?.range {
-                    block(range, string.substring(with: range), stop)
+                if let result = result {
+                    block(result, string.substring(with: result.range), stop)
                 }
             }
         }

@@ -17,7 +17,7 @@
     <a title="AnimatedTransition Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.8.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.8.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2466,7 +2466,8 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AnimatedTransition</span><span class="p">:</span> <span class="kt">UIPercentDrivenInteractiveTransition</span><span class="p">,</span>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">AnimatedTransition</span><span class="p">:</span> <span class="kt">UIPercentDrivenInteractiveTransition</span><span class="p">,</span>
                                <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">,</span>
                                <span class="kt">UIViewControllerTransitioningDelegate</span><span class="p">,</span>
                                <span class="kt">UINavigationControllerDelegate</span></code></pre>
@@ -2508,7 +2509,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">system</span><span class="p">:</span> <span class="kt">AnimatedTransition</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">system</span><span class="p">:</span> <span class="kt">AnimatedTransition</span></code></pre>
 
                         </div>
                       </div>
@@ -2535,7 +2537,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">AnimatedTransition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">AnimatedTransition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2562,7 +2565,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionDuration</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionDuration</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -2589,7 +2593,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionType</span><span class="p">:</span> <span class="kt"><a href="../Enums/AnimatedTransitionType.html">AnimatedTransitionType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">transitionType</span><span class="p">:</span> <span class="kt"><a href="../Enums/AnimatedTransitionType.html">AnimatedTransitionType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2616,7 +2621,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2643,7 +2649,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">AnimatedTransition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="kt">AnimatedTransition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -2683,7 +2690,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">interactEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">interactEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2710,7 +2718,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">interactDirection</span><span class="p">:</span> <span class="kt">UISwipeGestureRecognizer</span><span class="o">.</span><span class="kt">Direction</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">interactDirection</span><span class="p">:</span> <span class="kt">UISwipeGestureRecognizer</span><span class="o">.</span><span class="kt">Direction</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2737,7 +2746,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">interactScreenEdge</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">interactScreenEdge</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2764,7 +2774,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">isInteracting</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">isInteracting</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2791,7 +2802,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">isInteractDismissing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">isInteractDismissing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2818,7 +2830,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">interactBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIPanGestureRecognizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">interactBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIPanGestureRecognizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2845,7 +2858,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">interactDismissCompletion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">interactDismissCompletion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2872,7 +2886,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">dismissCompletion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">dismissCompletion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2899,7 +2914,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">gestureRecognizer</span><span class="p">:</span> <span class="kt">UIPanGestureRecognizer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">gestureRecognizer</span><span class="p">:</span> <span class="kt">UIPanGestureRecognizer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2926,7 +2942,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">screenEdgeGestureRecognizer</span><span class="p">:</span> <span class="kt">UIScreenEdgePanGestureRecognizer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">screenEdgeGestureRecognizer</span><span class="p">:</span> <span class="kt">UIScreenEdgePanGestureRecognizer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2953,7 +2970,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">interact</span><span class="p">(</span><span class="n">with</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">interact</span><span class="p">(</span><span class="n">with</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2993,7 +3011,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">presentationEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">presentationEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3020,7 +3039,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">presentationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UIViewController</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">UIPresentationController</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">presentationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UIViewController</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">UIPresentationController</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -3060,7 +3080,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">animationController</span><span class="p">(</span><span class="n">forPresented</span> <span class="nv">presented</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">presenting</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">animationController</span><span class="p">(</span><span class="n">forPresented</span> <span class="nv">presented</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">presenting</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3087,7 +3108,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">animationController</span><span class="p">(</span><span class="n">forDismissed</span> <span class="nv">dismissed</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">animationController</span><span class="p">(</span><span class="n">forDismissed</span> <span class="nv">dismissed</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3114,7 +3136,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">interactionControllerForPresentation</span><span class="p">(</span><span class="n">using</span> <span class="nv">animator</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">interactionControllerForPresentation</span><span class="p">(</span><span class="n">using</span> <span class="nv">animator</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3141,7 +3164,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">interactionControllerForDismissal</span><span class="p">(</span><span class="n">using</span> <span class="nv">animator</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">interactionControllerForDismissal</span><span class="p">(</span><span class="n">using</span> <span class="nv">animator</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3168,7 +3192,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">presentationController</span><span class="p">(</span><span class="n">forPresented</span> <span class="nv">presented</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">presenting</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIPresentationController</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">presentationController</span><span class="p">(</span><span class="n">forPresented</span> <span class="nv">presented</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">presenting</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIPresentationController</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3208,7 +3233,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">navigationController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationController</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="p">,</span> <span class="n">animationControllerFor</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="o">.</span><span class="kt">Operation</span><span class="p">,</span> <span class="n">from</span> <span class="nv">fromVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">to</span> <span class="nv">toVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">navigationController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationController</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="p">,</span> <span class="n">animationControllerFor</span> <span class="nv">operation</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="o">.</span><span class="kt">Operation</span><span class="p">,</span> <span class="n">from</span> <span class="nv">fromVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">to</span> <span class="nv">toVC</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3235,7 +3261,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">navigationController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationController</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="p">,</span> <span class="n">interactionControllerFor</span> <span class="nv">animationController</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">navigationController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationController</span><span class="p">:</span> <span class="kt">UINavigationController</span><span class="p">,</span> <span class="n">interactionControllerFor</span> <span class="nv">animationController</span><span class="p">:</span> <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewControllerInteractiveTransitioning</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3275,7 +3302,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">transitionDuration</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">transitionDuration</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -3302,7 +3330,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">animateTransition</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">animateTransition</span><span class="p">(</span><span class="n">using</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3342,7 +3371,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">transitionContext</span><span class="p">:</span> <span class="kt">UIViewControllerContextTransitioning</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3369,7 +3399,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3396,7 +3427,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">animate</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">animate</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3423,7 +3455,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">complete</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">complete</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3435,7 +3468,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-18)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-03)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

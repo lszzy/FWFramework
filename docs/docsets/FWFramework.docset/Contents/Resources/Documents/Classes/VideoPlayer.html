@@ -17,7 +17,7 @@
     <a title="VideoPlayer Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.8.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.8.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -2466,7 +2466,8 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">VideoPlayer</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">VideoPlayer</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
 
                 </div>
               </div>
@@ -2498,7 +2499,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">playerDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VideoPlayerDelegate.html">VideoPlayerDelegate</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">playerDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VideoPlayerDelegate.html">VideoPlayerDelegate</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2525,7 +2527,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">playbackDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VideoPlayerPlaybackDelegate.html">VideoPlayerPlaybackDelegate</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">playbackDelegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VideoPlayerPlaybackDelegate.html">VideoPlayerPlaybackDelegate</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2553,7 +2556,8 @@ URL of the asset.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2581,7 +2585,8 @@ Note: This will reset the <code><a href="../Classes/VideoPlayer.html#/s:11FWFram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">asset</span><span class="p">:</span> <span class="kt">AVAsset</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">asset</span><span class="p">:</span> <span class="kt">AVAsset</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2609,7 +2614,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">fillMode</span><span class="p">:</span> <span class="kt">AVLayerVideoGravity</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">fillMode</span><span class="p">:</span> <span class="kt">AVLayerVideoGravity</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2636,7 +2642,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">autoplay</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">autoplay</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2663,7 +2670,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">muted</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">muted</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2690,7 +2698,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2717,7 +2726,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">rate</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">rate</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2744,7 +2754,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackPausesWhenResigningActive</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackPausesWhenResigningActive</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2771,7 +2782,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackPausesWhenBackgrounded</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackPausesWhenBackgrounded</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2798,7 +2810,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackResumesWhenBecameActive</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackResumesWhenBecameActive</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2825,7 +2838,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackResumesWhenEnteringForeground</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackResumesWhenEnteringForeground</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2852,7 +2866,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">isPlayingVideo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">isPlayingVideo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2879,7 +2894,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackLoops</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackLoops</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2906,7 +2922,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackFreezesAtEnd</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackFreezesAtEnd</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -2933,7 +2950,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackState</span><span class="p">:</span> <span class="kt"><a href="../Enums/VideoPlayerPlaybackState.html">VideoPlayerPlaybackState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackState</span><span class="p">:</span> <span class="kt"><a href="../Enums/VideoPlayerPlaybackState.html">VideoPlayerPlaybackState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2960,7 +2978,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">bufferingState</span><span class="p">:</span> <span class="kt"><a href="../Enums/VideoPlayerBufferingState.html">VideoPlayerBufferingState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">bufferingState</span><span class="p">:</span> <span class="kt"><a href="../Enums/VideoPlayerBufferingState.html">VideoPlayerBufferingState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2987,7 +3006,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">bufferSizeInSeconds</span><span class="p">:</span> <span class="kt">Double</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">bufferSizeInSeconds</span><span class="p">:</span> <span class="kt">Double</span></code></pre>
 
                         </div>
                       </div>
@@ -3014,7 +3034,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackEdgeTriggered</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">playbackEdgeTriggered</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -3041,7 +3062,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">maximumDuration</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">maximumDuration</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3068,7 +3090,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">currentTimeInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">currentTimeInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3095,7 +3118,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">currentTime</span><span class="p">:</span> <span class="kt">CMTime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">currentTime</span><span class="p">:</span> <span class="kt">CMTime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3122,7 +3146,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">naturalSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">naturalSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3149,7 +3174,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">player</span><span class="p">:</span> <span class="kt">AVPlayer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">player</span><span class="p">:</span> <span class="kt">AVPlayer</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3176,7 +3202,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">playerView</span><span class="p">:</span> <span class="kt"><a href="../Classes/VideoPlayerView.html">VideoPlayerView</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">playerView</span><span class="p">:</span> <span class="kt"><a href="../Classes/VideoPlayerView.html">VideoPlayerView</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3203,7 +3230,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">playerLayer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AVPlayerLayer</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">playerLayer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AVPlayerLayer</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3230,7 +3258,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">preferredPeakBitRate</span><span class="p">:</span> <span class="kt">Double</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">preferredPeakBitRate</span><span class="p">:</span> <span class="kt">Double</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3257,7 +3286,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">preferredMaximumResolution</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">preferredMaximumResolution</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3297,7 +3327,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3324,7 +3355,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3351,7 +3383,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="n">nibName</span> <span class="nv">nibNameOrNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="n">bundle</span> <span class="nv">nibBundleOrNil</span><span class="p">:</span> <span class="kt">Bundle</span><span class="p">?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="n">nibName</span> <span class="nv">nibNameOrNil</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="n">bundle</span> <span class="nv">nibBundleOrNil</span><span class="p">:</span> <span class="kt">Bundle</span><span class="p">?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3378,7 +3411,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">loadView</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">loadView</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3405,7 +3439,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3432,7 +3467,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidDisappear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidDisappear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3472,7 +3508,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">totalDurationWatched</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">totalDurationWatched</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3512,7 +3549,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">playFromBeginning</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">playFromBeginning</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3539,7 +3577,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">playFromCurrentTime</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">playFromCurrentTime</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3566,7 +3605,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">pause</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">pause</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3593,7 +3633,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -3620,7 +3661,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">seek</span><span class="p">(</span><span class="n">to</span> <span class="nv">time</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">seek</span><span class="p">(</span><span class="n">to</span> <span class="nv">time</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3678,7 +3720,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">seekToTime</span><span class="p">(</span><span class="n">to</span> <span class="nv">time</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">toleranceBefore</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">toleranceAfter</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">seekToTime</span><span class="p">(</span><span class="n">to</span> <span class="nv">time</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">toleranceBefore</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">toleranceAfter</span><span class="p">:</span> <span class="kt">CMTime</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3760,7 +3803,8 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">takeSnapshot</span><span class="p">(</span><span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">takeSnapshot</span><span class="p">(</span><span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -3791,7 +3835,7 @@ The default value is <code>AVLayerVideoGravityResizeAspect</code>. See <code>Pla
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-18)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-03)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.8.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.8.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -26475,7 +26475,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>布局调试Key</p>
+                        <p>布局调试Key，默认accessibilityIdentifier</p>
 
                       </div>
                       <div class="declaration">
@@ -34218,6 +34218,33 @@
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASSRszlE11detectLinks5types5blockys6UInt64VSg_ySo20NSTextCheckingResultC_SSSpy10ObjectiveC8ObjCBoolVGtXEtF"></a>
+                    <a name="//apple_ref/swift/Method/detectLinks(types:block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASSRszlE11detectLinks5types5blockys6UInt64VSg_ySo20NSTextCheckingResultC_SSSpy10ObjectiveC8ObjCBoolVGtXEtF">detectLinks(types:<wbr>block:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>检测链接并回调，NSAttributedString调用时请使用string防止range越界</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">detectLinks</span><span class="p">(</span><span class="nv">types</span><span class="p">:</span> <span class="kt">NSTextCheckingTypes</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kt">NSTextCheckingResult</span><span class="p">,</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="kt">ObjCBool</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>
@@ -45683,6 +45710,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview10identifierAESgSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/subview(identifier:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview10identifierAESgSS_tF">subview(identifier:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>根据accessibilityIdentifier查找subview，仅从subviews中查找</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">subview</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14setShadowColor_6offset6radiusySo7UIColorCSg_So6CGSizeV14CoreFoundation7CGFloatVtF"></a>
                     <a name="//apple_ref/swift/Method/setShadowColor(_:offset:radius:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE14setShadowColor_6offset6radiusySo7UIColorCSg_So6CGSizeV14CoreFoundation7CGFloatVtF">setShadowColor(_:<wbr>offset:<wbr>radius:<wbr>)</a>
@@ -46063,9 +46117,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview2ofAESgyXlXp_tF"></a>
-                    <a name="//apple_ref/swift/Method/subview(of:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview2ofAESgyXlXp_tF">subview(of:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16recursiveSubview2ofqd__Sgqd__m_tAERbd__lF"></a>
+                    <a name="//apple_ref/swift/Method/recursiveSubview(of:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16recursiveSubview2ofqd__Sgqd__m_tAERbd__lF">recursiveSubview(of:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46080,7 +46134,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">subview</span><span class="p">(</span><span class="n">of</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">recursiveSubview</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                         </div>
                       </div>
@@ -46090,9 +46144,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview5blockAESgSbAEc_tF"></a>
-                    <a name="//apple_ref/swift/Method/subview(block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE7subview5blockAESgSbAEc_tF">subview(block:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16recursiveSubview5blockAESgSbAEXE_tF"></a>
+                    <a name="//apple_ref/swift/Method/recursiveSubview(block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE16recursiveSubview5blockAESgSbAEXE_tF">recursiveSubview(block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46107,7 +46161,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">subview</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">recursiveSubview</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -46117,9 +46171,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9superview2ofAESgyXlXp_tF"></a>
-                    <a name="//apple_ref/swift/Method/superview(of:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9superview2ofAESgyXlXp_tF">superview(of:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18recursiveSuperview2ofqd__Sgqd__m_tAERbd__lF"></a>
+                    <a name="//apple_ref/swift/Method/recursiveSuperview(of:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18recursiveSuperview2ofqd__Sgqd__m_tAERbd__lF">recursiveSuperview(of:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46134,7 +46188,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">superview</span><span class="p">(</span><span class="n">of</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">recursiveSuperview</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                         </div>
                       </div>
@@ -46144,9 +46198,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9superview5blockAESgSbAEc_tF"></a>
-                    <a name="//apple_ref/swift/Method/superview(block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE9superview5blockAESgSbAEc_tF">superview(block:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18recursiveSuperview5blockAESgSbAEXE_tF"></a>
+                    <a name="//apple_ref/swift/Method/recursiveSuperview(block:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo6UIViewCRbzlE18recursiveSuperview5blockAESgSbAEXE_tF">recursiveSuperview(block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46161,7 +46215,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">superview</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">recursiveSuperview</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -46683,9 +46737,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE19getTabBarController2ofSo06UIViewG0CSgyXlXp_tF"></a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE19getTabBarController2ofqd__Sgqd__m_tSo06UIViewG0CRbd__lF"></a>
                     <a name="//apple_ref/swift/Method/getTabBarController(of:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE19getTabBarController2ofSo06UIViewG0CSgyXlXp_tF">getTabBarController(of:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE19getTabBarController2ofqd__Sgqd__m_tSo06UIViewG0CRbd__lF">getTabBarController(of:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46700,7 +46754,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getTabBarController</span><span class="p">(</span><span class="n">of</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">getTabBarController</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
 
                         </div>
                       </div>
@@ -46765,9 +46819,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE22selectTabBarController2ofSo06UIViewG0CSgyXlXp_tF"></a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE22selectTabBarController2ofqd__Sgqd__m_tSo06UIViewG0CRbd__lF"></a>
                     <a name="//apple_ref/swift/Method/selectTabBarController(of:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE22selectTabBarController2ofSo06UIViewG0CSgyXlXp_tF">selectTabBarController(of:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIWindowCRbzlE22selectTabBarController2ofqd__Sgqd__m_tSo06UIViewG0CRbd__lF">selectTabBarController(of:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -46783,7 +46837,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">selectTabBarController</span><span class="p">(</span><span class="n">of</span> <span class="nv">clazz</span><span class="p">:</span> <span class="kt">AnyClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span><span class="p">?</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">selectTabBarController</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
 
                         </div>
                       </div>
@@ -51814,7 +51868,7 @@ titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于butt
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-06-18)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-03)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
