@@ -30,8 +30,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         app.observeNotification(UIDevice.orientationDidChangeNotification, target: self, action: #selector(refreshBarFrame))
         
         if !hideToast {
-            app.setRightBarItem("启用") { _ in
-                UINavigationController.app.enableBarTransition()
+            app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+                self?.app.showSheet(title: nil, message: nil, actions: ["启用导航栏转场优化"], actionBlock: { _ in
+                    UINavigationController.app.enableBarTransition()
+                })
             }
         } else {
             app.setLeftBarItem(Icon.closeImage) { [weak self] _ in

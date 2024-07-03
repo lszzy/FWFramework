@@ -84,8 +84,10 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
     }()
     
     func setupNavbar() {
-        app.setRightBarItem("Save") { [weak self] _ in
-            self?.gifImageView.image?.app.saveImage()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["保存图片到相册"], actionBlock: { _ in
+                self?.gifImageView.image?.app.saveImage()
+            })
         }
     }
     
