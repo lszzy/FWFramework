@@ -1,5 +1,13 @@
 # 更新日志
 
+## [5.8.2] - 2024-07-03
+
+### Changed
+* 新增String检测链接的工具方法
+* 优化递归查找子视图方法名称
+* layoutKey兼容accessibilityIdentifier
+* 统一优化测试用例导航栏按钮样式
+
 ## [5.8.1] - 2024-06-18
 
 ### Changed
