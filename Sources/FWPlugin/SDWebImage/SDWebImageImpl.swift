@@ -110,14 +110,16 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
         customBlock?(view)
         
         let targetOptions = SDWebImageOptions(rawValue: options.rawValue)
-        var targetContext: [SDWebImageContextOption : Any]?
+        var targetContext: [SDWebImageContextOption : Any] = [:]
+        if view is SDAnimatedImageView {
+            targetContext[.animatedImageClass] = SDAnimatedImage.self
+        }
         if let context = context {
-            targetContext = [:]
             for (key, value) in context {
                 if key == .thumbnailPixelSize {
-                    targetContext?[.imageThumbnailPixelSize] = value
+                    targetContext[.imageThumbnailPixelSize] = value
                 } else {
-                    targetContext?[.init(rawValue: key.rawValue)] = value
+                    targetContext[.init(rawValue: key.rawValue)] = value
                 }
             }
         }
@@ -126,7 +128,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
             with: imageURL,
             placeholderImage: placeholder,
             options: targetOptions.union(.retryFailed),
-            context: targetContext,
+            context: !targetContext.isEmpty ? targetContext : nil,
             setImageBlock: setImageBlock != nil ? { image, _, _, _ in
                 setImageBlock?(image)
             } : nil,
