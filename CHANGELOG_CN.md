@@ -1,5 +1,10 @@
 # 更新日志
 
+## [5.8.3] - 2024-07-03
+
+### Fixed
+* 修复SDWebImage插件渲染SDAnimatedImageView问题
+
 ## [5.8.2] - 2024-07-03
 
 ### Changed
