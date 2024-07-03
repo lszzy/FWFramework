@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.8.2] - 2024-07-03
+
+### Changed
+* Added a new String detection link tool method
+* Optimized the recursive search for subview method names
+* layoutKey is compatible with accessibilityIdentifier
+* Unified and optimized the test case navigation bar button style
+
 ## [5.8.1] - 2024-06-18
 
 ### Changed

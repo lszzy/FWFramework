@@ -34,10 +34,10 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
         navigationItem.title = "工作流-\(step)"
         
         if step < 3 {
-            app.setRightBarItem("下一步", target: self, action: #selector(onNext))
+            app.setRightBarItem(Icon.iconImage("zmdi-var-arrow-right", size: 24), target: self, action: #selector(onNext))
         } else {
-            app.addRightBarItem("退出", target: self, action: #selector(onExit))
-            app.addRightBarItem("重来", target: self, action: #selector(onOpen))
+            app.addRightBarItem(Icon.iconImage("zmdi-var-close", size: 24), target: self, action: #selector(onExit))
+            app.addRightBarItem(Icon.iconImage("zmdi-var-replay", size: 24), target: self, action: #selector(onOpen))
         }
         
         let notificationTarget = app.observeNotification(Self.testNotification) { notification in

@@ -402,6 +402,18 @@ extension Wrapper where Base: UIView {
         }
         return subview
     }
+    
+    /// 根据accessibilityIdentifier查找subview，仅从subviews中查找
+    public func subview(identifier: String) -> UIView? {
+        var subview: UIView?
+        for obj in base.subviews {
+            if obj.accessibilityIdentifier == identifier {
+                subview = obj
+                break
+            }
+        }
+        return subview
+    }
 
     /// 设置阴影颜色、偏移和半径
     public func setShadowColor(_ color: UIColor?, offset: CGSize, radius: CGFloat) {
@@ -643,14 +655,12 @@ extension Wrapper where Base: UIView {
     }
 
     /// 递归查找指定子类的第一个子视图(含自身)
-    public func subview(of clazz: AnyClass) -> UIView? {
-        return subview { view in
-            return view.isKind(of: clazz)
-        }
+    public func recursiveSubview<T: UIView>(of type: T.Type) -> T? {
+        return recursiveSubview { $0 is T } as? T
     }
-
+    
     /// 递归查找指定条件的第一个子视图(含自身)
-    public func subview(block: @escaping (UIView) -> Bool) -> UIView? {
+    public func recursiveSubview(block: (UIView) -> Bool) -> UIView? {
         if block(base) { return base }
         
         /* 如果需要顺序查找所有子视图，失败后再递归查找，参考此代码即可
@@ -661,7 +671,7 @@ extension Wrapper where Base: UIView {
         } */
         
         for subview in base.subviews {
-            if let resultView = subview.fw.subview(block: block) {
+            if let resultView = subview.fw.recursiveSubview(block: block) {
                 return resultView
             }
         }
@@ -669,14 +679,12 @@ extension Wrapper where Base: UIView {
     }
     
     /// 递归查找指定父类的第一个父视图(含自身)
-    public func superview(of clazz: AnyClass) -> UIView? {
-        return superview { view in
-            return view.isKind(of: clazz)
-        }
+    public func recursiveSuperview<T: UIView>(of type: T.Type) -> T? {
+        return recursiveSuperview { $0 is T } as? T
     }
     
     /// 递归查找指定条件的第一个父视图(含自身)
-    public func superview(block: @escaping (UIView) -> Bool) -> UIView? {
+    public func recursiveSuperview(block: (UIView) -> Bool) -> UIView? {
         var resultView: UIView?
         var superview: UIView? = base
         while let view = superview {
@@ -1013,18 +1021,17 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
-    public func getTabBarController(of clazz: AnyClass) -> UIViewController? {
+    public func getTabBarController<T: UIViewController>(of type: T.Type) -> T? {
         guard let tabBarController = rootTabBarController() else { return nil }
         
-        var targetController: UIViewController?
+        var targetController: T?
         let navigationControllers = tabBarController.viewControllers ?? []
         for navigationController in navigationControllers {
             var viewController: UIViewController? = navigationController
             if let navigationController = navigationController as? UINavigationController {
                 viewController = navigationController.viewControllers.first
             }
-            if let viewController = viewController,
-               viewController.isKind(of: clazz) {
+            if let viewController = viewController as? T {
                 targetController = viewController
                 break
             }
@@ -1061,9 +1068,9 @@ extension Wrapper where Base: UIWindow {
 
     /// 选中并获取指定类TabBar根视图控制器(非导航控制器)，找不到返回nil
     @discardableResult
-    public func selectTabBarController(of clazz: AnyClass) -> UIViewController? {
-        guard let targetController = getTabBarController(of: clazz) else { return nil }
-        return selectTabBarController(viewController: targetController)
+    public func selectTabBarController<T: UIViewController>(of type: T.Type) -> T? {
+        guard let targetController = getTabBarController(of: type) else { return nil }
+        return selectTabBarController(viewController: targetController) as? T
     }
 
     /// 选中并获取指定条件TabBar根视图控制器(非导航控制器)，找不到返回nil

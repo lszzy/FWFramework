@@ -32,11 +32,11 @@ class TestStateController: UIViewController {
 extension TestStateController: ViewControllerProtocol {
     
     func setupNavbar() {
-        app.setRightBarItem("锁定") { [weak self] sender in
+        app.setRightBarItem(Icon.iconImage("zmdi-var-lock-open", size: 24)) { [weak self] sender in
             guard let this = self else { return }
             
             this.isLocked = !this.isLocked
-            sender.title = this.isLocked ? "解锁" : "锁定"
+            sender.image = this.isLocked ? Icon.iconImage("zmdi-var-lock", size: 24) : Icon.iconImage("zmdi-var-lock-open", size: 24)
         }
     }
     
@@ -90,7 +90,7 @@ extension TestStateController: ViewControllerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self?.app.hideLoading()
                 
-                if [true, false].randomElement() == true {
+                if [0, 1, 2].randomElement() != 0 {
                     completion(true)
                 } else {
                     self?.app.showMessage(text: "请求失败")
@@ -112,7 +112,7 @@ extension TestStateController: ViewControllerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self?.app.hideLoading()
                 
-                if [true, false].randomElement() == true {
+                if [0, 1, 2].randomElement() != 0 {
                     completion(true)
                 } else {
                     self?.app.showMessage(text: "请求失败")
@@ -134,7 +134,7 @@ extension TestStateController: ViewControllerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self?.app.hideLoading()
                 
-                if [true, false].randomElement() == true {
+                if [0, 1, 2].randomElement() != 0 {
                     completion(true)
                 } else {
                     self?.app.showMessage(text: "请求失败")
