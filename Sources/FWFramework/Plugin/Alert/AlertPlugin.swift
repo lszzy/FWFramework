@@ -786,7 +786,7 @@ extension Wrapper where Base: UIAlertController {
     }
     
     @discardableResult
-    fileprivate static func alertSubview(_ view: UIView, block: @escaping (UIView) -> Bool) -> UIView? {
+    fileprivate static func alertSubview(_ view: UIView, block: (UIView) -> Bool) -> UIView? {
         if block(view) {
             return view
         }
