@@ -49,18 +49,7 @@ extension Wrapper where Base: Bundle {
     // MARK: - Bundle
     /// 根据本地化语言加载当前bundle内语言文件，支持动态切换
     public func localizedBundle() -> Bundle {
-        if base.isKind(of: TargetBundle.self) { return base }
-        synchronized {
-            if !base.isKind(of: TargetBundle.self) {
-                object_setClass(base, TargetBundle.self)
-                
-                if let language = Bundle.fw.localizedLanguage {
-                    base.innerLanguageChanged(Notification(name: .LanguageChanged, object: language))
-                }
-                
-                NotificationCenter.default.addObserver(base, selector: #selector(Bundle.innerLanguageChanged(_:)), name: .LanguageChanged, object: nil)
-            }
-        }
+        localizedBundleEnabled = true
         return base
     }
 
@@ -69,6 +58,29 @@ extension Wrapper where Base: Bundle {
         guard let language = language,
               let path = base.path(forResource: language, ofType: "lproj") else { return nil }
         return Bundle(path: path)
+    }
+    
+    /// 是否启用本地化语言加载bundle，支持动态切换，默认false
+    public var localizedBundleEnabled: Bool {
+        get { propertyBool(forName: "localizedBundleEnabled") }
+        set { setPropertyBool(newValue, forName: "localizedBundleEnabled") }
+    }
+    
+    fileprivate var localizedBundleTarget: Bundle? {
+        guard localizedBundleEnabled,
+              let language = Bundle.fw.localizedLanguage else {
+            return nil
+        }
+        
+        if let target = property(forName: "localizedBundleCache") as? Bundle,
+           language == property(forName: "localizedLanguageCache") as? String {
+            return target
+        }
+        
+        let target = localizedBundle(language: language)
+        setPropertyCopy(language, forName: "localizedLanguageCache")
+        setProperty(target, forName: "localizedBundleCache")
+        return target
     }
     
     // MARK: - Main
@@ -113,6 +125,7 @@ extension Wrapper where Base: Bundle {
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
     public static var localizedLanguage: String? {
         get {
+            if let language = Bundle.innerLocalizedLanguage { return language }
             return UserDefaults.standard.string(forKey: "FWLocalizedLanguage")
         }
         set {
@@ -125,7 +138,8 @@ extension Wrapper where Base: Bundle {
                 UserDefaults.standard.removeObject(forKey: "AppleLanguages")
                 UserDefaults.standard.synchronize()
             }
-            localizedChanged(newValue)
+            Bundle.innerLocalizedLanguage = newValue
+            Bundle.main.fw.localizedBundleEnabled = true
             
             NotificationCenter.default.post(name: .LanguageChanged, object: newValue)
         }
@@ -134,21 +148,6 @@ extension Wrapper where Base: Bundle {
     /// 读取本地化字符串，可指定table，strings文件需位于mainBundle，支持动态切换
     public static func localizedString(_ key: String, table: String? = nil) -> String {
         return Bundle.main.localizedString(forKey: key, value: nil, table: table)
-    }
-    
-    fileprivate static func localizedChanged(_ language: String?) {
-        synchronized {
-            if object_getClass(Bundle.main) != TargetBundle.self {
-                object_setClass(Bundle.main, TargetBundle.self)
-            }
-        }
-        
-        var bundle: Bundle?
-        if let language = language,
-           let path = Bundle.main.path(forResource: language, ofType: "lproj") {
-            bundle = Bundle(path: path)
-        }
-        Bundle.main.fw.setProperty(bundle, forName: "localizedBundle")
     }
     
     // MARK: - Bundle
@@ -198,25 +197,7 @@ extension Notification.Name {
 extension Bundle {
     
     fileprivate static var innerSystemLanguage: String?
-    
-    @objc fileprivate func innerLanguageChanged(_ notification: Notification) {
-        let language = notification.object as? String
-        let bundle = fw.localizedBundle(language: language)
-        fw.setProperty(bundle, forName: "localizedBundle")
-    }
-    
-}
-
-// MARK: - TargetBundle
-private class TargetBundle: Bundle {
-    
-    override func localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
-        if let bundle = fw.property(forName: "localizedBundle") as? Bundle {
-            return bundle.localizedString(forKey: key, value: value, table: tableName)
-        } else {
-            return super.localizedString(forKey: key, value: value, table: tableName)
-        }
-    }
+    fileprivate static var innerLocalizedLanguage: String?
     
 }
 
@@ -224,9 +205,27 @@ private class TargetBundle: Bundle {
 extension FrameworkAutoloader {
     
     @objc static func loadToolkit_Language() {
+        swizzleLanguageBundle()
+        
         if let language = Bundle.fw.localizedLanguage {
-            Bundle.fw.localizedChanged(language)
+            Bundle.innerLocalizedLanguage = language
+            Bundle.main.fw.localizedBundleEnabled = true
         }
+    }
+    
+    private static func swizzleLanguageBundle() {
+        NSObject.fw.swizzleInstanceMethod(
+            Bundle.self,
+            selector: #selector(Bundle.localizedString(forKey:value:table:)),
+            methodSignature: (@convention(c) (Bundle, Selector, String, String?, String?) -> String).self,
+            swizzleSignature: (@convention(block) (Bundle, String, String?, String?) -> String).self
+        ) { store in { selfObject, key, value, tableName in
+            if let bundle = selfObject.fw.localizedBundleTarget {
+                return bundle.localizedString(forKey: key, value: value, table: tableName)
+            } else {
+                return store.original(selfObject, store.selector, key, value, tableName)
+            }
+        }}
     }
     
 }
