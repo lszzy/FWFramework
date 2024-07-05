@@ -125,10 +125,16 @@ extension Wrapper where Base: Bundle {
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
     public static var localizedLanguage: String? {
         get {
-            if let language = Bundle.innerLocalizedLanguage { return language }
-            return UserDefaults.standard.string(forKey: "FWLocalizedLanguage")
+            if let language = Bundle.innerLocalizedLanguage {
+                return !language.isEmpty ? language : nil
+            }
+            let language = UserDefaults.standard.string(forKey: "FWLocalizedLanguage")
+            Bundle.innerLocalizedLanguage = language ?? ""
+            return language
         }
         set {
+            Bundle.innerLocalizedLanguage = newValue ?? ""
+            Bundle.main.fw.localizedBundleEnabled = true
             if let language = newValue {
                 UserDefaults.standard.set(language, forKey: "FWLocalizedLanguage")
                 UserDefaults.standard.set([language], forKey: "AppleLanguages")
@@ -138,8 +144,6 @@ extension Wrapper where Base: Bundle {
                 UserDefaults.standard.removeObject(forKey: "AppleLanguages")
                 UserDefaults.standard.synchronize()
             }
-            Bundle.innerLocalizedLanguage = newValue
-            Bundle.main.fw.localizedBundleEnabled = true
             
             NotificationCenter.default.post(name: .LanguageChanged, object: newValue)
         }
@@ -207,8 +211,7 @@ extension FrameworkAutoloader {
     @objc static func loadToolkit_Language() {
         swizzleLanguageBundle()
         
-        if let language = Bundle.fw.localizedLanguage {
-            Bundle.innerLocalizedLanguage = language
+        if Bundle.fw.localizedLanguage != nil {
             Bundle.main.fw.localizedBundleEnabled = true
         }
     }
