@@ -21,18 +21,30 @@ public enum ToastViewType: Int {
     case progress
 }
 
+/// 吐司视图位置
+public enum ToastViewPosition: Int {
+    /// 中心
+    case center = 0
+    /// 顶部
+    case top
+    /// 底部
+    case bottom
+}
+
 /// 吐司视图，默认背景色透明
 open class ToastView: UIControl {
     
     // MARK: - Accessor
     /// 当前吐司类型，只读
     open private(set) var type: ToastViewType = .custom
+    /// 吐司位置，默认center
+    open var position: ToastViewPosition = .center
     /// 自定义视图，仅Custom生效
     open var customView: UIView?
     
     /// 内容背景色，默认#404040
     open var contentBackgroundColor: UIColor = UIColor(red: 64.0 / 255.0, green: 64.0 / 255.0, blue: 64.0 / 255.0, alpha: 1.0)
-    /// 内容视图最小外间距，默认{10, 10, 10, 10}
+    /// 内容视图最小外间距，默认{10, 10, 10, 10}，当top和bottom时作为外间距使用
     open var contentMarginInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     /// 内容视图内间距，默认{10, 10, 10, 10}
     open var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -44,7 +56,7 @@ open class ToastView: UIControl {
     open var contentCornerRadius: CGFloat = 5.0
     /// 是否水平对齐，默认NO垂直对齐
     open var horizontalAlignment: Bool = false
-    /// 如果不想要内容整体垂直居中，则可通过调整此属性来进行垂直偏移。默认为-30，即内容比中间略微偏上
+    /// 内容垂直居中偏移，默认为-30，即内容比中间略微偏上，仅center生效
     open var verticalOffset: CGFloat = -30.0
     /// 标题字体，默认16号
     open var titleFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -264,13 +276,23 @@ open class ToastView: UIControl {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-
-        // contentView默认垂直居中于toastView
+        
         let contentViewSize = self.contentViewSize
         if contentViewSize.equalTo(.zero) { return }
+        
+        // contentView默认垂直居中于toastView
+        var contentY: CGFloat = 0
+        switch position {
+        case .top:
+            contentY = contentMarginInsets.top + safeAreaInsets.top
+        case .bottom:
+            contentY = bounds.height - contentMarginInsets.bottom - contentViewSize.height - safeAreaInsets.bottom
+        default:
+            contentY = (bounds.height - contentMarginInsets.top - contentMarginInsets.bottom - contentViewSize.height) / 2.0 + contentMarginInsets.top + verticalOffset
+        }
         contentView.frame = CGRect(
             x: (bounds.width - contentMarginInsets.left - contentMarginInsets.right - contentViewSize.width) / 2.0 + contentMarginInsets.left,
-            y: (bounds.height - contentMarginInsets.top - contentMarginInsets.bottom - contentViewSize.height) / 2.0 + contentMarginInsets.top + verticalOffset,
+            y: contentY,
             width: contentViewSize.width,
             height: contentViewSize.height
         )
