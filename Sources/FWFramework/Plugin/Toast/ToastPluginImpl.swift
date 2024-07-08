@@ -28,13 +28,21 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
 
     /// 默认加载吐司文本句柄
     open var defaultLoadingText: (() -> NSAttributedString?)?
+    /// 默认加载吐司详情句柄
+    open var defaultLoadingDetail: (() -> NSAttributedString?)?
     /// 默认进度条吐司文本句柄
     open var defaultProgressText: (() -> NSAttributedString?)?
+    /// 默认进度条吐司详情句柄
+    open var defaultProgressDetail: (() -> NSAttributedString?)?
     /// 默认消息吐司文本句柄
     open var defaultMessageText: ((ToastStyle) -> NSAttributedString?)?
+    /// 默认消息吐司详情句柄
+    open var defaultMessageDetail: ((ToastStyle) -> NSAttributedString?)?
 
     /// 错误消息吐司文本格式化句柄，error生效，默认nil
     open var errorTextFormatter: ((Error?) -> AttributedStringParameter?)?
+    /// 错误消息吐司详情格式化句柄，error生效，默认nil
+    open var errorDetailFormatter: ((Error?) -> AttributedStringParameter?)?
     /// 错误消息吐司样式格式化句柄，error生效，默认nil
     open var errorStyleFormatter: ((Error?) -> ToastStyle)?
     
@@ -43,16 +51,21 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     private var messageViewTag: Int = 2013
     
     // MARK: - ToastPlugin
-    open func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+    open func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var loadingText = attributedText
         if loadingText == nil, defaultLoadingText != nil {
             loadingText = defaultLoadingText?()
+        }
+        var loadingDetail = attributedDetail
+        if loadingDetail == nil, defaultLoadingDetail != nil {
+            loadingDetail = defaultLoadingDetail?()
         }
         
         if let toastView = view.fw.subview(tag: loadingViewTag) as? ToastView {
             toastView.invalidateTimer()
             view.bringSubviewToFront(toastView)
             toastView.attributedTitle = loadingText
+            toastView.attributedMessage = loadingDetail
             toastView.cancelBlock = cancelBlock
             
             reuseBlock?(toastView)
@@ -62,6 +75,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         let toastView = ToastView(type: .indicator)
         toastView.tag = loadingViewTag
         toastView.attributedTitle = loadingText
+        toastView.attributedMessage = loadingDetail
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets, autoScale: false)
@@ -86,16 +100,21 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         return toastView
     }
     
-    open func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+    open func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var progressText = attributedText
         if progressText == nil, defaultProgressText != nil {
             progressText = defaultProgressText?()
+        }
+        var progressDetail = attributedDetail
+        if progressDetail == nil, defaultProgressDetail != nil {
+            progressDetail = defaultProgressDetail?()
         }
         
         if let toastView = view.fw.subview(tag: progressViewTag) as? ToastView {
             toastView.invalidateTimer()
             view.bringSubviewToFront(toastView)
             toastView.attributedTitle = progressText
+            toastView.attributedMessage = progressDetail
             toastView.progress = progress
             toastView.cancelBlock = cancelBlock
             
@@ -106,6 +125,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         let toastView = ToastView(type: .progress)
         toastView.tag = progressViewTag
         toastView.attributedTitle = progressText
+        toastView.attributedMessage = progressDetail
         toastView.progress = progress
         toastView.cancelBlock = cancelBlock
         view.addSubview(toastView)
@@ -126,12 +146,16 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         return toastView
     }
     
-    open func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+    open func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var messageText = attributedText
         if messageText == nil, defaultMessageText != nil {
             messageText = defaultMessageText?(style)
         }
-        guard (messageText?.length ?? 0) > 0 else { return }
+        var messageDetail = attributedDetail
+        if messageDetail == nil, defaultMessageDetail != nil {
+            messageDetail = defaultMessageDetail?(style)
+        }
+        guard (messageText?.length ?? 0) > 0 || (messageDetail?.length ?? 0) > 0 else { return }
         
         let previousView = view.fw.subview(tag: messageViewTag) as? ToastView
         let fadeAnimated = self.fadeAnimated && previousView == nil
@@ -141,6 +165,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         toastView.tag = messageViewTag
         toastView.isUserInteractionEnabled = !interactive
         toastView.attributedTitle = messageText
+        toastView.attributedMessage = messageDetail
         view.addSubview(toastView)
         toastView.fw.pinEdges(toSuperview: view.fw.toastInsets, autoScale: false)
         
