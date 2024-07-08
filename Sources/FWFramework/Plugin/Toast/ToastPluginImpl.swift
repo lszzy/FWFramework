@@ -17,6 +17,8 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
 
     /// 显示吐司时是否执行淡入动画，默认YES
     open var fadeAnimated: Bool = true
+    /// 吐司是否水平对齐，默认NO垂直对齐
+    open var horizontalAlignment: Bool = false
     /// 加载吐司延迟隐藏时间，默认0.1
     open var delayHideTime: TimeInterval = 0.1
     /// 消息吐司自动隐藏时间句柄，默认nil时为2.0
@@ -76,6 +78,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         
         let toastView = ToastView(type: .indicator)
         toastView.tag = loadingViewTag
+        toastView.horizontalAlignment = horizontalAlignment
         toastView.attributedTitle = loadingText
         toastView.attributedMessage = loadingDetail
         toastView.cancelBlock = cancelBlock
@@ -126,6 +129,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         
         let toastView = ToastView(type: .progress)
         toastView.tag = progressViewTag
+        toastView.horizontalAlignment = horizontalAlignment
         toastView.attributedTitle = progressText
         toastView.attributedMessage = progressDetail
         toastView.progress = progress
@@ -167,6 +171,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         let toastView = ToastView(type: messageType ?? (style == .default ? .text : .image))
         toastView.tag = messageViewTag
         toastView.isUserInteractionEnabled = !interactive
+        toastView.horizontalAlignment = horizontalAlignment
         toastView.attributedTitle = messageText
         toastView.attributedMessage = messageDetail
         view.addSubview(toastView)
