@@ -116,10 +116,10 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func onLoadingWindow() {
-        view.window?.app.toastInsets = UIEdgeInsets(top: APP.topBarHeight, left: 0, bottom: 0, right: 0)
+        // view.window?.app.toastInsets = UIEdgeInsets(top: APP.topBarHeight, left: 0, bottom: 0, right: 0)
         view.window?.app.showLoading(text: "加载中")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.view.window?.app.toastInsets = .zero
+            // self?.view.window?.app.toastInsets = .zero
             self?.view.window?.app.hideLoading()
         }
     }
