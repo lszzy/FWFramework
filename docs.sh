@@ -9,7 +9,7 @@ mv CNAME docs/
 mkdir "docs/$framework_name"
 
 lib_path="docs/$framework_name/"
-sourcekitten doc -- -project _Pods.xcodeproj -target $framework_name > "$lib_path/swift.json"
+sourcekitten doc -- -project Example/Pods/Pods.xcodeproj -target $framework_name > "$lib_path/swift.json"
 jazzy --include-spi-declarations --sourcekitten-sourcefile "$lib_path/swift.json"
 
 rm -rf $lib_path
