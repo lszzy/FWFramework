@@ -31,6 +31,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
             ["加载进度动画(window)", "onProgressWindow"],
             ["单行吐司(可点击)", "onToast"],
             ["多行吐司(默认不可点击)", "onToast2"],
+            ["通知提示(自定义)", "onNotification"],
         ])
     }
     
@@ -144,6 +145,25 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
         app.showMessage(text: "我是很长很长很长很长很长很长很长很长很长很长很长的吐司消息", style: .default) { [weak self] in
             self?.onToast()
         }
+    }
+    
+    func onNotification() {
+        UIWindow.app.showMessage(text: "我是通知标题", detail: "我是通知内容", style: .notification, customBlock: { toastView in
+            guard let toastView = toastView as? ToastView else { return }
+            
+            toastView.horizontalAlignment = true
+            toastView.indicatorSize = CGSize(width: 40, height: 40)
+            toastView.indicatorImage = UIImage.app.appIconImage()
+            toastView.position = .top
+            toastView.cancelBlock = {
+                Router.openURL("https://www.baidu.com")
+            }
+            toastView.imageView.isUserInteractionEnabled = true
+            toastView.imageView.app.addTapGesture { [weak toastView] _ in
+                toastView?.hide()
+                UIWindow.app.showMessage(text: "点击了图片")
+            }
+        })
     }
     
 }

@@ -17,10 +17,10 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
 
     /// 显示吐司时是否执行淡入动画，默认YES
     open var fadeAnimated: Bool = true
-    /// 消息吐司自动隐藏时间，默认2.0
-    open var autoHideTime: TimeInterval = 2.0
     /// 加载吐司延迟隐藏时间，默认0.1
     open var delayHideTime: TimeInterval = 0.1
+    /// 消息吐司自动隐藏时间句柄，默认nil时为2.0
+    open var autoHideTime: ((ToastStyle) -> TimeInterval)?
     /// 吐司自定义句柄，show方法自动调用
     open var customBlock: ((ToastView) -> Void)?
     /// 吐司重用句柄，show方法重用时自动调用
@@ -38,6 +38,8 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
     open var defaultMessageText: ((ToastStyle) -> NSAttributedString?)?
     /// 默认消息吐司详情句柄
     open var defaultMessageDetail: ((ToastStyle) -> NSAttributedString?)?
+    /// 默认消息吐司类型句柄，默认nil时default文本，否则图片
+    open var defaultMessageType: ((ToastStyle) -> ToastViewType)?
 
     /// 错误消息吐司文本格式化句柄，error生效，默认nil
     open var errorTextFormatter: ((Error?) -> AttributedStringParameter?)?
@@ -161,7 +163,8 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         let fadeAnimated = self.fadeAnimated && previousView == nil
         previousView?.hide()
         
-        let toastView = ToastView(type: .text)
+        let messageType = defaultMessageType?(style)
+        let toastView = ToastView(type: messageType ?? (style == .default ? .text : .image))
         toastView.tag = messageViewTag
         toastView.isUserInteractionEnabled = !interactive
         toastView.attributedTitle = messageText
@@ -173,7 +176,7 @@ open class ToastPluginImpl: NSObject, ToastPlugin {
         customBlock?(toastView)
         toastView.show(animated: fadeAnimated)
         if autoHide {
-            toastView.hide(afterDelay: autoHideTime, completion: completion)
+            toastView.hide(afterDelay: autoHideTime?(style) ?? 2.0, completion: completion)
         }
     }
     

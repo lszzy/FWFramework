@@ -97,17 +97,12 @@ extension Wrapper where Base: UIView {
         )
     }
 
-    /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        showMessage(text: text, detail: detail, style: style, autoHide: true, interactive: completion != nil ? false : true, completion: completion)
-    }
-
-    /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
         let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
-        plugin.showMessage(attributedText: attributedText, attributedDetail: attributedDetail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: base)
+        plugin.showMessage(attributedText: attributedText, attributedDetail: attributedDetail, style: style, autoHide: autoHide, interactive: interactive ?? (completion != nil ? false : true), completion: completion, customBlock: customBlock, in: base)
     }
 
     /// 隐藏消息吐司
@@ -214,13 +209,8 @@ extension Wrapper where Base: UIViewController {
         toastContainer.fw.showMessage(error: error, completion: completion)
     }
 
-    /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        toastContainer.fw.showMessage(text: text, detail: detail, style: style, completion: completion)
-    }
-
-    /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         toastContainer.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -299,13 +289,8 @@ extension Wrapper where Base: UIWindow {
         UIWindow.fw.main?.fw.showMessage(error: error, completion: completion)
     }
 
-    /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, completion: completion)
-    }
-
-    /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
+    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -339,6 +324,8 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable {
     public static let failure: ToastStyle = .init(2)
     /// 警告消息样式
     public static let warning: ToastStyle = .init(3)
+    /// 通知消息样式
+    public static let notification: ToastStyle = .init(4)
     
     public var rawValue: Int
     
