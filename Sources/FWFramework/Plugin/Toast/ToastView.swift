@@ -53,7 +53,7 @@ open class ToastView: UIControl {
     
     /// 内容背景色，默认#404040
     open var contentBackgroundColor: UIColor = UIColor(red: 64.0 / 255.0, green: 64.0 / 255.0, blue: 64.0 / 255.0, alpha: 1.0)
-    /// 内容视图最小外间距，默认{10, 10, 10, 10}，当top和bottom时作为外间距使用
+    /// 内容视图最小外间距，默认{10, 10, 10, 10}
     open var contentMarginInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     /// 内容视图内间距，默认{10, 10, 10, 10}
     open var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -65,8 +65,10 @@ open class ToastView: UIControl {
     open var contentCornerRadius: CGFloat = 5.0
     /// 是否水平对齐，默认NO垂直对齐
     open var horizontalAlignment: Bool = false
-    /// 内容垂直居中偏移，默认为-30，即内容比中间略微偏上，仅center生效
-    open var verticalOffset: CGFloat = -30.0
+    /// 自定义内容垂直偏移，默认nil时自动处理，center时为-30，top|bottom时为0
+    open var verticalOffset: CGFloat?
+    /// 自定义内容垂直偏移句柄，参数为内容高度，默认nil
+    open var verticalOffsetBlock: ((CGFloat) -> CGFloat)?
     /// 标题字体，默认16号
     open var titleFont: UIFont = UIFont.systemFont(ofSize: 16)
     /// 标题颜色，默认白色
@@ -289,14 +291,15 @@ open class ToastView: UIControl {
         if contentViewSize.equalTo(.zero) { return }
         
         // contentView默认垂直居中于toastView
+        let originYOffset = verticalOffsetBlock?(contentViewSize.height) ?? verticalOffset
         var contentOriginY: CGFloat = 0
         switch position {
         case .top:
-            contentOriginY = contentMarginInsets.top + safeAreaInsets.top
+            contentOriginY = contentMarginInsets.top + safeAreaInsets.top + (originYOffset ?? 0)
         case .bottom:
-            contentOriginY = bounds.height - contentMarginInsets.bottom - contentViewSize.height - safeAreaInsets.bottom
+            contentOriginY = bounds.height - contentMarginInsets.bottom - contentViewSize.height - safeAreaInsets.bottom + (originYOffset ?? 0)
         default:
-            contentOriginY = (bounds.height - contentMarginInsets.top - contentMarginInsets.bottom - contentViewSize.height) / 2.0 + contentMarginInsets.top + verticalOffset
+            contentOriginY = (bounds.height - contentMarginInsets.top - contentMarginInsets.bottom - contentViewSize.height) / 2.0 + contentMarginInsets.top + (originYOffset ?? -30.0)
         }
         // 如果contentView要比toastView高，则置顶展示
         if contentView.bounds.height > bounds.height {
