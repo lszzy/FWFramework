@@ -82,7 +82,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func onLoading() {
-        app.showLoading(text: "加载中\n请耐心等待")
+        app.showLoading(text: "加载中", detail: "请耐心等待")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             self?.app.hideLoading()
         }

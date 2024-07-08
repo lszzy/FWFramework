@@ -38,6 +38,8 @@ open class ToastView: UIControl {
     open var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     /// 视图和文本之间的间距，默认5.0
     open var contentSpacing: CGFloat = 5.0
+    /// 文本和消息之间的间距，默认5.0
+    open var textSpacing: CGFloat = 5.0
     /// 内容圆角半径，默认5.0
     open var contentCornerRadius: CGFloat = 5.0
     /// 是否水平对齐，默认NO垂直对齐
@@ -48,6 +50,10 @@ open class ToastView: UIControl {
     open var titleFont: UIFont = UIFont.systemFont(ofSize: 16)
     /// 标题颜色，默认白色
     open var titleColor: UIColor = UIColor.white
+    /// 消息字体，默认15号
+    open var messageFont: UIFont = UIFont.systemFont(ofSize: 15)
+    /// 消息颜色，默认白色
+    open var messageColor: UIColor = UIColor.white
     /// 指示器图片，支持动画图片，自适应大小，仅Image生效
     open var indicatorImage: UIImage?
     /// 指示器大小，默认根据类型处理
@@ -70,6 +76,13 @@ open class ToastView: UIControl {
     open var attributedTitle: NSAttributedString? {
         didSet {
             titleLabel.attributedText = attributedTitle
+            setNeedsLayout()
+        }
+    }
+    /// 带属性消息文本，为空时不显示
+    open var attributedMessage: NSAttributedString? {
+        didSet {
+            messageLabel.attributedText = attributedMessage
             setNeedsLayout()
         }
     }
@@ -161,6 +174,14 @@ open class ToastView: UIControl {
         result.numberOfLines = 0
         return result
     }()
+    
+    /// 消息标签，都存在，有内容时才显示
+    open lazy var messageLabel: UILabel = {
+        let result = UILabel()
+        result.textAlignment = .center
+        result.numberOfLines = 0
+        return result
+    }()
 
     // MARK: - Lifecycle
     /// 初始化指定类型指示器
@@ -192,6 +213,7 @@ open class ToastView: UIControl {
         
         addSubview(contentView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(messageLabel)
         
         switch type {
         case .image:
@@ -211,6 +233,9 @@ open class ToastView: UIControl {
         titleLabel.font = titleFont
         titleLabel.textColor = titleColor
         titleLabel.attributedText = attributedTitle
+        messageLabel.font = messageFont
+        messageLabel.textColor = messageColor
+        messageLabel.attributedText = attributedMessage
 
         switch type {
         case .custom:
@@ -276,8 +301,10 @@ open class ToastView: UIControl {
 
             let maxTitleWidth = contentViewSize.width - contentInsets.left - contentInsets.right
             let titleLabelSize = titleLabel.sizeThatFits(CGSize(width: maxTitleWidth, height: CGFloat.greatestFiniteMagnitude))
+            let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: maxTitleWidth, height: CGFloat.greatestFiniteMagnitude))
             let firstViewSize = firstView?.frame.size ?? .zero
             titleLabel.frame = CGRect(x: (maxTitleWidth - titleLabelSize.width) / 2.0 + contentInsets.left, y: originY + (firstViewSize.height > 0 && titleLabelSize.height > 0 ? contentSpacing : 0), width: titleLabelSize.width, height: titleLabelSize.height)
+            messageLabel.frame = CGRect(x: (maxTitleWidth - messageLabelSize.width) / 2.0 + contentInsets.left, y: titleLabel.frame.maxY + (titleLabelSize.height > 0 && messageLabelSize.height > 0 ? textSpacing : 0), width: messageLabelSize.width, height: messageLabelSize.height)
         } else {
             var originX = contentInsets.left
             if let firstView = firstView {
@@ -290,7 +317,16 @@ open class ToastView: UIControl {
             let firstViewSize = firstView?.frame.size ?? .zero
             let maxTitleWidth = contentViewSize.width - contentInsets.left - contentInsets.right - firstViewSize.width - (firstViewSize.width > 0 ? contentSpacing : 0)
             let titleLabelSize = titleLabel.sizeThatFits(CGSize(width: maxTitleWidth, height: CGFloat.greatestFiniteMagnitude))
-            titleLabel.frame = CGRect(x: originX + (firstViewSize.width > 0 && titleLabelSize.width > 0 ? contentSpacing : 0), y: (contentViewSize.height - contentInsets.top - contentInsets.bottom - titleLabelSize.height) / 2.0 + contentInsets.top, width: titleLabelSize.width, height: titleLabelSize.height)
+            let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: maxTitleWidth, height: CGFloat.greatestFiniteMagnitude))
+            let textWidth = max(titleLabelSize.width, messageLabelSize.width)
+            var textHeight = titleLabelSize.height + messageLabelSize.height
+            if titleLabelSize.height > 0 && messageLabelSize.height > 0 {
+                textHeight += textSpacing
+            }
+            
+            originX += (firstViewSize.width > 0 && textWidth > 0) ? contentSpacing : 0
+            titleLabel.frame = CGRect(x: originX + (textWidth - titleLabelSize.width) / 2.0, y: (contentViewSize.height - contentInsets.top - contentInsets.bottom - textHeight) / 2.0 + contentInsets.top, width: titleLabelSize.width, height: titleLabelSize.height)
+            messageLabel.frame = CGRect(x: originX + (textWidth - messageLabelSize.width) / 2.0, y: titleLabel.frame.maxY + (titleLabelSize.height > 0 && messageLabelSize.height > 0 ? textSpacing : 0), width: messageLabelSize.width, height: messageLabelSize.height)
         }
     }
     
@@ -310,21 +346,31 @@ open class ToastView: UIControl {
 
         if !horizontalAlignment {
             let titleLabelSize = titleLabel.sizeThatFits(CGSize(width: maxContentWidth, height: CGFloat.greatestFiniteMagnitude))
+            let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: maxContentWidth, height: CGFloat.greatestFiniteMagnitude))
 
-            contentWidth += max(firstViewSize.width, titleLabelSize.width)
-            contentHeight += firstViewSize.height + titleLabelSize.height
+            contentWidth += max(firstViewSize.width, titleLabelSize.width, messageLabelSize.width)
+            contentHeight += firstViewSize.height + titleLabelSize.height + messageLabelSize.height
             if firstViewSize.height > 0 && titleLabelSize.height > 0 {
                 contentHeight += contentSpacing
+            }
+            if titleLabelSize.height > 0 && messageLabelSize.height > 0 {
+                contentHeight += textSpacing
             }
             return CGSize(width: contentWidth, height: contentHeight)
         } else {
             let titleLabelSize = titleLabel.sizeThatFits(CGSize(width: maxContentWidth - firstViewSize.width - (firstViewSize.width > 0 ? contentSpacing : 0), height: CGFloat.greatestFiniteMagnitude))
+            let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: maxContentWidth - firstViewSize.width - (firstViewSize.width > 0 ? contentSpacing : 0), height: CGFloat.greatestFiniteMagnitude))
+            let textWidth = max(titleLabelSize.width, messageLabelSize.width)
+            var textHeight = titleLabelSize.height + messageLabelSize.height
+            if titleLabelSize.height > 0 && messageLabelSize.height > 0 {
+                textHeight += textSpacing
+            }
 
-            contentWidth += firstViewSize.width + titleLabelSize.width
-            if firstViewSize.width > 0 && titleLabelSize.width > 0 {
+            contentWidth += firstViewSize.width + textWidth
+            if firstViewSize.width > 0 && textWidth > 0 {
                 contentWidth += contentSpacing
             }
-            contentHeight += max(firstViewSize.height, titleLabelSize.height)
+            contentHeight += max(firstViewSize.height, textHeight)
             return CGSize(width: contentWidth, height: contentHeight)
         }
     }

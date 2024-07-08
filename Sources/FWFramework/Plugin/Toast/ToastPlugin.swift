@@ -38,10 +38,11 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
+        let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
-        plugin.showLoading(attributedText: attributedText, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
+        plugin.showLoading(attributedText: attributedText, attributedDetail: attributedDetail, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
@@ -62,10 +63,11 @@ extension Wrapper where Base: UIView {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
+        let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
-        plugin.showProgress(attributedText: attributedText, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
+        plugin.showProgress(attributedText: attributedText, attributedDetail: attributedDetail, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
     }
 
     /// 隐藏进度条吐司
@@ -89,21 +91,23 @@ extension Wrapper where Base: UIView {
     public func showMessage(error: Error?, completion: (() -> Void)? = nil) {
         showMessage(
             text: ToastPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
+            detail: ToastPluginImpl.shared.errorDetailFormatter?(error),
             style: ToastPluginImpl.shared.errorStyleFormatter?(error) ?? .default,
             completion: completion
         )
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        showMessage(text: text, style: style, autoHide: true, interactive: completion != nil ? false : true, completion: completion)
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+        showMessage(text: text, detail: detail, style: style, autoHide: true, interactive: completion != nil ? false : true, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
+        let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
-        plugin.showMessage(attributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: base)
+        plugin.showMessage(attributedText: attributedText, attributedDetail: attributedDetail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: base)
     }
 
     /// 隐藏消息吐司
@@ -166,8 +170,8 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        toastContainer.fw.showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+    public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        toastContainer.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
@@ -186,8 +190,8 @@ extension Wrapper where Base: UIViewController {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        toastContainer.fw.showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        toastContainer.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏进度条吐司
@@ -211,13 +215,13 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        toastContainer.fw.showMessage(text: text, style: style, completion: completion)
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+        toastContainer.fw.showMessage(text: text, detail: detail, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        toastContainer.fw.showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
+    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        toastContainer.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
     /// 隐藏消息吐司
@@ -251,8 +255,8 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showLoading(text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        UIWindow.fw.main?.fw.showLoading(text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+    public static func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        UIWindow.fw.main?.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
@@ -271,8 +275,8 @@ extension Wrapper where Base: UIWindow {
     }
     
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        UIWindow.fw.main?.fw.showProgress(progress, text: text, cancelBlock: cancelBlock, customBlock: customBlock)
+    public static func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        UIWindow.fw.main?.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
     /// 隐藏进度条吐司
@@ -296,13 +300,13 @@ extension Wrapper where Base: UIWindow {
     }
 
     /// 显示指定样式消息吐司，自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: AttributedStringParameter?, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
-        UIWindow.fw.main?.fw.showMessage(text: text, style: style, completion: completion)
+    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, completion: (() -> Void)? = nil) {
+        UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, completion: completion)
     }
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: AttributedStringParameter?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
-        UIWindow.fw.main?.fw.showMessage(text: text, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
+    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+        UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
     /// 隐藏消息吐司
@@ -352,7 +356,7 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable {
 public protocol ToastPlugin: AnyObject {
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
+    func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
     func hideLoading(delayed: Bool, in view: UIView)
@@ -361,7 +365,7 @@ public protocol ToastPlugin: AnyObject {
     func showingLoadingView(in view: UIView) -> UIView?
 
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
+    func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
     /// 隐藏进度条吐司
     func hideProgress(in view: UIView)
@@ -370,7 +374,7 @@ public protocol ToastPlugin: AnyObject {
     func showingProgressView(in view: UIView) -> UIView?
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
-    func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
+    func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
     /// 隐藏消息吐司
     func hideMessage(in view: UIView)
@@ -383,8 +387,8 @@ public protocol ToastPlugin: AnyObject {
 extension ToastPlugin {
     
     /// 默认实现，显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    public func showLoading(attributedText: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
-        ToastPluginImpl.shared.showLoading(attributedText: attributedText, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
+    public func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+        ToastPluginImpl.shared.showLoading(attributedText: attributedText, attributedDetail: attributedDetail, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
     }
 
     /// 默认实现，隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
@@ -398,8 +402,8 @@ extension ToastPlugin {
     }
 
     /// 默认实现，显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    public func showProgress(attributedText: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
-        ToastPluginImpl.shared.showProgress(attributedText: attributedText, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
+    public func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+        ToastPluginImpl.shared.showProgress(attributedText: attributedText, attributedDetail: attributedDetail, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
     }
 
     /// 默认实现，隐藏进度条吐司
@@ -413,8 +417,8 @@ extension ToastPlugin {
     }
 
     /// 默认实现，显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
-    public func showMessage(attributedText: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
-        ToastPluginImpl.shared.showMessage(attributedText: attributedText, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: view)
+    public func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
+        ToastPluginImpl.shared.showMessage(attributedText: attributedText, attributedDetail: attributedDetail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: view)
     }
 
     /// 默认实现，隐藏消息吐司
