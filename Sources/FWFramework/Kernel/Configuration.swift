@@ -125,8 +125,11 @@ open class ConfigurationTemplate: NSObject, ConfigurationTemplateProtocol {
         // 配置吐司插件
         // ToastPluginImpl.shared.delayHideTime = 2.0
         // ToastPluginImpl.shared.defaultLoadingText = nil
+        // ToastPluginImpl.shared.defaultLoadingDetail = nil
         // ToastPluginImpl.shared.defaultProgressText = nil
+        // ToastPluginImpl.shared.defaultProgressDetail = nil
         // ToastPluginImpl.shared.defaultMessageText = nil
+        // ToastPluginImpl.shared.defaultMessageDetail = nil
         
         // 配置进度视图和指示器视图插件
         // ViewPluginImpl.shared.customIndicatorView = nil
