@@ -8864,29 +8864,36 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Toast/ToastPlugin.swift",
-      "line": 345,
+      "line": 338,
       "symbol": "ToastStyle.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Toast/ToastView.swift",
-      "line": 174,
+      "line": 219,
       "symbol": "ToastView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Toast/ToastView.swift",
-      "line": 180,
+      "line": 225,
       "symbol": "ToastView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Toast/ToastView.swift",
-      "line": 240,
+      "line": 289,
       "symbol": "ToastView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Plugin/Toast/ToastView.swift",
+      "line": 365,
+      "symbol": "ToastView.hitTest(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },

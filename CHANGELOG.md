@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.9.0] - 2024-07-09
+
+### Changed
+* Refactor the Language multi-language implementation to optimize performance
+* Refactor ToastPlugin to support detail attributes and more custom attributes
+* Refactor ToastView to support custom attributes such as position and attributedMessage
+* Optimize the animation effect of TabbarController test cases
+* Compatible with Swift Package Index
+
 ## [5.8.3] - 2024-07-03
 
 ### Fixed

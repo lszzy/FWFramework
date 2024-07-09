@@ -227,10 +227,26 @@ private extension SettingsController {
         var actions = Autoloader.toastPlugins.map {
             $0 == Autoloader.toastPluginImpl ? "[\($0)]" : $0
         }
+        actions.append(Autoloader.toastHorizontalAlignment ? "[horizontalAlignment]" : "horizontalAlignment")
+        actions.append(Autoloader.toastPluginPosition == ToastViewPosition.center.rawValue ? "[positionCenter]" : "positionCenter")
+        actions.append(Autoloader.toastPluginPosition == ToastViewPosition.top.rawValue ? "[positionTop]" : "positionTop")
+        actions.append(Autoloader.toastPluginPosition == ToastViewPosition.bottom.rawValue ? "[positionBottom]" : "positionBottom")
         actions.append(APP.localized("pluginDemo"))
         app.showSheet(title: "ToastPlugin", message: nil, actions: actions) { index in
             if index < Autoloader.toastPlugins.count {
                 Autoloader.toastPluginImpl = Autoloader.toastPlugins[index]
+                Autoloader.loadApp_Plugin()
+            } else if index == Autoloader.toastPlugins.count {
+                Autoloader.toastHorizontalAlignment = !Autoloader.toastHorizontalAlignment
+                Autoloader.loadApp_Plugin()
+            } else if index == Autoloader.toastPlugins.count + 1 {
+                Autoloader.toastPluginPosition = ToastViewPosition.center.rawValue
+                Autoloader.loadApp_Plugin()
+            } else if index == Autoloader.toastPlugins.count + 2 {
+                Autoloader.toastPluginPosition = ToastViewPosition.top.rawValue
+                Autoloader.loadApp_Plugin()
+            } else if index == Autoloader.toastPlugins.count + 3 {
+                Autoloader.toastPluginPosition = ToastViewPosition.bottom.rawValue
                 Autoloader.loadApp_Plugin()
             } else {
                 Navigator.push(TestToastController())
@@ -382,6 +398,10 @@ private extension SettingsController {
     @StoredValue("toastPluginImpl")
     static var toastPluginImpl = toastPlugins[0]
     static let toastPlugins = ["ToastPluginImpl"]
+    @StoredValue("toastHorizontalAlignment")
+    static var toastHorizontalAlignment = false
+    @StoredValue("toastPluginPosition")
+    static var toastPluginPosition: Int = 0
     
     @StoredValue("viewPluginImpl")
     static var viewPluginImpl = viewPlugins[0]
@@ -421,6 +441,11 @@ private extension SettingsController {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel
+        
+        ToastPluginImpl.shared.customBlock = { toastView in
+            toastView.horizontalAlignment = Autoloader.toastHorizontalAlignment
+            toastView.position = .init(rawValue: Autoloader.toastPluginPosition) ?? .center
+        }
         
         RefreshPluginImpl.shared.showsFinishedView = Autoloader.refreshShowsFinishedView
         

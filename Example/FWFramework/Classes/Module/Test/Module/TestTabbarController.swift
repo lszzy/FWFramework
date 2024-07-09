@@ -58,6 +58,7 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 50)
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
+        testController.tabBarItem.accessibilityIdentifier = "id.test"
         
         let settingsControlelr = TestTabbarChildController()
         settingsControlelr.hidesBottomBarWhenPushed = false
@@ -73,6 +74,19 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         navigationItem.title = viewController.navigationItem.title
+        
+        if viewController.tabBarItem.accessibilityIdentifier == "id.test" {
+            let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+            animation.fromValue = NSNumber(value: 0)
+            animation.toValue = NSNumber(value: CGFloat.pi)
+            animation.duration = 0.3
+            
+            var animationView = viewController.tabBarItem.app.imageView
+            if let tabBarItem = viewController.tabBarItem as? TabBarItem {
+                animationView = tabBarItem.contentView.imageView
+            }
+            animationView?.layer.add(animation, forKey: nil)
+        }
     }
     
 }

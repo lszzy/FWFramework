@@ -17,7 +17,7 @@
     <a title="ToastPluginImpl Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.8.3 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.9.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1157,6 +1157,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TagCollectionScrollDirection.html">TagCollectionScrollDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToastViewPosition.html">ToastViewPosition</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/ToastViewType.html">ToastViewType</a>
@@ -2543,33 +2546,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework15ToastPluginImplC12autoHideTimeSdvp"></a>
-                    <a name="//apple_ref/swift/Property/autoHideTime" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC12autoHideTimeSdvp">autoHideTime</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>消息吐司自动隐藏时间，默认2.0</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">autoHideTime</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework15ToastPluginImplC13delayHideTimeSdvp"></a>
                     <a name="//apple_ref/swift/Property/delayHideTime" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework15ToastPluginImplC13delayHideTimeSdvp">delayHideTime</a>
@@ -2588,6 +2564,87 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">delayHideTime</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC12autoHideTimeSdAA0B5StyleVcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/autoHideTime" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC12autoHideTimeSdAA0B5StyleVcSgvp">autoHideTime</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>消息吐司自动隐藏时间句柄，默认nil时为2.0</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">autoHideTime</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC06customB4ViewAA0bF0CSgAA0B5StyleVcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/customToastView" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC06customB4ViewAA0bF0CSgAA0B5StyleVcSgvp">customToastView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义吐司视图句柄，默认nil时自动处理，loading时为indicator，progress时为progress，其它为image</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">customToastView</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ToastView.html">ToastView</a></span><span class="p">?)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC06customB9ContainerSo6UIViewCSgAA0B5StyleV_AFtcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/customToastContainer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC06customB9ContainerSo6UIViewCSgAA0B5StyleV_AFtcSgvp">customToastContainer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义吐司容器句柄，style仅为loading|progress|default，默认nil时使用view</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">customToastContainer</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2678,6 +2735,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC20defaultLoadingDetailSo18NSAttributedStringCSgycSgvp"></a>
+                    <a name="//apple_ref/swift/Property/defaultLoadingDetail" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC20defaultLoadingDetailSo18NSAttributedStringCSgycSgvp">defaultLoadingDetail</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>默认加载吐司详情句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">defaultLoadingDetail</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">NSAttributedString</span><span class="p">?)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework15ToastPluginImplC19defaultProgressTextSo18NSAttributedStringCSgycSgvp"></a>
                     <a name="//apple_ref/swift/Property/defaultProgressText" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework15ToastPluginImplC19defaultProgressTextSo18NSAttributedStringCSgycSgvp">defaultProgressText</a>
@@ -2696,6 +2780,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">defaultProgressText</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">NSAttributedString</span><span class="p">?)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC21defaultProgressDetailSo18NSAttributedStringCSgycSgvp"></a>
+                    <a name="//apple_ref/swift/Property/defaultProgressDetail" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC21defaultProgressDetailSo18NSAttributedStringCSgycSgvp">defaultProgressDetail</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>默认进度条吐司详情句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">defaultProgressDetail</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">NSAttributedString</span><span class="p">?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2732,6 +2843,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC20defaultMessageDetailSo18NSAttributedStringCSgAA0B5StyleVcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/defaultMessageDetail" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC20defaultMessageDetailSo18NSAttributedStringCSgAA0B5StyleVcSgvp">defaultMessageDetail</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>默认消息吐司详情句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">defaultMessageDetail</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSAttributedString</span><span class="p">?)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework15ToastPluginImplC18errorTextFormatterAA25AttributedStringParameter_pSgs5Error_pSgcSgvp"></a>
                     <a name="//apple_ref/swift/Property/errorTextFormatter" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework15ToastPluginImplC18errorTextFormatterAA25AttributedStringParameter_pSgs5Error_pSgcSgvp">errorTextFormatter</a>
@@ -2750,6 +2888,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">errorTextFormatter</span><span class="p">:</span> <span class="p">((</span><span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework15ToastPluginImplC20errorDetailFormatterAA25AttributedStringParameter_pSgs5Error_pSgcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/errorDetailFormatter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15ToastPluginImplC20errorDetailFormatterAA25AttributedStringParameter_pSgs5Error_pSgcSgvp">errorDetailFormatter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>错误消息吐司详情格式化句柄，error生效，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">errorDetailFormatter</span><span class="p">:</span> <span class="p">((</span><span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2799,9 +2964,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11ToastPluginP11showLoading14attributedText11cancelBlock06customI02inySo18NSAttributedStringCSg_yycSgyypcSgSo6UIViewCtF"></a>
-                    <a name="//apple_ref/swift/Method/showLoading(attributedText:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11ToastPluginP11showLoading14attributedText11cancelBlock06customI02inySo18NSAttributedStringCSg_yycSgyypcSgSo6UIViewCtF">showLoading(attributedText:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a name="/s:11FWFramework11ToastPluginP11showLoading14attributedText0F6Detail11cancelBlock06customJ02inySo18NSAttributedStringCSg_ALyycSgyypcSgSo6UIViewCtF"></a>
+                    <a name="//apple_ref/swift/Method/showLoading(attributedText:attributedDetail:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11ToastPluginP11showLoading14attributedText0F6Detail11cancelBlock06customJ02inySo18NSAttributedStringCSg_ALyycSgyypcSgSo6UIViewCtF">showLoading(attributedText:<wbr>attributedDetail:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2815,7 +2980,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showLoading</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showLoading</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">attributedDetail</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2877,9 +3042,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11ToastPluginP12showProgress14attributedText8progress11cancelBlock06customJ02inySo18NSAttributedStringCSg_14CoreFoundation7CGFloatVyycSgyypcSgSo6UIViewCtF"></a>
-                    <a name="//apple_ref/swift/Method/showProgress(attributedText:progress:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11ToastPluginP12showProgress14attributedText8progress11cancelBlock06customJ02inySo18NSAttributedStringCSg_14CoreFoundation7CGFloatVyycSgyypcSgSo6UIViewCtF">showProgress(attributedText:<wbr>progress:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a name="/s:11FWFramework11ToastPluginP12showProgress14attributedText0F6Detail8progress11cancelBlock06customK02inySo18NSAttributedStringCSg_AM14CoreFoundation7CGFloatVyycSgyypcSgSo6UIViewCtF"></a>
+                    <a name="//apple_ref/swift/Method/showProgress(attributedText:attributedDetail:progress:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11ToastPluginP12showProgress14attributedText0F6Detail8progress11cancelBlock06customK02inySo18NSAttributedStringCSg_AM14CoreFoundation7CGFloatVyycSgyypcSgSo6UIViewCtF">showProgress(attributedText:<wbr>attributedDetail:<wbr>progress:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2893,7 +3058,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showProgress</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showProgress</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">attributedDetail</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2955,9 +3120,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11ToastPluginP11showMessage14attributedText5style8autoHide11interactive10completion11customBlock2inySo18NSAttributedStringCSg_AA0B5StyleVS2byycSgyypcSgSo6UIViewCtF"></a>
-                    <a name="//apple_ref/swift/Method/showMessage(attributedText:style:autoHide:interactive:completion:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11ToastPluginP11showMessage14attributedText5style8autoHide11interactive10completion11customBlock2inySo18NSAttributedStringCSg_AA0B5StyleVS2byycSgyypcSgSo6UIViewCtF">showMessage(attributedText:<wbr>style:<wbr>autoHide:<wbr>interactive:<wbr>completion:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a name="/s:11FWFramework11ToastPluginP11showMessage14attributedText0F6Detail5style8autoHide11interactive10completion11customBlock2inySo18NSAttributedStringCSg_AoA0B5StyleVS2byycSgyypcSgSo6UIViewCtF"></a>
+                    <a name="//apple_ref/swift/Method/showMessage(attributedText:attributedDetail:style:autoHide:interactive:completion:customBlock:in:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework11ToastPluginP11showMessage14attributedText0F6Detail5style8autoHide11interactive10completion11customBlock2inySo18NSAttributedStringCSg_AoA0B5StyleVS2byycSgyypcSgSo6UIViewCtF">showMessage(attributedText:<wbr>attributedDetail:<wbr>style:<wbr>autoHide:<wbr>interactive:<wbr>completion:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2971,7 +3136,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showMessage</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">,</span> <span class="nv">autoHide</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">interactive</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">showMessage</span><span class="p">(</span><span class="nv">attributedText</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">attributedDetail</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?,</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span><span class="p">,</span> <span class="nv">autoHide</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">interactive</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="k">in</span> <span class="nv">view</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3035,7 +3200,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-03)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
