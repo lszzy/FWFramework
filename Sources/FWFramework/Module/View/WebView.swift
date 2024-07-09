@@ -1397,7 +1397,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     
     // MARK: - WKDownloadDelegate
     @available(iOS 14.5, *)
-    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping @MainActor (URL?) -> Void) {
         let downloadDelegate = self.delegate as? WKDownloadDelegate
         if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
             return

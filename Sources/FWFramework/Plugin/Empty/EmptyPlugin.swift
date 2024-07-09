@@ -183,7 +183,7 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 刷新空界面
-    public func reloadEmptyView() {
+    @MainActor public func reloadEmptyView() {
         guard let emptyViewDelegate = emptyViewDelegate else { return }
         
         var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(base)
@@ -207,7 +207,7 @@ extension Wrapper where Base: UIScrollView {
     /// 当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)
     ///
     /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
-    public var totalDataCount: Int {
+    @MainActor public var totalDataCount: Int {
         get {
             if let totalCount = propertyNumber(forName: "totalDataCount")?.intValue,
                totalCount >= 0 {
@@ -405,7 +405,7 @@ extension FrameworkAutoloader {
             UITableView.self,
             selector: #selector(UITableView.reloadData),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UITableView) -> Void).self
         ) { store in { selfObject in
             selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
@@ -415,7 +415,7 @@ extension FrameworkAutoloader {
             UITableView.self,
             selector: #selector(UITableView.endUpdates),
             methodSignature: (@convention(c) (UITableView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UITableView) -> Void).self
         ) { store in { selfObject in
             selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
@@ -425,7 +425,7 @@ extension FrameworkAutoloader {
             UICollectionView.self,
             selector: #selector(UICollectionView.reloadData),
             methodSignature: (@convention(c) (UICollectionView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UICollectionView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UICollectionView) -> Void).self
         ) { store in { selfObject in
             selfObject.fw.reloadEmptyView()
             store.original(selfObject, store.selector)
