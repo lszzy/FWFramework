@@ -1,9 +1,9 @@
 # FWFramework
 
 [![Pod Version](https://img.shields.io/cocoapods/v/FWFramework.svg?style=flat)](http://cocoadocs.org/docsets/FWFramework/)
-[![Pod Platform](https://img.shields.io/cocoapods/p/FWFramework.svg?style=flat)](http://cocoadocs.org/docsets/FWFramework/)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flszzy%2FFWFramework%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/lszzy/FWFramework)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flszzy%2FFWFramework%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/lszzy/FWFramework)
 [![Pod License](https://img.shields.io/cocoapods/l/FWFramework.svg?style=flat)](https://github.com/lszzy/FWFramework/blob/master/LICENSE)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/lszzy/FWFramework)
 
 # [English](https://github.com/lszzy/FWFramework/blob/master/README.md)
 
