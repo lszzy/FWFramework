@@ -318,14 +318,16 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable {
     
     /// 默认消息样式
     public static let `default`: ToastStyle = .init(0)
+    /// 加载吐司样式
+    public static let loading: ToastStyle = .init(1)
+    /// 进度吐司样式
+    public static let progress: ToastStyle = .init(2)
     /// 成功消息样式
-    public static let success: ToastStyle = .init(1)
+    public static let success: ToastStyle = .init(3)
     /// 失败消息样式
-    public static let failure: ToastStyle = .init(2)
+    public static let failure: ToastStyle = .init(4)
     /// 警告消息样式
-    public static let warning: ToastStyle = .init(3)
-    /// 通知消息样式
-    public static let notification: ToastStyle = .init(4)
+    public static let warning: ToastStyle = .init(5)
     
     public var rawValue: Int
     

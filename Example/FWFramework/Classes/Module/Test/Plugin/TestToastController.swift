@@ -148,7 +148,7 @@ class TestToastController: UIViewController, TableViewControllerProtocol {
     }
     
     func onNotification() {
-        UIWindow.app.showMessage(text: "我是通知标题", detail: "我是通知内容", style: .notification, customBlock: { toastView in
+        UIWindow.app.showMessage(text: "我是通知标题", detail: "我是通知内容", customBlock: { toastView in
             guard let toastView = toastView as? ToastView else { return }
             
             toastView.horizontalAlignment = true

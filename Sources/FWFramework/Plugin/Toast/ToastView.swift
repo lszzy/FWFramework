@@ -44,6 +44,8 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
+    /// 关联吐司样式，仅用于判断，默认default
+    open var style: ToastStyle = .default
     /// 吐司位置，默认center
     open var position: ToastViewPosition = .center
     /// 自定义视图，仅Custom生效
@@ -65,7 +67,7 @@ open class ToastView: UIControl {
     open var contentCornerRadius: CGFloat = 5.0
     /// 是否水平对齐，默认NO垂直对齐
     open var horizontalAlignment: Bool = false
-    /// 自定义内容垂直偏移，默认nil时自动处理，center时为-30，top|bottom时为0
+    /// 自定义内容垂直偏移，默认nil时自动处理，center时为-30，top时为10，bottom时为-10
     open var verticalOffset: CGFloat?
     /// 自定义内容垂直偏移句柄，参数为内容高度，默认nil
     open var verticalOffsetBlock: ((CGFloat) -> CGFloat)?
@@ -295,9 +297,9 @@ open class ToastView: UIControl {
         var contentOriginY: CGFloat = 0
         switch position {
         case .top:
-            contentOriginY = contentMarginInsets.top + safeAreaInsets.top + (originYOffset ?? 0)
+            contentOriginY = contentMarginInsets.top + safeAreaInsets.top + (originYOffset ?? 10.0)
         case .bottom:
-            contentOriginY = bounds.height - contentMarginInsets.bottom - contentViewSize.height - safeAreaInsets.bottom + (originYOffset ?? 0)
+            contentOriginY = bounds.height - contentMarginInsets.bottom - contentViewSize.height - safeAreaInsets.bottom + (originYOffset ?? -10.0)
         default:
             contentOriginY = (bounds.height - contentMarginInsets.top - contentMarginInsets.bottom - contentViewSize.height) / 2.0 + contentMarginInsets.top + (originYOffset ?? -30.0)
         }

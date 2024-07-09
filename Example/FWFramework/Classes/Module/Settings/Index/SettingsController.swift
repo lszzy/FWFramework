@@ -442,8 +442,8 @@ private extension SettingsController {
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel
         
-        ToastPluginImpl.shared.horizontalAlignment = Autoloader.toastHorizontalAlignment
         ToastPluginImpl.shared.customBlock = { toastView in
+            toastView.horizontalAlignment = Autoloader.toastHorizontalAlignment
             toastView.position = .init(rawValue: Autoloader.toastPluginPosition) ?? .center
         }
         
