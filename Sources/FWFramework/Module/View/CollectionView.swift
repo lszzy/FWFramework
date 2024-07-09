@@ -46,7 +46,7 @@ extension Wrapper where Base: UICollectionView {
 // MARK: - Wrapper+UICollectionViewFlowLayout
 extension Wrapper where Base: UICollectionViewFlowLayout {
     /// 初始化布局section配置，在prepareLayout调用即可
-    public func sectionConfigPrepareLayout() {
+    @MainActor public func sectionConfigPrepareLayout() {
         guard let collectionView = base.collectionView,
               let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
               delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }

@@ -17,7 +17,7 @@
     <a title="ToastView Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.8.3 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.9.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1157,6 +1157,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TagCollectionScrollDirection.html">TagCollectionScrollDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToastViewPosition.html">ToastViewPosition</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/ToastViewType.html">ToastViewType</a>
@@ -2499,7 +2502,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>当前吐司类型，只读</p>
+                        <p>当前吐司类型，默认custom，切换时需优先设置</p>
 
                       </div>
                       <div class="declaration">
@@ -2507,7 +2510,63 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/ToastViewType.html">ToastViewType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/ToastViewType.html">ToastViewType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC5styleAA0B5StyleVvp"></a>
+                    <a name="//apple_ref/swift/Property/style" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC5styleAA0B5StyleVvp">style</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>关联吐司样式，仅用于判断，默认default</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/ToastStyle.html">ToastStyle</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC8positionAA0bC8PositionOvp"></a>
+                    <a name="//apple_ref/swift/Property/position" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC8positionAA0bC8PositionOvp">position</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>吐司位置，默认center</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">position</span><span class="p">:</span> <span class="kt"><a href="../Enums/ToastViewPosition.html">ToastViewPosition</a></span></code></pre>
 
                         </div>
                       </div>
@@ -2535,7 +2594,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">customView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">customView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -2657,6 +2716,34 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework9ToastViewC11textSpacing14CoreFoundation7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/textSpacing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC11textSpacing14CoreFoundation7CGFloatVvp">textSpacing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>文本和消息之间的间距，默认5.0</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textSpacing</span><span class="p">:</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework9ToastViewC19contentCornerRadius14CoreFoundation7CGFloatVvp"></a>
                     <a name="//apple_ref/swift/Property/contentCornerRadius" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework9ToastViewC19contentCornerRadius14CoreFoundation7CGFloatVvp">contentCornerRadius</a>
@@ -2713,9 +2800,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ToastViewC14verticalOffset14CoreFoundation7CGFloatVvp"></a>
+                    <a name="/s:11FWFramework9ToastViewC14verticalOffset14CoreFoundation7CGFloatVSgvp"></a>
                     <a name="//apple_ref/swift/Property/verticalOffset" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ToastViewC14verticalOffset14CoreFoundation7CGFloatVvp">verticalOffset</a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC14verticalOffset14CoreFoundation7CGFloatVSgvp">verticalOffset</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2723,7 +2810,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>如果不想要内容整体垂直居中，则可通过调整此属性来进行垂直偏移。默认为-30，即内容比中间略微偏上</p>
+                        <p>自定义内容垂直偏移，默认nil时自动处理，center时为-30，top时为10，bottom时为-10</p>
 
                       </div>
                       <div class="declaration">
@@ -2731,7 +2818,35 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">verticalOffset</span><span class="p">:</span> <span class="kt">CGFloat</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">verticalOffset</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC19verticalOffsetBlock14CoreFoundation7CGFloatVAGcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/verticalOffsetBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC19verticalOffsetBlock14CoreFoundation7CGFloatVAGcSgvp">verticalOffsetBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义内容垂直偏移句柄，参数为内容高度，默认nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">verticalOffsetBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">CGFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGFloat</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2788,6 +2903,62 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">open</span> <span class="k">var</span> <span class="nv">titleColor</span><span class="p">:</span> <span class="kt">UIColor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC11messageFontSo6UIFontCvp"></a>
+                    <a name="//apple_ref/swift/Property/messageFont" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC11messageFontSo6UIFontCvp">messageFont</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>消息字体，默认15号</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">messageFont</span><span class="p">:</span> <span class="kt">UIFont</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC12messageColorSo7UIColorCvp"></a>
+                    <a name="//apple_ref/swift/Property/messageColor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC12messageColorSo7UIColorCvp">messageColor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>消息颜色，默认白色</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">messageColor</span><span class="p">:</span> <span class="kt">UIColor</span></code></pre>
 
                         </div>
                       </div>
@@ -2909,6 +3080,34 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework9ToastViewC17attributedMessageSo18NSAttributedStringCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/attributedMessage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC17attributedMessageSo18NSAttributedStringCSgvp">attributedMessage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>带属性消息文本，为空时不显示</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">attributedMessage</span><span class="p">:</span> <span class="kt">NSAttributedString</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework9ToastViewC8progress14CoreFoundation7CGFloatVvp"></a>
                     <a name="//apple_ref/swift/Property/progress" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework9ToastViewC8progress14CoreFoundation7CGFloatVvp">progress</a>
@@ -2947,7 +3146,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>手工点击取消时触发的句柄，默认nil不可点击取消</p>
+                        <p>手动点击取消时触发的句柄，默认nil不可点击取消</p>
 
                       </div>
                       <div class="declaration">
@@ -2956,6 +3155,34 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">open</span> <span class="k">var</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC17contentPenetrableSbvp"></a>
+                    <a name="//apple_ref/swift/Property/contentPenetrable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC17contentPenetrableSbvp">contentPenetrable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>当吐司视图禁止交互时，是否允许contentView可穿透点击，默认false</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">contentPenetrable</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -3115,6 +3342,34 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ToastViewC12messageLabelSo7UILabelCvp"></a>
+                    <a name="//apple_ref/swift/Property/messageLabel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ToastViewC12messageLabelSo7UILabelCvp">messageLabel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>消息标签，都存在，有内容时才显示</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">lazy</span> <span class="k">var</span> <span class="nv">messageLabel</span><span class="p">:</span> <span class="kt">UILabel</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -3234,6 +3489,34 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutSubviews</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@FWFramework@objc(cs)ToastView(im)hitTest:withEvent:"></a>
+                    <a name="//apple_ref/swift/Method/hitTest(_:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@FWFramework@objc(cs)ToastView(im)hitTest:withEvent:">hitTest(_:<wbr>with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">hitTest</span><span class="p">(</span><span class="n">_</span> <span class="nv">point</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">,</span> <span class="n">with</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">UIEvent</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -3428,7 +3711,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-03)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-07-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
