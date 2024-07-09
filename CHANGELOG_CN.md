@@ -1,5 +1,14 @@
 # 更新日志
 
+## [5.9.0] - 2024-07-09
+
+### Changed
+* 重构Language多语言实现方案，优化性能
+* 重构ToastPlugin，支持detail属性，更多定制属性
+* 重构ToastView，支持position、attributedMessage等定制属性
+* 优化TabbarController测试用例动画效果
+* 兼容Swift Package Index
+
 ## [5.8.3] - 2024-07-03
 
 ### Fixed
