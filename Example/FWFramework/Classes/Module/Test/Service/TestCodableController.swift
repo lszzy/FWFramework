@@ -584,7 +584,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
-            ["Optional.isNil(<iOS18)", "onOptionalNil"],
+            ["Optional.isNil", "onOptionalNil"],
         ])
     }
     
