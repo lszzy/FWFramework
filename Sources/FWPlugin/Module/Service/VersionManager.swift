@@ -89,9 +89,11 @@ public class VersionManager {
     public func openAppStore(force: Bool = false) {
         guard let appId = appId, let storeUrl = URL(string: "https://apps.apple.com/app/id\(appId)") else { return }
         DispatchQueue.main.async {
-            UIApplication.shared.open(storeUrl, options: [:], completionHandler: force ? { success in
-                if success { exit(EXIT_SUCCESS) }
-            } : nil)
+            UIApplication.shared.open(storeUrl, options: [:]) { success in
+                if force && success {
+                    exit(EXIT_SUCCESS)
+                }
+            }
         }
     }
     
