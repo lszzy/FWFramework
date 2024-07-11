@@ -106,11 +106,12 @@ Pod::Spec.new do |s|
         env -i PATH="$PATH" "$SHELL" -l -c
         "swift build -c release --disable-sandbox
         --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWPlugin/Macros\\"
-        --scratch-path \\"#{product_folder}\\""
+        --scratch-path \\"#{product_folder}\\" &&
+        [ -e \\"#{product_folder}/release/FWMacroMacros-tool\\" ] &&
+        ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\""
       SCRIPT
       swift_flags = <<-FLAGS.squish
-        -Xfrontend -load-plugin-executable
-        -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
+        -Xfrontend -load-plugin-executable -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
       FLAGS
       
       sss.script_phase = {
