@@ -108,7 +108,8 @@ Pod::Spec.new do |s|
         --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWPlugin/Macros\\"
         --scratch-path \\"#{product_folder}\\" &&
         ([ -e \\"#{product_folder}/release/FWMacroMacros-tool\\" ] &&
-        ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\")"
+        ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\" ||
+        ln -sf \\"#{product_folder}/release/FWMacroMacros\\" \\"#{product_folder}/release/FWMacroMacros-tool\\")"
       SCRIPT
       swift_flags = <<-FLAGS.squish
         -Xfrontend -load-plugin-executable -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
