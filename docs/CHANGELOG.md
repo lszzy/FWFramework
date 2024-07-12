@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.9.1] - 2024-07-12
+
+### Changed
+* Compatible with Xcode16, fix compilation errors
+* SwiftUI component ViewIntrospect adds v18 when conditionally compiled in Xcode16, compatible with iOS18, and can be migrated and adapted
+* Xcode16 conditionally compiled compatible with iOS18, adds setTabBarHidden method
+* Optimize Optional.isNil and deepUnwrap methods, remove _OptionalProtocol
+* Cocoapods submodule FWPlugin/Macros compatible with Xcode16
+
 ## [5.9.0] - 2024-07-09
 
 ### Changed

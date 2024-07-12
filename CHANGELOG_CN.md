@@ -1,5 +1,14 @@
 # 更新日志
 
+## [5.9.1] - 2024-07-12
+
+### Changed
+* 兼容Xcode16，修复编译报错
+* SwiftUI组件ViewIntrospect在Xcode16条件编译时新增v18，兼容iOS18，可迁移适配
+* Xcode16条件编译时兼容iOS18新增setTabBarHidden方法
+* 优化Optional.isNil和deepUnwrap方法，去掉_OptionalProtocol
+* Cocoapods子模块FWPlugin/Macros兼容Xcode16
+
 ## [5.9.0] - 2024-07-09
 
 ### Changed
