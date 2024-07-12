@@ -1,9 +1,9 @@
 # FWFramework
 
 [![Pod Version](https://img.shields.io/cocoapods/v/FWFramework.svg?style=flat)](http://cocoadocs.org/docsets/FWFramework/)
-[![Pod Platform](https://img.shields.io/cocoapods/p/FWFramework.svg?style=flat)](http://cocoadocs.org/docsets/FWFramework/)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flszzy%2FFWFramework%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/lszzy/FWFramework)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flszzy%2FFWFramework%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/lszzy/FWFramework)
 [![Pod License](https://img.shields.io/cocoapods/l/FWFramework.svg?style=flat)](https://github.com/lszzy/FWFramework/blob/master/LICENSE)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/lszzy/FWFramework)
 
 # [English](https://github.com/lszzy/FWFramework/blob/master/README.md)
 
@@ -73,7 +73,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 ## [更新日志](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG_CN.md)
 由于本框架一直在升级优化和扩展新功能，各版本Api可能会有些许变动，如果升级新版本时编译报错，解决方案如下：
 
-	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.9.0'
+	1. 改为指定pod版本号引入即可，推荐方式，不影响项目进度，有空才升级到新版本，示例：pod 'FWFramework', '5.9.1'
 	2. 升级迁移到新版本，请留意版本更新日志
 
 ### Swift

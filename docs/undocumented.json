@@ -674,56 +674,70 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 336,
+      "line": 337,
       "symbol": "Optional.deepUnwrap(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 340,
+      "line": 347,
       "symbol": "Optional.then(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 344,
+      "line": 351,
       "symbol": "Optional.filter(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 348,
+      "line": 355,
       "symbol": "Optional.or(_:_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 376,
+      "line": 371,
       "symbol": "ObjectType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 377,
+      "line": 372,
       "symbol": "ObjectType.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 380,
+      "line": 375,
       "symbol": "BasicType",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 381,
+      "line": 376,
+      "symbol": "BasicType.isNotEmpty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
+      "line": 379,
+      "symbol": "BasicType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
+      "line": 380,
       "symbol": "BasicType.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -731,77 +745,70 @@
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
       "line": 384,
-      "symbol": "BasicType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 385,
-      "symbol": "BasicType.isNotEmpty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 389,
       "symbol": "Optional.safeValue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 392,
+      "line": 387,
       "symbol": "Optional.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 408,
+      "line": 403,
       "symbol": "Float.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 411,
+      "line": 406,
       "symbol": "Double.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 414,
+      "line": 409,
       "symbol": "URL.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 420,
+      "line": 415,
       "symbol": "Array.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 421,
+      "line": 416,
       "symbol": "Array.safeElement(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 424,
+      "line": 419,
       "symbol": "Array.subscript(safe:)",
       "symbol_kind": "source.lang.swift.decl.function.subscript",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 427,
+      "line": 422,
       "symbol": "Array.safeSwap(from:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
+      "line": 431,
+      "symbol": "Array.removeAll(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -814,84 +821,77 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 441,
-      "symbol": "Array.removeAll(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 449,
+      "line": 444,
       "symbol": "Dictionary.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 450,
+      "line": 445,
       "symbol": "Dictionary.has(key:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 453,
+      "line": 448,
       "symbol": "Dictionary.removeAll(keys:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 458,
+      "line": 453,
       "symbol": "CGFloat.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 459,
+      "line": 454,
       "symbol": "CGFloat.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 462,
+      "line": 457,
       "symbol": "CGPoint.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 463,
+      "line": 458,
       "symbol": "CGPoint.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 466,
+      "line": 461,
       "symbol": "CGSize.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 467,
+      "line": 462,
       "symbol": "CGSize.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 470,
+      "line": 465,
       "symbol": "CGRect.isValid",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Stdlib.swift",
-      "line": 471,
+      "line": 466,
       "symbol": "CGRect.isNotEmpty",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -13687,70 +13687,70 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 650,
+      "line": 649,
       "symbol": "ScreenInch.inch35",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 651,
+      "line": 650,
       "symbol": "ScreenInch.inch40",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 652,
+      "line": 651,
       "symbol": "ScreenInch.inch47",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 653,
+      "line": 652,
       "symbol": "ScreenInch.inch54",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 654,
+      "line": 653,
       "symbol": "ScreenInch.inch55",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 655,
+      "line": 654,
       "symbol": "ScreenInch.inch58",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 656,
+      "line": 655,
       "symbol": "ScreenInch.inch61",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 657,
+      "line": 656,
       "symbol": "ScreenInch.inch65",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 658,
+      "line": 657,
       "symbol": "ScreenInch.inch67",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 666,
+      "line": 665,
       "symbol": "ScreenInch.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -14464,14 +14464,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/BarStyle.swift",
-      "line": 273,
+      "line": 298,
       "symbol": "NavigationBarStyle.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/BarStyle.swift",
-      "line": 320,
+      "line": 345,
       "symbol": "NavigationBarAppearance.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -21289,737 +21289,730 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 592,
+      "line": 593,
       "symbol": "iOSVersion.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 599,
+      "line": 603,
+      "symbol": "iOSVersion.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 618,
       "symbol": "iOSVersion.earlier(_:from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 611,
+      "line": 630,
       "symbol": "iOSVersion.later(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 617,
+      "line": 636,
       "symbol": "iOSVersion.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 623,
+      "line": 642,
       "symbol": "PlatformView",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 625,
+      "line": 644,
       "symbol": "PlatformViewController",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 650,
+      "line": 669,
       "symbol": "PlatformViewVersionPredicate",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 664,
+      "line": 683,
       "symbol": "PlatformViewVersionPredicate.iOS(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 669,
+      "line": 688,
       "symbol": "PlatformViewVersionPredicate.iOS(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 674,
+      "line": 693,
       "symbol": "iOSViewVersion",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 677,
+      "line": 696,
       "symbol": "PlatformViewVersion",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 678,
+      "line": 697,
       "symbol": "PlatformViewVersion.available(_:_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 679,
+      "line": 698,
       "symbol": "PlatformViewVersion.unavailable",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 681,
+      "line": 700,
       "symbol": "PlatformViewVersion.init(for:selector:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 685,
+      "line": 704,
       "symbol": "PlatformViewVersion.unavailable(file:line:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 719,
+      "line": 738,
       "symbol": "PlatformViewVersion",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 777,
+      "line": 796,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 778,
+      "line": 797,
       "symbol": "IntrospectableViewType.view",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 782,
+      "line": 801,
       "symbol": "iOSViewVersion<ViewType, UIView>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 783,
+      "line": 802,
       "symbol": "iOSViewVersion<ViewType, UIView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 784,
+      "line": 803,
       "symbol": "iOSViewVersion<ViewType, UIView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 785,
+      "line": 804,
       "symbol": "iOSViewVersion<ViewType, UIView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 786,
+      "line": 805,
       "symbol": "iOSViewVersion<ViewType, UIView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 787,
+      "line": 807,
+      "symbol": "iOSViewVersion<ViewType, UIView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 809,
       "symbol": "iOSViewVersion<ViewType, UIView>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 807,
+      "line": 829,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 808,
+      "line": 830,
       "symbol": "IntrospectableViewType.colorPicker",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 815,
+      "line": 837,
       "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 816,
+      "line": 838,
       "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 817,
+      "line": 839,
       "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 818,
+      "line": 840,
       "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 819,
+      "line": 842,
+      "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 844,
       "symbol": "iOSViewVersion<ColorPickerType, UIColorWell>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 841,
+      "line": 866,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 842,
+      "line": 867,
       "symbol": "IntrospectableViewType.datePicker",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 846,
+      "line": 871,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 847,
+      "line": 872,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 848,
+      "line": 873,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 849,
+      "line": 874,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 850,
+      "line": 875,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 851,
+      "line": 877,
+      "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 879,
       "symbol": "iOSViewVersion<DatePickerType, UIDatePicker>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 871,
+      "line": 899,
       "symbol": "DatePickerWithCompactStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 872,
+      "line": 900,
       "symbol": "DatePickerWithCompactStyleType.Style.compact",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 876,
+      "line": 904,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 877,
+      "line": 905,
       "symbol": "IntrospectableViewType.datePicker(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 883,
+      "line": 911,
       "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 884,
+      "line": 912,
       "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 885,
+      "line": 913,
       "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 886,
+      "line": 914,
       "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 887,
+      "line": 916,
+      "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 918,
       "symbol": "iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 909,
+      "line": 940,
       "symbol": "DatePickerWithGraphicalStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 910,
+      "line": 941,
       "symbol": "DatePickerWithGraphicalStyleType.Style.graphical",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 914,
+      "line": 945,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 915,
+      "line": 946,
       "symbol": "IntrospectableViewType.datePicker(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 921,
+      "line": 952,
       "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 922,
+      "line": 953,
       "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 923,
+      "line": 954,
       "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 924,
+      "line": 955,
       "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 925,
-      "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v14Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 947,
-      "symbol": "DatePickerWithWheelStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 948,
-      "symbol": "DatePickerWithWheelStyleType.Style.wheel",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 952,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 953,
-      "symbol": "IntrospectableViewType.datePicker(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 957,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 958,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v14",
+      "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 959,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v15",
+      "symbol": "iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 960,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "line": 981,
+      "symbol": "DatePickerWithWheelStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 961,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "line": 982,
+      "symbol": "DatePickerWithWheelStyleType.Style.wheel",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 962,
-      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 987,
+      "line": 986,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 988,
-      "symbol": "IntrospectableViewType.form",
+      "line": 987,
+      "symbol": "IntrospectableViewType.datePicker(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 991,
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 992,
-      "symbol": "iOSViewVersion<FormType, UITableView>.v13",
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 993,
-      "symbol": "iOSViewVersion<FormType, UITableView>.v14",
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 994,
-      "symbol": "iOSViewVersion<FormType, UITableView>.v15",
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 995,
-      "symbol": "iOSViewVersion<FormType, UITableView>.v15Earlier",
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 997,
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 999,
+      "symbol": "iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1024,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1025,
+      "symbol": "IntrospectableViewType.form",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1029,
+      "symbol": "iOSViewVersion<FormType, UITableView>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1030,
+      "symbol": "iOSViewVersion<FormType, UITableView>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1031,
+      "symbol": "iOSViewVersion<FormType, UITableView>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1032,
+      "symbol": "iOSViewVersion<FormType, UITableView>.v15Earlier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1036,
       "symbol": "iOSViewVersion<FormType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1000,
+      "line": 1037,
       "symbol": "iOSViewVersion<FormType, UICollectionView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1001,
+      "line": 1039,
+      "symbol": "iOSViewVersion<FormType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1041,
       "symbol": "iOSViewVersion<FormType, UICollectionView>.v16Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1025,
+      "line": 1065,
       "symbol": "FormWithGroupedStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1026,
+      "line": 1066,
       "symbol": "FormWithGroupedStyleType.Style.grouped",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1030,
+      "line": 1070,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1031,
+      "line": 1071,
       "symbol": "IntrospectableViewType.form(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1044,
+      "line": 1084,
       "symbol": "iOSViewVersion<FormWithGroupedStyleType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1045,
+      "line": 1085,
       "symbol": "iOSViewVersion<FormWithGroupedStyleType, UICollectionView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1046,
+      "line": 1087,
+      "symbol": "iOSViewVersion<FormWithGroupedStyleType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1089,
       "symbol": "iOSViewVersion<FormWithGroupedStyleType, UICollectionView>.v16Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1073,
+      "line": 1116,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1074,
+      "line": 1117,
       "symbol": "IntrospectableViewType.fullScreenCover",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1080,
+      "line": 1123,
       "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1081,
+      "line": 1124,
       "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1082,
+      "line": 1125,
       "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1083,
+      "line": 1126,
       "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1084,
+      "line": 1128,
+      "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1130,
       "symbol": "iOSViewVersion<FullScreenCoverType, UIPresentationController>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1114,
+      "line": 1160,
       "symbol": "ListType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1115,
+      "line": 1161,
       "symbol": "ListType.Style.plain",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1119,
+      "line": 1165,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1120,
-      "symbol": "IntrospectableViewType.list",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1121,
-      "symbol": "IntrospectableViewType.list(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1125,
-      "symbol": "iOSViewVersion<ListType, UITableView>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1126,
-      "symbol": "iOSViewVersion<ListType, UITableView>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1127,
-      "symbol": "iOSViewVersion<ListType, UITableView>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1128,
-      "symbol": "iOSViewVersion<ListType, UITableView>.v15Earlier",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1132,
-      "symbol": "iOSViewVersion<ListType, UICollectionView>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1133,
-      "symbol": "iOSViewVersion<ListType, UICollectionView>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1134,
-      "symbol": "iOSViewVersion<ListType, UICollectionView>.v16Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1161,
-      "symbol": "ListWithGroupedStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1162,
-      "symbol": "ListWithGroupedStyleType.Style.grouped",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1166,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
+      "symbol": "IntrospectableViewType.list",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
@@ -22032,1798 +22025,2106 @@
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1171,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v13",
+      "symbol": "iOSViewVersion<ListType, UITableView>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1172,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v14",
+      "symbol": "iOSViewVersion<ListType, UITableView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1173,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v15",
+      "symbol": "iOSViewVersion<ListType, UITableView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1174,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v15Earlier",
+      "symbol": "iOSViewVersion<ListType, UITableView>.v15Earlier",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1178,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v16",
+      "symbol": "iOSViewVersion<ListType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1179,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v17",
+      "symbol": "iOSViewVersion<ListType, UICollectionView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1180,
-      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v16Later",
+      "line": 1181,
+      "symbol": "iOSViewVersion<ListType, UICollectionView>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1207,
-      "symbol": "ListWithInsetGroupedStyleType.Style",
+      "line": 1183,
+      "symbol": "iOSViewVersion<ListType, UICollectionView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1210,
+      "symbol": "ListWithGroupedStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1208,
-      "symbol": "ListWithInsetGroupedStyleType.Style.insetGrouped",
+      "line": 1211,
+      "symbol": "ListWithGroupedStyleType.Style.grouped",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1212,
+      "line": 1215,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1213,
+      "line": 1216,
       "symbol": "IntrospectableViewType.list(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1219,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1220,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v15",
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1221,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v15Earlier14",
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1225,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v16",
+      "line": 1222,
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1226,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v17",
+      "line": 1223,
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UITableView>.v15Earlier",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1227,
-      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v16Later",
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1254,
-      "symbol": "ListWithInsetStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
+      "line": 1228,
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1255,
-      "symbol": "ListWithInsetStyleType.Style.inset",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "line": 1230,
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1232,
+      "symbol": "iOSViewVersion<ListWithGroupedStyleType, UICollectionView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1259,
+      "symbol": "ListWithInsetGroupedStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1260,
+      "symbol": "ListWithInsetGroupedStyleType.Style.insetGrouped",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1264,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1260,
+      "line": 1265,
       "symbol": "IntrospectableViewType.list(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1266,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1267,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1268,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v15Earlier14",
+      "line": 1271,
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1272,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v16",
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1273,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v17",
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UITableView>.v15Earlier14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1274,
-      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v16Later",
+      "line": 1277,
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1301,
-      "symbol": "ListWithSidebarStyleType.Style",
+      "line": 1278,
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1280,
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1282,
+      "symbol": "iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1309,
+      "symbol": "ListWithInsetStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1302,
-      "symbol": "ListWithSidebarStyleType.Style.sidebar",
+      "line": 1310,
+      "symbol": "ListWithInsetStyleType.Style.inset",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1306,
+      "line": 1314,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1307,
+      "line": 1315,
       "symbol": "IntrospectableViewType.list(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1313,
+      "line": 1321,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1322,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1323,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UITableView>.v15Earlier14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1327,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1328,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1330,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1332,
+      "symbol": "iOSViewVersion<ListWithInsetStyleType, UICollectionView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1359,
+      "symbol": "ListWithSidebarStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1360,
+      "symbol": "ListWithSidebarStyleType.Style.sidebar",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1364,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1365,
+      "symbol": "IntrospectableViewType.list(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1371,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UITableView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1314,
+      "line": 1372,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UITableView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1315,
+      "line": 1373,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UITableView>.v15Earlier14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1319,
+      "line": 1377,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1320,
+      "line": 1378,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UICollectionView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1321,
+      "line": 1380,
+      "symbol": "iOSViewVersion<ListWithSidebarStyleType, UICollectionView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1382,
       "symbol": "iOSViewVersion<ListWithSidebarStyleType, UICollectionView>.v16Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1350,
+      "line": 1411,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1351,
+      "line": 1412,
       "symbol": "IntrospectableViewType.listCell",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1355,
+      "line": 1416,
       "symbol": "iOSViewVersion<ListCellType, UITableViewCell>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1356,
+      "line": 1417,
       "symbol": "iOSViewVersion<ListCellType, UITableViewCell>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1357,
+      "line": 1418,
       "symbol": "iOSViewVersion<ListCellType, UITableViewCell>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1358,
+      "line": 1419,
       "symbol": "iOSViewVersion<ListCellType, UITableViewCell>.v15Earlier",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1362,
+      "line": 1423,
       "symbol": "iOSViewVersion<ListCellType, UICollectionViewCell>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1363,
+      "line": 1424,
       "symbol": "iOSViewVersion<ListCellType, UICollectionViewCell>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1364,
-      "symbol": "iOSViewVersion<ListCellType, UICollectionViewCell>.v16Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1388,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1389,
-      "symbol": "IntrospectableViewType.navigationSplitView",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1400,
-      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1401,
-      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1402,
-      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v16Later",
+      "line": 1426,
+      "symbol": "iOSViewVersion<ListCellType, UICollectionViewCell>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1428,
+      "symbol": "iOSViewVersion<ListCellType, UICollectionViewCell>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1452,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1429,
+      "line": 1453,
+      "symbol": "IntrospectableViewType.navigationSplitView",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1464,
+      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1465,
+      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1467,
+      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1469,
+      "symbol": "iOSViewVersion<NavigationSplitViewType, UISplitViewController>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1495,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1496,
       "symbol": "IntrospectableViewType.navigationStack",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1440,
+      "line": 1507,
       "symbol": "iOSViewVersion<NavigationStackType, UINavigationController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1441,
+      "line": 1508,
       "symbol": "iOSViewVersion<NavigationStackType, UINavigationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1442,
+      "line": 1510,
+      "symbol": "iOSViewVersion<NavigationStackType, UINavigationController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1512,
       "symbol": "iOSViewVersion<NavigationStackType, UINavigationController>.v16Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1468,
+      "line": 1538,
       "symbol": "NavigationViewWithColumnsStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1469,
+      "line": 1539,
       "symbol": "NavigationViewWithColumnsStyleType.Style.columns",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1473,
+      "line": 1543,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1474,
+      "line": 1544,
       "symbol": "IntrospectableViewType.navigationView(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1478,
+      "line": 1548,
       "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1479,
+      "line": 1549,
       "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1480,
+      "line": 1550,
       "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1481,
+      "line": 1551,
       "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1482,
+      "line": 1552,
       "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1483,
-      "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1507,
-      "symbol": "NavigationViewWithStackStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1508,
-      "symbol": "NavigationViewWithStackStyleType.Style.stack",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1512,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1513,
-      "symbol": "IntrospectableViewType.navigationView(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1517,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1518,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1519,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1520,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1521,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1522,
-      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1548,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1549,
-      "symbol": "IntrospectableViewType.pageControl",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1555,
-      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v14",
+      "line": 1554,
+      "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1556,
-      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v15",
+      "symbol": "iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewController>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1557,
-      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1558,
-      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1559,
-      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v14Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1585,
-      "symbol": "PickerWithSegmentedStyleType.Style",
+      "line": 1580,
+      "symbol": "NavigationViewWithStackStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1586,
-      "symbol": "PickerWithSegmentedStyleType.Style.segmented",
+      "line": 1581,
+      "symbol": "NavigationViewWithStackStyleType.Style.stack",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1590,
+      "line": 1585,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1591,
-      "symbol": "IntrospectableViewType.picker(style:)",
+      "line": 1586,
+      "symbol": "IntrospectableViewType.navigationView(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1595,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v13",
+      "line": 1590,
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1591,
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1592,
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1593,
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1594,
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1596,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1597,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v15",
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1598,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1599,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1600,
-      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.all",
+      "symbol": "iOSViewVersion<NavigationViewWithStackStyleType, UINavigationController>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1624,
-      "symbol": "PickerWithWheelStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1625,
-      "symbol": "PickerWithWheelStyleType.Style.wheel",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1629,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1630,
-      "symbol": "IntrospectableViewType.picker(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1634,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v13",
+      "line": 1625,
+      "symbol": "IntrospectableViewType.pageControl",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1635,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v14",
+      "line": 1631,
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1632,
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1633,
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1634,
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1636,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1637,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v16",
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1638,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1639,
-      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.all",
+      "symbol": "iOSViewVersion<PageControlType, UIPageControl>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 1664,
+      "symbol": "PickerWithSegmentedStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1665,
+      "symbol": "PickerWithSegmentedStyleType.Style.segmented",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1669,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1665,
+      "line": 1670,
+      "symbol": "IntrospectableViewType.picker(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1674,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1675,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1676,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1677,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1678,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1680,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1682,
+      "symbol": "iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1706,
+      "symbol": "PickerWithWheelStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1707,
+      "symbol": "PickerWithWheelStyleType.Style.wheel",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1711,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1712,
+      "symbol": "IntrospectableViewType.picker(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1716,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1717,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1718,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1719,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1720,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1722,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1724,
+      "symbol": "iOSViewVersion<PickerWithWheelStyleType, UIPickerView>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1749,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1750,
       "symbol": "IntrospectableViewType.popover",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1669,
+      "line": 1754,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1670,
+      "line": 1755,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1671,
+      "line": 1756,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1672,
+      "line": 1757,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1673,
+      "line": 1758,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1674,
+      "line": 1760,
+      "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1762,
       "symbol": "iOSViewVersion<PopoverType, UIPopoverPresentationController>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1696,
+      "line": 1784,
       "symbol": "ProgressViewWithCircularStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1697,
+      "line": 1785,
       "symbol": "ProgressViewWithCircularStyleType.Style.circular",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1701,
+      "line": 1789,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1702,
+      "line": 1790,
       "symbol": "IntrospectableViewType.progressView(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1708,
+      "line": 1796,
       "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1709,
+      "line": 1797,
       "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1710,
+      "line": 1798,
       "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1711,
+      "line": 1799,
       "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1712,
+      "line": 1801,
+      "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1803,
       "symbol": "iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorView>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1732,
+      "line": 1823,
       "symbol": "ProgressViewWithLinearStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1733,
+      "line": 1824,
       "symbol": "ProgressViewWithLinearStyleType.Style.linear",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1737,
+      "line": 1828,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1738,
+      "line": 1829,
       "symbol": "IntrospectableViewType.progressView(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1744,
+      "line": 1835,
       "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1745,
+      "line": 1836,
       "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1746,
+      "line": 1837,
       "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1747,
+      "line": 1838,
       "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1748,
+      "line": 1840,
+      "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1842,
       "symbol": "iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView>.v14Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1770,
+      "line": 1864,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1771,
+      "line": 1865,
       "symbol": "IntrospectableViewType.scrollView",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1775,
+      "line": 1869,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1776,
+      "line": 1870,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1777,
+      "line": 1871,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1778,
+      "line": 1872,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1779,
+      "line": 1873,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1780,
+      "line": 1875,
+      "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1877,
       "symbol": "iOSViewVersion<ScrollViewType, UIScrollView>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1804,
+      "line": 1901,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1805,
+      "line": 1902,
       "symbol": "IntrospectableViewType.searchField",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1813,
+      "line": 1910,
       "symbol": "iOSViewVersion<SearchFieldType, UISearchBar>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1814,
+      "line": 1911,
       "symbol": "iOSViewVersion<SearchFieldType, UISearchBar>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1815,
+      "line": 1912,
       "symbol": "iOSViewVersion<SearchFieldType, UISearchBar>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1816,
+      "line": 1914,
+      "symbol": "iOSViewVersion<SearchFieldType, UISearchBar>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1916,
       "symbol": "iOSViewVersion<SearchFieldType, UISearchBar>.v15Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1844,
+      "line": 1944,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1845,
+      "line": 1945,
       "symbol": "IntrospectableViewType.secureField",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1849,
+      "line": 1949,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1850,
+      "line": 1950,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1851,
+      "line": 1951,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1852,
+      "line": 1952,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1853,
+      "line": 1953,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1854,
+      "line": 1955,
+      "symbol": "iOSViewVersion<SecureFieldType, UITextField>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1957,
       "symbol": "iOSViewVersion<SecureFieldType, UITextField>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1879,
+      "line": 1982,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1880,
+      "line": 1983,
       "symbol": "IntrospectableViewType.sheet",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1884,
+      "line": 1987,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1885,
+      "line": 1988,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1886,
+      "line": 1989,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1887,
+      "line": 1990,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1888,
+      "line": 1991,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1889,
+      "line": 1993,
+      "symbol": "iOSViewVersion<SheetType, UIPresentationController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 1995,
       "symbol": "iOSViewVersion<SheetType, UIPresentationController>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1899,
+      "line": 2005,
       "symbol": "iOSViewVersion<SheetType, UISheetPresentationController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1901,
+      "line": 2007,
       "symbol": "iOSViewVersion<SheetType, UISheetPresentationController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1903,
+      "line": 2009,
       "symbol": "iOSViewVersion<SheetType, UISheetPresentationController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1905,
+      "line": 2012,
+      "symbol": "iOSViewVersion<SheetType, UISheetPresentationController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2015,
       "symbol": "iOSViewVersion<SheetType, UISheetPresentationController>.v15Later",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1929,
+      "line": 2039,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1930,
+      "line": 2040,
       "symbol": "IntrospectableViewType.slider",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1934,
+      "line": 2044,
       "symbol": "iOSViewVersion<SliderType, UISlider>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1935,
+      "line": 2045,
       "symbol": "iOSViewVersion<SliderType, UISlider>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1936,
+      "line": 2046,
       "symbol": "iOSViewVersion<SliderType, UISlider>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1937,
+      "line": 2047,
       "symbol": "iOSViewVersion<SliderType, UISlider>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1938,
+      "line": 2048,
       "symbol": "iOSViewVersion<SliderType, UISlider>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1939,
-      "symbol": "iOSViewVersion<SliderType, UISlider>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1961,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1962,
-      "symbol": "IntrospectableViewType.stepper",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1966,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1967,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1968,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1969,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1970,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 1971,
-      "symbol": "iOSViewVersion<StepperType, UIStepper>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2008,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2009,
-      "symbol": "IntrospectableViewType.table",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2019,
-      "symbol": "iOSViewVersion<TableType, UICollectionView>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2020,
-      "symbol": "iOSViewVersion<TableType, UICollectionView>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2021,
-      "symbol": "iOSViewVersion<TableType, UICollectionView>.v16Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2044,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2045,
-      "symbol": "IntrospectableViewType.tabView",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2049,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2050,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2051,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v15",
+      "symbol": "iOSViewVersion<SliderType, UISlider>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2052,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v16",
+      "symbol": "iOSViewVersion<SliderType, UISlider>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2053,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "line": 2074,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2054,
-      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.all",
+      "line": 2075,
+      "symbol": "IntrospectableViewType.stepper",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2079,
-      "symbol": "TabViewWithPageStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2080,
-      "symbol": "TabViewWithPageStyleType.Style.page",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2084,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
+      "line": 2081,
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2082,
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2083,
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2085,
-      "symbol": "IntrospectableViewType.tabView(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2091,
-      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v14",
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2092,
-      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2093,
-      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2094,
-      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2095,
-      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v14Later",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2117,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2118,
-      "symbol": "IntrospectableViewType.textEditor",
+      "line": 2087,
+      "symbol": "iOSViewVersion<StepperType, UIStepper>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2124,
-      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2125,
-      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v15",
+      "symbol": "IntrospectableViewType.table",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2126,
-      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v16",
+      "line": 2135,
+      "symbol": "iOSViewVersion<TableType, UICollectionView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2127,
-      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v17",
+      "line": 2136,
+      "symbol": "iOSViewVersion<TableType, UICollectionView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2128,
-      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v14Later",
+      "line": 2138,
+      "symbol": "iOSViewVersion<TableType, UICollectionView>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2150,
+      "line": 2140,
+      "symbol": "iOSViewVersion<TableType, UICollectionView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2163,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2151,
-      "symbol": "IntrospectableViewType.textField",
+      "line": 2164,
+      "symbol": "IntrospectableViewType.tabView",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2155,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v13",
+      "line": 2168,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2156,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v14",
+      "line": 2169,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2157,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v15",
+      "line": 2170,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2158,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v16",
+      "line": 2171,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2159,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v17",
+      "line": 2172,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2160,
-      "symbol": "iOSViewVersion<TextFieldType, UITextField>.all",
+      "line": 2174,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2179,
-      "symbol": "TextFieldWithVerticalAxisType.Axis",
+      "line": 2176,
+      "symbol": "iOSViewVersion<TabViewType, UITabBarController>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2201,
+      "symbol": "TabViewWithPageStyleType.Style",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2180,
-      "symbol": "TextFieldWithVerticalAxisType.Axis.vertical",
+      "line": 2202,
+      "symbol": "TabViewWithPageStyleType.Style.page",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2184,
+      "line": 2206,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2185,
-      "symbol": "IntrospectableViewType.textField(axis:)",
+      "line": 2207,
+      "symbol": "IntrospectableViewType.tabView(style:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2196,
-      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v16",
+      "line": 2213,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2197,
-      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v17",
+      "line": 2214,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v15",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2198,
-      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v16Later",
+      "line": 2215,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2216,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2218,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2220,
+      "symbol": "iOSViewVersion<TabViewWithPageStyleType, UICollectionView>.v14Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2242,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2221,
-      "symbol": "IntrospectableViewType.toggle",
+      "line": 2243,
+      "symbol": "IntrospectableViewType.textEditor",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2225,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2226,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2227,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2228,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2229,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2230,
-      "symbol": "iOSViewVersion<ToggleType, UISwitch>.all",
+      "line": 2249,
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v14",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2250,
-      "symbol": "ToggleWithSwitchStyleType.Style",
-      "symbol_kind": "source.lang.swift.decl.enum",
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2251,
-      "symbol": "ToggleWithSwitchStyleType.Style.switch",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2255,
+      "line": 2252,
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2254,
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2256,
+      "symbol": "iOSViewVersion<TextEditorType, UITextView>.v14Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2278,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2256,
-      "symbol": "IntrospectableViewType.toggle(style:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2260,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2261,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2262,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2263,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v16",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2264,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2265,
-      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.all",
+      "line": 2279,
+      "symbol": "IntrospectableViewType.textField",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2283,
-      "symbol": "IntrospectableViewType",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2284,
-      "symbol": "IntrospectableViewType.window",
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v13",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2288,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.v13",
+      "line": 2284,
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2285,
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2286,
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2287,
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2289,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.v14",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2290,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.v15",
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2291,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.v16",
+      "symbol": "iOSViewVersion<TextFieldType, UITextField>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2292,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.v17",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "line": 2310,
+      "symbol": "TextFieldWithVerticalAxisType.Axis",
+      "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2293,
-      "symbol": "iOSViewVersion<WindowType, UIWindow>.all",
-      "symbol_kind": "source.lang.swift.decl.var.static",
+      "line": 2311,
+      "symbol": "TextFieldWithVerticalAxisType.Axis.vertical",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2323,
+      "line": 2315,
       "symbol": "IntrospectableViewType",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2324,
-      "symbol": "IntrospectableViewType.viewController",
+      "line": 2316,
+      "symbol": "IntrospectableViewType.textField(axis:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2327,
+      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v16",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2328,
-      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v13",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2329,
-      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v14",
+      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2330,
-      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v15",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2331,
-      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v16",
+      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v18",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
       "line": 2332,
+      "symbol": "iOSViewVersion<TextFieldWithVerticalAxisType, UITextView>.v16Later",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2354,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2355,
+      "symbol": "IntrospectableViewType.toggle",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2359,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2360,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2361,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2362,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2363,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2365,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2367,
+      "symbol": "iOSViewVersion<ToggleType, UISwitch>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2387,
+      "symbol": "ToggleWithSwitchStyleType.Style",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2388,
+      "symbol": "ToggleWithSwitchStyleType.Style.switch",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2392,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2393,
+      "symbol": "IntrospectableViewType.toggle(style:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2397,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2398,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2399,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2400,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2401,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2403,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2405,
+      "symbol": "iOSViewVersion<ToggleWithSwitchStyleType, UISwitch>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2423,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2424,
+      "symbol": "IntrospectableViewType.window",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2428,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2429,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2430,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2431,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2432,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v17",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2434,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2436,
+      "symbol": "iOSViewVersion<WindowType, UIWindow>.all",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2466,
+      "symbol": "IntrospectableViewType",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2467,
+      "symbol": "IntrospectableViewType.viewController",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2471,
+      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v13",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2472,
+      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v14",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2473,
+      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v15",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2474,
+      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v16",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2475,
       "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v17",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
-      "line": 2333,
+      "line": 2477,
+      "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.v18",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWSwiftUI/Toolkit/ViewIntrospect.swift",
+      "line": 2479,
       "symbol": "iOSViewVersion<ViewControllerType, UIViewController>.all",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
