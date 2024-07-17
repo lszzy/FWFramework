@@ -200,8 +200,8 @@ extension Notification.Name {
 // MARK: - Bundle+Language
 extension Bundle {
     
-    fileprivate static var innerSystemLanguage: String?
-    fileprivate static var innerLocalizedLanguage: String?
+    nonisolated(unsafe) fileprivate static var innerSystemLanguage: String?
+    nonisolated(unsafe) fileprivate static var innerLocalizedLanguage: String?
     
 }
 

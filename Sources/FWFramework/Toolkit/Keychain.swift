@@ -10,7 +10,7 @@ import Security
 
 // MARK: - KeychainManager
 /// Keychain管理器
-public class KeychainManager {
+public class KeychainManager: @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

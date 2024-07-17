@@ -56,7 +56,7 @@ extension Wrapper where Base: Timer {
     ///   - countDown: 倒计时时间
     ///   - block: 每秒执行block，为0时自动停止
     /// - Returns: 定时器，可手工停止
-    public static func commonTimer(countDown: Int, block: @escaping (Int) -> Void) -> Timer {
+    public static func commonTimer(countDown: Int, block: @MainActor @escaping @Sendable (Int) -> Void) -> Timer {
         let startTime = Date.fw.currentTime
         let timer = commonTimer(timeInterval: 1, block: { timer in
             DispatchQueue.main.async {
@@ -117,7 +117,7 @@ extension Wrapper where Base: Timer {
 }
 
 // MARK: - Wrapper+UIGestureRecognizer
-extension Wrapper where Base: UIGestureRecognizer {
+@MainActor extension Wrapper where Base: UIGestureRecognizer {
     /// 从事件句柄初始化
     public static func gestureRecognizer(block: @escaping (Base) -> Void) -> Base {
         let gestureRecognizer = Base.init()
@@ -166,7 +166,7 @@ extension Wrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 获取当前视图添加的第一个点击手势，默认nil
     public var tapGesture: UITapGestureRecognizer? {
         let tapGesture = base.gestureRecognizers?.first(where: { $0 is UITapGestureRecognizer })
@@ -219,7 +219,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIControl
-extension Wrapper where Base: UIControl {
+@MainActor extension Wrapper where Base: UIControl {
     /// 添加事件句柄，返回监听唯一标志
     @discardableResult
     public func addBlock(_ block: @escaping (Base) -> Void, for controlEvents: UIControl.Event) -> String {
@@ -300,7 +300,7 @@ extension Wrapper where Base: UIControl {
 
 // MARK: - Wrapper+UIBarButtonItem
 /// iOS11之后，customView必须具有intrinsicContentSize值才能点击，可使用frame布局或者实现intrinsicContentSize即可
-extension Wrapper where Base: UIBarButtonItem {
+@MainActor extension Wrapper where Base: UIBarButtonItem {
     /// 使用指定对象和事件创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
     public static func item(object: Any?, target: Any?, action: Selector?) -> Base {
         var barItem: Base
@@ -589,7 +589,7 @@ public typealias BlockIntParam = (Int, Any?) -> ()
 public class MulticastBlock {
     
     /// 句柄可扩展优先级
-    public struct Priority: RawRepresentable, Equatable, Hashable {
+    public struct Priority: RawRepresentable, Equatable, Hashable, Sendable {
         
         public typealias RawValue = Int
         
@@ -612,11 +612,11 @@ public class MulticastBlock {
     }
     
     private class Target {
-        let block: (() -> Void)?
-        let asyncBlock: ((@escaping () -> Void) -> Void)?
+        let block: (@Sendable () -> Void)?
+        let asyncBlock: (@Sendable (@escaping @Sendable () -> Void) -> Void)?
         let priority: Priority
         
-        init(block: (() -> Void)? = nil, asyncBlock: ((@escaping () -> Void) -> Void)? = nil, priority: Priority) {
+        init(block: (@Sendable () -> Void)? = nil, asyncBlock: (@Sendable (@escaping @Sendable () -> Void) -> Void)? = nil, priority: Priority) {
             self.block = block
             self.asyncBlock = asyncBlock
             self.priority = priority
@@ -644,8 +644,8 @@ public class MulticastBlock {
     }
     
     /// 添加同步句柄，优先级默认normal，注意invokeOnce开启且调用了invoke后会立即执行而不是添加
-    public func append(_ block: @escaping () -> Void, priority: Priority = .normal) {
-        let targetBlock = !onMainThread ? block : {
+    public func append(_ block: @escaping @Sendable () -> Void, priority: Priority = .normal) {
+        let targetBlock = !onMainThread ? block : { @Sendable in
             DispatchQueue.fw.mainAsync {
                 block()
             }
@@ -662,8 +662,8 @@ public class MulticastBlock {
     }
     
     /// 添加异步句柄，block必须调用completionHandler，优先级默认normal，注意invokeOnce开启且调用了invoke后会立即执行而不是添加
-    public func append(_ block: @escaping (_ completionHandler: @escaping () -> Void) -> Void, priority: Priority = .normal) {
-        let targetBlock = !onMainThread ? block : { completionHandler in
+    public func append(_ block: @escaping @Sendable (_ completionHandler: @escaping @Sendable () -> Void) -> Void, priority: Priority = .normal) {
+        let targetBlock = !onMainThread ? block : { @Sendable completionHandler in
             DispatchQueue.fw.mainAsync {
                 block(completionHandler)
             }

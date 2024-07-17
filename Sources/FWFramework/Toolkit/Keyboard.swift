@@ -1026,10 +1026,10 @@ extension UITextView {
 // MARK: - KeyboardConfig
 fileprivate class KeyboardConfig {
     
-    static var keyboardShowing = false
-    static var keyboardOrigin: CGFloat = 0
-    static var keyboardOffset: CGFloat = 0
-    static var keyboardGesture: UITapGestureRecognizer?
+    nonisolated(unsafe) static var keyboardShowing = false
+    nonisolated(unsafe) static var keyboardOrigin: CGFloat = 0
+    nonisolated(unsafe) static var keyboardOffset: CGFloat = 0
+    nonisolated(unsafe) static var keyboardGesture: UITapGestureRecognizer?
     
     static var toolbarPreviousImage: UIImage? {
         if let image = _toolbarPreviousImage { return image }
@@ -1039,7 +1039,7 @@ fileprivate class KeyboardConfig {
         _toolbarPreviousImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
         return _toolbarPreviousImage
     }
-    static var _toolbarPreviousImage: UIImage?
+    nonisolated(unsafe) static var _toolbarPreviousImage: UIImage?
     
     static var toolbarNextImage: UIImage? {
         if let image = _toolbarNextImage { return image }
@@ -1049,7 +1049,7 @@ fileprivate class KeyboardConfig {
         _toolbarNextImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
         return _toolbarNextImage
     }
-    static var _toolbarNextImage: UIImage?
+    nonisolated(unsafe) static var _toolbarNextImage: UIImage?
     
 }
 

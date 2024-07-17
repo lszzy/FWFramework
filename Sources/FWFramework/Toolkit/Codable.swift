@@ -15,7 +15,7 @@ extension WrapperGlobal {
         _codableDecodingConverters.append(decodingConverter)
     }
     
-    fileprivate static var _codableDecodingConverters: [CodableDecodingConverter] = []
+    nonisolated(unsafe) fileprivate static var _codableDecodingConverters: [CodableDecodingConverter] = []
 }
 
 // MARK: - AnyEncoder
