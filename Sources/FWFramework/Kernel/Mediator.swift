@@ -10,12 +10,12 @@ import UIKit
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 中间件快速访问
-    public static var mediator = Mediator.self
+    nonisolated(unsafe) public static var mediator = Mediator.self
 }
 
 // MARK: - ModulePriority
 /// 模块可扩展优先级
-public struct ModulePriority: RawRepresentable, Equatable, Hashable {
+public struct ModulePriority: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = UInt
     
@@ -94,13 +94,13 @@ extension ModuleProtocol where Self: NSObject {
 /// [Bifrost](https://github.com/youzan/Bifrost)
 public class Mediator {
     
-    private static var modulePool: [String: ModuleProtocol.Type] = [:]
-    private static var moduleInvokePool: [String: Bool] = [:]
+    nonisolated(unsafe) private static var modulePool: [String: ModuleProtocol.Type] = [:]
+    nonisolated(unsafe) private static var moduleInvokePool: [String: Bool] = [:]
     
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
-    public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
+    nonisolated(unsafe) public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
     /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
-    public static var delegateModeEnabled = false
+    nonisolated(unsafe) public static var delegateModeEnabled = false
     
     /// 插件调试描述
     public class func debugDescription() -> String {
