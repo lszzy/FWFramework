@@ -437,7 +437,7 @@ private extension SettingsController {
     static var requestPluginImpl = requestPlugins[0]
     static let requestPlugins = ["RequestPluginImpl", "AlamofireImpl"]
     
-    func loadApp_Plugin() {
+    @MainActor func loadApp_Plugin() {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: Autoloader.alertPluginImpl == Autoloader.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = Autoloader.alertHidesSheetCancel

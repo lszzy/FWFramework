@@ -8,7 +8,7 @@
 import UIKit
 
 /// 默认空界面插件
-open class EmptyPluginImpl: NSObject, EmptyPlugin {
+open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

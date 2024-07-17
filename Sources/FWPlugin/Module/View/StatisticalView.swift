@@ -11,7 +11,7 @@ import UIKit
 #endif
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     // MARK: - Click
     /// 设置并尝试自动绑定点击事件统计
     public var statisticalClick: StatisticalEvent? {
@@ -360,7 +360,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 设置并尝试自动绑定曝光事件统计
     public var statisticalExposure: StatisticalEvent? {
         get {
@@ -494,7 +494,7 @@ extension Notification.Name {
 /// 视图从可见到不可见时曝光结束，视为一次曝光，触发曝光结束事件(triggerDuration大于0)并统计曝光时长。
 /// 默认未开启曝光时长统计，仅触发开始事件用于统计次数；开启曝光时长统计后会触发结束事件并统计时长，应用退后台时不计曝光时间。
 /// 默认运行模式时，视图快速滚动不计算曝光，可配置runLoopMode快速滚动时也计算曝光
-public class StatisticalManager: NSObject {
+public class StatisticalManager: NSObject, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
@@ -534,7 +534,7 @@ public class StatisticalManager: NSObject {
     }
     
     /// 手工触发点击统计，如果为cell需指定indexPath，点击触发时调用
-    public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
+    @MainActor public func trackClick(_ view: UIView?, indexPath: IndexPath? = nil, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         
@@ -555,7 +555,7 @@ public class StatisticalManager: NSObject {
     }
     
     /// 手工触发视图曝光并统计次数，如果为cell需指定indexPath，isFinished为曝光结束，可重复触发
-    public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent) {
+    @MainActor public func trackExposure(_ view: UIView?, indexPath: IndexPath? = nil, isFinished: Bool = false, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         
@@ -623,7 +623,7 @@ public class StatisticalManager: NSObject {
     }
     
     /// 手工触发控制器曝光并统计次数，isFinished为曝光结束，可重复触发
-    public func trackExposure(_ viewController: UIViewController?, isFinished: Bool = false, event: StatisticalEvent) {
+    @MainActor public func trackExposure(_ viewController: UIViewController?, isFinished: Bool = false, event: StatisticalEvent) {
         if event.triggerIgnored { return }
         if let eventFilter = eventFilter, !eventFilter(event) { return }
         
@@ -675,7 +675,7 @@ public class StatisticalManager: NSObject {
     
     // MARK: - Private
     /// 内部方法，处理事件
-    private func handleEvent(_ event: StatisticalEvent) {
+    @MainActor private func handleEvent(_ event: StatisticalEvent) {
         let event = event.eventFormatter?(event) ?? event
         if event.isExposure {
             if event.view != nil {
@@ -721,7 +721,7 @@ public class StatisticalManager: NSObject {
             UIView.self,
             selector: #selector(UIView.didMoveToSuperview),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -743,7 +743,7 @@ public class StatisticalManager: NSObject {
             UIView.self,
             selector: #selector(UIView.didMoveToWindow),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -840,7 +840,7 @@ public class StatisticalEvent: NSObject, NSCopying {
 
 // MARK: - StatisticalViewProtocol
 /// 可统计视图协议，UIView默认实现，子类可重写
-@objc public protocol StatisticalViewProtocol {
+@MainActor @objc public protocol StatisticalViewProtocol {
     
     /// 可统计视图绑定点击事件方法，返回绑定结果，子类可重写，勿直接调用
     func statisticalViewWillBindClick(_ containerView: UIView?) -> Bool
@@ -1099,7 +1099,7 @@ fileprivate class StatisticalTarget: NSObject {
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    @MainActor override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         var valueChanged = false
         if keyPath == "alpha" {
             let oldValue = change?[.oldKey] as? Double
@@ -1124,20 +1124,20 @@ fileprivate class StatisticalTarget: NSObject {
         }
     }
     
-    @objc func appBecomeActive() {
+    @MainActor @objc func appBecomeActive() {
         view?.fw.statisticalCheckExposure()
     }
     
-    @objc func appEnterBackground() {
+    @MainActor @objc func appEnterBackground() {
         view?.fw.statisticalCheckExposure()
     }
     
-    @objc func appWillTerminate() {
+    @MainActor @objc func appWillTerminate() {
         exposureTerminated = true
         view?.fw.statisticalCheckExposure()
     }
     
-    @objc func exposureUpdate() {
+    @MainActor @objc func exposureUpdate() {
         if view?.statisticalViewVisibleIndexPaths() == nil,
            let childViews = view?.statisticalViewChildViews() {
             childViews.forEach { childView in
@@ -1194,7 +1194,7 @@ fileprivate class StatisticalControllerTarget: NSObject {
         removeObservers()
     }
     
-    func addObservers() {
+    @MainActor func addObservers() {
         guard !exposureObserved else { return }
         exposureObserved = true
         
@@ -1230,15 +1230,15 @@ fileprivate class StatisticalControllerTarget: NSObject {
         }
     }
     
-    @objc func appBecomeActive() {
+    @MainActor @objc func appBecomeActive() {
         viewController?.fw.statisticalCheckExposure()
     }
     
-    @objc func appEnterBackground() {
+    @MainActor @objc func appEnterBackground() {
         viewController?.fw.statisticalCheckExposure()
     }
     
-    @objc func appWillTerminate() {
+    @MainActor @objc func appWillTerminate() {
         exposureTerminated = true
         viewController?.fw.statisticalCheckExposure()
     }

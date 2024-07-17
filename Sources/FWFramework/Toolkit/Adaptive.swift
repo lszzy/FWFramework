@@ -25,9 +25,9 @@ extension WrapperGlobal {
     public static var isMac: Bool { UIDevice.fw.isMac }
 
     /// 界面是否横屏
-    public static var isLandscape: Bool { UIDevice.fw.isLandscape }
+    @MainActor public static var isLandscape: Bool { UIDevice.fw.isLandscape }
     /// 设备是否横屏，无论支不支持横屏
-    public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
+    @MainActor public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
 
     /// iOS系统版本
     public static var iosVersion: Double { UIDevice.fw.iosVersion }
@@ -57,24 +57,24 @@ extension WrapperGlobal {
     /// 判断屏幕英寸
     public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
     /// 是否是全面屏屏幕
-    public static var isNotchedScreen: Bool { UIScreen.fw.isNotchedScreen }
+    @MainActor public static var isNotchedScreen: Bool { UIScreen.fw.isNotchedScreen }
     /// 是否是灵动岛屏幕
-    public static var isDynamicIsland: Bool { UIScreen.fw.isDynamicIsland }
+    @MainActor public static var isDynamicIsland: Bool { UIScreen.fw.isDynamicIsland }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { UIScreen.fw.pixelOne }
     /// 屏幕安全区域距离
-    public static var safeAreaInsets: UIEdgeInsets { UIScreen.fw.safeAreaInsets }
+    @MainActor public static var safeAreaInsets: UIEdgeInsets { UIScreen.fw.safeAreaInsets }
 
     /// 状态栏高度，与是否隐藏无关
-    public static var statusBarHeight: CGFloat { UIScreen.fw.statusBarHeight }
+    @MainActor public static var statusBarHeight: CGFloat { UIScreen.fw.statusBarHeight }
     /// 导航栏高度，与是否隐藏无关
-    public static var navigationBarHeight: CGFloat { UIScreen.fw.navigationBarHeight }
+    @MainActor public static var navigationBarHeight: CGFloat { UIScreen.fw.navigationBarHeight }
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    public static var topBarHeight: CGFloat { UIScreen.fw.topBarHeight }
+    @MainActor public static var topBarHeight: CGFloat { UIScreen.fw.topBarHeight }
     /// 标签栏高度，与是否隐藏无关
-    public static var tabBarHeight: CGFloat { UIScreen.fw.tabBarHeight }
+    @MainActor public static var tabBarHeight: CGFloat { UIScreen.fw.tabBarHeight }
     /// 工具栏高度，与是否隐藏无关
-    public static var toolBarHeight: CGFloat { UIScreen.fw.toolBarHeight }
+    @MainActor public static var toolBarHeight: CGFloat { UIScreen.fw.toolBarHeight }
 
     /// 当前等比例缩放参考设计图宽度，默认375
     public static var referenceWidth: CGFloat { UIScreen.fw.referenceSize.width }
@@ -201,18 +201,18 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 界面是否横屏
-    public static var isLandscape: Bool {
+    @MainActor public static var isLandscape: Bool {
         return UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
     }
     
     /// 设备是否横屏，无论支不支持横屏
-    public static var isDeviceLandscape: Bool {
+    @MainActor public static var isDeviceLandscape: Bool {
         return UIDevice.current.orientation.isLandscape
     }
     
     /// 设置界面方向，支持旋转方向时生效
     @discardableResult
-    public static func setDeviceOrientation(_ orientation: UIDeviceOrientation) -> Bool {
+    @MainActor public static func setDeviceOrientation(_ orientation: UIDeviceOrientation) -> Bool {
         if UIDevice.current.orientation == orientation {
             UIViewController.attemptRotationToDeviceOrientation()
             return false
@@ -344,12 +344,12 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 是否是全面屏屏幕
-    public static var isNotchedScreen: Bool {
+    @MainActor public static var isNotchedScreen: Bool {
         return safeAreaInsets.bottom > 0
     }
     
     /// 是否是灵动岛屏幕
-    public static var isDynamicIsland: Bool {
+    @MainActor public static var isDynamicIsland: Bool {
         guard UIDevice.fw.isIphone else { return false }
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             return safeAreaInsets.top >= 59.0
@@ -364,12 +364,12 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
-    public static var hasSafeAreaInsets: Bool {
+    @MainActor public static var hasSafeAreaInsets: Bool {
         return safeAreaInsets.bottom > 0
     }
     
     /// 屏幕安全区域距离
-    public static var safeAreaInsets: UIEdgeInsets {
+    @MainActor public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
             if UIScreen.innerMainWindow != nil { UIScreen.innerMainWindow = nil }
@@ -381,7 +381,7 @@ extension Wrapper where Base: UIScreen {
     }
 
     /// 状态栏高度，与是否隐藏无关
-    public static var statusBarHeight: CGFloat {
+    @MainActor public static var statusBarHeight: CGFloat {
         if let statusBarManager = UIWindow.fw.mainScene?.statusBarManager,
            !statusBarManager.isStatusBarHidden {
             return statusBarManager.statusBarFrame.height
@@ -402,7 +402,7 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 导航栏高度，与是否隐藏无关
-    public static var navigationBarHeight: CGFloat {
+    @MainActor public static var navigationBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
         }
@@ -415,12 +415,12 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    public static var topBarHeight: CGFloat {
+    @MainActor public static var topBarHeight: CGFloat {
         return statusBarHeight + navigationBarHeight
     }
     
     /// 标签栏高度，与是否隐藏无关
-    public static var tabBarHeight: CGFloat {
+    @MainActor public static var tabBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 65 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
@@ -434,7 +434,7 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 工具栏高度，与是否隐藏无关
-    public static var toolBarHeight: CGFloat {
+    @MainActor public static var toolBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 70 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
@@ -447,7 +447,7 @@ extension Wrapper where Base: UIScreen {
         return height + safeAreaInsets.bottom
     }
     
-    private static var isRegularScreen: Bool {
+    @MainActor private static var isRegularScreen: Bool {
         // https://github.com/Tencent/QMUI_iOS
         if UIDevice.fw.isIpad { return true }
         
@@ -544,7 +544,7 @@ extension Wrapper where Base: UIScreen {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 是否自动等比例缩放方式设置transform，默认NO
     public var autoScaleTransform: Bool {
         get {
@@ -565,7 +565,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 当前状态栏布局高度，导航栏隐藏时为0，推荐使用
     public var statusBarHeight: CGFloat {
         // 1. 导航栏隐藏时不占用布局高度始终为0
@@ -642,7 +642,7 @@ extension UIScreen {
 
 // MARK: - ScreenInch
 /// 可扩展屏幕尺寸
-public struct ScreenInch: RawRepresentable, Equatable, Hashable {
+public struct ScreenInch: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     

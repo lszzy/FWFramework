@@ -10,9 +10,11 @@ import UIKit
 // MARK: - Wrapper+DispatchQueue
 extension Wrapper where Base: DispatchQueue {
     /// 主线程安全异步执行句柄
-    public static func mainAsync(execute block: @escaping () -> Void) {
+    public static func mainAsync(execute block: @MainActor @escaping @Sendable () -> Void) {
         if Thread.isMainThread {
-            block()
+            MainActor.assumeIsolated {
+                block()
+            }
         } else {
             DispatchQueue.main.async {
                 block()
@@ -384,7 +386,7 @@ extension Wrapper where Base: UIBarButtonItem {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 快捷设置导航栏标题文字
     public var title: String? {
         get { base.navigationItem.title }

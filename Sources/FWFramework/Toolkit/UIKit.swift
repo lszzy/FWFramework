@@ -317,7 +317,7 @@ extension Wrapper where Base: UIDevice {
 
 // MARK: - Wrapper+UIView
 /// 事件穿透实现方法：重写-hitTest:withEvent:方法，当为指定视图(如base)时返回nil排除即可
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 视图是否可见，视图hidden为NO、alpha>0.01、window存在且size不为0才认为可见
     public var isViewVisible: Bool {
         if base.isHidden || base.alpha <= 0.01 || base.window == nil { return false }
@@ -838,7 +838,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIImageView
-extension Wrapper where Base: UIImageView {
+@MainActor extension Wrapper where Base: UIImageView {
     /// 设置图片模式为scaleAspectFill，短边拉伸不变形，超过区域隐藏，一般用于宽度和高度都固定的场景
     public func scaleAspectFill() {
         base.contentMode = .scaleAspectFill
@@ -1116,7 +1116,7 @@ extension Wrapper where Base: UIWindow {
 }
 
 // MARK: - Wrapper+UILabel
-extension Wrapper where Base: UILabel {
+@MainActor extension Wrapper where Base: UILabel {
     /// 快速设置attributedText样式，设置后调用setText:会自动转发到setAttributedText:方法
     public var textAttributes: [NSAttributedString.Key: Any]? {
         get {
@@ -1462,7 +1462,7 @@ extension Wrapper where Base: UIControl {
 }
 
 // MARK: - Wrapper+UIButton
-extension Wrapper where Base: UIButton {
+@MainActor extension Wrapper where Base: UIButton {
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
     public static var highlightedAlpha: CGFloat {
         get { return UIButton.innerHighlightedAlpha }
@@ -1623,7 +1623,7 @@ extension Wrapper where Base: UIButton {
 }
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 判断当前scrollView内容是否足够滚动
     public var canScroll: Bool {
         return canScrollVertical || canScrollHorizontal
@@ -2021,7 +2021,7 @@ extension Wrapper where Base: UISwitch {
 }
 
 // MARK: - Wrapper+UITextField
-extension Wrapper where Base: UITextField {
+@MainActor extension Wrapper where Base: UITextField {
     /// 最大字数限制，0为无限制，二选一
     public var maxLength: Int {
         get { return inputTarget(false)?.maxLength ?? 0 }
@@ -2138,7 +2138,7 @@ extension Wrapper where Base: UITextField {
 }
 
 // MARK: - Wrapper+UITextView
-extension Wrapper where Base: UITextView {
+@MainActor extension Wrapper where Base: UITextView {
     /// 最大字数限制，0为无限制，二选一
     public var maxLength: Int {
         get { return inputTarget(false)?.maxLength ?? 0 }
@@ -2843,7 +2843,7 @@ extension Wrapper where Base: UISearchBar {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 判断当前控制器是否是头部控制器。如果是导航栏的第一个控制器或者不含有导航栏，则返回YES
     public var isHead: Bool {
         return base.navigationController == nil ||
@@ -3297,7 +3297,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(UIView.point(inside:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> Bool).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, CGPoint, UIEvent?) -> Bool).self
         ) { store in { selfObject, point, event in
             if let insetsValue = selfObject.fw.property(forName: "touchInsets") as? NSValue {
                 let touchInsets = insetsValue.uiEdgeInsetsValue
@@ -3322,7 +3322,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(UIView.hitTest(_:with:)),
             methodSignature: (@convention(c) (UIView, Selector, CGPoint, UIEvent?) -> UIView?).self,
-            swizzleSignature: (@convention(block) (UIView, CGPoint, UIEvent?) -> UIView?).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, CGPoint, UIEvent?) -> UIView?).self
         ) { store in { selfObject, point, event in
             guard selfObject.fw.isPenetrable else {
                 return store.original(selfObject, store.selector, point, event)
@@ -3347,7 +3347,7 @@ extension FrameworkAutoloader {
             UILabel.self,
             selector: #selector(UILabel.drawText(in:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UILabel, CGRect) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UILabel, CGRect) -> Void).self
         ) { store in { selfObject, aRect in
             var rect = aRect
             if selfObject.fw.issetContentInset {
@@ -3370,7 +3370,7 @@ extension FrameworkAutoloader {
             UILabel.self,
             selector: #selector(getter: UILabel.intrinsicContentSize),
             methodSignature: (@convention(c) (UILabel, Selector) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel) -> CGSize).self
+            swizzleSignature: (@convention(block) @MainActor (UILabel) -> CGSize).self
         ) { store in { selfObject in
             if selfObject.fw.issetContentInset {
                 let preferredMaxLayoutWidth = selfObject.preferredMaxLayoutWidth > 0 ? selfObject.preferredMaxLayoutWidth : .greatestFiniteMagnitude
@@ -3384,7 +3384,7 @@ extension FrameworkAutoloader {
             UILabel.self,
             selector: #selector(UILabel.sizeThatFits(_:)),
             methodSignature: (@convention(c) (UILabel, Selector, CGSize) -> CGSize).self,
-            swizzleSignature: (@convention(block) (UILabel, CGSize) -> CGSize).self
+            swizzleSignature: (@convention(block) @MainActor (UILabel, CGSize) -> CGSize).self
         ) { store in { selfObject, aSize in
             var size = aSize
             if selfObject.fw.issetContentInset {
@@ -3411,7 +3411,7 @@ extension FrameworkAutoloader {
             UIControl.self,
             selector: #selector(UIControl.sendAction(_:to:for:)),
             methodSignature: (@convention(c) (UIControl, Selector, Selector, Any?, UIEvent?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIControl, Selector, Any?, UIEvent?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIControl, Selector, Any?, UIEvent?) -> Void).self
         ) { store in { selfObject, action, target, event in
             // 仅拦截Touch事件，且配置了间隔时间的Event
             if let event = event, event.type == .touches, event.subtype == .none,
@@ -3429,7 +3429,7 @@ extension FrameworkAutoloader {
             UIButton.self,
             selector: #selector(setter: UIButton.isEnabled),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIButton, Bool) -> Void).self
         ) { store in { selfObject, enabled in
             store.original(selfObject, store.selector, enabled)
             
@@ -3445,7 +3445,7 @@ extension FrameworkAutoloader {
             UIButton.self,
             selector: #selector(setter: UIButton.isHighlighted),
             methodSignature: (@convention(c) (UIButton, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIButton, Bool) -> Void).self
         ) { store in { selfObject, highlighted in
             store.original(selfObject, store.selector, highlighted)
             
@@ -3463,7 +3463,7 @@ extension FrameworkAutoloader {
             UISwitch.self,
             selector: #selector(UISwitch.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (UISwitch, Selector, UITraitCollection?) -> Void).self,
-            swizzleSignature: (@convention(block) (UISwitch, UITraitCollection?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UISwitch, UITraitCollection?) -> Void).self
         ) { store in { selfObject, previousTraitCollection in
             store.original(selfObject, store.selector, previousTraitCollection)
 
@@ -3480,7 +3480,7 @@ extension FrameworkAutoloader {
             UITextField.self,
             selector: #selector(UITextField.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextField, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextField, Selector, Any?) -> Bool).self
+            swizzleSignature: (@convention(block) @MainActor (UITextField, Selector, Any?) -> Bool).self
         ) { store in { selfObject, action, sender in
             if selfObject.fw.menuDisabled { return false }
             
@@ -3510,7 +3510,7 @@ extension FrameworkAutoloader {
             UITextView.self,
             selector: #selector(UITextView.canPerformAction(_:withSender:)),
             methodSignature: (@convention(c) (UITextView, Selector, Selector, Any?) -> Bool).self,
-            swizzleSignature: (@convention(block) (UITextView, Selector, Any?) -> Bool).self
+            swizzleSignature: (@convention(block) @MainActor (UITextView, Selector, Any?) -> Bool).self
         ) { store in { selfObject, action, sender in
             if selfObject.fw.menuDisabled { return false }
             
@@ -3540,7 +3540,7 @@ extension FrameworkAutoloader {
             UISearchBar.self,
             selector: #selector(UISearchBar.layoutSubviews),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UISearchBar) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -3568,7 +3568,7 @@ extension FrameworkAutoloader {
             UISearchBar.self,
             selector: #selector(setter: UISearchBar.placeholder),
             methodSignature: (@convention(c) (UISearchBar, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar, String?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UISearchBar, String?) -> Void).self
         ) { store in { selfObject, placeholder in
             store.original(selfObject, store.selector, placeholder)
             
@@ -3591,7 +3591,7 @@ extension FrameworkAutoloader {
             UISearchBar.self,
             selector: #selector(UISearchBar.didMoveToWindow),
             methodSignature: (@convention(c) (UISearchBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UISearchBar) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UISearchBar) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -3606,7 +3606,7 @@ extension FrameworkAutoloader {
             objc_getClass("UISearchBarTextField"),
             selector: #selector(setter: UITextField.frame),
             methodSignature: (@convention(c) (UITextField, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UITextField, CGRect) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UITextField, CGRect) -> Void).self
         ) { store in { selfObject, aFrame in
             var frame = aFrame
             let searchBar = selfObject.superview?.superview?.superview as? UISearchBar
@@ -3633,7 +3633,7 @@ extension FrameworkAutoloader {
             objc_getClass("UINavigationButton"),
             selector: #selector(setter: UIButton.frame),
             methodSignature: (@convention(c) (UIButton, Selector, CGRect) -> Void).self,
-            swizzleSignature: (@convention(block) (UIButton, CGRect) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIButton, CGRect) -> Void).self
         ) { store in { selfObject, aFrame in
             var frame = aFrame
             let searchBar: UISearchBar? = selfObject.superview?.superview?.superview as? UISearchBar
@@ -3672,7 +3672,7 @@ extension FrameworkAutoloader {
             UITableViewCell.self,
             selector: #selector(UITableViewCell.layoutSubviews),
             methodSignature: (@convention(c) (UITableViewCell, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UITableViewCell) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UITableViewCell) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             

@@ -50,7 +50,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 显示图片预览(简单版)
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型

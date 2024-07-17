@@ -17,7 +17,7 @@ import UIKit
 /// 1. 可以将控制器的edgesForExtendedLayout在标签栏页面(通常hidesBottomBarWhenPushed为false)时设置为top或[]，不扩展标签栏，这样在iOS14及以下不会被标签栏遮挡
 /// 2. 也可以在标签栏页面布局时将下间距设置为bottomBarHeight，如需兼容横屏则屏幕方向变化时刷新布局即可
 /// 3. 或者自定义控制器additionalSafeAreaInsets排除标签栏，如需兼容横屏则屏幕方向变化时刷新附加安全区域
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     // MARK: - AutoLayout
     /// 是否启用自动布局适配RTL，启用后自动将Left|Right转换为Leading|Trailing，默认NO
     ///
@@ -904,7 +904,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+NSLayoutConstraint
-extension Wrapper where Base: NSLayoutConstraint {
+@MainActor extension Wrapper where Base: NSLayoutConstraint {
     /// 是否自动等比例缩放偏移值，默认未设置时检查视图和全局配置
     public var autoScaleLayout: Bool {
         get {
@@ -1112,7 +1112,7 @@ extension Wrapper where Base: NSLayoutConstraint {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 链式布局对象
     public var layoutChain: LayoutChain {
         if let layoutChain = property(forName: "layoutChain") as? LayoutChain {
@@ -1131,7 +1131,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+Array<UIView>
-extension Wrapper where Base == Array<UIView> {
+@MainActor extension Wrapper where Base == Array<UIView> {
     /// 批量链式布局闭包
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         base.forEach { view in
@@ -1368,7 +1368,7 @@ extension UIView {
 // MARK: - LayoutChain
 /// 视图链式布局类。如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过autoLayoutRTL统一启用
-public class LayoutChain {
+@MainActor public class LayoutChain {
     
     // MARK: - Accessor
     /// 布局视图
@@ -1952,7 +1952,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(UIView.updateConstraints),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -1974,7 +1974,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, Bool) -> Void).self
         ) { store in { selfObject, hidden in
             store.original(selfObject, store.selector, hidden)
             
@@ -1994,7 +1994,7 @@ extension FrameworkAutoloader {
             NSLayoutConstraint.self,
             selector: #selector(NSLayoutConstraint.description),
             methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
-            swizzleSignature: (@convention(block) (NSLayoutConstraint) -> String).self
+            swizzleSignature: (@convention(block) @MainActor (NSLayoutConstraint) -> String).self
         ) { store in { selfObject in
             guard UIView.innerAutoLayoutDebug else {
                 return store.original(selfObject, store.selector)

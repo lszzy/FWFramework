@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - CollectionDelegateControllerProtocol
 /// 集合代理控制器协议，数据源和事件代理为collectionDelegate，可覆写
-public protocol CollectionDelegateControllerProtocol: ViewControllerProtocol, UICollectionViewDelegate {
+@MainActor public protocol CollectionDelegateControllerProtocol: ViewControllerProtocol, UICollectionViewDelegate {
     
     /// 关联表格数据元素类型，默认Any
     associatedtype CollectionElement = Any
@@ -84,7 +84,7 @@ extension CollectionDelegateControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+CollectionViewControllerProtocol
 internal extension ViewControllerManager {
     
-    func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
+    @MainActor func collectionViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? any UIViewController & CollectionDelegateControllerProtocol else { return }
         
         let collectionView = viewController.collectionView

@@ -15,7 +15,7 @@ import WebKit
 /// 1. 只需配置WebView.reuseConfigurationBlock并设置ViewControllerManager.webViewReuseIdentifier不为nil即可
 /// 2. 其他初始化、预加载、回收等重用操作框架会自动处理，详见源码
 /// 3. 如果需要预缓存资源，配置WebView.reusePreloadUrlBlock后再设置webViewReuseIdentifier即可
-public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
+@MainActor public protocol WebViewControllerProtocol: ViewControllerProtocol, WebViewDelegate {
     
     /// 网页视图，默认显示滚动条，启用前进后退手势
     var webView: WebView { get }
@@ -90,7 +90,7 @@ extension WebViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+WebViewControllerProtocol
 internal extension ViewControllerManager {
     
-    func webViewControllerViewDidLoad(_ viewController: UIViewController) {
+    @MainActor func webViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let webController = viewController as? UIViewController & WebViewControllerProtocol else { return }
         
         let webView = webController.webView

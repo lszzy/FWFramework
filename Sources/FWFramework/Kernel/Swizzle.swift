@@ -445,7 +445,7 @@ extension NSObject {
 ///
 /// MethodSignature示例：(@convention(c) (NSObject, Selector) -> Void).self
 /// SwizzleSignature示例：(@convention(block) (NSObject) -> Void).self
-public class SwizzleStore<MethodSignature, SwizzleSignature> {
+public class SwizzleStore<MethodSignature, SwizzleSignature>: @unchecked Sendable {
     
     /// 交换类
     public let `class`: AnyClass

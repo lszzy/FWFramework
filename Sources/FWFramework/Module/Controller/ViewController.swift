@@ -11,7 +11,7 @@ import UIKit
 /// 视图控制器挂钩协议，可覆写
 ///
 /// 如果需要支持继承，建议基类在非extension中实现该协议的所有方法，从而忽略协议扩展的默认实现
-public protocol ViewControllerProtocol: ViewControllerLifecycleObservable {
+@MainActor public protocol ViewControllerProtocol: ViewControllerLifecycleObservable {
     
     /// 初始化完成，init自动调用，默认空实现
     func didInitialize()
@@ -47,14 +47,14 @@ extension ViewControllerProtocol where Self: UIViewController {
 /// 视图控制器拦截器
 public class ViewControllerIntercepter: NSObject {
     
-    public var initIntercepter: ((UIViewController) -> Void)?
-    public var viewDidLoadIntercepter: ((UIViewController) -> Void)?
-    public var viewWillAppearIntercepter: ((UIViewController, Bool) -> Void)?
-    public var viewIsAppearingIntercepter: ((UIViewController, Bool) -> Void)?
-    public var viewDidLayoutSubviewsIntercepter: ((UIViewController) -> Void)?
-    public var viewDidAppearIntercepter: ((UIViewController, Bool) -> Void)?
-    public var viewWillDisappearIntercepter: ((UIViewController, Bool) -> Void)?
-    public var viewDidDisappearIntercepter: ((UIViewController, Bool) -> Void)?
+    public var initIntercepter: (@MainActor (UIViewController) -> Void)?
+    public var viewDidLoadIntercepter: (@MainActor (UIViewController) -> Void)?
+    public var viewWillAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
+    public var viewIsAppearingIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
+    public var viewDidLayoutSubviewsIntercepter: (@MainActor (UIViewController) -> Void)?
+    public var viewDidAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
+    public var viewWillDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
+    public var viewDidDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
     
     fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
     
@@ -64,40 +64,40 @@ public class ViewControllerIntercepter: NSObject {
 /// 视图控制器管理器
 ///
 /// 框架默认未注册ViewControllerProtocol协议拦截器，如需全局配置控制器，使用全局自定义block即可
-public class ViewControllerManager: NSObject {
+public class ViewControllerManager: NSObject, @unchecked Sendable {
     
     /// 单例模式
     public static let shared = ViewControllerManager()
     
     // MARK: - Global
     /// 默认全局控制器init钩子句柄，init优先自动调用
-    public var hookInit: ((UIViewController) -> Void)?
+    public var hookInit: (@MainActor (UIViewController) -> Void)?
     /// 默认全局控制器viewDidLoad钩子句柄，viewDidLoad优先自动调用
-    public var hookViewDidLoad: ((UIViewController) -> Void)?
+    public var hookViewDidLoad: (@MainActor (UIViewController) -> Void)?
     /// 默认全局控制器viewWillAppear钩子句柄，viewWillAppear优先自动调用
-    public var hookViewWillAppear: ((UIViewController, Bool) -> Void)?
+    public var hookViewWillAppear: (@MainActor (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewIsAppearing钩子句柄，viewIsAppearing优先自动调用
-    public var hookViewIsAppearing: ((UIViewController, Bool) -> Void)?
+    public var hookViewIsAppearing: (@MainActor (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidLayoutSubviews钩子句柄，viewDidLayoutSubviews优先自动调用
-    public var hookViewDidLayoutSubviews: ((UIViewController) -> Void)?
+    public var hookViewDidLayoutSubviews: (@MainActor (UIViewController) -> Void)?
     /// 默认全局控制器viewDidAppear钩子句柄，viewDidAppear优先自动调用
-    public var hookViewDidAppear: ((UIViewController, Bool) -> Void)?
+    public var hookViewDidAppear: (@MainActor (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewWillDisappear钩子句柄，viewWillDisappear优先自动调用
-    public var hookViewWillDisappear: ((UIViewController, Bool) -> Void)?
+    public var hookViewWillDisappear: (@MainActor (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidDisappear钩子句柄，viewDidDisappear优先自动调用
-    public var hookViewDidDisappear: ((UIViewController, Bool) -> Void)?
+    public var hookViewDidDisappear: (@MainActor (UIViewController, Bool) -> Void)?
     
     // MARK: - ViewController
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
-    public var hookScrollViewController: ((UIViewController & ScrollViewControllerProtocol) -> Void)?
+    public var hookScrollViewController: (@MainActor (UIViewController & ScrollViewControllerProtocol) -> Void)?
     /// 默认全局tableViewController钩子句柄，viewDidLoad自动调用，先于setupTableView
-    public var hookTableViewController: ((any UIViewController & TableDelegateControllerProtocol) -> Void)?
+    public var hookTableViewController: (@MainActor (any UIViewController & TableDelegateControllerProtocol) -> Void)?
     /// 默认全局collectionViewController钩子句柄，viewDidLoad自动调用，先于setupCollectionView
-    public var hookCollectionViewController: ((any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
+    public var hookCollectionViewController: (@MainActor (any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
-    public var hookWebViewController: ((UIViewController & WebViewControllerProtocol) -> Void)?
+    public var hookWebViewController: (@MainActor (UIViewController & WebViewControllerProtocol) -> Void)?
     /// 默认全局popupViewController钩子句柄，viewDidLoad自动调用，先于setupPopupView
-    public var hookPopupViewController: ((UIViewController & PopupViewControllerProtocol) -> Void)?
+    public var hookPopupViewController: (@MainActor (UIViewController & PopupViewControllerProtocol) -> Void)?
     
     /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
     public var webViewReuseIdentifier: String? {
@@ -188,7 +188,7 @@ public class ViewControllerManager: NSObject {
     }
     
     // MARK: - Hook
-    fileprivate func hookInit(_ viewController: UIViewController) {
+    @MainActor fileprivate func hookInit(_ viewController: UIViewController) {
         /*
         // ViewControllerProtocol全局拦截器init方法示例：
         // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
@@ -216,7 +216,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewDidLoad(_ viewController: UIViewController) {
+    @MainActor fileprivate func hookViewDidLoad(_ viewController: UIViewController) {
         // 1. 默认viewDidLoad
         hookViewDidLoad?(viewController)
         
@@ -238,7 +238,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
+    @MainActor fileprivate func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillAppear
         hookViewWillAppear?(viewController, animated)
         
@@ -251,7 +251,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
+    @MainActor fileprivate func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewIsAppearing
         hookViewIsAppearing?(viewController, animated)
         
@@ -264,7 +264,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
+    @MainActor fileprivate func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
         // 1. 默认viewDidLayoutSubviews
         hookViewDidLayoutSubviews?(viewController)
         
@@ -277,7 +277,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
+    @MainActor fileprivate func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidAppear
         hookViewDidAppear?(viewController, animated)
         
@@ -290,7 +290,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
+    @MainActor fileprivate func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillDisappear
         hookViewWillDisappear?(viewController, animated)
         
@@ -303,7 +303,7 @@ public class ViewControllerManager: NSObject {
         }
     }
     
-    fileprivate func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
+    @MainActor fileprivate func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidDisappear
         hookViewDidDisappear?(viewController, animated)
         
@@ -331,7 +331,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
             
@@ -345,7 +345,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
             
@@ -359,7 +359,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -372,7 +372,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
@@ -385,7 +385,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
@@ -398,7 +398,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -411,7 +411,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
@@ -424,7 +424,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             
@@ -437,7 +437,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             

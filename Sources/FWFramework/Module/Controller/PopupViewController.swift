@@ -137,7 +137,7 @@ extension PopupViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+PopupViewControllerProtocol
 internal extension ViewControllerManager {
     
-    func popupViewControllerInit(_ viewController: UIViewController) {
+    @MainActor func popupViewControllerInit(_ viewController: UIViewController) {
         guard let popupController = viewController as? UIViewController & PopupViewControllerProtocol else { return }
         
         let popupConfiguration = popupController.popupConfiguration
@@ -169,7 +169,7 @@ internal extension ViewControllerManager {
         viewController.fw.modalTransition = modalTransition
     }
     
-    func popupViewControllerViewDidLoad(_ viewController: UIViewController) {
+    @MainActor func popupViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & PopupViewControllerProtocol else { return }
         
         viewController.view.backgroundColor = .clear
@@ -215,7 +215,7 @@ internal extension ViewControllerManager {
         popupView.layoutIfNeeded()
     }
     
-    func popupViewControllerViewDidLayoutSubviews(_ viewController: UIViewController) {
+    @MainActor func popupViewControllerViewDidLayoutSubviews(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & PopupViewControllerProtocol else { return }
         
         let popupConfiguration = viewController.popupConfiguration

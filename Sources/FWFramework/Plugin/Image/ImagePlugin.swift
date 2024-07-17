@@ -138,7 +138,7 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 自定义图片插件，未设置时自动从插件池加载
     public var imagePlugin: ImagePlugin? {
         get {
@@ -199,7 +199,7 @@ extension Wrapper where Base: UIView {
 // MARK: - Wrapper+UIImageView
 extension Wrapper where Base: UIImageView {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     
@@ -217,7 +217,7 @@ extension Wrapper where Base: UIImageView {
     }
     
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
-    public static func animatedImageView() -> UIImageView {
+    @MainActor public static func animatedImageView() -> UIImageView {
         let imagePlugin: ImagePlugin? = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         if let imagePlugin = imagePlugin {
             return imagePlugin.animatedImageView()
@@ -228,7 +228,7 @@ extension Wrapper where Base: UIImageView {
 }
 
 // MARK: - Wrapper+UIButton
-extension Wrapper where Base: UIButton {
+@MainActor extension Wrapper where Base: UIButton {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
     public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
@@ -237,7 +237,7 @@ extension Wrapper where Base: UIButton {
 
 // MARK: - ImagePlugin
 /// 网络图片加载选项，默认兼容SDWebImage
-public struct WebImageOptions: OptionSet {
+public struct WebImageOptions: OptionSet, Sendable {
     
     public let rawValue: UInt
     
@@ -260,14 +260,17 @@ public struct WebImageOptions: OptionSet {
 
 /// 图片插件协议，应用可自定义图片插件
 public protocol ImagePlugin: AnyObject {
+    /// 创建动画视图插件方法，默认使用UIImageView
+    @MainActor func animatedImageView() -> UIImageView
+    
     /// 获取view正在加载的URL插件方法
-    func imageURL(for view: UIView) -> URL?
+    @MainActor func imageURL(for view: UIView) -> URL?
     
     /// view加载网络图片插件方法
-    func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView)
+    @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView)
     
     /// view取消加载网络图片请求插件方法
-    func cancelImageRequest(for view: UIView)
+    @MainActor func cancelImageRequest(for view: UIView)
     
     /// 加载指定URL的本地缓存图片
     func loadImageCache(_ imageURL: URL?) -> UIImage?
@@ -281,9 +284,6 @@ public protocol ImagePlugin: AnyObject {
     /// image取消下载网络图片插件方法，指定下载凭据
     func cancelImageDownload(_ receipt: Any?)
     
-    /// 创建动画视图插件方法，默认使用UIImageView
-    func animatedImageView() -> UIImageView
-    
     /// image本地解码插件方法，默认使用系统方法
     func imageDecode(_ data: Data, scale: CGFloat, options: [ImageCoderOptions: Any]?) -> UIImage?
     
@@ -293,18 +293,23 @@ public protocol ImagePlugin: AnyObject {
 
 extension ImagePlugin {
     
+    /// 创建动画视图插件方法，默认使用UIImageView
+    @MainActor public func animatedImageView() -> UIImageView {
+        return ImagePluginImpl.shared.animatedImageView()
+    }
+    
     /// 获取view正在加载的URL插件方法
-    public func imageURL(for view: UIView) -> URL? {
+    @MainActor public func imageURL(for view: UIView) -> URL? {
         return ImagePluginImpl.shared.imageURL(for: view)
     }
     
     /// view加载网络图片插件方法
-    public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView) {
+    @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView) {
         ImagePluginImpl.shared.setImageURL(url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: view)
     }
     
     /// view取消加载网络图片请求插件方法
-    public func cancelImageRequest(for view: UIView) {
+    @MainActor public func cancelImageRequest(for view: UIView) {
         ImagePluginImpl.shared.cancelImageRequest(for: view)
     }
     
@@ -326,11 +331,6 @@ extension ImagePlugin {
     /// image取消下载网络图片插件方法，指定下载凭据
     public func cancelImageDownload(_ receipt: Any?) {
         ImagePluginImpl.shared.cancelImageDownload(receipt)
-    }
-    
-    /// 创建动画视图插件方法，默认使用UIImageView
-    public func animatedImageView() -> UIImageView {
-        return ImagePluginImpl.shared.animatedImageView()
     }
     
     /// image本地解码插件方法，默认使用系统方法

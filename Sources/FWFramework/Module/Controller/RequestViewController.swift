@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - RequestViewControllerProtocol
 /// 通用请求视图控制器协议，可扩展重写
-public protocol RequestViewControllerProtocol {
+@MainActor public protocol RequestViewControllerProtocol {
     
     /// 请求数据完成句柄，回调数据是否追加完成
     typealias Completion = (_ request: HTTPRequestProtocol, _ finished: Bool) -> Void

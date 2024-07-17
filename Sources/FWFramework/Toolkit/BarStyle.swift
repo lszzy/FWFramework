@@ -54,7 +54,7 @@ extension Wrapper where Base: UINavigationBar {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 状态栏样式，默认preferredStatusBarStyle，设置后才会生效
     public var statusBarStyle: UIStatusBarStyle {
         get {
@@ -384,7 +384,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             selfObject.fw.updateNavigationBarStyle(animated, isAppeared: false)

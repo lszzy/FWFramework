@@ -233,14 +233,14 @@ public class Router: NSObject {
     public static var routeFilter: ((Context) -> Bool)?
     
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
-    public static var routeHandler: ((Context, Any) -> Any?)?
+    public static var routeHandler: (@MainActor (Context, Any) -> Any?)?
     
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
     public static var errorHandler: ((Context) -> Void)?
     
     /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
-    public class func presetRouteHandler(_ handler: ((Context, Any) -> Any?)? = nil) {
+    public class func presetRouteHandler(_ handler: (@MainActor (Context, Any) -> Any?)? = nil) {
         if routeHandler != nil { return }
         
         routeHandler = handler ?? { context, object in
@@ -274,7 +274,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
+    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -312,7 +312,7 @@ public class Router: NSObject {
     ///   - url: URL 带 Scheme，如 app://beauty/3
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
-    public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
+    @MainActor public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
         

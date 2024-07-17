@@ -178,9 +178,9 @@ open class RequestContextAccessory: RequestAccessory {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
-    static var showErrorBlock: ((_ context: AnyObject?, _ error: Error) -> Void)?
-    static var showLoadingBlock: ((_ context: AnyObject?) -> Void)?
-    static var hideLoadingBlock: ((_ context: AnyObject?) -> Void)?
+    static var showErrorBlock: (@MainActor (_ context: AnyObject?, _ error: Error) -> Void)?
+    static var showLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
+    static var hideLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
     
     public override init() {
         super.init()
@@ -223,14 +223,14 @@ open class RequestContextAccessory: RequestAccessory {
     }
     
     /// 初始化请求上下文，默认获取当前顶部控制器
-    open func setupContext(for request: HTTPRequest) {
+    @MainActor open func setupContext(for request: HTTPRequest) {
         guard request.context == nil else { return }
         
         request.context = UIWindow.fw.main?.fw.topViewController
     }
     
     /// 监听请求上下文，默认context控制器释放时自动停止请求
-    open func observeContext(for request: HTTPRequest) {
+    @MainActor open func observeContext(for request: HTTPRequest) {
         var viewController = request.context as? UIViewController
         if viewController == nil, let view = request.context as? UIView {
             viewController = view.fw.viewController

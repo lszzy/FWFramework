@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - AlertPluginImpl
 /// 默认弹窗插件
-open class AlertPluginImpl: NSObject, AlertPlugin {
+open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
