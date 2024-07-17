@@ -10,7 +10,7 @@ import UIKit
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 路由快速访问
-    public static var router = Router.self
+    nonisolated(unsafe) public static var router = Router.self
 }
 
 // MARK: - Router
@@ -24,7 +24,7 @@ public class Router: NSObject {
     
     // MARK: - Typealias
     /// URL路由上下文
-    public class Context: NSObject {
+    public class Context: NSObject, @unchecked Sendable {
         
         /// 路由URL
         public private(set) var url: String
@@ -74,7 +74,7 @@ public class Router: NSObject {
     public typealias Completion = (Any?) -> Void
     
     /// 路由参数类，可直接使用，也可完全自定义
-    open class Parameter: ObjectParameter {
+    open class Parameter: ObjectParameter, @unchecked Sendable {
         
         /// 路由信息来源Key，兼容字典传参，默认未使用
         public static let routerSourceKey = "routerSource"
@@ -117,13 +117,13 @@ public class Router: NSObject {
     
     // MARK: - Accessor
     /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
-    public static let sharedLoader = Loader<String, Any>()
+    nonisolated(unsafe) public static let sharedLoader = Loader<String, Any>()
     
     /// 是否开启严格模式，开启后不会以上一层为fallback，默认false
-    public static var strictMode = false
+    nonisolated(unsafe) public static var strictMode = false
     
     /// 路由规则，结构类似 ["beauty": [":id": [routerCoreKey: block]]]
-    private static var routeRules = NSMutableDictionary()
+    nonisolated(unsafe) private static var routeRules = NSMutableDictionary()
     
     private static let routeWildcardCharacter = "*"
     private static let routeParameterCharacter = ":"
@@ -230,17 +230,17 @@ public class Router: NSObject {
     }
     
     /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回true，继续解析pattern，否则停止解析
-    public static var routeFilter: ((Context) -> Bool)?
+    nonisolated(unsafe) public static var routeFilter: ((Context) -> Bool)?
     
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
-    public static var routeHandler: (@MainActor (Context, Any) -> Any?)?
+    nonisolated(unsafe) public static var routeHandler: ((Context, Any) -> Any?)?
     
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
-    public static var errorHandler: ((Context) -> Void)?
+    nonisolated(unsafe) public static var errorHandler: ((Context) -> Void)?
     
     /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
-    public class func presetRouteHandler(_ handler: (@MainActor (Context, Any) -> Any?)? = nil) {
+    public class func presetRouteHandler(_ handler: ((Context, Any) -> Any?)? = nil) {
         if routeHandler != nil { return }
         
         routeHandler = handler ?? { context, object in
@@ -252,7 +252,9 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
+                DispatchQueue.fw.mainAsync {
+                    UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
+                }
             }
             return nil
         }
@@ -274,7 +276,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
+    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -312,7 +314,7 @@ public class Router: NSObject {
     ///   - url: URL 带 Scheme，如 app://beauty/3
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
-    @MainActor public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
+    public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
         
@@ -661,10 +663,10 @@ public class Router: NSObject {
 // MARK: - Router+Extension
 extension Router {
     
-    private static var rewriteRules = [String: String]()
+    nonisolated(unsafe) private static var rewriteRules = [String: String]()
     
     /// 全局重写过滤器
-    public static var rewriteFilter: ((String) -> String)?
+    nonisolated(unsafe) public static var rewriteFilter: ((String) -> String)?
     
     /// 根据重写规则，重写URL
     /// - Parameter url: 需要重写的url
