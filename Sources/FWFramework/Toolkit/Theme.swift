@@ -230,7 +230,7 @@ extension Wrapper where Base: UIImageAsset {
 }
 
 // MARK: - Wrapper+NSObject
-extension Wrapper where Base: NSObject {
+@MainActor extension Wrapper where Base: NSObject {
     /// 订阅主题通知并指定主题上下文(如vc|view)，非UITraitEnvironment等需指定后才能响应系统主题
     public weak var themeContext: (NSObject & UITraitEnvironment)? {
         get {
@@ -308,7 +308,7 @@ extension Wrapper where Base: NSObject {
 }
 
 // MARK: - Wrapper+UIImageView
-extension Wrapper where Base: UIImageView {
+@MainActor extension Wrapper where Base: UIImageView {
     /// 设置主题图片，自动跟随系统改变，清空时需置为nil，二选一
     public var themeImage: UIImage? {
         get {
@@ -336,7 +336,7 @@ extension Wrapper where Base: UIImageView {
 
 // MARK: - ThemeManager
 /// 可扩展主题样式(采用class实现是为了NSObject子类可重写)
-public class ThemeStyle: NSObject, RawRepresentable {
+public class ThemeStyle: NSObject, RawRepresentable, @unchecked Sendable {
     
     public typealias RawValue = Int
     
@@ -365,7 +365,7 @@ public class ThemeStyle: NSObject, RawRepresentable {
 }
 
 /// 可扩展主题模式(扩展值与样式值相同即可)
-public struct ThemeMode: RawRepresentable, Equatable, Hashable {
+public struct ThemeMode: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -399,7 +399,7 @@ extension Notification.Name {
 ///
 /// 框架默认只拦截了UIView|UIViewController|UIScreen|UIImageView|UILabel类，满足条件会自动触发themeChanged；如果不满足条件或者拦截未生效，需先设置主题上下文fw.themeContext才能生效。
 /// 注意事项：iOS13以下默认不支持主题切换；如需支持，请使用fw.color相关方法
-public class ThemeManager {
+public class ThemeManager: @unchecked Sendable {
     
     /// 单例模式
     public static let shared = ThemeManager()
@@ -438,9 +438,11 @@ public class ThemeManager {
             guard newValue != _overrideWindow else { return }
             _overrideWindow = newValue
             
-            var style: UIUserInterfaceStyle = .unspecified
+            let style: UIUserInterfaceStyle
             if newValue && self.mode != .system {
                 style = self.mode == .dark ? .dark : .light
+            } else {
+                style = .unspecified
             }
             DispatchQueue.fw.mainAsync {
                 UIWindow.fw.main?.overrideUserInterfaceStyle = style
@@ -503,15 +505,15 @@ public class ThemeObject<T> {
 // MARK: - UIColor+Theme
 extension UIColor {
     
-    fileprivate static var innerThemeColors: [String: UIColor] = [:]
+    nonisolated(unsafe) fileprivate static var innerThemeColors: [String: UIColor] = [:]
     
 }
 
 // MARK: - UIImage+Theme
 extension UIImage {
     
-    fileprivate static var innerThemeImages: [String: UIImage] = [:]
-    fileprivate static var innerThemeImageColorConfiguration: (() -> UIColor)?
+    nonisolated(unsafe) fileprivate static var innerThemeImages: [String: UIImage] = [:]
+    nonisolated(unsafe) fileprivate static var innerThemeImageColorConfiguration: (() -> UIColor)?
     
 }
 
@@ -519,10 +521,10 @@ extension UIImage {
 @objc extension NSObject {
     
     /// iOS13主题改变包装器钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func themeChanged(_ style: ThemeStyle) {}
+    @MainActor open func themeChanged(_ style: ThemeStyle) {}
     
     /// iOS13主题改变渲染钩子，如果父类有重写，记得调用super，需订阅后才生效
-    open func renderTheme(_ style: ThemeStyle) {}
+    @MainActor open func renderTheme(_ style: ThemeStyle) {}
     
 }
 
@@ -563,7 +565,7 @@ extension FrameworkAutoloader {
             themeClass,
             selector: #selector(UITraitEnvironment.traitCollectionDidChange(_:)),
             methodSignature: (@convention(c) (NSObject & UITraitEnvironment, Selector, UITraitCollection?) -> Void).self,
-            swizzleSignature: (@convention(block) (NSObject & UITraitEnvironment, UITraitCollection?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (NSObject & UITraitEnvironment, UITraitCollection?) -> Void).self
         ) { store in { selfObject, traitCollection in
             store.original(selfObject, store.selector, traitCollection)
             

@@ -1315,7 +1315,7 @@ extension UIView {
     fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
     fileprivate static var innerAutoFlatLayout = false
     
-    fileprivate static var innerAutoLayoutDebug: Bool = {
+    nonisolated(unsafe) fileprivate static var innerAutoLayoutDebug: Bool = {
         #if DEBUG
         true
         #else
@@ -1984,7 +1984,7 @@ extension FrameworkAutoloader {
         }}
     }
     
-    private static var swizzleAutoLayoutDebugFinished = false
+    nonisolated(unsafe) private static var swizzleAutoLayoutDebugFinished = false
     
     fileprivate static func swizzleAutoLayoutDebug() {
         guard !swizzleAutoLayoutDebugFinished else { return }
