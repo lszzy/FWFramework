@@ -141,7 +141,7 @@ extension WrapperGlobal {
 
 // MARK: - Logger
 /// 日志类型枚举
-public struct LogType: OptionSet {
+public struct LogType: OptionSet, Sendable {
     
     public let rawValue: UInt
     
@@ -163,7 +163,7 @@ public struct LogType: OptionSet {
 }
 
 /// 日志级别定义
-public struct LogLevel: RawRepresentable, Equatable, Hashable {
+public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = UInt
     
@@ -199,7 +199,7 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable {
 public class Logger: NSObject {
     
     /// 全局日志级别，默认调试为All，正式为Off
-    public static var level: LogLevel = {
+    nonisolated(unsafe) public static var level: LogLevel = {
         #if DEBUG
         .all
         #else
@@ -348,7 +348,7 @@ public protocol LoggerPlugin {
 }
 
 /// NSLog日志插件，兼容FWDebug等组件
-public class LoggerPluginNSLog: NSObject, LoggerPlugin {
+public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     
     @objc(sharedInstance)
     public static let shared = LoggerPluginNSLog()
@@ -398,7 +398,7 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin {
 }
 
 /// OSLog日志插件
-public class LoggerPluginOSLog: NSObject, LoggerPlugin {
+public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     
     @objc(sharedInstance)
     public static let shared = LoggerPluginOSLog()
@@ -431,7 +431,7 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin {
 
 // MARK: - LoggerPluginImpl
 /// 日志插件管理器，默认使用NSLog
-public class LoggerPluginImpl: NSObject, LoggerPlugin {
+public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     
     /// 单例模式对象
     @objc(sharedInstance)

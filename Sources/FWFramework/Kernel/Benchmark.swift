@@ -31,8 +31,8 @@ extension WrapperGlobal {
 public class Benchmark {
     
     // MARK: - Accessor
-    private static var beginTimes: [String : TimeInterval] = [:]
-    private static var endTimes: [String : TimeInterval] = [:]
+    nonisolated(unsafe) private static var beginTimes: [String : TimeInterval] = [:]
+    nonisolated(unsafe) private static var endTimes: [String : TimeInterval] = [:]
     
     // MARK: - Public
     /// 标记时间调试开始

@@ -23,12 +23,12 @@ extension Notification.Name {
 public class ErrorManager {
     
     /// 自定义需要捕获未定义方法异常的类，默认[NSNull, NSNumber, NSString, NSArray, NSDictionary]
-    public static var captureClasses: [AnyClass] = [
+    nonisolated(unsafe) public static var captureClasses: [AnyClass] = [
         NSNull.self, NSNumber.self, NSString.self, NSArray.self, NSDictionary.self,
     ]
     
     /// 自定义需要捕获的Signal字典，默认[SIGABRT, SIGSEGV, SIGBUS, SIGTRAP, SIGILL]
-    public static var captureSignals: [Int32: String] = [
+    nonisolated(unsafe) public static var captureSignals: [Int32: String] = [
         SIGABRT: "SIGABRT",
         SIGSEGV: "SIGSEGV",
         SIGBUS: "SIGBUS",
@@ -64,16 +64,16 @@ public class ErrorManager {
     /// ```swift
     /// ErrorManager.tryCatchHandler = { ObjCBridge.tryCatch($0, exceptionHandler: $1) }
     /// ```
-    public static var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
+    nonisolated(unsafe) public static var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
     
-    private static var isStarted = false
-    private static var isExceptionStarted = false
-    private static var isSignalStarted = false
+    nonisolated(unsafe) private static var isStarted = false
+    nonisolated(unsafe) private static var isExceptionStarted = false
+    nonisolated(unsafe) private static var isSignalStarted = false
     
-    private static var isRegistered = false
-    private static var isExceptionRegistered = false
-    private static var isCrashHandled = false
-    private static var previousExceptionHandler: (@convention(c) (NSException) -> Void)?
+    nonisolated(unsafe) private static var isRegistered = false
+    nonisolated(unsafe) private static var isExceptionRegistered = false
+    nonisolated(unsafe) private static var isCrashHandled = false
+    nonisolated(unsafe) private static var previousExceptionHandler: (@convention(c) (NSException) -> Void)?
     
     /// 开启框架错误捕获功能，默认仅处理captureClasses崩溃保护
     /// - Parameters:
