@@ -10,7 +10,7 @@ import WebKit
 import JavaScriptCore
 
 // MARK: - Wrapper+WKWebView
-extension Wrapper where Base: WKWebView {
+@MainActor extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
         get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (WKWebViewConfiguration, String) -> Void }
@@ -103,7 +103,7 @@ extension Wrapper where Base: WKWebView {
     }
     
     /// 使用JavaScriptCore执行脚本并返回结果，支持模板替换。常用语服务端下发计算公式等场景
-    public static func evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
+    nonisolated public static func evaluateScript(_ script: String, variables: [String: String] = [:]) -> JSValue? {
         var javascript = script
         if !variables.isEmpty {
             for (key, value) in variables {
@@ -211,7 +211,7 @@ extension Wrapper where Base: WKWebView {
 }
 
 // MARK: - Wrapper+UIProgressView
-extension Wrapper where Base: UIProgressView {
+@MainActor extension Wrapper where Base: UIProgressView {
     /// 设置Web加载进度，0和1自动切换隐藏。可设置trackTintColor为clear，隐藏背景色
     public var webProgress: Float {
         get {

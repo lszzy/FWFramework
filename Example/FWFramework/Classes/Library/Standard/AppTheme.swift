@@ -86,7 +86,7 @@ extension AppTheme {
         setupStyle()
     }
     
-    private static func setupAppearance() {
+    @MainActor private static func setupAppearance() {
         let defaultAppearance = NavigationBarAppearance()
         defaultAppearance.foregroundColor = AppTheme.textColor
         defaultAppearance.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
