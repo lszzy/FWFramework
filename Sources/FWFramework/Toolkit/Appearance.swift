@@ -37,7 +37,7 @@ extension Wrapper where Base: NSObject {
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
 public class Appearance {
     
-    private static var appearances: [String: AnyObject] = [:]
+    nonisolated(unsafe) private static var appearances: [String: AnyObject] = [:]
     
     /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
     public static func appearance(for aClass: AnyClass) -> AnyObject? {

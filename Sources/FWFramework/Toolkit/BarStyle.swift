@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UINavigationBar
-extension Wrapper where Base: UINavigationBar {
+@MainActor extension Wrapper where Base: UINavigationBar {
     /// 应用指定导航栏配置
     public func applyBarAppearance(_ appearance: NavigationBarAppearance) {
         if appearance.isTranslucent != isTranslucent {
@@ -282,7 +282,7 @@ extension Wrapper where Base: UINavigationBar {
 
 // MARK: - NavigationStyle
 /// 导航栏可扩展全局样式
-public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
+public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -304,8 +304,8 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
 /// 导航栏样式配置
 open class NavigationBarAppearance {
     
-    static var appearanceChanged: ((UIViewController) -> Void)?
-    private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+    nonisolated(unsafe) static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
+    nonisolated(unsafe) private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     
     /// 根据style获取全局appearance对象
     public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {

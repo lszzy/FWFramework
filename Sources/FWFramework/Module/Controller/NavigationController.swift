@@ -15,7 +15,7 @@ import UIKit
  @see https://github.com/MoZhouqi/KMNavigationBarTransition
  @see https://github.com/Tencent/QMUI_iOS
  */
-extension Wrapper where Base: UINavigationController {
+@MainActor extension Wrapper where Base: UINavigationController {
     /// 自定义转场过程中containerView的背景色，默认透明
     public var containerBackgroundColor: UIColor! {
         get {
@@ -123,7 +123,7 @@ extension Wrapper where Base: UINavigationController {
  导航栏全屏返回手势分类，兼容shouldPopController返回拦截方法
  @see https://github.com/forkingdog/FDFullscreenPopGesture
  */
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 转场动画自定义判断标识，不相等才会启用转场。默认nil启用转场。可重写或者push前设置生效
     public var barTransitionIdentifier: AnyHashable? {
         get { return property(forName: "barTransitionIdentifier") as? AnyHashable }
@@ -196,7 +196,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UINavigationBar
-extension Wrapper where Base: UINavigationBar {
+@MainActor extension Wrapper where Base: UINavigationBar {
     /// 导航栏背景视图，显示背景色和背景图片等
     public var backgroundView: UIView? {
         return invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
@@ -257,7 +257,7 @@ extension Wrapper where Base: UINavigationBar {
  present带导航栏webview，如果存在input[type=file]，会dismiss两次，无法选择照片。
  解决方法：1.使用push 2.重写dismiss方法仅当presentedViewController存在时才调用dismiss
  */
-extension Wrapper where Base: UIToolbar {
+@MainActor extension Wrapper where Base: UIToolbar {
     /// 工具栏背景视图，显示背景色和背景图片等。如果标签栏同时显示，背景视图高度也会包含标签栏高度
     public var backgroundView: UIView? {
         return invokeGetter(String(format: "%@%@%@", "_b", "ackgro", "undView")) as? UIView
@@ -332,7 +332,7 @@ extension FrameworkAutoloader {
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToViewController(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
-                swizzleSignature: (@convention(block) (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
+                swizzleSignature: (@convention(block) @MainActor (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
             ) { store in { selfObject, viewController, animated in
                 if animated && selfObject.tabBarController != nil && !viewController.hidesBottomBarWhenPushed {
                     var shouldHideTabBar = false
@@ -358,7 +358,7 @@ extension FrameworkAutoloader {
                 UINavigationController.self,
                 selector: #selector(UINavigationController.popToRootViewController(animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
-                swizzleSignature: (@convention(block) (UINavigationController, Bool) -> [UIViewController]?).self
+                swizzleSignature: (@convention(block) @MainActor (UINavigationController, Bool) -> [UIViewController]?).self
             ) { store in { selfObject, animated in
                 if animated && selfObject.tabBarController != nil && selfObject.viewControllers.count > 2 && !(selfObject.viewControllers.first?.hidesBottomBarWhenPushed ?? false) {
                     selfObject.fw.shouldBottomBarBeHidden = true
@@ -373,7 +373,7 @@ extension FrameworkAutoloader {
                 UINavigationController.self,
                 selector: #selector(UINavigationController.setViewControllers(_:animated:)),
                 methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
-                swizzleSignature: (@convention(block) (UINavigationController, [UIViewController], Bool) -> Void).self
+                swizzleSignature: (@convention(block) @MainActor (UINavigationController, [UIViewController], Bool) -> Void).self
             ) { store in { selfObject, viewControllers, animated in
                 let viewController = viewControllers.last
                 if animated && selfObject.tabBarController != nil && !(viewController?.hidesBottomBarWhenPushed ?? false) {
@@ -396,7 +396,7 @@ extension FrameworkAutoloader {
                 UINavigationController.self,
                 selector: NSSelectorFromString(String(format: "%@%@%@", "_s", "houldBotto", "mBarBeHidden")),
                 methodSignature: (@convention(c) (UINavigationController, Selector) -> Bool).self,
-                swizzleSignature: (@convention(block) (UINavigationController) -> Bool).self
+                swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> Bool).self
             ) { store in { selfObject in
                 var result = store.original(selfObject, store.selector)
                 if selfObject.fw.shouldBottomBarBeHidden {
@@ -407,7 +407,7 @@ extension FrameworkAutoloader {
         }
     }
     
-    private static var swizzleBarTransitionFinished = false
+    nonisolated(unsafe) private static var swizzleBarTransitionFinished = false
     
     fileprivate static func swizzleBarTransition() {
         guard !swizzleBarTransitionFinished else { return }
@@ -417,7 +417,7 @@ extension FrameworkAutoloader {
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationBar) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             
@@ -432,7 +432,7 @@ extension FrameworkAutoloader {
             objc_getClass(String(format: "%@%@%@", "_U", "IBarBack", "ground")),
             selector: #selector(setter: UIView.isHidden),
             methodSignature: (@convention(c) (UIView, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, Bool) -> Void).self
         ) { store in { selfObject, hidden in
             var responder: UIResponder? = selfObject
             while responder != nil {
@@ -453,7 +453,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             let transitionController = selfObject.navigationController?.fw.transitionContextToViewController
             if let navigationBar = selfObject.fw.transitionNavigationBar {
@@ -474,7 +474,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillLayoutSubviews),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             let tc = selfObject.transitionCoordinator
             let fromController = tc?.viewController(forKey: .from)
@@ -506,7 +506,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationController.pushViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationController, UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, UIViewController, Bool) -> Void).self
         ) { store in { selfObject, viewController, animated in
             guard let disappearingController = selfObject.viewControllers.last else {
                 return store.original(selfObject, store.selector, viewController, animated)
@@ -533,7 +533,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationController.popViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController, Bool) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, Bool) -> UIViewController?).self
         ) { store in { selfObject, animated in
             if selfObject.viewControllers.count < 2 {
                 return store.original(selfObject, store.selector, animated)
@@ -558,7 +558,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationController.popToViewController(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UIViewController, Bool) -> [UIViewController]?).self,
-            swizzleSignature: (@convention(block) (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, UIViewController, Bool) -> [UIViewController]?).self
         ) { store in { selfObject, viewController, animated in
             if !selfObject.viewControllers.contains(viewController) || selfObject.viewControllers.count < 2 {
                 return store.original(selfObject, store.selector, viewController, animated)
@@ -582,7 +582,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationController.popToRootViewController(animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, Bool) -> [UIViewController]?).self,
-            swizzleSignature: (@convention(block) (UINavigationController, Bool) -> [UIViewController]?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, Bool) -> [UIViewController]?).self
         ) { store in { selfObject, animated in
             if selfObject.viewControllers.count < 2 {
                 return store.original(selfObject, store.selector, animated)
@@ -607,7 +607,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationController.setViewControllers(_:animated:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, [UIViewController], Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationController, [UIViewController], Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, [UIViewController], Bool) -> Void).self
         ) { store in { selfObject, viewControllers, animated in
             let disappearingController = selfObject.viewControllers.last
             let appearingController = viewControllers.last
