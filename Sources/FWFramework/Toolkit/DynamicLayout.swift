@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 计算动态布局视图指定宽度时的高度。使用AutoLayout必须约束完整，不使用AutoLayout会调用view的sizeThatFits:方法
     public func layoutHeight(width: CGFloat) -> CGFloat {
         var fittingHeight: CGFloat = 0
@@ -240,7 +240,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UITableViewCell
-extension Wrapper where Base: UITableViewCell {
+@MainActor extension Wrapper where Base: UITableViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
         get { return base.maxYViewFixed }
@@ -279,7 +279,7 @@ extension Wrapper where Base: UITableViewCell {
 }
 
 // MARK: - Wrapper+UITableViewHeaderFooterView
-extension Wrapper where Base: UITableViewHeaderFooterView {
+@MainActor extension Wrapper where Base: UITableViewHeaderFooterView {
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
         get { return base.maxYViewFixed }
@@ -324,7 +324,7 @@ extension Wrapper where Base: UITableViewHeaderFooterView {
 /// 适用于需要计算高度或automaticDimension不满足需求的场景；
 /// 如果使用系统自动高度，建议设置estimatedRowHeight提高性能
 /// - see: [UITableViewDynamicLayoutCacheHeight](https://github.com/liangdahong/UITableViewDynamicLayoutCacheHeight)
-extension Wrapper where Base: UITableView {
+@MainActor extension Wrapper where Base: UITableView {
     // MARK: - Cache
     /// 手工清空高度缓存，用于高度发生变化的情况
     public func clearHeightCache() {
@@ -493,7 +493,7 @@ extension Wrapper where Base: UITableView {
 }
 
 // MARK: - Wrapper+UICollectionViewCell
-extension Wrapper where Base: UICollectionViewCell {
+@MainActor extension Wrapper where Base: UICollectionViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
         get { return base.maxYViewFixed }
@@ -534,7 +534,7 @@ extension Wrapper where Base: UICollectionViewCell {
 }
 
 // MARK: - Wrapper+UICollectionReusableView
-extension Wrapper where Base: UICollectionReusableView {
+@MainActor extension Wrapper where Base: UICollectionReusableView {
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
         get { return base.maxYViewFixed }
@@ -580,7 +580,7 @@ extension Wrapper where Base: UICollectionReusableView {
 /// 集合自动计算并缓存cell高度分类，最底部view的MaxY即为cell高度，自定义方案实现
 ///
 /// 如果使用系统自动尺寸，建议设置estimatedItemSize提高性能
-extension Wrapper where Base: UICollectionView {
+@MainActor extension Wrapper where Base: UICollectionView {
     // MARK: - Cache
     /// 手工清空尺寸缓存，用于尺寸发生变化的情况
     public func clearSizeCache() {
@@ -774,7 +774,7 @@ public enum HeaderFooterViewType: Int {
 
 // MARK: - DynamicLayoutViewProtocol
 /// 动态布局视图协议
-@_spi(FW) public protocol DynamicLayoutViewProtocol {
+@MainActor @_spi(FW) public protocol DynamicLayoutViewProtocol {
     
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     var maxYViewFixed: Bool { get set }

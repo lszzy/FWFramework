@@ -253,25 +253,25 @@ extension Wrapper where Base: NSObject {
 
     /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func performBlock(
-        _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
-        completion: @escaping (Bool, Any?) -> Void,
+        _ block: @escaping @Sendable (@escaping (Bool, Any?) -> Void) -> Void,
+        completion: @escaping @Sendable (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: @escaping (Int) -> TimeInterval,
-        isCancelled: (() -> Bool)? = nil
+        delayInterval: @escaping @Sendable (Int) -> TimeInterval,
+        isCancelled: (@Sendable () -> Bool)? = nil
     ) {
         let startTime = Date().timeIntervalSince1970
         performBlock(block, completion: completion, retryCount: retryCount, remainCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled, startTime: startTime)
     }
     
     private static func performBlock(
-        _ block: @escaping (@escaping (Bool, Any?) -> Void) -> Void,
-        completion: @escaping (Bool, Any?) -> Void,
+        _ block: @escaping @Sendable (@escaping (Bool, Any?) -> Void) -> Void,
+        completion: @escaping @Sendable (Bool, Any?) -> Void,
         retryCount: Int,
         remainCount: Int,
         timeoutInterval: TimeInterval,
-        delayInterval: @escaping (Int) -> TimeInterval,
-        isCancelled: (() -> Bool)?,
+        delayInterval: @escaping @Sendable (Int) -> TimeInterval,
+        isCancelled: (@Sendable () -> Bool)?,
         startTime: TimeInterval
     ) {
         if isCancelled?() ?? false { return }
@@ -1288,24 +1288,24 @@ extension Wrapper where Base: UserDefaults {
 // MARK: - NSObject+Foundation
 extension NSObject {
     
-    fileprivate static var innerOnceTokens = [AnyHashable]()
-    fileprivate static var innerTaskPool = NSMutableDictionary()
-    fileprivate static var innerTaskSemaphore = DispatchSemaphore(value: 1)
+    nonisolated(unsafe) fileprivate static var innerOnceTokens = [AnyHashable]()
+    nonisolated(unsafe) fileprivate static var innerTaskPool = NSMutableDictionary()
+    nonisolated(unsafe) fileprivate static var innerTaskSemaphore = DispatchSemaphore(value: 1)
     
 }
 
 // MARK: - Date+Foundation
 extension Date {
     
-    fileprivate static var innerCurrentBaseTime: TimeInterval = 0
-    fileprivate static var innerLocalBaseTime: TimeInterval = 0
-    fileprivate static var innerDateFormatter: DateFormatter = {
+    nonisolated(unsafe) fileprivate static var innerCurrentBaseTime: TimeInterval = 0
+    nonisolated(unsafe) fileprivate static var innerLocalBaseTime: TimeInterval = 0
+    nonisolated(unsafe) fileprivate static var innerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
         return formatter
     }()
-    fileprivate static var innerServerDateFormatter: DateFormatter = {
+    nonisolated(unsafe) fileprivate static var innerServerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "GMT")
         formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
@@ -1317,14 +1317,14 @@ extension Date {
 // MARK: - UserDefaults+Foundation
 extension URLSession {
     
-    fileprivate static var innerHttpProxyDisabled = false
+    nonisolated(unsafe) fileprivate static var innerHttpProxyDisabled = false
     
 }
 
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
     
-    private static var swizzleHttpProxyFinished = false
+    nonisolated(unsafe) private static var swizzleHttpProxyFinished = false
     
     fileprivate static func swizzleHttpProxy() {
         guard !swizzleHttpProxyFinished else { return }

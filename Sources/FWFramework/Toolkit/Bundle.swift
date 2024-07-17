@@ -25,7 +25,7 @@ open class ModuleBundle: NSObject {
         var strings: [String: [String: [String: String]]] = [:]
     }
     
-    static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
+    nonisolated(unsafe) static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
     
     /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {
