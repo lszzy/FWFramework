@@ -10,7 +10,7 @@ import Foundation
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 插件快速访问
-    public static var plugin = PluginManager.self
+    nonisolated(unsafe) public static var plugin = PluginManager.self
 }
 
 // MARK: - PluginProtocol
@@ -67,7 +67,7 @@ public class PluginManager {
     }
     
     /// 内部插件池
-    private static var pluginPool: [String: Target] = [:]
+    nonisolated(unsafe) private static var pluginPool: [String: Target] = [:]
     
     /// 插件调试描述
     public class func debugDescription() -> String {
@@ -81,7 +81,7 @@ public class PluginManager {
     }
     
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
-    public static let sharedLoader = Loader<Any, Any>()
+    nonisolated(unsafe) public static let sharedLoader = Loader<Any, Any>()
     
     /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
     @discardableResult
