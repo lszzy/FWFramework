@@ -250,7 +250,7 @@ extension Wrapper where Base: CAGradientLayer {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /**
      绘制形状路径，需要在drawRect中调用
      

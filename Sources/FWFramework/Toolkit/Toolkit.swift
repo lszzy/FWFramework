@@ -1228,15 +1228,12 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 后台线程压缩图片，完成后主线程回调
-    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([UIImage]) -> Void) {
+    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @MainActor @escaping @Sendable ([UIImage]) -> Void) {
         DispatchQueue.global().async {
-            var compressImages: [UIImage] = []
-            for image in images {
-                if let compressImage = image
+            let compressImages = images.compactMap { image in
+                return image
                     .fw.compressImage(maxWidth: maxWidth)?
-                    .fw.compressImage(maxLength: maxLength, compressRatio: compressRatio) {
-                    compressImages.append(compressImage)
-                }
+                    .fw.compressImage(maxLength: maxLength, compressRatio: compressRatio)
             }
             
             DispatchQueue.main.async {
@@ -1246,15 +1243,12 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 后台线程压缩图片数据，完成后主线程回调
-    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([Data]) -> Void) {
+    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @MainActor @escaping @Sendable ([Data]) -> Void) {
         DispatchQueue.global().async {
-            var compressDatas: [Data] = []
-            for image in images {
-                if let compressData = image
+            let compressDatas = images.compactMap { image in
+                return image
                     .fw.compressImage(maxWidth: maxWidth)?
-                    .fw.compressData(maxLength: maxLength, compressRatio: compressRatio) {
-                    compressDatas.append(compressData)
-                }
+                    .fw.compressData(maxLength: maxLength, compressRatio: compressRatio)
             }
             
             DispatchQueue.main.async {
@@ -1287,7 +1281,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 从视图创建UIImage，生成截图，主线程调用
-    public static func image(view: UIView) -> UIImage? {
+    @MainActor public static func image(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0)
         if view.window != nil {
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
@@ -1514,7 +1508,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 图片裁剪，可指定frame、角度、圆形等
-    public func croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+    @MainActor public func croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, !hasAlpha && !circular, base.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
@@ -1562,7 +1556,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 截取View所有视图，包括旋转缩放效果
-    public static func image(view: UIView, limitWidth: CGFloat) -> UIImage? {
+    @MainActor public static func image(view: UIView, limitWidth: CGFloat) -> UIImage? {
         let oldTransform = view.transform
         var scaleTransform = CGAffineTransform.identity
         if !limitWidth.isNaN && limitWidth > 0 && CGRectGetWidth(view.frame) > 0 {
@@ -1695,7 +1689,7 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 顶部纵坐标，frame.origin.y
     public var top: CGFloat {
         get {
@@ -1922,7 +1916,7 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - Wrapper+UINavigationController
 /// 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
-extension Wrapper where Base: UINavigationController {
+@MainActor extension Wrapper where Base: UINavigationController {
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func enablePopProxy() {
         base.interactivePopGestureRecognizer?.delegate = popProxyTarget
@@ -1997,23 +1991,23 @@ extension Wrapper where Base: UINavigationController {
 // MARK: - UIApplication+Toolkit
 extension UIApplication {
     
-    fileprivate static var innerAppVersion: String?
+    nonisolated(unsafe) fileprivate static var innerAppVersion: String?
     
 }
 
 // MARK: - UIColor+Toolkit
 extension UIColor {
     
-    fileprivate static var innerColorStandardARGB = false
+    nonisolated(unsafe) fileprivate static var innerColorStandardARGB = false
     
 }
 
 // MARK: - UIFont+Toolkit
 extension UIFont {
     
-    fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
-    fileprivate static var innerAutoFlatFont = false
-    fileprivate static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
+    nonisolated(unsafe) fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
+    nonisolated(unsafe) fileprivate static var innerAutoFlatFont = false
+    nonisolated(unsafe) fileprivate static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
     fileprivate static let innerWeightSuffixes: [UIFont.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
@@ -2250,7 +2244,7 @@ fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecogni
 }
 
 // MARK: - SafariViewControllerDelegate
-fileprivate class SafariViewControllerDelegate: NSObject, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
+fileprivate class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
     
     static let shared = SafariViewControllerDelegate()
     
@@ -2411,7 +2405,7 @@ extension FrameworkAutoloader {
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationBar) -> Void).self
         ) { store in { selfObject in
             guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
                 store.original(selfObject, store.selector)
@@ -2440,7 +2434,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(setter: UIViewController.title),
             methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, String?) -> Void).self
         ) { store in { selfObject, title in
             store.original(selfObject, store.selector, title)
             
@@ -2453,7 +2447,7 @@ extension FrameworkAutoloader {
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.title),
             methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationItem, String?) -> Void).self
         ) { store in { selfObject, title in
             store.original(selfObject, store.selector, title)
             
@@ -2466,7 +2460,7 @@ extension FrameworkAutoloader {
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.titleView),
             methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationItem, UIView?) -> Void).self
         ) { store in { selfObject, titleView in
             store.original(selfObject, store.selector, titleView)
             
@@ -2478,7 +2472,7 @@ extension FrameworkAutoloader {
         }}
     }
     
-    private static var swizzleToolkitNavigationControllerFinished = false
+    nonisolated(unsafe) private static var swizzleToolkitNavigationControllerFinished = false
     
     fileprivate static func swizzleToolkitNavigationController() {
         guard !swizzleToolkitNavigationControllerFinished else { return }
@@ -2488,7 +2482,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
-            swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
         ) { store in { selfObject, navigationBar, item in
             if UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled {
                 // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
@@ -2505,7 +2499,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             if !UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled { return }
@@ -2522,7 +2516,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarHidden),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
             if UINavigationController.innerChildProxyEnabled, child == nil {
@@ -2536,7 +2530,7 @@ extension FrameworkAutoloader {
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarStyle),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
             if UINavigationController.innerChildProxyEnabled, child == nil {
