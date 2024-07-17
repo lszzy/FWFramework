@@ -8,7 +8,7 @@
 import Foundation
 
 /// 任务操作类，可继承或直接使用
-open class TaskOperation: Operation {
+open class TaskOperation: Operation, @unchecked Sendable {
     
     private enum TaskState: Int {
         case created = 0
@@ -217,7 +217,7 @@ open class TaskOperation: Operation {
 }
 
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
-open class TaskManager {
+open class TaskManager: @unchecked Sendable {
     
     /// 单例模式
     public static let shared = TaskManager()

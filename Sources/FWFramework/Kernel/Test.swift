@@ -74,7 +74,7 @@ open class TestCase: NSObject {
 
 // MARK: - UnitTest
 /// 单元测试启动器
-fileprivate class UnitTest: CustomDebugStringConvertible {
+fileprivate class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     
     private static let shared = UnitTest()
     

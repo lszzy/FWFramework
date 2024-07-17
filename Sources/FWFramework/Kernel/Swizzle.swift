@@ -436,7 +436,7 @@ extension Wrapper where Base: NSObject {
 // MARK: - NSObject+Swizzle
 extension NSObject {
     
-    fileprivate static var innerSwizzleIdentifiers = NSMutableSet()
+    nonisolated(unsafe) fileprivate static var innerSwizzleIdentifiers = NSMutableSet()
     
 }
 
