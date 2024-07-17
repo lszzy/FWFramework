@@ -413,7 +413,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
 }
 
-class TestRouter: NSObject {
+@MainActor class TestRouter: NSObject {
     
     @objc static let testUrl = "app://tests/:id"
     @objc static let homeUrl = "app://tab/home"

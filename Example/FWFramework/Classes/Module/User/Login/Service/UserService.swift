@@ -51,14 +51,14 @@ extension UserService {
         NSObject.app.postNotification(UserService.logoutNotification)
     }
     
-    public func login(_ completion: (() -> Void)? = nil) {
+    @MainActor public func login(_ completion: (() -> Void)? = nil) {
         let viewController = LoginController()
         viewController.completion = completion
         let navigationController = UINavigationController(rootViewController: viewController)
         Navigator.present(navigationController, animated: true, completion: nil)
     }
     
-    public func logout(_ completion: (() -> Void)? = nil) {
+    @MainActor public func logout(_ completion: (() -> Void)? = nil) {
         let viewController = Navigator.topViewController
         viewController?.app.showConfirm(title: APP.localized("logoutConfirm"), message: nil) { [weak self] in
             self?.clearUserModel()

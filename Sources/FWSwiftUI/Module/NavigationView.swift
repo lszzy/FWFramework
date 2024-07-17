@@ -12,7 +12,7 @@ import SwiftUI
 #endif
 
 /// 导航栏配置，兼容AnyView和UIKit对象
-public struct NavigationBarConfiguration {
+@MainActor public struct NavigationBarConfiguration {
     public var leading: Any?
     public var title: Any?
     public var trailing: Any?

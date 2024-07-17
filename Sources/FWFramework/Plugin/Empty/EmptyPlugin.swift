@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var emptyPlugin: EmptyPlugin! {
         get {
@@ -113,7 +113,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 自定义空界面插件，未设置时自动从插件池加载
     public var emptyPlugin: EmptyPlugin! {
         get { return base.view.fw.emptyPlugin }
@@ -168,7 +168,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 空界面代理，默认nil。[DZNEmptyDataSet](https://github.com/dzenbot/DZNEmptyDataSet)
     public weak var emptyViewDelegate: EmptyViewDelegate? {
         get {
@@ -183,7 +183,7 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 刷新空界面
-    @MainActor public func reloadEmptyView() {
+    public func reloadEmptyView() {
         guard let emptyViewDelegate = emptyViewDelegate else { return }
         
         var shouldDisplay = emptyViewDelegate.emptyViewForceDisplay(base)
@@ -207,7 +207,7 @@ extension Wrapper where Base: UIScrollView {
     /// 当前数据总条数，默认自动调用tableView和collectionView的dataSource，支持自定义覆盖(优先级高，小于0还原)
     ///
     /// 注意：此处为当前数据源总数，并非当前cell总数，即使tableView未reloadData也会返回新总数
-    @MainActor public var totalDataCount: Int {
+    public var totalDataCount: Int {
         get {
             if let totalCount = propertyNumber(forName: "totalDataCount")?.intValue,
                totalCount >= 0 {
@@ -310,7 +310,7 @@ extension Wrapper where Base: UIScrollView {
 
 // MARK: - EmptyPlugin
 /// 空界面插件协议，应用可自定义空界面插件实现
-public protocol EmptyPlugin: AnyObject {
+@MainActor public protocol EmptyPlugin: AnyObject {
     
     /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
     func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
@@ -344,7 +344,7 @@ extension EmptyPlugin {
 
 // MARK: - EmptyViewDelegate
 /// 空界面代理协议
-public protocol EmptyViewDelegate: AnyObject {
+@MainActor public protocol EmptyViewDelegate: AnyObject {
     
     /// 显示空界面，默认调用UIScrollView.showEmptyView
     func showEmptyView(_ scrollView: UIScrollView)

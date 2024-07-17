@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ImagePluginImpl
 /// 默认图片插件
-open class ImagePluginImpl: NSObject, ImagePlugin {
+open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

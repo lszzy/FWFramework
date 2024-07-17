@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UITextField
-extension Wrapper where Base: UITextField {
+@MainActor extension Wrapper where Base: UITextField {
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var keyboardManager: Bool {
@@ -188,7 +188,7 @@ extension Wrapper where Base: UITextField {
 }
 
 // MARK: - Wrapper+UITextView
-extension Wrapper where Base: UITextView {
+@MainActor extension Wrapper where Base: UITextView {
     // MARK: - Keyboard
     /// 是否启用键盘管理(自动滚动)，默认NO
     public var keyboardManager: Bool {
@@ -406,7 +406,7 @@ extension Wrapper where Base: UITextView {
 }
 
 // MARK: - Wrapper+UITextView
-extension Wrapper where Base: UITextView {
+@MainActor extension Wrapper where Base: UITextView {
     /// 占位文本，默认nil
     public var placeholder: String? {
         get {
@@ -657,7 +657,7 @@ extension UITextView {
 }
 
 // MARK: - KeyboardTarget
-fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
+@MainActor fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
     
     var keyboardManager = false {
         didSet {
@@ -1054,7 +1054,7 @@ fileprivate class KeyboardConfig {
 }
 
 // MARK: - PlaceholderTarget
-fileprivate class PlaceholderTarget: NSObject {
+@MainActor fileprivate class PlaceholderTarget: NSObject {
     
     private(set) weak var textView: UITextView?
     

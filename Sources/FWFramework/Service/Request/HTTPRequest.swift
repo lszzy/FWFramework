@@ -78,7 +78,7 @@ public protocol HTTPRequestProtocol: AnyObject {
 /// 如果vc请求回调句柄中使用了weak self，不会产生强引用，则self会在vc关闭时立即释放，不会等待请求完成
 ///
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
-open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible {
+open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible, @unchecked Sendable {
     
     /// 请求完成句柄
     public typealias Completion = (HTTPRequest) -> Void

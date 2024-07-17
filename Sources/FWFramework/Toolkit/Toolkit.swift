@@ -116,13 +116,13 @@ extension Wrapper where Base: UIApplication {
     }
     
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func canOpenURL(_ url: URLParameter?) -> Bool {
+    @MainActor public static func canOpenURL(_ url: URLParameter?) -> Bool {
         guard let url = url?.urlValue else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openURL(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -131,7 +131,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openUniversalLinks(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -193,13 +193,13 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开AppStore下载页
-    public static func openAppStore(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStore(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         // SKStoreProductViewController可以内部打开
         openURL("https://apps.apple.com/app/id\(appId)", completionHandler: completionHandler)
     }
 
     /// 打开AppStore评价页
-    public static func openAppStoreReview(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStoreReview(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("https://apps.apple.com/app/id\(appId)?action=write-review", completionHandler: completionHandler)
     }
 
@@ -209,12 +209,12 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统应用设置页
-    public static func openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
     }
     
     /// 打开系统应用通知设置页
-    public static func openAppNotificationSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppNotificationSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if #available(iOS 16.0, *) {
             openURL(UIApplication.openNotificationSettingsURLString, completionHandler: completionHandler)
         } else if #available(iOS 15.4, *) {
@@ -225,26 +225,26 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统邮件App
-    public static func openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMailApp(_ email: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("mailto:" + email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
-    public static func openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("sms:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
-    public static func openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openPhoneApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("tel:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
-    public static func openActivityItems(
+    @MainActor public static func openActivityItems(
         _ activityItems: [Any],
         excludedTypes: [UIActivity.ActivityType]? = nil,
         completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil,
-        customBlock: ((UIActivityViewController) -> Void)? = nil
+        customBlock: (@MainActor (UIActivityViewController) -> Void)? = nil
     ) {
         let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         activityController.excludedActivityTypes = excludedTypes
@@ -263,7 +263,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
+    @MainActor public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil) {
         guard let url = url?.urlValue, isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
@@ -275,7 +275,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开短信控制器，完成时回调
-    public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
         if !MFMessageComposeViewController.canSendText() {
             completionHandler?(false)
             return
@@ -289,7 +289,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开邮件控制器，完成时回调
-    public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
         if !MFMailComposeViewController.canSendMail() {
             completionHandler?(false)
             return
@@ -303,7 +303,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开Store控制器，完成时回调
-    public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
+    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -319,7 +319,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-    public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
+    @MainActor public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
         var player: AVPlayer?
         if let playerItem = url as? AVPlayerItem {
             player = AVPlayer(playerItem: playerItem)
@@ -395,7 +395,7 @@ extension Wrapper where Base: UIApplication {
     }
     
     /// 播放触控反馈
-    public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
         feedbackGenerator.impactOccurred()
     }
@@ -2551,7 +2551,7 @@ extension FrameworkAutoloader {
 
 // MARK: - Concurrency+Toolkit
 #if compiler(>=5.6.0) && canImport(_Concurrency)
-extension Wrapper where Base: UIApplication {
+@MainActor extension Wrapper where Base: UIApplication {
     
     /// 异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     public static func openURL(_ url: URLParameter?) async -> Bool {

@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - UIWindow+Navigator
-extension Wrapper where Base: UIWindow {
+@MainActor extension Wrapper where Base: UIWindow {
     // MARK: - Static
     /// 获取当前主window，可自定义
     public static var main: UIWindow? {
@@ -120,7 +120,7 @@ extension Wrapper where Base: UIWindow {
 }
 
 // MARK: - UIViewController+Navigator
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     // MARK: - Navigation
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
     public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
@@ -231,7 +231,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - UINavigationController+Navigator
-extension Wrapper where Base: UINavigationController {
+@MainActor extension Wrapper where Base: UINavigationController {
     // MARK: - Navigation
     /// push新界面，完成时回调
     public func pushViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
@@ -474,7 +474,7 @@ extension Wrapper where Base: UINavigationController {
 
 // MARK: - NavigatorOptions
 /// 控制器导航选项定义
-public struct NavigatorOptions: OptionSet {
+public struct NavigatorOptions: OptionSet, Sendable {
     
     public let rawValue: Int
     
@@ -520,7 +520,7 @@ public struct NavigatorOptions: OptionSet {
 
 // MARK: - Navigator
 /// 导航管理器
-public class Navigator {
+@MainActor public class Navigator {
     
     fileprivate static var staticWindow: UIWindow?
     fileprivate static var staticScene: UIWindowScene?

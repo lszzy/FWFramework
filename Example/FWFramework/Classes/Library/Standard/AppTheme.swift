@@ -54,7 +54,7 @@ class AppTheme: NSObject {
         UIColor.app.themeLight(.app.color(hex: 0x017AFF), dark: .app.color(hex: 0x0A84FF))
     }
     
-    public static func largeButton() -> UIButton {
+    @MainActor public static func largeButton() -> UIButton {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .app.boldFont(ofSize: 17)
@@ -80,7 +80,7 @@ class AppTheme: NSObject {
 
 extension AppTheme {
     
-    static func setupTheme() {
+    @MainActor static func setupTheme() {
         setupAppearance()
         setupPlugin()
         setupStyle()
@@ -126,7 +126,7 @@ extension AppTheme {
         }
     }
     
-    private static func setupPlugin() {
+    @MainActor private static func setupPlugin() {
         ToastPluginImpl.shared.defaultLoadingText = {
             return NSAttributedString(string: "加载中...")
         }
@@ -154,7 +154,7 @@ extension AppTheme {
         }
     }
     
-    private static func setupStyle() {
+    @MainActor private static func setupStyle() {
         UITextField.app.defineStyle(.default) { textField in
             textField.font = UIFont.app.font(ofSize: 15)
             textField.textColor = AppTheme.textColor

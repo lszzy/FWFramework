@@ -69,7 +69,7 @@ extension Wrapper where Base: PHPhotoLibrary {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 自定义图片选取插件，未设置时自动从插件池加载
     public var imagePickerPlugin: ImagePickerPlugin! {
         get {
@@ -141,7 +141,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 从Camera选取单张图片(简单版)
     /// - Parameters:
     ///   - allowsEditing: 是否允许编辑
@@ -443,7 +443,7 @@ extension Wrapper where Base: PHPickerViewController {
 
 // MARK: ImagePickerPlugin
 /// 图片选择插件过滤类型
-public struct ImagePickerFilterType: OptionSet {
+public struct ImagePickerFilterType: OptionSet, Sendable {
     
     public let rawValue: UInt
     

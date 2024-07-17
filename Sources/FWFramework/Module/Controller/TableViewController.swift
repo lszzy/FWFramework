@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - TableDelegateControllerProtocol
 /// 表格代理控制器协议，数据源和事件代理为tableDelegate，可覆写
-public protocol TableDelegateControllerProtocol: ViewControllerProtocol, UITableViewDelegate {
+@MainActor public protocol TableDelegateControllerProtocol: ViewControllerProtocol, UITableViewDelegate {
     
     /// 关联表格数据元素类型，默认Any
     associatedtype TableElement = Any
@@ -36,7 +36,7 @@ public protocol TableDelegateControllerProtocol: ViewControllerProtocol, UITable
 
 // MARK: - TableViewControllerProtocol
 /// 表格视图控制器协议，数据源和事件代理为控制器，可覆写
-public protocol TableViewControllerProtocol: TableDelegateControllerProtocol, UITableViewDataSource {}
+@MainActor public protocol TableViewControllerProtocol: TableDelegateControllerProtocol, UITableViewDataSource {}
 
 // MARK: - UIViewController+TableViewControllerProtocol
 extension TableDelegateControllerProtocol where Self: UIViewController {
@@ -81,7 +81,7 @@ extension TableDelegateControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+TableViewControllerProtocol
 internal extension ViewControllerManager {
     
-    func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
+    @MainActor func tableViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? any UIViewController & TableDelegateControllerProtocol else { return }
         
         let tableView = viewController.tableView

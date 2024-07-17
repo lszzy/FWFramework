@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 自定义吐司插件，未设置时自动从插件池加载
     public var toastPlugin: ToastPlugin! {
         get {
@@ -124,7 +124,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 设置吐司是否显示在window上，默认NO，显示到view上
     public var toastInWindow: Bool {
         get { propertyBool(forName: "toastInWindow") }
@@ -231,7 +231,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UIWindow
-extension Wrapper where Base: UIWindow {
+@MainActor extension Wrapper where Base: UIWindow {
     /// 自定义吐司插件，未设置时自动从插件池加载
     public static var toastPlugin: ToastPlugin! {
         get { return UIWindow.fw.main?.fw.toastPlugin }
@@ -312,7 +312,7 @@ extension Wrapper where Base: UIWindow {
 
 // MARK: - ToastPlugin
 /// 消息吐司可扩展样式枚举
-public struct ToastStyle: RawRepresentable, Equatable, Hashable {
+public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -342,7 +342,7 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 吐司插件协议，应用可自定义吐司插件实现
-public protocol ToastPlugin: AnyObject {
+@MainActor public protocol ToastPlugin: AnyObject {
     
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
     func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)

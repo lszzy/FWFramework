@@ -471,7 +471,7 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
     }
 }
 
-protocol TestSwiftProtocol {
+@MainActor protocol TestSwiftProtocol {
     func testMethod()
 }
 

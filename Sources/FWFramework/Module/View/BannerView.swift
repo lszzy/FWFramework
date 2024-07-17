@@ -49,8 +49,8 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
-    @_spi(FW) public static var trackClickBlock: ((UIView, IndexPath?) -> Bool)?
-    @_spi(FW) public static var trackExposureBlock: ((UIView) -> Void)?
+    @_spi(FW) public static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
+    @_spi(FW) public static var trackExposureBlock: (@MainActor (UIView) -> Void)?
     
     // MARK: - Accessor
     /// 图片数组，支持String|URL|UIImage

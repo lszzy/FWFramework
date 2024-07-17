@@ -558,10 +558,10 @@ open class PasscodeCellProperty: NSObject, NSCopying {
     open var cellPlaceholderFont: UIFont? = .systemFont(ofSize: 20)
     
     /// 自定义密文View回调，默认创建视图
-    open var customSecurityViewBlock: (() -> UIView)?
+    open var customSecurityViewBlock: (@MainActor () -> UIView)?
     
     /// 自定义下划线回调，默认PasscodeLineView
-    open var customLineViewBlock: (() -> PasscodeLineView)?
+    open var customLineViewBlock: (@MainActor () -> PasscodeLineView)?
     
     /// 自定义阴影回调，默认nil
     open var configCellShadowBlock: ((CALayer) -> Void)?

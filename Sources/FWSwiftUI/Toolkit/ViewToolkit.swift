@@ -288,7 +288,7 @@ extension Color {
 }
 
 // MARK: - Font+Toolkit
-extension Font {
+@MainActor extension Font {
     
     /// 全局自定义字体句柄，优先调用
     public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ScrollViewControllerProtocol
 /// 滚动视图控制器协议，可覆写
-public protocol ScrollViewControllerProtocol: ViewControllerProtocol {
+@MainActor public protocol ScrollViewControllerProtocol: ViewControllerProtocol {
     
     /// 滚动视图，默认不显示滚动条
     var scrollView: UIScrollView { get }
@@ -64,7 +64,7 @@ extension ScrollViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerManager+ScrollViewControllerProtocol
 internal extension ViewControllerManager {
     
-    func scrollViewControllerViewDidLoad(_ viewController: UIViewController) {
+    @MainActor func scrollViewControllerViewDidLoad(_ viewController: UIViewController) {
         guard let viewController = viewController as? UIViewController & ScrollViewControllerProtocol else { return }
         
         let scrollView = viewController.scrollView

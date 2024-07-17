@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 自定义弹窗插件，未设置时自动从插件池加载
     public var alertPlugin: AlertPlugin! {
         get {
@@ -308,7 +308,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 显示错误警告框
     /// - Parameters:
     ///   - error: 错误对象
@@ -830,7 +830,7 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 弹窗插件协议，应用可自定义弹窗实现
-public protocol AlertPlugin: AnyObject {
+@MainActor public protocol AlertPlugin: AnyObject {
     
     /// 显示弹出框插件方法，默认使用系统UIAlertController
     func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)

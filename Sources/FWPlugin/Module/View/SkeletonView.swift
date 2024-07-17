@@ -12,7 +12,7 @@ import UIKit
 
 // MARK: - Wrapper+UIView
 /// 视图显示骨架屏扩展
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 显示骨架屏，指定布局代理
     public func showSkeleton(delegate: SkeletonViewDelegate?) {
         showSkeleton(delegate: delegate, block: nil)
@@ -77,7 +77,7 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIViewController
 /// 控制器显示骨架屏扩展
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 显示view骨架屏，指定布局代理
     public func showSkeleton(delegate: SkeletonViewDelegate?) {
         base.view.fw.showSkeleton(delegate: delegate)
@@ -130,7 +130,7 @@ public enum SkeletonAnimationDirection: Int {
 }
 
 /// 骨架屏自带动画
-open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
+open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol, @unchecked Sendable {
     public static let shimmer = SkeletonAnimation(type: .shimmer)
     public static let solid = SkeletonAnimation(type: .solid)
     public static let scale = SkeletonAnimation(type: .scale)
@@ -264,7 +264,7 @@ open class SkeletonAnimation: NSObject, SkeletonAnimationProtocol {
 
 // MARK: - SkeletonAppearance
 /// 骨架屏通用样式
-public class SkeletonAppearance: NSObject {
+public class SkeletonAppearance: NSObject, @unchecked Sendable {
     /// 单例对象
     public static let appearance = SkeletonAppearance()
     

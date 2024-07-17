@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
         hideBadgeView()
@@ -31,7 +31,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIBarItem
-extension Wrapper where Base: UIBarItem {
+@MainActor extension Wrapper where Base: UIBarItem {
     /// 获取UIBarItem(UIBarButtonItem、UITabBarItem)内部的view，通常对于navigationItem和tabBarItem而言，需要在设置为item后并且在bar可见时(例如 viewDidAppear:及之后)获取fwView才有值
     public weak var view: UIView? {
         if let barItem = base as? UIBarButtonItem {
@@ -71,7 +71,7 @@ extension Wrapper where Base: UIBarItem {
 }
 
 // MARK: - Wrapper+UIBarButtonItem
-extension Wrapper where Base: UIBarButtonItem {
+@MainActor extension Wrapper where Base: UIBarButtonItem {
     /// 显示右上角提醒灯，上右偏移指定距离(正外负内)
     public func showBadgeView(_ badgeView: BadgeView, badgeValue: String? = nil) {
         hideBadgeView()
@@ -98,7 +98,7 @@ extension Wrapper where Base: UIBarButtonItem {
 }
 
 // MARK: - Wrapper+UITabBarItem
-extension Wrapper where Base: UITabBarItem {
+@MainActor extension Wrapper where Base: UITabBarItem {
     /// 获取一个UITabBarItem内显示图标的UIImageView，如果找不到则返回nil
     public weak var imageView: UIImageView? {
         if let tabBarButton = view {
@@ -154,7 +154,7 @@ extension Wrapper where Base: UITabBarItem {
 
 // MARK: - BadgeView
 /// 提醒灯视图协议
-public protocol BadgeViewProtocol {
+@MainActor public protocol BadgeViewProtocol {
     /// 提醒灯文本标签，默认nil
     var badgeLabel: UILabel? { get }
     /// 提醒灯高度，默认zero
@@ -270,7 +270,7 @@ extension FrameworkAutoloader {
             objc_getClass("UITabBarButton"),
             selector: #selector(UIView.layoutSubviews),
             methodSignature: (@convention(c) (UIView, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIView) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             

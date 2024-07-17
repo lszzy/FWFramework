@@ -442,7 +442,9 @@ public class ThemeManager {
             if newValue && self.mode != .system {
                 style = self.mode == .dark ? .dark : .light
             }
-            UIWindow.fw.main?.overrideUserInterfaceStyle = style
+            DispatchQueue.fw.mainAsync {
+                UIWindow.fw.main?.overrideUserInterfaceStyle = style
+            }
         }
     }
     private var _overrideWindow = false

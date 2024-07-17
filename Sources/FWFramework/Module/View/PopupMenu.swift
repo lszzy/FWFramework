@@ -221,7 +221,7 @@ open class PopupMenuDeviceOrientationManager: NSObject {
         }
     }
     
-    @objc func deviceOrientationDidChange(_ notify: Notification) {
+    @MainActor @objc func deviceOrientationDidChange(_ notify: Notification) {
         guard autoRotateWhenDeviceOrientationChanged else { return }
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation
         if let orientation = orientation, orientation != .unknown {
