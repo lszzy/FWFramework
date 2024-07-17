@@ -31,10 +31,13 @@ public protocol AutoloadProtocol {
 /// 本方案采用objc扩展方法实现，相对于全局扫描类方案性能高，使用简单，使用方法：
 /// 新增Autoloader objc扩展，以load开头且无参静态方法即会自动调用，方法名建议[load模块名_文件名|类名]
 @objc(ObjCAutoloader)
-public class Autoloader: NSObject, AutoloadProtocol {
+public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     
-    private static var isAutoloaded = false
-    private static var debugMethods: [String] = []
+    public static let shared = Autoloader()
+    
+    // MARK: - Accessor
+    private var isAutoloaded = false
+    private var debugMethods: [String] = []
     
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
@@ -72,7 +75,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
             for methodName in methodNames {
                 targetClass.perform(NSSelectorFromString(methodName))
             }
-            return methodNames
+            return methodNames.map { "+" + $0 }
         } else if let targetObject = clazz as? NSObject {
             for methodName in methodNames {
                 targetObject.perform(NSSelectorFromString(methodName))
@@ -93,8 +96,13 @@ public class Autoloader: NSObject, AutoloadProtocol {
         return nil
     }
     
-    /// 自动加载器调试描述
+    /// 自动加载器类调试描述
     public override class func debugDescription() -> String {
+        return shared.debugDescription
+    }
+    
+    /// 自动加载器调试描述
+    public override var debugDescription: String {
         var debugDescription = ""
         var debugCount = 0
         for methodName in debugMethods {
@@ -112,11 +120,11 @@ public class Autoloader: NSObject, AutoloadProtocol {
     // MARK: - AutoloadProtocol
     /// 自动加载load开头objc扩展方法
     public static func autoload() {
-        guard !isAutoloaded else { return }
-        isAutoloaded = true
+        guard !shared.isAutoloaded else { return }
+        shared.isAutoloaded = true
         
         FrameworkAutoloader.debugMethods = autoloadMethods(FrameworkAutoloader.self)
-        debugMethods = autoloadMethods(Autoloader.self)
+        shared.debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
         
         #if DEBUG
         // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
@@ -128,9 +136,9 @@ public class Autoloader: NSObject, AutoloadProtocol {
 
 // MARK: - FrameworkAutoloader
 /// 框架内部自动加载器，自动加载框架内置组件
-internal class FrameworkAutoloader: NSObject {
+internal class FrameworkAutoloader: NSObject, @unchecked Sendable {
     
-    fileprivate static var debugMethods: [String] = []
+    nonisolated(unsafe) fileprivate static var debugMethods: [String] = []
     
     /// 自动加载器调试描述
     override class func debugDescription() -> String {
