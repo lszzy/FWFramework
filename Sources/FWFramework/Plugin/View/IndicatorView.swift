@@ -196,7 +196,7 @@ public protocol IndicatorViewAnimationProtocol: AnyObject {
 }
 
 /// 自定义指示器视图动画类型枚举，可扩展
-public struct IndicatorViewAnimationType: RawRepresentable, Equatable, Hashable {
+public struct IndicatorViewAnimationType: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     

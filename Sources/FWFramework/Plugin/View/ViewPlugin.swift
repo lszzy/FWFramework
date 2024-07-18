@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 自定义视图插件，未设置时自动从插件池加载
     public var viewPlugin: ViewPlugin! {
         get {
@@ -50,7 +50,7 @@ extension Wrapper where Base: UIView {
 }
 
 // MARK: - Wrapper+UIActivityIndicatorView
-extension Wrapper where Base: UIActivityIndicatorView {
+@MainActor extension Wrapper where Base: UIActivityIndicatorView {
     /// 快速创建指示器，可指定颜色，默认白色
     public static func indicatorView(color: UIColor?) -> UIActivityIndicatorView {
         let indicatorView = UIActivityIndicatorView(style: .medium)
@@ -62,7 +62,7 @@ extension Wrapper where Base: UIActivityIndicatorView {
 
 // MARK: - ProgressViewPlugin
 /// 进度条视图样式枚举，可扩展
-public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
+public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -89,8 +89,8 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
         indicatorColors[style.rawValue] = color
     }
     
-    private static var indicatorSizes: [Int: CGSize] = [:]
-    private static var indicatorColors: [Int: UIColor] = [:]
+    nonisolated(unsafe) private static var indicatorSizes: [Int: CGSize] = [:]
+    nonisolated(unsafe) private static var indicatorColors: [Int: UIColor] = [:]
     
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
@@ -124,7 +124,7 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 自定义进度条视图插件
-public protocol ProgressViewPlugin: AnyObject {
+@MainActor public protocol ProgressViewPlugin: AnyObject {
     
     /// 设置或获取进度条当前颜色
     var indicatorColor: UIColor? { get set }
@@ -142,7 +142,7 @@ public protocol ProgressViewPlugin: AnyObject {
 
 // MARK: - IndicatorViewPlugin
 /// 指示器视图样式枚举，可扩展
-public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
+public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -177,8 +177,8 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
         indicatorColors[style.rawValue] = color
     }
     
-    private static var indicatorSizes: [Int: CGSize] = [:]
-    private static var indicatorColors: [Int: UIColor] = [:]
+    nonisolated(unsafe) private static var indicatorSizes: [Int: CGSize] = [:]
+    nonisolated(unsafe) private static var indicatorColors: [Int: UIColor] = [:]
     
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
@@ -212,7 +212,7 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable {
 }
 
 /// 自定义指示器视图协议
-public protocol IndicatorViewPlugin: AnyObject {
+@MainActor public protocol IndicatorViewPlugin: AnyObject {
     
     /// 设置或获取指示器当前颜色
     var indicatorColor: UIColor? { get set }
@@ -233,7 +233,7 @@ public protocol IndicatorViewPlugin: AnyObject {
 
 // MARK: - ViewPlugin
 /// 视图插件协议
-public protocol ViewPlugin: AnyObject {
+@MainActor public protocol ViewPlugin: AnyObject {
     
     /// 进度视图工厂方法
     func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin

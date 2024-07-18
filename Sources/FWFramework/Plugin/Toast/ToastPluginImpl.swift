@@ -8,7 +8,7 @@
 import UIKit
 
 /// 默认吐司插件
-open class ToastPluginImpl: NSObject, ToastPlugin {
+open class ToastPluginImpl: NSObject, ToastPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

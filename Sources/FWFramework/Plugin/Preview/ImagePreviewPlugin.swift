@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 自定义图片预览插件，未设置时自动从插件池加载
     public var imagePreviewPlugin: ImagePreviewPlugin! {
         get {
@@ -85,7 +85,7 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - ImagePreviewPlugin
 /// 图片预览插件协议，应用可自定义图片预览插件实现
-public protocol ImagePreviewPlugin: AnyObject {
+@MainActor public protocol ImagePreviewPlugin: AnyObject {
     
     /// 显示图片预览方法
     /// - Parameters:

@@ -8,7 +8,7 @@
 import UIKit
 
 /// 默认视图插件
-open class ViewPluginImpl: NSObject, ViewPlugin {
+open class ViewPluginImpl: NSObject, ViewPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
