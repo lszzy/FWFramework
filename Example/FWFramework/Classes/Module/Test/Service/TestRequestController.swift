@@ -10,7 +10,7 @@ import FWFramework
 import UIKit
 
 // 继承HTTPRequest及重载Builder示例
-class AppRequest: HTTPRequest {
+class AppRequest: HTTPRequest, @unchecked Sendable {
     
     class Builder: HTTPRequest.Builder {
         override func build() -> AppRequest {
@@ -27,7 +27,7 @@ class AppRequest: HTTPRequest {
 }
 
 // 解析单个ResponseModel实例
-class TestModelRequest: HTTPRequest, ResponseModelRequest {
+class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = TestModel
     
     /*
@@ -100,7 +100,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest {
 }
 
 // 解析ResponseModel数组实例
-class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
+class TestWeatherRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = [TestWeatherModel]
     
     struct TestWeatherModel: JSONModel {
@@ -147,7 +147,7 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest {
 }
 
 // 请求缓存实例
-class TestCacheRequest: HTTPRequest, ResponseModelRequest {
+class TestCacheRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = String
     
     func responseModelFilter() -> String? {
@@ -181,7 +181,7 @@ class TestCacheRequest: HTTPRequest, ResponseModelRequest {
     
 }
 
-class TestUploadRequest: HTTPRequest {
+class TestUploadRequest: HTTPRequest, @unchecked Sendable {
     
     var uploadData: Any?
     var fileName: String = ""
@@ -220,7 +220,7 @@ class TestUploadRequest: HTTPRequest {
     
 }
 
-class TestDownloadRequest: HTTPRequest {
+class TestDownloadRequest: HTTPRequest, @unchecked Sendable {
     
     var fileName: String = ""
     var savePath: String = "" {
@@ -666,13 +666,15 @@ private extension TestRequestController {
         }
         
         NetworkReachabilityManager.shared.startListening { [weak self] status in
-            switch status {
-            case .unknown:
-                self?.observeButton.setTitle("Unknown", for: .normal)
-            case .notReachable:
-                self?.observeButton.setTitle("Not Reachable", for: .normal)
-            case .reachable(let connectionType):
-                self?.observeButton.setTitle(connectionType == .ethernetOrWiFi ? "WiFi Reachable" : "WWAN Reachable", for: .normal)
+            DispatchQueue.app.mainAsync { [weak self] in
+                switch status {
+                case .unknown:
+                    self?.observeButton.setTitle("Unknown", for: .normal)
+                case .notReachable:
+                    self?.observeButton.setTitle("Not Reachable", for: .normal)
+                case .reachable(let connectionType):
+                    self?.observeButton.setTitle(connectionType == .ethernetOrWiFi ? "WiFi Reachable" : "WWAN Reachable", for: .normal)
+                }
             }
         }
     }

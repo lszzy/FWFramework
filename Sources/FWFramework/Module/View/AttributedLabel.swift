@@ -1196,7 +1196,7 @@ open class AttributedLabelURLDetector: NSObject, AttributedLabelURLDetectorProto
 }
 
 // MARK: - AttributedLabelAttachment
-open class AttributedLabelAttachment: NSObject {
+@MainActor open class AttributedLabelAttachment: NSObject {
     open private(set) var content: Any
     open private(set) var margin: UIEdgeInsets
     open private(set) var alignment: AttributedLabelAlignment
