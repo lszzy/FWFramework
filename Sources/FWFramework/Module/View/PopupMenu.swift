@@ -193,7 +193,7 @@ public class PopupMenuPath {
 }
 
 /// 屏幕转向管理器
-open class PopupMenuDeviceOrientationManager: NSObject {
+@MainActor open class PopupMenuDeviceOrientationManager: NSObject {
     
     /// 根据屏幕旋转方向自动旋转 Default is YES
     open var autoRotateWhenDeviceOrientationChanged: Bool = true
@@ -221,7 +221,7 @@ open class PopupMenuDeviceOrientationManager: NSObject {
         }
     }
     
-    @MainActor @objc func deviceOrientationDidChange(_ notify: Notification) {
+    @objc func deviceOrientationDidChange(_ notify: Notification) {
         guard autoRotateWhenDeviceOrientationChanged else { return }
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation
         if let orientation = orientation, orientation != .unknown {

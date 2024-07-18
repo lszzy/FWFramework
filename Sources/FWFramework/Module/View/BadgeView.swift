@@ -260,7 +260,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
 // MARK: - FrameworkAutoloader+BadgeView
 extension FrameworkAutoloader {
     
-    private static var swizzleBadgeViewFinished = false
+    nonisolated(unsafe) private static var swizzleBadgeViewFinished = false
     
     fileprivate static func swizzleBadgeView() {
         guard !swizzleBadgeViewFinished else { return }

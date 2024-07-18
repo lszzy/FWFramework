@@ -2111,7 +2111,7 @@ public enum ViewControllerLifecycleState: Int {
 
 // MARK: - TitleViewProtocol
 /// 自定义titleView协议
-@objc public protocol TitleViewProtocol {
+@MainActor @objc public protocol TitleViewProtocol {
     /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
     var title: String? { get set }
 }

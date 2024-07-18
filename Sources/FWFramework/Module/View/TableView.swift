@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UITableView
-extension Wrapper where Base: UITableView {
+@MainActor extension Wrapper where Base: UITableView {
     /// 表格代理，延迟加载
     public var tableDelegate: TableViewDelegate {
         get {

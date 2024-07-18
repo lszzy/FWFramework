@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - Wrapper+UIView
 /// 视图抽屉拖拽效果分类
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 抽屉拖拽视图，绑定抽屉拖拽效果后才存在
     public var drawerView: DrawerView? {
         get {
@@ -49,7 +49,7 @@ extension Wrapper where Base: UIView {
 
 // MARK: - Wrapper+UIScrollView
 /// 滚动视图纵向手势冲突无缝滑动分类，需允许同时识别多个手势
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 外部滚动视图是否位于顶部固定位置，在顶部时不能滚动
     public var drawerSuperviewFixed: Bool {
         get { return propertyBool(forName: "drawerSuperviewFixed") }

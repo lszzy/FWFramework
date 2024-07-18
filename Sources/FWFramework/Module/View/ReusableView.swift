@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 视图持有者对象，弱引用
     public weak var viewHolder: NSObject? {
         get { return property(forName: "viewHolder") as? NSObject }
@@ -106,7 +106,7 @@ open class ReusableViewPool: NSObject {
     ///   - viewHolder: 视图的持有者，一般为所在控制器，持有者释放时会自动回收
     ///   - reuseIdentifier: 重用附加唯一标志，默认空
     /// - Returns: 可复用的视图
-    open func dequeueReusableView<T: UIView>(with reusableViewType: T.Type, viewHolder: NSObject?, reuseIdentifier: String = "") -> T {
+    @MainActor open func dequeueReusableView<T: UIView>(with reusableViewType: T.Type, viewHolder: NSObject?, reuseIdentifier: String = "") -> T {
         recycleInvalidHolderReusableViews()
         let reusableView = getReusableView(with: reusableViewType, reuseIdentifier: reuseIdentifier)
         reusableView.fw.viewHolder = viewHolder
@@ -114,7 +114,7 @@ open class ReusableViewPool: NSObject {
     }
     
     /// 预加载一个指定类和唯一标志的可重用视图并将它放入到回收池中，最多不超过maxPreloadCount
-    open func preloadReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String = "") {
+    @MainActor open func preloadReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String = "") {
         var enqueueReusableView: T?
         lock.wait()
         let classIdentifier = NSStringFromClass(reusableViewType) + reuseIdentifier
@@ -131,7 +131,7 @@ open class ReusableViewPool: NSObject {
     }
     
     /// 回收可复用的视图
-    open func recycleReusableView(_ reusableView: UIView?) {
+    @MainActor open func recycleReusableView(_ reusableView: UIView?) {
         guard let reusableView = reusableView,
               let reuseIdentifier = reusableView.fw.reuseIdentifier else { return }
         
@@ -159,7 +159,7 @@ open class ReusableViewPool: NSObject {
     }
     
     /// 销毁指定的复用视图，并且从回收池里删除
-    open func clearReusableView(_ reusableView: UIView?) {
+    @MainActor open func clearReusableView(_ reusableView: UIView?) {
         guard let reusableView = reusableView,
               let reuseIdentifier = reusableView.fw.reuseIdentifier else { return }
         
@@ -190,7 +190,7 @@ open class ReusableViewPool: NSObject {
     }
     
     /// 销毁全部在回收池中的视图
-    @objc open func clearAllReusableViews() {
+    @MainActor @objc open func clearAllReusableViews() {
         recycleInvalidHolderReusableViews()
         lock.wait()
         enqueueReusableViews.removeAll()
@@ -198,7 +198,7 @@ open class ReusableViewPool: NSObject {
     }
     
     /// 重新刷新在回收池中的视图(触发willEnterPool)
-    open func reloadAllReusableViews() {
+    @MainActor open func reloadAllReusableViews() {
         lock.wait()
         for reusableViews in enqueueReusableViews.values {
             for reusableView in reusableViews {
@@ -222,7 +222,7 @@ open class ReusableViewPool: NSObject {
     }
     
     // MARK: - Private
-    private func recycleInvalidHolderReusableViews() {
+    @MainActor private func recycleInvalidHolderReusableViews() {
         let reusableViewDict = dequeueReusableViews
         if reusableViewDict.count > 0 {
             for reusableViews in reusableViewDict.values {
@@ -235,7 +235,7 @@ open class ReusableViewPool: NSObject {
         }
     }
     
-    private func getReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
+    @MainActor private func getReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
         let classIdentifier = NSStringFromClass(reusableViewType) + reuseIdentifier
         var enqueueReusableView: T?
         lock.wait()
@@ -255,7 +255,7 @@ open class ReusableViewPool: NSObject {
         return reusableView
     }
     
-    private func initializeReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
+    @MainActor private func initializeReusableView<T: UIView>(with reusableViewType: T.Type, reuseIdentifier: String) -> T {
         let reusableView = reusableViewType.reusableViewInitialize(reuseIdentifier: reuseIdentifier)
         reusableView.fw.reuseIdentifier = reuseIdentifier
         return reusableView
@@ -264,7 +264,7 @@ open class ReusableViewPool: NSObject {
 }
 
 /// 可重用视图协议
-public protocol ReusableViewProtocol {
+@MainActor public protocol ReusableViewProtocol {
     
     /// 初始化可重用视图，默认调用init(frame:)
     static func reusableViewInitialize(reuseIdentifier: String) -> Self

@@ -26,7 +26,7 @@ public enum SegmentedControlSegmentWidthStyle: Int {
     case dynamic
 }
 
-public struct SegmentedControlBorderType: OptionSet {
+public struct SegmentedControlBorderType: OptionSet, Sendable {
     public let rawValue: Int
     
     public static let top: SegmentedControlBorderType = .init(rawValue: 1 << 0)
@@ -1136,7 +1136,7 @@ class SegmentedScrollView: UIScrollView {
     }
 }
 
-protocol SegmentedAccessibilityDelegate: NSObjectProtocol {
+@MainActor protocol SegmentedAccessibilityDelegate: NSObjectProtocol {
     func scrollToAccessibilityElement(_ sender: Any)
 }
 

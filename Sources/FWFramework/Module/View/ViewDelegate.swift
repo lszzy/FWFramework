@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 滚动事件代理，需手工设置delegate生效
     public var scrollDelegate: ScrollViewDelegate {
         get {
@@ -27,7 +27,7 @@ extension Wrapper where Base: UIScrollView {
 }
 
 // MARK: - Wrapper+UITextField
-extension Wrapper where Base: UITextField {
+@MainActor extension Wrapper where Base: UITextField {
     /// 输入事件代理，需手工设置delegate生效
     public var textDelegate: TextFieldDelegate {
         get {
@@ -46,7 +46,7 @@ extension Wrapper where Base: UITextField {
 }
 
 // MARK: - Wrapper+UITextView
-extension Wrapper where Base: UITextView {
+@MainActor extension Wrapper where Base: UITextView {
     /// 输入事件代理，需手工设置delegate生效
     public var textDelegate: TextViewDelegate {
         get {
@@ -65,7 +65,7 @@ extension Wrapper where Base: UITextView {
 }
 
 // MARK: - Wrapper+UISearchBar
-extension Wrapper where Base: UISearchBar {
+@MainActor extension Wrapper where Base: UISearchBar {
     /// 搜索栏事件代理，需手工设置delegate生效
     public var searchDelegate: SearchBarDelegate {
         get {

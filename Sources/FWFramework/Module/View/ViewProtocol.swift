@@ -24,7 +24,7 @@ import UIKit
 ///     ...
 /// }
 /// ```
-public protocol ViewProtocol {
+@MainActor public protocol ViewProtocol {
     
     /// 初始化完成，一般init(frame:)调用，默认空实现
     func didInitialize()

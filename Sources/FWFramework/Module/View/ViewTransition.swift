@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 视图控制器present|dismiss转场。注意会修改transitioningDelegate，且会强引用之；如需weak引用，请直接设置transitioningDelegate
     public var modalTransition: AnimatedTransition? {
         get {
@@ -221,7 +221,7 @@ extension Wrapper where Base: UIViewController {
 }
 
 // MARK: - Wrapper+UINavigationController
-extension Wrapper where Base: UINavigationController {
+@MainActor extension Wrapper where Base: UINavigationController {
     /// 导航控制器push|pop转场。注意会修改delegate，且会强引用之，一直生效直到设置为nil。如需weak引用，请直接设置delegate
     public var navigationTransition: AnimatedTransition? {
         get {

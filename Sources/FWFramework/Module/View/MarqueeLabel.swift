@@ -57,7 +57,7 @@ open class MarqueeLabel: UILabel {
     /// 绘制文本时重复绘制的次数，用于实现首尾连接的滚动效果，1 表示不首尾连接，大于 1 表示首尾连接。
     private var textRepeatCount: Int = 2
     
-    private var displayLink: CADisplayLink?
+    nonisolated(unsafe) private var displayLink: CADisplayLink?
     private var fadeLayer: CAGradientLayer?
     
     // MARK: - Lifecycle

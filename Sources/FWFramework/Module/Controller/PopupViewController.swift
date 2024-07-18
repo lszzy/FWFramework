@@ -53,7 +53,7 @@ open class PopupConfiguration {
 
 // MARK: - PopupViewControllerProtocol
 /// 弹窗视图控制器协议，可覆写
-public protocol PopupViewControllerProtocol: ViewControllerProtocol {
+@MainActor public protocol PopupViewControllerProtocol: ViewControllerProtocol {
 
     /// 弹窗内容容器视图，高度(或宽度，视位置而定)需内容撑开，内容子视图需要添加到此视图上
     var popupView: UIView { get }

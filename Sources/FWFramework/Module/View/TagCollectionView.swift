@@ -21,7 +21,7 @@ public enum TagCollectionAlignment: Int {
     case fillByExpandingWidthExceptLastLine
 }
 
-@objc public protocol TagCollectionViewDelegate: NSObjectProtocol {
+@MainActor @objc public protocol TagCollectionViewDelegate: NSObjectProtocol {
     func tagCollectionView(_ tagCollectionView: TagCollectionView, sizeForTagAt index: Int) -> CGSize
     
     @objc optional func tagCollectionView(_ tagCollectionView: TagCollectionView, shouldSelectTag tagView: UIView, at index: Int) -> Bool
@@ -29,7 +29,7 @@ public enum TagCollectionAlignment: Int {
     @objc optional func tagCollectionView(_ tagCollectionView: TagCollectionView, updateContentSize contentSize: CGSize)
 }
 
-public protocol TagCollectionViewDataSource: AnyObject {
+@MainActor public protocol TagCollectionViewDataSource: AnyObject {
     func numberOfTags(in tagCollectionView: TagCollectionView) -> Int
     func tagCollectionView(_ tagCollectionView: TagCollectionView, tagViewFor index: Int) -> UIView
 }
