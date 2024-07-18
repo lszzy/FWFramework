@@ -11,7 +11,7 @@ import PhotosUI
 
 // MARK: - ImagePickerPluginImpl
 /// 默认图片选取插件
-open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
+open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
@@ -138,7 +138,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin {
 
 // MARK: - ImagePickerControllerImpl
 /// 自定义图片选取插件
-open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin {
+open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

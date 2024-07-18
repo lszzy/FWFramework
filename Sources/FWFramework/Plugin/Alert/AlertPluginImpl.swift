@@ -181,7 +181,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
 
 // MARK: - AlertControllerImpl
 /// 自定义弹窗插件
-open class AlertControllerImpl: NSObject, AlertPlugin {
+open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
