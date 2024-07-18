@@ -47,7 +47,7 @@ extension AnalysisReporter {
 }
 
 /// 事件分析器
-public class Analyzer {
+public class Analyzer: @unchecked Sendable {
     
     /// 单例模式
     public static let shared = Analyzer()

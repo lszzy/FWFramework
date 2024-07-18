@@ -58,7 +58,7 @@ fileprivate enum AudioPlayerPauseReason: Int {
 /// 音频播放器
 ///
 /// [HysteriaPlayer](https://github.com/StreetVoice/HysteriaPlayer)
-open class AudioPlayer: NSObject {
+open class AudioPlayer: NSObject, @unchecked Sendable {
     
     public static let shared = AudioPlayer()
     

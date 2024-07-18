@@ -13,7 +13,7 @@ import UserNotifications
 
 // MARK: - AuthorizeType
 /// 可扩展权限类型
-public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
+public struct AuthorizeType: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = String
     
@@ -42,7 +42,7 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable {
 
 // MARK: - AuthorizeStatus
 /// 权限状态枚举
-public enum AuthorizeStatus: Int {
+public enum AuthorizeStatus: Int, Sendable {
     /// 未确认
     case notDetermined = 0
     /// 受限制
@@ -60,15 +60,15 @@ public protocol AuthorizeProtocol {
     func authorizeStatus() -> AuthorizeStatus
     
     /// 异步执行权限授权，主线程回调，必须实现
-    func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
+    func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?)
     
     /// 异步查询权限状态，主线程回调，可选实现。某些权限建议异步查询，不会阻塞当前线程，如通知
-    func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?)
+    func authorizeStatus(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?)
 }
 
 extension AuthorizeProtocol {
     /// 默认实现异步查询权限状态，主线程回调
-    public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func authorizeStatus(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         let status = authorizeStatus()
         DispatchQueue.fw.mainAsync {
             completion?(status, nil)
@@ -83,7 +83,7 @@ extension AuthorizeProtocol {
 /// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWPlugin/Contacts']
 /// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
 public class AuthorizeManager {
-    private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
+    nonisolated(unsafe) private static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
     
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
     public static func registerAuthorize(_ type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
@@ -123,7 +123,7 @@ public class AuthorizeManager {
 
 // MARK: - AuthorizeLocation
 /// 定位授权
-public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDelegate {
+public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDelegate, @unchecked Sendable {
     public static let shared = AuthorizeLocation()
     public static let always = AuthorizeLocation(isAlways: true)
     
@@ -134,7 +134,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     }()
     
     private var isAlways: Bool = false
-    private var completionBlock: ((AuthorizeStatus, Error?) -> Void)?
+    private var completionBlock: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?
     
     public init(isAlways: Bool = false) {
         super.init()
@@ -171,7 +171,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         return AuthorizeLocation.authorizeStatus(for: locationManager, isAlways: isAlways)
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         let authorizeStatus = authorizeStatus()
         if authorizeStatus != .notDetermined {
             if completion != nil {
@@ -213,7 +213,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
 
 // MARK: - AuthorizePhotoLibrary
 /// 相册授权
-public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
+public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizePhotoLibrary()
     
     public func authorizeStatus() -> AuthorizeStatus {
@@ -230,7 +230,7 @@ public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         PHPhotoLibrary.requestAuthorization { status in
             if completion != nil {
                 DispatchQueue.fw.mainAsync {
@@ -243,7 +243,7 @@ public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeCamera
 /// 照相机授权
-public class AuthorizeCamera: NSObject, AuthorizeProtocol {
+public class AuthorizeCamera: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeCamera()
     
     public func authorizeStatus() -> AuthorizeStatus {
@@ -265,7 +265,7 @@ public class AuthorizeCamera: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { granted in
             if completion != nil {
                 DispatchQueue.fw.mainAsync {
@@ -278,7 +278,7 @@ public class AuthorizeCamera: NSObject, AuthorizeProtocol {
 
 // MARK: - AuthorizeNotifications
 /// 通知授权
-public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
+public class AuthorizeNotifications: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeNotifications()
     
     public var authorizeOptions: UNAuthorizationOptions = [.badge, .sound, .alert]
@@ -304,9 +304,9 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         return status
     }
     
-    public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func authorizeStatus(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
-            var status: AuthorizeStatus = .notDetermined
+            let status: AuthorizeStatus
             switch settings.authorizationStatus {
             case .denied:
                 status = .denied
@@ -324,7 +324,7 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         UNUserNotificationCenter.current().requestAuthorization(options: authorizeOptions) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -333,7 +333,9 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol {
                 }
             }
         }
-        UIApplication.shared.registerForRemoteNotifications()
+        DispatchQueue.fw.mainAsync {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
     }
 }
 

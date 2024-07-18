@@ -26,7 +26,7 @@ extension Notification.Name {
 /// 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项。
 /// 如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项。
 /// iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
-open class LocationManager: NSObject, CLLocationManagerDelegate {
+open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Sendable {
     
     /// 单例模式
     public static let shared = LocationManager()

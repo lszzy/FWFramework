@@ -28,7 +28,7 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeTracking
 /// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
-public class AuthorizeTracking: NSObject, AuthorizeProtocol {
+public class AuthorizeTracking: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeTracking()
     
     public func authorizeStatus() -> AuthorizeStatus {
@@ -49,7 +49,7 @@ public class AuthorizeTracking: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         if #available(iOS 14.0, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 if completion != nil {

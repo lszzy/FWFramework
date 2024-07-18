@@ -18,7 +18,7 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeBiometry
 /// 生物识别授权
-public class AuthorizeBiometry: NSObject, AuthorizeProtocol {
+public class AuthorizeBiometry: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeBiometry()
     
     // MARK: - Accessor
@@ -55,7 +55,7 @@ public class AuthorizeBiometry: NSObject, AuthorizeProtocol {
     }
     
     /// 异步查询状态，主线程回调，默认返回最近一次认证状态，未认证时为notDetermined，不支持时为restricted
-    public func authorizeStatus(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func authorizeStatus(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         if latestAuthorizeStatus == nil {
             createContext()
         }
@@ -67,7 +67,7 @@ public class AuthorizeBiometry: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         guard let context = createContext() else {
             let status = latestAuthorizeStatus ?? .restricted
             let error = latestAuthorizeError

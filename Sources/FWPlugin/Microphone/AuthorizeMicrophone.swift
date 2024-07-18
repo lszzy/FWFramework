@@ -18,7 +18,7 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeMicrophone
 /// 麦克风授权
-public class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
+public class AuthorizeMicrophone: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeMicrophone()
     
     public func authorizeStatus() -> AuthorizeStatus {
@@ -33,7 +33,7 @@ public class AuthorizeMicrophone: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
