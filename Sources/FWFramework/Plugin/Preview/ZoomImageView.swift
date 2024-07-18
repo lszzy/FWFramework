@@ -10,7 +10,7 @@ import PhotosUI
 import AVFoundation
 
 /// ZoomImageView事件代理
-@objc public protocol ZoomImageViewDelegate {
+@MainActor @objc public protocol ZoomImageViewDelegate {
 
     /// 单击事件代理方法
     @objc optional func singleTouch(in zoomImageView: ZoomImageView, location: CGPoint)

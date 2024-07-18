@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 自定义刷新插件，未设置时自动从插件池加载
     public var refreshPlugin: RefreshPlugin! {
         get {
@@ -136,7 +136,7 @@ extension Wrapper where Base: UIScrollView {
 }
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     public func addPullRefresh(block: @escaping () -> Void) {
         addPullRefresh(block: block, target: nil, action: nil)
     }
@@ -303,7 +303,7 @@ extension Wrapper where Base: UIScrollView {
 
 // MARK: - RefreshPlugin
 /// 刷新插件协议，应用可自定义刷新插件实现
-public protocol RefreshPlugin: AnyObject {
+@MainActor public protocol RefreshPlugin: AnyObject {
 
     // MARK: - Refreshing
     /// 是否正在刷新中

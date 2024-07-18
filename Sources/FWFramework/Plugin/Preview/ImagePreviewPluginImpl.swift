@@ -8,7 +8,7 @@
 import UIKit
 
 /// 默认图片预览插件
-open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin {
+open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

@@ -8,7 +8,7 @@
 import UIKit
 
 /// 默认刷新插件
-open class RefreshPluginImpl: NSObject, RefreshPlugin {
+open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
