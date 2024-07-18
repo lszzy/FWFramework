@@ -20,7 +20,7 @@ public enum VersionStatus: Int {
 
 // MARK: - VersionManager
 /// 版本管理器
-public class VersionManager {
+public class VersionManager: @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
@@ -64,7 +64,7 @@ public class VersionManager {
     // MARK: - Public
     /// 检查应用版本号并进行比较，检查成功时回调。interval为频率(天)，0立即检查，1一天一次，7一周一次
     @discardableResult
-    public func checkVersion(_ interval: Int, completion: (() -> Void)?) -> Bool {
+    public func checkVersion(_ interval: Int, completion: (@Sendable () -> Void)?) -> Bool {
         if interval > 0 {
             if let checkDate = checkDate {
                 // 根据当天0点时间和缓存0点时间计算间隔天数，大于等于interval需要请求。效果为每隔N天第一次运行时检查更新
@@ -110,7 +110,7 @@ public class VersionManager {
     
     /// 比较数据版本号并依次进行数据迁移，迁移完成时回调(不执行迁移不回调)
     @discardableResult
-    public func migrateData(_ completion: (() -> Void)?) -> Bool {
+    public func migrateData(_ completion: (@MainActor @Sendable () -> Void)?) -> Bool {
         // 版本号从低到高排序
         let versions = dataMigrations.keys.sorted { str1, str2 in
             return str1.compare(str2, options: .numeric) == .orderedAscending
@@ -140,7 +140,7 @@ public class VersionManager {
     }
     
     // MARK: - Private
-    private func requestVersion(_ completion: (() -> Void)?) {
+    private func requestVersion(_ completion: (@Sendable () -> Void)?) {
         var requestUrl = "https://itunes.apple.com/lookup"
         if let appId = appId {
             requestUrl.append("?id=\(appId)")
@@ -160,7 +160,7 @@ public class VersionManager {
         task.resume()
     }
     
-    private func parseResponse(_ data: Data, completion: (() -> Void)?) {
+    private func parseResponse(_ data: Data, completion: (@Sendable () -> Void)?) {
         // 解析数据错误
         guard let dataDict = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any] else { return }
         guard let results = dataDict["results"] as? [[String: Any]] else { return }
@@ -196,7 +196,7 @@ public class VersionManager {
         checkCallback(completion)
     }
     
-    private func checkCallback(_ completion: (() -> Void)?) {
+    private func checkCallback(_ completion: (@Sendable () -> Void)?) {
         DispatchQueue.main.async {
             if let latestVersion = self.latestVersion {
                 let result = self.currentVersion.compare(latestVersion, options: .numeric)

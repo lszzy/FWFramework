@@ -14,7 +14,7 @@ import Vision
 public class Recognizer {
     
     /// 识别结果
-    public struct Result {
+    public struct Result: Sendable {
         /// 识别文本
         public var text: String = ""
         /// 可信度，0到1
@@ -28,7 +28,7 @@ public class Recognizer {
     }
     
     /// 识别图片文字，可设置语言(zh-CN,en-US)等，完成时主线程回调结果
-    public static func recognizeText(in image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
+    public static func recognizeText(in image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @MainActor @escaping @Sendable ([Result]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             performOcr(image: image, configuration: configuration) { results in
                 DispatchQueue.main.async {
@@ -39,7 +39,7 @@ public class Recognizer {
     }
     
     // MARK: - Private
-    private static func performOcr(image: CGImage, configuration: ((VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
+    private static func performOcr(image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
         let textRequest = VNRecognizeTextRequest() { request, error in
             let imageSize = CGSize(width: image.width, height: image.height)
             guard let results = request.results as? [VNRecognizedTextObservation], !results.isEmpty else {
