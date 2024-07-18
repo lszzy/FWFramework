@@ -42,7 +42,7 @@ extension RequestFilterProtocol {
 
 // MARK: - RequestConfig
 /// 请求配置类
-open class RequestConfig {
+open class RequestConfig: @unchecked Sendable {
     
     public static let shared = RequestConfig()
     

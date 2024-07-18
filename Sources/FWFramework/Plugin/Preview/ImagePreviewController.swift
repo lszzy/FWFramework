@@ -18,7 +18,7 @@ import Photos
 }
 
 /// 图片预览视图代理
-@objc public protocol ImagePreviewViewDelegate: ZoomImageViewDelegate {
+@MainActor @objc public protocol ImagePreviewViewDelegate: ZoomImageViewDelegate {
     
     /// 返回预览的图片数量
     @objc optional func numberOfImages(in imagePreviewView: ImagePreviewView) -> Int

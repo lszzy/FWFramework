@@ -1379,7 +1379,7 @@ enum ImageCropViewOverlayEdge: Int {
     case left
 }
 
-public protocol ImageCropViewDelegate: AnyObject {
+@MainActor public protocol ImageCropViewDelegate: AnyObject {
     func cropViewDidBecomeResettable(_ cropView: ImageCropView)
     func cropViewDidBecomeNonResettable(_ cropView: ImageCropView)
 }
