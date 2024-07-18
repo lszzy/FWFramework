@@ -13,7 +13,7 @@ import SDWebImage
 
 // MARK: - SDWebImageImpl
 /// SDWebImage图片插件，启用SDWebImage子模块后生效
-open class SDWebImageImpl: NSObject, ImagePlugin {
+open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
@@ -231,7 +231,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin {
 
 // MARK: - SDWebImagePluginIndicator
 /// SDWebImage指示器插件Indicator
-open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
+@MainActor open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.indicatorView(style: style)
@@ -281,7 +281,7 @@ open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
 }
 
 // MARK: - SDWebImageProgressPluginIndicator
-open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
+@MainActor open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.progressView(style: style)

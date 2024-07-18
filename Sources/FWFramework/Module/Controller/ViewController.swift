@@ -100,7 +100,7 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
     public var hookPopupViewController: (@MainActor (UIViewController & PopupViewControllerProtocol) -> Void)?
     
     /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
-    public var webViewReuseIdentifier: String? {
+    @MainActor public var webViewReuseIdentifier: String? {
         didSet {
             if let reuseIdentifier = webViewReuseIdentifier {
                 ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
