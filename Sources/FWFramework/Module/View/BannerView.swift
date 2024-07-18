@@ -473,12 +473,6 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         }
     }
     
-    // 解决当timer释放后 回调scrollViewDidScroll时访问野指针导致崩溃
-    deinit {
-        mainView.delegate = nil
-        mainView.dataSource = nil
-    }
-    
     // MARK: - UICollectionView
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return totalItemsCount

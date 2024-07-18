@@ -153,7 +153,7 @@ public enum TabBarItemPositioning : Int {
 
 // MARK: - TabBarDelegate
 /// 对UITabBarDelegate进行扩展，以支持UITabBarControllerDelegate的相关方法桥接
-internal protocol TabBarDelegate: NSObjectProtocol {
+@MainActor internal protocol TabBarDelegate: NSObjectProtocol {
 
     /// 当前item是否支持选中
     ///

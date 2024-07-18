@@ -244,7 +244,7 @@ import JavaScriptCore
 
 // MARK: - WebView
 /// WebView事件代理协议
-public protocol WebViewDelegate: WKNavigationDelegate, WKUIDelegate {
+@MainActor public protocol WebViewDelegate: WKNavigationDelegate, WKUIDelegate {
     
     /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
     func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool

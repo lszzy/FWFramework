@@ -170,7 +170,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     }
     
     deinit {
-        removeNotificationObserver()
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Public
@@ -324,10 +324,6 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
-    }
-    
-    private func removeNotificationObserver() {
-        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func applicationWillResignActive(_ notification: Notification) {

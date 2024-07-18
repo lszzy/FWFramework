@@ -251,7 +251,7 @@ open class PageControl: UIControl {
 
 // MARK: - DotView
 /// 点视图协议
-public protocol DotViewProtocol {
+@MainActor public protocol DotViewProtocol {
     
     /// 选中状态改变方法
     func changeActivityState(_ active: Bool)

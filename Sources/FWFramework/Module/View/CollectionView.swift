@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UICollectionView
-extension Wrapper where Base: UICollectionView {
+@MainActor extension Wrapper where Base: UICollectionView {
     /// 集合视图代理，延迟加载
     public var collectionDelegate: CollectionViewDelegate {
         get {
@@ -44,9 +44,9 @@ extension Wrapper where Base: UICollectionView {
 }
 
 // MARK: - Wrapper+UICollectionViewFlowLayout
-extension Wrapper where Base: UICollectionViewFlowLayout {
+@MainActor extension Wrapper where Base: UICollectionViewFlowLayout {
     /// 初始化布局section配置，在prepareLayout调用即可
-    @MainActor public func sectionConfigPrepareLayout() {
+    public func sectionConfigPrepareLayout() {
         guard let collectionView = base.collectionView,
               let delegate = collectionView.delegate as? CollectionViewDelegateFlowLayout,
               delegate.responds(to: #selector(CollectionViewDelegateFlowLayout.collectionView(_:layout:configForSectionAt:))) else { return }

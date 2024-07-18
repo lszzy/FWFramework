@@ -211,7 +211,7 @@ open class AttributedLabel: UIView {
     private var attachments: [AttributedLabelAttachment] = []
     private var linkLocations: [AttributedLabelURL] = []
     private var touchedLink: AttributedLabelURL?
-    private var textFrame: CTFrame?
+    nonisolated(unsafe) private var textFrame: CTFrame?
     private var fontAscent: CGFloat = 0
     private var fontDescent: CGFloat = 0
     private var fontHeight: CGFloat = 0
@@ -1144,7 +1144,7 @@ public protocol AttributedLabelURLDetectorProtocol: AnyObject {
     func detectLinks(_ plainText: String, completion: AttributedLinkDetectCompletion)
 }
 
-open class AttributedLabelURLDetector: NSObject, AttributedLabelURLDetectorProtocol {
+open class AttributedLabelURLDetector: NSObject, AttributedLabelURLDetectorProtocol, @unchecked Sendable {
     public static let shared = AttributedLabelURLDetector()
     
     open var detector: AttributedLabelURLDetectorProtocol?
