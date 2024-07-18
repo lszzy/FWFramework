@@ -10,7 +10,7 @@ import UserNotifications
 
 // MARK: - NotificationManager
 /// 通知管理器
-public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式
@@ -27,15 +27,15 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     /// 异步查询通知权限状态，主线程回调
-    public func authorizeStatus(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeNotifications.shared.authorizeStatus(completion != nil ? { status, _ in
+    public func authorizeStatus(_ completion: (@MainActor @Sendable (AuthorizeStatus) -> Void)?) {
+        AuthorizeNotifications.shared.authorizeStatus(completion != nil ? { @MainActor @Sendable status, _ in
             completion?(status)
         } : nil)
     }
     
     /// 执行通知权限授权，主线程回调
-    public func requestAuthorize(_ completion: ((AuthorizeStatus) -> Void)?) {
-        AuthorizeNotifications.shared.requestAuthorize(completion != nil ? { status, _ in
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus) -> Void)?) {
+        AuthorizeNotifications.shared.requestAuthorize(completion != nil ? { @MainActor @Sendable status, _ in
             completion?(status)
         } : nil)
     }

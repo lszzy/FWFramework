@@ -88,7 +88,7 @@ extension Wrapper where Base == Data {
 
 // MARK: - ImageCoderOptions
 /// 本地图片解码编码选项，默认兼容SDWebImage
-public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable {
+public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = String
     
@@ -111,7 +111,7 @@ public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable {
 
 // MARK: - ImageFormat
 /// 图片格式可扩展枚举
-public struct ImageFormat: RawRepresentable, Equatable, Hashable {
+public struct ImageFormat: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -254,16 +254,16 @@ public class ImageFrame {
 /// 图片解码器，支持动图
 ///
 /// [SDWebImage](https://github.com/SDWebImage/SDWebImage)
-open class ImageCoder {
+open class ImageCoder: @unchecked Sendable {
     
     /// 单例模式
     public static let shared = ImageCoder()
     
     /// 扩展系统UTType
-    public static let kUTTypeHEIC = "public.heic" as CFString
-    public static let kUTTypeHEIF = "public.heif" as CFString
-    public static let kUTTypeHEICS = "public.heics" as CFString
-    public static let kUTTypeWEBP = "org.webmproject.webp" as CFString
+    nonisolated(unsafe) public static let kUTTypeHEIC = "public.heic" as CFString
+    nonisolated(unsafe) public static let kUTTypeHEIF = "public.heif" as CFString
+    nonisolated(unsafe) public static let kUTTypeHEICS = "public.heics" as CFString
+    nonisolated(unsafe) public static let kUTTypeWEBP = "org.webmproject.webp" as CFString
 
     /// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
     open var heicsEnabled: Bool = false

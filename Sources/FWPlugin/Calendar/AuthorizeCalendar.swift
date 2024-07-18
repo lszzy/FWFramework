@@ -22,7 +22,7 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeCalendar
 /// 日历授权
-public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
+public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeCalendar(type: .event)
     public static let writeOnly = AuthorizeCalendar(type: .event, writeOnly: true)
     public static let reminder = AuthorizeCalendar(type: .reminder)
@@ -61,7 +61,7 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
         }
     }
     
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
