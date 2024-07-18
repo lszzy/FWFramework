@@ -413,7 +413,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
 }
 
-@MainActor class TestRouter: NSObject {
+class TestRouter: NSObject {
     
     @objc static let testUrl = "app://tests/:id"
     @objc static let homeUrl = "app://tab/home"
@@ -430,7 +430,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     @objc static let closeUrl = "app://close"
     @objc static let multiUrl = "app://multi"
     
-    @objc static func testRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = testUrl
         vc.context = context
@@ -438,12 +438,12 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func homeRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func homeRouter(_ context: Router.Context) -> Any? {
         UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
     
-    @objc static func wildcardTestRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func wildcardTestRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = wildcardTestUrl
         vc.context = context
@@ -451,7 +451,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func pageRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func pageRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = pageUrl
         vc.context = context
@@ -459,7 +459,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func shopRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func shopRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = shopUrl
         vc.context = context
@@ -467,7 +467,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func itemRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = itemUrl
         vc.context = context
@@ -475,7 +475,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func htmlRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func htmlRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = htmlUrl
         vc.context = context
@@ -483,14 +483,14 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func objectRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func objectRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = objectUrl
         vc.context = context
         return vc
     }
     
-    @objc static func objectUnmatchRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func objectUnmatchRouter(_ context: Router.Context) -> Any? {
         if context.isOpening {
             return "OBJECT UNMATCH"
         } else {
@@ -499,7 +499,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         }
     }
     
-    @objc static func javascriptRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func javascriptRouter(_ context: Router.Context) -> Any? {
         guard let webVC = Navigator.topViewController as? WebController,
               webVC.isViewLoaded else { return nil }
         
@@ -514,13 +514,13 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func closeDefaultRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func closeDefaultRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
         return nil
     }
     
-    @objc static func multiRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func multiRouter(_ context: Router.Context) -> Any? {
         guard context.isOpening else { return nil }
         guard let nav = Navigator.topNavigationController else { return nil }
         
@@ -544,7 +544,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         return nil
     }
     
-    @objc static func loaderRouter(_ context: Router.Context) -> Any? {
+    @MainActor @objc static func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = loaderUrl
         vc.context = context
@@ -572,7 +572,9 @@ extension TestRouter: AutoloadProtocol {
         Router.routeFilter = { context in
             let url = APP.safeURL(context.url)
             if UIApplication.app.isSystemURL(url) {
-                UIApplication.app.openURL(url)
+                DispatchQueue.app.mainAsync {
+                    UIApplication.app.openURL(url)
+                }
                 return false
             }
             
@@ -580,7 +582,9 @@ extension TestRouter: AutoloadProtocol {
                 let vc = TestRouterResultController()
                 vc.rule = "app://filter/"
                 vc.context = context
-                Navigator.push(vc, animated: true)
+                DispatchQueue.app.mainAsync {
+                    Navigator.push(vc, animated: true)
+                }
                 return false
             }
             
@@ -594,10 +598,14 @@ extension TestRouter: AutoloadProtocol {
                     if userInfo.routerHandler != nil {
                         userInfo.routerHandler?(context, vc)
                     } else {
-                        Navigator.open(vc, animated: true, options: userInfo.routerOptions ?? [])
+                        DispatchQueue.app.mainAsync {
+                            Navigator.open(vc, animated: true, options: userInfo.routerOptions ?? [])
+                        }
                     }
                 } else {
-                    Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+                    DispatchQueue.app.mainAsync {
+                        Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+                    }
                 }
             }
             
@@ -606,10 +614,14 @@ extension TestRouter: AutoloadProtocol {
         
         Router.errorHandler = { context in
             if context.url == "app://" {
-                UIWindow.app.showMessage(text: "打开App，不报错")
+                DispatchQueue.app.mainAsync {
+                    UIWindow.app.showMessage(text: "打开App，不报错")
+                }
                 return
             }
-            Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            DispatchQueue.app.mainAsync {
+                Navigator.topPresentedController?.app.showAlert(title: "url not supported\nurl: \(context.url)\nparameters: \(context.parameters)", message: nil)
+            }
         }
     }
     
@@ -620,7 +632,9 @@ extension TestRouter: AutoloadProtocol {
             let vc = TestRouterResultController()
             vc.rule = TestRouter.wildcardUrl
             vc.context = context
-            Navigator.push(vc, animated: true)
+            DispatchQueue.app.mainAsync {
+                Navigator.push(vc, animated: true)
+            }
             return nil
         }
     }
