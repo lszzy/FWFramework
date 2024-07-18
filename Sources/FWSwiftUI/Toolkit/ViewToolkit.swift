@@ -206,7 +206,7 @@ extension Color {
         }
     }
     
-    private static var colorCaches: [Color: UIColor] = [:]
+    nonisolated(unsafe) private static var colorCaches: [Color: UIColor] = [:]
     
     private func toUIColor1() -> UIColor? {
         switch self {
@@ -449,14 +449,14 @@ extension EdgeInsets {
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
 extension Binding {
     
-    public func onSet(_ body: @escaping (Value) -> ()) -> Self {
+    public func onSet(_ body: @escaping @Sendable (Value) -> ()) -> Self {
         return .init(
             get: { self.wrappedValue },
             set: { self.wrappedValue = $0; body($0) }
         )
     }
     
-    public func onChange(perform action: @escaping (Value) -> ()) -> Self where Value: Equatable {
+    public func onChange(perform action: @escaping @Sendable (Value) -> ()) -> Self where Value: Equatable {
         return .init(
             get: { self.wrappedValue },
             set: { newValue in
@@ -476,7 +476,7 @@ extension Binding {
         }
     }
     
-    public func withDefaultValue<T>(_ defaultValue: T) -> Binding<T> where Value == Optional<T> {
+    public func withDefaultValue<T: Sendable>(_ defaultValue: T) -> Binding<T> where Value == Optional<T> {
         return .init(
             get: { self.wrappedValue ?? defaultValue },
             set: { self.wrappedValue = $0 }

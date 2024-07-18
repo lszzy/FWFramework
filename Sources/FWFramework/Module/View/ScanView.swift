@@ -45,15 +45,15 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    nonisolated(unsafe) public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
     
     /// 默认条形码类型，可自定义
-    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+    nonisolated(unsafe) public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
         .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
     ]
     
     /// 预览视图，必须设置（传外界控制器视图）
-    open var preview: UIView? {
+    @MainActor open var preview: UIView? {
         didSet {
             preview?.layer.insertSublayer(videoPreviewLayer, at: 0)
         }
@@ -168,7 +168,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         return result
     }()
     
-    private lazy var videoPreviewLayer: AVCaptureVideoPreviewLayer = {
+    @MainActor private lazy var videoPreviewLayer: AVCaptureVideoPreviewLayer = {
         let result = AVCaptureVideoPreviewLayer(session: session)
         result.videoGravity = .resizeAspectFill
         result.frame = preview?.frame ?? .zero
@@ -313,7 +313,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     }
 
     /// 检测后置摄像头是否可用
-    open class func isCameraRearAvailable() -> Bool {
+    @MainActor open class func isCameraRearAvailable() -> Bool {
         return UIImagePickerController.isCameraDeviceAvailable(.rear)
     }
 
@@ -329,7 +329,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
-    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @escaping (String?) -> Void) {
+    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @MainActor @escaping @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
@@ -370,7 +370,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于条形码/二维码数据，否则等于 nil
-    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @escaping (String?) -> Void) {
+    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @MainActor @escaping @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
@@ -591,7 +591,7 @@ open class ScanView: UIView {
             self.target = target
         }
         
-        @objc func updateUI() {
+        @MainActor @objc func updateUI() {
             target?.updateUI()
         }
     }
