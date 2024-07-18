@@ -616,7 +616,7 @@ import UIKit
 
 // MARK: - Wrapper+UIAlertAction
 /// 系统弹出动作title仅支持NSString，如果需要支持NSAttributedString等，请使用AlertController
-extension Wrapper where Base: UIAlertAction {
+@MainActor extension Wrapper where Base: UIAlertAction {
     /// 自定义样式，默认为样式单例
     public var alertAppearance: AlertAppearance! {
         get {
@@ -690,7 +690,7 @@ extension Wrapper where Base: UIAlertAction {
 }
 
 // MARK: - Wrapper+UIAlertController
-extension Wrapper where Base: UIAlertController {
+@MainActor extension Wrapper where Base: UIAlertController {
     /// 自定义样式，默认为样式单例
     public var alertAppearance: AlertAppearance! {
         get {
@@ -804,7 +804,7 @@ extension Wrapper where Base: UIAlertController {
 
 // MARK: - AlertPlugin
 /// 弹框样式可扩展枚举
-public struct AlertStyle: RawRepresentable, Equatable, Hashable {
+public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -874,7 +874,7 @@ extension AlertPlugin {
 /// 系统弹出框样式配置类，由于系统兼容性，建议优先使用AlertController
 ///
 /// 备注：如果未自定义样式，显示效果和系统一致，不会产生任何影响；框架会先渲染actions动作再渲染cancel动作
-public class AlertAppearance: NSObject {
+public class AlertAppearance: NSObject, @unchecked Sendable {
     
     /// 单例模式，统一设置样式
     public static let appearance = AlertAppearance()
@@ -926,7 +926,7 @@ extension FrameworkAutoloader {
             UIAlertController.self,
             selector: #selector(UIAlertController.viewDidLoad),
             methodSignature: (@convention(c) (UIAlertController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIAlertController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIAlertController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             

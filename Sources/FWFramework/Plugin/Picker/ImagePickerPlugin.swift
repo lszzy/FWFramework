@@ -12,7 +12,7 @@ import MobileCoreServices
 
 // MARK: - Wrapper+PHPhotoLibrary
 /// 通用相册：[PHPhotoLibrary sharedPhotoLibrary]
-extension Wrapper where Base: PHPhotoLibrary {
+@MainActor extension Wrapper where Base: PHPhotoLibrary {
     /**
      快速创建照片选择器(仅图片)
      
@@ -210,7 +210,7 @@ extension Wrapper where Base: PHPhotoLibrary {
 }
 
 // MARK: - Wrapper+UIImagePickerController
-extension Wrapper where Base: UIImagePickerController {
+@MainActor extension Wrapper where Base: UIImagePickerController {
     /**
      快速创建单选照片选择器(仅图片)，自动设置delegate
      
@@ -320,7 +320,7 @@ extension Wrapper where Base: UIImagePickerController {
 
 // MARK: - Wrapper+PHPickerViewController
 @available(iOS 14, *)
-extension Wrapper where Base: PHPickerViewController {
+@MainActor extension Wrapper where Base: PHPickerViewController {
     /**
      快速创建多选照片选择器(仅图片)，自动设置delegate
      
@@ -458,7 +458,7 @@ public struct ImagePickerFilterType: OptionSet, Sendable {
 }
 
 /// 图片选取插件协议，应用可自定义图片选取插件实现
-public protocol ImagePickerPlugin: AnyObject {
+@MainActor public protocol ImagePickerPlugin: AnyObject {
     
     /// 从Camera选取单张图片插件方法
     /// - Parameters:

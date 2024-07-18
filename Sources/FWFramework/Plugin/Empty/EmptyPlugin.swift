@@ -395,7 +395,7 @@ extension EmptyViewDelegate {
 // MARK: - FrameworkAutoloader+EmptyPlugin
 extension FrameworkAutoloader {
     
-    private static var swizzleEmptyPluginFinished = false
+    nonisolated(unsafe) private static var swizzleEmptyPluginFinished = false
     
     fileprivate static func swizzleEmptyPlugin() {
         guard !swizzleEmptyPluginFinished else { return }

@@ -15,7 +15,7 @@ public enum ImageDownloadPrioritization: Int {
 }
 
 /// 图片下载凭据
-open class ImageDownloadReceipt: NSObject {
+open class ImageDownloadReceipt: NSObject, @unchecked Sendable {
     public let task: URLSessionDataTask
     public let receiptID: UUID
     
@@ -29,9 +29,9 @@ open class ImageDownloadReceipt: NSObject {
 /// 图片下载器，默认解码scale为1，同SDWebImage
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-open class ImageDownloader: NSObject {
+open class ImageDownloader: NSObject, @unchecked Sendable {
     // MARK: - Accessor
-    public static var shared = ImageDownloader()
+    public static let shared = ImageDownloader()
 
     public static func defaultURLCache() -> URLCache {
         return URLCache(
@@ -465,7 +465,7 @@ open class ImageDownloader: NSObject {
     }
 }
 
-fileprivate class ImageDownloaderResponseHandler: NSObject {
+fileprivate class ImageDownloaderResponseHandler: NSObject, @unchecked Sendable {
     var uuid: UUID
     var successBlock: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?
     var failureBlock: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?
@@ -531,7 +531,7 @@ public protocol ImageRequestCache: ImageCache {
 }
 
 /// 内存自动清理图片缓存
-open class AutoPurgingImageCache: NSObject, ImageRequestCache {
+open class AutoPurgingImageCache: NSObject, ImageRequestCache, @unchecked Sendable {
     // MARK: - Accessor
     open var memoryCapacity: UInt64 = 100 * 1024 * 1024
     open var preferredMemoryUsageAfterPurge: UInt64 = 60 * 1024 * 1024

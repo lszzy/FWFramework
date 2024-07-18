@@ -39,7 +39,7 @@ public enum AlertAnimationType: Int {
 }
 
 /// 自定义弹窗控制器样式配置类
-public class AlertControllerAppearance: NSObject {
+public class AlertControllerAppearance: NSObject, @unchecked Sendable {
     
     /// 单例模式，统一设置样式
     public static let appearance = AlertControllerAppearance()
