@@ -11,7 +11,7 @@ import UIKit
 /// 弹幕管理器
 ///
 /// [OCBarrage](https://github.com/w1531724247/OCBarrage)
-open class BarrageManager: NSObject {
+@MainActor open class BarrageManager: NSObject {
     open private(set) lazy var renderView: BarrageRenderView = {
         let result = BarrageRenderView()
         return result
@@ -19,10 +19,6 @@ open class BarrageManager: NSObject {
     
     open var renderStatus: BarrageRenderStatus {
         return renderView.renderStatus
-    }
-    
-    deinit {
-        renderView.stop()
     }
     
     open func start() {
@@ -75,18 +71,18 @@ public enum BarrageRenderStatus: Int {
     case paused
 }
 
-open class BarrageRenderView: UIView, CAAnimationDelegate {
+open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
     open var renderPositionStyle: BarrageRenderPositionStyle = .randomTracks
-    open private(set) var animatingCells: [BarrageCell] = []
-    open private(set) var idleCells: [BarrageCell] = []
-    open private(set) var renderStatus: BarrageRenderStatus = .stopped
+    nonisolated(unsafe) open private(set) var animatingCells: [BarrageCell] = []
+    nonisolated(unsafe) open private(set) var idleCells: [BarrageCell] = []
+    nonisolated(unsafe) open private(set) var renderStatus: BarrageRenderStatus = .stopped
     
     private let animatingCellsLock = DispatchSemaphore(value: 1)
     private let idleCellsLock = DispatchSemaphore(value: 1)
     private let trackInfoLock = DispatchSemaphore(value: 1)
     private var lastestCell: BarrageCell?
-    private var autoClear = false
-    private var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
+    nonisolated(unsafe) private var autoClear = false
+    nonisolated(unsafe) private var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
     
     private lazy var lowPositionView: UIView = {
         let result = UIView()
@@ -121,6 +117,10 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
         addSubview(highPositionView)
         addSubview(veryHighPositionView)
         layer.masksToBounds = true
+    }
+    
+    deinit {
+        stop()
     }
     
     open func dequeueReusableCell(withClass barrageCellClass: BarrageCell.Type) -> BarrageCell? {
@@ -253,7 +253,8 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
         animatingCellsLock.signal()
     }
     
-    open func stop() {
+    /// 除了deinit之外需主线程调用
+    nonisolated open func stop() {
         switch renderStatus {
         case .started:
             renderStatus = .stopped
@@ -268,13 +269,17 @@ open class BarrageRenderView: UIView, CAAnimationDelegate {
         }
         
         animatingCellsLock.wait()
-        let cells = animatingCells.reversed()
-        for cell in cells {
-            let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
-            cell.layer.speed = 0
-            cell.layer.timeOffset = pausedTime
-            cell.layer.removeAllAnimations()
-            cell.removeFromSuperview()
+        if Thread.isMainThread {
+            MainActor.assumeIsolated {
+                let cells = animatingCells.reversed()
+                for cell in cells {
+                    let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
+                    cell.layer.speed = 0
+                    cell.layer.timeOffset = pausedTime
+                    cell.layer.removeAllAnimations()
+                    cell.removeFromSuperview()
+                }
+            }
         }
         animatingCells.removeAll()
         animatingCellsLock.signal()
