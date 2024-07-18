@@ -240,20 +240,39 @@ extension Wrapper where Base: UIDevice {
         UIDevice.current.setValue(orientation.rawValue, forKey: "orientation")
         return true
     }
+    
+    /// iOS系统版本字符串
+    public static var iosVersionString: String {
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        var versionString = "\(version.majorVersion).\(version.minorVersion)"
+        if version.patchVersion != 0 {
+            versionString += ".\(version.patchVersion)"
+        }
+        return versionString
+    }
 
-    /// iOS系统版本
+    /// iOS系统版本浮点数
     public static var iosVersion: Double {
-        return (UIDevice.current.systemVersion as NSString).doubleValue
+        return (iosVersionString as NSString).doubleValue
     }
     
-    /// 是否是指定iOS主版本
-    public static func isIos(_ version: Int) -> Bool {
-        return iosVersion >= Double(version) && iosVersion < Double(version + 1)
+    /// 是否是指定iOS版本
+    public static func isIos(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        var result = version.majorVersion == major
+        if result, let minor = minor {
+            result = result && version.minorVersion == minor
+        }
+        if result, let patch = patch {
+            result = result && version.patchVersion == patch
+        }
+        return result
     }
     
-    /// 是否是大于等于指定iOS主版本
-    public static func isIosLater(_ version: Int) -> Bool {
-        return iosVersion >= Double(version)
+    /// 是否是大于等于指定iOS版本
+    public static func isIosLater(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+        let version = OperatingSystemVersion(majorVersion: major, minorVersion: minor ?? 0, patchVersion: patch ?? 0)
+        return ProcessInfo.processInfo.isOperatingSystemAtLeast(version)
     }
 
     /// 设备尺寸，跟横竖屏无关
