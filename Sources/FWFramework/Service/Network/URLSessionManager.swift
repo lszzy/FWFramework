@@ -11,7 +11,7 @@ import Foundation
 /// URLSession管理器
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
+open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate, @unchecked Sendable {
     public static let networkingTaskDidResumeNotification = Notification.Name("site.wuyong.networking.task.resume")
     public static let networkingTaskDidCompleteNotification = Notification.Name("site.wuyong.networking.task.complete")
     public static let networkingTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.task.suspend")
@@ -556,7 +556,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 }
 
 // MARK: - URLSessionManagerTaskDelegate
-fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
+fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate, @unchecked Sendable {
     static let processingQueue = DispatchQueue(label: "site.wuyong.networking.session.manager.processing", attributes: .concurrent)
     static let completionGroup = DispatchGroup()
     

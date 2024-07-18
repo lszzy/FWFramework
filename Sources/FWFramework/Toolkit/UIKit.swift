@@ -865,11 +865,11 @@ extension Wrapper where Base: UIDevice {
                let cgImage = image.cgImage,
                let features = UIImageView.innerFaceDetector?.features(in: ciImage),
                !features.isEmpty {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak base] in
                     base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
                 }
             } else {
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak base] in
                     base?.fw.faceLayer(false)?.removeFromSuperlayer()
                 }
             }
@@ -1004,7 +1004,7 @@ extension Wrapper where Base: UIDevice {
 }
 
 // MARK: - Wrapper+UIWindow
-extension Wrapper where Base: UIWindow {
+@MainActor extension Wrapper where Base: UIWindow {
     /// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
     public func getTabBarController(index: Int) -> UIViewController? {
         guard let tabBarController = rootTabBarController() else { return nil }
@@ -1448,7 +1448,7 @@ extension Wrapper where Base: UIWindow {
 // MARK: - Wrapper+UIControl
 /// 防重复点击可以手工控制enabled或userInteractionEnabled或loading，如request开始时禁用，结束时启用等
 /// 注意：需要支持appearance的属性必须标记为objc，否则不会生效
-extension Wrapper where Base: UIControl {
+@MainActor extension Wrapper where Base: UIControl {
     // 设置Touch事件触发间隔，防止短时间多次触发事件，默认0
     public var touchEventInterval: TimeInterval {
         get { return base.innerTouchEventInterval }
@@ -1853,7 +1853,7 @@ extension Wrapper where Base: UIControl {
 /// shouldRecognizeSimultaneouslyWithGestureRecognizer: 是否支持多手势触发。默认NO
 /// shouldRequireFailureOfGestureRecognizer：是否otherGestureRecognizer触发失败时，才开始触发gestureRecognizer。返回YES，第一个手势失败
 /// shouldBeRequiredToFailByGestureRecognizer：在otherGestureRecognizer识别其手势之前，是否gestureRecognizer必须触发失败。返回YES，第二个手势失败
-extension Wrapper where Base: UIGestureRecognizer {
+@MainActor extension Wrapper where Base: UIGestureRecognizer {
     /// 获取手势直接作用的view，不同于view，此处是view的subview
     public weak var targetView: UIView? {
         return base.view?.hitTest(base.location(in: base.view), with: nil)
@@ -1876,7 +1876,7 @@ extension Wrapper where Base: UIGestureRecognizer {
 }
 
 // MARK: - Wrapper+UIPanGestureRecognizer
-extension Wrapper where Base: UIPanGestureRecognizer {
+@MainActor extension Wrapper where Base: UIPanGestureRecognizer {
     /// 当前滑动方向，如果多个方向滑动，取绝对值较大的一方，失败返回0
     public var swipeDirection: UISwipeGestureRecognizer.Direction {
         let transition = base.translation(in: base.view)
@@ -1933,7 +1933,7 @@ extension Wrapper where Base: UIPanGestureRecognizer {
 }
 
 // MARK: - Wrapper+UIPageControl
-extension Wrapper where Base: UIPageControl {
+@MainActor extension Wrapper where Base: UIPageControl {
     /// 自定义圆点大小，默认{10, 10}
     public var preferredSize: CGSize {
         get {
@@ -1953,7 +1953,7 @@ extension Wrapper where Base: UIPageControl {
 }
 
 // MARK: - Wrapper+UISlider
-extension Wrapper where Base: UISlider {
+@MainActor extension Wrapper where Base: UISlider {
     /// 中间圆球的大小，默认zero
     public var thumbSize: CGSize {
         get {
@@ -1995,7 +1995,7 @@ extension Wrapper where Base: UISlider {
 }
 
 // MARK: - Wrapper+UISwitch
-extension Wrapper where Base: UISwitch {
+@MainActor extension Wrapper where Base: UISwitch {
     /// 自定义尺寸大小，默认{51,31}
     public var preferredSize: CGSize {
         get {
@@ -2383,7 +2383,7 @@ extension Wrapper where Base: UISwitch {
 
 // MARK: - Wrapper+UITableView
 /// 启用高度估算：设置rowHeight为automaticDimension并撑开布局即可，再设置estimatedRowHeight可提升性能
-extension Wrapper where Base: UITableView {
+@MainActor extension Wrapper where Base: UITableView {
     /// 全局清空TableView默认多余边距
     public static func resetTableStyle() {
         if #available(iOS 15.0, *) {
@@ -2474,7 +2474,7 @@ extension Wrapper where Base: UITableView {
 }
 
 // MARK: - Wrapper+UITableViewCell
-extension Wrapper where Base: UITableViewCell {
+@MainActor extension Wrapper where Base: UITableViewCell {
     /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
     public var separatorInset: UIEdgeInsets {
         get {
@@ -2570,7 +2570,7 @@ extension Wrapper where Base: UITableViewCell {
 }
 
 // MARK: - Wrapper+UICollectionView
-extension Wrapper where Base: UICollectionView {
+@MainActor extension Wrapper where Base: UICollectionView {
     /// reloadData完成回调
     public func reloadData(completion: (() -> Void)?) {
         let strongBase = base
@@ -2644,7 +2644,7 @@ extension Wrapper where Base: UICollectionView {
 }
 
 // MARK: - Wrapper+UICollectionViewCell
-extension Wrapper where Base: UICollectionViewCell {
+@MainActor extension Wrapper where Base: UICollectionViewCell {
     /// 获取当前所属collectionView
     public weak var collectionView: UICollectionView? {
         var superview = base.superview
@@ -2680,7 +2680,7 @@ extension Wrapper where Base: UICollectionViewCell {
 }
 
 // MARK: - Wrapper+UISearchBar
-extension Wrapper where Base: UISearchBar {
+@MainActor extension Wrapper where Base: UISearchBar {
     /// 自定义内容边距，可调整左右距离和TextField高度，未设置时为系统默认
     ///
     /// 如需设置UISearchBar为navigationItem.titleView，请使用ExpandedTitleView
@@ -2965,7 +2965,7 @@ extension Wrapper where Base: UISearchBar {
 
 // MARK: - ViewStyle
 /// 视图样式可扩展枚举
-public struct ViewStyle: RawRepresentable, Equatable, Hashable {
+public struct ViewStyle: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = String
     
@@ -2987,15 +2987,15 @@ public struct ViewStyle: RawRepresentable, Equatable, Hashable {
 // MARK: - UIDevice+UIKit
 extension UIDevice {
     
-    fileprivate static var innerDeviceUUID: String?
-    fileprivate static var innerNetworkInfo = CTTelephonyNetworkInfo()
+    nonisolated(unsafe) fileprivate static var innerDeviceUUID: String?
+    nonisolated(unsafe) fileprivate static var innerNetworkInfo = CTTelephonyNetworkInfo()
     
 }
 
 // MARK: - UIImageView+UIKit
 extension UIImageView {
     
-    fileprivate static var innerFaceDetector: CIDetector? = {
+    nonisolated(unsafe) fileprivate static var innerFaceDetector: CIDetector? = {
         let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
         return detector
     }()
@@ -3185,7 +3185,7 @@ fileprivate class SaturationGrayView: UIView {
 }
 
 // MARK: - InputTarget
-fileprivate class InputTarget {
+@MainActor fileprivate class InputTarget {
     weak var textInput: (UIView & UITextInput)?
     var maxLength: Int = 0
     var maxUnicodeLength: Int = 0
@@ -3650,7 +3650,7 @@ extension FrameworkAutoloader {
         }}
     }
     
-    private static var swizzleUIKitScrollViewFinished = false
+    nonisolated(unsafe) private static var swizzleUIKitScrollViewFinished = false
     
     fileprivate static func swizzleUIKitScrollView() {
         guard !swizzleUIKitScrollViewFinished else { return }
@@ -3662,7 +3662,7 @@ extension FrameworkAutoloader {
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
     
-    private static var swizzleUIKitTableViewCellFinished = false
+    nonisolated(unsafe) private static var swizzleUIKitTableViewCellFinished = false
     
     fileprivate static func swizzleUIKitTableViewCell() {
         guard !swizzleUIKitTableViewCellFinished else { return }

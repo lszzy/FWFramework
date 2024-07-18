@@ -11,10 +11,10 @@ import SystemConfiguration
 /// 网络可达性管理器
 ///
 /// [Alamofire](https://github.com/Alamofire/Alamofire)
-open class NetworkReachabilityManager {
+open class NetworkReachabilityManager: @unchecked Sendable {
     
     /// 网络可达性状态枚举
-    public enum NetworkReachabilityStatus: Equatable {
+    public enum NetworkReachabilityStatus: Equatable, Sendable {
         /// 未知状态
         case unknown
         /// 不可达
@@ -33,7 +33,7 @@ open class NetworkReachabilityManager {
         }
 
         /// 网络连接类型枚举
-        public enum ConnectionType {
+        public enum ConnectionType: Sendable {
             /// 以太网或WiFi
             case ethernetOrWiFi
             /// 蜂窝网络
@@ -42,7 +42,7 @@ open class NetworkReachabilityManager {
     }
 
     /// 网络可达性监听句柄
-    public typealias Listener = (NetworkReachabilityStatus) -> Void
+    public typealias Listener = @Sendable (NetworkReachabilityStatus) -> Void
 
     /// 默认网络可达性管理器
     public static let shared = NetworkReachabilityManager()

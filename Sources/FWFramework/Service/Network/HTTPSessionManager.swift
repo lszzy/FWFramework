@@ -10,7 +10,7 @@ import Foundation
 /// HTTPSession管理器
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-open class HTTPSessionManager: URLSessionManager {
+open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
     open private(set) var baseURL: URL?
     open var requestSerializer: HTTPRequestSerializer = HTTPRequestSerializer()
     open override var securityPolicy: SecurityPolicy {
@@ -94,7 +94,7 @@ open class HTTPSessionManager: URLSessionManager {
         constructingBody block: ((MultipartFormData) -> Void)?,
         progress: ((Progress) -> Void)? = nil,
         success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let url = URL.fw.url(string: urlString, relativeTo: baseURL)
         var request: URLRequest

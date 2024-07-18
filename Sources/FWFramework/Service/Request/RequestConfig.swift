@@ -178,9 +178,9 @@ open class RequestContextAccessory: RequestAccessory {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
-    static var showErrorBlock: (@MainActor (_ context: AnyObject?, _ error: Error) -> Void)?
-    static var showLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
-    static var hideLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
+    nonisolated(unsafe) static var showErrorBlock: (@MainActor (_ context: AnyObject?, _ error: Error) -> Void)?
+    nonisolated(unsafe) static var showLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
+    nonisolated(unsafe) static var hideLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
     
     public override init() {
         super.init()
@@ -296,7 +296,7 @@ public protocol RequestRetrierProtocol: AnyObject {
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
-open class RequestRetrier: RequestRetrierProtocol {
+open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     public static let `default` = RequestRetrier()
     
     /// 自定义重试过滤器，回调过滤结果(nil时继续判定，非nil时停止判定)，优先级最高且线程安全，可用于刷新授权等
@@ -309,7 +309,7 @@ open class RequestRetrier: RequestRetrierProtocol {
     
     // MARK: - Public
     /// 同步执行自定义重试句柄，必须调用completionHandler，线程安全
-    open func retrySynchronously(_ block: @escaping (_ completionHandler: @escaping () -> Void) -> Void) {
+    open func retrySynchronously(_ block: @escaping @Sendable (_ completionHandler: @escaping () -> Void) -> Void) {
         retryQueue.async { [weak self] in
             self?.retrySemaphore.wait()
             block({
@@ -384,7 +384,7 @@ public protocol RequestValidatorProtocol: AnyObject {
 }
 
 /// 默认请求验证器，调用jsonValidator验证responseJSONObject
-open class RequestValidator: RequestValidatorProtocol {
+open class RequestValidator: RequestValidatorProtocol, @unchecked Sendable {
     public static let `default` = RequestValidator()
     
     public init() {}
@@ -440,7 +440,7 @@ public protocol RequestCacheProtocol: AnyObject {
 }
 
 /// 默认请求文件缓存
-open class RequestCache: RequestCacheProtocol {
+open class RequestCache: RequestCacheProtocol, @unchecked Sendable {
     public static let `default` = RequestCache()
     
     static let cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)

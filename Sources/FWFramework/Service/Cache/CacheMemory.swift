@@ -8,7 +8,7 @@
 import Foundation
 
 /// 内存缓存
-open class CacheMemory: CacheEngine {
+open class CacheMemory: CacheEngine, @unchecked Sendable {
     
     /// 单例模式
     public static let shared = CacheMemory()
