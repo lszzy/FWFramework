@@ -17,7 +17,7 @@ import SwiftUI
 /// modifier.
 ///
 /// [SwiftUI-Introspect](https://github.com/siteline/SwiftUI-Introspect)
-public struct IntrospectionScope: OptionSet {
+public struct IntrospectionScope: OptionSet, Sendable {
     /// Look within the `receiver` of the `.introspect(...)` modifier.
     public static let receiver = Self(rawValue: 1 << 0)
     /// Look for an `ancestor` relative to the `.introspect(...)` modifier.
@@ -53,7 +53,7 @@ extension View {
     ///     }
     /// }
     /// ```
-    public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
+    @MainActor public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
         _ viewType: SwiftUIViewType,
         on platforms: (PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>)...,
         scope: IntrospectionScope? = nil,
@@ -69,7 +69,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
     let customize: (PlatformSpecificEntity) -> Void
 
-    init(
+    @MainActor init(
         _ viewType: SwiftUIViewType,
         platforms: [PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>],
         scope: IntrospectionScope?,
@@ -109,7 +109,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
     }
 }
 
-public protocol PlatformEntity: AnyObject {
+@MainActor public protocol PlatformEntity: AnyObject {
     associatedtype Base: PlatformEntity
 
     @_spi(FW)
@@ -224,7 +224,7 @@ extension UIPresentationController: PlatformEntity {
 }
 
 // MARK: - IntrospectableViewType
-public protocol IntrospectableViewType {
+@MainActor public protocol IntrospectableViewType {
     /// The scope of introspection for this particular view type, i.e. where introspect
     /// should look to find the desired target view relative to the applied
     /// `.introspect(...)` modifier.
@@ -244,7 +244,7 @@ extension IntrospectableViewType {
 
 // MARK: - IntrospectionSelector
 @_spi(FW)
-public struct IntrospectionSelector<Target: PlatformEntity> {
+@MainActor public struct IntrospectionSelector<Target: PlatformEntity> {
     @_spi(FW)
     public static var `default`: Self { .from(Target.self, selector: { $0 }) }
 
@@ -260,12 +260,12 @@ public struct IntrospectionSelector<Target: PlatformEntity> {
         )
     }
 
-    private var receiverSelector: (_IntrospectionPlatformViewController) -> Target?
-    private var ancestorSelector: (_IntrospectionPlatformViewController) -> Target?
+    private var receiverSelector: (IntrospectionPlatformViewController) -> Target?
+    private var ancestorSelector: (IntrospectionPlatformViewController) -> Target?
 
     private init(
-        receiverSelector: @escaping (_IntrospectionPlatformViewController) -> Target?,
-        ancestorSelector: @escaping (_IntrospectionPlatformViewController) -> Target?
+        receiverSelector: @escaping (IntrospectionPlatformViewController) -> Target?,
+        ancestorSelector: @escaping (IntrospectionPlatformViewController) -> Target?
     ) {
         self.receiverSelector = receiverSelector
         self.ancestorSelector = ancestorSelector
@@ -285,7 +285,7 @@ public struct IntrospectionSelector<Target: PlatformEntity> {
         return copy
     }
 
-    func callAsFunction(_ controller: _IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
+    func callAsFunction(_ controller: IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
         if
             scope.contains(.receiver),
             let target = receiverSelector(controller)
@@ -316,18 +316,18 @@ extension PlatformViewController {
 // MARK: - IntrospectionView
 typealias IntrospectionViewID = UUID
 
-fileprivate enum IntrospectionStore {
+@MainActor fileprivate enum IntrospectionStore {
     static var shared: [IntrospectionViewID: Pair] = [:]
 
     struct Pair {
-        weak var controller: _IntrospectionPlatformViewController?
-        weak var anchor: _IntrospectionAnchorPlatformViewController?
+        weak var controller: IntrospectionPlatformViewController?
+        weak var anchor: IntrospectionAnchorPlatformViewController?
     }
 }
 
 extension PlatformEntity {
     var introspectionAnchorEntity: Base? {
-        if let introspectionController = self as? _IntrospectionPlatformViewController {
+        if let introspectionController = self as? IntrospectionPlatformViewController {
             return IntrospectionStore.shared[introspectionController.id]?.anchor~
         }
         if
@@ -341,7 +341,7 @@ extension PlatformEntity {
 }
 
 struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
-    typealias UIViewControllerType = _IntrospectionAnchorPlatformViewController
+    typealias UIViewControllerType = IntrospectionAnchorPlatformViewController
 
     @Binding
     private var observed: Void // workaround for state changes not triggering view updates
@@ -353,16 +353,16 @@ struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
         self.id = id
     }
 
-    func makePlatformViewController(context: Context) -> _IntrospectionAnchorPlatformViewController {
-        _IntrospectionAnchorPlatformViewController(id: id)
+    func makePlatformViewController(context: Context) -> IntrospectionAnchorPlatformViewController {
+        IntrospectionAnchorPlatformViewController(id: id)
     }
 
-    func updatePlatformViewController(_ controller: _IntrospectionAnchorPlatformViewController, context: Context) {}
+    func updatePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, context: Context) {}
 
-    static func dismantlePlatformViewController(_ controller: _IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
+    static func dismantlePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
 }
 
-final class _IntrospectionAnchorPlatformViewController: PlatformViewController {
+final class IntrospectionAnchorPlatformViewController: PlatformViewController {
     init(id: IntrospectionViewID) {
         super.init(nibName: nil, bundle: nil)
         self.isIntrospectionPlatformEntity = true
@@ -381,7 +381,7 @@ final class _IntrospectionAnchorPlatformViewController: PlatformViewController {
 }
 
 struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresentable {
-    typealias UIViewControllerType = _IntrospectionPlatformViewController
+    typealias UIViewControllerType = IntrospectionPlatformViewController
 
     final class TargetCache {
         weak var target: Target?
@@ -390,12 +390,12 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
     @Binding
     private var observed: Void // workaround for state changes not triggering view updates
     private let id: IntrospectionViewID
-    private let selector: (_IntrospectionPlatformViewController) -> Target?
+    private let selector: (IntrospectionPlatformViewController) -> Target?
     private let customize: (Target) -> Void
 
     init(
         id: IntrospectionViewID,
-        selector: @escaping (_IntrospectionPlatformViewController) -> Target?,
+        selector: @escaping (IntrospectionPlatformViewController) -> Target?,
         customize: @escaping (Target) -> Void
     ) {
         self._observed = .constant(())
@@ -408,8 +408,8 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
         TargetCache()
     }
 
-    func makePlatformViewController(context: Context) -> _IntrospectionPlatformViewController {
-        let controller = _IntrospectionPlatformViewController(id: id) { controller in
+    func makePlatformViewController(context: Context) -> IntrospectionPlatformViewController {
+        let controller = IntrospectionPlatformViewController(id: id) { controller in
             guard let target = selector(controller) else {
                 return
             }
@@ -429,25 +429,25 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
         return controller
     }
 
-    func updatePlatformViewController(_ controller: _IntrospectionPlatformViewController, context: Context) {
+    func updatePlatformViewController(_ controller: IntrospectionPlatformViewController, context: Context) {
         guard let target = context.coordinator.target ?? selector(controller) else {
             return
         }
         customize(target)
     }
 
-    static func dismantlePlatformViewController(_ controller: _IntrospectionPlatformViewController, coordinator: Coordinator) {
+    static func dismantlePlatformViewController(_ controller: IntrospectionPlatformViewController, coordinator: Coordinator) {
         controller.handler = nil
     }
 }
 
-final class _IntrospectionPlatformViewController: PlatformViewController {
+final class IntrospectionPlatformViewController: PlatformViewController {
     let id: IntrospectionViewID
     var handler: (() -> Void)? = nil
 
     fileprivate init(
         id: IntrospectionViewID,
-        handler: ((_IntrospectionPlatformViewController) -> Void)?
+        handler: ((IntrospectionPlatformViewController) -> Void)?
     ) {
         self.id = id
         super.init(nibName: nil, bundle: nil)
@@ -494,10 +494,10 @@ final class _IntrospectionPlatformViewController: PlatformViewController {
 }
 
 extension PlatformView {
-    fileprivate var introspectionController: _IntrospectionPlatformViewController? {
+    fileprivate var introspectionController: IntrospectionPlatformViewController? {
         get {
             let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
-            return objc_getAssociatedObject(self, key) as? _IntrospectionPlatformViewController
+            return objc_getAssociatedObject(self, key) as? IntrospectionPlatformViewController
         }
         set {
             let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
@@ -520,13 +520,13 @@ extension PlatformEntity {
 }
 
 // MARK: - PlatformVersion
-public enum PlatformVersionCondition {
+public enum PlatformVersionCondition: Sendable {
     case past
     case current
     case future
 }
 
-public protocol PlatformVersion {
+public protocol PlatformVersion: Sendable {
     var condition: PlatformVersionCondition? { get }
 }
 
@@ -645,7 +645,7 @@ public typealias PlatformViewController = UIViewController
 
 typealias _PlatformViewControllerRepresentable = UIViewControllerRepresentable
 
-protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
+@MainActor protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
     typealias ViewController = UIViewControllerType
 
     func makePlatformViewController(context: Context) -> ViewController
@@ -666,7 +666,7 @@ extension PlatformViewControllerRepresentable {
 }
 
 // MARK: - PlatformViewVersion
-public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+@MainActor public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
 
     private init<Version: PlatformVersion>(
@@ -693,7 +693,7 @@ public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewTy
 public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> =
     PlatformViewVersion<iOSVersion, SwiftUIViewType, PlatformSpecificEntity>
 
-public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+@MainActor public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>: Sendable {
     @_spi(FW) case available(Version, IntrospectionSelector<PlatformSpecificEntity>?)
     @_spi(FW) case unavailable
 
@@ -718,7 +718,7 @@ public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: Intro
         }
     }
 
-    fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
+    @MainActor fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
         if case .available(_, let selector) = self {
             return selector
         } else {
@@ -736,11 +736,11 @@ public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: Intro
 }
 
 extension PlatformViewVersion: Comparable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    nonisolated public static func == (lhs: Self, rhs: Self) -> Bool {
         true
     }
 
-    public static func < (lhs: Self, rhs: Self) -> Bool {
+    nonisolated public static func < (lhs: Self, rhs: Self) -> Bool {
         true
     }
 }
