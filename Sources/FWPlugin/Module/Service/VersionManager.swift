@@ -227,8 +227,9 @@ public class VersionManager: @unchecked Sendable {
     
     private func isOsCompatible(_ appData: [String: Any]) -> Bool {
         guard let minimumOsVersion = appData["minimumOsVersion"] as? String else { return false }
-        let systemVersion = UIDevice.current.systemVersion
-        return systemVersion.compare(minimumOsVersion, options: .numeric) != .orderedAscending
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+        return versionString.compare(minimumOsVersion, options: .numeric) != .orderedAscending
     }
     
     private func checkDataVersion(_ version: String) -> Bool {
