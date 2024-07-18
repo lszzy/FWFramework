@@ -711,7 +711,7 @@ public class StatisticalManager: NSObject, @unchecked Sendable {
         return identifier
     }
     
-    private static var swizzleStatisticalViewFinished = false
+    nonisolated(unsafe) private static var swizzleStatisticalViewFinished = false
     
     fileprivate static func swizzleStatisticalView() {
         guard !swizzleStatisticalViewFinished else { return }
