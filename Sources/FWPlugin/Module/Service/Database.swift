@@ -55,15 +55,15 @@ public class DatabaseManager {
     ///
     /// 如果模型实现了databaseVersion且不为空，则会忽略全局版本号；
     /// 可设置为appVersion+appBuildVersion从而实现App升级时自动更新版本号
-    public static var version = "1.0"
+    nonisolated(unsafe) public static var version = "1.0"
     
     /// 是否打印调试SQL语句，默认true
-    public static var printSql = true
+    nonisolated(unsafe) public static var printSql = true
     
-    private static var database: OpaquePointer!
-    private static var semaphore = DispatchSemaphore(value: 1)
-    private static var checkUpdate = true
-    private static var isMigration = false
+    nonisolated(unsafe) private static var database: OpaquePointer!
+    nonisolated(unsafe) private static var semaphore = DispatchSemaphore(value: 1)
+    nonisolated(unsafe) private static var checkUpdate = true
+    nonisolated(unsafe) private static var isMigration = false
     
     /// 保存模型到本地，主键存在时更新，不存在时新增
     @discardableResult
@@ -405,7 +405,7 @@ private extension DatabaseManager {
         return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "Database"])
     }
     
-    static var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
+    nonisolated(unsafe) static var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
     
     static func removeModelFieldsCache(_ modelClass: AnyClass?) {
         guard let modelClass = modelClass else {

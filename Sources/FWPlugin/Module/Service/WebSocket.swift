@@ -47,11 +47,11 @@ public struct WebSocketError: Error {
 public protocol WebSocketClient: AnyObject {
     func connect()
     func disconnect(closeCode: UInt16)
-    func write(string: String, completion: (() -> ())?)
-    func write(stringData: Data, completion: (() -> ())?)
-    func write(data: Data, completion: (() -> ())?)
-    func write(ping: Data, completion: (() -> ())?)
-    func write(pong: Data, completion: (() -> ())?)
+    func write(string: String, completion: (@Sendable () -> ())?)
+    func write(stringData: Data, completion: (@Sendable () -> ())?)
+    func write(data: Data, completion: (@Sendable () -> ())?)
+    func write(ping: Data, completion: (@Sendable () -> ())?)
+    func write(pong: Data, completion: (@Sendable () -> ())?)
 }
 
 //implements some of the base behaviors
@@ -77,7 +77,7 @@ extension WebSocketClient {
     }
 }
 
-public enum WebSocketEvent {
+public enum WebSocketEvent: Sendable {
     case connected([String: String])
     case disconnected(String, UInt16)
     case text(String)
@@ -98,7 +98,7 @@ public protocol WebSocketDelegate: AnyObject {
 /// WebSocket客户端
 ///
 /// [Starscream](https://github.com/daltoniam/Starscream)
-open class WebSocket: WebSocketClient, WebSocketEngineDelegate {
+open class WebSocket: WebSocketClient, WebSocketEngineDelegate, @unchecked Sendable {
     private let engine: WebSocketEngineProtocol
     public weak var delegate: WebSocketDelegate?
     public var onEvent: ((WebSocketEvent) -> Void)?
@@ -143,27 +143,27 @@ open class WebSocket: WebSocketClient, WebSocketEngineDelegate {
         engine.forceStop()
     }
     
-    public func write(data: Data, completion: (() -> ())?) {
+    public func write(data: Data, completion: (@Sendable () -> ())?) {
          write(data: data, opcode: .binaryFrame, completion: completion)
     }
     
-    public func write(string: String, completion: (() -> ())?) {
+    public func write(string: String, completion: (@Sendable () -> ())?) {
         engine.write(string: string, completion: completion)
     }
     
-    public func write(stringData: Data, completion: (() -> ())?) {
+    public func write(stringData: Data, completion: (@Sendable () -> ())?) {
         write(data: stringData, opcode: .textFrame, completion: completion)
     }
     
-    public func write(ping: Data, completion: (() -> ())?) {
+    public func write(ping: Data, completion: (@Sendable () -> ())?) {
         write(data: ping, opcode: .ping, completion: completion)
     }
     
-    public func write(pong: Data, completion: (() -> ())?) {
+    public func write(pong: Data, completion: (@Sendable () -> ())?) {
         write(data: pong, opcode: .pong, completion: completion)
     }
     
-    private func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
+    private func write(data: Data, opcode: WebSocketFrameOpCode, completion: (@Sendable () -> ())?) {
         engine.write(data: data, opcode: opcode, completion: completion)
     }
     
@@ -187,7 +187,7 @@ public enum WebSocketConnectionEvent {
     case error(Error)
 }
 
-public protocol WebSocketConnection {
+public protocol WebSocketConnection: Sendable {
     func write(data: Data, opcode: WebSocketFrameOpCode)
 }
 
@@ -195,7 +195,7 @@ public protocol WebSocketConnectionDelegate: AnyObject {
     func didReceive(event: WebSocketServerEvent)
 }
 
-public enum WebSocketServerEvent {
+public enum WebSocketServerEvent: Sendable {
     case connected(WebSocketConnection, [String: String])
     case disconnected(WebSocketConnection, String, UInt16)
     case text(WebSocketConnection, String)
@@ -213,7 +213,7 @@ public protocol WebSocketServerProtocol {
 import Network
 
 /// WebSocketServer is a Network.framework implementation of a WebSocket server
-public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelegate {
+public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelegate, @unchecked Sendable {
     public var onEvent: ((WebSocketServerEvent) -> Void)?
     public var callbackQueue = DispatchQueue.main
     private var connections = [String: WebSocketServerConnection]()
@@ -281,7 +281,7 @@ public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelega
     }
 }
 
-public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServerDelegate, WebSocketFramerEventClient, WebSocketFrameCollectorDelegate, WebSocketTransportEventClient {
+public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServerDelegate, WebSocketFramerEventClient, WebSocketFrameCollectorDelegate, WebSocketTransportEventClient, @unchecked Sendable {
     let transport: WebSocketTCPTransport
     private let httpHandler = WebSocketFoundationHTTPServerHandler()
     private let framer = WebSocketFramer(isServer: true)
@@ -393,7 +393,7 @@ public enum WebSocketTCPTransportError: Error {
     case invalidRequest
 }
 
-public class WebSocketTCPTransport: WebSocketTransport {
+public class WebSocketTCPTransport: WebSocketTransport, @unchecked Sendable {
     private var connection: NWConnection?
     private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.networkstream", attributes: [])
     private weak var delegate: WebSocketTransportEventClient?
@@ -460,7 +460,7 @@ public class WebSocketTCPTransport: WebSocketTransport {
         self.delegate = delegate
     }
     
-    public func write(data: Data, completion: @escaping ((Error?) -> ())) {
+    public func write(data: Data, completion: @escaping (@Sendable (Error?) -> ())) {
         connection?.send(content: data, completion: .contentProcessed { (error) in
             completion(error)
         })
@@ -882,11 +882,11 @@ public protocol WebSocketEngineProtocol {
     func start(request: URLRequest)
     func stop(closeCode: UInt16)
     func forceStop()
-    func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?)
-    func write(string: String, completion: (() -> ())?)
+    func write(data: Data, opcode: WebSocketFrameOpCode, completion: (@Sendable () -> ())?)
+    func write(string: String, completion: (@Sendable () -> ())?)
 }
 
-public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessionDataDelegate, URLSessionWebSocketDelegate {
+public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessionDataDelegate, URLSessionWebSocketDelegate, @unchecked Sendable {
     private var task: URLSessionWebSocketTask?
     weak var delegate: WebSocketEngineDelegate?
 
@@ -910,13 +910,13 @@ public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessio
         stop(closeCode: UInt16(URLSessionWebSocketTask.CloseCode.abnormalClosure.rawValue))
     }
 
-    public func write(string: String, completion: (() -> ())?) {
+    public func write(string: String, completion: (@Sendable () -> ())?) {
         task?.send(.string(string), completionHandler: { (error) in
             completion?()
         })
     }
 
-    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
+    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (@Sendable () -> ())?) {
         switch opcode {
         case .binaryFrame:
             task?.send(.data(data), completionHandler: { (error) in
@@ -978,7 +978,7 @@ public class WebSocketNativeEngine: NSObject, WebSocketEngineProtocol, URLSessio
 }
 
 public class WebSocketEngine: WebSocketEngineProtocol, WebSocketTransportEventClient, WebSocketFramerEventClient,
-WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
+                              WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate, @unchecked Sendable {
     private let transport: WebSocketTransport
     private let framer: WebSocketFramerProtocol
     private let httpHandler: WebSocketHTTPHandler
@@ -1060,12 +1060,12 @@ WebSocketFrameCollectorDelegate, WebSocketHTTPHandlerDelegate {
         transport.disconnect()
     }
     
-    public func write(string: String, completion: (() -> ())?) {
+    public func write(string: String, completion: (@Sendable () -> ())?) {
         let data = string.data(using: .utf8)!
         write(data: data, opcode: .textFrame, completion: completion)
     }
     
-    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (() -> ())?) {
+    public func write(data: Data, opcode: WebSocketFrameOpCode, completion: (@Sendable () -> ())?) {
         writeQueue.async { [weak self] in
             guard let s = self else { return }
             s.mutex.wait()
@@ -1256,7 +1256,7 @@ public protocol WebSocketTransport: AnyObject {
     func register(delegate: WebSocketTransportEventClient)
     func connect(url: URL, timeout: Double, certificatePinning: WebSocketCertificatePinning?)
     func disconnect()
-    func write(data: Data, completion: @escaping ((Error?) -> ()))
+    func write(data: Data, completion: @escaping (@Sendable (Error?) -> ()))
     var usingTLS: Bool { get }
 }
 
@@ -1270,7 +1270,7 @@ let PayloadLenMask: UInt8   = 0x7F
 let MaxFrameSize: Int       = 32
 
 // Standard WebSocket close codes
-public enum WebSocketCloseCode: UInt16 {
+public enum WebSocketCloseCode: UInt16, Sendable {
     case normal                 = 1000
     case goingAway              = 1001
     case protocolError          = 1002
@@ -1283,7 +1283,7 @@ public enum WebSocketCloseCode: UInt16 {
     case messageTooBig          = 1009
 }
 
-public enum WebSocketFrameOpCode: UInt8 {
+public enum WebSocketFrameOpCode: UInt8, Sendable {
     case continueFrame = 0x0
     case textFrame = 0x1
     case binaryFrame = 0x2
@@ -1322,7 +1322,7 @@ public protocol WebSocketFramerProtocol {
     func supportsCompression() -> Bool
 }
 
-public class WebSocketFramer: WebSocketFramerProtocol {
+public class WebSocketFramer: WebSocketFramerProtocol, @unchecked Sendable {
     private let queue = DispatchQueue(label: "site.wuyong.queue.websocket.client.wsframer", attributes: [])
     private weak var delegate: WebSocketFramerEventClient?
     private var buffer = Data()

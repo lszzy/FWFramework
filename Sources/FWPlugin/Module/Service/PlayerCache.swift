@@ -208,7 +208,7 @@ public class PlayerCacheLoader: NSObject, PlayerCacheRequestWorkerDelegate {
 }
 
 // MARK: - PlayerCacheDownloader
-public class PlayerCacheDownloaderStatus: NSObject {
+public class PlayerCacheDownloaderStatus: NSObject, @unchecked Sendable {
     public static let shared = PlayerCacheDownloaderStatus()
     
     private var downloadingURLs: Set<URL> = []
@@ -354,7 +354,7 @@ fileprivate protocol PlayerCacheSessionDelegateObjectDelegate: AnyObject {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?)
 }
 
-fileprivate class PlayerCacheSessionDelegateObject: NSObject, URLSessionDataDelegate {
+fileprivate class PlayerCacheSessionDelegateObject: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     private static let bufferSize: Int = 10 * 1024
     private weak var delegate: PlayerCacheSessionDelegateObjectDelegate?
     private var bufferData = Data()
@@ -404,7 +404,7 @@ protocol PlayerCacheActionWorkerDelegate: AnyObject {
     func actionWorker(_ actionWorker: PlayerCacheActionWorker, didFinishWithError error: Error?)
 }
 
-class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegate {
+class PlayerCacheActionWorker: NSObject, PlayerCacheSessionDelegateObjectDelegate, @unchecked Sendable {
     private var actions: [PlayerCacheAction] = []
     var canSaveToCache = true
     weak var delegate: PlayerCacheActionWorkerDelegate?
@@ -732,7 +732,7 @@ public class PlayerCacheAction: NSObject {
 }
 
 // MARK: - PlayerCacheConfiguration
-public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
+public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
     public private(set) var filePath: String = ""
     public var contentInfo: PlayerCacheContentInfo?
     public var url: URL?
@@ -936,18 +936,18 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
 }
 
 // MARK: - PlayerCacheManager
-public class PlayerCacheManager: NSObject {
+public class PlayerCacheManager: NSObject, @unchecked Sendable {
     public static let playerCacheManagerDidUpdateCacheNotification = Notification.Name("FWPlayerCacheManagerDidUpdateCacheNotification")
     public static let playerCacheManagerDidFinishCacheNotification = Notification.Name("FWPlayerCacheManagerDidFinishCacheNotification")
     public static let playerCacheConfigurationKey = "FWPlayerCacheConfigurationKey"
     public static let playerCacheFinishedErrorKey = "FWPlayerCacheFinishedErrorKey"
     
-    public static var cacheDirectory: String = {
+    nonisolated(unsafe) public static var cacheDirectory: String = {
         let result = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "PlayerCache"])
         return result
     }()
-    public static var cacheUpdateNotifyInterval: TimeInterval = 0.1
-    private static var cacheFileNameRules: ((URL) -> String)?
+    nonisolated(unsafe) public static var cacheUpdateNotifyInterval: TimeInterval = 0.1
+    nonisolated(unsafe) private static var cacheFileNameRules: ((URL) -> String)?
     
     public static func cachedFilePath(for url: URL) -> String {
         var pathComponent: String = ""
@@ -1040,7 +1040,7 @@ public class PlayerCacheManager: NSObject {
 }
 
 // MARK: - PlayerCacheSessionManager
-public class PlayerCacheSessionManager: NSObject {
+public class PlayerCacheSessionManager: NSObject, @unchecked Sendable {
     public static let shared = PlayerCacheSessionManager()
     
     public private(set) var downloadQueue: OperationQueue = {
