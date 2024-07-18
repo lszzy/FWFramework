@@ -1333,7 +1333,7 @@ struct InternalLogger {
 }
 
 // MARK: - Configuration
-public struct DeserializeOptions: OptionSet {
+public struct DeserializeOptions: OptionSet, Sendable {
     public let rawValue: Int
 
     public static let caseInsensitive = DeserializeOptions(rawValue: 1 << 0)
@@ -1359,9 +1359,9 @@ public struct JSONModelConfiguration {
         case none = 3
     }
 
-    public static var memoryMode = true
-    public static var debugMode: DebugMode = .error
-    public static var deserializeOptions: DeserializeOptions = .defaultOptions
+    nonisolated(unsafe) public static var memoryMode = true
+    nonisolated(unsafe) public static var debugMode: DebugMode = .error
+    nonisolated(unsafe) public static var deserializeOptions: DeserializeOptions = .defaultOptions
 }
 
 // MARK: - AnyExtensions

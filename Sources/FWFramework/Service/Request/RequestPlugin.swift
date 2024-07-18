@@ -67,7 +67,7 @@ extension RequestPlugin {
 
 // MARK: - RequestPluginImpl
 /// 默认请求插件
-open class RequestPluginImpl: NSObject, RequestPlugin {
+open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

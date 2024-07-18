@@ -24,7 +24,7 @@ extension BatchRequestDelegate {
 }
 
 /// 批量请求类
-open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
+open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendable {
     
     /// 批量请求完成句柄
     public typealias Completion = (BatchRequest) -> Void
@@ -228,7 +228,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate {
 
 // MARK: - BatchRequestManager
 /// 批量请求管理器
-open class BatchRequestManager {
+open class BatchRequestManager: @unchecked Sendable {
     
     public static let shared = BatchRequestManager()
     

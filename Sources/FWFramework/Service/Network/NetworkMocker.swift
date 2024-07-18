@@ -266,13 +266,13 @@ public struct NetworkMocker {
     }
 
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
-    public static var mode: Mode = .optout
+    nonisolated(unsafe) public static var mode: Mode = .optout
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
-    internal static var shared = NetworkMocker()
+    nonisolated(unsafe) internal static var shared = NetworkMocker()
 
     /// The HTTP Version to use in the mocked response.
-    public static var httpVersion: HTTPVersion = HTTPVersion.http1_1
+    nonisolated(unsafe) public static var httpVersion: HTTPVersion = HTTPVersion.http1_1
 
     /// The registrated mocks.
     private(set) var mocks: [NetworkMock] = []
@@ -355,7 +355,7 @@ public struct NetworkMocker {
 }
 
 /// A Mock which can be used for mocking data requests with the `Mocker` by calling `Mocker.register(...)`.
-public struct NetworkMock: Equatable {
+public struct NetworkMock: Equatable, @unchecked Sendable {
 
     /// HTTP method definitions.
     ///
@@ -586,7 +586,7 @@ public struct NetworkMock: Equatable {
 
 extension NetworkMock {
     /// The types of content of a request. Will be used as Content-Type header inside a `Mock`.
-    public struct DataType {
+    public struct DataType: Sendable {
 
         /// Name of the data type.
         public let name: String

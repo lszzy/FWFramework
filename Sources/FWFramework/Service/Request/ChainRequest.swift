@@ -24,7 +24,7 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
+open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendable {
     
     /// 队列请求完成句柄
     public typealias Completion = (ChainRequest) -> Void
@@ -259,7 +259,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
 
 // MARK: - ChainRequestManager
 /// 队列请求管理器
-open class ChainRequestManager {
+open class ChainRequestManager: @unchecked Sendable {
     
     public static let shared = ChainRequestManager()
     

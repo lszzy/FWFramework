@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - CacheType
 /// 缓存类型枚举
-public struct CacheType: RawRepresentable, Equatable, Hashable {
+public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
     
     public typealias RawValue = Int
     
@@ -43,7 +43,7 @@ public struct CacheType: RawRepresentable, Equatable, Hashable {
 public class CacheManager: NSObject {
     
     /// 自定义缓存创建句柄，默认nil
-    public static var factoryBlock: ((CacheType) -> CacheProtocol?)?
+    nonisolated(unsafe) public static var factoryBlock: ((CacheType) -> CacheProtocol?)?
     
     /// 获取指定类型的缓存单例对象
     public static func manager(type: CacheType) -> CacheProtocol? {

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Keychain缓存。复杂对象需遵循NSCoding|AnyArchivable协议
-open class CacheKeychain: CacheEngine {
+open class CacheKeychain: CacheEngine, @unchecked Sendable {
 
     /// 单例模式
     public static let shared = CacheKeychain()

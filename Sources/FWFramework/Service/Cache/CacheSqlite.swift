@@ -9,7 +9,7 @@ import Foundation
 import SQLite3
 
 /// Sqlite缓存。复杂对象需遵循NSCoding|AnyArchivable协议
-open class CacheSqlite: CacheEngine {
+open class CacheSqlite: CacheEngine, @unchecked Sendable {
     
     /// 单例模式
     public static let shared = CacheSqlite()

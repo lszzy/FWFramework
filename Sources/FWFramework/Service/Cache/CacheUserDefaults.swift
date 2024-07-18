@@ -8,7 +8,7 @@
 import Foundation
 
 /// UserDefaults缓存。复杂对象需遵循AnyArchivable协议
-open class CacheUserDefaults: CacheEngine {
+open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
     
     /// 单例模式
     public static let shared = CacheUserDefaults()

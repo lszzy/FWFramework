@@ -8,7 +8,7 @@
 import Foundation
 
 /// 请求管理器
-open class RequestManager {
+open class RequestManager: @unchecked Sendable {
     
     public static let shared = RequestManager()
     
