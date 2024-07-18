@@ -652,10 +652,10 @@ extension Wrapper where Base: UIScreen {
 // MARK: - UIScreen+Adaptive
 extension UIScreen {
     
-    fileprivate static var innerReferenceSize: CGSize = CGSize(width: 375, height: 812)
-    fileprivate static var innerRelativeScaleBlock: (() -> CGFloat)?
-    fileprivate static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
-    fileprivate static var innerMainWindow: UIWindow?
+    nonisolated(unsafe) fileprivate static var innerReferenceSize: CGSize = CGSize(width: 375, height: 812)
+    nonisolated(unsafe) fileprivate static var innerRelativeScaleBlock: (() -> CGFloat)?
+    nonisolated(unsafe) fileprivate static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
+    nonisolated(unsafe) fileprivate static var innerMainWindow: UIWindow?
     
 }
 

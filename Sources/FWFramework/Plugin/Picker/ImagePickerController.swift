@@ -2832,7 +2832,7 @@ open class ImagePickerCollectionCell: UICollectionViewCell {
 }
 
 // MARK: - ImagePickerTitleView
-public protocol ImagePickerTitleViewDelegate: AnyObject {
+@MainActor public protocol ImagePickerTitleViewDelegate: AnyObject {
     func didTouchTitleView(_ titleView: ImagePickerTitleView, isActive: Bool)
     func didChangedActive(_ active: Bool, for titleView: ImagePickerTitleView)
 }
