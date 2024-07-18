@@ -244,7 +244,7 @@ public class Router: NSObject {
         if routeHandler != nil { return }
         
         routeHandler = handler ?? { context, object in
-            if !context.isOpening { return object }
+            guard context.isOpening else { return object }
             guard let viewController = object as? UIViewController else { return object }
             
             // 解析默认路由参数userInfo
