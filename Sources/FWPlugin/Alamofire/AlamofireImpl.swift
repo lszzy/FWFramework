@@ -13,7 +13,7 @@ import Alamofire
 
 // MARK: - AlamofireImpl
 /// Alamofire请求插件，启用Alamofire子模块后生效
-open class AlamofireImpl: NSObject, RequestPlugin {
+open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 单例模式

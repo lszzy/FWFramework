@@ -81,11 +81,11 @@ extension EnvironmentValues {
 extension Refresh {
     
     struct HeaderAnchorKey {
-        static var defaultValue: Value = []
+        nonisolated(unsafe) static var defaultValue: Value = []
     }
     
     struct HeaderUpdateKey {
-        static var defaultValue: Value = .init(enable: false)
+        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
     }
 }
 
@@ -198,11 +198,11 @@ extension EnvironmentValues {
 extension Refresh {
     
     struct FooterAnchorKey {
-        static var defaultValue: Value = []
+        nonisolated(unsafe) static var defaultValue: Value = []
     }
     
     struct FooterUpdateKey {
-        static var defaultValue: Value = .init(enable: false)
+        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
     }
 }
 
@@ -249,7 +249,7 @@ extension List {
 // MARK: - Modifier
 extension Refresh {
     
-    public struct Modifier {
+    public struct Modifier: Sendable {
         let isEnabled: Bool
         
         @State private var id: Int = 0
