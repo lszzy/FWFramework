@@ -45,7 +45,7 @@ public enum PagingListContainerType: Int {
     @objc optional func listDidDisappear()
 }
 
-@objc public protocol PagingListContainerViewDataSource {
+@MainActor @objc public protocol PagingListContainerViewDataSource {
     /// 返回list的数量
     ///
     /// - Parameter listContainerView: PagingListContainerView
@@ -74,7 +74,7 @@ public enum PagingListContainerType: Int {
     @objc optional func scrollViewClass(in listContainerView: PagingListContainerView) -> AnyClass
 }
 
-@objc protocol PagingListContainerViewDelegate {
+@MainActor @objc protocol PagingListContainerViewDelegate {
     @objc optional func listContainerViewDidScroll(_ listContainerView: PagingListContainerView)
     @objc optional func listContainerViewWillBeginDragging(_ listContainerView: PagingListContainerView)
     @objc optional func listContainerViewDidEndScrolling(_ listContainerView: PagingListContainerView)
@@ -1146,7 +1146,7 @@ open class PagingListRefreshView: PagingView {
 
 // MARK: - PagingSmoothView
 
-@objc public protocol PagingSmoothViewListViewDelegate {
+@objc public protocol PagingSmoothViewListViewDelegate: Sendable {
     /// 返回listView。如果是vc包裹的就是vc.view；如果是自定义view包裹的，就是自定义view自己。
     func listView() -> UIView
     /// 返回FWPagerSmoothViewListViewDelegate内部持有的UIScrollView或UITableView或UICollectionView
