@@ -143,6 +143,7 @@
 		2F6A41DC28B9E8FF003719E7 /* TestSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSocketController.swift; sourceTree = "<group>"; };
 		2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCompatibleController.swift; sourceTree = "<group>"; };
 		2F91AA2C28CDD876000A6FA2 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
+		2F96D54A2C4A53B9009D1F94 /* Package@Swift-6.0.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Package@Swift-6.0.swift"; sourceTree = "<group>"; };
 		2FB11EF028DAE16500DCB965 /* TestAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAnimationController.swift; sourceTree = "<group>"; };
 		2FB11EF228DB023B00DCB965 /* TestFloatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFloatingController.swift; sourceTree = "<group>"; };
 		2FB11EF428DB055C00DCB965 /* TestGridController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGridController.swift; sourceTree = "<group>"; };
@@ -563,6 +564,7 @@
 			children = (
 				EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */,
 				2FE6E88F2BE0BBCC00F0CC00 /* Package.swift */,
+				2F96D54A2C4A53B9009D1F94 /* Package@Swift-6.0.swift */,
 				9A618471107F1D6CF1E47FF0 /* README.md */,
 				2FE6E8832BE0B97700F0CC00 /* README_CN.md */,
 				2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */,
