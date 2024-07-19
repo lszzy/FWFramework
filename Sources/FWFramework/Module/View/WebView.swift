@@ -1153,6 +1153,12 @@ extension WKWebView {
 // MARK: - WebViewDelegateProxy
 fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
     
+    #if compiler(>=6.0)
+    typealias DownloadCompletionHandler = @MainActor @Sendable (URL?) -> Void
+    #else
+    typealias DownloadCompletionHandler = (URL?) -> Void
+    #endif
+    
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let webView = webView as? WebView,
@@ -1396,9 +1402,8 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     }
     
     // MARK: - WKDownloadDelegate
-    #if compiler(>=6.0)
     @available(iOS 14.5, *)
-    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping @MainActor (URL?) -> Void) {
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping DownloadCompletionHandler) {
         let downloadDelegate = self.delegate as? WKDownloadDelegate
         if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
             return
@@ -1411,22 +1416,6 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         download.fw.setProperty(url, forName: "downloadUrl")
         completionHandler(url)
     }
-    #else
-    @available(iOS 14.5, *)
-    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
-        let downloadDelegate = self.delegate as? WKDownloadDelegate
-        if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
-            return
-        }
-        
-        let fileExt = (suggestedFilename as NSString).pathExtension
-        var fileName = (suggestedFilename as NSString).deletingPathExtension
-        fileName = (UUID().uuidString + fileName).fw.md5Encode
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
-        download.fw.setProperty(url, forName: "downloadUrl")
-        completionHandler(url)
-    }
-    #endif
     
     @available(iOS 14.5, *)
     func downloadDidFinish(_ download: WKDownload) {

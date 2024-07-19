@@ -16,7 +16,7 @@ protocol AppModuleProtocol: ModuleProtocol {
 }
 
 @objc extension Autoloader {
-    static func loadApp_AppModule() {
+    func loadApp_AppModule() {
         Mediator.registerService(AppModuleProtocol.self, module: AppModule.self)
     }
 }

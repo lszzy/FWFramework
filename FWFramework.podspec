@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '5.9.1'
+  s.version               = '5.9.2'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -107,9 +107,10 @@ Pod::Spec.new do |s|
         "swift build -c release --disable-sandbox
         --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWPlugin/Macros\\"
         --scratch-path \\"#{product_folder}\\" &&
-        ([ -e \\"#{product_folder}/release/FWMacroMacros-tool\\" ] &&
-        ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\" ||
-        ln -sf \\"#{product_folder}/release/FWMacroMacros\\" \\"#{product_folder}/release/FWMacroMacros-tool\\")"
+        (([ -e \\"#{product_folder}/release/FWMacroMacros-tool\\" ] &&
+          ! [ -L \\"#{product_folder}/release/FWMacroMacros-tool\\" ]) &&
+         ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\" ||
+         ln -sf \\"#{product_folder}/release/FWMacroMacros\\" \\"#{product_folder}/release/FWMacroMacros-tool\\")"
       SCRIPT
       swift_flags = <<-FLAGS.squish
         -Xfrontend -load-plugin-executable -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
