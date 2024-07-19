@@ -120,7 +120,16 @@ open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
     }
     
     deinit {
-        stop()
+        guard renderStatus != .stopped else { return }
+        renderStatus = .stopped
+        
+        if autoClear {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(clearIdleCells), object: nil)
+        }
+        
+        animatingCells.removeAll()
+        idleCells.removeAll()
+        trackNextAvailableTime.removeAll()
     }
     
     open func dequeueReusableCell(withClass barrageCellClass: BarrageCell.Type) -> BarrageCell? {
@@ -253,8 +262,7 @@ open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
         animatingCellsLock.signal()
     }
     
-    /// 除了deinit之外需主线程调用
-    nonisolated open func stop() {
+    open func stop() {
         switch renderStatus {
         case .started:
             renderStatus = .stopped
@@ -269,17 +277,13 @@ open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
         }
         
         animatingCellsLock.wait()
-        if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                let cells = animatingCells.reversed()
-                for cell in cells {
-                    let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
-                    cell.layer.speed = 0
-                    cell.layer.timeOffset = pausedTime
-                    cell.layer.removeAllAnimations()
-                    cell.removeFromSuperview()
-                }
-            }
+        let cells = animatingCells.reversed()
+        for cell in cells {
+            let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
+            cell.layer.speed = 0
+            cell.layer.timeOffset = pausedTime
+            cell.layer.removeAllAnimations()
+            cell.removeFromSuperview()
         }
         animatingCells.removeAll()
         animatingCellsLock.signal()
