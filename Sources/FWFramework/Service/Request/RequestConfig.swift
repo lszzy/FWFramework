@@ -162,7 +162,7 @@ open class RequestAccessory: RequestAccessoryProtocol {
 }
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
-open class RequestContextAccessory: RequestAccessory {
+open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
     /// 自定义显示错误方法，主线程优先调用，默认nil
     open var showErrorBlock: HTTPRequest.Completion?
     /// 自定义显示加载方法，主线程优先调用，默认nil
@@ -188,7 +188,7 @@ open class RequestContextAccessory: RequestAccessory {
         self.willStartBlock = { [weak self] request in
             guard let request = request as? HTTPRequest else { return }
             
-            DispatchQueue.fw.mainAsync {
+            DispatchQueue.fw.mainAsync { [weak self] in
                 if (request.autoShowLoading || request.autoShowError),
                    self?.autoSetupContext == true, request.context == nil {
                     self?.setupContext(for: request)

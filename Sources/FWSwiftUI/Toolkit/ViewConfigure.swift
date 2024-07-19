@@ -12,7 +12,7 @@ import SwiftUI
 #endif
 
 // MARK: - View+Configure
-extension View {
+@MainActor extension View {
     
     /// 初始化当前顶部视图控制器，仅调用一次
     public func viewControllerInitialize(
@@ -95,7 +95,7 @@ extension View {
 }
 
 // MARK: - ScrollView+Configure
-extension View {
+@MainActor extension View {
     
     /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
     public func scrollViewInitialize(
@@ -214,7 +214,7 @@ extension View {
 }
 
 // MARK: - List+Configure
-extension View {
+@MainActor extension View {
     
     /// 重置List样式，去除多余间距等，可指定背景色
     /// - Parameters:
@@ -430,7 +430,7 @@ extension View {
 }
 
 // MARK: - TextField+Configure
-extension View {
+@MainActor extension View {
     
     /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
     public func textFieldInitialize(

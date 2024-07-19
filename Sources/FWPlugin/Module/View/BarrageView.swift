@@ -71,7 +71,7 @@ public enum BarrageRenderStatus: Int {
     case paused
 }
 
-open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
+open class BarrageRenderView: UIView {
     open var renderPositionStyle: BarrageRenderPositionStyle = .randomTracks
     nonisolated(unsafe) open private(set) var animatingCells: [BarrageCell] = []
     nonisolated(unsafe) open private(set) var idleCells: [BarrageCell] = []
@@ -550,6 +550,12 @@ open class BarrageRenderView: UIView, @preconcurrency CAAnimationDelegate {
         return "\(NSStringFromClass(type(of: barrageCell)))_\(index)"
     }
 }
+
+#if compiler(>=6.0)
+extension BarrageRenderView: @preconcurrency CAAnimationDelegate {}
+#else
+extension BarrageRenderView: CAAnimationDelegate {}
+#endif
 
 // MARK: - BarrageDescriptor
 open class BarrageDescriptor: NSObject {
