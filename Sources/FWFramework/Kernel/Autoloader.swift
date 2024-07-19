@@ -36,8 +36,8 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     public static let shared = Autoloader()
     
     // MARK: - Accessor
-    private var isAutoloaded = false
-    private var debugMethods: [String] = []
+    private static var isAutoloaded = false
+    private static var debugMethods: [String] = []
     
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
@@ -96,13 +96,8 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
         return nil
     }
     
-    /// 自动加载器类调试描述
-    public override class func debugDescription() -> String {
-        return shared.debugDescription
-    }
-    
     /// 自动加载器调试描述
-    public override var debugDescription: String {
+    public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
         for methodName in debugMethods {
@@ -120,11 +115,11 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     // MARK: - AutoloadProtocol
     /// 自动加载load开头objc扩展方法
     public static func autoload() {
-        guard !shared.isAutoloaded else { return }
-        shared.isAutoloaded = true
+        guard !isAutoloaded else { return }
+        isAutoloaded = true
         
         FrameworkAutoloader.debugMethods = autoloadMethods(FrameworkAutoloader.self)
-        shared.debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
+        debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
         
         #if DEBUG
         // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
