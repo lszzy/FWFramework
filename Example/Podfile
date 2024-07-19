@@ -25,10 +25,10 @@ post_install do |installer|
       config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
       
       # 选择性开启框架Swift6编译和严格并发模式
-      if ['FWFramework'].include? target.name
+      # if ['FWFramework'].include? target.name
         # config.build_settings['SWIFT_VERSION'] = '6.0'
         # config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'complete'
-      end
+      # end
     end
   end
 end
