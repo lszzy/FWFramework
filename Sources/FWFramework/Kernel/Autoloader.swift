@@ -33,6 +33,9 @@ public protocol AutoloadProtocol {
 @objc(ObjCAutoloader)
 public class Autoloader: NSObject, AutoloadProtocol {
     
+    public static let shared = Autoloader()
+    
+    // MARK: - Accessor
     private static var isAutoloaded = false
     private static var debugMethods: [String] = []
     
@@ -72,7 +75,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
             for methodName in methodNames {
                 targetClass.perform(NSSelectorFromString(methodName))
             }
-            return methodNames
+            return methodNames.map { "+" + $0 }
         } else if let targetObject = clazz as? NSObject {
             for methodName in methodNames {
                 targetObject.perform(NSSelectorFromString(methodName))
@@ -116,7 +119,7 @@ public class Autoloader: NSObject, AutoloadProtocol {
         isAutoloaded = true
         
         FrameworkAutoloader.debugMethods = autoloadMethods(FrameworkAutoloader.self)
-        debugMethods = autoloadMethods(Autoloader.self)
+        debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
         
         #if DEBUG
         // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
