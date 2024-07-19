@@ -106,7 +106,7 @@ import SwiftUI
     }
 }
 
-extension View {
+@MainActor extension View {
     
     /// 配置导航栏SwiftUI左侧、标题、右侧视图和背景
     public func navigationBarConfigure<Leading: View, Title: View, Trailing: View>(
