@@ -186,7 +186,7 @@ public struct EmptyPluginView: UIViewRepresentable {
 }
 
 // MARK: - View+PluginView
-extension View {
+@MainActor extension View {
     
     // MARK: - Plugin
     /// 显示通用控制器插件，自动切换
