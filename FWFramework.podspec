@@ -98,6 +98,7 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
       sss.preserve_paths = [
         'Sources/FWPlugin/Macros/Package.swift',
+        'Sources/FWPlugin/Macros/Package@Swift-6.0.swift',
         'Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift'
       ]
       
@@ -119,7 +120,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWMacroMacros',
         :script => build_script,
-        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/Package@Swift-6.0.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],
