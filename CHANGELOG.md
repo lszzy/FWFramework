@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.9.2] - 2024-07-19
+
+### Changed
+* Compatible with Xcode16, fix Cocoapods submodule compilation error
+* Modify version number acquisition and comparison tool methods to support minor versions
+* Modify Autoloader to load static methods and class methods starting with load by default
+
 ## [5.9.1] - 2024-07-12
 
 ### Changed
