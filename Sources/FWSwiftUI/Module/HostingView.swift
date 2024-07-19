@@ -101,7 +101,7 @@ open class HostingView<Content: View>: UIView {
 }
 
 // MARK: - View+HostingView
-extension View {
+@MainActor extension View {
     
     /// 快速包装到HostingView
     public func wrappedHostingView() -> HostingView<AnyView> {
