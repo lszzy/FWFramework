@@ -1464,13 +1464,13 @@ extension Wrapper where Base: UIDevice {
 // MARK: - Wrapper+UIButton
 @MainActor extension Wrapper where Base: UIButton {
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
-    public static var highlightedAlpha: CGFloat {
+    nonisolated public static var highlightedAlpha: CGFloat {
         get { return UIButton.innerHighlightedAlpha }
         set { UIButton.innerHighlightedAlpha = newValue }
     }
     
     /// 全局自定义按钮禁用时的alpha配置，默认0.3
-    public static var disabledAlpha: CGFloat {
+    nonisolated public static var disabledAlpha: CGFloat {
         get { return UIButton.innerDisabledAlpha }
         set { UIButton.innerDisabledAlpha = newValue }
     }
@@ -3072,8 +3072,8 @@ extension UIControl {
 // MARK: - UIButton+UIKit
 extension UIButton {
     
-    fileprivate static var innerHighlightedAlpha: CGFloat = 0.5
-    fileprivate static var innerDisabledAlpha: CGFloat = 0.3
+    nonisolated(unsafe) fileprivate static var innerHighlightedAlpha: CGFloat = 0.5
+    nonisolated(unsafe) fileprivate static var innerDisabledAlpha: CGFloat = 0.3
     
 }
 
