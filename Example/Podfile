@@ -27,7 +27,7 @@ post_install do |installer|
       # 选择性开启框架Swift6编译和严格并发模式
       if ['FWFramework'].include? target.name
         # config.build_settings['SWIFT_VERSION'] = '6.0'
-        config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'complete'
+        # config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'complete'
       end
     end
   end

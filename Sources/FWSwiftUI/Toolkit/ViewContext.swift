@@ -17,17 +17,17 @@ public class ViewContext: ObservableObject {
     public weak var viewController: UIViewController?
     
     /// 获取当前导航栏控制器
-    public weak var navigationController: UINavigationController? {
+    @MainActor public weak var navigationController: UINavigationController? {
         return viewController?.navigationController
     }
     
     /// 获取当前UIView根视图
-    public weak var hostingView: UIView? {
+    @MainActor public weak var hostingView: UIView? {
         return viewController?.view
     }
     
     /// 获取当前AnyView根视图
-    public var rootView: AnyView? {
+    @MainActor public var rootView: AnyView? {
         if let hostingController = viewController as? UIHostingController<AnyView> {
             return hostingController.rootView
         }
@@ -78,7 +78,7 @@ extension EnvironmentValues {
     
 }
 
-extension View {
+@MainActor extension View {
     
     /// 设置视图上下文，可指定自定义对象
     public func viewContext(_ viewController: UIViewController?, object: Any? = nil) -> some View {
