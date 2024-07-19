@@ -1,6 +1,13 @@
 {
   "warnings": [
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Autoloader.swift",
+      "line": 36,
+      "symbol": "Autoloader.shared",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Logger.swift",
       "line": 191,
       "symbol": "LogLevel.init(_:)",
@@ -13687,70 +13694,70 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 649,
+      "line": 668,
       "symbol": "ScreenInch.inch35",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 650,
+      "line": 669,
       "symbol": "ScreenInch.inch40",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 651,
+      "line": 670,
       "symbol": "ScreenInch.inch47",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 652,
+      "line": 671,
       "symbol": "ScreenInch.inch54",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 653,
+      "line": 672,
       "symbol": "ScreenInch.inch55",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 654,
+      "line": 673,
       "symbol": "ScreenInch.inch58",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 655,
+      "line": 674,
       "symbol": "ScreenInch.inch61",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 656,
+      "line": 675,
       "symbol": "ScreenInch.inch65",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 657,
+      "line": 676,
       "symbol": "ScreenInch.inch67",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 665,
+      "line": 684,
       "symbol": "ScreenInch.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
