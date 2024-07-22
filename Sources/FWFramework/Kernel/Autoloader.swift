@@ -36,8 +36,8 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     public static let shared = Autoloader()
     
     // MARK: - Accessor
-    private static var isAutoloaded = false
-    private static var debugMethods: [String] = []
+    nonisolated(unsafe) private static var isAutoloaded = false
+    nonisolated(unsafe) private static var debugMethods: [String] = []
     
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
