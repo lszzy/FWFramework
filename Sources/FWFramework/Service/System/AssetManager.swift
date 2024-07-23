@@ -1565,12 +1565,8 @@ extension AssetSessionExporter {
         self._progressHandler = progressHandler
         self._renderHandler = renderHandler
         self._completionHandler = completionHandler != nil ? { result in
-            if Thread.isMainThread {
+            DispatchQueue.fw.mainAsync {
                 completionHandler?(result)
-            } else {
-                DispatchQueue.main.async {
-                    completionHandler?(result)
-                }
             }
         } : nil
         

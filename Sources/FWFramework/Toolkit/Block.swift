@@ -7,22 +7,6 @@
 
 import UIKit
 
-// MARK: - Wrapper+DispatchQueue
-extension Wrapper where Base: DispatchQueue {
-    /// 主线程安全异步执行句柄
-    public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
-        if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                block()
-            }
-        } else {
-            DispatchQueue.main.async {
-                block()
-            }
-        }
-    }
-}
-
 // MARK: - Wrapper+Timer
 extension Wrapper where Base: Timer {
     /// 创建Timer，使用target-action，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发

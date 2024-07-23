@@ -7,6 +7,41 @@
 
 import Foundation
 
+// MARK: - Wrapper+MainActor
+extension Wrapper where Base: MainActor {
+    /// 主Actor安全异步执行句柄
+    public static func runAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated {
+                block()
+            }
+        } else {
+            Task {
+                await MainActor.run {
+                    block()
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Wrapper+DispatchQueue
+extension Wrapper where Base: DispatchQueue {
+    /// 主线程安全异步执行句柄
+    public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated {
+                block()
+            }
+        } else {
+            DispatchQueue.main.async {
+                block()
+            }
+        }
+    }
+}
+
+// MARK: - TaskOperation
 /// 任务操作类，可继承或直接使用
 open class TaskOperation: Operation, @unchecked Sendable {
     
@@ -216,6 +251,7 @@ open class TaskOperation: Operation, @unchecked Sendable {
     
 }
 
+// MARK: - TaskManager
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 open class TaskManager: @unchecked Sendable {
     
