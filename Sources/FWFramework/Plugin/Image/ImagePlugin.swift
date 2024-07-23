@@ -279,7 +279,7 @@ public protocol ImagePlugin: AnyObject {
     func clearImageCaches(_ completion: (() -> Void)?)
     
     /// image下载网络图片插件方法，返回下载凭据
-    func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)?) -> Any?
+    func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)?) -> Any?
     
     /// image取消下载网络图片插件方法，指定下载凭据
     func cancelImageDownload(_ receipt: Any?)
@@ -324,7 +324,7 @@ extension ImagePlugin {
     }
     
     /// image下载网络图片插件方法，返回下载凭据
-    public func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)?) -> Any? {
+    public func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)?) -> Any? {
         return ImagePluginImpl.shared.downloadImage(imageURL, options: options, context: context, completion: completion, progress: progress)
     }
     

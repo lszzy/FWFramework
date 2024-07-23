@@ -174,14 +174,14 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         _ imageURL: URL?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
-        completion: @escaping (UIImage?, Data?, Error?) -> Void,
-        progress: ((Double) -> Void)? = nil
+        completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void,
+        progress: (@MainActor @Sendable (Double) -> Void)? = nil
     ) -> Any? {
         return ImageDownloader.shared.downloadImage(for: imageURL, options: options, context: context, success: { [weak self] request, response, responseObject in
-            var imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
+            let imageData = ImageResponseSerializer.cachedResponseData(for: responseObject)
             if options.contains(.queryMemoryData), imageData == nil {
-                DispatchQueue.global().async {
-                    imageData = self?.imageEncode(responseObject)
+                DispatchQueue.global().async { [weak self] in
+                    let imageData = self?.imageEncode(responseObject)
                     DispatchQueue.main.async {
                         completion(responseObject, imageData, nil)
                     }
@@ -190,12 +190,18 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
                 if !options.contains(.queryMemoryData) {
                     ImageResponseSerializer.clearCachedResponseData(for: responseObject)
                 }
-                completion(responseObject, imageData, nil)
+                DispatchQueue.fw.mainAsync {
+                    completion(responseObject, imageData, nil)
+                }
             }
         }, failure: { request, response, error in
-            completion(nil, nil, error)
+            DispatchQueue.fw.mainAsync {
+                completion(nil, nil, error)
+            }
         }, progress: progress != nil ? { downloadProgress in
-            progress?(downloadProgress.fractionCompleted)
+            DispatchQueue.fw.mainAsync {
+                progress?(downloadProgress.fractionCompleted)
+            }
         } : nil)
     }
     
