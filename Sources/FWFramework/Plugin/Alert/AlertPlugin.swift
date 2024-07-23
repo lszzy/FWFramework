@@ -775,13 +775,11 @@ import UIKit
             alertController.fw.attributedMessage = NSAttributedString(string: message, attributes: messageAttributes)
         }
         
-        alertController.fw.observeProperty(\.preferredAction) { object, _ in
-            DispatchQueue.fw.mainAsync {
-                for action in object.actions {
-                    if action.fw.isPreferred { action.fw.isPreferred = false }
-                }
-                object.preferredAction?.fw.isPreferred = true
+        alertController.fw.safeObserveProperty(\.preferredAction) { object, _ in
+            for action in object.actions {
+                if action.fw.isPreferred { action.fw.isPreferred = false }
             }
+            object.preferredAction?.fw.isPreferred = true
         }
         
         return alertController

@@ -481,11 +481,9 @@ open class SkeletonLayout: SkeletonView {
         if scrollView.contentOffset.y <= 0 && superview != nil {
             block?(scrollView.contentOffset.y)
         }
-        scrollView.fw.observeProperty(\.contentOffset) { [weak self] scrollView, _ in
-            DispatchQueue.fw.mainAsync { [weak self] in
-                if scrollView.contentOffset.y <= 0 && self?.superview != nil {
-                    block?(scrollView.contentOffset.y)
-                }
+        scrollView.fw.safeObserveProperty(\.contentOffset) { [weak self] scrollView, _ in
+            if scrollView.contentOffset.y <= 0 && self?.superview != nil {
+                block?(scrollView.contentOffset.y)
             }
         }
     }

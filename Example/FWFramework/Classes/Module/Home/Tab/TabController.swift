@@ -65,7 +65,7 @@ extension TabController {
         settingsNav.tabBarItem.title = APP.localized("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
         
-        app.observeNotification(.LanguageChanged) { (notification) in
+        app.safeObserveNotification(.LanguageChanged) { (notification) in
             homeNav.tabBarItem.title = APP.localized("homeTitle")
             testNav.tabBarItem.title = APP.localized("testTitle")
             settingsNav.tabBarItem.title = APP.localized("settingTitle")
