@@ -520,7 +520,7 @@ public class WebViewCookieManager: NSObject {
     }
     
     /// 拷贝共享Cookie到webView，iOS11+有效
-    public static func copySharedCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+    @MainActor public static func copySharedCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
         let cookies = HTTPCookieStorage.shared.cookies ?? []
         let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
         if cookies.isEmpty {
@@ -537,7 +537,7 @@ public class WebViewCookieManager: NSObject {
     }
     
     /// 拷贝webView到共享Cookie，iOS11+有效
-    public static func copyWebViewCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+    @MainActor public static func copyWebViewCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
         let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
         cookieStore.getAllCookies { cookies in
             if cookies.isEmpty {
@@ -554,7 +554,7 @@ public class WebViewCookieManager: NSObject {
     }
     
     /// Cookie日期格式化对象
-    public static var cookieDateFormatter: DateFormatter = {
+    nonisolated(unsafe) public static var cookieDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)

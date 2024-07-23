@@ -267,7 +267,7 @@ public protocol ImagePlugin: AnyObject {
     @MainActor func imageURL(for view: UIView) -> URL?
     
     /// view加载网络图片插件方法
-    @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView)
+    @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?, for view: UIView)
     
     /// view取消加载网络图片请求插件方法
     @MainActor func cancelImageRequest(for view: UIView)
@@ -276,7 +276,7 @@ public protocol ImagePlugin: AnyObject {
     func loadImageCache(_ imageURL: URL?) -> UIImage?
     
     /// 清除所有本地图片缓存
-    func clearImageCaches(_ completion: (() -> Void)?)
+    func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)?)
     
     /// image下载网络图片插件方法，返回下载凭据
     func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)?) -> Any?
@@ -304,7 +304,7 @@ extension ImagePlugin {
     }
     
     /// view加载网络图片插件方法
-    @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?, for view: UIView) {
+    @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?, for view: UIView) {
         ImagePluginImpl.shared.setImageURL(url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: view)
     }
     
@@ -319,7 +319,7 @@ extension ImagePlugin {
     }
     
     /// 清除所有本地图片缓存
-    public func clearImageCaches(_ completion: (() -> Void)?) {
+    public func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)?) {
         ImagePluginImpl.shared.clearImageCaches(completion)
     }
     

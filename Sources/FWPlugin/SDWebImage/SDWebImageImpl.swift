@@ -92,7 +92,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
         context: [ImageCoderOptions : Any]?,
         setImageBlock: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
-        progress: ((Double) -> Void)? = nil,
+        progress: (@Sendable (Double) -> Void)? = nil,
         for view: UIView
     ) {
         if fadeAnimated && view.sd_imageTransition == nil {
@@ -167,9 +167,15 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
         return cachedImage
     }
     
-    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+    open func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         SDImageCache.shared.clearMemory()
-        SDImageCache.shared.clearDisk(onCompletion: completion)
+        SDImageCache.shared.clearDisk(onCompletion: {
+            if completion != nil {
+                DispatchQueue.fw.mainAsync {
+                    completion?()
+                }
+            }
+        })
     }
     
     open func downloadImage(

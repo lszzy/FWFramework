@@ -100,9 +100,9 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         receiptID: UUID = UUID(),
         options: WebImageOptions,
         context: [ImageCoderOptions: Any]?,
-        success: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
-        failure: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?,
-        progress: ((Progress) -> Void)?
+        success: (@MainActor @Sendable (URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
+        failure: (@MainActor @Sendable (URLRequest?, HTTPURLResponse?, Error) -> Void)?,
+        progress: (@MainActor @Sendable (Progress) -> Void)?
     ) -> ImageDownloadReceipt? {
         let request = urlRequest(url: url, options: options)
         var task: URLSessionDataTask?
@@ -144,7 +144,7 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
             let mergedTaskIdentifier = UUID()
             var createdTask: URLSessionDataTask
             createdTask = self.sessionManager.dataTask(request: request, uploadProgress: nil, downloadProgress: { [weak self] downloadProgress in
-                self?.responseQueue.async {
+                self?.responseQueue.async { [weak self] in
                     let mergedTask = self?.safelyGetMergedTask(urlIdentifier)
                     if mergedTask?.identifier == mergedTaskIdentifier {
                         let responseHandlers = self?.safelyGetResponseHandlers(urlIdentifier) ?? []
@@ -158,7 +158,7 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
                     }
                 }
             }, completionHandler: { [weak self] response, responseObject, error in
-                self?.responseQueue.async {
+                self?.responseQueue.async { [weak self] in
                     var mergedTask = self?.safelyGetMergedTask(urlIdentifier)
                     if mergedTask?.identifier == mergedTaskIdentifier {
                         mergedTask = self?.safelyRemoveMergedTask(urlIdentifier)
@@ -254,8 +254,8 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         options: WebImageOptions,
         context: [ImageCoderOptions: Any]?,
         placeholder: (() -> Void)?,
-        completion: ((UIImage?, Bool, Error?) -> Void)?,
-        progress: ((Double) -> Void)?
+        completion: (@MainActor @Sendable (UIImage?, Bool, Error?) -> Void)?,
+        progress: (@MainActor @Sendable (Double) -> Void)?
     ) {
         let urlRequest = urlRequest(url: imageURL, options: options)
         setImageOperationKey(String(describing: type(of: object)), for: object)
@@ -267,7 +267,9 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         
         guard let urlRequest = urlRequest, urlRequest.url != nil else {
             placeholder?()
-            completion?(nil, false, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+            DispatchQueue.fw.mainAsync {
+                completion?(nil, false, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+            }
             return
         }
         
@@ -276,8 +278,10 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
             cachedImage = imageCache?.image(for: urlRequest, additionalIdentifier: nil)
         }
         if let cachedImage = cachedImage {
-            completion?(cachedImage, true, nil)
-            setActiveImageDownloadReceipt(nil, for: object)
+            DispatchQueue.fw.mainAsync { [weak self] in
+                completion?(cachedImage, true, nil)
+                self?.setActiveImageDownloadReceipt(nil, for: object)
+            }
         } else {
             placeholder?()
             let downloadID = UUID()
@@ -292,7 +296,7 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
                     completion?(nil, false, error)
                     self?.setActiveImageDownloadReceipt(nil, for: object)
                 }
-            }, progress: progress != nil ? { [weak self] downloadProgress in
+            }, progress: progress != nil ? { @MainActor @Sendable [weak self] downloadProgress in
                 if self?.activeImageDownloadReceipt(for: object)?.receiptID == downloadID {
                     progress?(downloadProgress.fractionCompleted)
                 }
@@ -327,17 +331,13 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         return responseObject as? UIImage
     }
 
-    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+    open func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         imageCache?.removeAllImages()
         sessionManager.session.configuration.urlCache?.removeAllCachedResponses()
         
         if completion != nil {
-            if Thread.isMainThread {
+            DispatchQueue.fw.mainAsync {
                 completion?()
-            } else {
-                DispatchQueue.main.async {
-                    completion?()
-                }
             }
         }
     }
@@ -467,15 +467,15 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
 
 fileprivate class ImageDownloaderResponseHandler: NSObject, @unchecked Sendable {
     var uuid: UUID
-    var successBlock: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?
-    var failureBlock: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?
-    var progressBlock: ((Progress) -> Void)?
+    var successBlock: (@MainActor @Sendable (URLRequest, HTTPURLResponse?, UIImage) -> Void)?
+    var failureBlock: (@MainActor @Sendable (URLRequest?, HTTPURLResponse?, Error) -> Void)?
+    var progressBlock: (@MainActor @Sendable (Progress) -> Void)?
     
     init(
         uuid: UUID,
-        successBlock: ((URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
-        failureBlock: ((URLRequest?, HTTPURLResponse?, Error) -> Void)?,
-        progressBlock: ((Progress) -> Void)?
+        successBlock: (@MainActor @Sendable (URLRequest, HTTPURLResponse?, UIImage) -> Void)?,
+        failureBlock: (@MainActor @Sendable (URLRequest?, HTTPURLResponse?, Error) -> Void)?,
+        progressBlock: (@MainActor @Sendable (Progress) -> Void)?
     ) {
         self.uuid = uuid
         self.successBlock = successBlock

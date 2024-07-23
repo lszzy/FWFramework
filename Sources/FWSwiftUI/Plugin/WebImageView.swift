@@ -102,7 +102,7 @@ public struct WebImageView: View {
 }
 
 extension WebImageView {
-    public class ImageBinder: ObservableObject {
+    public class ImageBinder: ObservableObject, @unchecked Sendable {
         @Published var image: UIImage?
         
         let url: URLParameter?
