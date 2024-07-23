@@ -721,7 +721,9 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     private func addPlayerTimeObserver() {
         guard videoTimeObserver == nil else { return }
         videoTimeObserver = videoPlayer?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, preferredTimescale: Int32(NSEC_PER_SEC)), queue: nil, using: { [weak self] time in
-            self?.syncVideoProgressSlider()
+            DispatchQueue.fw.mainAsync { [weak self] in
+                self?.syncVideoProgressSlider()
+            }
         })
     }
     
@@ -947,7 +949,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         
         let currentValue: Float64 = Float64(slider.value)
         videoPlayer?.seek(to: CMTimeMakeWithSeconds(currentValue, preferredTimescale: Int32(NSEC_PER_SEC)), completionHandler: { [weak self] _ in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.isSeekingVideo = false
             }
         })

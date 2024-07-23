@@ -435,8 +435,8 @@ import MobileCoreServices
     }
     
     /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
-    public var exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
-        get { property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
+    public var exportProgressBlock: (@Sendable (_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
+        get { property(forName: #function) as? @Sendable (PHPickerViewController, Int, Int) -> Void }
         set { setPropertyCopy(newValue, forName: #function) }
     }
 }
@@ -551,7 +551,7 @@ fileprivate class ImagePickerControllerTarget: NSObject, UINavigationControllerD
 
 // MARK: - PickerViewControllerTarget
 @available(iOS 14, *)
-fileprivate class PickerViewControllerTarget: NSObject, PHPickerViewControllerDelegate {
+@MainActor fileprivate class PickerViewControllerTarget: NSObject, PHPickerViewControllerDelegate {
     
     var filterType: ImagePickerFilterType = []
     var shouldDismiss: Bool = false
@@ -576,7 +576,7 @@ fileprivate class PickerViewControllerTarget: NSObject, PHPickerViewControllerDe
         }
     }
     
-    static func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult], filterType: ImagePickerFilterType, completion: ((PHPickerViewController, [Any], [PHPickerResult], Bool) -> Void)?) {
+    static func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult], filterType: ImagePickerFilterType, completion: (@MainActor @Sendable (PHPickerViewController, [Any], [PHPickerResult], Bool) -> Void)?) {
         if results.count < 1 {
             completion?(picker, [], results, true)
             return

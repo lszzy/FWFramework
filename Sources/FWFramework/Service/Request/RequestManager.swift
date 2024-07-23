@@ -192,13 +192,13 @@ open class RequestManager: @unchecked Sendable {
         }
     }
     
-    private func retrySessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func retrySessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         startSessionTask(for: request) { [weak self] response, responseObject, error in
             request.requestTotalCount += 1
             request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
             
             if let requestRetrier = request.config.requestRetrier {
-                requestRetrier.retryRequest(request, response: response, responseObject: responseObject, error: error) { shouldRetry in
+                requestRetrier.retryRequest(request, response: response, responseObject: responseObject, error: error) { [weak self] shouldRetry in
                     if shouldRetry {
                         self?.retrySessionTask(for: request, completionHandler: completionHandler)
                     } else {
