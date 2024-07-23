@@ -161,7 +161,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: ((Double) -> Void)?) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?) {
         // 兼容URLRequest.cachePolicy缓存策略
         var targetOptions = options
         if let urlRequest = url as? URLRequest,
@@ -199,7 +199,7 @@ extension Wrapper where Base: UIImage {
 // MARK: - Wrapper+UIImageView
 extension Wrapper where Base: UIImageView {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: (@Sendable (Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     
@@ -211,7 +211,7 @@ extension Wrapper where Base: UIImageView {
     }
 
     /// 清除所有本地图片缓存
-    public static func clearImageCaches(completion: (() -> Void)? = nil) {
+    public static func clearImageCaches(completion: (@MainActor @Sendable () -> Void)? = nil) {
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         imagePlugin.clearImageCaches(completion)
     }
@@ -230,7 +230,7 @@ extension Wrapper where Base: UIImageView {
 // MARK: - Wrapper+UIButton
 @MainActor extension Wrapper where Base: UIButton {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: ((Double) -> Void)? = nil) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: (@Sendable (Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
 }

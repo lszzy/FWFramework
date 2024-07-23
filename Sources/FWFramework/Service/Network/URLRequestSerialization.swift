@@ -146,7 +146,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         return formData.requestByFinalizingMultipartFormData()
     }
     
-    open func request(multipartFormRequest request: URLRequest, writingStreamContentsToFile fileURL: URL, completionHandler: ((Error?) -> Void)?) -> URLRequest? {
+    open func request(multipartFormRequest request: URLRequest, writingStreamContentsToFile fileURL: URL, completionHandler: (@Sendable (Error?) -> Void)?) -> URLRequest? {
         guard let inputStream = request.httpBodyStream,
               fileURL.isFileURL,
               let outputStream = OutputStream(url: fileURL, append: false) else { return nil }

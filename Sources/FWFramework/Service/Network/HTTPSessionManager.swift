@@ -51,9 +51,9 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        progress: ((Progress) -> Void)? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "GET", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: nil, downloadProgress: progress, success: success, failure: failure)
         dataTask?.resume()
@@ -64,8 +64,8 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        success: ((_ task: URLSessionDataTask) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        success: (@Sendable (_ task: URLSessionDataTask) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "HEAD", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: nil, downloadProgress: nil, success: { task, responseObject in
             success?(task)
@@ -78,9 +78,9 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        progress: ((Progress) -> Void)? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "POST", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: progress, downloadProgress: nil, success: success, failure: failure)
         dataTask?.resume()
@@ -92,8 +92,8 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         parameters: Any? = nil,
         headers: [String: String]? = nil,
         constructingBody block: ((MultipartFormData) -> Void)?,
-        progress: ((Progress) -> Void)? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
         failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let url = URL.fw.url(string: urlString, relativeTo: baseURL)
@@ -129,8 +129,8 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "PUT", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: nil, downloadProgress: nil, success: success, failure: failure)
         dataTask?.resume()
@@ -141,8 +141,8 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "PATCH", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: nil, downloadProgress: nil, success: success, failure: failure)
         dataTask?.resume()
@@ -153,8 +153,8 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let dataTask = dataTask(httpMethod: "DELETE", urlString: urlString, parameters: parameters, headers: headers, uploadProgress: nil, downloadProgress: nil, success: success, failure: failure)
         dataTask?.resume()
@@ -166,10 +166,10 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        uploadProgress: ((Progress) -> Void)? = nil,
-        downloadProgress: ((Progress) -> Void)? = nil,
-        success: ((_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
-        failure: ((_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
+        uploadProgress: (@Sendable (Progress) -> Void)? = nil,
+        downloadProgress: (@Sendable (Progress) -> Void)? = nil,
+        success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
+        failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
     ) -> URLSessionDataTask? {
         let url = URL.fw.url(string: urlString, relativeTo: baseURL)
         var request: URLRequest
