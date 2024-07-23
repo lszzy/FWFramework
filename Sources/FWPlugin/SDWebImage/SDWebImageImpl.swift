@@ -176,8 +176,8 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
         _ imageURL: URL?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
-        completion: @escaping (UIImage?, Data?, Error?) -> Void,
-        progress: ((Double) -> Void)? = nil
+        completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void,
+        progress: (@MainActor @Sendable (Double) -> Void)? = nil
     ) -> Any? {
         let targetOptions = SDWebImageOptions(rawValue: options.rawValue)
         var targetContext: [SDWebImageContextOption : Any]?
@@ -198,24 +198,22 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             context: targetContext,
             progress: progress != nil ? { receivedSize, expectedSize, _ in
                 guard expectedSize > 0 else { return }
-                if Thread.isMainThread {
+                DispatchQueue.fw.mainAsync {
                     progress?(Double(receivedSize) / Double(expectedSize))
-                } else {
-                    DispatchQueue.main.async {
-                        progress?(Double(receivedSize) / Double(expectedSize))
-                    }
                 }
             } : nil,
             completed: { [weak self] image, data, error, _, _, _ in
                 if options.contains(.queryMemoryData), data == nil, let image = image {
-                    DispatchQueue.global().async {
+                    DispatchQueue.global().async { [weak self] in
                         let imageData = self?.imageEncode(image)
                         DispatchQueue.main.async {
                             completion(image, imageData, error)
                         }
                     }
                 } else {
-                    completion(image, data, error)
+                    DispatchQueue.fw.mainAsync {
+                        completion(image, data, error)
+                    }
                 }
             }
         )
@@ -231,7 +229,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
 
 // MARK: - SDWebImagePluginIndicator
 /// SDWebImage指示器插件Indicator
-@MainActor open class SDWebImagePluginIndicator: NSObject, SDWebImageIndicator {
+@MainActor open class SDWebImagePluginIndicator: NSObject, @preconcurrency SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.indicatorView(style: style)
@@ -281,7 +279,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
 }
 
 // MARK: - SDWebImageProgressPluginIndicator
-@MainActor open class SDWebImageProgressPluginIndicator: NSObject, SDWebImageIndicator {
+@MainActor open class SDWebImageProgressPluginIndicator: NSObject, @preconcurrency SDWebImageIndicator {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.progressView(style: style)
