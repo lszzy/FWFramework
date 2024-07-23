@@ -2832,10 +2832,8 @@ extension Wrapper where Base: UIDevice {
             guard let cancelButton = cancelButton else { return }
             if newValue {
                 cancelButton.isEnabled = true
-                cancelButton.fw.observeProperty(\.isEnabled) { object, _ in
-                    DispatchQueue.fw.mainAsync {
-                        if !object.isEnabled { object.isEnabled = true }
-                    }
+                cancelButton.fw.safeObserveProperty(\.isEnabled) { object, _ in
+                    if !object.isEnabled { object.isEnabled = true }
                 }
             } else {
                 cancelButton.fw.unobserveProperty(\.isEnabled)

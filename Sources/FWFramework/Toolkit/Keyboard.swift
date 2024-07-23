@@ -495,12 +495,10 @@ import UIKit
         observeProperty(\.frame, target: placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
         observeProperty(\.textAlignment, target: placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
         observeProperty(\.textContainerInset, target: placeholderTarget, action: #selector(PlaceholderTarget.setNeedsUpdatePlaceholder))
-        observeProperty(\.font) { textView, _ in
-            DispatchQueue.fw.mainAsync {
-                if textView.font != nil {
-                    textView.fw.placeholderLabel.font = textView.font
-                    textView.fw.placeholderTarget.setNeedsUpdatePlaceholder()
-                }
+        safeObserveProperty(\.font) { textView, _ in
+            if textView.font != nil {
+                textView.fw.placeholderLabel.font = textView.font
+                textView.fw.placeholderTarget.setNeedsUpdatePlaceholder()
             }
         }
         return label

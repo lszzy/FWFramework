@@ -57,14 +57,12 @@ import UIKit
             if let view = view {
                 newValue?(base, view)
             } else {
-                observeProperty("view") { object, change in
+                safeObserveProperty("view") { object, change in
                     guard change[.newKey] != nil else { return }
                     object.fw.unobserveProperty("view")
                     
-                    DispatchQueue.fw.mainAsync {
-                        if let view = object.fw.view {
-                            object.fw.viewLoadedBlock?(object, view)
-                        }
+                    if let view = object.fw.view {
+                        object.fw.viewLoadedBlock?(object, view)
                     }
                 }
             }

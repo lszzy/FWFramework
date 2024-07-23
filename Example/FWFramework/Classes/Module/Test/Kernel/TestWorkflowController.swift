@@ -40,21 +40,17 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
             app.addRightBarItem(Icon.iconImage("zmdi-var-replay", size: 24), target: self, action: #selector(onOpen))
         }
         
-        let notificationTarget = app.observeNotification(Self.testNotification) { notification in
-            DispatchQueue.app.mainAsync {
-                TestWorkflowController.notificationCount += 1
-                let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
-                UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
-            }
+        let notificationTarget = app.safeObserveNotification(Self.testNotification) { notification in
+            TestWorkflowController.notificationCount += 1
+            let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
+            UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
         }
         TestWorkflowController.notificationTargets.append(WeakObject(object: notificationTarget))
         
-        let kvoTarget = app.observeProperty(\.kvoValue) { vc, _ in
-            DispatchQueue.app.mainAsync {
-                TestWorkflowController.kvoCount += 1
-                let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
-                UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
-            }
+        let kvoTarget = app.safeObserveProperty(\.kvoValue) { vc, _ in
+            TestWorkflowController.kvoCount += 1
+            let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
+            UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
         TestWorkflowController.kvoTargets.append(WeakObject(object: kvoTarget))
     }

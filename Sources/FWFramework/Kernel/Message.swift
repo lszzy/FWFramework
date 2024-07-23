@@ -27,6 +27,25 @@ extension Wrapper where Base: WrapperObject {
         return messageTarget
     }
     
+    /// 主线程安全监听某个点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - name: 消息名称
+    ///   - object: 消息对象，值为nil时表示所有
+    ///   - block: 消息句柄
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
+        return observeMessage(name, object: object) { notification in
+            let messageTarget = MessageTarget()
+            messageTarget.notification = notification
+            DispatchQueue.fw.mainAsync {
+                if let notification = messageTarget.notification {
+                    block(notification)
+                }
+            }
+        }
+    }
+    
     /// 监听某个指定对象点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
@@ -154,6 +173,25 @@ extension Wrapper where Base: WrapperObject {
         return notificationTarget
     }
     
+    /// 主线程安全监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 通知对象，值为nil时表示所有
+    ///   - block: 通知句柄
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
+        return observeNotification(name, object: object) { notification in
+            let messageTarget = MessageTarget()
+            messageTarget.notification = notification
+            DispatchQueue.fw.mainAsync {
+                if let notification = messageTarget.notification {
+                    block(notification)
+                }
+            }
+        }
+    }
+    
     /// 监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
@@ -192,6 +230,23 @@ extension Wrapper where Base: WrapperObject {
                 NotificationCenter.default.removeObserver(observer)
             }
             block($0)
+        }
+    }
+    
+    /// 主线程安全单次监听通知，触发后自动移除监听
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 通知对象，值为nil时表示所有
+    ///   - block: 监听句柄
+    public static func safeObserveOnce(
+        forName name: NSNotification.Name?,
+        object: Any? = nil,
+        using block: @escaping @MainActor @Sendable (_ notification: Notification) -> Void
+    ) {
+        observeOnce(forName: name, object: object, queue: .main) { notification in
+            MainActor.assumeIsolated {
+                block(notification)
+            }
         }
     }
     
@@ -295,6 +350,21 @@ extension Wrapper where Base: NSObject {
         return addObservation(observation, keyPath: keyPath)
     }
     
+    /// 主线程安全监听对象某个属性KeyPath，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - keyPath: 属性KeyPath
+    ///   - options: 监听选项
+    ///   - block: 目标句柄，block参数依次为object、change对象
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping @MainActor @Sendable (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol {
+        return observeProperty(keyPath, options: options) { object, change in
+            DispatchQueue.fw.mainAsync {
+                block(object, change)
+            }
+        }
+    }
+    
     /// 监听对象某个属性KeyPath，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - keyPath: 属性KeyPath
@@ -331,6 +401,20 @@ extension Wrapper where Base: NSObject {
         propertyTargets.append(target)
         target.addObserver()
         return target
+    }
+    
+    /// 主线程安全监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - property: 属性名称
+    ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveProperty(_ property: String, block: @escaping @MainActor @Sendable (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
+        return observeProperty(property) { object, change in
+            DispatchQueue.fw.mainAsync {
+                block(object, change)
+            }
+        }
     }
     
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
@@ -548,7 +632,8 @@ fileprivate class PropertyTarget: NSObject {
 }
 
 // MARK: - MessageTarget
-fileprivate class MessageTarget: NSObject, @unchecked Sendable {
+fileprivate class MessageTarget: @unchecked Sendable {
     var observer: (any NSObjectProtocol)?
     weak var target: AnyObject?
+    var notification: Notification?
 }
