@@ -161,7 +161,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?) {
         // 兼容URLRequest.cachePolicy缓存策略
         var targetOptions = options
         if let urlRequest = url as? URLRequest,
@@ -199,7 +199,7 @@ extension Wrapper where Base: UIImage {
 // MARK: - Wrapper+UIImageView
 extension Wrapper where Base: UIImageView {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: (@Sendable (Double) -> Void)? = nil) {
+    @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)? = nil, progress: (@MainActor @Sendable (Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
     
@@ -230,7 +230,7 @@ extension Wrapper where Base: UIImageView {
 // MARK: - Wrapper+UIButton
 @MainActor extension Wrapper where Base: UIButton {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: ((UIImage?, Error?) -> Void)? = nil, progress: (@Sendable (Double) -> Void)? = nil) {
+    public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)? = nil, progress: (@MainActor @Sendable (Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
 }
@@ -267,7 +267,7 @@ public protocol ImagePlugin: AnyObject {
     @MainActor func imageURL(for view: UIView) -> URL?
     
     /// view加载网络图片插件方法
-    @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?, for view: UIView)
+    @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?, for view: UIView)
     
     /// view取消加载网络图片请求插件方法
     @MainActor func cancelImageRequest(for view: UIView)
@@ -304,7 +304,7 @@ extension ImagePlugin {
     }
     
     /// view加载网络图片插件方法
-    @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: ((UIImage?) -> Void)?, completion: ((UIImage?, Error?) -> Void)?, progress: (@Sendable (Double) -> Void)?, for view: UIView) {
+    @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?, for view: UIView) {
         ImagePluginImpl.shared.setImageURL(url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: view)
     }
     

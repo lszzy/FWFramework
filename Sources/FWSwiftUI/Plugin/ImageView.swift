@@ -19,7 +19,7 @@ public struct ImageView: UIViewRepresentable {
     var placeholder: UIImage?
     var options: WebImageOptions = []
     var context: [ImageCoderOptions: Any]?
-    var completion: ((UIImageView, UIImage?) -> Void)?
+    var completion: (@MainActor @Sendable (UIImageView, UIImage?) -> Void)?
     var contentMode: UIView.ContentMode = .scaleAspectFill
     
     /// 指定本地占位图片初始化
@@ -67,7 +67,7 @@ public struct ImageView: UIViewRepresentable {
         let imageView = UIImageView.fw.animatedImageView()
         let uiView = ResizableView(imageView)
         uiView.content.contentMode = contentMode
-        uiView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { image, _ in completion?(imageView, image) } : nil)
+        uiView.content.fw.setImage(url: url, placeholderImage: placeholder, options: options, context: self.context, completion: completion != nil ? { @MainActor @Sendable image, _ in completion?(imageView, image) } : nil)
         return uiView
     }
     

@@ -67,9 +67,9 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
-        setImageBlock block: ((UIImage?) -> Void)?,
-        completion: ((UIImage?, Error?) -> Void)?,
-        progress: (@Sendable (Double) -> Void)? = nil,
+        setImageBlock block: (@MainActor @Sendable (UIImage?) -> Void)?,
+        completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?,
+        progress: (@MainActor @Sendable (Double) -> Void)? = nil,
         for view: UIView
     ) {
         let setImageBlock = block ?? { image in
