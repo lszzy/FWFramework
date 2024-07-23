@@ -169,8 +169,8 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
     
-    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
-    private static var imageLock = NSLock()
+    nonisolated(unsafe) static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions : Any]?) -> UIImage?)?
+    nonisolated(unsafe) private static var imageLock = NSLock()
     
     public override init() {
         super.init()

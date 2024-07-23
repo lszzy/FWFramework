@@ -329,7 +329,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
-    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @MainActor @escaping @Sendable (String?) -> Void) {
+    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @escaping @MainActor @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
@@ -371,7 +371,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于条形码/二维码数据，否则等于 nil
-    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @MainActor @escaping @Sendable (String?) -> Void) {
+    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @escaping @MainActor @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {

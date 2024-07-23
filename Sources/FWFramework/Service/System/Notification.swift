@@ -42,7 +42,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
     
     // MARK: - Badge
     /// 清空图标通知计数
-    public func clearNotificationBadges() {
+    @MainActor public func clearNotificationBadges() {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
