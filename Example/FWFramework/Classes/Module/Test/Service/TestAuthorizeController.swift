@@ -31,7 +31,9 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
         
         // 手工修改设置返回页面自动刷新权限，释放时自动移除监听
         app.observeNotification(UIApplication.didBecomeActiveNotification) { [weak self] _ in
-            self?.tableView.reloadData()
+            DispatchQueue.app.mainAsync { [weak self] in
+                self?.tableView.reloadData()
+            }
         }
     }
    

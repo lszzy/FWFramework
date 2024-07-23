@@ -61,8 +61,10 @@ import UIKit
                     guard change[.newKey] != nil else { return }
                     object.fw.unobserveProperty("view")
                     
-                    if let view = object.fw.view {
-                        object.fw.viewLoadedBlock?(object, view)
+                    DispatchQueue.fw.mainAsync {
+                        if let view = object.fw.view {
+                            object.fw.viewLoadedBlock?(object, view)
+                        }
                     }
                 }
             }
