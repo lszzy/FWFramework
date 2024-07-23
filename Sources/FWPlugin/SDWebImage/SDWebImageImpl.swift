@@ -30,10 +30,10 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     open var hidesPlaceholderIndicator = false
     
     /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil
-    open var customIndicatorBlock: ((UIView, Bool) -> SDWebImageIndicator?)?
+    open var customIndicatorBlock: (@MainActor @Sendable (UIView, Bool) -> SDWebImageIndicator?)?
     
     /// 图片自定义句柄，setImageURL开始时调用
-    open var customBlock: ((UIView) -> Void)?
+    open var customBlock: (@MainActor @Sendable (UIView) -> Void)?
     
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
@@ -90,9 +90,9 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
         placeholder: UIImage?,
         options: WebImageOptions = [],
         context: [ImageCoderOptions : Any]?,
-        setImageBlock: ((UIImage?) -> Void)?,
-        completion: ((UIImage?, Error?) -> Void)?,
-        progress: (@Sendable (Double) -> Void)? = nil,
+        setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?,
+        completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?,
+        progress: (@MainActor @Sendable (Double) -> Void)? = nil,
         for view: UIView
     ) {
         if fadeAnimated && view.sd_imageTransition == nil {
