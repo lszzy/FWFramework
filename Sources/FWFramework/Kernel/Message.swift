@@ -17,7 +17,7 @@ extension Wrapper where Base: WrapperObject {
     ///   - block: 消息句柄
     /// - Returns: 监听者
     @discardableResult
-    public func observeMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func observeMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @Sendable (Notification) -> Void) -> NSObjectProtocol {
         let messageTarget = NotificationTarget()
         messageTarget.broadcast = false
         messageTarget.name = name
@@ -143,7 +143,7 @@ extension Wrapper where Base: WrapperObject {
     ///   - block: 通知句柄
     /// - Returns: 监听者
     @discardableResult
-    public func observeNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping (Notification) -> Void) -> NSObjectProtocol {
+    public func observeNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @Sendable (Notification) -> Void) -> NSObjectProtocol {
         let notificationTarget = NotificationTarget()
         notificationTarget.broadcast = true
         notificationTarget.name = name
@@ -319,7 +319,7 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听者
     @discardableResult
-    public func observeProperty(_ property: String, block: @escaping (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
+    public func observeProperty(_ property: String, block: @escaping @Sendable (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
         let target = PropertyTarget()
         target.isKvo = true
         target.object = base
@@ -468,7 +468,7 @@ fileprivate class NotificationTarget: NSObject {
     weak var object: AnyObject?
     weak var target: AnyObject?
     var action: Selector?
-    var block: ((Notification) -> Void)?
+    var block: (@Sendable (Notification) -> Void)?
     
     deinit {
         if broadcast {
@@ -497,7 +497,7 @@ fileprivate class PropertyTarget: NSObject {
     
     var isKvo: Bool = false
     unowned(unsafe) var object: AnyObject?
-    var block: ((Any, [NSKeyValueChangeKey: Any]) -> Void)?
+    var block: (@Sendable (Any, [NSKeyValueChangeKey: Any]) -> Void)?
     private var isObserving = false
     
     deinit {
