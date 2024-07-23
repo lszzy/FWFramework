@@ -12,7 +12,7 @@ import Photos
 
 // MARK: - Asset
 /// 资源类型枚举
-public enum AssetType: UInt {
+public enum AssetType: UInt, Sendable {
     case unknown = 0
     case image
     case video
@@ -20,7 +20,7 @@ public enum AssetType: UInt {
 }
 
 /// 资源子类型枚举
-public enum AssetSubType: UInt {
+public enum AssetSubType: UInt, Sendable {
     case unknown = 0
     case image
     case livePhoto
@@ -28,7 +28,7 @@ public enum AssetSubType: UInt {
 }
 
 /// 资源下载状态枚举
-public enum AssetDownloadStatus: UInt {
+public enum AssetDownloadStatus: UInt, Sendable {
     case succeed = 0
     case downloading
     case canceled
@@ -39,7 +39,7 @@ public enum AssetDownloadStatus: UInt {
 ///
 /// Asset 重写了 isEqual: 方法，只要两个 Asset 的 identifier 相同，则认为是同一个对象，以方便在数组、字典等容器中对大量 Asset 进行遍历查找等操作
 @objc(ObjCAsset)
-public class Asset: NSObject {
+public class Asset: NSObject, @unchecked Sendable {
     
     /// 只读PHAsset对象
     public let phAsset: PHAsset
@@ -476,7 +476,7 @@ public enum AlbumContentType: UInt, Sendable {
 }
 
 /// 相册展示内容按日期排序的方式
-@objc public enum AlbumSortType: UInt {
+@objc public enum AlbumSortType: UInt, Sendable {
     /// 日期最新的内容排在后面
     case positive = 0
     /// 日期最新的内容排在前面
@@ -485,7 +485,7 @@ public enum AlbumContentType: UInt, Sendable {
 
 /// 资源分组
 @objc(ObjCAssetGroup)
-public class AssetGroup: NSObject {
+public class AssetGroup: NSObject, @unchecked Sendable {
     
     /// 只读PHAssetCollection对象
     public let phAssetCollection: PHAssetCollection
@@ -582,7 +582,7 @@ public class AssetGroup: NSObject {
 
 // MARK: - AssetManager
 /// Asset 授权的状态
-public enum AssetAuthorizationStatus: UInt {
+public enum AssetAuthorizationStatus: UInt, Sendable {
     /// 还不确定有没有授权
     case notDetermined = 0
     /// 已经授权
@@ -596,7 +596,7 @@ public enum AssetAuthorizationStatus: UInt {
 ///  2. 使用 PhotoKit 获取图片，基本都需要一个 PHCachingImageManager 的实例，为了减少消耗，AssetManager 单例内部也构建了一个 PHCachingImageManager，并且暴露给外面，方便获取PHCachingImageManager 的实例。
 ///
 ///  [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
-public class AssetManager {
+public class AssetManager: @unchecked Sendable {
     
     // MARK: - Static
     /// 获取 AssetManager 的单例
@@ -958,7 +958,7 @@ public class AssetManager {
 
 // MARK: - AssetLivePhoto
 /// [LivePhoto](https://github.com/LimitPoint/LivePhoto)
-public class AssetLivePhoto {
+public class AssetLivePhoto: @unchecked Sendable {
     
     /// LivePhoto资源定义
     public typealias Resources = (pairedImage: URL, pairedVideo: URL)
@@ -1323,7 +1323,7 @@ public enum AssetSessionExporterError: Error, CustomStringConvertible {
 /// 🔄 AssetSessionExporter, export and transcode media in Swift
 ///
 /// [NextLevelSessionExporter](https://github.com/NextLevel/NextLevelSessionExporter)
-open class AssetSessionExporter: NSObject {
+open class AssetSessionExporter: NSObject, @unchecked Sendable {
     
     /// Initiates a AssetSessionExport on the asset
     ///

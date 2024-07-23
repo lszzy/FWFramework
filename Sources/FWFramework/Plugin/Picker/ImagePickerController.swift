@@ -77,7 +77,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     }
     
     /// 当前相册列表，异步加载
-    open private(set) var albumsArray: [AssetGroup] = []
+    nonisolated(unsafe) open private(set) var albumsArray: [AssetGroup] = []
     
     /// 相册列表事件代理
     open weak var albumControllerDelegate: ImageAlbumControllerDelegate?
@@ -257,14 +257,15 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
             fw.showLoading()
         }
         
+        let albumContentType = self.contentType
         DispatchQueue.global(qos: .default).async { [weak self] in
-            AssetManager.shared.enumerateAllAlbums(albumContentType: self?.contentType ?? .all) { resultAssetsGroup in
+            AssetManager.shared.enumerateAllAlbums(albumContentType: albumContentType) { [weak self] resultAssetsGroup in
                 if let resultAssetsGroup = resultAssetsGroup {
                     self?.albumsArray.append(resultAssetsGroup)
                 } else {
                     // 意味着遍历完所有的相簿了
                     self?.sortAlbumArray()
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
                         self?.refreshAlbumGroups()
                     }
                 }
@@ -272,7 +273,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func sortAlbumArray() {
+    nonisolated private func sortAlbumArray() {
         // 把隐藏相册排序强制放到最后
         var hiddenGroup: AssetGroup?
         for album in albumsArray {
@@ -1986,9 +1987,10 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             return
         }
         
+        let options = albumSortType
         DispatchQueue.global(qos: .default).async { [weak self] in
-            assetsGroup?.enumerateAssets(options: albumSortType, using: { resultAsset in
-                DispatchQueue.main.async {
+            assetsGroup?.enumerateAssets(options: options, using: { [weak self] resultAsset in
+                DispatchQueue.main.async { [weak self] in
                     if let resultAsset = resultAsset {
                         self?.isImagesAssetLoaded = false
                         self?.imagesAssetArray.append(resultAsset)
