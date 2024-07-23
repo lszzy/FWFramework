@@ -242,7 +242,7 @@ public enum PopupMenuAnimationStyle: Int {
 }
 
 /// 弹出菜单动画管理器
-open class PopupMenuAnimationManager: NSObject, CAAnimationDelegate {
+@MainActor open class PopupMenuAnimationManager: NSObject, @preconcurrency CAAnimationDelegate {
     
     /// 动画类型，默认style
     open var style: PopupMenuAnimationStyle = .scale {
