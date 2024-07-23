@@ -275,7 +275,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开短信控制器，完成时回调
-    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
         if !MFMessageComposeViewController.canSendText() {
             completionHandler?(false)
             return
@@ -289,7 +289,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开邮件控制器，完成时回调
-    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
         if !MFMailComposeViewController.canSendMail() {
             completionHandler?(false)
             return
@@ -303,7 +303,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开Store控制器，完成时回调
-    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
+    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: (@Sendable (Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -2184,7 +2184,7 @@ fileprivate class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
 }
 
 // MARK: - GestureRecognizerDelegateProxy
-@objc fileprivate protocol GestureRecognizerDelegateCompatible {
+@MainActor @objc fileprivate protocol GestureRecognizerDelegateCompatible {
     
     @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
     
@@ -2254,23 +2254,29 @@ fileprivate class SafariViewControllerDelegate: NSObject, @unchecked Sendable, S
     }
     
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(result == .sent)
+        let completion = controller.fw.property(forName: "messageComposeViewController") as? @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(result == .sent)
+            }
         }
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(result == .sent)
+        let completion = controller.fw.property(forName: "mailComposeController") as? @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(result == .sent)
+            }
         }
     }
     
     func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(true)
+        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(true)
+            }
         }
     }
     

@@ -468,7 +468,7 @@ open class SkeletonLayout: SkeletonView {
     }
     
     /// 设置相对滚动视图，实现跟随下拉刷新等效果。block参数为contentOffset.y(不大于0)，默认设置顶部布局跟随滚动
-    open func setScrollView(_ scrollView: UIScrollView, scrollBlock: ((CGFloat) -> ())? = nil) {
+    open func setScrollView(_ scrollView: UIScrollView, scrollBlock: (@MainActor @Sendable (CGFloat) -> ())? = nil) {
         var block = scrollBlock
         if block == nil && superview != nil {
             let constraint = fw.constraint(toSuperview: .top)
@@ -482,8 +482,10 @@ open class SkeletonLayout: SkeletonView {
             block?(scrollView.contentOffset.y)
         }
         scrollView.fw.observeProperty(\.contentOffset) { [weak self] scrollView, _ in
-            if scrollView.contentOffset.y <= 0 && self?.superview != nil {
-                block?(scrollView.contentOffset.y)
+            DispatchQueue.fw.mainAsync { [weak self] in
+                if scrollView.contentOffset.y <= 0 && self?.superview != nil {
+                    block?(scrollView.contentOffset.y)
+                }
             }
         }
     }
