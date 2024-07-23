@@ -29,17 +29,17 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 }
 
 /// 约定类
-public class Promise {
+public class Promise: @unchecked Sendable {
     
     // MARK: - Accessor
     /// 约定回调队列，默认main队列
     public static var completionQueue: DispatchQueue = .main
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
-    public static var failedError: Error = PromiseError.failed
+    nonisolated(unsafe) public static var failedError: Error = PromiseError.failed
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    public static var validationError: Error = PromiseError.validation
+    nonisolated(unsafe) public static var validationError: Error = PromiseError.validation
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    public static var timeoutError: Error = PromiseError.timeout
+    nonisolated(unsafe) public static var timeoutError: Error = PromiseError.timeout
     
     /// 约定进度值
     private struct ProgressValue { var value: Double }

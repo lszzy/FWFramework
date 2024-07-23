@@ -184,7 +184,7 @@ extension Wrapper where Base: WrapperObject {
         forName name: NSNotification.Name?,
         object: Any? = nil,
         queue: OperationQueue? = nil,
-        using block: @escaping (_ notification: Notification) -> Void
+        using block: @escaping @Sendable (_ notification: Notification) -> Void
     ) {
         var handler: (any NSObjectProtocol)!
         let removeObserver = {
@@ -291,7 +291,7 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、change对象
     /// - Returns: 监听者
     @discardableResult
-    public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol {
+    public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping @Sendable (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol {
         let observation = base.observe(keyPath, options: options, changeHandler: block)
         return addObservation(observation, keyPath: keyPath)
     }

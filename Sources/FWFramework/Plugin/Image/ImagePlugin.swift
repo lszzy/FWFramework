@@ -124,7 +124,7 @@ extension Wrapper where Base: UIImage {
 
     /// 下载网络图片并返回下载凭据，指定option
     @discardableResult
-    public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: @escaping (UIImage?, Data?, Error?) -> Void, progress: ((Double) -> Void)? = nil) -> Any? {
+    public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)? = nil) -> Any? {
         let imageURL = url?.urlValue
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         return imagePlugin.downloadImage(imageURL, options: options, context: context, completion: completion, progress: progress)
