@@ -186,12 +186,11 @@ extension Wrapper where Base: WrapperObject {
         queue: OperationQueue? = nil,
         using block: @escaping @Sendable (_ notification: Notification) -> Void
     ) {
-        var handler: (any NSObjectProtocol)!
-        let removeObserver = {
-            NotificationCenter.default.removeObserver(handler!)
-        }
-        handler = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) {
-            removeObserver()
+        let messageTarget = MessageTarget()
+        messageTarget.observer = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) {
+            if let observer = messageTarget.observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
             block($0)
         }
     }
@@ -305,8 +304,10 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 监听者
     @discardableResult
     public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let observation = base.observe(keyPath, options: options) { [weak target] object, change in
-            if let target = target, target.responds(to: action) {
+        let messageTarget = MessageTarget()
+        messageTarget.target = target
+        let observation = base.observe(keyPath, options: options) { object, change in
+            if let target = messageTarget.target, target.responds(to: action) {
                 _ = target.perform(action, with: object, with: change)
             }
         }
@@ -544,4 +545,10 @@ fileprivate class PropertyTarget: NSObject {
             _ = target.perform(action, with: object, with: newChange)
         }
     }
+}
+
+// MARK: - MessageTarget
+fileprivate class MessageTarget: NSObject, @unchecked Sendable {
+    var observer: (any NSObjectProtocol)?
+    weak var target: AnyObject?
 }
