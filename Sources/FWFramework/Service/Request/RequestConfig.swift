@@ -292,7 +292,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
     /// 处理重试请求，处理完成回调是否需要重试
-    func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (_ shouldRetry: Bool) -> Void)
+    func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
@@ -300,7 +300,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     public static let `default` = RequestRetrier()
     
     /// 自定义重试过滤器，回调过滤结果(nil时继续判定，非nil时停止判定)，优先级最高且线程安全，可用于刷新授权等
-    open var requestRetryFilter: ((_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (_ filterResult: Bool?) -> Void) -> Void)?
+    open var requestRetryFilter: (@Sendable (_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (_ filterResult: Bool?) -> Void) -> Void)?
     
     private lazy var retryQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
     private lazy var retrySemaphore = DispatchSemaphore(value: 1)
@@ -319,7 +319,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     }
     
     // MARK: - RequestRetrierProtocol
-    open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (_ shouldRetry: Bool) -> Void) {
+    open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         if request.isCancelled { return }
         
         guard let filter = requestRetryFilter else {
@@ -329,7 +329,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
         
         retryQueue.async { [weak self] in
             self?.retrySemaphore.wait()
-            filter(request, response, responseObject, error, { filterResult in
+            filter(request, response, responseObject, error, { [weak self] filterResult in
                 self?.retrySemaphore.signal()
                 if request.isCancelled { return }
                 
@@ -343,7 +343,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
         }
     }
     
-    private func retryProcess(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (_ shouldRetry: Bool) -> Void) {
+    private func retryProcess(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         let retryCount = request.requestRetryCount()
         let remainCount = retryCount - (request.requestTotalCount - 1)
         var canRetry = retryCount < 0 || remainCount > 0
