@@ -10,7 +10,7 @@ import UIKit
 // MARK: - Wrapper+DispatchQueue
 extension Wrapper where Base: DispatchQueue {
     /// 主线程安全异步执行句柄
-    public static func mainAsync(execute block: @MainActor @escaping @Sendable () -> Void) {
+    public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
         if Thread.isMainThread {
             MainActor.assumeIsolated {
                 block()
@@ -56,7 +56,7 @@ extension Wrapper where Base: Timer {
     ///   - countDown: 倒计时时间
     ///   - block: 每秒执行block，为0时自动停止
     /// - Returns: 定时器，可手工停止
-    public static func commonTimer(countDown: Int, block: @MainActor @escaping @Sendable (Int) -> Void) -> Timer {
+    public static func commonTimer(countDown: Int, block: @escaping @MainActor @Sendable (Int) -> Void) -> Timer {
         let startTime = Date.fw.currentTime
         let timer = commonTimer(timeInterval: 1, block: { timer in
             DispatchQueue.main.async {

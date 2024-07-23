@@ -462,7 +462,7 @@ public class Asset: NSObject {
 
 // MARK: - AssetGroup
 /// 相册展示内容的类型
-public enum AlbumContentType: UInt {
+public enum AlbumContentType: UInt, Sendable {
     /// 展示所有资源
     case all = 0
     /// 只展示照片

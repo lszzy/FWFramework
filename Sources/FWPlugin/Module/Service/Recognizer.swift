@@ -28,7 +28,7 @@ public class Recognizer {
     }
     
     /// 识别图片文字，可设置语言(zh-CN,en-US)等，完成时主线程回调结果
-    public static func recognizeText(in image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @MainActor @escaping @Sendable ([Result]) -> Void) {
+    public static func recognizeText(in image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping @MainActor @Sendable ([Result]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             performOcr(image: image, configuration: configuration) { results in
                 DispatchQueue.main.async {

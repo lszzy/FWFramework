@@ -1228,7 +1228,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 后台线程压缩图片，完成后主线程回调
-    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @MainActor @escaping @Sendable ([UIImage]) -> Void) {
+    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([UIImage]) -> Void) {
         DispatchQueue.global().async {
             let compressImages = images.compactMap { image in
                 return image
@@ -1243,7 +1243,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 后台线程压缩图片数据，完成后主线程回调
-    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @MainActor @escaping @Sendable ([Data]) -> Void) {
+    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([Data]) -> Void) {
         DispatchQueue.global().async {
             let compressDatas = images.compactMap { image in
                 return image
