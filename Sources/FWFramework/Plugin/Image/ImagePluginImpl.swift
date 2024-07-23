@@ -26,19 +26,19 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
     open var hidesPlaceholderIndicator = false
     
     /// 自定义动画指示器句柄，参数为是否有placeholder，默认nil
-    open var customIndicatorBlock: ((UIView, Bool) -> (UIView & IndicatorViewPlugin)?)?
+    open var customIndicatorBlock: (@MainActor @Sendable (UIView, Bool) -> (UIView & IndicatorViewPlugin)?)?
 
     /// 自定义图片处理句柄，setImageURL开始时调用
-    open var customBlock: ((UIView) -> Void)?
+    open var customBlock: (@MainActor @Sendable (UIView) -> Void)?
     
     /// 自定义图片进度句柄，setImageURL下载时调用
-    open var customProgressBlock: ((UIView, CGFloat) -> Void)?
+    open var customProgressBlock: (@MainActor @Sendable (UIView, CGFloat) -> Void)?
     
     /// 自定义图片完成句柄，setImageURL完成时调用
-    open var customCompletionBlock: ((UIView, UIImage?, Error?) -> Void)?
+    open var customCompletionBlock: (@MainActor @Sendable (UIView, UIImage?, Error?) -> Void)?
     
     /// 自定义图片取消句柄，cancelImageRequest时调用
-    open var customCancelBlock: ((UIView) -> Void)?
+    open var customCancelBlock: (@MainActor @Sendable (UIView) -> Void)?
     
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
@@ -69,7 +69,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         context: [ImageCoderOptions : Any]?,
         setImageBlock block: ((UIImage?) -> Void)?,
         completion: ((UIImage?, Error?) -> Void)?,
-        progress: ((Double) -> Void)? = nil,
+        progress: (@Sendable (Double) -> Void)? = nil,
         for view: UIView
     ) {
         let setImageBlock = block ?? { image in
@@ -144,7 +144,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
             }
             
             completion?(image, error)
-        }, progress: customProgressBlock != nil ? { [weak self] value in
+        }, progress: customProgressBlock != nil ? { @MainActor @Sendable [weak self] value in
             self?.customProgressBlock?(view, value)
             progress?(value)
         } : progress)
@@ -166,7 +166,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         return ImageDownloader.shared.loadImageCache(for: imageURL)
     }
     
-    open func clearImageCaches(_ completion: (() -> Void)? = nil) {
+    open func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         ImageDownloader.shared.clearImageCaches(completion)
     }
     
@@ -198,7 +198,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
             DispatchQueue.fw.mainAsync {
                 completion(nil, nil, error)
             }
-        }, progress: progress != nil ? { downloadProgress in
+        }, progress: progress != nil ? { @MainActor @Sendable downloadProgress in
             DispatchQueue.fw.mainAsync {
                 progress?(downloadProgress.fractionCompleted)
             }
