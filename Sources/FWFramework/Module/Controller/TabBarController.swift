@@ -1142,9 +1142,8 @@ open class TabBarItemMoreContentView: TabBarItemContentView {
     public func systemMore(highlighted isHighlighted: Bool) -> UIImage? {
         let image = UIImage.init()
         let circleDiameter  = isHighlighted ? 5.0 : 4.0
-        let scale = UIScreen.main.scale
         
-        UIGraphicsBeginImageContextWithOptions(CGSize.init(width: 32, height: 32), false, scale)
+        UIGraphicsBeginImageContextWithOptions(CGSize.init(width: 32, height: 32), false, 0.0)
         
         if let context = UIGraphicsGetCurrentContext() {
             context.setLineWidth(1.0)

@@ -796,7 +796,7 @@ open class BarrageTextCell: BarrageCell {
     
     open override func convertContentToImage() {
         let contentSize = _textLabel?.frame.size ?? .zero
-        UIGraphicsBeginImageContextWithOptions(contentSize, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(contentSize, false, 0.0)
         if let context = UIGraphicsGetCurrentContext() {
             self.layer.render(in: context)
         }
