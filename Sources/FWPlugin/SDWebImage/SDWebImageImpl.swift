@@ -134,12 +134,8 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             } : nil,
             progress: progress != nil ? { receivedSize, expectedSize, _ in
                 guard expectedSize > 0 else { return }
-                if Thread.isMainThread {
+                DispatchQueue.fw.mainAsync {
                     progress?(Double(receivedSize) / Double(expectedSize))
-                } else {
-                    DispatchQueue.main.async {
-                        progress?(Double(receivedSize) / Double(expectedSize))
-                    }
                 }
             } : nil,
             completed: completion != nil ? { image, _, error, _, _, _ in

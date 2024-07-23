@@ -846,12 +846,8 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding, @unc
     }
     
     public func save() {
-        if Thread.isMainThread {
-            doDelaySaveAction()
-        } else {
-            DispatchQueue.main.async {
-                self.doDelaySaveAction()
-            }
+        DispatchQueue.fw.mainAsync {
+            self.doDelaySaveAction()
         }
     }
     
