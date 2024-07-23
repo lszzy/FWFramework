@@ -358,8 +358,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
                 }
             }
             
+            let resultString = messageString
             DispatchQueue.main.async {
-                completion(messageString)
+                completion(resultString)
             }
         }
     }
@@ -396,8 +397,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
                     }
                 }
                 
+                let resultString = messageString
                 DispatchQueue.main.async {
-                    completion(messageString)
+                    completion(resultString)
                 }
             }
            

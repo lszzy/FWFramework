@@ -107,7 +107,9 @@ internal extension ViewControllerManager {
         }
         
         webView.fw.observeProperty(\.title) { [weak webController] _, _ in
-            webController?.navigationItem.title = webController?.webView.title
+            DispatchQueue.fw.mainAsync { [weak webController] in
+                webController?.navigationItem.title = webController?.webView.title
+            }
         }
         viewController.fw.allowsPopGesture = { [weak webController] in
             return !(webController?.webView.canGoBack ?? false)

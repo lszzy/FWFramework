@@ -153,9 +153,11 @@ class WebController: UIViewController, WebViewControllerProtocol {
         }
         backItem.isEnabled = false
         webView.app.observeProperty(\.canGoBack) { [weak self] _, _ in
-            guard let self = self else { return }
-            backItem.isEnabled = self.webView.canGoBack
-            self.reloadToolbar(false)
+            DispatchQueue.app.mainAsync { [weak self] in
+                guard let self = self else { return }
+                backItem.isEnabled = self.webView.canGoBack
+                self.reloadToolbar(false)
+            }
         }
         
         let forwardItem = UIBarButtonItem.app.item(object: Icon.backImage?.app.image(rotateDegree: 180)) { [weak self] _ in
@@ -166,13 +168,17 @@ class WebController: UIViewController, WebViewControllerProtocol {
         }
         forwardItem.isEnabled = false
         webView.app.observeProperty(\.canGoForward) { [weak self] _, _ in
-            guard let self = self else { return }
-            forwardItem.isEnabled = self.webView.canGoForward
-            self.reloadToolbar(false)
+            DispatchQueue.app.mainAsync { [weak self] in
+                guard let self = self else { return }
+                forwardItem.isEnabled = self.webView.canGoForward
+                self.reloadToolbar(false)
+            }
         }
         
         webView.app.observeProperty(\.isLoading) { [weak self] _, _ in
-            self?.reloadToolbar(false)
+            DispatchQueue.app.mainAsync { [weak self] in
+                self?.reloadToolbar(false)
+            }
         }
         
         let flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)

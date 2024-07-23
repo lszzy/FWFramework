@@ -776,10 +776,12 @@ import UIKit
         }
         
         alertController.fw.observeProperty(\.preferredAction) { object, _ in
-            for action in object.actions {
-                if action.fw.isPreferred { action.fw.isPreferred = false }
+            DispatchQueue.fw.mainAsync {
+                for action in object.actions {
+                    if action.fw.isPreferred { action.fw.isPreferred = false }
+                }
+                object.preferredAction?.fw.isPreferred = true
             }
-            object.preferredAction?.fw.isPreferred = true
         }
         
         return alertController
