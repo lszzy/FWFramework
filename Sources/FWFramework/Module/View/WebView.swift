@@ -201,10 +201,12 @@ import JavaScriptCore
         }
         viewController.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
         observeProperty(\.canGoBack) { [weak viewController] webView, _ in
-            if webView.canGoBack {
-                viewController?.navigationItem.leftBarButtonItems = leftItems
-            } else {
-                viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+            DispatchQueue.fw.mainAsync { [weak viewController] in
+                if webView.canGoBack {
+                    viewController?.navigationItem.leftBarButtonItems = leftItems
+                } else {
+                    viewController?.navigationItem.leftBarButtonItems = showClose && leftItems.count > 0 ? [leftItems[0]]  : []
+                }
             }
         }
     }
@@ -372,11 +374,15 @@ open class WebView: WKWebView {
         progressView.fw.pinEdges(excludingEdge: .bottom, autoScale: false)
         progressView.fw.setDimension(.height, size: 2.0, autoScale: false)
         fw.observeProperty(\.estimatedProgress) { webView, _ in
-            webView.progressView.fw.webProgress = Float(webView.estimatedProgress)
+            DispatchQueue.fw.mainAsync {
+                webView.progressView.fw.webProgress = Float(webView.estimatedProgress)
+            }
         }
         fw.observeProperty(\.isLoading) { webView, _ in
-            if !webView.isLoading && webView.progressView.fw.webProgress < 1.0 {
-                webView.progressView.fw.webProgress = 1.0
+            DispatchQueue.fw.mainAsync {
+                if !webView.isLoading && webView.progressView.fw.webProgress < 1.0 {
+                    webView.progressView.fw.webProgress = 1.0
+                }
             }
         }
     }
@@ -957,7 +963,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         #endif
     }
     
-    private func evaluateJavascript(javascript: String, completion: ((Any?, Error?) -> Void)? = nil) {
+    private func evaluateJavascript(javascript: String, completion: (@MainActor @Sendable (Any?, Error?) -> Void)? = nil) {
         webView?.evaluateJavaScript(javascript, completionHandler: completion)
     }
     
