@@ -198,7 +198,7 @@ extension Wrapper where Base: CALayer {
     
     /// 生成图片截图，默认大小为frame.size
     public func snapshotImage(size: CGSize = .zero) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? base.frame.size : size, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(size.equalTo(.zero) ? base.frame.size : size, false, 0.0)
         if let context = UIGraphicsGetCurrentContext() {
             base.render(in: context)
             let image = UIGraphicsGetImageFromCurrentImageContext()
