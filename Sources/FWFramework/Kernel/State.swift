@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - StateObject
 /// 状态类
-public class StateObject {
+public class StateObject: @unchecked Sendable {
     
     /// 状态名称，只读
     public private(set) var name: String
@@ -35,7 +35,7 @@ public class StateObject {
 
 // MARK: - StateEvent
 /// 状态事件类
-public class StateEvent {
+public class StateEvent: @unchecked Sendable {
     
     /// 事件名称，只读
     public private(set) var name: String
@@ -69,7 +69,7 @@ public class StateEvent {
 
 // MARK: - StateTransition
 /// 状态转换器
-public class StateTransition {
+public class StateTransition: @unchecked Sendable {
     
     /// 有限状态机，只读
     public private(set) var machine: StateMachine
@@ -109,7 +109,7 @@ extension Notification.Name {
 /// 有限状态机
 ///
 /// [TransitionKit](https://github.com/blakewatters/TransitionKit)
-public class StateMachine {
+public class StateMachine: @unchecked Sendable {
     
     /// 状态列表，只读
     public private(set) var states: [StateObject] = []
