@@ -102,11 +102,23 @@ open class DelegateProxy<T>: NSObject {
 
 // MARK: - WeakObject
 /// 弱引用对象容器类，用于解决关联对象weak引用等
-public class WeakObject {
+public class WeakObject: @unchecked Sendable {
     
-    public private(set) weak var object: AnyObject?
+    public weak var object: AnyObject?
     
-    public init(object: AnyObject?) {
+    public init(_ object: AnyObject? = nil) {
+        self.object = object
+    }
+    
+}
+
+// MARK: - SendableObject
+/// Sendable容器类，用于解决任意对象Sendable传参等
+public class SendableObject: @unchecked Sendable {
+    
+    public var object: Any?
+    
+    public init(_ object: Any? = nil) {
         self.object = object
     }
     
