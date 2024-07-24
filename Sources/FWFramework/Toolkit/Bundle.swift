@@ -25,7 +25,7 @@ open class ModuleBundle: NSObject {
         var strings: [String: [String: [String: String]]] = [:]
     }
     
-    nonisolated(unsafe) static var imageNamedBlock: ((_ name: String, _ bundle: Bundle?) -> UIImage?)?
+    nonisolated(unsafe) static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
     
     /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {
@@ -50,7 +50,7 @@ open class ModuleBundle: NSObject {
         let value = bundleTarget.images[name]
         if let image = value as? UIImage {
             return image
-        } else if let block = value as? () -> UIImage? {
+        } else if let block = value as? @Sendable () -> UIImage? {
             return block()
         }
         return nil
@@ -62,7 +62,7 @@ open class ModuleBundle: NSObject {
     }
     
     /// 设置当前模块动态图片句柄
-    open class func addImage(_ name: String, block: (() -> UIImage?)?) {
+    open class func addImage(_ name: String, block: (@Sendable () -> UIImage?)?) {
         bundleTarget.images[name] = block
     }
     
@@ -73,7 +73,7 @@ open class ModuleBundle: NSObject {
         let value = bundleTarget.colors[name]
         if let color = value as? UIColor {
             return color
-        } else if let block = value as? () -> UIColor {
+        } else if let block = value as? @Sendable () -> UIColor {
             return block()
         }
         return .clear
@@ -85,7 +85,7 @@ open class ModuleBundle: NSObject {
     }
     
     /// 设置当前模块动态颜色句柄
-    open class func addColor(_ name: String, block: (() -> UIColor)?) {
+    open class func addColor(_ name: String, block: (@Sendable () -> UIColor)?) {
         bundleTarget.colors[name] = block
     }
     
