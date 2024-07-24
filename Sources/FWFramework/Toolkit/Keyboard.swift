@@ -23,7 +23,7 @@ import UIKit
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    public var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return base.innerKeyboardDistanceBlock }
         set { base.innerKeyboardDistanceBlock = newValue }
     }
@@ -71,7 +71,7 @@ import UIKit
     }
 
     /// 设置点击键盘完成按钮的事件句柄
-    public var returnBlock: ((UITextField) -> Void)? {
+    public var returnBlock: (@MainActor @Sendable (UITextField) -> Void)? {
         get {
             return keyboardTarget.returnBlock
         }
@@ -115,13 +115,13 @@ import UIKit
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: ((UITextField) -> UIResponder?)? {
+    public var previousResponder: (@MainActor @Sendable (UITextField) -> UIResponder?)? {
         get { return keyboardTarget.previousResponder }
         set { keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: ((UITextField) -> UIResponder?)? {
+    public var nextResponder: (@MainActor @Sendable (UITextField) -> UIResponder?)? {
         get { return keyboardTarget.nextResponder }
         set { keyboardTarget.nextResponder = newValue }
     }
@@ -162,7 +162,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -203,7 +203,7 @@ import UIKit
     }
     
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    public var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return base.innerKeyboardDistanceBlock }
         set { base.innerKeyboardDistanceBlock = newValue }
     }
@@ -251,7 +251,7 @@ import UIKit
     }
 
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var returnBlock: ((UITextView) -> Void)? {
+    public var returnBlock: (@MainActor @Sendable (UITextView) -> Void)? {
         get {
             return keyboardTarget.returnBlock
         }
@@ -333,13 +333,13 @@ import UIKit
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: ((UITextView) -> UIResponder?)? {
+    public var previousResponder: (@MainActor @Sendable (UITextView) -> UIResponder?)? {
         get { return keyboardTarget.previousResponder }
         set { keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: ((UITextView) -> UIResponder?)? {
+    public var nextResponder: (@MainActor @Sendable (UITextView) -> UIResponder?)? {
         get { return keyboardTarget.nextResponder }
         set { keyboardTarget.nextResponder = newValue }
     }
@@ -380,7 +380,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -551,13 +551,13 @@ import UIKit
     }
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
-    public var heightDidChange: ((CGFloat) -> Void)? {
-        get { return property(forName: "heightDidChange") as? (CGFloat) -> Void }
+    public var heightDidChange: (@MainActor @Sendable (CGFloat) -> Void)? {
+        get { return property(forName: "heightDidChange") as? @MainActor @Sendable (CGFloat) -> Void }
         set { setPropertyCopy(newValue, forName: "heightDidChange") }
     }
 
     /// 快捷启用自动高度，并设置最大高度和回调句柄
-    public func autoHeight(maxHeight height: CGFloat, didChange: ((CGFloat) -> Void)?) {
+    public func autoHeight(maxHeight height: CGFloat, didChange: (@MainActor @Sendable (CGFloat) -> Void)?) {
         maxHeight = height
         if didChange != nil { heightDidChange = didChange }
         autoHeightEnabled = true
@@ -578,7 +578,7 @@ extension UITextField {
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
     
-    @objc dynamic fileprivate var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc dynamic fileprivate var innerKeyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
@@ -624,7 +624,7 @@ extension UITextView {
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
     
-    @objc dynamic fileprivate var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc dynamic fileprivate var innerKeyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { return fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
@@ -674,7 +674,7 @@ extension UITextView {
     
     var keyboardDistance: CGFloat = 10
     
-    var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
+    var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
     
     var reboundDistance: CGFloat = 0
     
@@ -718,7 +718,7 @@ extension UITextView {
     
     var returnNext = false
     
-    var returnBlock: ((T) -> Void)?
+    var returnBlock: (@MainActor @Sendable (T) -> Void)?
     
     lazy var keyboardToolbar: UIToolbar = {
         return UIToolbar()
@@ -736,13 +736,13 @@ extension UITextView {
         return NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
     }()
     
-    var previousResponder: ((T) -> UIResponder?)? {
+    var previousResponder: (@MainActor @Sendable (T) -> UIResponder?)? {
         didSet {
             previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
         }
     }
     
-    var nextResponder: ((T) -> UIResponder?)? {
+    var nextResponder: (@MainActor @Sendable (T) -> UIResponder?)? {
         didSet {
             nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
         }
@@ -975,7 +975,7 @@ extension UITextView {
         UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: animations, completion: completion)
     }
     
-    func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    func addToolbar(title: Any?, doneBlock: (@MainActor @Sendable (Any) -> Void)?) {
         let titleItem = title != nil ? UIBarButtonItem.fw.item(object: title, block: nil) : nil
         titleItem?.isEnabled = false
         
