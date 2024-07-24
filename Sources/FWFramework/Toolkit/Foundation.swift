@@ -134,36 +134,36 @@ extension Wrapper where Base: WrapperObject {
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        _ block: @escaping (Any) -> Void,
+        _ block: @escaping @Sendable (Any) -> Void,
         afterDelay delay: TimeInterval
-    ) -> Any {
+    ) -> Any where Base: Sendable {
         return performBlock(block, on: .main, afterDelay: delay)
     }
 
     /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        inBackground block: @escaping (Any) -> Void,
+        inBackground block: @escaping @Sendable (Any) -> Void,
         afterDelay delay: TimeInterval
-    ) -> Any {
+    ) -> Any where Base: Sendable {
         return performBlock(block, on: .global(qos: .background), afterDelay: delay)
     }
 
     /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        _ block: @escaping (Any) -> Void,
+        _ block: @escaping @Sendable (Any) -> Void,
         on: DispatchQueue,
         afterDelay delay: TimeInterval
-    ) -> Any {
-        var cancelled = false
+    ) -> Any where Base: Sendable {
+        let cancelled = SendableObject()
         let strongBase = base
-        let wrapper: (Bool) -> Void = { cancel in
+        let wrapper: @Sendable (Bool) -> Void = { cancel in
             if cancel {
-                cancelled = true
+                cancelled.object = true
                 return
             }
-            if !cancelled {
+            if cancelled.object == nil {
                 block(strongBase)
             }
         }
@@ -193,7 +193,7 @@ extension Wrapper where Base: NSObject {
     /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
     @discardableResult
     public static func performBlock(
-        _ block: @escaping () -> Void,
+        _ block: @escaping @Sendable () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
         return performBlock(block, on: .main, afterDelay: delay)
@@ -202,7 +202,7 @@ extension Wrapper where Base: NSObject {
     /// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
     @discardableResult
     public static func performBlock(
-        inBackground block: @escaping () -> Void,
+        inBackground block: @escaping @Sendable () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
         return performBlock(block, on: .global(qos: .background), afterDelay: delay)
@@ -211,17 +211,17 @@ extension Wrapper where Base: NSObject {
     /// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
     @discardableResult
     public static func performBlock(
-        _ block: @escaping () -> Void,
+        _ block: @escaping @Sendable () -> Void,
         on queue: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
-        var cancelled = false
-        let wrapper: (Bool) -> Void = { cancel in
+        let cancelled = SendableObject()
+        let wrapper: @Sendable (Bool) -> Void = { cancel in
             if cancel {
-                cancelled = true
+                cancelled.object = true
                 return
             }
-            if !cancelled {
+            if cancelled.object == nil {
                 block()
             }
         }
@@ -234,17 +234,17 @@ extension Wrapper where Base: NSObject {
 
     /// 取消指定延迟block，全局范围
     public static func cancelBlock(_ block: Any) {
-        let wrapper = block as? (Bool) -> Void
+        let wrapper = block as? @Sendable (Bool) -> Void
         wrapper?(true)
     }
 
     /// 同步方式执行异步block，阻塞当前线程(信号量)，异步block必须调用completionHandler，全局范围
     public static func syncPerform(
-        asyncBlock: @escaping (@escaping () -> Void) -> Void
+        asyncBlock: @escaping @Sendable (@escaping @Sendable () -> Void) -> Void
     ) {
         // 使用信号量阻塞当前线程，等待block执行结果
         let semaphore = DispatchSemaphore(value: 0)
-        let completionHandler: () -> Void = {
+        let completionHandler: @Sendable () -> Void = {
             semaphore.signal()
         }
         asyncBlock(completionHandler)
@@ -253,7 +253,7 @@ extension Wrapper where Base: NSObject {
 
     /// 重试方式执行异步block，直至成功或者次数为0(小于0不限)或者超时(小于等于0不限)，完成后回调completion。block必须调用completionHandler，参数示例：重试4次|超时8秒|延迟2秒
     public static func performBlock(
-        _ block: @escaping @Sendable (@escaping (Bool, Any?) -> Void) -> Void,
+        _ block: @escaping @Sendable (@escaping @Sendable (Bool, Any?) -> Void) -> Void,
         completion: @escaping @Sendable (Bool, Any?) -> Void,
         retryCount: Int,
         timeoutInterval: TimeInterval,
@@ -265,7 +265,7 @@ extension Wrapper where Base: NSObject {
     }
     
     private static func performBlock(
-        _ block: @escaping @Sendable (@escaping (Bool, Any?) -> Void) -> Void,
+        _ block: @escaping @Sendable (@escaping @Sendable (Bool, Any?) -> Void) -> Void,
         completion: @escaping @Sendable (Bool, Any?) -> Void,
         retryCount: Int,
         remainCount: Int,
@@ -291,7 +291,7 @@ extension Wrapper where Base: NSObject {
 
     /// 执行轮询block任务，返回任务Id可取消
     @discardableResult
-    public static func performTask(_ task: @escaping () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
+    public static func performTask(_ task: @escaping @Sendable () -> Void, start: TimeInterval, interval: TimeInterval, repeats: Bool, async: Bool) -> String {
         let queue: DispatchQueue = async ? .global() : .main
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(deadline: .now() + start, repeating: interval, leeway: .seconds(0))
