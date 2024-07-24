@@ -36,10 +36,9 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func safeObserveMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
         return observeMessage(name, object: object) { notification in
-            let messageTarget = MessageTarget()
-            messageTarget.notification = notification
+            let sendableNotification = SendableObject(notification)
             DispatchQueue.fw.mainAsync {
-                if let notification = messageTarget.notification {
+                if let notification = sendableNotification.object as? Notification {
                     block(notification)
                 }
             }
@@ -182,10 +181,9 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func safeObserveNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
         return observeNotification(name, object: object) { notification in
-            let messageTarget = MessageTarget()
-            messageTarget.notification = notification
+            let sendableNotification = SendableObject(notification)
             DispatchQueue.fw.mainAsync {
-                if let notification = messageTarget.notification {
+                if let notification = sendableNotification.object as? Notification {
                     block(notification)
                 }
             }
@@ -224,12 +222,12 @@ extension Wrapper where Base: WrapperObject {
         queue: OperationQueue? = nil,
         using block: @escaping @Sendable (_ notification: Notification) -> Void
     ) {
-        let messageTarget = MessageTarget()
-        messageTarget.observer = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) {
-            if let observer = messageTarget.observer {
+        let sendableObserver = SendableObject()
+        sendableObserver.object = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) { notification in
+            if let observer = sendableObserver.object {
                 NotificationCenter.default.removeObserver(observer)
             }
-            block($0)
+            block(notification)
         }
     }
     
@@ -244,8 +242,11 @@ extension Wrapper where Base: WrapperObject {
         using block: @escaping @MainActor @Sendable (_ notification: Notification) -> Void
     ) {
         observeOnce(forName: name, object: object, queue: .main) { notification in
-            MainActor.assumeIsolated {
-                block(notification)
+            let sendableNotification = SendableObject(notification)
+            DispatchQueue.fw.mainAsync {
+                if let notification = sendableNotification.object as? Notification {
+                    block(notification)
+                }
             }
         }
     }
@@ -357,7 +358,7 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、change对象
     /// - Returns: 监听者
     @discardableResult
-    public func safeObserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping @MainActor @Sendable (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol {
+    public func safeObserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], block: @escaping @MainActor @Sendable (Base, NSKeyValueObservedChange<Value>) -> Void) -> NSObjectProtocol where Base: Sendable, Value: Sendable {
         return observeProperty(keyPath, options: options) { object, change in
             DispatchQueue.fw.mainAsync {
                 block(object, change)
@@ -374,11 +375,10 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 监听者
     @discardableResult
     public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let messageTarget = MessageTarget()
-        messageTarget.target = target
+        let weakObject = WeakObject(target)
         let observation = base.observe(keyPath, options: options) { object, change in
-            if let target = messageTarget.target, target.responds(to: action) {
-                _ = target.perform(action, with: object, with: change)
+            if let weakTarget = weakObject.object, weakTarget.responds(to: action) {
+                _ = weakTarget.perform(action, with: object, with: change)
             }
         }
         return addObservation(observation, keyPath: keyPath, target: target, action: action)
@@ -409,10 +409,13 @@ extension Wrapper where Base: NSObject {
     ///   - block: 目标句柄，block参数依次为object、优化的change字典(不含NSNull)
     /// - Returns: 监听者
     @discardableResult
-    public func safeObserveProperty(_ property: String, block: @escaping @MainActor @Sendable (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol {
+    public func safeObserveProperty(_ property: String, block: @escaping @MainActor @Sendable (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol where Base: Sendable {
         return observeProperty(property) { object, change in
+            let sendableChange = SendableObject(change)
             DispatchQueue.fw.mainAsync {
-                block(object, change)
+                if let change = sendableChange.object as? [NSKeyValueChangeKey: Any] {
+                    block(object, change)
+                }
             }
         }
     }
@@ -629,11 +632,4 @@ fileprivate class PropertyTarget: NSObject {
             _ = target.perform(action, with: object, with: newChange)
         }
     }
-}
-
-// MARK: - MessageTarget
-fileprivate class MessageTarget: @unchecked Sendable {
-    var observer: (any NSObjectProtocol)?
-    weak var target: AnyObject?
-    var notification: Notification?
 }
