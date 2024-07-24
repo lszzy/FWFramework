@@ -37,7 +37,7 @@ extension Wrapper where Base: UIColor {
     }
 
     /// 动态创建主题色，指定提供句柄
-    public static func themeColor(_ provider: @escaping (ThemeStyle) -> UIColor) -> UIColor {
+    public static func themeColor(_ provider: @escaping @Sendable (ThemeStyle) -> UIColor) -> UIColor {
         let color = UIColor { traitCollection in
             return provider(ThemeManager.shared.style(for: traitCollection))
         }
@@ -136,7 +136,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 创建主题模拟动态图像，指定提供句柄，不支持动态切换，需重新赋值才会变化
-    public static func themeImage(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImage {
+    public static func themeImage(_ provider: @escaping @Sendable (ThemeStyle) -> UIImage?) -> UIImage {
         let image = UIImage()
         image.fw.themeObject = ThemeObject(provider: provider)
         return image
@@ -173,7 +173,7 @@ extension Wrapper where Base: UIImage {
     }
     
     /// 默认主题图片颜色配置句柄，默认nil
-    public static var themeImageColorConfiguration: (() -> UIColor)? {
+    public static var themeImageColorConfiguration: (@Sendable () -> UIColor)? {
         get { Base.innerThemeImageColorConfiguration }
         set { Base.innerThemeImageColorConfiguration = newValue }
     }
@@ -222,7 +222,7 @@ extension Wrapper where Base: UIImageAsset {
     }
 
     /// 创建主题动态图片资源，指定提供句柄，内部使用ThemeObject实现
-    public static func themeAsset(_ provider: @escaping (ThemeStyle) -> UIImage?) -> UIImageAsset {
+    public static func themeAsset(_ provider: @escaping @Sendable (ThemeStyle) -> UIImage?) -> UIImageAsset {
         let asset = UIImageAsset()
         asset.fw.themeObject = ThemeObject(provider: provider)
         return asset
@@ -259,7 +259,7 @@ extension Wrapper where Base: UIImageAsset {
 
     /// 添加iOS13主题改变通知回调，返回订阅唯一标志，需订阅后才生效
     @discardableResult
-    public func addThemeListener(_ listener: @escaping (ThemeStyle) -> Void) -> String {
+    public func addThemeListener(_ listener: @escaping @MainActor @Sendable (ThemeStyle) -> Void) -> String {
         let identifier = UUID().uuidString
         themeListeners[identifier] = listener
         return identifier
@@ -286,8 +286,8 @@ extension Wrapper where Base: UIImageAsset {
         return property(forName: "themeListeners") != nil
     }
     
-    private var themeListeners: [String: (ThemeStyle) -> Void] {
-        get { return property(forName: "themeListeners") as? [String: (ThemeStyle) -> Void] ?? [:] }
+    private var themeListeners: [String: @MainActor @Sendable (ThemeStyle) -> Void] {
+        get { return property(forName: "themeListeners") as? [String: @MainActor @Sendable (ThemeStyle) -> Void] ?? [:] }
         set { setProperty(newValue, forName: "themeListeners") }
     }
     
@@ -474,12 +474,12 @@ public class ThemeManager: @unchecked Sendable {
 }
 
 /// 主题动态对象，可获取当前主题静态对象
-public class ThemeObject<T> {
+public class ThemeObject<T: Sendable>: @unchecked Sendable {
     
-    private var provider: ((ThemeStyle) -> T?)?
+    private var provider: (@Sendable (ThemeStyle) -> T?)?
     
     /// 创建主题动态对象，指定提供句柄
-    public init(provider: @escaping (ThemeStyle) -> T?) {
+    public init(provider: @escaping @Sendable (ThemeStyle) -> T?) {
         self.provider = provider
     }
     
@@ -513,7 +513,7 @@ extension UIColor {
 extension UIImage {
     
     nonisolated(unsafe) fileprivate static var innerThemeImages: [String: UIImage] = [:]
-    nonisolated(unsafe) fileprivate static var innerThemeImageColorConfiguration: (() -> UIColor)?
+    nonisolated(unsafe) fileprivate static var innerThemeImageColorConfiguration: (@Sendable () -> UIColor)?
     
 }
 
