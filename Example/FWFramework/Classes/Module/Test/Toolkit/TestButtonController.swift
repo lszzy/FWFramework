@@ -87,17 +87,11 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
             timerButton.app.startCountDown(60, title: "=>", waitTitle: "%lds")
             
             sendTimer?.invalidate()
-            let startTime = Date.app.currentTime
-            sendTimer = Timer.app.commonTimer(timeInterval: 1, block: { timer in
-                let countDown = 60 - Int(round(Date.app.currentTime - startTime))
-                if countDown < 1 {
-                    sendTimer?.invalidate()
-                }
+            sendTimer = Timer.app.commonTimer(countDown: 60, block: { countDown in
                 let title = countDown > 0 ? String(format: "%lds", countDown) : "发送"
                 sendButton.setTitle(title, for: .normal)
                 sendButton.isEnabled = countDown < 1
-            }, repeats: true)
-            sendTimer?.fire()
+            })
         }
         
         let odometerView = OdometerView()

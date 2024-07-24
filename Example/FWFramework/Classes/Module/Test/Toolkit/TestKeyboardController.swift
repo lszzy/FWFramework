@@ -126,7 +126,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             .right(15)
             .centerX()
         mobileField.app.returnNext = true
-        mobileField.app.nextResponder = { [weak self] textField in
+        mobileField.app.nextResponder = { @MainActor @Sendable [weak self] textField in
             return self?.passwordField
         }
         mobileField.app.addToolbar(title: NSAttributedString.app.attributedString(mobileField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
