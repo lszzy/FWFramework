@@ -29,7 +29,7 @@ extension Wrapper where Base: Timer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    public static func commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
+    public static func commonTimer(timeInterval: TimeInterval, block: @escaping @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
         let timer = timer(timeInterval: timeInterval, block: block, repeats: repeats)
         RunLoop.current.add(timer, forMode: .common)
         return timer
@@ -43,11 +43,14 @@ extension Wrapper where Base: Timer {
     public static func commonTimer(countDown: Int, block: @escaping @MainActor @Sendable (Int) -> Void) -> Timer {
         let startTime = Date.fw.currentTime
         let timer = commonTimer(timeInterval: 1, block: { timer in
+            let sendableTimer = SendableObject(timer)
             DispatchQueue.main.async {
                 let remainTime = countDown - Int(round(Date.fw.currentTime - startTime))
                 if remainTime <= 0 {
                     block(0)
-                    timer.invalidate()
+                    if let timer = sendableTimer.object as? Timer {
+                        timer.invalidate()
+                    }
                 } else {
                     block(remainTime)
                 }
@@ -67,7 +70,7 @@ extension Wrapper where Base: Timer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    public static func timer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
+    public static func timer(timeInterval: TimeInterval, block: @escaping @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
         return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
     }
 
@@ -77,7 +80,7 @@ extension Wrapper where Base: Timer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    public static func scheduledTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
+    public static func scheduledTimer(timeInterval: TimeInterval, block: @escaping @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
         return Timer.scheduledTimer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
     }
     
@@ -103,7 +106,7 @@ extension Wrapper where Base: Timer {
 // MARK: - Wrapper+UIGestureRecognizer
 @MainActor extension Wrapper where Base: UIGestureRecognizer {
     /// 从事件句柄初始化
-    public static func gestureRecognizer(block: @escaping (Base) -> Void) -> Base {
+    public static func gestureRecognizer(block: @escaping @MainActor @Sendable (Base) -> Void) -> Base {
         let gestureRecognizer = Base.init()
         gestureRecognizer.fw.addBlock(block)
         return gestureRecognizer
@@ -111,7 +114,7 @@ extension Wrapper where Base: Timer {
     
     /// 添加事件句柄，返回监听唯一标志
     @discardableResult
-    public func addBlock(_ block: @escaping (Base) -> Void) -> String {
+    public func addBlock(_ block: @escaping @MainActor @Sendable (Base) -> Void) -> String {
         let target = BlockTarget()
         target.block = { sender in
             block(sender as! Base)
@@ -158,7 +161,7 @@ extension Wrapper where Base: Timer {
     }
     
     /// 添加点击手势事件，可自定义点击高亮句柄等
-    public func addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
+    public func addTapGesture(target: Any, action: Selector, customize: (@MainActor (TapGestureRecognizer) -> Void)? = nil) {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer(target: target, action: action) : UITapGestureRecognizer(target: target, action: action)
         base.addGestureRecognizer(gesture)
         if customize != nil, let tapGesture = gesture as? TapGestureRecognizer {
@@ -168,7 +171,7 @@ extension Wrapper where Base: Timer {
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+    public func addTapGesture(block: @escaping @MainActor @Sendable (UITapGestureRecognizer) -> Void, customize: (@MainActor (TapGestureRecognizer) -> Void)? = nil) -> String {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer() : UITapGestureRecognizer()
         let identifier = gesture.fw.addBlock(block)
         base.addGestureRecognizer(gesture)
@@ -206,7 +209,7 @@ extension Wrapper where Base: Timer {
 @MainActor extension Wrapper where Base: UIControl {
     /// 添加事件句柄，返回监听唯一标志
     @discardableResult
-    public func addBlock(_ block: @escaping (Base) -> Void, for controlEvents: UIControl.Event) -> String {
+    public func addBlock(_ block: @escaping @MainActor @Sendable (Base) -> Void, for controlEvents: UIControl.Event) -> String {
         let target = BlockTarget()
         target.block = { sender in
             block(sender as! Base)
@@ -261,7 +264,7 @@ extension Wrapper where Base: Timer {
 
     /// 添加点击句柄，返回监听唯一标志
     @discardableResult
-    public func addTouch(block: @escaping (Base) -> Void) -> String {
+    public func addTouch(block: @escaping @MainActor @Sendable (Base) -> Void) -> String {
         return addBlock(block, for: .touchUpInside)
     }
 
@@ -315,7 +318,7 @@ extension Wrapper where Base: Timer {
     }
 
     /// 使用指定对象和句柄创建Item，支持UIImage|NSString|NSNumber|NSAttributedString等
-    public static func item(object: Any?, block: ((UIBarButtonItem) -> Void)?) -> Base {
+    public static func item(object: Any?, block: (@MainActor @Sendable (UIBarButtonItem) -> Void)?) -> Base {
         let barItem = item(object: object, target: nil, action: nil)
         barItem.fw.setBlock(block)
         return barItem
@@ -340,7 +343,7 @@ extension Wrapper where Base: Timer {
     }
     
     /// 设置当前Item触发句柄，nil时清空句柄
-    public func setBlock(_ block: ((UIBarButtonItem) -> Void)?) {
+    public func setBlock(_ block: (@MainActor @Sendable (UIBarButtonItem) -> Void)?) {
         var target: BlockTarget?
         var action: Selector?
         if block != nil {
@@ -446,7 +449,7 @@ extension Wrapper where Base: Timer {
     
     /// 快捷设置导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
     @discardableResult
-    public func setLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+    public func setLeftBarItem(_ object: Any?, block: @escaping @MainActor @Sendable (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         base.navigationItem.leftBarButtonItem = barItem
         return barItem
@@ -462,7 +465,7 @@ extension Wrapper where Base: Timer {
     
     /// 快捷设置导航栏右侧按钮，block事件
     @discardableResult
-    public func setRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+    public func setRightBarItem(_ object: Any?, block: @escaping @MainActor @Sendable (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         base.navigationItem.rightBarButtonItem = barItem
         return barItem
@@ -480,7 +483,7 @@ extension Wrapper where Base: Timer {
 
     /// 快捷添加导航栏左侧按钮，block事件。注意自定义left按钮之后，系统返回手势失效
     @discardableResult
-    public func addLeftBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+    public func addLeftBarItem(_ object: Any?, block: @escaping @MainActor @Sendable (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         var items = base.navigationItem.leftBarButtonItems ?? []
         items.append(barItem)
@@ -500,7 +503,7 @@ extension Wrapper where Base: Timer {
 
     /// 快捷添加导航栏右侧按钮，block事件
     @discardableResult
-    public func addRightBarItem(_ object: Any?, block: @escaping (UIBarButtonItem) -> Void) -> UIBarButtonItem {
+    public func addRightBarItem(_ object: Any?, block: @escaping @MainActor @Sendable (UIBarButtonItem) -> Void) -> UIBarButtonItem {
         let barItem = UIBarButtonItem.fw.item(object: object, block: block)
         var items = base.navigationItem.rightBarButtonItems ?? []
         items.append(barItem)
@@ -715,7 +718,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 自定义高亮状态变化时处理句柄
-    open var highlightedChanged: ((TapGestureRecognizer, Bool) -> Void)? {
+    open var highlightedChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if isEnabled && highlightedChanged != nil {
                 highlightedChanged?(self, isHighlighted)
@@ -733,7 +736,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
     
     /// 自定义禁用状态变化时处理句柄
-    open var disabledChanged: ((TapGestureRecognizer, Bool) -> Void)? {
+    open var disabledChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if disabledChanged != nil {
                 disabledChanged?(self, isEnabled)
