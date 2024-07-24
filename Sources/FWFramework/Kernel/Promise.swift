@@ -29,11 +29,9 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 }
 
 /// 约定类
-public class Promise: @unchecked Sendable {
+@MainActor public class Promise: @unchecked Sendable {
     
     // MARK: - Accessor
-    /// 约定回调队列，默认main队列
-    nonisolated(unsafe) public static var completionQueue: DispatchQueue = .main
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
     nonisolated(unsafe) public static var failedError: Error = PromiseError.failed
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
@@ -45,24 +43,24 @@ public class Promise: @unchecked Sendable {
     private struct ProgressValue: Sendable { var value: Double }
     
     /// 约定内部属性
-    private let operation: @Sendable (@escaping @Sendable (_ result: any Sendable) -> Void) -> Void
+    private let operation: @MainActor @Sendable (@escaping @MainActor @Sendable (_ result: any Sendable) -> Void) -> Void
     private var finished: Bool = false
     
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
-    public init(completion: @escaping @Sendable (_ completion: @escaping @Sendable (_ result: any Sendable) -> Void) -> Void) {
+    public init(completion: @escaping @MainActor @Sendable (_ completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) -> Void) {
         self.operation = completion
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init<T: Sendable>(block: @escaping @Sendable (_ resolve: @escaping @Sendable (_ value: T) -> Void, _ reject: @escaping @Sendable (_ error: Error) -> Void) -> Void) {
+    public convenience init<T: Sendable>(block: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void) -> Void) {
         self.init(completion: { completion in
             block(completion, completion)
         })
     }
     
     /// 指定操作成功、失败句柄和进度句柄初始化
-    public convenience init<T: Sendable>(progress: @escaping @Sendable (_ resolve: @escaping @Sendable (_ value: T) -> Void, _ reject: @escaping @Sendable (_ error: Error) -> Void, _ progress: @escaping @Sendable (_ value : Double) -> Void) -> Void) {
+    public convenience init<T: Sendable>(progress: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void, _ progress: @escaping @MainActor @Sendable (_ value : Double) -> Void) -> Void) {
         self.init(completion: { completion in
             progress(completion, completion, { value in
                 completion(ProgressValue(value: value))
@@ -159,22 +157,22 @@ extension Promise {
     }
     
     /// 约定重试，block需返回新创建的约定，该约定失败时延迟指定时间后重新创建并执行，直至成功或达到最大重试次数(总次数retry+1)
-    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @Sendable () -> Promise) -> Promise {
+    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
         return retry(block(), times: times, delay: delay, block: block)
     }
     
     /// 执行约定并回调完成句柄
-    public func done(_ completion: @escaping @Sendable (_ result: any Sendable) -> Void) {
+    public func done(_ completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) {
         self.execute(progress: false, completion: completion)
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done<T: Sendable>(_ done: @escaping @Sendable (_ value: T) -> Void, catch: (@Sendable (_ error: Error) -> Void)?, finally: (@Sendable () -> Void)? = nil) {
+    public func done<T: Sendable>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) {
         self.done(done, catch: `catch`, progress: nil, finally: finally)
     }
     
     /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
-    public func done<T: Sendable>(_ done: @escaping @Sendable (_ value: T) -> Void, catch: (@Sendable (_ error: Error) -> Void)?, progress: (@Sendable (_ value: Double) -> Void)?, finally: (@Sendable () -> Void)? = nil) {
+    public func done<T: Sendable>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, progress: (@MainActor @Sendable (_ value: Double) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) {
         self.execute(progress: progress != nil) { result in
             if let prog = result as? ProgressValue {
                 progress?(prog.value)
@@ -193,7 +191,7 @@ extension Promise {
     }
     
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then<T: Sendable>(_ block: @escaping @Sendable (_ value: T) throws -> any Sendable) -> Promise {
+    public func then<T: Sendable>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> any Sendable) -> Promise {
         return Promise { completion in
             self.done({ value in
                 do {
@@ -215,7 +213,7 @@ extension Promise {
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    public func recover(_ block: @escaping @Sendable (_ error: Error) throws -> any Sendable) -> Promise {
+    public func recover(_ block: @escaping @MainActor @Sendable (_ error: Error) throws -> any Sendable) -> Promise {
         return Promise { completion in
             self.done({ value in
                 completion(value)
@@ -237,7 +235,7 @@ extension Promise {
     }
     
     /// 验证约定，当前约定成功时验证结果，可返回Bool或抛异常；验证通过时返回结果，验证失败时返回验证错误
-    public func validate<T: Sendable>(_ block: @escaping @Sendable (_ value: T) throws -> Bool) -> Promise {
+    public func validate<T: Sendable>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> Bool) -> Promise {
         return Promise { completion in
             self.done({ value in
                 do {
@@ -259,7 +257,7 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce<T: Sendable>(_ items: [T], reducer: @escaping @Sendable (_ value: any Sendable, _ item: T) throws -> any Sendable) -> Promise {
+    public func reduce<T: Sendable>(_ items: [T], reducer: @escaping @MainActor @Sendable (_ value: any Sendable, _ item: T) throws -> any Sendable) -> Promise {
         var promise = self
         for item in items {
             promise = promise.then({ value in
@@ -301,7 +299,7 @@ extension Promise {
     }
     
     /// 约定重试，block需返回新创建的约定，当前约定失败时延迟指定时间后调用block创建约定并执行，直至成功或达到最大重试次数
-    public func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @Sendable () -> Promise) -> Promise {
+    public func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
         return Promise.retry(self, times: times, delay: delay, block: block)
     }
     
@@ -311,28 +309,26 @@ extension Promise {
 extension Promise {
     
     /// 约定内部执行方法
-    private func execute(progress: Bool, completion: @escaping @Sendable (_ result: any Sendable) -> Void) {
+    private func execute(progress: Bool, completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) {
         self.operation() { result in
-            Promise.completionQueue.async {
-                if !self.finished {
-                    if result is ProgressValue {
-                        if progress { completion(result) }
-                    } else {
-                        self.finished = true
-                        completion(result)
-                    }
+            if !self.finished {
+                if result is ProgressValue {
+                    if progress { completion(result) }
+                } else {
+                    self.finished = true
+                    completion(result)
                 }
             }
         }
     }
     
     /// 约定内部延时方法
-    private static func delay(_ time: TimeInterval, block: @escaping @Sendable () -> Void) {
-        Promise.completionQueue.asyncAfter(deadline: .now() + time, execute: block)
+    private static func delay(_ time: TimeInterval, block: @escaping @MainActor @Sendable () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: block)
     }
     
     /// 约定内部重试方法
-    private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping @Sendable () -> Promise) -> Promise {
+    private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
         let promise = initialPromise ?? Promise.delay(delay).then({ (_: any Sendable) in block() })
         if times < 1 { return promise }
         return promise.recover { _ in
