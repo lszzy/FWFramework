@@ -865,8 +865,11 @@ extension Wrapper where Base: UIDevice {
                let cgImage = image.cgImage,
                let features = UIImageView.innerFaceDetector?.features(in: ciImage),
                !features.isEmpty {
+                let sendableFeatures = SendableObject(features)
                 DispatchQueue.main.async { [weak base] in
-                    base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
+                    if let features = sendableFeatures.object as? [CIFeature] {
+                        base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
+                    }
                 }
             } else {
                 DispatchQueue.main.async { [weak base] in
