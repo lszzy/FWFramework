@@ -1300,11 +1300,19 @@ import UIKit
     }
 }
 
-// MARK: - UILayoutPriority+AutoLayout
+// MARK: - UILayoutPriority+Shortcut
 extension UILayoutPriority {
     
     /// 中优先级，500
     public static let defaultMedium: UILayoutPriority = .init(500)
+    
+}
+
+// MARK: - UIView+Shortcut
+extension UIView {
+    
+    /// 链式布局对象
+    public var chain: LayoutChain { fw.layoutChain }
     
 }
 
