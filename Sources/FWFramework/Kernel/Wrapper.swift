@@ -132,4 +132,3 @@ extension CGPoint: WrapperCompatible {}
 extension CGSize: WrapperCompatible {}
 extension CGRect: WrapperCompatible {}
 extension NSObject: WrapperCompatible {}
-extension MainActor: WrapperCompatible {}
