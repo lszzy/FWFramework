@@ -1300,7 +1300,7 @@ open class ToolbarButton: UIButton {
     }
     
     /// 指定对象初始化，支持UIImage|NSString(默认)，同时添加点击句柄
-    public convenience init(object: Any?, block: ((Any) -> Void)?) {
+    public convenience init(object: Any?, block: (@MainActor @Sendable (Any) -> Void)?) {
         if let attributedString = object as? NSAttributedString {
             self.init(frame: .zero)
             setAttributedTitle(attributedString, for: .normal)

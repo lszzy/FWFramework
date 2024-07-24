@@ -12,7 +12,7 @@ import FWDebug
 #endif
 
 protocol AppModuleProtocol: ModuleProtocol {
-    func moduleMethod()
+    nonisolated func moduleMethod()
 }
 
 @objc extension Autoloader {
@@ -29,7 +29,9 @@ protocol AppModuleProtocol: ModuleProtocol {
         #if DEBUG
         FWDebugManager.sharedInstance().openUrl = { (url) in
             if let scheme = URL.app.url(string: url)?.scheme, scheme.count > 0 {
-                Router.openURL(url)
+                MainActor.runAsync {
+                    Router.openURL(url)
+                }
                 return true
             }
             return false

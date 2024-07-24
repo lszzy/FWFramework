@@ -40,16 +40,16 @@ public struct ModulePriority: RawRepresentable, Equatable, Hashable, Sendable {
 public protocol ModuleProtocol: UIApplicationDelegate {
     
     /// 单例对象
-    static var shared: Self { get }
+    nonisolated static var shared: Self { get }
     
     /// 模块初始化方法，默认不处理，setupAllModules自动调用
-    func setup()
+    nonisolated func setup()
     
     /// 是否主线程同步调用setup，默认为false，后台线程异步调用
-    static func setupSynchronously() -> Bool
+    nonisolated static func setupSynchronously() -> Bool
     
     /// 模块优先级，0最低。默认为default优先级
-    static func priority() -> ModulePriority
+    nonisolated static func priority() -> ModulePriority
     
 }
 

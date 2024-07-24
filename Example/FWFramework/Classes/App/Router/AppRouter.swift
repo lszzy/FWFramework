@@ -8,7 +8,7 @@
 
 import FWFramework
 
-class AppRouter: NSObject {
+@MainActor class AppRouter: NSObject {
     
     @objc static let homeUrl = "app://home"
     @objc static let testUrl = "app://test"
