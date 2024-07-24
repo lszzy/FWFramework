@@ -48,9 +48,7 @@ extension Wrapper where Base: Timer {
                 let remainTime = countDown - Int(round(Date.fw.currentTime - startTime))
                 if remainTime <= 0 {
                     block(0)
-                    if let timer = sendableTimer.object as? Timer {
-                        timer.invalidate()
-                    }
+                    sendableTimer.object.invalidate()
                 } else {
                     block(remainTime)
                 }

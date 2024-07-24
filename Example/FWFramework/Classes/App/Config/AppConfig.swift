@@ -17,7 +17,7 @@ class AppConfig: Configuration {
 extension AppConfig {
     
     class Network {
-        static var apiUrl = ""
+        nonisolated(unsafe) static var apiUrl = ""
     }
     
     var network: Network.Type { Network.self }

@@ -38,9 +38,7 @@ extension Wrapper where Base: WrapperObject {
         return observeMessage(name, object: object) { notification in
             let sendableNotification = SendableObject(notification)
             DispatchQueue.fw.mainAsync {
-                if let notification = sendableNotification.object as? Notification {
-                    block(notification)
-                }
+                block(sendableNotification.object)
             }
         }
     }
@@ -183,9 +181,7 @@ extension Wrapper where Base: WrapperObject {
         return observeNotification(name, object: object) { notification in
             let sendableNotification = SendableObject(notification)
             DispatchQueue.fw.mainAsync {
-                if let notification = sendableNotification.object as? Notification {
-                    block(notification)
-                }
+                block(sendableNotification.object)
             }
         }
     }
@@ -222,7 +218,7 @@ extension Wrapper where Base: WrapperObject {
         queue: OperationQueue? = nil,
         using block: @escaping @Sendable (_ notification: Notification) -> Void
     ) {
-        let sendableObserver = SendableObject()
+        let sendableObserver = SendableObject<Any?>(nil)
         sendableObserver.object = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) { notification in
             if let observer = sendableObserver.object {
                 NotificationCenter.default.removeObserver(observer)
@@ -244,9 +240,7 @@ extension Wrapper where Base: WrapperObject {
         observeOnce(forName: name, object: object, queue: .main) { notification in
             let sendableNotification = SendableObject(notification)
             DispatchQueue.fw.mainAsync {
-                if let notification = sendableNotification.object as? Notification {
-                    block(notification)
-                }
+                block(sendableNotification.object)
             }
         }
     }
@@ -413,9 +407,7 @@ extension Wrapper where Base: NSObject {
         return observeProperty(property) { object, change in
             let sendableChange = SendableObject(change)
             DispatchQueue.fw.mainAsync {
-                if let change = sendableChange.object as? [NSKeyValueChangeKey: Any] {
-                    block(object, change)
-                }
+                block(object, sendableChange.object)
             }
         }
     }

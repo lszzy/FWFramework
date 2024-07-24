@@ -81,10 +81,10 @@ extension TestPromiseController {
     private static func progressPromise() -> Promise {
         return Promise { resolve, reject, progress in
             DispatchQueue.global().async {
-                var value: Double = 0
-                while (value < 1) {
-                    value += 0.02
-                    let finish = value >= 1
+                let value = SendableObject<Double>(0)
+                while (value.object < 1) {
+                    value.object += 0.02
+                    let finish = value.object >= 1
                     DispatchQueue.main.async {
                         if (finish) {
                             progress(1)
@@ -94,7 +94,7 @@ extension TestPromiseController {
                                 resolve(UIImage())
                             }
                         } else {
-                            progress(value)
+                            progress(value.object)
                         }
                     }
                     usleep(50000)
