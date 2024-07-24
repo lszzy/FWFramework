@@ -159,7 +159,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     }
     
     /// 归档类型加载器，加载未注册类型时会尝试调用并注册，block返回值为registerType方法type参数
-    nonisolated(unsafe) public static let sharedLoader = Loader<String, AnyArchivable.Type>()
+    public static let sharedLoader = Loader<String, AnyArchivable.Type>()
     
     nonisolated(unsafe) private static var registeredTypes: [String: AnyArchivable.Type] = [:]
     
