@@ -135,9 +135,10 @@ public class Analyzer: @unchecked Sendable {
             Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER EVENT===========\n%@%@:\n%@", !group.isEmpty ? "[\(group)] " : "", name, parameters ?? "")
         }
         
+        let sendableParameters = SendableObject(parameters)
         queue.async { [weak self] in
             self?.reporters.forEach { reporter in
-                reporter.reportEvent(group: group, name, parameters: parameters)
+                reporter.reportEvent(group: group, name, parameters: sendableParameters.object)
             }
         }
     }
@@ -148,9 +149,10 @@ public class Analyzer: @unchecked Sendable {
             Logger.debug(group: Logger.fw.moduleName, "\n===========ANALYZER ERROR===========\n%@%@: %@\n%@", !group.isEmpty ? "[\(group)] " : "", name, error.localizedDescription, parameters ?? "")
         }
         
+        let sendableParameters = SendableObject(parameters)
         queue.async { [weak self] in
             self?.reporters.forEach({ reporter in
-                reporter.reportError(group: group, name, error: error, parameters: parameters)
+                reporter.reportError(group: group, name, error: error, parameters: sendableParameters.object)
             })
         }
     }
