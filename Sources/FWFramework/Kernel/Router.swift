@@ -69,9 +69,9 @@ public class Router: NSObject {
     }
     
     /// 路由处理句柄，仅支持openURL时可返回nil
-    public typealias Handler = (Context) -> Any?
+    public typealias Handler = @MainActor @Sendable (Context) -> Any?
     /// 路由完成回调句柄
-    public typealias Completion = (Any?) -> Void
+    public typealias Completion = @MainActor @Sendable (Any?) -> Void
     
     /// 路由参数类，可直接使用，也可完全自定义
     open class Parameter: ObjectParameter, @unchecked Sendable {
@@ -92,7 +92,7 @@ public class Router: NSObject {
         /// 路由动画选项，仅open生效
         open var routerAnimated: Bool?
         /// 路由信息句柄，仅open生效
-        open var routerHandler: (@convention(block) (Context, UIViewController) -> Void)?
+        open var routerHandler: (@convention(block) @MainActor @Sendable (Context, UIViewController) -> Void)?
         
         public required init() {}
         
@@ -102,7 +102,7 @@ public class Router: NSObject {
                 routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
             }
             routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
-            routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) (Context, UIViewController) -> Void
+            routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) @MainActor @Sendable (Context, UIViewController) -> Void
         }
         
         public var dictionaryValue: [AnyHashable: Any] {
@@ -230,20 +230,20 @@ public class Router: NSObject {
     }
     
     /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回true，继续解析pattern，否则停止解析
-    nonisolated(unsafe) public static var routeFilter: ((Context) -> Bool)?
+    nonisolated(unsafe) public static var routeFilter: (@MainActor @Sendable (Context) -> Bool)?
     
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
-    nonisolated(unsafe) public static var routeHandler: ((Context, Any) -> Any?)?
+    nonisolated(unsafe) public static var routeHandler: (@MainActor @Sendable (Context, Any) -> Any?)?
     
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
-    nonisolated(unsafe) public static var errorHandler: ((Context) -> Void)?
+    nonisolated(unsafe) public static var errorHandler: (@MainActor @Sendable (Context) -> Void)?
     
     /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
-    public class func presetRouteHandler(_ handler: ((Context, Any) -> Any?)? = nil) {
+    public class func presetRouteHandler(_ handler: (@MainActor @Sendable (Context, Any) -> Any?)? = nil) {
         if routeHandler != nil { return }
         
-        routeHandler = handler ?? { context, object in
+        routeHandler = handler ?? { @MainActor @Sendable context, object in
             guard context.isOpening else { return object }
             guard let viewController = object as? UIViewController else { return object }
             
@@ -252,9 +252,7 @@ public class Router: NSObject {
             if let routerHandler = userInfo.routerHandler {
                 routerHandler(context, viewController)
             } else {
-                DispatchQueue.fw.mainAsync {
-                    UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
-                }
+                UIWindow.fw.main?.fw.open(viewController, animated: userInfo.routerAnimated ?? true, options: userInfo.routerOptions ?? [], completion: nil)
             }
             return nil
         }
@@ -276,7 +274,7 @@ public class Router: NSObject {
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
+    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return }
         
@@ -305,7 +303,7 @@ public class Router: NSObject {
     /// - Parameters:
     ///   - context: Handler中的模型参数
     ///   - result: URL处理完成后的回调结果
-    public class func completeURL(_ context: Context, result: Any?) {
+    @MainActor public class func completeURL(_ context: Context, result: Any?) {
         context.completion?(result)
     }
     
@@ -314,7 +312,7 @@ public class Router: NSObject {
     ///   - url: URL 带 Scheme，如 app://beauty/3
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
-    public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
+    @MainActor public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
         
@@ -413,10 +411,11 @@ public class Router: NSObject {
                 }, isPreset: isPreset) && result
             }
         } else if let targetObject = clazz as? NSObject {
+            let sendableObject = SendableObject(targetObject)
             for (key, obj) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(with: pattern, handler: { context in
-                    return targetObject.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    return (sendableObject.object as? NSObject)?.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         }

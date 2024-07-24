@@ -632,9 +632,7 @@ extension TestRouter: AutoloadProtocol {
             let vc = TestRouterResultController()
             vc.rule = TestRouter.wildcardUrl
             vc.context = context
-            DispatchQueue.app.mainAsync {
-                Navigator.push(vc, animated: true)
-            }
+            Navigator.push(vc, animated: true)
             return nil
         }
     }
