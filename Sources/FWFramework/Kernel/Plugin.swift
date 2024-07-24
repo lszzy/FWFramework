@@ -81,7 +81,7 @@ public class PluginManager {
     }
     
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
-    nonisolated(unsafe) public static let sharedLoader = Loader<Any, Any>()
+    public static let sharedLoader = Loader<Any, Any>()
     
     /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
     @discardableResult

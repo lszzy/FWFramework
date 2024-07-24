@@ -117,7 +117,7 @@ public class Router: NSObject {
     
     // MARK: - Accessor
     /// 路由类加载器，访问未注册路由时会尝试调用并注册，block返回值为register方法class参数
-    nonisolated(unsafe) public static let sharedLoader = Loader<String, Any>()
+    public static let sharedLoader = Loader<String, Any>()
     
     /// 是否开启严格模式，开启后不会以上一层为fallback，默认false
     nonisolated(unsafe) public static var strictMode = false

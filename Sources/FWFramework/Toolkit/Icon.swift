@@ -46,7 +46,7 @@ open class Icon {
     nonisolated(unsafe) private static var iconMappers: [String: Icon.Type] = [:]
     
     /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
-    nonisolated(unsafe) public static let sharedLoader = Loader<String, Icon.Type>()
+    public static let sharedLoader = Loader<String, Icon.Type>()
     
     /// 注册图标实现类，必须继承Icon，用于name快速查找，注意name不要重复
     open class func registerClass(_ iconClass: Icon.Type) {

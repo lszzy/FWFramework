@@ -98,7 +98,7 @@ public class Mediator {
     nonisolated(unsafe) private static var moduleInvokePool: [String: Bool] = [:]
     
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
-    nonisolated(unsafe) public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
+    public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
     /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
     nonisolated(unsafe) public static var delegateModeEnabled = false
     
