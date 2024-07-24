@@ -415,7 +415,7 @@ public class Router: NSObject {
             for (key, obj) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(with: pattern, handler: { context in
-                    return (sendableObject.object as? NSObject)?.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    return sendableObject.object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         }

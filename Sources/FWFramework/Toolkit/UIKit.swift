@@ -867,9 +867,7 @@ extension Wrapper where Base: UIDevice {
                !features.isEmpty {
                 let sendableFeatures = SendableObject(features)
                 DispatchQueue.main.async { [weak base] in
-                    if let features = sendableFeatures.object as? [CIFeature] {
-                        base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
-                    }
+                    base?.fw.faceMark(sendableFeatures.object, size: CGSize(width: cgImage.width, height: cgImage.height))
                 }
             } else {
                 DispatchQueue.main.async { [weak base] in

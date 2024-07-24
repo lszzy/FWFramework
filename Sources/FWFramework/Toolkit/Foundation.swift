@@ -156,14 +156,14 @@ extension Wrapper where Base: WrapperObject {
         on: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any where Base: Sendable {
-        let cancelled = SendableObject()
+        let cancelled = SendableObject<Bool>(false)
         let strongBase = base
         let wrapper: @Sendable (Bool) -> Void = { cancel in
             if cancel {
                 cancelled.object = true
                 return
             }
-            if cancelled.object == nil {
+            if !cancelled.object {
                 block(strongBase)
             }
         }
@@ -215,13 +215,13 @@ extension Wrapper where Base: NSObject {
         on queue: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
-        let cancelled = SendableObject()
+        let cancelled = SendableObject<Bool>(false)
         let wrapper: @Sendable (Bool) -> Void = { cancel in
             if cancel {
                 cancelled.object = true
                 return
             }
-            if cancelled.object == nil {
+            if !cancelled.object {
                 block()
             }
         }

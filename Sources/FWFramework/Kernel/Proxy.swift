@@ -114,11 +114,11 @@ public class WeakObject: @unchecked Sendable {
 
 // MARK: - SendableObject
 /// Sendable容器类，用于解决任意对象Sendable传参等
-public class SendableObject: @unchecked Sendable {
+public class SendableObject<T>: @unchecked Sendable {
     
-    public var object: Any?
+    public var object: T
     
-    public init(_ object: Any? = nil) {
+    public init(_ object: T) {
         self.object = object
     }
     
