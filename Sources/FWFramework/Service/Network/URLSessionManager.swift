@@ -61,7 +61,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open var dataTaskDidBecomeDownloadTask: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ downloadTask: URLSessionDownloadTask) -> Void)?
     open var dataTaskDidReceiveData: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ data: Data) -> Void)?
     open var dataTaskWillCacheResponse: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ proposedResponse: CachedURLResponse) -> CachedURLResponse)?
-    open var didFinishEventsForBackgroundURLSession: ((_ session: URLSession) -> Void)?
+    open var didFinishEventsForBackgroundURLSession: (@Sendable (_ session: URLSession) -> Void)?
     open var downloadTaskDidFinishDownloading: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
     open var downloadTaskDidWriteData: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?
     open var downloadTaskDidResume: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ fileOffset: Int64, _ expectedTotalBytes: Int64) -> Void)?
@@ -296,24 +296,24 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     }
     
     private func tasks(for keyPath: String) -> [URLSessionTask] {
-        var tasks: [URLSessionTask] = []
+        let sendableTasks = SendableObject<[URLSessionTask]>([])
         let semaphore = DispatchSemaphore(value: 0)
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             if keyPath == "dataTasks" {
-                tasks = dataTasks
+                sendableTasks.object = dataTasks
             } else if keyPath == "uploadTasks" {
-                tasks = uploadTasks
+                sendableTasks.object = uploadTasks
             } else if keyPath == "downloadTasks" {
-                tasks = downloadTasks
+                sendableTasks.object = downloadTasks
             } else if keyPath == "tasks" {
-                tasks = dataTasks + uploadTasks + downloadTasks
+                sendableTasks.object = dataTasks + uploadTasks + downloadTasks
             }
             
             semaphore.signal()
         }
         semaphore.wait()
         
-        return tasks
+        return sendableTasks.object
     }
     
     private func addNotificationObserver(for task: URLSessionTask) {
