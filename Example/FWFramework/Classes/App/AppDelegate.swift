@@ -14,8 +14,11 @@ class AppDelegate: AppResponder {
     var backgroundTask: ((@escaping () -> Void) -> Void)?
     var expirationHandler: (() -> Void)?
     
-    @StoredValue("latestCrashLog")
-    private var latestCrashLog: String?
+    nonisolated(unsafe) private var latestCrashLog: String? {
+        didSet {
+            UserDefaults.app.setObject(latestCrashLog, forKey: "latestCrashLog")
+        }
+    }
     
     // MARK: - Override
     override func setupEnvironment() {
