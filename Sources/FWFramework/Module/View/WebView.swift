@@ -917,12 +917,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         messageJSON = messageJSON.replacingOccurrences(of: "\u{2029}", with: "\\u2029")
         
         let javascriptCommand = "WKWebViewJavascriptBridge._handleMessageFromiOS('\(messageJSON)');"
-        if Thread.current.isMainThread {
-            evaluateJavascript(javascript: javascriptCommand)
-        } else {
-            DispatchQueue.main.async {
-                self.evaluateJavascript(javascript: javascriptCommand)
-            }
+        DispatchQueue.fw.mainAsync {
+            self.webView?.evaluateJavaScript(javascriptCommand)
         }
     }
     
@@ -958,13 +954,9 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         #endif
     }
     
-    private func evaluateJavascript(javascript: String, completion: (@MainActor @Sendable (Any?, Error?) -> Void)? = nil) {
-        webView?.evaluateJavaScript(javascript, completionHandler: completion)
-    }
-    
     private func injectJavascriptFile() {
         let js = javascriptBridgeJS
-        evaluateJavascript(javascript: js, completion: { [weak self] (_, error) in
+        webView?.evaluateJavaScript(js, completionHandler: { [weak self] (_, error) in
             guard let self = self else { return }
             if let error = error {
                 self.log("ERROR: \(error)")
@@ -1155,13 +1147,25 @@ extension WKWebView {
 fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
     
     #if compiler(>=6.0)
+    typealias ActionDecisionHandler = @MainActor @Sendable (WKNavigationActionPolicy) -> Void
+    typealias ResponseDecisionHandler = @MainActor @Sendable (WKNavigationResponsePolicy) -> Void
     typealias DownloadCompletionHandler = @MainActor @Sendable (URL?) -> Void
+    typealias ChallengeCompletionHandler = @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    typealias AlertCompletionHandler = @MainActor @Sendable () -> Void
+    typealias ConfirmCompletionHandler = @MainActor @Sendable (Bool) -> Void
+    typealias PromptCompletionHandler = @MainActor @Sendable (String?) -> Void
     #else
+    typealias ActionDecisionHandler = (WKNavigationActionPolicy) -> Void
+    typealias ResponseDecisionHandler = (WKNavigationResponsePolicy) -> Void
     typealias DownloadCompletionHandler = (URL?) -> Void
+    typealias ChallengeCompletionHandler = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    typealias AlertCompletionHandler = () -> Void
+    typealias ConfirmCompletionHandler = (Bool) -> Void
+    typealias PromptCompletionHandler = (String?) -> Void
     #endif
     
     // MARK: - WKNavigationDelegate
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping ActionDecisionHandler) {
         if let webView = webView as? WebView,
            webView.cookieEnabled,
            let request = navigationAction.request as? NSMutableURLRequest {
@@ -1222,7 +1226,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         decisionHandler(.allow)
     }
     
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping ResponseDecisionHandler) {
         if let webView = webView as? WebView,
            webView.cookieEnabled {
             WebViewCookieManager.copyWebViewCookie(webView)
@@ -1321,7 +1325,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         download.delegate = self
     }
     
-    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping ChallengeCompletionHandler) {
         if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: completionHandler) != nil {
             return
         }
@@ -1341,7 +1345,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     }
     
     // MARK: - WKUIDelegate
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor @Sendable () -> Void) {
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping AlertCompletionHandler) {
         if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
             return
         }
@@ -1351,7 +1355,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         }
     }
     
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor @Sendable (Bool) -> Void) {
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ConfirmCompletionHandler) {
         if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
             return
         }
@@ -1363,7 +1367,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         }
     }
     
-    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor @Sendable (String?) -> Void) {
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping PromptCompletionHandler) {
         if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
             return
         }
