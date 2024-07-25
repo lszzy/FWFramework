@@ -281,7 +281,7 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 视频文件URL 的请求 id
      */
     @discardableResult
-    public func requestVideoURL(outputURL: URL, exportPreset: String, completion: ((_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestVideoURL(outputURL: URL, exportPreset: String, completion: (@Sendable (_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
@@ -428,15 +428,17 @@ public class Asset: NSObject, @unchecked Sendable {
     }
     
     /// 获取 Asset 的体积（数据大小）
-    public func assetSize(completion: ((Int64) -> Void)?) {
+    public func assetSize(completion: (@MainActor @Sendable (Int64) -> Void)?) {
         if let phAssetInfo = phAssetInfo {
             let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
-            completion?(number?.int64Value ?? 0)
+            DispatchQueue.fw.mainAsync {
+                completion?(number?.int64Value ?? 0)
+            }
         } else {
             requestPhAssetInfo { [weak self] phAssetInfo in
                 self?.phAssetInfo = phAssetInfo
+                let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
                 DispatchQueue.main.async {
-                    let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
                     completion?(number?.int64Value ?? 0)
                 }
             }
@@ -766,9 +768,11 @@ public class AssetManager: @unchecked Sendable {
     }
     
     /// 保存图片到指定相册（传入 UIImage）
-    public static func saveImage(image: UIImage?, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public static func saveImage(image: UIImage?, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         guard let image = image, let cgImage = image.cgImage else {
-            completion(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorResourceUnavailable, userInfo: nil))
+            DispatchQueue.fw.mainAsync {
+                completion(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorResourceUnavailable, userInfo: nil))
+            }
             return
         }
         
@@ -776,12 +780,12 @@ public class AssetManager: @unchecked Sendable {
     }
     
     /// 保存图片到指定相册（传入 图片路径）
-    public static func saveImage(imagePath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public static func saveImage(imagePath: String, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         AssetManager.shared.saveImage(imagePathURL: URL(fileURLWithPath: imagePath), albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
     /// 保存视频到指定相册（传入 视频路径）
-    public static func saveVideo(videoPath: String, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public static func saveVideo(videoPath: String, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         AssetManager.shared.saveVideo(videoPathURL: URL(fileURLWithPath: videoPath), albumAssetsGroup: albumAssetsGroup, completion: completion)
     }
     
@@ -819,7 +823,7 @@ public class AssetManager: @unchecked Sendable {
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func saveImage(imageRef: CGImage, orientation: UIImage.Orientation, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public func saveImage(imageRef: CGImage, orientation: UIImage.Orientation, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         let image = UIImage(cgImage: imageRef, scale: UIScreen.fw.screenScale, orientation: orientation)
         let assetCollection = albumAssetsGroup.phAssetCollection
         addImage(image: image, imagePathURL: nil, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
@@ -841,7 +845,7 @@ public class AssetManager: @unchecked Sendable {
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func saveImage(imagePathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public func saveImage(imagePathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         let assetCollection = albumAssetsGroup.phAssetCollection
         addImage(image: nil, imagePathURL: imagePathURL, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {
@@ -862,7 +866,7 @@ public class AssetManager: @unchecked Sendable {
     /// 无论用户保存到哪个自行创建的相册，系统都会在“相机胶卷”相册中同时保存这个图片。
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
-    public func saveVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
+    public func saveVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping @MainActor @Sendable (Asset?, Error?) -> Void) {
         let assetCollection = albumAssetsGroup.phAssetCollection
         addVideo(videoPathURL: videoPathURL, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {
@@ -879,7 +883,7 @@ public class AssetManager: @unchecked Sendable {
     }
     
     // MARK: - Private
-    private func addImage(image: UIImage?, imagePathURL: URL?, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+    private func addImage(image: UIImage?, imagePathURL: URL?, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: (@MainActor @Sendable (Bool, Date?, Error?) -> Void)?) {
         var creationDate: Date?
         photoLibrary.performChanges {
             // 创建一个以图片生成新的 PHAsset，这时图片已经被添加到“相机胶卷”
@@ -921,7 +925,7 @@ public class AssetManager: @unchecked Sendable {
         }
     }
 
-    private func addVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: ((Bool, Date?, Error?) -> Void)?) {
+    private func addVideo(videoPathURL: URL, photoLibrary: PHPhotoLibrary, assetCollection: PHAssetCollection, completionHandler: (@MainActor @Sendable (Bool, Date?, Error?) -> Void)?) {
         var creationDate: Date?
         photoLibrary.performChanges {
             // 创建一个以视频生成新的 PHAsset 的请求
@@ -1005,7 +1009,7 @@ public class AssetLivePhoto: @unchecked Sendable {
     
     public init() {}
     
-    private func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, Resources?) -> Void) {
+    private func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping @MainActor @Sendable (PHLivePhoto?, Resources?) -> Void) {
         let assetIdentifier = UUID().uuidString
         guard let pairedImageURL = addAssetID(assetIdentifier, toImage: imageURL, saveTo: cacheDirectory.appendingPathComponent(assetIdentifier).appendingPathExtension("jpg")) else {
             DispatchQueue.main.async {
@@ -1499,7 +1503,7 @@ open class AssetSessionExporter: NSObject, @unchecked Sendable {
 extension AssetSessionExporter {
     
     /// Completion handler type for when an export finishes.
-    public typealias CompletionHandler = (Swift.Result<AVAssetExportSession.Status, Error>) -> Void
+    public typealias CompletionHandler = @MainActor @Sendable (Swift.Result<AVAssetExportSession.Status, Error>) -> Void
     
     /// Progress handler type
     public typealias ProgressHandler = (_ progress: Float) -> Void
@@ -1564,7 +1568,7 @@ extension AssetSessionExporter {
         
         self._progressHandler = progressHandler
         self._renderHandler = renderHandler
-        self._completionHandler = completionHandler != nil ? { result in
+        self._completionHandler = completionHandler != nil ? { @MainActor @Sendable result in
             DispatchQueue.fw.mainAsync {
                 completionHandler?(result)
             }
@@ -1631,7 +1635,9 @@ extension AssetSessionExporter {
         }
         
         group.notify(queue: .main) {
-            self.finish()
+            DispatchQueue.fw.mainAsync {
+                self.finish()
+            }
         }
     }
     
@@ -1890,7 +1896,7 @@ extension AssetSessionExporter {
     }
     
     // always called on the main thread
-    internal func finish() {
+    @MainActor internal func finish() {
         if self._reader?.status == .cancelled || self._writer?.status == .cancelled {
             self.complete()
         } else if self._writer?.status == .failed {
@@ -1901,13 +1907,15 @@ extension AssetSessionExporter {
             self.complete()
         } else {
             self._writer?.finishWriting {
-                self.complete()
+                DispatchQueue.fw.mainAsync {
+                    self.complete()
+                }
             }
         }
     }
     
     // always called on the main thread
-    internal func complete() {
+    @MainActor internal func complete() {
         if self._reader?.status == .cancelled || self._writer?.status == .cancelled {
             guard let outputURL = self.outputURL else {
                 self._completionHandler?(.failure(AssetSessionExporterError.cancelled))
