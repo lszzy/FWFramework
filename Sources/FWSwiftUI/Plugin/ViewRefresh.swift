@@ -249,7 +249,7 @@ extension List {
 // MARK: - Modifier
 extension Refresh {
     
-    public struct Modifier: Sendable {
+    public struct Modifier: @unchecked Sendable {
         let isEnabled: Bool
         
         @State private var id: Int = 0
