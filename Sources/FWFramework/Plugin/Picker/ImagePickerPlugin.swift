@@ -435,8 +435,8 @@ import MobileCoreServices
     }
     
     /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
-    public var exportProgressBlock: (@Sendable (_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
-        get { property(forName: #function) as? @Sendable (PHPickerViewController, Int, Int) -> Void }
+    public var exportProgressBlock: (@MainActor @Sendable (_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
+        get { property(forName: #function) as? @MainActor @Sendable (PHPickerViewController, Int, Int) -> Void }
         set { setPropertyCopy(newValue, forName: #function) }
     }
 }
@@ -586,16 +586,17 @@ fileprivate class ImagePickerControllerTarget: NSObject, UINavigationControllerD
         var finishCount: Int = 0
         let progressBlock = picker.fw.exportProgressBlock
         if progressBlock != nil {
-            DispatchQueue.main.async {
+            DispatchQueue.fw.mainAsync {
                 progressBlock?(picker, finishCount, totalCount)
             }
         }
         
-        var objectDict: [Int: (Any, PHPickerResult)] = [:]
+        let sendableObjectDict = SendableObject<[Int: (Any, PHPickerResult)]>([:])
         let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
         let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
         for (index, result) in results.enumerated() {
             // assetIdentifier为空，无法获取到PHAsset，且获取PHAsset需要用户授权
+            let sendableResult = SendableObject(result)
             let isVideo = checkVideo && result.itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMovie as String)
             if !isVideo {
                 var objectClass: NSItemProviderReading.Type = UIImage.self
@@ -604,17 +605,18 @@ fileprivate class ImagePickerControllerTarget: NSObject, UINavigationControllerD
                 }
                 
                 result.itemProvider.loadObject(ofClass: objectClass) { object, error in
+                    let sendableObject = SendableObject(object)
                     DispatchQueue.main.async {
-                        if let image = object as? UIImage {
-                            objectDict[index] = (image, result)
-                        } else if let livePhoto = object as? PHLivePhoto {
-                            objectDict[index] = (livePhoto, result)
+                        if let image = sendableObject.object as? UIImage {
+                            sendableObjectDict.object[index] = (image, sendableResult.object)
+                        } else if let livePhoto = sendableObject.object as? PHLivePhoto {
+                            sendableObjectDict.object[index] = (livePhoto, sendableResult.object)
                         }
                         
                         finishCount += 1
                         progressBlock?(picker, finishCount, totalCount)
                         if finishCount == totalCount {
-                            let objectList = objectDict.sorted { $0.key < $1.key }
+                            let objectList = sendableObjectDict.object.sorted { $0.key < $1.key }
                             let sortedObjects = objectList.map { $0.value.0 }
                             let sortedResults = objectList.map { $0.value.1 }
                             completion?(picker, sortedObjects, sortedResults, false)
@@ -639,15 +641,16 @@ fileprivate class ImagePickerControllerTarget: NSObject, UINavigationControllerD
                     }
                 }
                 
+                let resultURL = videoURL
                 DispatchQueue.main.async {
-                    if let videoURL = videoURL {
-                        objectDict[index] = (videoURL, result)
+                    if let resultURL = resultURL {
+                        sendableObjectDict.object[index] = (resultURL, sendableResult.object)
                     }
                     
                     finishCount += 1
                     progressBlock?(picker, finishCount, totalCount)
                     if finishCount == totalCount {
-                        let objectList = objectDict.sorted { $0.key < $1.key }
+                        let objectList = sendableObjectDict.object.sorted { $0.key < $1.key }
                         let sortedObjects = objectList.map { $0.value.0 }
                         let sortedResults = objectList.map { $0.value.1 }
                         completion?(picker, sortedObjects, sortedResults, false)
