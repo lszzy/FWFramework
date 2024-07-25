@@ -350,7 +350,7 @@ extension ImagePlugin {
 extension Wrapper where Base: UIImage {
     /// 异步下载网络图片
     public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil) async throws -> UIImage {
-        let target = NSObject()
+        let sendableTarget = SendableObject(NSObject())
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 let receipt = UIImage.fw.downloadImage(url, options: options, context: context) { image, _, error in
@@ -360,10 +360,10 @@ extension Wrapper where Base: UIImage {
                         continuation.resume(throwing: error ?? RequestError.unknown)
                     }
                 }
-                target.fw.setProperty(receipt, forName: #function)
+                sendableTarget.object.fw.setProperty(receipt, forName: #function)
             }
         } onCancel: {
-            let receipt = target.fw.property(forName: #function)
+            let receipt = sendableTarget.object.fw.property(forName: #function)
             UIImage.fw.cancelImageDownload(receipt)
         }
     }
