@@ -37,25 +37,25 @@ extension WrapperGlobal {
     public static func isIosLater(_ version: Int) -> Bool { UIDevice.fw.isIosLater(version) }
 
     /// 设备尺寸，跟横竖屏无关
-    public static var deviceSize: CGSize { UIDevice.fw.deviceSize }
+    @MainActor public static var deviceSize: CGSize { UIDevice.fw.deviceSize }
     /// 设备宽度，跟横竖屏无关
-    public static var deviceWidth: CGFloat { UIDevice.fw.deviceWidth }
+    @MainActor public static var deviceWidth: CGFloat { UIDevice.fw.deviceWidth }
     /// 设备高度，跟横竖屏无关
-    public static var deviceHeight: CGFloat { UIDevice.fw.deviceHeight }
+    @MainActor public static var deviceHeight: CGFloat { UIDevice.fw.deviceHeight }
     /// 设备分辨率，跟横竖屏无关
-    public static var deviceResolution: CGSize { UIDevice.fw.deviceResolution }
+    @MainActor public static var deviceResolution: CGSize { UIDevice.fw.deviceResolution }
 
     // MARK: - UIScreen
     /// 屏幕尺寸
-    public static var screenSize: CGSize { UIScreen.fw.screenSize }
+    @MainActor public static var screenSize: CGSize { UIScreen.fw.screenSize }
     /// 屏幕宽度
-    public static var screenWidth: CGFloat { UIScreen.fw.screenWidth }
+    @MainActor public static var screenWidth: CGFloat { UIScreen.fw.screenWidth }
     /// 屏幕高度
-    public static var screenHeight: CGFloat { UIScreen.fw.screenHeight }
+    @MainActor public static var screenHeight: CGFloat { UIScreen.fw.screenHeight }
     /// 屏幕像素比例
     public static var screenScale: CGFloat { UIScreen.fw.screenScale }
     /// 判断屏幕英寸
-    public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
+    @MainActor public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
     /// 是否是全面屏屏幕
     @MainActor public static var isNotchedScreen: Bool { UIScreen.fw.isNotchedScreen }
     /// 是否是灵动岛屏幕
@@ -77,62 +77,62 @@ extension WrapperGlobal {
     @MainActor public static var toolBarHeight: CGFloat { UIScreen.fw.toolBarHeight }
 
     /// 当前等比例缩放参考设计图宽度，默认375
-    public static var referenceWidth: CGFloat { UIScreen.fw.referenceSize.width }
+    @MainActor public static var referenceWidth: CGFloat { UIScreen.fw.referenceSize.width }
     /// 当前等比例缩放参考设计图高度，默认812
-    public static var referenceHeight: CGFloat { UIScreen.fw.referenceSize.height }
+    @MainActor public static var referenceHeight: CGFloat { UIScreen.fw.referenceSize.height }
     /// 当前屏幕宽度缩放比例
-    public static var relativeScale: CGFloat { UIScreen.fw.relativeScale }
+    @MainActor public static var relativeScale: CGFloat { UIScreen.fw.relativeScale }
     /// 当前屏幕高度缩放比例
-    public static var relativeHeightScale: CGFloat { UIScreen.fw.relativeHeightScale }
+    @MainActor public static var relativeHeightScale: CGFloat { UIScreen.fw.relativeHeightScale }
 
     /// 获取相对设计图宽度等比例缩放值
-    public static func relative(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+    @MainActor public static func relative(_ value: CGFloat, flat: Bool = false) -> CGFloat {
         return UIScreen.fw.relativeValue(value, flat: flat)
     }
     /// 获取相对设计图等比例缩放size
-    public static func relative(_ size: CGSize, flat: Bool = false) -> CGSize {
+    @MainActor public static func relative(_ size: CGSize, flat: Bool = false) -> CGSize {
         return CGSize(width: relative(size.width, flat: flat), height: relative(size.height, flat: flat))
     }
     /// 获取相对设计图等比例缩放point
-    public static func relative(_ point: CGPoint, flat: Bool = false) -> CGPoint {
+    @MainActor public static func relative(_ point: CGPoint, flat: Bool = false) -> CGPoint {
         return CGPoint(x: relative(point.x, flat: flat), y: relative(point.y, flat: flat))
     }
     /// 获取相对设计图等比例缩放rect
-    public static func relative(_ rect: CGRect, flat: Bool = false) -> CGRect {
+    @MainActor public static func relative(_ rect: CGRect, flat: Bool = false) -> CGRect {
         return CGRect(origin: relative(rect.origin, flat: flat), size: relative(rect.size, flat: flat))
     }
     /// 获取相对设计图等比例缩放insets
-    public static func relative(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
+    @MainActor public static func relative(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
         return UIEdgeInsets(top: relative(insets.top, flat: flat), left: relative(insets.left, flat: flat), bottom: relative(insets.bottom, flat: flat), right: relative(insets.right, flat: flat))
     }
     
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public static func fixed(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+    @MainActor public static func fixed(_ value: CGFloat, flat: Bool = false) -> CGFloat {
         return UIScreen.fw.fixedValue(value, flat: flat)
     }
     /// 获取相对设计图等比例缩放时的固定size
-    public static func fixed(_ size: CGSize, flat: Bool = false) -> CGSize {
+    @MainActor public static func fixed(_ size: CGSize, flat: Bool = false) -> CGSize {
         return CGSize(width: fixed(size.width, flat: flat), height: fixed(size.height, flat: flat))
     }
     /// 获取相对设计图等比例缩放时的固定point
-    public static func fixed(_ point: CGPoint, flat: Bool = false) -> CGPoint {
+    @MainActor public static func fixed(_ point: CGPoint, flat: Bool = false) -> CGPoint {
         return CGPoint(x: fixed(point.x, flat: flat), y: fixed(point.y, flat: flat))
     }
     /// 获取相对设计图等比例缩放时的固定rect
-    public static func fixed(_ rect: CGRect, flat: Bool = false) -> CGRect {
+    @MainActor public static func fixed(_ rect: CGRect, flat: Bool = false) -> CGRect {
         return CGRect(origin: fixed(rect.origin, flat: flat), size: fixed(rect.size, flat: flat))
     }
     /// 获取相对设计图等比例缩放时的固定insets
-    public static func fixed(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
+    @MainActor public static func fixed(_ insets: UIEdgeInsets, flat: Bool = false) -> UIEdgeInsets {
         return UIEdgeInsets(top: fixed(insets.top, flat: flat), left: fixed(insets.left, flat: flat), bottom: fixed(insets.bottom, flat: flat), right: fixed(insets.right, flat: flat))
     }
     
     /// 获取相对设计图高度等比例缩放值
-    public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+    @MainActor public static func relativeHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
         return UIScreen.fw.relativeHeight(value, flat: flat)
     }
     /// 获取相对设计图高度等比例缩放时的固定高度值
-    public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+    @MainActor public static func fixedHeight(_ value: CGFloat, flat: Bool = false) -> CGFloat {
         return UIScreen.fw.fixedHeight(value, flat: flat)
     }
 
@@ -183,12 +183,24 @@ extension Wrapper where Base: UIDevice {
 
     /// 是否是iPhone
     public static var isIphone: Bool {
-        return UIDevice.current.userInterfaceIdiom == .phone
+        if UIDevice.innerIsIphone == nil {
+            DispatchQueue.fw.mainSync {
+                UIDevice.innerIsIphone = UIDevice.current.userInterfaceIdiom == .phone
+            }
+        }
+        
+        return UIDevice.innerIsIphone ?? false
     }
     
     /// 是否是iPad
     public static var isIpad: Bool {
-        return UIDevice.current.userInterfaceIdiom == .pad
+        if UIDevice.innerIsIpad == nil {
+            DispatchQueue.fw.mainSync {
+                UIDevice.innerIsIpad = UIDevice.current.userInterfaceIdiom == .pad
+            }
+        }
+        
+        return UIDevice.innerIsIpad ?? false
     }
     
     /// 是否是Mac
@@ -276,22 +288,22 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设备尺寸，跟横竖屏无关
-    public static var deviceSize: CGSize {
+    @MainActor public static var deviceSize: CGSize {
         return CGSize(width: deviceWidth, height: deviceHeight)
     }
     
     /// 设备宽度，跟横竖屏无关
-    public static var deviceWidth: CGFloat {
+    @MainActor public static var deviceWidth: CGFloat {
         return min(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
     }
     
     /// 设备高度，跟横竖屏无关
-    public static var deviceHeight: CGFloat {
+    @MainActor public static var deviceHeight: CGFloat {
         return max(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
     }
     
     /// 设备分辨率，跟横竖屏无关
-    public static var deviceResolution: CGSize {
+    @MainActor public static var deviceResolution: CGSize {
         return CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
     }
     
@@ -313,7 +325,7 @@ extension Wrapper where Base: UIDevice {
 }
 
 // MARK: - Wrapper+UIScreen
-extension Wrapper where Base: UIScreen {
+@MainActor extension Wrapper where Base: UIScreen {
     /// 屏幕尺寸
     public static var screenSize: CGSize {
         return UIScreen.main.bounds.size
@@ -330,8 +342,14 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 屏幕像素比例
-    public static var screenScale: CGFloat {
-        return UIScreen.main.scale
+    nonisolated public static var screenScale: CGFloat {
+        if UIScreen.innerScreenScale == nil {
+            DispatchQueue.fw.mainSync {
+                UIScreen.innerScreenScale = UIScreen.main.scale
+            }
+        }
+        
+        return UIScreen.innerScreenScale ?? 0
     }
     
     /// 判断屏幕英寸
@@ -363,12 +381,12 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 是否是全面屏屏幕
-    @MainActor public static var isNotchedScreen: Bool {
+    public static var isNotchedScreen: Bool {
         return safeAreaInsets.bottom > 0
     }
     
     /// 是否是灵动岛屏幕
-    @MainActor public static var isDynamicIsland: Bool {
+    public static var isDynamicIsland: Bool {
         guard UIDevice.fw.isIphone else { return false }
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             return safeAreaInsets.top >= 59.0
@@ -378,17 +396,17 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 屏幕一像素的大小
-    public static var pixelOne: CGFloat {
+    nonisolated public static var pixelOne: CGFloat {
         return 1.0 / screenScale
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX
-    @MainActor public static var hasSafeAreaInsets: Bool {
+    public static var hasSafeAreaInsets: Bool {
         return safeAreaInsets.bottom > 0
     }
     
     /// 屏幕安全区域距离
-    @MainActor public static var safeAreaInsets: UIEdgeInsets {
+    public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
             if UIScreen.innerMainWindow != nil { UIScreen.innerMainWindow = nil }
@@ -400,7 +418,7 @@ extension Wrapper where Base: UIScreen {
     }
 
     /// 状态栏高度，与是否隐藏无关
-    @MainActor public static var statusBarHeight: CGFloat {
+    public static var statusBarHeight: CGFloat {
         if let statusBarManager = UIWindow.fw.mainScene?.statusBarManager,
            !statusBarManager.isStatusBarHidden {
             return statusBarManager.statusBarFrame.height
@@ -421,7 +439,7 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 导航栏高度，与是否隐藏无关
-    @MainActor public static var navigationBarHeight: CGFloat {
+    public static var navigationBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
         }
@@ -434,12 +452,12 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
-    @MainActor public static var topBarHeight: CGFloat {
+    public static var topBarHeight: CGFloat {
         return statusBarHeight + navigationBarHeight
     }
     
     /// 标签栏高度，与是否隐藏无关
-    @MainActor public static var tabBarHeight: CGFloat {
+    public static var tabBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 65 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
@@ -453,7 +471,7 @@ extension Wrapper where Base: UIScreen {
     }
     
     /// 工具栏高度，与是否隐藏无关
-    @MainActor public static var toolBarHeight: CGFloat {
+    public static var toolBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 70 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
@@ -466,7 +484,7 @@ extension Wrapper where Base: UIScreen {
         return height + safeAreaInsets.bottom
     }
     
-    @MainActor private static var isRegularScreen: Bool {
+    private static var isRegularScreen: Bool {
         // https://github.com/Tencent/QMUI_iOS
         if UIDevice.fw.isIpad { return true }
         
@@ -555,7 +573,7 @@ extension Wrapper where Base: UIScreen {
     }
 
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
-    public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
+    nonisolated public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         let floatValue: CGFloat = (value == .leastNonzeroMagnitude || value == .leastNormalMagnitude) ? 0 : value
         let scaleValue: CGFloat = scale > 0 ? scale : screenScale
         return ceil(floatValue * scaleValue) / scaleValue
@@ -653,9 +671,9 @@ extension Wrapper where Base: UIScreen {
 extension CGFloat {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw.relativeValue(self) }
+    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw.fixedValue(self) }
+    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(self) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw.flatValue(self) }
     /// 获取向上取整值
@@ -666,9 +684,9 @@ extension CGFloat {
 extension CGSize {
     
     /// 获取相对设计图宽度等比例缩放size
-    public var relative: CGSize { CGSize(width: width.relative, height: height.relative) }
+    @MainActor public var relative: CGSize { CGSize(width: width.relative, height: height.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定size
-    public var fixed: CGSize { CGSize(width: width.fixed, height: height.fixed) }
+    @MainActor public var fixed: CGSize { CGSize(width: width.fixed, height: height.fixed) }
     /// 获取基于当前设备的倍数像素取整size
     public var flat: CGSize { CGSize(width: width.flat, height: height.flat) }
     /// 获取向上取整size
@@ -679,9 +697,9 @@ extension CGSize {
 extension CGPoint {
     
     /// 获取相对设计图宽度等比例缩放point
-    public var relative: CGPoint { CGPoint(x: x.relative, y: y.relative) }
+    @MainActor public var relative: CGPoint { CGPoint(x: x.relative, y: y.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定point
-    public var fixed: CGPoint { CGPoint(x: x.fixed, y: y.fixed) }
+    @MainActor public var fixed: CGPoint { CGPoint(x: x.fixed, y: y.fixed) }
     /// 获取基于当前设备的倍数像素取整point
     public var flat: CGPoint { CGPoint(x: x.flat, y: y.flat) }
     /// 获取向上取整point
@@ -692,9 +710,9 @@ extension CGPoint {
 extension CGRect {
     
     /// 获取相对设计图宽度等比例缩放rect
-    public var relative: CGRect { CGRect(origin: origin.relative, size: size.relative) }
+    @MainActor public var relative: CGRect { CGRect(origin: origin.relative, size: size.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定rect
-    public var fixed: CGRect { CGRect(origin: origin.fixed, size: size.fixed) }
+    @MainActor public var fixed: CGRect { CGRect(origin: origin.fixed, size: size.fixed) }
     /// 获取基于当前设备的倍数像素取整rect
     public var flat: CGRect { CGRect(origin: origin.flat, size: size.flat) }
     /// 获取向上取整rect
@@ -705,9 +723,9 @@ extension CGRect {
 extension UIEdgeInsets {
     
     /// 获取相对设计图宽度等比例缩放insets
-    public var relative: UIEdgeInsets { UIEdgeInsets(top: top.relative, left: left.relative, bottom: bottom.relative, right: right.relative) }
+    @MainActor public var relative: UIEdgeInsets { UIEdgeInsets(top: top.relative, left: left.relative, bottom: bottom.relative, right: right.relative) }
     /// 获取相对设计图宽度等比例缩放时的固定insets
-    public var fixed: UIEdgeInsets { UIEdgeInsets(top: top.fixed, left: left.fixed, bottom: bottom.fixed, right: right.fixed) }
+    @MainActor public var fixed: UIEdgeInsets { UIEdgeInsets(top: top.fixed, left: left.fixed, bottom: bottom.fixed, right: right.fixed) }
     /// 获取基于当前设备的倍数像素取整insets
     public var flat: UIEdgeInsets { UIEdgeInsets(top: top.flat, left: left.flat, bottom: bottom.flat, right: right.flat) }
     /// 获取向上取整insets
@@ -718,9 +736,9 @@ extension UIEdgeInsets {
 extension Int {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -731,9 +749,9 @@ extension Int {
 extension Float {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -744,9 +762,9 @@ extension Float {
 extension Double {
     
     /// 获取相对设计图宽度等比例缩放值
-    public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -754,9 +772,19 @@ extension Double {
     
 }
 
+// MARK: - UIDevice+Adaptive
+extension UIDevice {
+    
+    nonisolated(unsafe) fileprivate static var innerIsIphone: Bool?
+    nonisolated(unsafe) fileprivate static var innerIsIpad: Bool?
+    nonisolated(unsafe) internal static var innerDeviceIDFV: String?
+    
+}
+
 // MARK: - UIScreen+Adaptive
 extension UIScreen {
     
+    nonisolated(unsafe) fileprivate static var innerScreenScale: CGFloat?
     nonisolated(unsafe) fileprivate static var innerReferenceSize: CGSize = CGSize(width: 375, height: 812)
     nonisolated(unsafe) fileprivate static var innerRelativeScaleBlock: (() -> CGFloat)?
     nonisolated(unsafe) fileprivate static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
@@ -788,6 +816,20 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable, Sendable {
     
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
+    }
+    
+}
+
+// MARK: - FrameworkAutoloader+Adaptive
+extension FrameworkAutoloader {
+    
+    @objc static func loadToolkit_Adaptive() {
+        DispatchQueue.fw.mainAsync {
+            UIDevice.innerIsIphone = UIDevice.current.userInterfaceIdiom == .phone
+            UIDevice.innerIsIpad = UIDevice.current.userInterfaceIdiom == .pad
+            UIScreen.innerScreenScale = UIScreen.main.scale
+            UIDevice.innerDeviceIDFV = UIDevice.current.identifierForVendor?.uuidString ?? ""
+        }
     }
     
 }
