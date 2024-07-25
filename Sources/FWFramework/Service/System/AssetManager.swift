@@ -292,13 +292,15 @@ public class Asset: NSObject, @unchecked Sendable {
                 return
             }
             
+            let sendableInfo = SendableObject(info)
+            let sendableExportSession = SendableObject(exportSession)
             exportSession.outputURL = outputURL
             exportSession.outputFileType = .mp4
             exportSession.exportAsynchronously {
-                if exportSession.status == .completed {
-                    completion?(outputURL, info)
+                if sendableExportSession.object.status == .completed {
+                    completion?(outputURL, sendableInfo.object)
                 } else {
-                    completion?(nil, info)
+                    completion?(nil, sendableInfo.object)
                 }
             }
         }
@@ -916,10 +918,11 @@ public class AssetManager: @unchecked Sendable {
                  *  performChanges:completionHandler 不在主线程执行，若用户在该 block 中操作 UI 时会产生一些问题，
                  *  为了避免这种情况，这里该 block 主动放到主线程执行。
                  */
+                let completionDate = creationDate
                 DispatchQueue.main.async {
                     // 若创建时间为 nil，则说明 performChanges 中传入的资源为空，因此需要同时判断 performChanges 是否执行成功以及资源是否有创建时间。
-                    let creatingSuccess = success && creationDate != nil
-                    completionHandler?(creatingSuccess, creationDate, error)
+                    let creatingSuccess = success && completionDate != nil
+                    completionHandler?(creatingSuccess, completionDate, error)
                 }
             }
         }
@@ -951,8 +954,9 @@ public class AssetManager: @unchecked Sendable {
                  *  performChanges:completionHandler 不在主线程执行，若用户在该 block 中操作 UI 时会产生一些问题，
                  *  为了避免这种情况，这里该 block 主动放到主线程执行。
                  */
+                let completionDate = creationDate
                 DispatchQueue.main.async {
-                    completionHandler?(success, creationDate, error)
+                    completionHandler?(success, completionDate, error)
                 }
             }
         }
@@ -968,21 +972,22 @@ public class AssetLivePhoto: @unchecked Sendable {
     public typealias Resources = (pairedImage: URL, pairedVideo: URL)
     
     /// 导出LivePhoto资源
-    public class func extractResources(from livePhoto: PHLivePhoto, completion: @escaping (Resources?) -> Void) {
+    public class func extractResources(from livePhoto: PHLivePhoto, completion: @escaping @MainActor @Sendable (Resources?) -> Void) {
+        let sendableLivePhoto = SendableObject(livePhoto)
         queue.async {
-            shared.extractResources(from: livePhoto, completion: completion)
+            shared.extractResources(from: sendableLivePhoto.object, completion: completion)
         }
     }
     
     /// 生成LivePhoto对象
-    public class func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, Resources?) -> Void) {
+    public class func generate(from imageURL: URL, videoURL: URL, progress: @escaping @MainActor @Sendable (CGFloat) -> Void, completion: @escaping @MainActor @Sendable (PHLivePhoto?, Resources?) -> Void) {
         queue.async {
             shared.generate(from: imageURL, videoURL: videoURL, progress: progress, completion: completion)
         }
     }
     
     /// 保存LivePhoto资源到相册
-    public class func saveToLibrary(_ resources: Resources, completion: @escaping (Bool, Error?) -> Void) {
+    public class func saveToLibrary(_ resources: Resources, completion: @escaping @MainActor @Sendable (Bool, Error?) -> Void) {
         PHPhotoLibrary.shared().performChanges({
             let creationRequest = PHAssetCreationRequest.forAsset()
             let options = PHAssetResourceCreationOptions()
@@ -1009,7 +1014,7 @@ public class AssetLivePhoto: @unchecked Sendable {
     
     public init() {}
     
-    private func generate(from imageURL: URL, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping @MainActor @Sendable (PHLivePhoto?, Resources?) -> Void) {
+    private func generate(from imageURL: URL, videoURL: URL, progress: @escaping @MainActor @Sendable (CGFloat) -> Void, completion: @escaping @MainActor @Sendable (PHLivePhoto?, Resources?) -> Void) {
         let assetIdentifier = UUID().uuidString
         guard let pairedImageURL = addAssetID(assetIdentifier, toImage: imageURL, saveTo: cacheDirectory.appendingPathComponent(assetIdentifier).appendingPathExtension("jpg")) else {
             DispatchQueue.main.async {
@@ -1023,8 +1028,9 @@ public class AssetLivePhoto: @unchecked Sendable {
                     if let isDegraded = info[PHLivePhotoInfoIsDegradedKey] as? Bool, isDegraded {
                         return
                     }
+                    let sendableLivePhoto = SendableObject(livePhoto)
                     DispatchQueue.main.async {
-                        completion(livePhoto, (pairedImageURL, pairedVideoURL))
+                        completion(sendableLivePhoto.object, (pairedImageURL, pairedVideoURL))
                     }
                 })
             } else {
@@ -1035,7 +1041,7 @@ public class AssetLivePhoto: @unchecked Sendable {
         }
     }
     
-    private func extractResources(from livePhoto: PHLivePhoto, to directoryURL: URL, completion: @escaping (Resources?) -> Void) {
+    private func extractResources(from livePhoto: PHLivePhoto, to directoryURL: URL, completion: @escaping @MainActor @Sendable (Resources?) -> Void) {
         let assetResources = PHAssetResource.assetResources(for: livePhoto)
         let group = DispatchGroup()
         var keyPhotoURL: URL?
@@ -1062,14 +1068,18 @@ public class AssetLivePhoto: @unchecked Sendable {
         }
         group.notify(queue: DispatchQueue.main) {
             guard let pairedPhotoURL = keyPhotoURL, let pairedVideoURL = videoURL else {
-                completion(nil)
+                DispatchQueue.fw.mainAsync {
+                    completion(nil)
+                }
                 return
             }
-            completion((pairedPhotoURL, pairedVideoURL))
+            DispatchQueue.fw.mainAsync {
+                completion((pairedPhotoURL, pairedVideoURL))
+            }
         }
     }
     
-    private func extractResources(from livePhoto: PHLivePhoto, completion: @escaping (Resources?) -> Void) {
+    private func extractResources(from livePhoto: PHLivePhoto, completion: @escaping @MainActor @Sendable (Resources?) -> Void) {
         extractResources(from: livePhoto, to: cacheDirectory, completion: completion)
     }
     
@@ -1110,7 +1120,7 @@ public class AssetLivePhoto: @unchecked Sendable {
     var videoReader: AVAssetReader?
     var assetWriter: AVAssetWriter?
     
-    func addAssetID(_ assetIdentifier: String, toVideo videoURL: URL, saveTo destinationURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (URL?) -> Void) {
+    func addAssetID(_ assetIdentifier: String, toVideo videoURL: URL, saveTo destinationURL: URL, progress: @escaping @MainActor @Sendable (CGFloat) -> Void, completion: @escaping @Sendable (URL?) -> Void) {
         
         var audioWriterInput: AVAssetWriterInput?
         var audioReaderOutput: AVAssetReaderOutput?
@@ -1161,11 +1171,11 @@ public class AssetLivePhoto: @unchecked Sendable {
             let _stillImagePercent: Float = 0.5
             stillImageTimeMetadataAdapter.append(AVTimedMetadataGroup(items: [metadataItemForStillImageTime()],timeRange: makeStillImageTimeRange(asset: videoAsset, percent: _stillImagePercent, inFrameCount: frameCount)))
             // For end of writing / progress
-            var writingVideoFinished = false
-            var writingAudioFinished = false
-            var currentFrameCount = 0
-            func didCompleteWriting() {
-                guard writingAudioFinished && writingVideoFinished else { return }
+            let writingVideoFinished = SendableObject<Bool>(false)
+            let writingAudioFinished = SendableObject<Bool>(false)
+            let currentFrameCount = SendableObject<Int>(0)
+            @Sendable func didCompleteWriting() {
+                guard writingAudioFinished.object && writingVideoFinished.object else { return }
                 assetWriter?.finishWriting {
                     if self.assetWriter?.status == .completed {
                         completion(destinationURL)
@@ -1176,44 +1186,48 @@ public class AssetLivePhoto: @unchecked Sendable {
             }
             // Start writing video
             if videoReader?.startReading() ?? false {
+                let sendableVideoWriterInput = SendableObject(videoWriterInput)
+                let sendableVideoReaderOutput = SendableObject(videoReaderOutput)
                 videoWriterInput.requestMediaDataWhenReady(on: DispatchQueue(label: "videoWriterInputQueue")) {
-                    while videoWriterInput.isReadyForMoreMediaData {
-                        if let sampleBuffer = videoReaderOutput.copyNextSampleBuffer()  {
-                            currentFrameCount += 1
-                            let percent:CGFloat = CGFloat(currentFrameCount)/CGFloat(frameCount)
+                    while sendableVideoWriterInput.object.isReadyForMoreMediaData {
+                        if let sampleBuffer = sendableVideoReaderOutput.object.copyNextSampleBuffer()  {
+                            currentFrameCount.object += 1
+                            let percent:CGFloat = CGFloat(currentFrameCount.object)/CGFloat(frameCount)
                             DispatchQueue.main.async {
                                 progress(percent)
                             }
-                            if !videoWriterInput.append(sampleBuffer) {
+                            if !sendableVideoWriterInput.object.append(sampleBuffer) {
                                 print("Cannot write: \(String(describing: self.assetWriter?.error?.localizedDescription))")
                                 self.videoReader?.cancelReading()
                             }
                         } else {
-                            videoWriterInput.markAsFinished()
-                            writingVideoFinished = true
+                            sendableVideoWriterInput.object.markAsFinished()
+                            writingVideoFinished.object = true
                             didCompleteWriting()
                         }
                     }
                 }
             } else {
-                writingVideoFinished = true
+                writingVideoFinished.object = true
                 didCompleteWriting()
             }
             // Start writing audio
             if audioReader?.startReading() ?? false {
+                let sendableAudioWriterInput = SendableObject(audioWriterInput)
+                let sendableAudioReaderOutput = SendableObject(audioReaderOutput)
                 audioWriterInput?.requestMediaDataWhenReady(on: DispatchQueue(label: "audioWriterInputQueue")) {
-                    while audioWriterInput?.isReadyForMoreMediaData ?? false {
-                        guard let sampleBuffer = audioReaderOutput?.copyNextSampleBuffer() else {
-                            audioWriterInput?.markAsFinished()
-                            writingAudioFinished = true
+                    while sendableAudioWriterInput.object?.isReadyForMoreMediaData ?? false {
+                        guard let sampleBuffer = sendableAudioReaderOutput.object?.copyNextSampleBuffer() else {
+                            sendableAudioWriterInput.object?.markAsFinished()
+                            writingAudioFinished.object = true
                             didCompleteWriting()
                             return
                         }
-                        audioWriterInput?.append(sampleBuffer)
+                        sendableAudioWriterInput.object?.append(sampleBuffer)
                     }
                 }
             } else {
-                writingAudioFinished = true
+                writingAudioFinished.object = true
                 didCompleteWriting()
             }
         } catch {
@@ -1614,8 +1628,10 @@ extension AssetSessionExporter {
         if let videoInput = self._videoInput,
            let videoOutput = self._videoOutput,
            videoTracks.count > 0 {
+            let sendableVideoInput = SendableObject(videoInput)
+            let sendableVideoOutput = SendableObject(videoOutput)
             videoInput.requestMediaDataWhenReady(on: self._inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: videoOutput, toWriterInput: videoInput) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableVideoOutput.object, toWriterInput: sendableVideoInput.object) == false {
                     group.leave()
                 }
             })
@@ -1625,8 +1641,10 @@ extension AssetSessionExporter {
         
         if let audioInput = self._audioInput,
             let audioOutput = self._audioOutput {
+            let sendableAudioInput = SendableObject(audioInput)
+            let sendableAudioOutput = SendableObject(audioOutput)
             audioInput.requestMediaDataWhenReady(on: self._inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: audioOutput, toWriterInput: audioInput) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableAudioOutput.object, toWriterInput: sendableAudioInput.object) == false {
                     group.leave()
                 }
             })
