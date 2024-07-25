@@ -113,7 +113,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
         if #available(iOS 14.0, *) {
             if let progressBlock = exportProgressBlock,
                let picker = pickerController as? PHPickerViewController {
-                picker.fw.exportProgressBlock = { picker, finishedCount, totalCount in
+                picker.fw.exportProgressBlock = { @MainActor @Sendable picker, finishedCount, totalCount in
                     let controller: UIViewController = picker.navigationController ?? picker
                     progressBlock(controller, finishedCount, totalCount)
                 }
