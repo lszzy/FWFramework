@@ -180,7 +180,7 @@ extension Wrapper where Base: UIDevice {
                 return deviceUUID
             }
             
-            let deviceUUID = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+            let deviceUUID = deviceIDFV ?? UUID().uuidString
             UIDevice.innerDeviceUUID = deviceUUID
             KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
             return deviceUUID
