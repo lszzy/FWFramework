@@ -53,14 +53,14 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
     }
     
     /// 指定操作成功和失败句柄初始化
-    public convenience init<T: Sendable>(block: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void) -> Void) {
+    public convenience init<T>(block: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void) -> Void) where T: Sendable {
         self.init(completion: { completion in
             block(completion, completion)
         })
     }
     
     /// 指定操作成功、失败句柄和进度句柄初始化
-    public convenience init<T: Sendable>(progress: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void, _ progress: @escaping @MainActor @Sendable (_ value : Double) -> Void) -> Void) {
+    public convenience init<T>(progress: @escaping @MainActor @Sendable (_ resolve: @escaping @MainActor @Sendable (_ value: T) -> Void, _ reject: @escaping @MainActor @Sendable (_ error: Error) -> Void, _ progress: @escaping @MainActor @Sendable (_ value : Double) -> Void) -> Void) where T: Sendable {
         self.init(completion: { completion in
             progress(completion, completion, { value in
                 completion(ProgressValue(value: value))
@@ -167,12 +167,12 @@ extension Promise {
     }
     
     /// 执行约定并分别回调成功、失败句柄，统一回调收尾句柄
-    public func done<T: Sendable>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) {
+    public func done<T>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) where T: Sendable {
         self.done(done, catch: `catch`, progress: nil, finally: finally)
     }
     
     /// 执行约定并分别回调成功、失败句柄、进度句柄，统一回调收尾句柄
-    public func done<T: Sendable>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, progress: (@MainActor @Sendable (_ value: Double) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) {
+    public func done<T>(_ done: @escaping @MainActor @Sendable (_ value: T) -> Void, catch: (@MainActor @Sendable (_ error: Error) -> Void)?, progress: (@MainActor @Sendable (_ value: Double) -> Void)?, finally: (@MainActor @Sendable () -> Void)? = nil) where T: Sendable {
         self.execute(progress: progress != nil) { result in
             if let prog = result as? ProgressValue {
                 progress?(prog.value)
@@ -191,7 +191,7 @@ extension Promise {
     }
     
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then<T: Sendable>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> any Sendable) -> Promise {
+    public func then<T>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> any Sendable) -> Promise where T: Sendable {
         return Promise { completion in
             self.done({ value in
                 do {
@@ -235,7 +235,7 @@ extension Promise {
     }
     
     /// 验证约定，当前约定成功时验证结果，可返回Bool或抛异常；验证通过时返回结果，验证失败时返回验证错误
-    public func validate<T: Sendable>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> Bool) -> Promise {
+    public func validate<T>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> Bool) -> Promise where T: Sendable {
         return Promise { completion in
             self.done({ value in
                 do {
@@ -257,7 +257,7 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce<T: Sendable>(_ items: [T], reducer: @escaping @MainActor @Sendable (_ value: any Sendable, _ item: T) throws -> any Sendable) -> Promise {
+    public func reduce<T>(_ items: [T], reducer: @escaping @MainActor @Sendable (_ value: any Sendable, _ item: T) throws -> any Sendable) -> Promise where T: Sendable {
         var promise = self
         for item in items {
             promise = promise.then({ value in
@@ -356,7 +356,7 @@ extension Promise {
     }
     
     /// 异步获取结果值，可声明类型
-    public func value<T: Sendable>() async throws -> T {
+    public func value<T>() async throws -> T where T: Sendable {
         guard let value = (try await value) as? T else {
             throw Promise.failedError
         }
