@@ -242,7 +242,7 @@ public enum PopupMenuAnimationStyle: Int {
 }
 
 /// 弹出菜单动画管理器
-@MainActor open class PopupMenuAnimationManager: NSObject, @preconcurrency CAAnimationDelegate {
+@MainActor open class PopupMenuAnimationManager: NSObject {
     
     /// 动画类型，默认style
     open var style: PopupMenuAnimationStyle = .scale {
@@ -364,6 +364,12 @@ public enum PopupMenuAnimationStyle: Int {
     }
     
 }
+
+#if compiler(>=6.0)
+extension PopupMenuAnimationManager: @preconcurrency CAAnimationDelegate {}
+#else
+extension PopupMenuAnimationManager: CAAnimationDelegate {}
+#endif
 
 /// 箭头方向优先级，当控件超出屏幕时会自动调整成反方向
 public enum PopupMenuPriorityDirection: Int {

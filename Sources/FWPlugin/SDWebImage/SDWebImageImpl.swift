@@ -231,7 +231,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
 
 // MARK: - SDWebImagePluginIndicator
 /// SDWebImage指示器插件Indicator
-@MainActor open class SDWebImagePluginIndicator: NSObject, @preconcurrency SDWebImageIndicator {
+@MainActor open class SDWebImagePluginIndicator: NSObject {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.indicatorView(style: style)
@@ -280,8 +280,14 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     
 }
 
+#if compiler(>=6.0)
+extension SDWebImagePluginIndicator: @preconcurrency SDWebImageIndicator {}
+#else
+extension SDWebImagePluginIndicator: SDWebImageIndicator {}
+#endif
+
 // MARK: - SDWebImageProgressPluginIndicator
-@MainActor open class SDWebImageProgressPluginIndicator: NSObject, @preconcurrency SDWebImageIndicator {
+@MainActor open class SDWebImageProgressPluginIndicator: NSObject {
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.progressView(style: style)
@@ -334,6 +340,12 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     }
     
 }
+
+#if compiler(>=6.0)
+extension SDWebImageProgressPluginIndicator: @preconcurrency SDWebImageIndicator {}
+#else
+extension SDWebImageProgressPluginIndicator: SDWebImageIndicator {}
+#endif
 
 // MARK: - Autoloader+SDWebImage
 @objc extension Autoloader {
