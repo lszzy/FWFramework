@@ -52,13 +52,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         }
         setValue(acceptLanguagesComponents.joined(separator: ", "), forHTTPHeaderField: "Accept-Language")
         
-        var userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIDevice.current.model, UIDevice.fw.iosVersionString, UIScreen.fw.screenScale)
-        if !userAgent.canBeConverted(to: .ascii) {
-            let mutableUserAgent = NSMutableString(string: userAgent)
-            if CFStringTransform(mutableUserAgent as CFMutableString, nil, "Any-Latin; Latin-ASCII; [:^ASCII:] Remove" as CFString, false) {
-                userAgent = mutableUserAgent as String
-            }
-        }
+        let userAgent = String(format: "%@/%@ (%@; build:%@; iOS %@)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIApplication.fw.appBuildVersion, UIDevice.fw.iosVersionString)
         setValue(userAgent, forHTTPHeaderField: "User-Agent")
     }
     

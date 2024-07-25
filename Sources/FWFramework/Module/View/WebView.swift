@@ -44,9 +44,9 @@ import JavaScriptCore
         return userAgent
     }
 
-    /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (iPhone; iOS 14.2; Scale/3.00)
-    public static var requestUserAgent: String {
-        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIDevice.current.model, UIDevice.current.systemVersion, UIScreen.main.scale)
+    /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (site.wuyong.Example; build:1.0.0.1; iOS 14.2)
+    nonisolated public static var requestUserAgent: String {
+        let userAgent = String(format: "%@/%@ (%@; build:%@; iOS %@)", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIApplication.fw.appBuildVersion, UIDevice.fw.iosVersionString)
         return userAgent
     }
     
