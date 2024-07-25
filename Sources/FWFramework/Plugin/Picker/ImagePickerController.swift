@@ -1892,7 +1892,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         useOriginImage: Bool,
         videoExportPreset: String? = nil,
         videoExportAVAsset: Bool = false,
-        completion: (() -> Void)?
+        completion: (@MainActor @Sendable () -> Void)?
     ) {
         if imagesAssetArray.count < 1 {
             completion?()
@@ -1901,10 +1901,12 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         
         let totalCount = imagesAssetArray.count
         var finishCount: Int = 0
-        let completionHandler: (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
+        let completionHandler: @Sendable (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
+            let sendableObject = SendableObject(object)
+            let sendableInfo = SendableObject(info)
             DispatchQueue.main.async {
-                asset.requestObject = object
-                asset.requestInfo = info
+                asset.requestObject = sendableObject.object
+                asset.requestInfo = sendableInfo.object
                 
                 finishCount += 1
                 if finishCount == totalCount {
@@ -1942,9 +1944,10 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                     }
                 } else if asset.assetSubType == .gif {
                     asset.requestImageData { imageData, info, isGIF, isHEIC in
+                        let sendableInfo = SendableObject(info)
                         DispatchQueue.global(qos: .default).async {
                             let resultImage = UIImage.fw.image(data: imageData, scale: 1)
-                            completionHandler(asset, resultImage, info)
+                            completionHandler(asset, resultImage, sendableInfo.object)
                         }
                     }
                 } else if useOriginImage {

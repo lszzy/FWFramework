@@ -455,7 +455,7 @@ open class ToastView: UIControl {
 
     /// 隐藏吐司，延迟指定时间后执行。吐司不存在时返回NO
     @discardableResult
-    open func hide(afterDelay delay: TimeInterval, completion: (@MainActor @Sendable () -> Void)? = nil) -> Bool {
+    open func hide(afterDelay delay: TimeInterval, completion: (() -> Void)? = nil) -> Bool {
         if superview != nil {
             invalidateTimer()
             hideTimer = Timer.fw.commonTimer(timeInterval: delay, block: { [weak self] _ in

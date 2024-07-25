@@ -29,7 +29,7 @@ extension Wrapper where Base: Timer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    public static func commonTimer(timeInterval: TimeInterval, block: @escaping @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
+    public static func commonTimer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
         let timer = timer(timeInterval: timeInterval, block: block, repeats: repeats)
         RunLoop.current.add(timer, forMode: .common)
         return timer
@@ -68,7 +68,7 @@ extension Wrapper where Base: Timer {
     ///   - block: 代码块
     ///   - repeats: 是否重复
     /// - Returns: 定时器
-    public static func timer(timeInterval: TimeInterval, block: @escaping @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
+    public static func timer(timeInterval: TimeInterval, block: @escaping (Timer) -> Void, repeats: Bool) -> Timer {
         return Timer(timeInterval: timeInterval, target: Timer.self, selector: #selector(Timer.innerTimerAction(_:)), userInfo: block, repeats: repeats)
     }
 
