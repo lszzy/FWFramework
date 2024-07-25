@@ -134,7 +134,7 @@ public class Asset: NSObject, @unchecked Sendable {
         
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
             resultImage = result
         }
         return resultImage
@@ -147,7 +147,7 @@ public class Asset: NSObject, @unchecked Sendable {
         imageRequestOptions.isSynchronous = true
         
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
             resultImage = result
         }
         return resultImage
@@ -194,7 +194,7 @@ public class Asset: NSObject, @unchecked Sendable {
         imageRequestOptions.resizeMode = .fast
         
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -217,7 +217,7 @@ public class Asset: NSObject, @unchecked Sendable {
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -240,7 +240,7 @@ public class Asset: NSObject, @unchecked Sendable {
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
         
-        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.main.bounds.width * 2, height: UIScreen.main.bounds.height * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
+        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
             let downloadSucceed = (livePhoto != nil && info == nil) || (!Asset.isValueTrue(info, key: PHLivePhotoInfoCancelledKey) && info?[PHLivePhotoInfoErrorKey] == nil && !Asset.isValueTrue(info, key: PHLivePhotoInfoIsDegradedKey) && !Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHLivePhotoInfoErrorKey] != nil || info?[PHImageErrorKey] != nil
             completion?(livePhoto, info, downloadSucceed || downloadFailed)
@@ -539,7 +539,7 @@ public class AssetGroup: NSObject, @unchecked Sendable {
             imageRequestOptions.isSynchronous = true
             imageRequestOptions.resizeMode = .exact
             // targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-            AssetManager.shared.phCachingImageManager.requestImage(for: asset, targetSize: CGSize(width: size.width * UIScreen.main.scale, height: size.height * UIScreen.main.scale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+            AssetManager.shared.phCachingImageManager.requestImage(for: asset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
                 resultImage = result
             }
         }
@@ -820,7 +820,7 @@ public class AssetManager: @unchecked Sendable {
     /// * 原因请参考 AssetManager 对象的保存图片和视频方法的注释。
     /// 无法通过该方法把图片保存到“智能相册”，“智能相册”只能由系统控制资源的增删。
     public func saveImage(imageRef: CGImage, orientation: UIImage.Orientation, photoLibrary: PHPhotoLibrary? = nil, albumAssetsGroup: AssetGroup, completion: @escaping (Asset?, Error?) -> Void) {
-        let image = UIImage(cgImage: imageRef, scale: UIScreen.main.scale, orientation: orientation)
+        let image = UIImage(cgImage: imageRef, scale: UIScreen.fw.screenScale, orientation: orientation)
         let assetCollection = albumAssetsGroup.phAssetCollection
         addImage(image: image, imagePathURL: nil, photoLibrary: photoLibrary ?? .shared(), assetCollection: assetCollection) { success, creationDate, error in
             if success {

@@ -68,7 +68,7 @@ public class AlertControllerAppearance: NSObject, @unchecked Sendable {
     public var disabledActionColor: UIColor?
     
     /// 自定义配置项
-    public var lineWidth: CGFloat = 1.0 / UIScreen.main.scale
+    public var lineWidth: CGFloat = 1.0 / UIScreen.fw.screenScale
     public var cancelLineWidth: CGFloat = 8.0
     public var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 20, left: 15, bottom: 20, right: 15)
     public var actionHeight: CGFloat = 55
