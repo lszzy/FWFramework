@@ -141,7 +141,7 @@ public class Asset: NSObject, @unchecked Sendable {
     }
     
     /// Asset 的预览图，输出与当前设备屏幕大小相同尺寸的图片，如果图片原图小于当前设备屏幕的尺寸，则只输出原图大小的图片
-    public var previewImage: UIImage? {
+    @MainActor public var previewImage: UIImage? {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.isSynchronous = true
@@ -212,7 +212,7 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestPreviewImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    @MainActor public func requestPreviewImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
@@ -235,7 +235,7 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 Live Photo 的请求 id
      */
     @discardableResult
-    public func requestLivePhoto(completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    @MainActor public func requestLivePhoto(completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let livePhotoRequestOptions = PHLivePhotoRequestOptions()
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
