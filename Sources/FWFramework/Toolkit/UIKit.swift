@@ -165,7 +165,14 @@ extension Wrapper where Base: UIDevice {
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        return UIDevice.current.identifierForVendor?.uuidString
+        if UIDevice.innerDeviceIDFV == nil {
+            DispatchQueue.fw.mainSync {
+                UIDevice.innerDeviceIDFV = UIDevice.current.identifierForVendor?.uuidString ?? ""
+            }
+        }
+        
+        let deviceIDFV = UIDevice.innerDeviceIDFV ?? ""
+        return !deviceIDFV.isEmpty ? deviceIDFV : nil
     }
     
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
