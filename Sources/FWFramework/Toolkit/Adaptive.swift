@@ -321,12 +321,12 @@ extension Wrapper where Base: UIScreen {
     
     /// 屏幕宽度
     public static var screenWidth: CGFloat {
-        return UIScreen.main.bounds.size.width
+        return UIScreen.main.bounds.width
     }
     
     /// 屏幕高度
     public static var screenHeight: CGFloat {
-        return UIScreen.main.bounds.size.height
+        return UIScreen.main.bounds.height
     }
     
     /// 屏幕像素比例
@@ -379,7 +379,7 @@ extension Wrapper where Base: UIScreen {
     
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat {
-        return 1.0 / UIScreen.main.scale
+        return 1.0 / screenScale
     }
     
     /// 检查是否含有安全区域，可用来判断iPhoneX

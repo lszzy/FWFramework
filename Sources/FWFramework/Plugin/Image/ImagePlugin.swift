@@ -54,7 +54,7 @@ extension Wrapper where Base: UIImage {
     }
     
     private static func bundlePreferredScales() -> [CGFloat] {
-        let screenScale = UIScreen.main.scale
+        let screenScale = UIScreen.fw.screenScale
         if screenScale <= 1 {
             return [1, 2, 3]
         } else if screenScale <= 2 {

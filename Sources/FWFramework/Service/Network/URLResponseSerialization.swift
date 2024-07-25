@@ -165,7 +165,7 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 }
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
-    open var imageScale: CGFloat = UIScreen.main.scale
+    open var imageScale: CGFloat = UIScreen.fw.screenScale
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
     
