@@ -19,7 +19,12 @@ import QuartzCore
 /// ```swift
 /// APP.safeString(object)
 /// ```
-public class WrapperGlobal {}
+public class WrapperGlobal {
+    
+    /// 当前框架版本号
+    public static let version = "6.0.0"
+    
+}
 
 /// 全局包装器别名
 @_spi(FW) public typealias FW = WrapperGlobal
