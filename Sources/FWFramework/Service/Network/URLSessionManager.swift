@@ -611,7 +611,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         let error = (task.fw.property(forName: "authenticationChallengeError") as? Error) ?? error
         let manager = self.manager
-        var responseObject: Any?
+        let sendableResponseObject = SendableObject<Any?>(nil)
         
         var userInfo: [AnyHashable: Any] = [:]
         userInfo[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
@@ -634,7 +634,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
             let queue = manager?.completionQueue ?? .main
             let group = manager?.completionGroup ?? Self.completionGroup
             queue.async(group: group) {
-                self.completionHandler?(task.response ?? HTTPURLResponse(), responseObject, error)
+                self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, error)
                 
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: userInfo)
@@ -649,16 +649,16 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
                 
                 var serializationError: Error?
                 do {
-                    responseObject = try manager?.responseSerializer.responseObject(for: task.response, data: data)
+                    sendableResponseObject.object = try manager?.responseSerializer.responseObject(for: task.response, data: data)
                 } catch let decodeError {
                     serializationError = decodeError
                 }
                 
                 if self.downloadFileURL != nil {
-                    responseObject = self.downloadFileURL
+                    sendableResponseObject.object = self.downloadFileURL
                 }
-                if responseObject != nil {
-                    userInfo[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = responseObject
+                if sendableResponseObject.object != nil {
+                    userInfo[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = sendableResponseObject.object
                 }
                 if serializationError != nil {
                     userInfo[URLSessionManager.networkingTaskDidCompleteErrorKey] = serializationError
@@ -667,7 +667,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
                 let queue = manager?.completionQueue ?? .main
                 let group = manager?.completionGroup ?? Self.completionGroup
                 queue.async(group: group) {
-                    self.completionHandler?(task.response ?? HTTPURLResponse(), responseObject, serializationError)
+                    self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, serializationError)
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: userInfo)

@@ -151,7 +151,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
               fileURL.isFileURL,
               let outputStream = OutputStream(url: fileURL, append: false) else { return nil }
         
-        var error: Error?
+        let sendableError = SendableObject<Error?>(nil)
         DispatchQueue.global(qos: .default).async {
             inputStream.schedule(in: .current, forMode: .default)
             outputStream.schedule(in: .current, forMode: .default)
@@ -164,13 +164,13 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 
                 let bytesRead = inputStream.read(&buffer, maxLength: 1024)
                 if inputStream.streamError != nil || bytesRead < 0 {
-                    error = inputStream.streamError
+                    sendableError.object = inputStream.streamError
                     break
                 }
 
                 let bytesWritten = outputStream.write(buffer, maxLength: bytesRead)
                 if outputStream.streamError != nil || bytesWritten < 0 {
-                    error = outputStream.streamError
+                    sendableError.object = outputStream.streamError
                     break
                 }
 
@@ -184,7 +184,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
 
             if completionHandler != nil {
                 DispatchQueue.main.async {
-                    completionHandler?(error)
+                    completionHandler?(sendableError.object)
                 }
             }
         }
@@ -487,7 +487,7 @@ extension StreamingMultipartFormData {
         case finalBoundary = 4
     }
     
-    private class HTTPBodyPart: NSObject {
+    private class HTTPBodyPart: NSObject, @unchecked Sendable {
         var stringEncoding: String.Encoding = .utf8
         var headers: [String: String]?
         var boundary: String = ""
@@ -607,7 +607,7 @@ extension StreamingMultipartFormData {
         private func transitionToNextPhase() -> Bool {
             if !Thread.isMainThread {
                 DispatchQueue.main.sync {
-                    _ = transitionToNextPhase()
+                    _ = self.transitionToNextPhase()
                 }
                 return true
             }
