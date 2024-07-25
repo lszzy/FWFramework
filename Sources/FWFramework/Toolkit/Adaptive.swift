@@ -282,17 +282,17 @@ extension Wrapper where Base: UIDevice {
     
     /// 设备宽度，跟横竖屏无关
     public static var deviceWidth: CGFloat {
-        return min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+        return min(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
     }
     
     /// 设备高度，跟横竖屏无关
     public static var deviceHeight: CGFloat {
-        return max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+        return max(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
     }
     
     /// 设备分辨率，跟横竖屏无关
     public static var deviceResolution: CGSize {
-        return CGSize(width: deviceWidth * UIScreen.main.scale, height: deviceHeight * UIScreen.main.scale)
+        return CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
     }
     
     /// 获取设备模型，格式："iPhone6,1"
@@ -510,10 +510,10 @@ extension Wrapper where Base: UIScreen {
             return block()
         }
         
-        if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-            return UIScreen.main.bounds.width / referenceSize.width
+        if screenHeight > screenWidth {
+            return screenWidth / referenceSize.width
         } else {
-            return UIScreen.main.bounds.width / referenceSize.height
+            return screenWidth / referenceSize.height
         }
     }
     
@@ -523,10 +523,10 @@ extension Wrapper where Base: UIScreen {
             return block()
         }
         
-        if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-            return UIScreen.main.bounds.height / referenceSize.height
+        if screenHeight > screenWidth {
+            return screenHeight / referenceSize.height
         } else {
-            return UIScreen.main.bounds.height / referenceSize.width
+            return screenHeight / referenceSize.width
         }
     }
 
@@ -557,7 +557,7 @@ extension Wrapper where Base: UIScreen {
     /// 基于指定的倍数(0取当前设备)，对传进来的floatValue进行像素取整
     public static func flatValue(_ value: CGFloat, scale: CGFloat = 0) -> CGFloat {
         let floatValue: CGFloat = (value == .leastNonzeroMagnitude || value == .leastNormalMagnitude) ? 0 : value
-        let scaleValue: CGFloat = scale > 0 ? scale : UIScreen.main.scale
+        let scaleValue: CGFloat = scale > 0 ? scale : screenScale
         return ceil(floatValue * scaleValue) / scaleValue
     }
 }

@@ -1620,7 +1620,7 @@ extension Wrapper where Base: UIImage {
         
         let pdfRect = page.getBoxRect(.cropBox)
         let pdfSize = size.equalTo(.zero) ? pdfRect.size : size
-        let scale = UIScreen.main.scale
+        let scale = UIScreen.fw.screenScale
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         guard let context = CGContext(data: nil, width: Int(pdfSize.width * scale), height: Int(pdfSize.height * scale), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue) else { return nil }
         
