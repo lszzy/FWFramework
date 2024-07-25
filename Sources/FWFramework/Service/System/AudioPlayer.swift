@@ -312,7 +312,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         }
     }
     
-    open func seek(to seconds: Double, completionHandler: ((Bool) -> Void)? = nil) {
+    open func seek(to seconds: Double, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
         if let completionHandler = completionHandler {
             audioPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: Int32(NSEC_PER_SEC)), completionHandler: completionHandler)
         } else {
@@ -320,12 +320,12 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         }
     }
     
-    open func addBoundaryTimeObserver(for times: [NSValue], queue: DispatchQueue?, using block: @escaping () -> Void) -> Any {
+    open func addBoundaryTimeObserver(for times: [NSValue], queue: DispatchQueue?, using block: @escaping @Sendable () -> Void) -> Any {
         let observer = audioPlayer.addBoundaryTimeObserver(forTimes: times, queue: queue, using: block)
         return observer
     }
     
-    open func addPeriodicTimeObserver(for interval: CMTime, queue: DispatchQueue?, using block: @escaping (CMTime) -> Void) -> Any {
+    open func addPeriodicTimeObserver(for interval: CMTime, queue: DispatchQueue?, using block: @escaping @Sendable (CMTime) -> Void) -> Any {
         let observer = audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: queue, using: block)
         return observer
     }
@@ -343,7 +343,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
                 Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
             }
         }
-        UIApplication.shared.endReceivingRemoteControlEvents()
+        DispatchQueue.fw.mainSyncIf {
+            UIApplication.shared.endReceivingRemoteControlEvents()
+        }
         NotificationCenter.default.removeObserver(self)
         
         if let token = periodicTimeToken {
@@ -357,7 +359,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         
         removeAllItems()
         
-        audioPlayer.pause()
+        DispatchQueue.fw.mainSyncIf {
+            audioPlayer.pause()
+        }
         delegate = nil
         dataSource = nil
     }

@@ -12,14 +12,20 @@ extension Wrapper where Base: DispatchQueue {
     /// 主线程安全异步执行句柄
     public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
         if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                block()
-            }
+            MainActor.assumeIsolated(block)
         } else {
-            DispatchQueue.main.async {
-                block()
-            }
+            DispatchQueue.main.async(execute: block)
         }
+    }
+    
+    /// 主线程安全同步执行句柄
+    public static func mainSync(execute block: @MainActor () -> Void) {
+        MainActor.runSync(execute: block)
+    }
+    
+    /// 当主线程时执行句柄，非主线程不执行
+    public static func mainSyncIf(execute block: @MainActor () -> Void) {
+        MainActor.runSyncIf(execute: block)
     }
 }
 
@@ -28,15 +34,27 @@ extension MainActor {
     /// 主Actor安全异步执行句柄
     public static func runAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
         if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                block()
-            }
+            MainActor.assumeIsolated(block)
         } else {
             Task {
-                await MainActor.run {
-                    block()
-                }
+                await MainActor.run(body: block)
             }
+        }
+    }
+    
+    /// 主Actor安全同步执行句柄
+    public static func runSync(execute block: @MainActor () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated(block)
+        } else {
+            DispatchQueue.main.sync(execute: block)
+        }
+    }
+    
+    /// 当主线程时执行句柄，非主线程不执行
+    public static func runSyncIf(execute block: @MainActor () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated(block)
         }
     }
 }

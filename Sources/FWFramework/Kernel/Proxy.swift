@@ -101,7 +101,7 @@ open class DelegateProxy<T>: NSObject {
 }
 
 // MARK: - WeakObject
-/// 弱引用对象容器类，用于解决关联对象weak引用等
+/// 弱引用对象容器类，用于解决关联对象weak引用问题
 public class WeakObject: @unchecked Sendable {
     
     public weak var object: AnyObject?
@@ -113,7 +113,7 @@ public class WeakObject: @unchecked Sendable {
 }
 
 // MARK: - SendableObject
-/// Sendable容器类，用于解决任意对象Sendable传参等
+/// Sendable容器类，用于解决任意对象Sendable传参问题
 public class SendableObject<T>: @unchecked Sendable {
     
     public var object: T

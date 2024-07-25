@@ -476,7 +476,7 @@ extension Binding {
         }
     }
     
-    public func withDefaultValue<T: Sendable>(_ defaultValue: T) -> Binding<T> where Value == Optional<T> {
+    public func withDefaultValue<T>(_ defaultValue: T) -> Binding<T> where Value == Optional<T>, T: Sendable {
         return .init(
             get: { self.wrappedValue ?? defaultValue },
             set: { self.wrappedValue = $0 }
