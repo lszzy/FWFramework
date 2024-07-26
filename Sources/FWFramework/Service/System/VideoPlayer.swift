@@ -31,7 +31,7 @@ import CoreGraphics
 
 // MARK: - VideoPlayerPlaybackState
 /// Asset playback states
-public enum VideoPlayerPlaybackState: Int {
+public enum VideoPlayerPlaybackState: Int, Sendable {
     case stopped = 0
     case playing
     case paused
@@ -40,7 +40,7 @@ public enum VideoPlayerPlaybackState: Int {
 
 // MARK: - VideoPlayerBufferingState
 /// Asset buffering states
-public enum VideoPlayerBufferingState: Int {
+public enum VideoPlayerBufferingState: Int, Sendable {
     case unknown = 0
     case ready
     case delayed

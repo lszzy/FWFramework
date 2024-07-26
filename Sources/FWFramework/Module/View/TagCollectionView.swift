@@ -7,12 +7,12 @@
 
 import UIKit
 
-public enum TagCollectionScrollDirection: Int {
+public enum TagCollectionScrollDirection: Int, Sendable {
     case vertical = 0
     case horizontal
 }
 
-public enum TagCollectionAlignment: Int {
+public enum TagCollectionAlignment: Int, Sendable {
     case left = 0
     case center
     case right

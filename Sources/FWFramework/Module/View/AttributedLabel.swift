@@ -9,7 +9,7 @@ import UIKit
 import CoreText
 
 // MARK: - AttributedLabel
-public enum AttributedLabelAlignment: Int {
+public enum AttributedLabelAlignment: Int, Sendable {
     case top
     case center
     case bottom

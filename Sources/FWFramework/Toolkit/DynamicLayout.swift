@@ -767,7 +767,7 @@ import UIKit
 }
 
 // MARK: - HeaderFooterViewType
-public enum HeaderFooterViewType: Int {
+public enum HeaderFooterViewType: Int, Sendable {
     case header = 0
     case footer = 1
 }

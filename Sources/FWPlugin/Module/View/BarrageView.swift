@@ -49,14 +49,14 @@ import UIKit
 }
 
 // MARK: - BarrageRenderView
-public enum BarragePositionPriority: Int {
+public enum BarragePositionPriority: Int, Sendable {
     case low = 0
     case middle
     case high
     case veryHigh
 }
 
-public enum BarrageRenderPositionStyle: Int {
+public enum BarrageRenderPositionStyle: Int, Sendable {
     /// 将BarrageRenderView分成几条轨道, 随机选一条展示
     case randomTracks = 0
     /// y坐标随机
@@ -65,7 +65,7 @@ public enum BarrageRenderPositionStyle: Int {
     case increase
 }
 
-public enum BarrageRenderStatus: Int {
+public enum BarrageRenderStatus: Int, Sendable {
     case stopped = 0
     case started
     case paused

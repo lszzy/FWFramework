@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - VersionStatus
 /// 版本状态
-public enum VersionStatus: Int {
+public enum VersionStatus: Int, Sendable {
     /// 已发布
     case published = 0
     /// 需要更新

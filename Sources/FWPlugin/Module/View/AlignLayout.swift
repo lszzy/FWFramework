@@ -12,7 +12,7 @@ import UIKit
 
 // MARK: - CollectionViewAlignLayout
 /// 集合视图元素水平对齐方式枚举
-@objc public enum CollectionViewItemsHorizontalAlignment: Int {
+@objc public enum CollectionViewItemsHorizontalAlignment: Int, Sendable {
     /// 水平流式（水平方向效果与 UICollectionViewDelegateFlowLayout 一致）
     case flow
     /// 水平流式并充满（行内各 item 均分行内剩余空间，使行内充满显示）
@@ -26,7 +26,7 @@ import UIKit
 }
 
 /// 集合视图元素水平对齐方式枚举
-@objc public enum CollectionViewItemsVerticalAlignment: Int {
+@objc public enum CollectionViewItemsVerticalAlignment: Int, Sendable {
     /// 竖直方向居中
     case center
     /// 竖直方向顶部对齐
@@ -36,7 +36,7 @@ import UIKit
 }
 
 /// 集合视图元素排布方向枚举
-@objc public enum CollectionViewItemsDirection: Int {
+@objc public enum CollectionViewItemsDirection: Int, Sendable {
     // 排布方向从左到右
     case ltr
     // 排布方向从右到左

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - BannerView
 /// BannerView分页控件对齐方式枚举
-public enum BannerViewPageControlAlignment: Int {
+public enum BannerViewPageControlAlignment: Int, Sendable {
     /// 右对齐
     case right
     /// 居中对齐
@@ -17,7 +17,7 @@ public enum BannerViewPageControlAlignment: Int {
 }
 
 /// BannerView分页控件样式枚举
-public enum BannerViewPageControlStyle: Int {
+public enum BannerViewPageControlStyle: Int, Sendable {
     /// 系统样式
     case system
     /// 自定义样式，可设置图片等

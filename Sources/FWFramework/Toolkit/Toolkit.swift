@@ -2102,7 +2102,7 @@ public protocol ViewControllerLifecycleObservable {}
 /// 视图控制器常用生命周期状态枚举
 ///
 /// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)，请使用object参数
-public enum ViewControllerLifecycleState: Int {
+public enum ViewControllerLifecycleState: Int, Sendable {
     case didInit = 0
     case didLoad = 1
     case willAppear = 2

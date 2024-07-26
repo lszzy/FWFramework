@@ -8,7 +8,7 @@
 import UIKit
 
 /// 弹出菜单箭头方向
-public enum PopupMenuArrowDirection: Int {
+public enum PopupMenuArrowDirection: Int, Sendable {
     case top = 0
     case bottom
     case left
@@ -234,7 +234,7 @@ public class PopupMenuPath {
 }
 
 /// 弹出菜单动画样式
-public enum PopupMenuAnimationStyle: Int {
+public enum PopupMenuAnimationStyle: Int, Sendable {
     case scale = 0
     case fade
     case none
@@ -372,7 +372,7 @@ extension PopupMenuAnimationManager: CAAnimationDelegate {}
 #endif
 
 /// 箭头方向优先级，当控件超出屏幕时会自动调整成反方向
-public enum PopupMenuPriorityDirection: Int {
+public enum PopupMenuPriorityDirection: Int, Sendable {
     case top = 0
     case bottom
     case left

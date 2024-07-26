@@ -8,13 +8,13 @@
 import UIKit
 
 // MARK: - PasscodeView
-public enum PasscodeEditStatus: Int {
+public enum PasscodeEditStatus: Int, Sendable {
     case idle = 0
     case beginEdit
     case endEdit
 }
 
-public enum PasscodeInputType: Int {
+public enum PasscodeInputType: Int, Sendable {
     /// 数字
     case number = 0
     /// 普通（不作任何处理）
@@ -480,7 +480,7 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
 }
 
 // MARK: - PasscodeCellProperty
-public enum PasscodeSecurityType: Int {
+public enum PasscodeSecurityType: Int, Sendable {
     case symbol = 0
     case view
 }

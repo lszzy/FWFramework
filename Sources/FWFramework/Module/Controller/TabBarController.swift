@@ -138,7 +138,7 @@ open class TabBarController: UITabBarController, TabBarDelegate {
 /// - centered: UITabBarItemPositioning.centered
 /// - fillExcludeSeparator: 完全fill模式，布局不覆盖tabBar顶部分割线
 /// - fillIncludeSeparator: 完全fill模式，布局覆盖tabBar顶部分割线
-public enum TabBarItemPositioning : Int {
+public enum TabBarItemPositioning : Int, Sendable {
     
     case automatic
     
@@ -702,7 +702,7 @@ internal class TabBarItemContainer: UIControl {
 }
 
 // MARK: - TabBarItemContentMode
-public enum TabBarItemContentMode : Int {
+public enum TabBarItemContentMode : Int, Sendable {
     
     case alwaysOriginal // Always set the original image size
     

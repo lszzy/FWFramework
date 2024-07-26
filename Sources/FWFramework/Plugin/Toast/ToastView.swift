@@ -8,7 +8,7 @@
 import UIKit
 
 /// 吐司视图类型
-public enum ToastViewType: Int {
+public enum ToastViewType: Int, Sendable {
     /// 自定义吐司
     case custom = 0
     /// 文本吐司
@@ -22,7 +22,7 @@ public enum ToastViewType: Int {
 }
 
 /// 吐司视图位置
-public enum ToastViewPosition: Int {
+public enum ToastViewPosition: Int, Sendable {
     /// 中心
     case center = 0
     /// 顶部

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - PullRefreshView
 /// 下拉刷新状态枚举
-public enum PullRefreshState: Int {
+public enum PullRefreshState: Int, Sendable {
     case idle = 0
     case triggered
     case loading
@@ -547,7 +547,7 @@ fileprivate class PullRefreshArrowView: UIView {
 
 // MARK: - InfiniteScrollView
 /// 上拉追加状态枚举
-public enum InfiniteScrollState: Int {
+public enum InfiniteScrollState: Int, Sendable {
     case idle = 0
     case triggered
     case loading

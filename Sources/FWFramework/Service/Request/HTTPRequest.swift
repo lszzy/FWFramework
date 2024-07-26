@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - HTTPRequest
 /// 请求方式
-public enum RequestMethod: String {
+public enum RequestMethod: String, Sendable {
     case GET = "GET"
     case POST = "POST"
     case HEAD = "HEAD"
@@ -24,19 +24,19 @@ public enum RequestMethod: String {
 }
 
 /// 请求序列化类型
-public enum RequestSerializerType: Int {
+public enum RequestSerializerType: Int, Sendable {
     case HTTP = 0
     case JSON
 }
 
 /// 响应序列化类型
-public enum ResponseSerializerType: Int {
+public enum ResponseSerializerType: Int, Sendable {
     case HTTP = 0
     case JSON
 }
 
 /// 请求优先级
-public enum RequestPriority: Int {
+public enum RequestPriority: Int, Sendable {
     case `default` = 0
     case low = -4
     case high = 4

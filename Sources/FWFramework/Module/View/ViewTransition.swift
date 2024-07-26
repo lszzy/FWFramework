@@ -238,7 +238,7 @@ import UIKit
 
 // MARK: - AnimatedTransition
 /// 转场动画类型
-public enum AnimatedTransitionType: Int {
+public enum AnimatedTransitionType: Int, Sendable {
     /// 转场未开始
     case none = 0
     /// push转场

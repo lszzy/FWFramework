@@ -171,7 +171,7 @@ extension BadgeViewProtocol {
 }
 
 /// 自带提醒灯样式
-public enum BadgeStyle: Int {
+public enum BadgeStyle: Int, Sendable {
     /// 自定义
     case custom = 0
     /// 小红点，圆形，默认(10)*(10)

@@ -10,7 +10,7 @@ import Photos
 
 // MARK: - ImagePreviewView
 /// 图片预览媒体类型枚举
-@objc public enum ImagePreviewMediaType: UInt {
+@objc public enum ImagePreviewMediaType: UInt, Sendable {
     case image
     case livePhoto
     case video
@@ -381,7 +381,7 @@ fileprivate class ImagePreviewCell: UICollectionViewCell {
 }
 
 // MARK: - ImagePreviewController
-public enum ImagePreviewTransitioningStyle: UInt {
+public enum ImagePreviewTransitioningStyle: UInt, Sendable {
     /// present 时整个界面渐现，dismiss 时整个界面渐隐，默认。
     case fade
     /// present 时从某个指定的位置缩放到屏幕中央，dismiss 时缩放到指定位置，必须实现 sourceImageView 并返回一个非空的值
@@ -960,7 +960,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
 
 // MARK: - CollectionViewPagingLayout
 /// 分页横向滚动布局样式枚举
-public enum CollectionViewPagingLayoutStyle: Int {
+public enum CollectionViewPagingLayoutStyle: Int, Sendable {
     /// 普通模式，水平滑动
     case `default`
     /// 缩放模式，两边的item会小一点，逐渐向中间放大

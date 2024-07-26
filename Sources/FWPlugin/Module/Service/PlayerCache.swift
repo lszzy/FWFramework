@@ -693,7 +693,7 @@ public class PlayerCacheContentInfo: NSObject, NSSecureCoding {
 }
 
 // MARK: - PlayerCacheAction
-public enum PlayerCacheAtionType: Int {
+public enum PlayerCacheAtionType: Int, Sendable {
     case local = 0
     case remote
 }

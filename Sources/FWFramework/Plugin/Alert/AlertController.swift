@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - AlertController
 /// 弹窗控制器样式枚举
-public enum AlertControllerStyle: Int {
+public enum AlertControllerStyle: Int, Sendable {
     /// 从单侧弹出(顶/左/底/右)
     case actionSheet = 0
     /// 从中间弹出
@@ -17,7 +17,7 @@ public enum AlertControllerStyle: Int {
 }
 
 /// 弹窗动画类型枚举
-public enum AlertAnimationType: Int {
+public enum AlertAnimationType: Int, Sendable {
     /// 默认动画，actionSheet为fromBottom，alert为shrink
     case `default` = 0
     /// 从底部弹出
@@ -1704,7 +1704,7 @@ open class AlertAnimation: NSObject, UIViewControllerAnimatedTransitioning {
 
 // MARK: - AlertAction
 /// 弹窗动作样式枚举
-public enum AlertActionStyle: Int {
+public enum AlertActionStyle: Int, Sendable {
     /// 默认样式
     case `default` = 0
     /// 取消样式,字体加粗

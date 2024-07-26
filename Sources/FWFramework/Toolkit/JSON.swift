@@ -46,7 +46,7 @@ extension JSONError: CustomNSError {
 }
 
 // MARK: - JSONType
-public enum JSONType: Int {
+public enum JSONType: Int, Sendable {
     case number
     case string
     case bool
@@ -63,7 +63,7 @@ public enum JSONType: Int {
  - see: [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
  */
 @dynamicMemberLookup
-public struct JSON {
+public struct JSON: @unchecked Sendable {
     
     public init() {
         self.init(jsonObject: NSNull())
@@ -1170,7 +1170,7 @@ func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-public enum JSONWritingOptionsKeys {
+public enum JSONWritingOptionsKeys: Sendable {
     case jsonSerialization
     case castNilToNSNull
     case maxObjextDepth

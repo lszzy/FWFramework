@@ -8,13 +8,13 @@
 import UIKit
 
 /// 图片裁剪样式
-public enum ImageCropCroppingStyle: Int {
+public enum ImageCropCroppingStyle: Int, Sendable {
     case `default`
     case circular
 }
 
 /// 常用裁剪比率枚举
-public enum ImageCropAspectRatioPreset: Int {
+public enum ImageCropAspectRatioPreset: Int, Sendable {
     case presetOriginal = 0
     case presetSquare
     case preset3x2
@@ -27,7 +27,7 @@ public enum ImageCropAspectRatioPreset: Int {
 }
 
 /// 工具栏位置枚举
-public enum ImageCropToolbarPosition: Int {
+public enum ImageCropToolbarPosition: Int, Sendable {
     case bottom
     case top
 }
