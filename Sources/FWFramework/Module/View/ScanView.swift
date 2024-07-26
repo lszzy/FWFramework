@@ -531,7 +531,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
 
 // MARK: - ScanView
 /// 扫码边角位置枚举
-public enum ScanCornerLoaction: Int {
+public enum ScanCornerLoaction: Int, Sendable {
     /// 默认与边框线同中心点
     case `default` = 0
     /// 在边框线内部

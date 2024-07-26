@@ -326,7 +326,7 @@ open class CollectionViewFlowLayout: UICollectionViewFlowLayout {
 }
 
 // MARK: - CollectionViewWaterfallLayout
-public enum CollectionViewWaterfallLayoutItemRenderDirection: Int {
+public enum CollectionViewWaterfallLayoutItemRenderDirection: Int, Sendable {
     case shortestFirst
     case leftToRight
     case rightToLeft

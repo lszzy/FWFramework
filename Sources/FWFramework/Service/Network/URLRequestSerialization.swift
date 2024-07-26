@@ -13,7 +13,7 @@ public protocol URLRequestSerialization: AnyObject {
     func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest
 }
 
-public enum HTTPRequestQueryStringSerializationStyle: Int {
+public enum HTTPRequestQueryStringSerializationStyle: Int, Sendable {
     case `default` = 0
 }
 

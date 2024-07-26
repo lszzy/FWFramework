@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ImageDownloader
 /// 图片下载优先顺序
-public enum ImageDownloadPrioritization: Int {
+public enum ImageDownloadPrioritization: Int, Sendable {
     case FIFO
     case LIFO
 }

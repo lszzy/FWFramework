@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum SegmentedControlSelectionStyle: Int {
+public enum SegmentedControlSelectionStyle: Int, Sendable {
     case textWidthStripe
     case fullWidthStripe
     case box
@@ -15,13 +15,13 @@ public enum SegmentedControlSelectionStyle: Int {
     case circle
 }
 
-public enum SegmentedControlSelectionIndicatorLocation: Int {
+public enum SegmentedControlSelectionIndicatorLocation: Int, Sendable {
     case top
     case bottom
     case none
 }
 
-public enum SegmentedControlSegmentWidthStyle: Int {
+public enum SegmentedControlSegmentWidthStyle: Int, Sendable {
     case fixed
     case dynamic
 }
@@ -39,13 +39,13 @@ public struct SegmentedControlBorderType: OptionSet, Sendable {
     }
 }
 
-public enum SegmentedControlType: Int {
+public enum SegmentedControlType: Int, Sendable {
     case text
     case images
     case textImages
 }
 
-public enum SegmentedControlImagePosition: Int {
+public enum SegmentedControlImagePosition: Int, Sendable {
     case behindText
     case leftOfText
     case rightOfText

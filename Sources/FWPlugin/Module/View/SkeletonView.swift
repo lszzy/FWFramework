@@ -112,7 +112,7 @@ public protocol SkeletonAnimationProtocol {
 }
 
 /// 骨架屏自带动画类型
-public enum SkeletonAnimationType: Int {
+public enum SkeletonAnimationType: Int, Sendable {
     /// 闪光灯动画
     case shimmer
     /// 呼吸灯动画
@@ -122,7 +122,7 @@ public enum SkeletonAnimationType: Int {
 }
 
 /// 骨架屏自带动画方向
-public enum SkeletonAnimationDirection: Int {
+public enum SkeletonAnimationDirection: Int, Sendable {
     case right
     case left
     case down

@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - ToolbarView
-public enum ToolbarViewType: Int {
+public enum ToolbarViewType: Int, Sendable {
     
     /// 默认工具栏，含菜单和底部，无titleView，自动兼容横屏
     case `default` = 0
@@ -569,7 +569,7 @@ open class ToolbarMenuView: UIView {
 }
 
 /// 自定义titleView布局方式，默认水平布局
-public enum ToolbarTitleViewStyle: Int {
+public enum ToolbarTitleViewStyle: Int, Sendable {
     case horizontal = 0
     case vertical
 }

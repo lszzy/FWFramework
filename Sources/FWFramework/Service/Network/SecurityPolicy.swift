@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-public enum SSLPinningMode: Int {
+public enum SSLPinningMode: Int, Sendable {
     case none = 0
     case publicKey
     case certificate
