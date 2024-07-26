@@ -173,6 +173,10 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         if tookAudioFocus {
             destroyPlayer()
         }
+        
+        #if DEBUG
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        #endif
     }
     
     open func setupPlayerItem(url: Any, index: Int) {

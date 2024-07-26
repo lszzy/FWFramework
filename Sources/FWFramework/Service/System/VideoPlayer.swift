@@ -11,7 +11,7 @@ import CoreGraphics
 
 // MARK: - VideoPlayerDelegate
 /// Player delegate protocol
-@objc public protocol VideoPlayerDelegate {
+@MainActor @objc public protocol VideoPlayerDelegate {
     @objc optional func playerReady(_ player: VideoPlayer)
     @objc optional func playerPlaybackStateDidChange(_ player: VideoPlayer)
     @objc optional func playerBufferingStateDidChange(_ player: VideoPlayer)
@@ -21,7 +21,7 @@ import CoreGraphics
 
 // MARK: - VideoPlayerPlaybackDelegate
 /// Player playback protocol
-@objc public protocol VideoPlayerPlaybackDelegate {
+@MainActor @objc public protocol VideoPlayerPlaybackDelegate {
     @objc optional func playerCurrentTimeDidChange(_ player: VideoPlayer)
     @objc optional func playerPlaybackWillStartFromBeginning(_ player: VideoPlayer)
     @objc optional func playerPlaybackDidEnd(_ player: VideoPlayer)
@@ -55,10 +55,10 @@ open class VideoPlayer: UIViewController {
     // properties
     
     /// Player delegate.
-    open weak var playerDelegate: VideoPlayerDelegate?
+    nonisolated(unsafe) open weak var playerDelegate: VideoPlayerDelegate?
 
     /// Playback delegate.
-    open weak var playbackDelegate: VideoPlayerPlaybackDelegate?
+    nonisolated(unsafe) open weak var playbackDelegate: VideoPlayerPlaybackDelegate?
 
     // configuration
 
@@ -75,12 +75,17 @@ open class VideoPlayer: UIViewController {
     /// For setting up with AVAsset instead of URL
     /// Note: This will reset the `url` property. (cannot set both)
     open var asset: AVAsset? {
-        didSet {
-            if let asset = self.asset {
+        get {
+            return _asset
+        }
+        set {
+            _asset = newValue
+            if let asset = newValue {
                 setupAsset(asset)
             }
         }
     }
+    nonisolated(unsafe) private var _asset: AVAsset?
 
     /// Specifies how the video is displayed within a player layer’s bounds.
     /// The default value is `AVLayerVideoGravityResizeAspect`. See `PlayerFillMode`.
@@ -164,10 +169,10 @@ open class VideoPlayer: UIViewController {
     open var playbackFreezesAtEnd: Bool = false
 
     /// Current playback state of the Player.
-    open var playbackState: VideoPlayerPlaybackState = .stopped {
+    nonisolated(unsafe) open var playbackState: VideoPlayerPlaybackState = .stopped {
         didSet {
             if playbackState != oldValue || !playbackEdgeTriggered {
-                self.executeClosureOnMainQueueIfNecessary {
+                DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerPlaybackStateDidChange?(self)
                 }
             }
@@ -175,10 +180,10 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Current buffering state of the Player.
-    open var bufferingState: VideoPlayerBufferingState = .unknown {
+    nonisolated(unsafe) open var bufferingState: VideoPlayerBufferingState = .unknown {
         didSet {
             if bufferingState != oldValue || !playbackEdgeTriggered {
-                self.executeClosureOnMainQueueIfNecessary {
+                DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerBufferingStateDidChange?(self)
                 }
             }
@@ -186,13 +191,13 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Playback buffering size in seconds.
-    open var bufferSizeInSeconds: Double = 10
+    nonisolated(unsafe) open var bufferSizeInSeconds: Double = 10
 
     /// Playback is not automatically triggered from state changes when true.
-    open var playbackEdgeTriggered: Bool = true
+    nonisolated(unsafe) open var playbackEdgeTriggered: Bool = true
 
     /// Maximum duration of playback.
-    open var maximumDuration: TimeInterval {
+    nonisolated open var maximumDuration: TimeInterval {
         get {
             if let playerItem = self.playerItem {
                 return CMTimeGetSeconds(playerItem.duration)
@@ -203,7 +208,7 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Media playback's current time interval in seconds.
-    open var currentTimeInterval: TimeInterval {
+    nonisolated open var currentTimeInterval: TimeInterval {
         get {
             if let playerItem = self.playerItem {
                 return CMTimeGetSeconds(playerItem.currentTime())
@@ -214,7 +219,7 @@ open class VideoPlayer: UIViewController {
     }
     
     /// Media playback's current time.
-    open var currentTime: CMTime {
+    nonisolated open var currentTime: CMTime {
         get {
             if let playerItem = self.playerItem {
                 return playerItem.currentTime()
@@ -238,12 +243,18 @@ open class VideoPlayer: UIViewController {
         }
     }
     
-    open lazy var player: AVPlayer = {
+    open var player: AVPlayer {
+        if let player = _player {
+            return player
+        }
+        
         let player = AVPlayer()
         player.automaticallyWaitsToMinimizeStalling = false
         player.actionAtItemEnd = .pause
+        _player = player
         return player
-    }()
+    }
+    nonisolated(unsafe) private var _player: AVPlayer?
 
     open lazy var playerView: VideoPlayerView = VideoPlayerView(frame: .zero)
 
@@ -253,14 +264,14 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Indicates the desired limit of network bandwidth consumption for this item.
-    open var preferredPeakBitRate: Double = 0 {
+    nonisolated(unsafe) open var preferredPeakBitRate: Double = 0 {
         didSet {
             self.playerItem?.preferredPeakBitRate = self.preferredPeakBitRate
         }
     }
 
     /// Indicates a preferred upper limit on the resolution of the video to be downloaded.
-    open var preferredMaximumResolution: CGSize {
+    nonisolated(unsafe) open var preferredMaximumResolution: CGSize {
         get {
             return self.playerItem?.preferredMaximumResolution ?? CGSize.zero
         }
@@ -272,18 +283,18 @@ open class VideoPlayer: UIViewController {
 
     // private
     
-    internal var playerItem: AVPlayerItem?
-    internal var playerObservers = [NSKeyValueObservation]()
-    internal var playerItemObservers = [NSKeyValueObservation]()
-    internal var playerLayerObserver: NSKeyValueObservation?
-    internal var playerTimeObserver: Any?
+    nonisolated(unsafe) internal var playerItem: AVPlayerItem?
+    nonisolated(unsafe) internal var playerObservers = [NSKeyValueObservation]()
+    nonisolated(unsafe) internal var playerItemObservers = [NSKeyValueObservation]()
+    nonisolated(unsafe) internal var playerLayerObserver: NSKeyValueObservation?
+    nonisolated(unsafe) internal var playerTimeObserver: Any?
 
-    internal var seekTimeRequested: CMTime?
-    internal var lastBufferTime: Double = 0
-    internal var itemMaximumResolution: CGSize = .zero
+    nonisolated(unsafe) internal var seekTimeRequested: CMTime?
+    nonisolated(unsafe) internal var lastBufferTime: Double = 0
+    nonisolated(unsafe) internal var itemMaximumResolution: CGSize = .zero
 
     // Boolean that determines if the user or calling coded has trigged autoplay manually.
-    internal var hasAutoplayActivated: Bool = true
+    nonisolated(unsafe) internal var hasAutoplayActivated: Bool = true
 
     // MARK: - lifecycle
 
@@ -300,14 +311,19 @@ open class VideoPlayer: UIViewController {
     }
 
     deinit {
-        self.player.pause()
-        self.setupPlayerItem(nil)
-
+        self.resetPlayerItem(nil)
+        _player?.replaceCurrentItem(with: self.playerItem)
+        _player?.actionAtItemEnd = .pause
+        
         self.removePlayerObservers()
         self.removeApplicationObservers()
         self.removePlayerLayerObservers()
-
-        self.playerView.player = nil
+        
+        _player = nil
+        
+        #if DEBUG
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        #endif
     }
 
     open override func loadView() {
@@ -433,7 +449,7 @@ open class VideoPlayer: UIViewController {
     /// - Parameters:
     ///   - time: The time to switch to move the playback.
     ///   - completionHandler: Call block handler after seeking/
-    open func seek(to time: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
+    nonisolated open func seek(to time: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
         if let playerItem = self.playerItem {
             return playerItem.seek(to: time, completionHandler: completionHandler)
         } else {
@@ -531,17 +547,16 @@ open class VideoPlayer: UIViewController {
         self.setupPlayerItem(nil)
 
         self.asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () -> Void in
-            guard let asset = self.asset else {
-                return
-            }
+            guard let asset = self._asset else { return }
             
             for key in loadableKeys {
                 var error: NSError? = nil
                 let status = asset.statusOfValue(forKey: key, error: &error)
                 if status == .failed {
                     self.playbackState = .failed
-                    self.executeClosureOnMainQueueIfNecessary {
-                        self.playerDelegate?.player?(self, didFailWithError: error)
+                    let failedError = error
+                    DispatchQueue.fw.mainAsync {
+                        self.playerDelegate?.player?(self, didFailWithError: failedError)
                     }
                     return
                 }
@@ -549,19 +564,36 @@ open class VideoPlayer: UIViewController {
 
             if !asset.isPlayable {
                 self.playbackState = .failed
-                self.executeClosureOnMainQueueIfNecessary {
+                DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.player?(self, didFailWithError: NSError(domain: "VideoPlayer", code: 0, userInfo: nil))
                 }
                 return
             }
 
-            let playerItem = AVPlayerItem(asset:asset)
-            self.setupPlayerItem(playerItem)
+            DispatchQueue.fw.mainAsync {
+                guard let asset = self.asset else { return }
+                
+                let playerItem = AVPlayerItem(asset: asset)
+                self.setupPlayerItem(playerItem)
+            }
         })
     }
 
     fileprivate func setupPlayerItem(_ playerItem: AVPlayerItem?) {
+        self.resetPlayerItem(playerItem)
 
+        self.player.replaceCurrentItem(with: self.playerItem)
+        self.player.rate = rate
+
+        // update new playerItem settings
+        if self.playbackLoops {
+            self.player.actionAtItemEnd = .none
+        } else {
+            self.player.actionAtItemEnd = .pause
+        }
+    }
+    
+    nonisolated fileprivate func resetPlayerItem(_ playerItem: AVPlayerItem?) {
         self.removePlayerItemObservers()
 
         if let currentPlayerItem = self.playerItem {
@@ -585,16 +617,6 @@ open class VideoPlayer: UIViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidPlayToEndTime(_:)), name: .AVPlayerItemDidPlayToEndTime, object: updatedPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: updatedPlayerItem)
         }
-
-        self.player.replaceCurrentItem(with: self.playerItem)
-        self.player.rate = rate
-
-        // update new playerItem settings
-        if self.playbackLoops {
-            self.player.actionAtItemEnd = .none
-        } else {
-            self.player.actionAtItemEnd = .pause
-        }
     }
 
     // MARK: - UIApplication
@@ -606,14 +628,14 @@ open class VideoPlayer: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
-    internal func removeApplicationObservers() {
+    nonisolated internal func removeApplicationObservers() {
         NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - AVPlayerItem handlers
 
     @objc internal func playerItemDidPlayToEndTime(_ aNotification: Notification) {
-        self.executeClosureOnMainQueueIfNecessary {
+        DispatchQueue.fw.mainAsync {
             if self.playbackLoops {
                 self.playbackDelegate?.playerPlaybackWillLoop?(self)
                 self.player.seek(to: CMTime.zero)
@@ -623,8 +645,10 @@ open class VideoPlayer: UIViewController {
             } else if self.playbackFreezesAtEnd {
                 self.stop()
             } else {
-                self.player.seek(to: CMTime.zero, completionHandler: { _ in
-                    self.stop()
+                self.player.seek(to: CMTime.zero, completionHandler: { [weak self] _ in
+                    DispatchQueue.fw.mainAsync { [weak self] in
+                        self?.stop()
+                    }
                 })
             }
         }
@@ -662,7 +686,7 @@ open class VideoPlayer: UIViewController {
 
     // MARK: - AVPlayerItemObservers
 
-    internal func addPlayerItemObservers() {
+    nonisolated internal func addPlayerItemObservers() {
         guard let playerItem = self.playerItem else {
             return
         }
@@ -688,7 +712,9 @@ open class VideoPlayer: UIViewController {
             if object.isPlaybackLikelyToKeepUp {
                 strongSelf.bufferingState = .ready
                 if strongSelf.playbackState == .playing {
-                    strongSelf.playFromCurrentTime()
+                    DispatchQueue.fw.mainAsync {
+                        strongSelf.playFromCurrentTime()
+                    }
                 }
             }
 
@@ -711,7 +737,7 @@ open class VideoPlayer: UIViewController {
                 let bufferedTime = CMTimeGetSeconds(CMTimeAdd(timeRange.start, timeRange.duration))
                 if strongSelf.lastBufferTime != bufferedTime {
                     strongSelf.lastBufferTime = bufferedTime
-                    strongSelf.executeClosureOnMainQueueIfNecessary {
+                    DispatchQueue.fw.mainAsync {
                         strongSelf.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
                     }
                 }
@@ -724,12 +750,14 @@ open class VideoPlayer: UIViewController {
                 strongSelf.lastBufferTime == strongSelf.maximumDuration ||
                 timeRanges.first == nil) &&
                 strongSelf.playbackState == .playing {
-                strongSelf.play()
+                DispatchQueue.fw.mainAsync {
+                    strongSelf.play()
+                }
             }
         })
     }
 
-    internal func removePlayerItemObservers() {
+    nonisolated internal func removePlayerItemObservers() {
         for observer in self.playerItemObservers {
             observer.invalidate()
         }
@@ -740,7 +768,7 @@ open class VideoPlayer: UIViewController {
 
     internal func addPlayerLayerObservers() {
         self.playerLayerObserver = self.playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] (object, change) in
-            self?.executeClosureOnMainQueueIfNecessary {
+            DispatchQueue.fw.mainAsync { [weak self] in
                 if let strongSelf = self {
                     strongSelf.playerDelegate?.playerReady?(strongSelf)
                 }
@@ -748,7 +776,7 @@ open class VideoPlayer: UIViewController {
         }
     }
 
-    internal func removePlayerLayerObservers() {
+    nonisolated internal func removePlayerLayerObservers() {
         self.playbackDelegate = nil
         self.playerLayerObserver?.invalidate()
         self.playerLayerObserver = nil
@@ -758,10 +786,10 @@ open class VideoPlayer: UIViewController {
 
     internal func addPlayerObservers() {
         self.playerTimeObserver = self.player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] timeInterval in
-            guard let strongSelf = self else {
-                return
+            DispatchQueue.fw.mainAsync { [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.playbackDelegate?.playerCurrentTimeDidChange?(strongSelf)
             }
-            strongSelf.playbackDelegate?.playerCurrentTimeDidChange?(strongSelf)
         })
 
         self.playerObservers.append(self.player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] (object, change) in
@@ -778,25 +806,15 @@ open class VideoPlayer: UIViewController {
         })
     }
 
-    internal func removePlayerObservers() {
+    nonisolated internal func removePlayerObservers() {
         if let observer = self.playerTimeObserver {
-            self.player.removeTimeObserver(observer)
+            _player?.removeTimeObserver(observer)
         }
         for observer in self.playerObservers {
             observer.invalidate()
         }
         self.playerObservers.removeAll()
         self.playerDelegate = nil
-    }
-
-    // MARK: - queues
-
-    internal func executeClosureOnMainQueueIfNecessary(withClosure closure: @escaping () -> Void) {
-        if Thread.isMainThread {
-            closure()
-        } else {
-            DispatchQueue.main.async(execute: closure)
-        }
     }
 
 }
@@ -863,11 +881,6 @@ open class VideoPlayerView: UIView {
         super.init(coder: aDecoder)
         self.playerLayer.isHidden = true
         self.playerFillMode = .resizeAspect
-    }
-
-    deinit {
-        self.player?.pause()
-        self.player = nil
     }
 
 }
