@@ -12,7 +12,7 @@ import AVFoundation
 class TestAudioController: UIViewController {
     
     // MARK: - Accessor
-    lazy var audioPlayer = AudioPlayer.shared
+    lazy var audioPlayer = AudioPlayer()
     lazy var resourceLoader = PlayerCacheLoaderManager()
     
     @StoredValue("TestAudioCacheEnabled")
