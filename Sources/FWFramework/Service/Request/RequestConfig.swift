@@ -178,9 +178,9 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
     
-    nonisolated(unsafe) static var showErrorBlock: (@MainActor (_ context: AnyObject?, _ error: Error) -> Void)?
-    nonisolated(unsafe) static var showLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
-    nonisolated(unsafe) static var hideLoadingBlock: (@MainActor (_ context: AnyObject?) -> Void)?
+    nonisolated(unsafe) static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
+    nonisolated(unsafe) static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    nonisolated(unsafe) static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
     
     public override init() {
         super.init()

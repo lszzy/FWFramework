@@ -86,11 +86,15 @@ import JavaScriptCore
     }
     
     /// 清空网页缓存，完成后回调。单个网页请求指定URLRequest.cachePolicy即可
-    public static func clearCache(_ completion: (() -> Void)? = nil) {
+    public static func clearCache(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
         let sinceDate = Date(timeIntervalSince1970: 0)
         WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
-            completion?()
+            if completion != nil {
+                DispatchQueue.fw.mainAsync {
+                    completion?()
+                }
+            }
         }
     }
     
