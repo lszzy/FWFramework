@@ -291,7 +291,7 @@ extension Color {
 @MainActor extension Font {
     
     /// 全局自定义字体句柄，优先调用
-    public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
+    nonisolated(unsafe) public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
     
     /// 返回系统Thin字体，自动等比例缩放
     public static func thinFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
@@ -325,12 +325,17 @@ extension Color {
             fontSize = UIFont.fw.autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: UIFont.fw.autoFlatFont)
         }
         
-        if let font = fontBlock?(fontSize, weight) { return font }
-        return .system(size: fontSize, weight: weight)
+        return nonScaleFont(size: fontSize, weight: weight)
+    }
+    
+    /// 创建指定尺寸和weight的不缩放系统字体
+    nonisolated public static func nonScaleFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        if let font = fontBlock?(size, weight) { return font }
+        return .system(size: size, weight: weight)
     }
     
     /// 获取指定名称、字重、斜体字体的完整规范名称
-    public static func fontName(_ name: String, weight: Font.Weight, italic: Bool = false) -> String {
+    nonisolated public static func fontName(_ name: String, weight: Font.Weight, italic: Bool = false) -> String {
         var fontName = name
         if let weightSuffix = weightSuffixes[weight] {
             fontName += weightSuffix + (italic ? "Italic" : "")
@@ -338,7 +343,7 @@ extension Color {
         return fontName
     }
     
-    private static let weightSuffixes: [Font.Weight: String] = [
+    nonisolated private static let weightSuffixes: [Font.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
         .light: "-Light",
