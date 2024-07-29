@@ -545,26 +545,26 @@ extension UIBarButtonItem {
 }
 
 // MARK: - Block
-/// 通用无参数block
-public typealias BlockVoid = () -> ()
+/// 通用Sendable 无参数block
+public typealias BlockVoid = @Sendable () -> ()
 
-/// 通用Any参数block
-public typealias BlockParam = (Any?) -> ()
+/// 通用Sendable Any参数block
+public typealias BlockParam = @Sendable (Any?) -> ()
 
-/// 通用Bool参数block
-public typealias BlockBool = (Bool) -> ()
+/// 通用Sendable Bool参数block
+public typealias BlockBool = @Sendable (Bool) -> ()
 
-/// 通用Int参数block
-public typealias BlockInt = (Int) -> ()
+/// 通用Sendable Int参数block
+public typealias BlockInt = @Sendable (Int) -> ()
 
-/// 通用Double参数block
-public typealias BlockDouble = (Double) -> ()
+/// 通用Sendable Double参数block
+public typealias BlockDouble = @Sendable (Double) -> ()
 
-/// 通用(Bool, Any)参数block
-public typealias BlockBoolParam = (Bool, Any?) -> ()
+/// 通用Sendable (Bool, Any)参数block
+public typealias BlockBoolParam = @Sendable (Bool, Any?) -> ()
 
-/// 通用(Int, Any)参数block
-public typealias BlockIntParam = (Int, Any?) -> ()
+/// 通用Sendable (Int, Any)参数block
+public typealias BlockIntParam = @Sendable (Int, Any?) -> ()
 
 // MARK: - MulticastBlock
 /// 多句柄代理，线程安全，可实现重复、单次或延迟调用功能
