@@ -32,7 +32,7 @@ class TestEncodeClass {
     var name: String = "name"
 }
 
-class TestEncodeObject: NSObject {
+class TestEncodeObject: NSObject, @unchecked Sendable {
     var id: Int = 1
     var name: String = "name"
     var closure: () -> Void = {}

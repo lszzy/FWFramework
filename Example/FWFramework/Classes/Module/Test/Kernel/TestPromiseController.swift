@@ -207,7 +207,7 @@ extension TestPromiseController {
         }
         Task {
             do {
-                let result: Int = try await Promise.all(promises).then { (values: [any Sendable]) in
+                let result: Int = try await Promise.all(promises).then { (values: [Sendable]) in
                     return values.count
                 }.value()
                 
