@@ -36,7 +36,7 @@ import UIKit
 
 // MARK: - CollectionViewControllerProtocol
 /// 集合视图控制器协议，数据源和事件代理为控制器，可覆写
-public protocol CollectionViewControllerProtocol: CollectionDelegateControllerProtocol, UICollectionViewDataSource {}
+@MainActor public protocol CollectionViewControllerProtocol: CollectionDelegateControllerProtocol, UICollectionViewDataSource {}
 
 // MARK: - UIViewController+CollectionViewControllerProtocol
 extension CollectionDelegateControllerProtocol where Self: UIViewController {

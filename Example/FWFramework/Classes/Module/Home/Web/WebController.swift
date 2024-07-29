@@ -11,14 +11,9 @@ import WebKit
 
 @objc extension Autoloader {
     func loadApp_WebView() {
-        var observer: Any?
-        observer = NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { _ in
+        NSObject.app.safeObserveOnce(forName: UIApplication.didFinishLaunchingNotification) { _ in
             let reuseEnabled = UserDefaults.standard.bool(forKey: "WebReuseEnabled")
             WebController.toggleReuse(enabled: reuseEnabled)
-            
-            if let observer = observer {
-                NotificationCenter.default.removeObserver(observer)
-            }
         }
     }
 }
@@ -109,7 +104,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
     
     static func toggleReuse(enabled: Bool) {
         if enabled {
-            WebView.app.reuseConfigurationBlock = { configuration, _ in
+            WebView.app.reuseConfigurationBlock = { @MainActor @Sendable configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
             WebView.reusePreloadUrlBlock = { _ in

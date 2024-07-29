@@ -10,7 +10,7 @@ import Photos
 
 // MARK: - ImageAlbumController
 /// 相册列表事件代理
-@objc public protocol ImageAlbumControllerDelegate {
+@MainActor @objc public protocol ImageAlbumControllerDelegate {
     
     /// 需提供 ImagePickerController 用于展示九宫格图片列表
     @objc optional func imagePickerController(for albumController: ImageAlbumController) -> ImagePickerController
@@ -485,7 +485,7 @@ open class ImageAlbumTableCell: UITableViewCell {
 }
 
 // MARK: - ImagePickerPreviewController
-@objc public protocol ImagePickerPreviewControllerDelegate {
+@MainActor @objc public protocol ImagePickerPreviewControllerDelegate {
     
     /// 完成选中图片回调，未实现时自动转发给当前imagePickerController
     @objc optional func imagePickerPreviewController(_ imagePickerPreviewController: ImagePickerPreviewController, didFinishPickingImage imagesAssetArray: [Asset])
@@ -1539,7 +1539,7 @@ fileprivate extension Asset {
 }
 
 // MARK: - ImagePickerController
-@objc public protocol ImagePickerControllerDelegate {
+@MainActor @objc public protocol ImagePickerControllerDelegate {
     
     /// 创建一个 ImagePickerPreviewViewController 用于预览图片
     @objc optional func imagePickerPreviewController(for imagePickerController: ImagePickerController) -> ImagePickerPreviewController

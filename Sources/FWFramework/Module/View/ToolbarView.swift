@@ -554,7 +554,7 @@ open class ToolbarMenuView: UIView {
 
 // MARK: - ToolbarTitleView
 /// 自定义titleView事件代理
-@objc public protocol ToolbarTitleViewDelegate {
+@MainActor @objc public protocol ToolbarTitleViewDelegate {
     /// 点击 titleView 后的回调，只需设置 titleView.isUserInteractionEnabled = true 后即可使用
     /// - Parameters:
     ///   - titleView: 被点击的 titleView

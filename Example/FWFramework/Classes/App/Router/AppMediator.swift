@@ -29,7 +29,7 @@ protocol AppModuleProtocol: ModuleProtocol {
         #if DEBUG
         FWDebugManager.sharedInstance().openUrl = { (url) in
             if let scheme = URL.app.url(string: url)?.scheme, scheme.count > 0 {
-                MainActor.runAsync {
+                DispatchQueue.app.mainAsync {
                     Router.openURL(url)
                 }
                 return true

@@ -44,7 +44,9 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         app.showLoading()
     }
     
-    deinit {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
         self.player.willMove(toParent: nil)
         self.player.view.removeFromSuperview()
         self.player.removeFromParent()

@@ -12,9 +12,9 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     typealias TableElement = [String]
     
-    var queueCount: Int = 10000
+    nonisolated(unsafe) var queueCount: Int = 10000
     
-    @objc dynamic var value: Int = 0
+    @objc nonisolated(unsafe) dynamic var value: Int = 0
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -80,7 +80,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         _ = self.perform(NSSelectorFromString(rowData[1]))
     }
     
-    func onQueue(_ block: @escaping BlockVoid, completion: @escaping BlockVoid) {
+    func onQueue(_ block: @escaping @Sendable () -> Void, completion: @escaping @MainActor @Sendable () -> Void) {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 10
         for _ in 0 ..< queueCount {
@@ -134,19 +134,19 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onArray() {
-        var array = [Int]()
+        let array = SendableObject([Int]())
         let queue = DispatchQueue(label: "onArray")
-        var count = 0
+        let count = SendableObject<Int>(0)
         
         DispatchQueue.concurrentPerform(iterations: queueCount) { index in
             queue.sync {
-                let last = array.last ?? 0
-                array.append(last + 1)
+                let last = array.object.last ?? 0
+                array.object.append(last + 1)
                 
-                count += 1
-                if count == queueCount {
+                count.object += 1
+                if count.object == queueCount {
                     DispatchQueue.main.async { [weak self] in
-                        self?.onResult(array.last ?? 0)
+                        self?.onResult(array.object.last ?? 0)
                     }
                 }
             }
@@ -155,19 +155,19 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onArray1() {
         let key = "onArray1"
-        let array = NSMutableArray()
-        array.add(NSObject())
+        let array = SendableObject(NSMutableArray())
+        array.object.add(NSObject())
         
         onQueue {
             
-            array.enumerateObjects { arg, idx, stop in
+            array.object.enumerateObjects { arg, idx, stop in
                 guard let obj = arg as? NSObject else { return }
                 let value = obj.app.boundInt(forKey: key)
                 obj.app.bindInt(value + 1, forKey: key)
             }
         } completion: { [weak self] in
             
-            guard let obj = array.firstObject as? NSObject else { return }
+            guard let obj = array.object.firstObject as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }
@@ -175,15 +175,15 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onArray2() {
         let key = "onArray2"
-        let array = NSMutableArray()
-        array.add(NSObject())
+        let array = SendableObject(NSMutableArray())
+        array.object.add(NSObject())
         let queue = DispatchQueue(label: "testArray")
         
         onQueue {
             
             // 串行读sync，写async
             queue.sync {
-                array.enumerateObjects { arg, idx, stop in
+                array.object.enumerateObjects { arg, idx, stop in
                     guard let obj = arg as? NSObject else { return }
                     let value = obj.app.boundInt(forKey: key)
                     obj.app.bindInt(value + 1, forKey: key)
@@ -191,7 +191,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             }
         } completion: { [weak self] in
             
-            guard let obj = array.firstObject as? NSObject else { return }
+            guard let obj = array.object.firstObject as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }
@@ -199,13 +199,13 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onArray3() {
         let key = "onArray3"
-        let array = NSMutableArray()
-        array.add(NSObject())
+        let array = SendableObject(NSMutableArray())
+        array.object.add(NSObject())
         
         onQueue { [weak self] in
             
             self?.app.lock()
-            array.enumerateObjects { arg, idx, stop in
+            array.object.enumerateObjects { arg, idx, stop in
                 guard let obj = arg as? NSObject else { return }
                 let value = obj.app.boundInt(forKey: key)
                 obj.app.bindInt(value + 1, forKey: key)
@@ -213,7 +213,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             self?.app.unlock()
         } completion: { [weak self] in
             
-            guard let obj = array.firstObject as? NSObject else { return }
+            guard let obj = array.object.firstObject as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }
@@ -221,19 +221,19 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onDictionary1() {
         let key = "object"
-        let dict = NSMutableDictionary()
-        dict.setObject(NSObject(), forKey: key as NSString)
+        let dict = SendableObject(NSMutableDictionary())
+        dict.object.setObject(NSObject(), forKey: key as NSString)
         
         onQueue {
             
-            dict.enumerateKeysAndObjects { _, arg, stop in
+            dict.object.enumerateKeysAndObjects { _, arg, stop in
                 guard let obj = arg as? NSObject else { return }
                 let value = obj.app.boundInt(forKey: key)
                 obj.app.bindInt(value + 1, forKey: key)
             }
         } completion: { [weak self] in
             
-            guard let obj = dict.object(forKey: key) as? NSObject else { return }
+            guard let obj = dict.object.object(forKey: key) as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }
@@ -241,15 +241,15 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onDictionary2() {
         let key = "object"
-        let dict = NSMutableDictionary()
-        dict.setObject(NSObject(), forKey: key as NSString)
+        let dict = SendableObject(NSMutableDictionary())
+        dict.object.setObject(NSObject(), forKey: key as NSString)
         let queue = DispatchQueue(label: "testDictionary", attributes: .concurrent)
         
         onQueue {
             
             // 并行读sync，写async，用flags为barrier加共享互斥锁
             queue.sync(flags: .barrier) {
-                dict.enumerateKeysAndObjects { _, arg, stop in
+                dict.object.enumerateKeysAndObjects { _, arg, stop in
                     guard let obj = arg as? NSObject else { return }
                     let value = obj.app.boundInt(forKey: key)
                     obj.app.bindInt(value + 1, forKey: key)
@@ -257,7 +257,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             }
         } completion: { [weak self] in
             
-            guard let obj = dict.object(forKey: key) as? NSObject else { return }
+            guard let obj = dict.object.object(forKey: key) as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }
@@ -265,13 +265,13 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
     
     @objc func onDictionary3() {
         let key = "object"
-        let dict = NSMutableDictionary()
-        dict.setObject(NSObject(), forKey: key as NSString)
+        let dict = SendableObject(NSMutableDictionary())
+        dict.object.setObject(NSObject(), forKey: key as NSString)
         
         onQueue { [weak self] in
             
             self?.app.lock()
-            dict.enumerateKeysAndObjects { _, arg, stop in
+            dict.object.enumerateKeysAndObjects { _, arg, stop in
                 guard let obj = arg as? NSObject else { return }
                 let value = obj.app.boundInt(forKey: key)
                 obj.app.bindInt(value + 1, forKey: key)
@@ -279,7 +279,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             self?.app.unlock()
         } completion: { [weak self] in
             
-            guard let obj = dict.object(forKey: key) as? NSObject else { return }
+            guard let obj = dict.object.object(forKey: key) as? NSObject else { return }
             let value = obj.app.boundInt(forKey: key)
             self?.onResult(value)
         }

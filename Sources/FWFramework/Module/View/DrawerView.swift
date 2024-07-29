@@ -79,7 +79,7 @@ import UIKit
 
 // MARK: - DrawerView
 /// 抽屉拖拽视图事件代理
-public protocol DrawerViewDelegate: AnyObject {
+@MainActor public protocol DrawerViewDelegate: AnyObject {
     
     /// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
     func drawerView(_ drawerView: DrawerView, positionChanged position: CGFloat, finished: Bool)

@@ -404,8 +404,14 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 }
 
 @objc extension Autoloader {
-    @StoredValue("routerStrictMode")
-    static var routerStrictMode: Bool = false
+    nonisolated(unsafe) static var routerStrictMode: Bool {
+        get {
+            return UserDefaults.app.object(forKey: "routerStrictMode") as? Bool ?? false
+        }
+        set {
+            UserDefaults.app.setObject(newValue, forKey: "routerStrictMode")
+        }
+    }
     
     func loadApp_TestRouter() {
         APP.autoload(TestRouter.self)

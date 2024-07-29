@@ -104,15 +104,15 @@ class TestController: UIViewController {
     }
     
     // MARK: - Public
-    static func mockProgress(_ block: @escaping (Double, Bool) -> Void) {
+    static func mockProgress(_ block: @escaping @MainActor @Sendable (Double, Bool) -> Void) {
         block(0, false)
         DispatchQueue.global().async {
-            var progress: Double = 0
-            while progress < 1 {
+            let progress = SendableObject<Double>(0)
+            while progress.object < 1 {
                 usleep(50000)
-                progress += 0.02
+                progress.object += 0.02
                 DispatchQueue.main.async {
-                    block(min(progress, 1), progress >= 1)
+                    block(min(progress.object, 1), progress.object >= 1)
                 }
             }
         }

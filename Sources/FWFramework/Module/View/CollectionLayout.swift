@@ -20,7 +20,7 @@ open class CollectionViewSectionConfig: NSObject {
 }
 
 /// 通用布局section配置协议
-@objc public protocol CollectionViewDelegateFlowLayout: UICollectionViewDelegateFlowLayout {
+@MainActor @objc public protocol CollectionViewDelegateFlowLayout: UICollectionViewDelegateFlowLayout {
     
     /// 自定义section配置可选代理方法
     @objc optional func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, configForSectionAt index: Int) -> CollectionViewSectionConfig?
@@ -332,7 +332,7 @@ public enum CollectionViewWaterfallLayoutItemRenderDirection: Int, Sendable {
     case rightToLeft
 }
 
-@objc public protocol CollectionViewDelegateWaterfallLayout: UICollectionViewDelegate {
+@MainActor @objc public protocol CollectionViewDelegateWaterfallLayout: UICollectionViewDelegate {
     
     @objc(collectionView:layout:sizeForItemAtIndexPath:)
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize

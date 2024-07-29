@@ -122,26 +122,26 @@ extension TestPromiseController {
         var value: Int = 0
         let index = [1, 2].randomElement()!
         if index == 1 {
-            var values: [Int] = []
+            let values = SendableObject<[Int]>([])
             let semaphore = DispatchSemaphore(value: 1)
             DispatchQueue.concurrentPerform(iterations: 10000) { index in
                 semaphore.wait()
-                let last = values.last ?? 0
-                values.append(last + 1)
+                let last = values.object.last ?? 0
+                values.object.append(last + 1)
                 semaphore.signal()
             }
-            value = values.last.safeInt
+            value = values.object.last.safeInt
         } else {
-            var values: [Int] = []
+            let values = SendableObject<[Int]>([])
             let queue = DispatchQueue(label: "serial")
             DispatchQueue.concurrentPerform(iterations: 10000) { index in
                 queue.async {
-                    let last = values.last ?? 0
-                    values.append(last + 1)
+                    let last = values.object.last ?? 0
+                    values.object.append(last + 1)
                 }
             }
             queue.sync {
-                value = values.last.safeInt
+                value = values.object.last.safeInt
             }
         }
         Self.isLoading = false
@@ -207,7 +207,7 @@ extension TestPromiseController {
         }
         Task {
             do {
-                let result: Int = try await Promise.all(promises).then { (values: [Any]) in
+                let result: Int = try await Promise.all(promises).then { (values: [any Sendable]) in
                     return values.count
                 }.value()
                 
@@ -384,11 +384,11 @@ extension TestPromiseController {
         var promise: Promise?
         let index = [1, 2, 3].randomElement()!
         if index == 1 {
-            promise = Self.progressPromise().then({ (value: Any) in
+            promise = Self.progressPromise().then({ (value: Sendable) in
                 return Self.successPromise()
             })
         } else if index == 2 {
-            promise = Self.successPromise().then({ (value: Any) in
+            promise = Self.successPromise().then({ (value: Sendable) in
                 return Self.progressPromise()
             })
         } else {
@@ -397,7 +397,7 @@ extension TestPromiseController {
             })
         }
         UIWindow.app.showProgress(0, text: String(format: "\(index)下载中(%.0f%%)", 0 * 100))
-        promise?.validate({ (value: Any) in
+        promise?.validate({ (value: Sendable) in
             return false
         }).recover({ error in
             return Promise(value: "\(index)下载成功")
@@ -405,7 +405,7 @@ extension TestPromiseController {
             return value
         }).delay(1).timeout(30).retry(1, delay: 0, block: {
             return Self.successPromise()
-        }).done({ (value: Any) in
+        }).done({ (value: Sendable) in
             Self.showMessage("\(value)")
         }, catch: { error in
             Self.showMessage("\(error)")
@@ -418,8 +418,8 @@ extension TestPromiseController {
     
     @objc func onProgress2() {
         let promises = [Self.progressPromise(),
-                        Promise.delay(0.5).then({ (value: Any) in Self.progressPromise() }),
-                        Promise.delay(1.0).then({ (value: Any) in Self.progressPromise() })]
+                        Promise.delay(0.5).then({ (value: Sendable) in Self.progressPromise() }),
+                        Promise.delay(1.0).then({ (value: Sendable) in Self.progressPromise() })]
         var promise: Promise?
         let index = [1, 2, 3].randomElement()!
         if index == 1 {
@@ -430,7 +430,7 @@ extension TestPromiseController {
             promise = Promise.race(promises)
         }
         UIWindow.app.showProgress(0, text: String(format: "\(index)下载中(%.0f%%)", 0 * 100))
-        promise?.done({ (value: Any) in
+        promise?.done({ (value: Sendable) in
             Self.showMessage("\(value)")
         }, catch: { error in
             Self.showMessage("\(error)")
