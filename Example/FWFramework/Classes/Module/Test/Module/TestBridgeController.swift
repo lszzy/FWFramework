@@ -29,8 +29,10 @@ class TestBridgeController: WebController {
         bridge.isLogEnabled = true
         
         bridge.setErrorHandler { context in
-            UIWindow.app.showMessage(text: "handler \(context.handlerName) undefined: \(context.parameters)", style: .default) {
-                context.completion?("Response from errorHandler")
+            DispatchQueue.app.mainAsync {
+                UIWindow.app.showMessage(text: "handler \(context.handlerName) undefined: \(context.parameters)", style: .default) {
+                    context.completion?("Response from errorHandler")
+                }
             }
         }
         

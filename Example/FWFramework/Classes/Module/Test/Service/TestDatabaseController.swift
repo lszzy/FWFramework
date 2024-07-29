@@ -10,7 +10,7 @@ import FWFramework
 
 class TestDatabaseModel: NSObject, DatabaseModel {
     // 用于模拟数据库结构更新
-    static var isLatest: Bool = false
+    nonisolated(unsafe) static var isLatest: Bool = false
     
     @objc var id: Int = 0
     @objc var content: String = ""

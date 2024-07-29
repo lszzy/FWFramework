@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - PageControl
 /// 分页控件事件代理
-public protocol PageControlDelegate: NSObjectProtocol {
+@MainActor public protocol PageControlDelegate: NSObjectProtocol {
     
     /// 选中指定页回调方法
     func pageControl(_ pageControl: PageControl, didSelectPage page: Int)

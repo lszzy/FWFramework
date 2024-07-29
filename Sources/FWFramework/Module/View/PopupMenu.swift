@@ -381,7 +381,7 @@ public enum PopupMenuPriorityDirection: Int, Sendable {
 }
 
 /// 弹出菜单事件代理
-@objc public protocol PopupMenuDelegate {
+@MainActor @objc public protocol PopupMenuDelegate {
     @objc optional func popupMenuBeganDismiss(_ popupMenu: PopupMenu)
     @objc optional func popupMenuDidDismiss(_ popupMenu: PopupMenu)
     @objc optional func popupMenuBeganShow(_ popupMenu: PopupMenu)

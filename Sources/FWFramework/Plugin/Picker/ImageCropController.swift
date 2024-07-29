@@ -33,7 +33,7 @@ public enum ImageCropToolbarPosition: Int, Sendable {
 }
 
 /// 裁剪控制器事件代理协议
-@objc public protocol ImageCropControllerDelegate: NSObjectProtocol {
+@MainActor @objc public protocol ImageCropControllerDelegate: NSObjectProtocol {
     @objc optional func cropController(_ cropController: ImageCropController, didCropImageToRect rect: CGRect, angle: Int)
     @objc optional func cropController(_ cropController: ImageCropController, didCropToImage image: UIImage, rect: CGRect, angle: Int)
     @objc optional func cropController(_ cropController: ImageCropController, didCropToCircularImage image: UIImage, rect: CGRect, angle: Int)

@@ -24,7 +24,7 @@ import AVFoundation
 }
 
 /// 音频播放器数据源
-@objc public protocol AudioPlayerDataSource {
+@MainActor @objc public protocol AudioPlayerDataSource {
     @objc optional func audioPlayerNumberOfItems() -> Int
     /// 音频源URL，支持String|URL|AVURLAsset|AVPlayerItem等
     @objc optional func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> Any?
@@ -519,7 +519,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         delegate?.audioPlayerWillChanged?(at: lastItemIndex)
     }
     
-    private func audioPlayerItemsCount() -> Int {
+    @MainActor private func audioPlayerItemsCount() -> Int {
         if let count = dataSource?.audioPlayerNumberOfItems?() {
             return count
         }
@@ -529,7 +529,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         return itemURLs?.count ?? 0
     }
     
-    private func getSourceURL(at index: Int, preBuffer: Bool) {
+    @MainActor private func getSourceURL(at index: Int, preBuffer: Bool) {
         if let url = dataSource?.audioPlayerURLForItem?(at: index, preBuffer: preBuffer) {
             let sendableUrl = SendableObject(url)
             audioQueue.async { [weak self] in

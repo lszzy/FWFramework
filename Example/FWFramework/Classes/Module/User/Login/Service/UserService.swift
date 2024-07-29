@@ -8,7 +8,7 @@
 
 import FWFramework
 
-public class UserService {
+public class UserService: @unchecked Sendable {
     
     public static let shared = UserService()
     

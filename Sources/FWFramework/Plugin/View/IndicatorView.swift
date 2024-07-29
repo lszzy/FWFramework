@@ -188,7 +188,7 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
 
 // MARK: - IndicatorViewAnimation
 /// 自定义指示器视图动画协议
-public protocol IndicatorViewAnimationProtocol: AnyObject {
+@MainActor public protocol IndicatorViewAnimationProtocol: AnyObject {
     
     /// 初始化layer动画效果
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor)

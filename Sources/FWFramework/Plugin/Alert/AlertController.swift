@@ -131,7 +131,7 @@ public class AlertControllerAppearance: NSObject, @unchecked Sendable {
 }
 
 /// 自定义弹窗控制器事件代理
-@objc public protocol AlertControllerDelegate {
+@MainActor @objc public protocol AlertControllerDelegate {
     
     /// 将要present
     @objc optional func willPresentAlertController(_ alertController: AlertController)

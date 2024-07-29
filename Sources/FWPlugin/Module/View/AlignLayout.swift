@@ -45,7 +45,7 @@ import UIKit
 
 /// 扩展 UICollectionViewDelegateFlowLayout/NSCollectionViewDelegateFlowLayout 协议，
 /// 添加设置水平、竖直方向的对齐方式以及 items 排布方向协议方法
-@objc public protocol CollectionViewDelegateAlignLayout: CollectionViewDelegateFlowLayout {
+@MainActor @objc public protocol CollectionViewDelegateAlignLayout: CollectionViewDelegateFlowLayout {
     // 设置不同 section items 水平方向的对齐方式
     @objc optional func collectionView(_ collectionView: UICollectionView, layout: CollectionViewAlignLayout, itemsHorizontalAlignmentForSectionAt section: Int) -> CollectionViewItemsHorizontalAlignment
     

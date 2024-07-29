@@ -8,15 +8,18 @@
 
 import FWFramework
 
-@UIApplicationMain
+@main
 class AppDelegate: AppResponder {
     
     var backgroundTask: ((@escaping @Sendable () -> Void) -> Void)?
     var expirationHandler: (@Sendable () -> Void)?
     
     nonisolated(unsafe) private var latestCrashLog: String? {
-        didSet {
-            UserDefaults.app.setObject(latestCrashLog, forKey: "latestCrashLog")
+        get {
+            UserDefaults.app.object(forKey: "latestCrashLog") as? String
+        }
+        set {
+            UserDefaults.app.setObject(newValue, forKey: "latestCrashLog")
         }
     }
     

@@ -15,7 +15,7 @@ public enum AttributedLabelAlignment: Int, Sendable {
     case bottom
 }
 
-public protocol AttributedLabelDelegate: AnyObject {
+@MainActor public protocol AttributedLabelDelegate: AnyObject {
     func attributedLabel(_ attributedLabel: AttributedLabel, clickedOnLink linkData: Any)
 }
 

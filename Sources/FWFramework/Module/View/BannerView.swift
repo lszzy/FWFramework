@@ -27,7 +27,7 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 }
 
 /// Banner视图事件代理
-@objc public protocol BannerViewDelegate {
+@MainActor @objc public protocol BannerViewDelegate {
     
     /// 选中指定index
     @objc optional func bannerView(_ bannerView: BannerView, didSelectItemAt index: Int)

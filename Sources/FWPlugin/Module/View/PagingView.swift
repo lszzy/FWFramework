@@ -17,7 +17,7 @@ public enum PagingListContainerType: Int, Sendable {
     case collectionView
 }
 
-@objc public protocol PagingViewListViewDelegate {
+@MainActor @objc public protocol PagingViewListViewDelegate {
     /// 如果列表是VC，就返回VC.view
     /// 如果列表是View，就返回View自己
     ///
@@ -605,7 +605,7 @@ class PagingListContainerCollectionView: UICollectionView, UIGestureRecognizerDe
 
 // MARK: - PagingMainTableView
 
-@objc public protocol PagingMainTableViewGestureDelegate {
+@MainActor @objc public protocol PagingMainTableViewGestureDelegate {
     //如果headerView（或其他地方）有水平滚动的scrollView，当其正在左右滑动的时候，就不能让列表上下滑动，所以有此代理方法进行对应处理
     func mainTableViewGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
 }
@@ -624,7 +624,7 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
 
 // MARK: - PagingView
 
-@objc public protocol PagingViewDelegate {
+@MainActor @objc public protocol PagingViewDelegate {
     /// tableHeaderView的高度，因为内部需要比对判断，只能是整型数
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int
     /// 返回tableHeaderView
@@ -1146,7 +1146,7 @@ open class PagingListRefreshView: PagingView {
 
 // MARK: - PagingSmoothView
 
-@objc public protocol PagingSmoothViewListViewDelegate: Sendable {
+@MainActor @objc public protocol PagingSmoothViewListViewDelegate: Sendable {
     /// 返回listView。如果是vc包裹的就是vc.view；如果是自定义view包裹的，就是自定义view自己。
     func listView() -> UIView
     /// 返回FWPagerSmoothViewListViewDelegate内部持有的UIScrollView或UITableView或UICollectionView
@@ -1155,7 +1155,7 @@ open class PagingListRefreshView: PagingView {
     @objc optional func listDidDisappear()
 }
 
-@objc public protocol PagingSmoothViewDataSource {
+@MainActor @objc public protocol PagingSmoothViewDataSource {
     /// 返回页面header的高度
     func heightForPagingHeader(in pagingView: PagingSmoothView) -> CGFloat
     /// 返回页面header视图
@@ -1172,7 +1172,7 @@ open class PagingListRefreshView: PagingView {
     func pagingView(_ pagingView: PagingSmoothView, initListAtIndex index: Int) -> PagingSmoothViewListViewDelegate
 }
 
-@objc public protocol PagingSmoothViewDelegate {
+@MainActor @objc public protocol PagingSmoothViewDelegate {
     @objc optional func pagingSmoothViewDidScroll(_ scrollView: UIScrollView)
 }
 

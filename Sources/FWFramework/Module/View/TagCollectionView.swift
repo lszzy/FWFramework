@@ -523,7 +523,7 @@ open class TextTagConfig: NSObject, NSCopying {
     }
 }
 
-@objc public protocol TextTagCollectionViewDelegate {
+@MainActor @objc public protocol TextTagCollectionViewDelegate {
     @objc optional func textTagCollectionView(_ textTagCollectionView: TextTagCollectionView, canTapTag tagText: String, at index: Int, currentSelected: Bool, tagConfig: TextTagConfig) -> Bool
     @objc optional func textTagCollectionView(_ textTagCollectionView: TextTagCollectionView, didTapTag tagText: String, at index: Int, selected: Bool, tagConfig: TextTagConfig)
     @objc optional func textTagCollectionView(_ textTagCollectionView: TextTagCollectionView, updateContentSize contentSize: CGSize)
