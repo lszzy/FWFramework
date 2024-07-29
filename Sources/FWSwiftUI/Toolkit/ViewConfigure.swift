@@ -16,7 +16,7 @@ import SwiftUI
     
     /// 初始化当前顶部视图控制器，仅调用一次
     public func viewControllerInitialize(
-        _ initialization: @escaping (UIViewController) -> Void,
+        _ initialization: @escaping @MainActor @Sendable (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         return viewControllerConfigure ({ viewController in
@@ -29,7 +29,7 @@ import SwiftUI
     
     /// 配置当前顶部视图控制器，可调用多次
     public func viewControllerConfigure(
-        _ configuration: @escaping (UIViewController) -> (),
+        _ configuration: @escaping @MainActor @Sendable (UIViewController) -> (),
         viewContext: ViewContext? = nil
     ) -> some View {
         return introspect(.view, on: .iOS(.all)) { view in
@@ -73,7 +73,7 @@ import SwiftUI
     
     /// 初始化当前SwiftUI视图对应UIView，仅调用一次。仅适用于有对应UIView的视图(如Text等)，不支持Layer视图(如VStack等)
     public func hostingViewInitialize(
-        _ initialization: @escaping (UIView) -> Void
+        _ initialization: @escaping @MainActor @Sendable (UIView) -> Void
     ) -> some View {
         return hostingViewConfigure { hostingView in
             guard !hostingView.fw.propertyBool(forName: "hostingViewInitialize") else { return }
@@ -85,7 +85,7 @@ import SwiftUI
     
     /// 配置当前SwiftUI视图对应UIView，可调用多次。仅适用于有对应UIView的视图(如Text等)，不支持Layer视图(如VStack等)
     public func hostingViewConfigure(
-        _ configuration: @escaping (UIView) -> ()
+        _ configuration: @escaping @MainActor @Sendable (UIView) -> ()
     ) -> some View {
         return introspect(.view, on: .iOS(.all)) { hostingView in
             configuration(hostingView)
@@ -99,7 +99,7 @@ import SwiftUI
     
     /// 初始化ScrollView视图，仅调用一次，一般用于绑定下拉刷新、上拉追加等
     public func scrollViewInitialize(
-        _ initialization: @escaping (UIScrollView) -> Void
+        _ initialization: @escaping @MainActor @Sendable (UIScrollView) -> Void
     ) -> some View {
         return scrollViewConfigure { scrollView in
             guard !scrollView.fw.propertyBool(forName: "scrollViewInitialize") else { return }
@@ -111,7 +111,7 @@ import SwiftUI
     
     /// 配置ScrollView视图，可调用多次
     public func scrollViewConfigure(
-        _ configuration: @escaping (UIScrollView) -> Void
+        _ configuration: @escaping @MainActor @Sendable (UIScrollView) -> Void
     ) -> some View {
         return introspect(.scrollView, on: .iOS(.all)) { scrollView in
             configuration(scrollView)
@@ -122,8 +122,8 @@ import SwiftUI
     public func scrollViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
         loadingFinished: Binding<Bool?>? = nil,
-        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
-        customize: ((UIScrollView) -> Void)? = nil
+        action: @escaping @MainActor @Sendable (@escaping @MainActor @Sendable (_ finished: Bool?) -> Void) -> Void,
+        customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
             if !scrollView.fw.propertyBool(forName: "scrollViewRefreshing") {
@@ -160,8 +160,8 @@ import SwiftUI
     public func scrollViewLoading(
         shouldBegin: Binding<Bool>? = nil,
         loadingFinished: Binding<Bool?>? = nil,
-        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
-        customize: ((UIScrollView) -> Void)? = nil
+        action: @escaping @MainActor @Sendable (@escaping @MainActor @Sendable (_ finished: Bool?) -> Void) -> Void,
+        customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil
     ) -> some View {
         return scrollViewConfigure { scrollView in
             if !scrollView.fw.propertyBool(forName: "scrollViewLoading") {
@@ -195,7 +195,7 @@ import SwiftUI
     }
     
     /// 显示ScrollView空界面插件，需手工切换，空界面显示时也可滚动
-    public func showScrollEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+    public func showScrollEmpty(_ isShowing: Bool, customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil) -> some View {
         return scrollViewConfigure { scrollView in
             if isShowing {
                 if let customize = customize {
@@ -309,7 +309,7 @@ import SwiftUI
     ///
     /// 注意：iOS16以上scrollView为UICollectionView，iOS16以下为UITableView
     public func listViewInitialize(
-        _ initialization: @escaping (UIScrollView) -> Void
+        _ initialization: @escaping @MainActor @Sendable (UIScrollView) -> Void
     ) -> some View {
         return listViewConfigure { scrollView in
             guard !scrollView.fw.propertyBool(forName: "listViewInitialize") else { return }
@@ -323,7 +323,7 @@ import SwiftUI
     ///
     /// 注意：iOS16以上scrollView为UICollectionView，iOS16以下为UITableView
     public func listViewConfigure(
-        _ configuration: @escaping (UIScrollView) -> Void
+        _ configuration: @escaping @MainActor @Sendable (UIScrollView) -> Void
     ) -> some View {
         return self
             .introspect(.list, on: .iOS(.v15Earlier)) { tableView in
@@ -338,8 +338,8 @@ import SwiftUI
     public func listViewRefreshing(
         shouldBegin: Binding<Bool>? = nil,
         loadingFinished: Binding<Bool?>? = nil,
-        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
-        customize: ((UIScrollView) -> Void)? = nil
+        action: @escaping @MainActor @Sendable (@escaping @MainActor @Sendable (_ finished: Bool?) -> Void) -> Void,
+        customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
             if !scrollView.fw.propertyBool(forName: "listViewRefreshing") {
@@ -376,8 +376,8 @@ import SwiftUI
     public func listViewLoading(
         shouldBegin: Binding<Bool>? = nil,
         loadingFinished: Binding<Bool?>? = nil,
-        action: @escaping (@escaping (_ finished: Bool?) -> Void) -> Void,
-        customize: ((UIScrollView) -> Void)? = nil
+        action: @escaping @MainActor @Sendable (@escaping @MainActor @Sendable (_ finished: Bool?) -> Void) -> Void,
+        customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil
     ) -> some View {
         return listViewConfigure { scrollView in
             if !scrollView.fw.propertyBool(forName: "listViewLoading") {
@@ -411,7 +411,7 @@ import SwiftUI
     }
     
     /// 显示List空界面插件，需手工切换，空界面显示时也可滚动
-    public func showListEmpty(_ isShowing: Bool, customize: ((UIScrollView) -> Void)? = nil) -> some View {
+    public func showListEmpty(_ isShowing: Bool, customize: (@MainActor @Sendable (UIScrollView) -> Void)? = nil) -> some View {
         return listViewConfigure { scrollView in
             if isShowing {
                 if let customize = customize {
@@ -434,7 +434,7 @@ import SwiftUI
     
     /// 初始化TextField视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
     public func textFieldInitialize(
-        _ initialization: @escaping (UITextField) -> Void,
+        _ initialization: @escaping @MainActor @Sendable (UITextField) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textFieldConfigure { textField in
@@ -457,7 +457,7 @@ import SwiftUI
     
     /// 配置TextField视图，可调用多次
     public func textFieldConfigure(
-        _ configuration: @escaping (UITextField) -> Void
+        _ configuration: @escaping @MainActor @Sendable (UITextField) -> Void
     ) -> some View {
         return introspect(.textField, on: .iOS(.all)) { textField in
             configuration(textField)
@@ -466,7 +466,7 @@ import SwiftUI
     
     /// 初始化TextView视图，仅调用一次，一般用于配置键盘管理，自动聚焦等
     public func textViewInitialize(
-        _ initialization: @escaping (UITextView) -> Void,
+        _ initialization: @escaping @MainActor @Sendable (UITextView) -> Void,
         autoFocus viewContext: ViewContext? = nil
     ) -> some View {
         return textViewConfigure { textView in
@@ -489,7 +489,7 @@ import SwiftUI
     
     /// 配置TextView视图，可调用多次
     public func textViewConfigure(
-        _ configuration: @escaping (UITextView) -> Void
+        _ configuration: @escaping @MainActor @Sendable (UITextView) -> Void
     ) -> some View {
         return introspect(.textEditor, on: .iOS(.v14Later)) { textView in
             configuration(textView)

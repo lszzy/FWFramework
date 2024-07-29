@@ -33,7 +33,7 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
-        navigationItem.title = Autoloader.imagePluginImpl
+        navigationItem.title = SettingsController.imagePluginImpl
         SDWebImageImpl.shared.fadeAnimated = true
         ImagePluginImpl.shared.fadeAnimated = true
         

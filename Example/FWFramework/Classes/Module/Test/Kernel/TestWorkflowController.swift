@@ -8,7 +8,7 @@
 
 import FWFramework
 
-@objc protocol TestWorkflowProtocol {
+@MainActor @objc protocol TestWorkflowProtocol {
     @objc optional func testMethod1()
     @objc optional func testMethod2()
 }
