@@ -41,7 +41,7 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 /// 默认条形码类型示例：[.code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5]
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
-open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
