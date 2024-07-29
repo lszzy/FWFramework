@@ -131,7 +131,7 @@ struct TestSwiftUIListContent: View {
     
 }
 
-class TestSwiftUIListModel: ViewModel {
+class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
     
     var style: Int = 0
     var error: Error? {
@@ -146,7 +146,7 @@ class TestSwiftUIListModel: ViewModel {
     
     @Published var items: [String] = []
     
-    func refreshData(completionHandler: @escaping (Bool?) -> Void) {
+    func refreshData(completionHandler: @escaping @Sendable (Bool?) -> Void) {
         self.error = nil
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in

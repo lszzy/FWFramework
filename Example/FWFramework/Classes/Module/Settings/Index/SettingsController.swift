@@ -378,7 +378,7 @@ private extension SettingsController {
     
 }
 
-private extension SettingsController {
+extension SettingsController {
     @StoredValue("alertPluginImpl")
     static var alertPluginImpl = alertPlugins[0]
     static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]

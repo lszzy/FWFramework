@@ -517,7 +517,7 @@ class TestSwiftProtocolViewController: TestSwiftProtocolBaseController {
     }
 }
 
-@objc protocol TestObjcProtocol {
+@MainActor @objc protocol TestObjcProtocol {
     func testObjcMethod()
     // @objc optional func testObjcMethod()
 }
