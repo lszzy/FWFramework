@@ -249,15 +249,15 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         return NSObject.fw.getAssociatedObject(object, key: "imageOperationKey(for:)") as? String
     }
 
-    open func downloadImage(
-        for object: any Sendable,
+    open func downloadImage<T>(
+        for object: T,
         imageURL: Any?,
         options: WebImageOptions,
         context: [ImageCoderOptions: Any]?,
         placeholder: (() -> Void)?,
         completion: (@MainActor @Sendable (UIImage?, Bool, Error?) -> Void)?,
         progress: (@MainActor @Sendable (Double) -> Void)?
-    ) {
+    ) where T: Sendable {
         let urlRequest = urlRequest(url: imageURL, options: options)
         setImageOperationKey(String(describing: type(of: object)), for: object)
         if let activeReceipt = activeImageDownloadReceipt(for: object) {
