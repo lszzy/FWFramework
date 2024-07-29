@@ -1146,7 +1146,7 @@ open class PagingListRefreshView: PagingView {
 
 // MARK: - PagingSmoothView
 
-@MainActor @objc public protocol PagingSmoothViewListViewDelegate: Sendable {
+@MainActor @objc public protocol PagingSmoothViewListViewDelegate {
     /// 返回listView。如果是vc包裹的就是vc.view；如果是自定义view包裹的，就是自定义view自己。
     func listView() -> UIView
     /// 返回FWPagerSmoothViewListViewDelegate内部持有的UIScrollView或UITableView或UICollectionView
