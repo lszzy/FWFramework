@@ -12,8 +12,8 @@ import JavaScriptCore
 // MARK: - Wrapper+WKWebView
 @MainActor extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
-    public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (WKWebViewConfiguration, String) -> Void }
+    public static var reuseConfigurationBlock: (@Sendable (WKWebViewConfiguration, String) -> Void)? {
+        get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? @Sendable (WKWebViewConfiguration, String) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
     
@@ -341,7 +341,7 @@ open class WebView: WKWebView {
     open var isFirstLoad = true
     
     /// 设置重用时预缓存资源的url句柄，同一个reuseIdentifier仅生效一次，自动处理堆栈
-    public static var reusePreloadUrlBlock: ((String) -> Any?)?
+    public static var reusePreloadUrlBlock: (@Sendable (String) -> Any?)?
     
     private static var preloadedReuseIdentifiers: [String] = []
     
@@ -519,7 +519,7 @@ public class WebViewCookieManager: NSObject {
     }
     
     /// 拷贝共享Cookie到webView，iOS11+有效
-    @MainActor public static func copySharedCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+    @MainActor public static func copySharedCookie(_ webView: WKWebView, completion: (@MainActor @Sendable () -> Void)? = nil) {
         let cookies = HTTPCookieStorage.shared.cookies ?? []
         let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
         if cookies.isEmpty {
@@ -536,7 +536,7 @@ public class WebViewCookieManager: NSObject {
     }
     
     /// 拷贝webView到共享Cookie，iOS11+有效
-    @MainActor public static func copyWebViewCookie(_ webView: WKWebView, completion: (() -> Void)? = nil) {
+    @MainActor public static func copyWebViewCookie(_ webView: WKWebView, completion: (@MainActor @Sendable () -> Void)? = nil) {
         let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
         cookieStore.getAllCookies { cookies in
             if cookies.isEmpty {
@@ -611,7 +611,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     
     // MARK: - Typealias
     /// JS桥接上下文
-    public class Context: NSObject {
+    public class Context: NSObject, @unchecked Sendable {
         /// 自定义对象
         public fileprivate(set) weak var object: AnyObject?
         /// 绑定WKWebView
@@ -622,10 +622,10 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         /// 调用参数
         public private(set) var parameters: [String: Any]
         /// 完成回调
-        public private(set) var completion: ((Any?) -> Void)?
+        public private(set) var completion: (@Sendable (Any?) -> Void)?
         
         /// 初始化方法
-        public init(handlerName: String, parameters: [String: Any]? = nil, completion: ((Any?) -> Void)? = nil) {
+        public init(handlerName: String, parameters: [String: Any]? = nil, completion: (@Sendable (Any?) -> Void)? = nil) {
             self.handlerName = handlerName
             self.parameters = parameters ?? [:]
             self.completion = completion
@@ -633,9 +633,9 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
     
     /// JS桥接处理句柄
-    public typealias Handler = (Context) -> Void
+    public typealias Handler = @Sendable (Context) -> Void
     /// JS桥接完成回调
-    public typealias Completion = (Any?) -> Void
+    public typealias Completion = @Sendable (Any?) -> Void
     /// JS桥接消息对象
     public typealias Message = [String: Any]
     
@@ -653,18 +653,18 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
     
     /// 是否启用日志，默认false
-    public var isLogEnabled = false
+    nonisolated(unsafe) public var isLogEnabled = false
     
     private let iOS_Native_InjectJavascript = "iOS_Native_InjectJavascript"
     private let iOS_Native_FlushMessageQueue = "iOS_Native_FlushMessageQueue"
     
     private weak var webView: WKWebView?
     
-    private var startupMessageQueue: [Message]? = []
+    nonisolated(unsafe) private var startupMessageQueue: [Message]? = []
     private var responseCallbacks = [String: Completion]()
     private var messageHandlers = [String: Handler]()
     private var errorHandler: Handler?
-    private var filterHandler: ((Context) -> Bool)?
+    private var filterHandler: (@Sendable (Context) -> Bool)?
     private var uniqueId = 0
     
     public init(webView: WKWebView) {
@@ -691,20 +691,22 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge: > xxxDefaultBridge:
     public func registerClass(_ clazz: Any, package: String? = nil, context object: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
+        let sendableObject = SendableObject(object)
         if let targetClass = clazz as? NSObject.Type {
             for (key, obj) in bridges {
                 let name = (package ?? "") + key
-                registerHandler(name) { [weak object] context in
-                    context.object = object
+                registerHandler(name) { context in
+                    context.object = sendableObject.object
                     _ = targetClass.perform(NSSelectorFromString(obj), with: context)
                 }
             }
         } else if let targetObject = clazz as? NSObject {
+            let sendableTarget = SendableObject(targetObject)
             for (key, obj) in bridges {
                 let name = (package ?? "") + key
-                registerHandler(name) { [weak object] context in
-                    context.object = object
-                    _ = targetObject.perform(NSSelectorFromString(obj), with: context)
+                registerHandler(name) { context in
+                    context.object = sendableObject.object
+                    _ = sendableTarget.object.perform(NSSelectorFromString(obj), with: context)
                 }
             }
         }
@@ -745,7 +747,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
     
     /// 注册过滤器句柄，句柄访问时优先触发。如果返回true，继续处理handler，否则停止处理
-    public func setFilterHandler(_ handler: ((Context) -> Bool)?) {
+    public func setFilterHandler(_ handler: (@Sendable (Context) -> Bool)?) {
         filterHandler = handler
     }
     
@@ -867,8 +869,9 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
                 
                 var callback: Completion?
                 if let callbackID = message["callbackID"] {
+                    let sendableCallbackID = SendableObject(callbackID)
                     callback = { responseData in
-                        let msg = ["responseID": callbackID, "responseData": responseData ?? NSNull()] as Message
+                        let msg = ["responseID": sendableCallbackID.object, "responseData": responseData ?? NSNull()] as Message
                         self.queue(message: msg)
                     }
                 } else {
@@ -897,7 +900,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    private func queue(message: Message) {
+    nonisolated private func queue(message: Message) {
         if startupMessageQueue == nil {
             dispatch(message: message)
         } else {
@@ -905,7 +908,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    private func dispatch(message: Message) {
+    nonisolated private func dispatch(message: Message) {
         guard var messageJSON = serialize(message: message, pretty: false) else { return }
         if isLogEnabled {
             log("SEND: \(messageJSON)")
@@ -926,7 +929,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
     
-    private func serialize(message: Message, pretty: Bool) -> String? {
+    nonisolated private func serialize(message: Message, pretty: Bool) -> String? {
         var result: String?
         do {
             let data = try JSONSerialization.data(withJSONObject: message, options: pretty ? .prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0))
@@ -952,7 +955,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         return result
     }
     
-    private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    nonisolated private func log(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "WKWebViewJavascriptBridge: %@", message, function: function, file: file, line: line)
         #endif
