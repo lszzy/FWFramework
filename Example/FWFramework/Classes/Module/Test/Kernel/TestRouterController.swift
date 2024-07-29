@@ -14,6 +14,9 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     
     static var popCount: Int = 0
     
+    @StoredValue("routerStrictMode")
+    static var routerStrictMode: Bool = false
+    
     var testData: [TableElement] = [
         ["打开Web", "onOpenHttp"],
         ["打开完整Web", "onOpenHttp2"],
@@ -113,9 +116,9 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func setupNavbar() {
         navigationItem.title = "Router"
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [Autoloader.routerStrictMode ? "关闭严格模式" : "开启严格模式"], actionBlock: { _ in
-                Autoloader.routerStrictMode = !Autoloader.routerStrictMode
-                Router.strictMode = Autoloader.routerStrictMode
+            self?.app.showSheet(title: nil, message: nil, actions: [TestRouterController.routerStrictMode ? "关闭严格模式" : "开启严格模式"], actionBlock: { _ in
+                TestRouterController.routerStrictMode = !TestRouterController.routerStrictMode
+                Router.strictMode = TestRouterController.routerStrictMode
             })
         }
         
@@ -404,18 +407,9 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 }
 
 @objc extension Autoloader {
-    nonisolated(unsafe) static var routerStrictMode: Bool {
-        get {
-            return UserDefaults.app.object(forKey: "routerStrictMode") as? Bool ?? false
-        }
-        set {
-            UserDefaults.app.setObject(newValue, forKey: "routerStrictMode")
-        }
-    }
-    
-    func loadApp_TestRouter() {
+    @MainActor func loadApp_TestRouter() {
         APP.autoload(TestRouter.self)
-        Router.strictMode = Autoloader.routerStrictMode
+        Router.strictMode = TestRouterController.routerStrictMode
     }
 }
 
