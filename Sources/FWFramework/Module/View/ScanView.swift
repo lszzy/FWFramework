@@ -681,7 +681,7 @@ open class ScanView: UIView {
         return result
     }()
     
-    private var displayLink: CADisplayLink?
+    nonisolated(unsafe) private var displayLink: CADisplayLink?
     private var isTop = true
     private var isSelected = false
     
@@ -720,6 +720,11 @@ open class ScanView: UIView {
         
         addGestureRecognizer(tapGesture)
         addGestureRecognizer(pinchGesture)
+    }
+    
+    deinit {
+        displayLink?.invalidate()
+        displayLink = nil
     }
     
     open override func draw(_ rect: CGRect) {
