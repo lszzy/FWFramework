@@ -267,7 +267,7 @@ extension Wrapper where Base: UIDevice {
         hostName[255] = 0
 
         #if targetEnvironment(simulator)
-        return String(cString: hostName)
+        return String(cString: hostName, encoding: .utf8)
         #else
         return String(format: "%s.local", hostName)
         #endif

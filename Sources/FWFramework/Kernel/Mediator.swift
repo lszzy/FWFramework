@@ -56,20 +56,20 @@ public protocol ModuleProtocol: UIApplicationDelegate {
 extension ModuleProtocol {
     
     /// 默认初始化不处理
-    public func setup() {}
+    nonisolated public func setup() {}
     
     /// 默认后台线程调用setup
-    public static func setupSynchronously() -> Bool { false }
+    nonisolated public static func setupSynchronously() -> Bool { false }
     
     /// 默认优先级default
-    public static func priority() -> ModulePriority { .default }
+    nonisolated public static func priority() -> ModulePriority { .default }
     
 }
 
 extension ModuleProtocol where Self: NSObject {
     
     /// 默认实现NSObject单例对象
-    public static var shared: Self {
+    nonisolated public static var shared: Self {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
