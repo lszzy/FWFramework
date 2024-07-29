@@ -1195,11 +1195,12 @@ open class PagingSmoothView: UIView {
     let cellIdentifier = "cell"
     var currentListInitializeContentOffsetY: CGFloat = 0
     var singleScrollView: UIScrollView?
+    nonisolated(unsafe) var listScrollViewDict = [Int : UIScrollView]()
 
     deinit {
-        listDict.values.forEach {
-            $0.listScrollView().removeObserver(self, forKeyPath: "contentOffset")
-            $0.listScrollView().removeObserver(self, forKeyPath: "contentSize")
+        listScrollViewDict.values.forEach {
+            $0.removeObserver(self, forKeyPath: "contentOffset")
+            $0.removeObserver(self, forKeyPath: "contentSize")
         }
     }
 
@@ -1238,9 +1239,12 @@ open class PagingSmoothView: UIView {
         isSyncListContentOffsetEnabled = false
 
         listHeaderDict.removeAll()
+        listScrollViewDict.values.forEach { (list) in
+            list.removeObserver(self, forKeyPath: "contentOffset")
+            list.removeObserver(self, forKeyPath: "contentSize")
+        }
+        listScrollViewDict.removeAll()
         listDict.values.forEach { (list) in
-            list.listScrollView().removeObserver(self, forKeyPath: "contentOffset")
-            list.listScrollView().removeObserver(self, forKeyPath: "contentSize")
             list.listView().removeFromSuperview()
         }
         listDict.removeAll()
@@ -1433,6 +1437,7 @@ extension PagingSmoothView: UICollectionViewDataSource, UICollectionViewDelegate
             listHeaderDict[indexPath.item] = listHeader
             list?.listScrollView().addObserver(self, forKeyPath: "contentOffset", options: .new, context: nil)
             list?.listScrollView().addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+            listScrollViewDict[indexPath.item] = list?.listScrollView()
         }
         listDict.values.forEach { $0.listScrollView().scrollsToTop = ($0 === list) }
         if let listView = list?.listView(), listView.superview != cell.contentView {
