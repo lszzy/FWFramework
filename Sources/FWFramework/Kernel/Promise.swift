@@ -43,12 +43,12 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
     private struct ProgressValue: Sendable { var value: Double }
     
     /// 约定内部属性
-    private let operation: @MainActor @Sendable (@escaping @MainActor @Sendable (_ result: any Sendable) -> Void) -> Void
+    private let operation: @MainActor @Sendable (@escaping @MainActor @Sendable (_ result: Sendable) -> Void) -> Void
     private var finished: Bool = false
     
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
-    public init(completion: @escaping @MainActor @Sendable (_ completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) -> Void) {
+    public init(completion: @escaping @MainActor @Sendable (_ completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) -> Void) {
         self.operation = completion
     }
     
@@ -69,7 +69,7 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
     }
     
     /// 快速创建成功实例
-    public convenience init(value: any Sendable) {
+    public convenience init(value: Sendable) {
         self.init(completion: { completion in
             completion(value)
         })
@@ -90,7 +90,7 @@ extension Promise {
     /// 全部约定，所有约定成功才返回约定结果合集；如果某一个失败了，则返回该错误信息；约定进度为所有约定总进度
     public static func all(_ promises: [Promise]) -> Promise {
         return Promise { completion in
-            var values: [any Sendable] = []
+            var values: [Sendable] = []
             var progress: [Int: Double] = [:]
             for promise in promises {
                 promise.done({ value in
@@ -162,7 +162,7 @@ extension Promise {
     }
     
     /// 执行约定并回调完成句柄
-    public func done(_ completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) {
+    public func done(_ completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) {
         self.execute(progress: false, completion: completion)
     }
     
@@ -191,7 +191,7 @@ extension Promise {
     }
     
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
-    public func then<T>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> any Sendable) -> Promise where T: Sendable {
+    public func then<T>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> Sendable) -> Promise where T: Sendable {
         return Promise { completion in
             self.done({ value in
                 do {
@@ -213,7 +213,7 @@ extension Promise {
     }
     
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
-    public func recover(_ block: @escaping @MainActor @Sendable (_ error: Error) throws -> any Sendable) -> Promise {
+    public func recover(_ block: @escaping @MainActor @Sendable (_ error: Error) throws -> Sendable) -> Promise {
         return Promise { completion in
             self.done({ value in
                 completion(value)
@@ -257,7 +257,7 @@ extension Promise {
     }
     
     /// 减少约定，当前约定结果作为初始值value，顺序使用value和数组值item调用reducer，产生新的value继续循环直至结束，类似数组reduce方法
-    public func reduce<T>(_ items: [T], reducer: @escaping @MainActor @Sendable (_ value: any Sendable, _ item: T) throws -> any Sendable) -> Promise where T: Sendable {
+    public func reduce<T>(_ items: [T], reducer: @escaping @MainActor @Sendable (_ value: Sendable, _ item: T) throws -> Sendable) -> Promise where T: Sendable {
         var promise = self
         for item in items {
             promise = promise.then({ value in
@@ -309,7 +309,7 @@ extension Promise {
 extension Promise {
     
     /// 约定内部执行方法
-    private func execute(progress: Bool, completion: @escaping @MainActor @Sendable (_ result: any Sendable) -> Void) {
+    private func execute(progress: Bool, completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) {
         self.operation() { result in
             if !self.finished {
                 if result is ProgressValue {
@@ -329,7 +329,7 @@ extension Promise {
     
     /// 约定内部重试方法
     private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
-        let promise = initialPromise ?? Promise.delay(delay).then({ (_: any Sendable) in block() })
+        let promise = initialPromise ?? Promise.delay(delay).then({ (_: Sendable) in block() })
         if times < 1 { return promise }
         return promise.recover { _ in
             Promise.retry(nil, times: times - 1, delay: delay, block: block)
@@ -343,7 +343,7 @@ extension Promise {
 extension Promise {
     
     /// 异步获取结果值
-    public var value: any Sendable {
+    public var value: Sendable {
         get async throws {
             try await withCheckedThrowingContinuation { continuation in
                 done { value in
