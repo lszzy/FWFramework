@@ -10,7 +10,7 @@ import FWFramework
 
 class TestQrcodeController: UIViewController, ViewControllerProtocol {
     
-    private lazy var scanCode: ScanCode = {
+    nonisolated(unsafe) private lazy var scanCode: ScanCode = {
         let result = ScanCode()
         return result
     }()
@@ -129,9 +129,11 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         scanView.startScanning()
     }
     
-    func stopScanManager() {
+    nonisolated func stopScanManager() {
         scanCode.stopRunning()
-        scanView.stopScanning()
+        DispatchQueue.app.mainSyncIf {
+            scanView.stopScanning()
+        }
         removeFlashlightBtn()
     }
     
@@ -145,11 +147,13 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         }
     }
     
-    @objc func removeFlashlightBtn() {
+    @objc nonisolated func removeFlashlightBtn() {
         ScanCode.turnOffTorch()
         
-        flashlightBtn.isSelected = false
-        flashlightBtn.removeFromSuperview()
+        DispatchQueue.app.mainSyncIf {
+            flashlightBtn.isSelected = false
+            flashlightBtn.removeFromSuperview()
+        }
     }
     
     @objc func onPhotoLibrary(_ isBarcode: Bool = false) {
