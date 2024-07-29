@@ -146,7 +146,7 @@ class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
     
     @Published var items: [String] = []
     
-    func refreshData(completionHandler: @escaping @Sendable (Bool?) -> Void) {
+    func refreshData(completionHandler: @escaping @MainActor @Sendable (Bool?) -> Void) {
         self.error = nil
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
@@ -169,7 +169,7 @@ class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
         }
     }
     
-    func loadData(completionHandler: @escaping (Bool?) -> Void) {
+    func loadData(completionHandler: @escaping @MainActor @Sendable (Bool?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             

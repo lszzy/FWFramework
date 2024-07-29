@@ -59,7 +59,7 @@ extension TestConcurrencyController {
         app.showLoading()
         
         Task.init {
-            let promise = Promise.delay(1).then { (value: Any) in
+            let promise = Promise.delay(1).then { (value: Sendable) in
                 return "Promise succeed"
             }
             
@@ -82,7 +82,7 @@ extension TestConcurrencyController {
         app.showLoading()
         
         Task.init {
-            let promise = Promise.delay(1).then { (value: Any) in
+            let promise = Promise.delay(1).then { (value: Sendable) in
                 throw PromiseError.failed
             }
             
