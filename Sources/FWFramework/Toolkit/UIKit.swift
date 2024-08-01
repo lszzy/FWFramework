@@ -2447,6 +2447,66 @@ extension Wrapper where Base: UITableView {
         }
     }
     
+    /// 动态计算tableView内容总高度(不含contentInset，使用dataSource和delegate，必须实现heightForRow等方法)，即使tableView未reloadData也会返回新高度
+    public func totalContentHeight() -> CGFloat {
+        var totalHeight: CGFloat = 0
+        if let headerView = base.tableHeaderView {
+            totalHeight += headerView.frame.height
+        }
+        if let footerView = base.tableFooterView {
+            totalHeight += footerView.frame.height
+        }
+        
+        var sections: Int = 1
+        if let sectionCount = base.dataSource?.numberOfSections?(in: base) {
+            sections = sectionCount
+        }
+        for section in 0 ..< sections {
+            if let headerHeight = base.delegate?.tableView?(base, heightForHeaderInSection: section),
+               headerHeight != UITableView.automaticDimension {
+                totalHeight += headerHeight
+            } else {
+                totalHeight += base.rectForHeader(inSection: section).height
+            }
+            if let footerHeight = base.delegate?.tableView?(base, heightForFooterInSection: section),
+               footerHeight != UITableView.automaticDimension {
+                totalHeight += footerHeight
+            } else {
+                totalHeight += base.rectForFooter(inSection: section).height
+            }
+            
+            if let rows = base.dataSource?.tableView(base, numberOfRowsInSection: section) {
+                for row in 0 ..< rows {
+                    if let rowHeight = base.delegate?.tableView?(base, heightForRowAt: IndexPath(row: row, section: section)),
+                       rowHeight != UITableView.automaticDimension {
+                        totalHeight += rowHeight
+                    } else {
+                        totalHeight += base.rectForRow(at: IndexPath(row: row, section: section)).height
+                    }
+                }
+            }
+        }
+        return ceil(totalHeight)
+    }
+    
+    /// 获取指定section的header视图frame，失败时为zero
+    public func layoutHeaderFrame(for section: Int) -> CGRect {
+        guard section >= 0, section < base.numberOfSections else { return .zero }
+        return base.rectForHeader(inSection: section)
+    }
+    
+    /// 获取指定section的footer视图frame，失败时为zero
+    public func layoutFooterFrame(for section: Int) -> CGRect {
+        guard section >= 0, section < base.numberOfSections else { return .zero }
+        return base.rectForFooter(inSection: section)
+    }
+    
+    /// 获取指定indexPath的cell视图frame，失败时为zero
+    public func layoutCellFrame(for indexPath: IndexPath) -> CGRect {
+        guard isValidIndexPath(indexPath) else { return .zero }
+        return base.rectForRow(at: indexPath)
+    }
+    
     /// 判断indexPath是否有效
     public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
         guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
@@ -2590,6 +2650,24 @@ extension Wrapper where Base: UICollectionView {
         CATransaction.setDisableActions(true)
         base.reloadData()
         CATransaction.commit()
+    }
+    
+    /// 获取指定indexPath的header视图frame，失败时为zero
+    public func layoutHeaderFrame(for indexPath: IndexPath) -> CGRect {
+        guard indexPath.section >= 0, indexPath.section < base.numberOfSections else { return .zero }
+        return base.layoutAttributesForSupplementaryElement(ofKind: UICollectionView.elementKindSectionHeader, at: indexPath)?.frame ?? .zero
+    }
+    
+    /// 获取指定indexPath的footer视图frame，失败时为zero
+    public func layoutFooterFrame(for indexPath: IndexPath) -> CGRect {
+        guard indexPath.section >= 0, indexPath.section < base.numberOfSections else { return .zero }
+        return base.layoutAttributesForSupplementaryElement(ofKind: UICollectionView.elementKindSectionFooter, at: indexPath)?.frame ?? .zero
+    }
+    
+    /// 获取指定indexPath的cell视图frame，失败时为zero
+    public func layoutCellFrame(for indexPath: IndexPath) -> CGRect {
+        guard isValidIndexPath(indexPath) else { return .zero }
+        return base.layoutAttributesForItem(at: indexPath)?.frame ?? .zero
     }
     
     /// 判断indexPath是否有效

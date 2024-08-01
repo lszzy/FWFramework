@@ -13,8 +13,8 @@ import JavaScriptCore
 extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (WKWebViewConfiguration, String) -> Void }
-        set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
+        get { return NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
+        set { NSObject.fw.setAssociatedObject(Base.self, key: "reuseConfigurationBlock", value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
     
     /// 默认跨WKWebView共享Cookie，切换用户时可重置processPool清空Cookie
@@ -1118,7 +1118,7 @@ extension WKWebView {
     /// 初始化WKWebView可重用视图
     open override class func reusableViewInitialize(reuseIdentifier: String) -> Self {
         let configuration = WKWebView.fw.defaultConfiguration()
-        let reuseBlock = NSObject.fw.getAssociatedObject(self, key: #function) as? (WKWebViewConfiguration, String) -> Void
+        let reuseBlock = NSObject.fw.getAssociatedObject(self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void
         reuseBlock?(configuration, reuseIdentifier)
         return self.init(frame: .zero, configuration: configuration)
     }
