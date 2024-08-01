@@ -2455,8 +2455,8 @@ extension Wrapper where Base: UIDevice {
         }
     }
     
-    /// 动态计算tableView总高度(使用dataSource和delegate，必须实现heightForRow等方法)，即使tableView未reloadData也会返回新高度
-    public func totalHeight() -> CGFloat {
+    /// 动态计算tableView内容总高度(不含contentInset，使用dataSource和delegate，必须实现heightForRow等方法)，即使tableView未reloadData也会返回新高度
+    public func totalContentHeight() -> CGFloat {
         var totalHeight: CGFloat = 0
         if let headerView = base.tableHeaderView {
             totalHeight += headerView.frame.height
@@ -2470,17 +2470,26 @@ extension Wrapper where Base: UIDevice {
             sections = sectionCount
         }
         for section in 0 ..< sections {
-            if let headerHeight = base.delegate?.tableView?(base, heightForHeaderInSection: section) {
+            if let headerHeight = base.delegate?.tableView?(base, heightForHeaderInSection: section),
+               headerHeight != UITableView.automaticDimension {
                 totalHeight += headerHeight
+            } else {
+                totalHeight += base.rectForHeader(inSection: section).height
             }
-            if let footerHeight = base.delegate?.tableView?(base, heightForFooterInSection: section) {
+            if let footerHeight = base.delegate?.tableView?(base, heightForFooterInSection: section),
+               footerHeight != UITableView.automaticDimension {
                 totalHeight += footerHeight
+            } else {
+                totalHeight += base.rectForFooter(inSection: section).height
             }
             
             if let rows = base.dataSource?.tableView(base, numberOfRowsInSection: section) {
                 for row in 0 ..< rows {
-                    if let rowHeight = base.delegate?.tableView?(base, heightForRowAt: IndexPath(row: row, section: section)) {
+                    if let rowHeight = base.delegate?.tableView?(base, heightForRowAt: IndexPath(row: row, section: section)),
+                       rowHeight != UITableView.automaticDimension {
                         totalHeight += rowHeight
+                    } else {
+                        totalHeight += base.rectForRow(at: IndexPath(row: row, section: section)).height
                     }
                 }
             }
