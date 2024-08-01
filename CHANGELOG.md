@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.9.3] - 2024-08-01
+
+### Changed
+* Added UITableView and UICollectionView methods for calculating height and frame
+* Fixed the issue that WebView configuration reuseConfigurationBlock did not take effect
+
 ## [5.9.2] - 2024-07-19
 
 ### Changed

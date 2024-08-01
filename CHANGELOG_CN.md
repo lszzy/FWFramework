@@ -1,5 +1,11 @@
 # 更新日志
 
+## [5.9.3] - 2024-08-01
+
+### Changed
+* 新增UITableView和UICollectionView计算高度和frame相关方法
+* 修复WebView配置reuseConfigurationBlock未生效问题
+
 ## [5.9.2] - 2024-07-19
 
 ### Changed
