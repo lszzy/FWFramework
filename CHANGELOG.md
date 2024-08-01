@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.9.4] - 2024-08-01
+
+### Fixed
+* Compatible with SwiftPackageIndex
+
 ## [5.9.3] - 2024-08-01
 
 ### Changed
