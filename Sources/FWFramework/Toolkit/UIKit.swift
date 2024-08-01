@@ -2488,6 +2488,24 @@ extension Wrapper where Base: UIDevice {
         return ceil(totalHeight)
     }
     
+    /// 获取指定section的header视图frame，失败时为zero
+    public func layoutHeaderFrame(for section: Int) -> CGRect {
+        guard section >= 0, section < base.numberOfSections else { return .zero }
+        return base.rectForHeader(inSection: section)
+    }
+    
+    /// 获取指定section的footer视图frame，失败时为zero
+    public func layoutFooterFrame(for section: Int) -> CGRect {
+        guard section >= 0, section < base.numberOfSections else { return .zero }
+        return base.rectForFooter(inSection: section)
+    }
+    
+    /// 获取指定indexPath的cell视图frame，失败时为zero
+    public func layoutCellFrame(for indexPath: IndexPath) -> CGRect {
+        guard isValidIndexPath(indexPath) else { return .zero }
+        return base.rectForRow(at: indexPath)
+    }
+    
     /// 判断indexPath是否有效
     public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
         guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
@@ -2631,6 +2649,24 @@ extension Wrapper where Base: UIDevice {
         CATransaction.setDisableActions(true)
         base.reloadData()
         CATransaction.commit()
+    }
+    
+    /// 获取指定indexPath的header视图frame，失败时为zero
+    public func layoutHeaderFrame(for indexPath: IndexPath) -> CGRect {
+        guard indexPath.section >= 0, indexPath.section < base.numberOfSections else { return .zero }
+        return base.layoutAttributesForSupplementaryElement(ofKind: UICollectionView.elementKindSectionHeader, at: indexPath)?.frame ?? .zero
+    }
+    
+    /// 获取指定indexPath的footer视图frame，失败时为zero
+    public func layoutFooterFrame(for indexPath: IndexPath) -> CGRect {
+        guard indexPath.section >= 0, indexPath.section < base.numberOfSections else { return .zero }
+        return base.layoutAttributesForSupplementaryElement(ofKind: UICollectionView.elementKindSectionFooter, at: indexPath)?.frame ?? .zero
+    }
+    
+    /// 获取指定indexPath的cell视图frame，失败时为zero
+    public func layoutCellFrame(for indexPath: IndexPath) -> CGRect {
+        guard isValidIndexPath(indexPath) else { return .zero }
+        return base.layoutAttributesForItem(at: indexPath)?.frame ?? .zero
     }
     
     /// 判断indexPath是否有效
