@@ -2455,6 +2455,39 @@ extension Wrapper where Base: UIDevice {
         }
     }
     
+    /// 动态计算tableView总高度(使用dataSource和delegate，必须实现heightForRow等方法)，即使tableView未reloadData也会返回新高度
+    public func totalHeight() -> CGFloat {
+        var totalHeight: CGFloat = 0
+        if let headerView = base.tableHeaderView {
+            totalHeight += headerView.frame.height
+        }
+        if let footerView = base.tableFooterView {
+            totalHeight += footerView.frame.height
+        }
+        
+        var sections: Int = 1
+        if let sectionCount = base.dataSource?.numberOfSections?(in: base) {
+            sections = sectionCount
+        }
+        for section in 0 ..< sections {
+            if let headerHeight = base.delegate?.tableView?(base, heightForHeaderInSection: section) {
+                totalHeight += headerHeight
+            }
+            if let footerHeight = base.delegate?.tableView?(base, heightForFooterInSection: section) {
+                totalHeight += footerHeight
+            }
+            
+            if let rows = base.dataSource?.tableView(base, numberOfRowsInSection: section) {
+                for row in 0 ..< rows {
+                    if let rowHeight = base.delegate?.tableView?(base, heightForRowAt: IndexPath(row: row, section: section)) {
+                        totalHeight += rowHeight
+                    }
+                }
+            }
+        }
+        return ceil(totalHeight)
+    }
+    
     /// 判断indexPath是否有效
     public func isValidIndexPath(_ indexPath: IndexPath) -> Bool {
         guard indexPath.section >= 0, indexPath.row >= 0 else { return false }
