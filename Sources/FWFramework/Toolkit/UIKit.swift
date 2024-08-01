@@ -2448,7 +2448,7 @@ extension Wrapper where Base: UITableView {
     }
     
     /// 动态计算tableView内容总高度(不含contentInset，使用dataSource和delegate，必须实现heightForRow等方法)，即使tableView未reloadData也会返回新高度
-    public func totalContentHeight() -> CGFloat {
+    @MainActor public func totalContentHeight() -> CGFloat {
         var totalHeight: CGFloat = 0
         if let headerView = base.tableHeaderView {
             totalHeight += headerView.frame.height
