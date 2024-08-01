@@ -216,29 +216,25 @@ extension Wrapper where Base: UIScrollView {
             
             var totalCount: Int = 0
             if let tableView = base as? UITableView {
-                let dataSource = tableView.dataSource
-                
                 var sections: Int = 1
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.numberOfSections(in:))) {
-                    sections = dataSource.numberOfSections!(in: tableView)
+                if let sectionCount = tableView.dataSource?.numberOfSections?(in: tableView) {
+                    sections = sectionCount
                 }
                 
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) {
-                    for section in 0 ..< sections {
-                        totalCount += dataSource.tableView(tableView, numberOfRowsInSection: section)
+                for section in 0 ..< sections {
+                    if let rowCount = tableView.dataSource?.tableView(tableView, numberOfRowsInSection: section) {
+                        totalCount += rowCount
                     }
                 }
             } else if let collectionView = base as? UICollectionView {
-                let dataSource = collectionView.dataSource
-                
                 var sections: Int = 1
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.numberOfSections(in:))) {
-                    sections = dataSource.numberOfSections!(in: collectionView)
+                if let sectionCount = collectionView.dataSource?.numberOfSections?(in: collectionView) {
+                    sections = sectionCount
                 }
                 
-                if let dataSource = dataSource, dataSource.responds(to: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) {
-                    for section in 0 ..< sections {
-                        totalCount += dataSource.collectionView(collectionView, numberOfItemsInSection: section)
+                for section in 0 ..< sections {
+                    if let rowCount = collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: section) {
+                        totalCount += rowCount
                     }
                 }
             }
