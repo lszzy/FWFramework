@@ -256,8 +256,14 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         }
         
         app.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
-            let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
-            return cell?.myImageView
+            guard let self = self else { return nil }
+            if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell {
+                return cell.myImageView
+            } else {
+                let cellFrame = self.tableView.app.layoutCellFrame(for: IndexPath(row: index, section: 0))
+                let windowFrame = self.tableView.convert(cellFrame, to: self.view.window)
+                return NSValue(cgRect: windowFrame)
+            }
         } placeholderImage: { [weak self] index in
             let cell = self?.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? TestTableDynamicLayoutCell
             return cell?.myImageView.image

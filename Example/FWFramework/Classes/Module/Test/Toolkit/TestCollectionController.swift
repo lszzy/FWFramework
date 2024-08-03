@@ -333,8 +333,14 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
         }
         
         app.showImagePreview(imageURLs: pictureUrls, imageInfos: nil, currentIndex: indexPath.row) { [weak self] index in
-            let cell = self?.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? TestCollectionDynamicLayoutCell
-            return cell?.myImageView
+            guard let self = self else { return nil }
+            if let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? TestCollectionDynamicLayoutCell {
+                return cell.myImageView
+            } else {
+                let cellFrame = self.collectionView.app.layoutCellFrame(for: IndexPath(row: index, section: 0))
+                let windowFrame = self.collectionView.convert(cellFrame, to: self.view.window)
+                return NSValue(cgRect: windowFrame)
+            }
         } placeholderImage: { [weak self] index in
             let cell = self?.collectionView.cellForItem(at: IndexPath(row: index, section: 0)) as? TestCollectionDynamicLayoutCell
             return cell?.myImageView.image
