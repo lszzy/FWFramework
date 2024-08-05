@@ -1534,7 +1534,26 @@ extension Wrapper where Base: UIDevice {
             }
         }
     }
-
+    
+    /// 获取当前按钮是否非空，兼容attributedTitle|title|image
+    public var isNotEmpty: Bool {
+        if (base.currentAttributedTitle?.length ?? 0) > 0 { return true }
+        if (base.currentTitle?.count ?? 0) > 0 { return true }
+        if base.currentImage != nil { return true }
+        return false
+    }
+    
+    /// 是否内容为空时收缩且不占用布局尺寸，兼容attributedTitle|title|image
+    public var contentCollapse: Bool {
+        get {
+            propertyBool(forName: "contentCollapse")
+        }
+        set {
+            setPropertyBool(newValue, forName: "contentCollapse")
+            base.invalidateIntrinsicContentSize()
+        }
+    }
+    
     /// 快速设置文本按钮
     public func setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
         if let title = title { base.setTitle(title, for: .normal) }
@@ -3542,6 +3561,32 @@ extension FrameworkAutoloader {
             if selfObject.isEnabled && selfObject.fw.highlightedChanged != nil {
                 selfObject.fw.highlightedChanged?(selfObject, highlighted)
             }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(getter: UIButton.intrinsicContentSize),
+            methodSignature: (@convention(c) (UIButton, Selector) -> CGSize).self,
+            swizzleSignature: (@convention(block) @MainActor (UIButton) -> CGSize).self
+        ) { store in { selfObject in
+            if selfObject.fw.contentCollapse, !selfObject.fw.isNotEmpty {
+                return .zero
+            }
+            
+            return store.original(selfObject, store.selector)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(UIButton.sizeThatFits(_:)),
+            methodSignature: (@convention(c) (UIButton, Selector, CGSize) -> CGSize).self,
+            swizzleSignature: (@convention(block) @MainActor (UIButton, CGSize) -> CGSize).self
+        ) { store in { selfObject, size in
+            if selfObject.fw.contentCollapse, !selfObject.fw.isNotEmpty {
+                return .zero
+            }
+            
+            return store.original(selfObject, store.selector, size)
         }}
     }
     
