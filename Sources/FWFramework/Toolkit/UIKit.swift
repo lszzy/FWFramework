@@ -1554,8 +1554,9 @@ extension Wrapper where Base: UIDevice {
 
     /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
     ///
-    /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
-    /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
+    /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title，sizeThatFits不包含
+    /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image，sizeThatFits不包含
+    /// contentEdgeInsets: 内容边距，setImageEdge时不影响，sizeThatFits包含
     public func setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
         let imageSize = base.imageView?.image?.size ?? .zero
         let labelSize = base.titleLabel?.intrinsicContentSize ?? .zero
