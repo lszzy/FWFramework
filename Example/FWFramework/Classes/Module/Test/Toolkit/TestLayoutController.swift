@@ -205,7 +205,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             make.left(20)
         }
         
-        let emptyButton = CollapsedButton()
+        let emptyButton = UIButton()
+        emptyButton.app.contentCollapse = true
         emptyButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         emptyButton.setTitleColor(AppTheme.textColor, for: .normal)
         emptyButton.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
