@@ -1958,11 +1958,11 @@ extension FrameworkAutoloader {
             
             if selfObject.fw.autoCollapse && selfObject.fw.collapseConstraints.count > 0 {
                 // Absent意味着视图没有固有size，即{-1, -1}
-                let absentIntrinsicContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+                let absentContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
                 // 计算固有尺寸
                 let contentSize = selfObject.intrinsicContentSize
                 // 如果视图没有固定尺寸，自动设置约束
-                if contentSize.equalTo(absentIntrinsicContentSize) || contentSize.equalTo(.zero) {
+                if contentSize.equalTo(absentContentSize) || contentSize.equalTo(.zero) {
                     selfObject.fw.isCollapsed = true
                 } else {
                     selfObject.fw.isCollapsed = false
