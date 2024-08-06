@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.9.5] - 2024-08-06
+
+### Changed
+* UIButton adds contentCollapse property to quickly handle button shrinkage issues
+
 ## [5.9.4] - 2024-08-01
 
 ### Fixed
