@@ -1300,6 +1300,19 @@ extension Wrapper where Base: UILabel {
         if !allowsSpacing && distance >= 1 { return [:] }
         return attributedString.attributes(at: index, effectiveRange: nil)
     }
+    
+    /// 快速设置字体并指定行高
+    public func setFont(
+        _ font: UIFont?,
+        lineHeight aLineHeight: CGFloat
+    ) {
+        if let font = font {
+            base.font = font
+            lineHeight = font.fw.lineHeight(expected: aLineHeight)
+        } else {
+            lineHeight = aLineHeight
+        }
+    }
 
     /// 快速设置标签并指定文本
     public func setFont(
@@ -1526,7 +1539,26 @@ extension Wrapper where Base: UIButton {
             }
         }
     }
-
+    
+    /// 获取当前按钮是否非空，兼容attributedTitle|title|image
+    public var isNotEmpty: Bool {
+        if (base.currentAttributedTitle?.length ?? 0) > 0 { return true }
+        if (base.currentTitle?.count ?? 0) > 0 { return true }
+        if base.currentImage != nil { return true }
+        return false
+    }
+    
+    /// 是否内容为空时收缩且不占用布局尺寸，兼容attributedTitle|title|image
+    public var contentCollapse: Bool {
+        get {
+            propertyBool(forName: "contentCollapse")
+        }
+        set {
+            setPropertyBool(newValue, forName: "contentCollapse")
+            base.invalidateIntrinsicContentSize()
+        }
+    }
+    
     /// 快速设置文本按钮
     public func setTitle(_ title: String?, font: UIFont?, titleColor: UIColor?) {
         if let title = title { base.setTitle(title, for: .normal) }
@@ -1546,8 +1578,9 @@ extension Wrapper where Base: UIButton {
 
     /// 设置图片的居中边位置，需要在setImage和setTitle之后调用才生效，且button大小大于图片+文字+间距
     ///
-    /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title
-    /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image
+    /// imageEdgeInsets: 仅有image时相对于button，都有时上左下相对于button，右相对于title，sizeThatFits不包含
+    /// titleEdgeInsets: 仅有title时相对于button，都有时上右下相对于button，左相对于image，sizeThatFits不包含
+    /// contentEdgeInsets: 内容边距，setImageEdge时不影响，sizeThatFits包含
     public func setImageEdge(_ edge: UIRectEdge, spacing: CGFloat) {
         let imageSize = base.imageView?.image?.size ?? .zero
         let labelSize = base.titleLabel?.intrinsicContentSize ?? .zero
@@ -3533,6 +3566,32 @@ extension FrameworkAutoloader {
             if selfObject.isEnabled && selfObject.fw.highlightedChanged != nil {
                 selfObject.fw.highlightedChanged?(selfObject, highlighted)
             }
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(getter: UIButton.intrinsicContentSize),
+            methodSignature: (@convention(c) (UIButton, Selector) -> CGSize).self,
+            swizzleSignature: (@convention(block) @MainActor (UIButton) -> CGSize).self
+        ) { store in { selfObject in
+            if selfObject.fw.contentCollapse, !selfObject.fw.isNotEmpty {
+                return .zero
+            }
+            
+            return store.original(selfObject, store.selector)
+        }}
+        
+        NSObject.fw.swizzleInstanceMethod(
+            UIButton.self,
+            selector: #selector(UIButton.sizeThatFits(_:)),
+            methodSignature: (@convention(c) (UIButton, Selector, CGSize) -> CGSize).self,
+            swizzleSignature: (@convention(block) @MainActor (UIButton, CGSize) -> CGSize).self
+        ) { store in { selfObject, size in
+            if selfObject.fw.contentCollapse, !selfObject.fw.isNotEmpty {
+                return .zero
+            }
+            
+            return store.original(selfObject, store.selector, size)
         }}
     }
     
