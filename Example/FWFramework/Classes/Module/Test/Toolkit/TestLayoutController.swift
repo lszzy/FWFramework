@@ -169,38 +169,6 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         attributedLabel.lineTruncatingAttachment = AttributedLabelAttachment(content: expandLabel, margin: .zero, alignment: .center, maxSize: .zero)
         
-        let emptyLabel = UILabel()
-        emptyLabel.textAlignment = .center
-        emptyLabel.textColor = AppTheme.textColor
-        emptyLabel.backgroundColor = AppTheme.backgroundColor
-        view.addSubview(emptyLabel)
-        emptyLabel.app.layoutMaker { make in
-            make.top(toViewBottom: attributedLabel, offset: 20)
-            make.left(20)
-        }
-        
-        let emptyLabel2 = UILabel()
-        emptyLabel2.textAlignment = .center
-        emptyLabel2.textColor = AppTheme.textColor
-        emptyLabel2.backgroundColor = AppTheme.backgroundColor
-        emptyLabel2.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        view.addSubview(emptyLabel2)
-        emptyLabel2.app.layoutMaker { make in
-            make.left(toViewRight: emptyLabel, offset: 20)
-            make.centerY(toView: emptyLabel)
-        }
-        
-        let resultLabel = UILabel()
-        let emptySize = emptyLabel.sizeThatFits(CGSize(width: 1, height: 1))
-        let emptySize2 = emptyLabel2.sizeThatFits(CGSize(width: 1, height: 1))
-        resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
-        resultLabel.textAlignment = .center
-        resultLabel.textColor = AppTheme.textColor
-        view.addSubview(resultLabel)
-        resultLabel.app.layoutMaker { make in
-            make.centerX().centerY(toView: emptyLabel2)
-        }
-        
         let numberLabel = UILabel()
         numberLabel.textAlignment = .center
         numberLabel.numberOfLines = 0
@@ -210,7 +178,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         numberLabel.app.layoutMaker { make in
             make.left(20)
                 .width((APP.screenWidth - 60) / 2.0)
-                .top(toViewBottom: attributedLabel, offset: 50)
+                .top(toViewBottom: attributedLabel, offset: 20)
         }
         
         let number2Label = UILabel()
@@ -222,7 +190,50 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         number2Label.app.layoutMaker { make in
             make.right(20)
                 .width((APP.screenWidth - 60) / 2.0)
-                .top(toViewBottom: attributedLabel, offset: 50)
+                .top(toViewBottom: attributedLabel, offset: 20)
+        }
+        
+        let emptyLabel = UILabel()
+        emptyLabel.textAlignment = .center
+        emptyLabel.textColor = AppTheme.textColor
+        emptyLabel.backgroundColor = AppTheme.backgroundColor
+        emptyLabel.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        emptyLabel.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
+        view.addSubview(emptyLabel)
+        emptyLabel.app.layoutMaker { make in
+            make.top(toViewBottom: numberLabel, offset: 20)
+            make.left(20)
+        }
+        
+        let emptyButton = UIButton()
+        emptyButton.app.contentCollapse = true
+        emptyButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        emptyButton.setTitleColor(AppTheme.textColor, for: .normal)
+        emptyButton.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
+        view.addSubview(emptyButton)
+        emptyButton.app.layoutMaker { make in
+            make.top(toViewBottom: numberLabel, offset: 20)
+            make.left(toViewRight: emptyLabel, offset: 20)
+        }
+        
+        let resultLabel = UILabel()
+        let emptySize = emptyLabel.intrinsicContentSize.ceil
+        let emptySize2 = emptyButton.intrinsicContentSize.ceil
+        resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
+        resultLabel.textAlignment = .center
+        resultLabel.textColor = AppTheme.textColor
+        resultLabel.isUserInteractionEnabled = true
+        resultLabel.app.addTapGesture { _ in
+            emptyLabel.text = ["", "UILabel"].randomElement()
+            emptyButton.setTitle([true, false].randomElement() == true ? "UILabel" : nil, for: .normal)
+            emptyButton.setImage([true, false].randomElement() == true ? UIImage.app.appIconImage() : nil, for: .normal)
+            let emptySize = emptyLabel.intrinsicContentSize.ceil
+            let emptySize2 = emptyButton.intrinsicContentSize.ceil
+            resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
+        }
+        view.addSubview(resultLabel)
+        resultLabel.app.layoutMaker { make in
+            make.right(20).top(toViewBottom: numberLabel, offset: 20)
         }
         
         let bottomLeftImage = UIImageView()
