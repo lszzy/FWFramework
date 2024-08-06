@@ -206,6 +206,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         
         let emptyButton = UIButton()
+        emptyButton.app.contentCollapse = true
         emptyButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         emptyButton.setTitleColor(AppTheme.textColor, for: .normal)
         emptyButton.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
@@ -216,19 +217,18 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         
         let resultLabel = UILabel()
-        let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        let emptySize = emptyLabel.sizeThatFits(maxSize).ceil
-        let emptySize2 = emptyButton.sizeThatFits(maxSize).ceil
+        let emptySize = emptyLabel.intrinsicContentSize.ceil
+        let emptySize2 = emptyButton.intrinsicContentSize.ceil
         resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
         resultLabel.textAlignment = .center
         resultLabel.textColor = AppTheme.textColor
         resultLabel.isUserInteractionEnabled = true
         resultLabel.app.addTapGesture { _ in
             emptyLabel.text = ["", "UILabel"].randomElement()
-            emptyButton.setTitle(["", "UILabel"].randomElement(), for: .normal)
+            emptyButton.setTitle([true, false].randomElement() == true ? "UILabel" : nil, for: .normal)
             emptyButton.setImage([true, false].randomElement() == true ? UIImage.app.appIconImage() : nil, for: .normal)
-            let emptySize = emptyLabel.sizeThatFits(maxSize).ceil
-            let emptySize2 = emptyButton.sizeThatFits(maxSize).ceil
+            let emptySize = emptyLabel.intrinsicContentSize.ceil
+            let emptySize2 = emptyButton.intrinsicContentSize.ceil
             resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
         }
         view.addSubview(resultLabel)
