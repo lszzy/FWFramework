@@ -1308,6 +1308,19 @@ extension Wrapper where Base: UIDevice {
         if !allowsSpacing && distance >= 1 { return [:] }
         return attributedString.attributes(at: index, effectiveRange: nil)
     }
+    
+    /// 快速设置字体并指定行高
+    public func setFont(
+        _ font: UIFont?,
+        lineHeight aLineHeight: CGFloat
+    ) {
+        if let font = font {
+            base.font = font
+            lineHeight = font.fw.lineHeight(expected: aLineHeight)
+        } else {
+            lineHeight = aLineHeight
+        }
+    }
 
     /// 快速设置标签并指定文本
     public func setFont(
