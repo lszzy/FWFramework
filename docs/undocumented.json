@@ -15955,14 +15955,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/UIKit.swift",
-      "line": 1453,
+      "line": 1466,
       "symbol": "Wrapper.touchEventInterval",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/UIKit.swift",
-      "line": 3059,
+      "line": 3092,
       "symbol": "ViewStyle.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
