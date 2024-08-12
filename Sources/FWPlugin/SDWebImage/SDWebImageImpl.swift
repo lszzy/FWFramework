@@ -238,6 +238,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
         if style.indicatorColor == nil {
             result.indicatorColor = (style == .image) ? .gray : .white
         }
+        result.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         return result
     }() {
         didSet {
@@ -249,19 +250,11 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     
     public override init() {
         super.init()
-        
-        didInitialize()
     }
     
     public init(style: IndicatorViewStyle) {
         super.init()
-        
         self.style = style
-        didInitialize()
-    }
-    
-    private func didInitialize() {
-        indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
     }
     
     open func startAnimatingIndicator() {
@@ -291,6 +284,7 @@ extension SDWebImagePluginIndicator: SDWebImageIndicator {}
     
     open lazy var indicatorView: UIView = {
         let result = UIView.fw.progressView(style: style)
+        result.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         return result
     }() {
         didSet {
@@ -304,19 +298,11 @@ extension SDWebImagePluginIndicator: SDWebImageIndicator {}
     
     public override init() {
         super.init()
-        
-        didInitialize()
     }
     
     public init(style: ProgressViewStyle) {
         super.init()
-        
         self.style = style
-        didInitialize()
-    }
-    
-    private func didInitialize() {
-        indicatorView.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
     }
     
     open func startAnimatingIndicator() {
