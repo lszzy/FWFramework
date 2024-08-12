@@ -385,86 +385,91 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if object as? AVPlayer == self.audioPlayer, keyPath == "status" {
-            if audioPlayer.status == .readyToPlay {
-                if observePeriodicTime && periodicTimeToken == nil {
-                    periodicTimeToken = addPeriodicTimeObserver(for: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: .main, using: { [weak self] time in
-                        DispatchQueue.fw.mainAsync { [weak self] in
-                            self?.delegate?.audioPlayerCurrentTimeChanged?(time)
-                        }
-                    })
+        let sendableObject = SendableObject(object)
+        let sendableChange = SendableObject(change)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            guard let self = self else { return }
+            if sendableObject.object as? AVPlayer == self.audioPlayer, keyPath == "status" {
+                if self.audioPlayer.status == .readyToPlay {
+                    if self.observePeriodicTime && self.periodicTimeToken == nil {
+                        self.periodicTimeToken = self.addPeriodicTimeObserver(for: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: .main, using: { [weak self] time in
+                            DispatchQueue.fw.mainAsync { [weak self] in
+                                self?.delegate?.audioPlayerCurrentTimeChanged?(time)
+                            }
+                        })
+                    }
+                    self.delegate?.audioPlayerReadyToPlay?(nil)
+                    if !self.isPlaying {
+                        self.audioPlayer.play()
+                    }
+                } else if self.audioPlayer.status == .failed {
+                    if !self.disableLogs {
+                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", self.audioPlayer.error?.localizedDescription ?? "")
+                    }
+                    
+                    self.delegate?.audioPlayerDidFailed?(nil, error: self.audioPlayer.error)
                 }
-                delegate?.audioPlayerReadyToPlay?(nil)
-                if !isPlaying {
-                    audioPlayer.play()
-                }
-            } else if audioPlayer.status == .failed {
-                if !disableLogs {
-                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
-                }
-                
-                delegate?.audioPlayerDidFailed?(nil, error: audioPlayer.error)
-            }
-        }
-        
-        if object as? AVPlayer == self.audioPlayer, keyPath == "rate" {
-            delegate?.audioPlayerRateChanged?(isPlaying)
-        }
-        
-        if object as? AVPlayer == self.audioPlayer, keyPath == "currentItem" {
-            let newPlayerItem = change?[.newKey] as? AVPlayerItem
-            let lastPlayerItem = change?[.oldKey] as? AVPlayerItem
-            if let lastPlayerItem = lastPlayerItem {
-                unobservePlayerItem(lastPlayerItem)
-                
-                delegate?.audioPlayerCurrentItemEvicted?(lastPlayerItem)
-            }
-            if let newPlayerItem = newPlayerItem {
-                observePlayerItem(newPlayerItem)
-                
-                delegate?.audioPlayerCurrentItemChanged?(newPlayerItem)
-            }
-        }
-        
-        if object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "status" {
-            isPreBuffered = false
-            if item.status == .failed {
-                delegate?.audioPlayerDidFailed?(item, error: item.error)
-            } else if item.status == .readyToPlay {
-                delegate?.audioPlayerReadyToPlay?(item)
-                if !isPlaying && pauseReason != .forced {
-                    audioPlayer.play()
-                }
-            }
-        }
-        
-        if audioPlayer.items().count > 1, object as? AVPlayerItem == audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
-            isPreBuffered = true
-        }
-        
-        if object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
-            if item.hash != prepareingItemHash {
-                prepareNextPlayerItem()
-                prepareingItemHash = item.hash
             }
             
-            let timeRanges = change?[.newKey] as? [NSValue] ?? []
-            if timeRanges.count > 0 {
-                let timeRange = timeRanges[0].timeRangeValue
-                delegate?.audioPlayerCurrentItemPreloaded?(CMTimeAdd(timeRange.start, timeRange.duration))
+            if sendableObject.object as? AVPlayer == self.audioPlayer, keyPath == "rate" {
+                self.delegate?.audioPlayerRateChanged?(self.isPlaying)
+            }
+            
+            if sendableObject.object as? AVPlayer == self.audioPlayer, keyPath == "currentItem" {
+                let newPlayerItem = sendableChange.object?[.newKey] as? AVPlayerItem
+                let lastPlayerItem = sendableChange.object?[.oldKey] as? AVPlayerItem
+                if let lastPlayerItem = lastPlayerItem {
+                    self.unobservePlayerItem(lastPlayerItem)
+                    
+                    self.delegate?.audioPlayerCurrentItemEvicted?(lastPlayerItem)
+                }
+                if let newPlayerItem = newPlayerItem {
+                    self.observePlayerItem(newPlayerItem)
+                    
+                    self.delegate?.audioPlayerCurrentItemChanged?(newPlayerItem)
+                }
+            }
+            
+            if sendableObject.object as? AVPlayerItem == self.audioPlayer.currentItem, let item = self.audioPlayer.currentItem, keyPath == "status" {
+                self.isPreBuffered = false
+                if item.status == .failed {
+                    self.delegate?.audioPlayerDidFailed?(item, error: item.error)
+                } else if item.status == .readyToPlay {
+                    self.delegate?.audioPlayerReadyToPlay?(item)
+                    if !self.isPlaying && self.pauseReason != .forced {
+                        self.audioPlayer.play()
+                    }
+                }
+            }
+            
+            if self.audioPlayer.items().count > 1, sendableObject.object as? AVPlayerItem == self.audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
+                self.isPreBuffered = true
+            }
+            
+            if sendableObject.object as? AVPlayerItem == self.audioPlayer.currentItem, let item = self.audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
+                if item.hash != self.prepareingItemHash {
+                    self.prepareNextPlayerItem()
+                    self.prepareingItemHash = item.hash
+                }
                 
-                if audioPlayer.rate == 0 && pauseReason != .forced {
-                    pauseReason = .buffering
+                let timeRanges = sendableChange.object?[.newKey] as? [NSValue] ?? []
+                if timeRanges.count > 0 {
+                    let timeRange = timeRanges[0].timeRangeValue
+                    self.delegate?.audioPlayerCurrentItemPreloaded?(CMTimeAdd(timeRange.start, timeRange.duration))
                     
-                    let bufferdTime = CMTimeAdd(timeRange.start, timeRange.duration)
-                    let milestone = CMTimeAdd(audioPlayer.currentTime(), CMTimeMakeWithSeconds(5.0, preferredTimescale: timeRange.duration.timescale))
-                    
-                    if bufferdTime > milestone && audioPlayer.currentItem?.status == .readyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying {
-                        if !isPlaying {
-                            if !disableLogs {
-                                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
+                    if self.audioPlayer.rate == 0 && self.pauseReason != .forced {
+                        self.pauseReason = .buffering
+                        
+                        let bufferdTime = CMTimeAdd(timeRange.start, timeRange.duration)
+                        let milestone = CMTimeAdd(self.audioPlayer.currentTime(), CMTimeMakeWithSeconds(5.0, preferredTimescale: timeRange.duration.timescale))
+                        
+                        if bufferdTime > milestone && self.audioPlayer.currentItem?.status == .readyToPlay && !self.interruptedWhilePlaying && !self.routeChangedWhilePlaying {
+                            if !self.isPlaying {
+                                if !self.disableLogs {
+                                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
+                                }
+                                self.play()
                             }
-                            play()
                         }
                     }
                 }
