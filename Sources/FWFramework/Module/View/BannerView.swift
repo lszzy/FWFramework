@@ -745,21 +745,6 @@ open class BannerViewFlowLayout: UICollectionViewFlowLayout {
     private var lastScrollDirection: UICollectionView.ScrollDirection = .horizontal
     private var lastItemSize: CGSize = .zero
     
-    // MARK: - Lifecycle
-    public override init() {
-        super.init()
-        
-        scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
-    }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
-        scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
-    }
-    
     // MARK: - Public
     /// 获取每页宽度，必须设置itemSize
     open var pageWidth: CGFloat {
