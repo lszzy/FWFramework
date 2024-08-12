@@ -1332,16 +1332,21 @@ open class PagingSmoothView: UIView {
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "contentOffset" {
             if let scrollView = object as? UIScrollView {
-                listDidScroll(scrollView: scrollView)
+                DispatchQueue.fw.mainAsync { [weak self] in
+                    self?.listDidScroll(scrollView: scrollView)
+                }
             }
         }else if keyPath == "contentSize" {
             if let scrollView = object as? UIScrollView {
-                let minContentSizeHeight = bounds.size.height - heightForPinHeader
-                if minContentSizeHeight > scrollView.contentSize.height {
-                    scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: minContentSizeHeight)
-                    //新的scrollView第一次加载的时候重置contentOffset
-                    if currentListScrollView != nil, scrollView != currentListScrollView! {
-                        scrollView.contentOffset = CGPoint(x: 0, y: currentListInitializeContentOffsetY)
+                DispatchQueue.fw.mainAsync { [weak self] in
+                    guard let self = self else { return }
+                    let minContentSizeHeight = self.bounds.size.height - self.heightForPinHeader
+                    if minContentSizeHeight > scrollView.contentSize.height {
+                        scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: minContentSizeHeight)
+                        //新的scrollView第一次加载的时候重置contentOffset
+                        if self.currentListScrollView != nil, scrollView != self.currentListScrollView! {
+                            scrollView.contentOffset = CGPoint(x: 0, y: self.currentListInitializeContentOffsetY)
+                        }
                     }
                 }
             }

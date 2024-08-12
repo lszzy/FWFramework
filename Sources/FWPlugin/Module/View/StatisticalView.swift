@@ -1099,7 +1099,7 @@ fileprivate class StatisticalTarget: NSObject {
         }
     }
     
-    @MainActor override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         var valueChanged = false
         if keyPath == "alpha" {
             let oldValue = change?[.oldKey] as? Double
@@ -1119,8 +1119,10 @@ fileprivate class StatisticalTarget: NSObject {
             valueChanged = newValue != oldValue
         }
         
-        if valueChanged {
-            (object as? UIView)?.fw.statisticalCheckExposure()
+        if valueChanged, let view = object as? UIView {
+            DispatchQueue.fw.mainAsync {
+                view.fw.statisticalCheckExposure()
+            }
         }
     }
     
