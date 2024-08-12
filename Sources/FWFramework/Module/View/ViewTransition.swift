@@ -304,14 +304,10 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
     private var _transitionType: AnimatedTransitionType = .none
     
-    /// 创建动画转场
-    public override init() {
+    /// 创建动画转场，可自定义句柄
+    public init(block: ((AnimatedTransition) -> Void)? = nil) {
         super.init()
-    }
-    
-    /// 创建动画句柄转场
-    public convenience init(block: ((AnimatedTransition) -> Void)?) {
-        self.init()
+        self.completionSpeed = 0.35
         self.transitionBlock = block
     }
 
