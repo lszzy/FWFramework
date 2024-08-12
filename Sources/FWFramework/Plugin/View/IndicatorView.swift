@@ -65,14 +65,8 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
         setupLayer()
     }
     
-    public init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
-        
-        setupLayer()
-    }
-    
     public override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: frame.size.equalTo(.zero) ? CGRect(origin: frame.origin, size: CGSize(width: 37, height: 37)) : frame)
         
         setupLayer()
     }

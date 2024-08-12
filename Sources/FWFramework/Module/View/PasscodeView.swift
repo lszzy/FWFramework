@@ -111,6 +111,10 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     open lazy var flowLayout: PasscodeFlowLayout = {
         let result = PasscodeFlowLayout()
+        result.scrollDirection = .horizontal
+        result.minimumLineSpacing = 0
+        result.minimumInteritemSpacing = 0
+        result.sectionInset = .zero
         result.itemNum = codeLength
         result.itemSize = CGSize(width: 42, height: 47)
         return result
@@ -930,25 +934,6 @@ open class PasscodeFlowLayout: UICollectionViewFlowLayout {
     open var itemNum: Int = 1
     
     open var minLineSpacing: CGFloat = 10
-    
-    public override init() {
-        super.init()
-        
-        didInitialize()
-    }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
-        didInitialize()
-    }
-    
-    private func didInitialize() {
-        scrollDirection = .horizontal
-        minimumLineSpacing = 0
-        minimumInteritemSpacing = 0
-        sectionInset = .zero
-    }
     
     open override func prepare() {
         if equalGap {

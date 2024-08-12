@@ -348,29 +348,32 @@ open class PullRefreshView: UIView {
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let scrollView = scrollView else { return }
+        let sendableChange = SendableObject(change)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            guard let self = self, let scrollView = self.scrollView else { return }
 
-        if keyPath == "contentOffset" {
-            guard let contentOffset = change?[.newKey] as? CGPoint else { return }
+            if keyPath == "contentOffset" {
+                guard let contentOffset = sendableChange.object?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw.infiniteScrollView?.isActive ?? false) ||
-                (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
-                if pullingPercent > 0 { pullingPercent = 0 }
-                if state != .idle {
-                    state = .idle
+                if (scrollView.fw.infiniteScrollView?.isActive ?? false) ||
+                    (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
+                    if self.pullingPercent > 0 { self.pullingPercent = 0 }
+                    if self.state != .idle {
+                        self.state = .idle
+                    }
+                } else if self.state != .loading {
+                    self.scrollViewDidScroll(contentOffset)
+                } else {
+                    var currentInset = scrollView.contentInset
+                    currentInset.top = self.originalInset.top + self.bounds.size.height
+                    scrollView.contentInset = currentInset
                 }
-            } else if state != .loading {
-                scrollViewDidScroll(contentOffset)
-            } else {
-                var currentInset = scrollView.contentInset
-                currentInset.top = originalInset.top + bounds.size.height
-                scrollView.contentInset = currentInset
+            } else if keyPath == "contentSize" {
+                self.layoutSubviews()
+                self.frame = CGRect(x: 0, y: -self.height, width: self.bounds.size.width, height: self.height)
+            } else if keyPath == "frame" {
+                self.layoutSubviews()
             }
-        } else if keyPath == "contentSize" {
-            layoutSubviews()
-            frame = CGRect(x: 0, y: -height, width: bounds.size.width, height: height)
-        } else if keyPath == "frame" {
-            layoutSubviews()
         }
     }
 
@@ -832,23 +835,26 @@ open class InfiniteScrollView: UIView {
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let scrollView = scrollView else { return }
+        let sendableChange = SendableObject(change)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            guard let self = self, let scrollView = self.scrollView else { return }
 
-        if keyPath == "contentOffset" {
-            if finished { return }
-            guard let contentOffset = change?[.newKey] as? CGPoint else { return }
+            if keyPath == "contentOffset" {
+                if self.finished { return }
+                guard let contentOffset = sendableChange.object?[.newKey] as? CGPoint else { return }
 
-            if (scrollView.fw.pullRefreshView?.isActive ?? false) ||
-                (contentOffset.y + ceil(scrollView.adjustedContentInset.top) - scrollView.contentInset.top) < 0 {
-                if state != .idle {
-                    state = .idle
+                if (scrollView.fw.pullRefreshView?.isActive ?? false) ||
+                    (contentOffset.y + ceil(scrollView.adjustedContentInset.top) - scrollView.contentInset.top) < 0 {
+                    if self.state != .idle {
+                        self.state = .idle
+                    }
+                } else if self.state != .loading && self.enabled {
+                    self.scrollViewDidScroll(contentOffset)
                 }
-            } else if state != .loading && enabled {
-                scrollViewDidScroll(contentOffset)
+            } else if keyPath == "contentSize" {
+                self.layoutSubviews()
+                self.frame = CGRect(x: 0, y: scrollView.contentSize.height, width: self.bounds.size.width, height: self.height)
             }
-        } else if keyPath == "contentSize" {
-            layoutSubviews()
-            frame = CGRect(x: 0, y: scrollView.contentSize.height, width: bounds.size.width, height: height)
         }
     }
     
