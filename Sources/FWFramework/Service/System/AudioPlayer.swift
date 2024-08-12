@@ -292,7 +292,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
             } else {
                 pause()
                 audioPlayer.currentItem?.seek(to: .zero, completionHandler: { [weak self] _ in
-                    self?.play()
+                    DispatchQueue.fw.mainAsync { [weak self] in
+                        self?.play()
+                    }
                 })
             }
         } else {
@@ -382,7 +384,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
         dataSource = nil
     }
     
-    @MainActor open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if object as? AVPlayer == self.audioPlayer, keyPath == "status" {
             if audioPlayer.status == .readyToPlay {
                 if observePeriodicTime && periodicTimeToken == nil {
@@ -563,7 +565,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
             if let checkIndex = getAudioIndex(item), checkIndex == index {
                 if item.status == .readyToPlay {
                     item.seek(to: .zero) { [weak self] _ in
-                        self?.insertPlayerItem(item, play: play)
+                        DispatchQueue.fw.mainAsync { [weak self] in
+                            self?.insertPlayerItem(item, play: play)
+                        }
                     }
                     return true
                 }

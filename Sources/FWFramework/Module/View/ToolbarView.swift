@@ -893,10 +893,6 @@ open class ToolbarTitleView: UIControl, TitleViewProtocol {
         contentHorizontalAlignment = .center
     }
     
-    open override var description: String {
-        return String(format: "%@, title = %@, subtitle = %@", super.description, title ?? "", subtitle ?? "")
-    }
-    
     open override var contentHorizontalAlignment: UIControl.ContentHorizontalAlignment {
         get {
             super.contentHorizontalAlignment
@@ -1447,14 +1443,9 @@ open class ExpandedTitleView: UIView {
     /// 内部最大适配间距，大于该间距无需处理，iOS16+系统默认16，iOS15-系统默认8，取较大值
     private var maximumFittingSpacing: CGFloat = 16
     
-    /// 初始化，默认导航栏尺寸
-    public required init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight))
-    }
-    
-    /// 指定frame并初始化
+    /// 指定frame并初始化，默认导航栏尺寸
     public override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: frame.size.equalTo(.zero) ? CGRect(origin: frame.origin, size: CGSize(width: UIScreen.fw.screenWidth, height: UIScreen.fw.navigationBarHeight)) : frame)
     }
     
     /// 解码初始化，默认导航栏尺寸
