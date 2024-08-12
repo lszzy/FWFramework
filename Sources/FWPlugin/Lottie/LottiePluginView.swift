@@ -71,13 +71,8 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     }()
     
     // MARK: - Lifecycle
-    public init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
-        setupSubviews()
-    }
-    
     public override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: frame.size.equalTo(.zero) ? CGRect(origin: frame.origin, size: CGSize(width: 37, height: 37)) : frame)
         setupSubviews()
     }
     
