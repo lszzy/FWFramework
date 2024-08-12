@@ -196,7 +196,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         return result
     }()
     
-    @_spi(FW) public var segmentWidth: CGFloat = 0
+    @_spi(FW) nonisolated(unsafe) public var segmentWidth: CGFloat = 0
     @_spi(FW) public var segmentWidthsArray: [CGFloat] = []
     private var titleBackgroundLayers: [CALayer] = []
     private var segmentBackgroundLayers: [CALayer] = []
