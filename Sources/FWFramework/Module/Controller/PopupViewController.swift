@@ -26,8 +26,8 @@ open class PopupConfiguration {
     open var alertAnimation = true
     /// 动画持续时间，必须大于0，默认0.35秒
     open var animationDuration: TimeInterval = 0.35
-    /// 动画完成速度，默认nil不生效
-    open var completionSpeed: CGFloat?
+    /// 动画完成速度，默认0.35
+    open var completionSpeed: CGFloat = 0.35
     /// 是否启用交互pan手势进行pop|dismiss，默认false，仅animationEdge生效
     open var interactEnabled = false
     /// 是否启用screenEdge交互手势进行pop|dismiss，默认false，仅animationEdge为left|right时生效
@@ -154,9 +154,7 @@ internal extension ViewControllerManager {
         }
         
         modalTransition.transitionDuration = popupConfiguration.animationDuration
-        if let completionSpeed = popupConfiguration.completionSpeed {
-            modalTransition.completionSpeed = completionSpeed
-        }
+        modalTransition.completionSpeed = popupConfiguration.completionSpeed
         modalTransition.presentationBlock = { [weak popupController] presented, presenting in
             let presentation = PresentationController(presentedViewController: presented, presenting: presenting)
             presentation.showDimming = popupController?.popupConfiguration.showDimming ?? true
