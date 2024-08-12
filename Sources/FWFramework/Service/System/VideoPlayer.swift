@@ -297,17 +297,12 @@ open class VideoPlayer: UIViewController {
     nonisolated(unsafe) internal var hasAutoplayActivated: Bool = true
 
     // MARK: - lifecycle
-
-    public convenience init() {
-        self.init(nibName: nil, bundle: nil)
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 
     deinit {
@@ -449,7 +444,7 @@ open class VideoPlayer: UIViewController {
     /// - Parameters:
     ///   - time: The time to switch to move the playback.
     ///   - completionHandler: Call block handler after seeking/
-    nonisolated open func seek(to time: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
+    nonisolated open func seek(to time: CMTime, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
         if let playerItem = self.playerItem {
             return playerItem.seek(to: time, completionHandler: completionHandler)
         } else {
@@ -464,7 +459,7 @@ open class VideoPlayer: UIViewController {
     ///   - toleranceBefore: The tolerance allowed before time.
     ///   - toleranceAfter: The tolerance allowed after time.
     ///   - completionHandler: call block handler after seeking
-    open func seekToTime(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: ((Bool) -> Swift.Void)? = nil) {
+    open func seekToTime(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
         if let playerItem = self.playerItem {
             return playerItem.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
@@ -473,7 +468,7 @@ open class VideoPlayer: UIViewController {
     /// Captures a snapshot of the current Player asset.
     ///
     /// - Parameter completionHandler: Returns a UIImage of the requested video frame. (Great for thumbnails!)
-    open func takeSnapshot(completionHandler: ((_ image: UIImage?, _ error: Error?) -> Void)? ) {
+    open func takeSnapshot(completionHandler: (@MainActor @Sendable (_ image: UIImage?, _ error: Error?) -> Void)? ) {
         guard let asset = self.playerItem?.asset else {
             DispatchQueue.main.async {
                 completionHandler?(nil, nil)

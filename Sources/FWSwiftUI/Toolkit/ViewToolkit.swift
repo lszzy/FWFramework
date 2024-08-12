@@ -362,16 +362,16 @@ extension Color {
 extension Divider {
     
     /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
-    public static var defaultSize: CGFloat = 1.0 / UIScreen.main.scale
+    nonisolated(unsafe) public static var defaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
     
     /// 分割线默认颜色，未自定义时为灰色，仅影响Divider和Rectangle的dividerStyle方法
-    public static var defaultColor: Color {
+    nonisolated(unsafe) public static var defaultColor: Color {
         return defaultColorConfiguration?() ??
             Color(red: 222.0 / 255.0, green: 224.0 / 255.0, blue: 226.0 / 255.0)
     }
     
     /// 自定义分割线默认颜色配置句柄，默认nil
-    public static var defaultColorConfiguration: (() -> Color)?
+    nonisolated(unsafe) public static var defaultColorConfiguration: (() -> Color)?
     
     /// 自定义分割线尺寸，使用scale实现，参数nil时为Divider默认配置
     public func dividerStyle(size: CGFloat? = nil, color: Color? = nil) -> some View {
