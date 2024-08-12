@@ -268,7 +268,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 设置动画句柄
     open var transitionBlock: ((AnimatedTransition) -> Void)?
 
-    /// 动画持续时间，必须大于0，默认0.35秒(默认设置completionSpeed为0.35)
+    /// 动画持续时间，必须大于0，默认0.35秒
     open var transitionDuration: TimeInterval = 0.35
 
     /// 获取动画类型，默认根据上下文判断
@@ -307,7 +307,6 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 创建动画转场
     public override init() {
         super.init()
-        self.completionSpeed = 0.35
     }
     
     /// 创建动画句柄转场
@@ -996,10 +995,6 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     public override init(target: Any?, action: Selector?) {
         super.init(target: target, action: action)
         self.delegate = self
-    }
-    
-    public convenience init() {
-        self.init(target: nil, action: nil)
     }
     
     // MARK: - Override
