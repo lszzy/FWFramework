@@ -24,7 +24,7 @@ open class PopupConfiguration {
     open var centerAnimation = false
     /// 中心弹窗时是否执行alert动画，默认true，否则fade动画，仅centerAnimation生效
     open var alertAnimation = true
-    /// 动画持续时间，必须大于0，默认0.35秒
+    /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
     open var animationDuration: TimeInterval = 0.35
     /// 动画完成速度，默认0.35
     open var completionSpeed: CGFloat = 0.35

@@ -268,7 +268,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 设置动画句柄
     open var transitionBlock: ((AnimatedTransition) -> Void)?
 
-    /// 动画持续时间，必须大于0，默认0.35秒
+    /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
     open var transitionDuration: TimeInterval = 0.35
 
     /// 获取动画类型，默认根据上下文判断
