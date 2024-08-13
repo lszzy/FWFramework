@@ -551,7 +551,7 @@ open class BarrageRenderView: UIView {
     }
 }
 
-#if compiler(>=6.0)
+#if swift(>=6.0)
 extension BarrageRenderView: @preconcurrency CAAnimationDelegate {}
 #else
 extension BarrageRenderView: CAAnimationDelegate {}
