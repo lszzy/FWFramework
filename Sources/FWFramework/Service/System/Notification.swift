@@ -158,7 +158,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
 }
 
 // MARK: - Concurrency+Notification
-#if compiler(>=5.6.0) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 extension NotificationManager {
     
     /// 异步查询通知权限状态

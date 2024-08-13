@@ -1341,7 +1341,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     
     // MARK: - WKUIDelegate
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async {
-        await withCheckedContinuation { continuation in
+        await withUnsafeContinuation { continuation in
             if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: { continuation.resume() }) != nil {
                 return
             }
@@ -1353,7 +1353,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     }
     
     func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async -> Bool {
-        await withCheckedContinuation { continuation in
+        await withUnsafeContinuation { continuation in
             if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: { continuation.resume(returning: $0) }) != nil {
                 return
             }
@@ -1367,7 +1367,7 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     }
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo) async -> String? {
-        await withCheckedContinuation { continuation in
+        await withUnsafeContinuation { continuation in
             if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: { continuation.resume(returning: $0) }) != nil {
                 return
             }

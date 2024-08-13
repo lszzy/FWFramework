@@ -340,7 +340,7 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol, @unchecked Sen
 }
 
 // MARK: - Concurrency+Authorize
-#if compiler(>=5.6.0) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 extension AuthorizeProtocol {
     
     /// 异步查询权限状态

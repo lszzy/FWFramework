@@ -346,7 +346,7 @@ extension ImagePlugin {
 }
 
 // MARK: - Concurrency+ImagePlugin
-#if compiler(>=5.6.0) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 extension Wrapper where Base: UIImage {
     /// 异步下载网络图片
     public static func downloadImage(_ url: URLParameter?, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil) async throws -> UIImage {

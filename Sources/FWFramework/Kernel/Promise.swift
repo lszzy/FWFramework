@@ -339,7 +339,7 @@ extension Promise {
 }
 
 // MARK: - Concurrency+Promise
-#if compiler(>=5.6.0) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 extension Promise {
     
     /// 异步获取结果值
