@@ -1562,7 +1562,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
     /// 判断是否是网络取消错误，支持嵌套请求错误
     public static func isCancelledError(_ error: Error?) -> Bool {
         guard let error = error else { return false }
-        #if compiler(>=5.6.0) && canImport(_Concurrency)
+        #if canImport(_Concurrency)
         if error is CancellationError { return true }
         #endif
         if cancelledErrorCodes.contains((error as NSError).code) { return true }
@@ -1607,7 +1607,7 @@ public enum RequestError: Swift.Error, CustomNSError, RequestErrorProtocol {
 }
 
 // MARK: - Concurrency+HTTPRequest
-#if compiler(>=5.6.0) && canImport(_Concurrency)
+#if canImport(_Concurrency)
 extension HTTPRequestProtocol where Self: HTTPRequest {
     
     /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
