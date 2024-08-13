@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:5.8
 
 import PackageDescription
 import CompilerPluginSupport
@@ -41,10 +41,6 @@ let package = Package(
         .library(
             name: "FWPluginBiometry",
             targets: ["FWPluginBiometry"]
-        ),
-        .library(
-            name: "FWPluginMacros",
-            targets: ["FWPluginMacros"]
         ),
         .library(
             name: "FWPluginSDWebImage",
@@ -136,27 +132,6 @@ let package = Package(
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
-            ]
-        ),
-        .macro(
-            name: "FWMacroMacros",
-            dependencies: [
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-            ],
-            path: "Sources/FWPlugin/Macros/FWMacroMacros"
-        ),
-        .target(
-            name: "FWPluginMacros",
-            dependencies: [
-                "FWFramework",
-                "FWMacroMacros",
-            ],
-            path: "Sources/FWPlugin/Macros/FWPluginMacros",
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
-                .define("FWPluginMacros"),
             ]
         ),
         .target(
