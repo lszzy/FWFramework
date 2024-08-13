@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.9.6] - 2024-08-13
+
+### Changed
+* Compatible with Swift5.8 compilation
+
 ## [5.9.5] - 2024-08-06
 
 ### Changed
