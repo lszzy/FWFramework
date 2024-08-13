@@ -1153,106 +1153,92 @@ extension WKWebView {
 // MARK: - WebViewDelegateProxy
 fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
     
-    #if compiler(>=6.0)
-    typealias ActionDecisionHandler = @MainActor @Sendable (WKNavigationActionPolicy) -> Void
-    typealias ResponseDecisionHandler = @MainActor @Sendable (WKNavigationResponsePolicy) -> Void
-    typealias DownloadCompletionHandler = @MainActor @Sendable (URL?) -> Void
-    typealias ChallengeCompletionHandler = @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-    typealias AlertCompletionHandler = @MainActor @Sendable () -> Void
-    typealias ConfirmCompletionHandler = @MainActor @Sendable (Bool) -> Void
-    typealias PromptCompletionHandler = @MainActor @Sendable (String?) -> Void
-    #else
-    typealias ActionDecisionHandler = (WKNavigationActionPolicy) -> Void
-    typealias ResponseDecisionHandler = (WKNavigationResponsePolicy) -> Void
-    typealias DownloadCompletionHandler = (URL?) -> Void
-    typealias ChallengeCompletionHandler = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-    typealias AlertCompletionHandler = () -> Void
-    typealias ConfirmCompletionHandler = (Bool) -> Void
-    typealias PromptCompletionHandler = (String?) -> Void
-    #endif
-    
     // MARK: - WKNavigationDelegate
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping ActionDecisionHandler) {
-        if let webView = webView as? WebView,
-           webView.cookieEnabled,
-           let request = navigationAction.request as? NSMutableURLRequest {
-            WebViewCookieManager.syncRequestCookie(request)
-        }
-        
-        if self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler) != nil {
-            return
-        }
-        
-        if let delegate = self.delegate,
-           !delegate.webViewShouldLoad(navigationAction) {
-            decisionHandler(.cancel)
-            return
-        }
-        
-        if UIApplication.fw.isSystemURL(navigationAction.request.url) {
-            UIApplication.fw.openURL(navigationAction.request.url)
-            decisionHandler(.cancel)
-            return
-        }
-        
-        if #available(iOS 14.5, *) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        await withCheckedContinuation { continuation in
             if let webView = webView as? WebView,
-               let url = navigationAction.request.url,
-               webView.allowsDownloadUrl?(url) == true {
-                decisionHandler(.download)
+               webView.cookieEnabled,
+               let request = navigationAction.request as? NSMutableURLRequest {
+                WebViewCookieManager.syncRequestCookie(request)
+            }
+            
+            if self.delegate?.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: { continuation.resume(returning: $0) }) != nil {
                 return
             }
-        }
-        
-        if let webView = webView as? WebView,
-           !webView.allowsUrlSchemes.isEmpty,
-           UIApplication.fw.isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
-            UIApplication.fw.openURL(navigationAction.request.url)
-            decisionHandler(.cancel)
-            return
-        }
-        
-        if let webView = webView as? WebView,
-           !webView.allowsRouterSchemes.isEmpty,
-           let url = navigationAction.request.url,
-           UIApplication.fw.isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
-            Router.openURL(url)
-            decisionHandler(.cancel)
-            return
-        }
-        
-        if let webView = webView as? WebView,
-           webView.allowsUniversalLinks,
-           navigationAction.request.url?.scheme == "https" {
-            UIApplication.fw.openUniversalLinks(navigationAction.request.url) { success in
-                decisionHandler(success ? .cancel : .allow)
+            
+            if let delegate = self.delegate,
+               !delegate.webViewShouldLoad(navigationAction) {
+                continuation.resume(returning: .cancel)
+                return
             }
-            return
+            
+            if UIApplication.fw.isSystemURL(navigationAction.request.url) {
+                UIApplication.fw.openURL(navigationAction.request.url)
+                continuation.resume(returning: .cancel)
+                return
+            }
+            
+            if #available(iOS 14.5, *) {
+                if let webView = webView as? WebView,
+                   let url = navigationAction.request.url,
+                   webView.allowsDownloadUrl?(url) == true {
+                    continuation.resume(returning: .download)
+                    return
+                }
+            }
+            
+            if let webView = webView as? WebView,
+               !webView.allowsUrlSchemes.isEmpty,
+               UIApplication.fw.isSchemeURL(navigationAction.request.url, schemes: webView.allowsUrlSchemes) {
+                UIApplication.fw.openURL(navigationAction.request.url)
+                continuation.resume(returning: .cancel)
+                return
+            }
+            
+            if let webView = webView as? WebView,
+               !webView.allowsRouterSchemes.isEmpty,
+               let url = navigationAction.request.url,
+               UIApplication.fw.isSchemeURL(url, schemes: webView.allowsRouterSchemes) {
+                Router.openURL(url)
+                continuation.resume(returning: .cancel)
+                return
+            }
+            
+            if let webView = webView as? WebView,
+               webView.allowsUniversalLinks,
+               navigationAction.request.url?.scheme == "https" {
+                UIApplication.fw.openUniversalLinks(navigationAction.request.url) { success in
+                    continuation.resume(returning: success ? .cancel : .allow)
+                }
+                return
+            }
+            
+            continuation.resume(returning: .allow)
         }
-        
-        decisionHandler(.allow)
     }
     
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping ResponseDecisionHandler) {
-        if let webView = webView as? WebView,
-           webView.cookieEnabled {
-            WebViewCookieManager.copyWebViewCookie(webView)
-        }
-        
-        if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler) != nil {
-            return
-        }
-        
-        if #available(iOS 14.5, *) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
+        await withCheckedContinuation { continuation in
             if let webView = webView as? WebView,
-               let url = navigationResponse.response.url,
-               webView.allowsDownloadUrl?(url) == true {
-                decisionHandler(.download)
+               webView.cookieEnabled {
+                WebViewCookieManager.copyWebViewCookie(webView)
+            }
+            
+            if self.delegate?.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: { continuation.resume(returning: $0) }) != nil {
                 return
             }
+            
+            if #available(iOS 14.5, *) {
+                if let webView = webView as? WebView,
+                   let url = navigationResponse.response.url,
+                   webView.allowsDownloadUrl?(url) == true {
+                    continuation.resume(returning: .download)
+                    return
+                }
+            }
+            
+            continuation.resume(returning: .allow)
         }
-        
-        decisionHandler(.allow)
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -1332,59 +1318,67 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
         download.delegate = self
     }
     
-    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping ChallengeCompletionHandler) {
-        if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: completionHandler) != nil {
-            return
-        }
-        
-        if let webView = webView as? WebView, webView.allowsArbitraryLoads,
-           challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if let serverTrust = challenge.protectionSpace.serverTrust {
-                let credential = URLCredential(trust: serverTrust)
-                completionHandler(.useCredential, credential)
-            } else {
-                completionHandler(.useCredential, nil)
+    func webView(_ webView: WKWebView, respondTo challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+        await withCheckedContinuation { continuation in
+            if self.delegate?.webView?(webView, didReceive: challenge, completionHandler: { continuation.resume(returning: ($0, $1)) }) != nil {
+                return
             }
-            return
+            
+            if let webView = webView as? WebView, webView.allowsArbitraryLoads,
+               challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                if let serverTrust = challenge.protectionSpace.serverTrust {
+                    let credential = URLCredential(trust: serverTrust)
+                    continuation.resume(returning: (.useCredential, credential))
+                } else {
+                    continuation.resume(returning: (.useCredential, nil))
+                }
+                return
+            }
+            
+            continuation.resume(returning: (.performDefaultHandling, nil))
         }
-        
-        completionHandler(.performDefaultHandling, nil)
     }
     
     // MARK: - WKUIDelegate
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping AlertCompletionHandler) {
-        if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-            return
-        }
-        
-        webView.fw.showAlert(title: nil, message: message, cancel: nil) {
-            completionHandler()
-        }
-    }
-    
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ConfirmCompletionHandler) {
-        if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-            return
-        }
-        
-        webView.fw.showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
-            completionHandler(true)
-        } cancelBlock: {
-            completionHandler(false)
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async {
+        await withCheckedContinuation { continuation in
+            if self.delegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: { continuation.resume() }) != nil {
+                return
+            }
+            
+            webView.fw.showAlert(title: nil, message: message, cancel: nil) {
+                continuation.resume()
+            }
         }
     }
     
-    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping PromptCompletionHandler) {
-        if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: completionHandler) != nil {
-            return
+    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo) async -> Bool {
+        await withCheckedContinuation { continuation in
+            if self.delegate?.webView?(webView, runJavaScriptConfirmPanelWithMessage: message, initiatedByFrame: frame, completionHandler: { continuation.resume(returning: $0) }) != nil {
+                return
+            }
+            
+            webView.fw.showConfirm(title: nil, message: message, cancel: nil, confirm: nil) {
+                continuation.resume(returning: true)
+            } cancelBlock: {
+                continuation.resume(returning: false)
+            }
         }
-        
-        webView.fw.showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
-            textField.text = defaultText
-        } confirmBlock: { text in
-            completionHandler(text)
-        } cancelBlock: {
-            completionHandler(nil)
+    }
+    
+    func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo) async -> String? {
+        await withCheckedContinuation { continuation in
+            if self.delegate?.webView?(webView, runJavaScriptTextInputPanelWithPrompt: prompt, defaultText: defaultText, initiatedByFrame: frame, completionHandler: { continuation.resume(returning: $0) }) != nil {
+                return
+            }
+            
+            webView.fw.showPrompt(title: nil, message: prompt, cancel: nil, confirm: nil) { textField in
+                textField.text = defaultText
+            } confirmBlock: { text in
+                continuation.resume(returning: text)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
+            }
         }
     }
     
@@ -1415,18 +1409,20 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     
     // MARK: - WKDownloadDelegate
     @available(iOS 14.5, *)
-    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping DownloadCompletionHandler) {
-        let downloadDelegate = self.delegate as? WKDownloadDelegate
-        if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: completionHandler) != nil {
-            return
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String) async -> URL? {
+        await withCheckedContinuation { continuation in
+            let downloadDelegate = self.delegate as? WKDownloadDelegate
+            if downloadDelegate?.download(download, decideDestinationUsing: response, suggestedFilename: suggestedFilename, completionHandler: { continuation.resume(returning: $0) }) != nil {
+                return
+            }
+            
+            let fileExt = (suggestedFilename as NSString).pathExtension
+            var fileName = (suggestedFilename as NSString).deletingPathExtension
+            fileName = (UUID().uuidString + fileName).fw.md5Encode
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
+            download.fw.setProperty(url, forName: "downloadUrl")
+            continuation.resume(returning: url)
         }
-        
-        let fileExt = (suggestedFilename as NSString).pathExtension
-        var fileName = (suggestedFilename as NSString).deletingPathExtension
-        fileName = (UUID().uuidString + fileName).fw.md5Encode
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName).appendingPathExtension(fileExt)
-        download.fw.setProperty(url, forName: "downloadUrl")
-        completionHandler(url)
     }
     
     @available(iOS 14.5, *)
