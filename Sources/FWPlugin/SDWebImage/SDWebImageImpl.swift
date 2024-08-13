@@ -273,7 +273,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     
 }
 
-#if compiler(>=6.0)
+#if swift(>=6.0)
 extension SDWebImagePluginIndicator: @preconcurrency SDWebImageIndicator {}
 #else
 extension SDWebImagePluginIndicator: SDWebImageIndicator {}
@@ -327,7 +327,7 @@ extension SDWebImagePluginIndicator: SDWebImageIndicator {}
     
 }
 
-#if compiler(>=6.0)
+#if swift(>=6.0)
 extension SDWebImageProgressPluginIndicator: @preconcurrency SDWebImageIndicator {}
 #else
 extension SDWebImageProgressPluginIndicator: SDWebImageIndicator {}

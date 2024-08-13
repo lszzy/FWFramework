@@ -365,7 +365,7 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
     
 }
 
-#if compiler(>=6.0)
+#if swift(>=6.0)
 extension PopupMenuAnimationManager: @preconcurrency CAAnimationDelegate {}
 #else
 extension PopupMenuAnimationManager: CAAnimationDelegate {}
