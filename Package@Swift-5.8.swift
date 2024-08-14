@@ -1,7 +1,6 @@
 // swift-tools-version:5.8
 
 import PackageDescription
-import CompilerPluginSupport
 
 let package = Package(
     name: "FWFramework",
@@ -59,7 +58,6 @@ let package = Package(
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
         .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0"),
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
     ],
     targets: [
         .target(
