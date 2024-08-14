@@ -202,17 +202,17 @@ class TestRefreshCell: UITableViewCell {
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.chain
+        myTitleLabel.layoutChain
             .horizontal(15)
             .top(15).collapse()
             .autoCollapse(true)
         
-        myTextLabel.chain
+        myTextLabel.layoutChain
             .hiddenCollapse(true)
             .horizontal(15)
             .top(toViewBottom: myTitleLabel, offset: 10).collapse()
         
-        myImageView.chain
+        myImageView.layoutChain
             .left(15)
             .right(15, relation: .greaterThanOrEqual)
             .bottom(15)

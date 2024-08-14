@@ -72,7 +72,7 @@ class AppTheme: NSObject {
         button.app.disabledAlpha = UIButton.app.disabledAlpha
         button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         
-        button.chain.width(APP.screenWidth - 30).height(50)
+        button.layoutChain.width(APP.screenWidth - 30).height(50)
         return button
     }
     

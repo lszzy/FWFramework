@@ -1312,7 +1312,7 @@ extension UILayoutPriority {
 extension UIView {
     
     /// 链式布局对象
-    public var chain: LayoutChain { fw.layoutChain }
+    public var layoutChain: LayoutChain { fw.layoutChain }
     
 }
 
