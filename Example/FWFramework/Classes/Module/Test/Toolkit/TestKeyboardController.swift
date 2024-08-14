@@ -214,7 +214,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private func renderData() {
         let marginTop = APP.screenHeight - (390 + 15 + APP.topBarHeight + UIScreen.app.safeAreaInsets.bottom)
         let topInset = canScroll ? APP.screenHeight : marginTop
-        mobileField.chain.top(topInset)
+        mobileField.layoutChain.top(topInset)
     }
     
     private func createTextField() -> UITextField {
@@ -225,7 +225,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
         result.clearButtonMode = .whileEditing
         result.app.setBorderView(.bottom, color: AppTheme.borderColor, width: 0.5)
-        result.chain.width(APP.screenWidth - 30).height(50)
+        result.layoutChain.width(APP.screenWidth - 30).height(50)
         return result
     }
     
@@ -236,7 +236,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.tintColor = AppTheme.textColor
         result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
         result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
-        result.chain.width(APP.screenWidth - 30).height(100)
+        result.layoutChain.width(APP.screenWidth - 30).height(100)
         return result
     }
     

@@ -50,7 +50,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupCollectionLayout() {
-        tableView.chain.edges(excludingEdge: .top).top(toSafeArea: .zero)
+        tableView.layoutChain.edges(excludingEdge: .top).top(toSafeArea: .zero)
     }
     
     func setupNavbar() {
@@ -356,16 +356,16 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.chain
+        myTitleLabel.layoutChain
             .horizontal(15)
             .top(15)
         
-        myTextLabel.chain
+        myTextLabel.layoutChain
             .horizontal(15)
             .top(toViewBottom: myTitleLabel, offset: 10).collapse()
             .autoCollapse(true)
         
-        myImageView.chain
+        myImageView.layoutChain
             .left(15)
             .bottom(15)
             .top(toViewBottom: myTextLabel, offset: 10).collapse()

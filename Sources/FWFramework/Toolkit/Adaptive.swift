@@ -671,104 +671,104 @@ extension Wrapper where Base: UIDevice {
 extension CGFloat {
     
     /// 获取相对设计图宽度等比例缩放值
-    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(self) }
+    @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(self) }
+    @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(self) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw.flatValue(self) }
+    public var flatValue: CGFloat { UIScreen.fw.flatValue(self) }
     /// 获取向上取整值
-    public var ceil: CGFloat { Darwin.ceil(self) }
-    
-}
-
-extension CGSize {
-    
-    /// 获取相对设计图宽度等比例缩放size
-    @MainActor public var relative: CGSize { CGSize(width: width.relative, height: height.relative) }
-    /// 获取相对设计图宽度等比例缩放时的固定size
-    @MainActor public var fixed: CGSize { CGSize(width: width.fixed, height: height.fixed) }
-    /// 获取基于当前设备的倍数像素取整size
-    public var flat: CGSize { CGSize(width: width.flat, height: height.flat) }
-    /// 获取向上取整size
-    public var ceil: CGSize { CGSize(width: width.ceil, height: height.ceil) }
-    
-}
-
-extension CGPoint {
-    
-    /// 获取相对设计图宽度等比例缩放point
-    @MainActor public var relative: CGPoint { CGPoint(x: x.relative, y: y.relative) }
-    /// 获取相对设计图宽度等比例缩放时的固定point
-    @MainActor public var fixed: CGPoint { CGPoint(x: x.fixed, y: y.fixed) }
-    /// 获取基于当前设备的倍数像素取整point
-    public var flat: CGPoint { CGPoint(x: x.flat, y: y.flat) }
-    /// 获取向上取整point
-    public var ceil: CGPoint { CGPoint(x: x.ceil, y: y.ceil) }
-    
-}
-
-extension CGRect {
-    
-    /// 获取相对设计图宽度等比例缩放rect
-    @MainActor public var relative: CGRect { CGRect(origin: origin.relative, size: size.relative) }
-    /// 获取相对设计图宽度等比例缩放时的固定rect
-    @MainActor public var fixed: CGRect { CGRect(origin: origin.fixed, size: size.fixed) }
-    /// 获取基于当前设备的倍数像素取整rect
-    public var flat: CGRect { CGRect(origin: origin.flat, size: size.flat) }
-    /// 获取向上取整rect
-    public var ceil: CGRect { CGRect(origin: origin.ceil, size: size.ceil) }
-    
-}
-
-extension UIEdgeInsets {
-    
-    /// 获取相对设计图宽度等比例缩放insets
-    @MainActor public var relative: UIEdgeInsets { UIEdgeInsets(top: top.relative, left: left.relative, bottom: bottom.relative, right: right.relative) }
-    /// 获取相对设计图宽度等比例缩放时的固定insets
-    @MainActor public var fixed: UIEdgeInsets { UIEdgeInsets(top: top.fixed, left: left.fixed, bottom: bottom.fixed, right: right.fixed) }
-    /// 获取基于当前设备的倍数像素取整insets
-    public var flat: UIEdgeInsets { UIEdgeInsets(top: top.flat, left: left.flat, bottom: bottom.flat, right: right.flat) }
-    /// 获取向上取整insets
-    public var ceil: UIEdgeInsets { UIEdgeInsets(top: top.ceil, left: left.ceil, bottom: bottom.ceil, right: right.ceil) }
-    
-}
-
-extension Int {
-    
-    /// 获取相对设计图宽度等比例缩放值
-    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
-    /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
-    /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
-    /// 获取向上取整值
-    public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
-    
-}
-
-extension Float {
-    
-    /// 获取相对设计图宽度等比例缩放值
-    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
-    /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
-    /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
-    /// 获取向上取整值
-    public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
+    public var ceilValue: CGFloat { ceil(self) }
     
 }
 
 extension Double {
     
     /// 获取相对设计图宽度等比例缩放值
-    @MainActor public var relative: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
-    @MainActor public var fixed: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
-    public var flat: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
+    public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
-    public var ceil: CGFloat { Darwin.ceil(CGFloat(self)) }
+    public var ceilValue: CGFloat { ceil(CGFloat(self)) }
+    
+}
+
+extension Float {
+    
+    /// 获取相对设计图宽度等比例缩放值
+    @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    /// 获取基于当前设备的倍数像素取整值
+    public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
+    /// 获取向上取整值
+    public var ceilValue: CGFloat { ceil(CGFloat(self)) }
+    
+}
+
+extension Int {
+    
+    /// 获取相对设计图宽度等比例缩放值
+    @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
+    /// 获取相对设计图宽度等比例缩放时的固定宽度值
+    @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    /// 获取基于当前设备的倍数像素取整值
+    public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
+    /// 获取向上取整值
+    public var ceilValue: CGFloat { ceil(CGFloat(self)) }
+    
+}
+
+extension CGSize {
+    
+    /// 获取相对设计图宽度等比例缩放size
+    @MainActor public var relativeValue: CGSize { CGSize(width: width.relativeValue, height: height.relativeValue) }
+    /// 获取相对设计图宽度等比例缩放时的固定size
+    @MainActor public var fixedValue: CGSize { CGSize(width: width.fixedValue, height: height.fixedValue) }
+    /// 获取基于当前设备的倍数像素取整size
+    public var flatValue: CGSize { CGSize(width: width.flatValue, height: height.flatValue) }
+    /// 获取向上取整size
+    public var ceilValue: CGSize { CGSize(width: width.ceilValue, height: height.ceilValue) }
+    
+}
+
+extension CGPoint {
+    
+    /// 获取相对设计图宽度等比例缩放point
+    @MainActor public var relativeValue: CGPoint { CGPoint(x: x.relativeValue, y: y.relativeValue) }
+    /// 获取相对设计图宽度等比例缩放时的固定point
+    @MainActor public var fixedValue: CGPoint { CGPoint(x: x.fixedValue, y: y.fixedValue) }
+    /// 获取基于当前设备的倍数像素取整point
+    public var flatValue: CGPoint { CGPoint(x: x.flatValue, y: y.flatValue) }
+    /// 获取向上取整point
+    public var ceilValue: CGPoint { CGPoint(x: x.ceilValue, y: y.ceilValue) }
+    
+}
+
+extension CGRect {
+    
+    /// 获取相对设计图宽度等比例缩放rect
+    @MainActor public var relativeValue: CGRect { CGRect(origin: origin.relativeValue, size: size.relativeValue) }
+    /// 获取相对设计图宽度等比例缩放时的固定rect
+    @MainActor public var fixedValue: CGRect { CGRect(origin: origin.fixedValue, size: size.fixedValue) }
+    /// 获取基于当前设备的倍数像素取整rect
+    public var flatValue: CGRect { CGRect(origin: origin.flatValue, size: size.flatValue) }
+    /// 获取向上取整rect
+    public var ceilValue: CGRect { CGRect(origin: origin.ceilValue, size: size.ceilValue) }
+    
+}
+
+extension UIEdgeInsets {
+    
+    /// 获取相对设计图宽度等比例缩放insets
+    @MainActor public var relativeValue: UIEdgeInsets { UIEdgeInsets(top: top.relativeValue, left: left.relativeValue, bottom: bottom.relativeValue, right: right.relativeValue) }
+    /// 获取相对设计图宽度等比例缩放时的固定insets
+    @MainActor public var fixedValue: UIEdgeInsets { UIEdgeInsets(top: top.fixedValue, left: left.fixedValue, bottom: bottom.fixedValue, right: right.fixedValue) }
+    /// 获取基于当前设备的倍数像素取整insets
+    public var flatValue: UIEdgeInsets { UIEdgeInsets(top: top.flatValue, left: left.flatValue, bottom: bottom.flatValue, right: right.flatValue) }
+    /// 获取向上取整insets
+    public var ceilValue: UIEdgeInsets { UIEdgeInsets(top: top.ceilValue, left: left.ceilValue, bottom: bottom.ceilValue, right: right.ceilValue) }
     
 }
 
