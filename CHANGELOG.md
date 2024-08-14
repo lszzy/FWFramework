@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.9.8] - 2024-08-14
+
+### Changed
+* Added Shortcut tool method, the original method is marked as deprecated and will be deleted in the next version, it is recommended to migrate gradually
+
 ## [5.9.7] - 2024-08-14
 
 ### Fixed
