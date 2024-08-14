@@ -351,7 +351,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         button.setTitleColor(AppTheme.textColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
         footerView.addSubview(button)
-        button.chain.center().size(width: 200, height: 100)
+        button.layoutChain.center().size(width: 200, height: 100)
     }
     
     override func viewDidLoad() {

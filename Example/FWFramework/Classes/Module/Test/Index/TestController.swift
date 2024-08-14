@@ -135,7 +135,7 @@ extension TestController: TableViewControllerProtocol {
         // 示例安全区域布局，scrollView关闭contentInset自适应
         app.adjustExtendedLayout(compatible: true)
         tableView.contentInsetAdjustmentBehavior = .never
-        tableView.chain.edges(toSafeArea: .zero)
+        tableView.layoutChain.edges(toSafeArea: .zero)
     }
     
     func setupNavbar() {

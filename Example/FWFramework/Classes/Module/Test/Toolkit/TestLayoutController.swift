@@ -119,7 +119,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         
         let iconsView = UIView()
         view.addSubview(iconsView)
-        iconsView.chain
+        iconsView.layoutChain
             .top(toViewBottom: subview, offset: 20)
             .horizontal(20)
             .height(50)
@@ -130,7 +130,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             iconView.image = UIImage.app.appIconImage()
             iconsView.addSubview(iconView)
         }
-        iconsView.chain
+        iconsView.layoutChain
             .subviews(along: .horizontal, itemLength: APP.fixed(50), leadSpacing: 0, tailSpacing: 0)
             .subviews(along: .horizontal, leftSpacing: 0, rightSpacing: 0)
         UIView.app.autoScaleLayout = false
@@ -217,8 +217,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         
         let resultLabel = UILabel()
-        let emptySize = emptyLabel.intrinsicContentSize.ceil
-        let emptySize2 = emptyButton.intrinsicContentSize.ceil
+        let emptySize = emptyLabel.intrinsicContentSize.ceilValue
+        let emptySize2 = emptyButton.intrinsicContentSize.ceilValue
         resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
         resultLabel.textAlignment = .center
         resultLabel.textColor = AppTheme.textColor
@@ -227,8 +227,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             emptyLabel.text = ["", "UILabel"].randomElement()
             emptyButton.setTitle([true, false].randomElement() == true ? "UILabel" : nil, for: .normal)
             emptyButton.setImage([true, false].randomElement() == true ? UIImage.app.appIconImage() : nil, for: .normal)
-            let emptySize = emptyLabel.intrinsicContentSize.ceil
-            let emptySize2 = emptyButton.intrinsicContentSize.ceil
+            let emptySize = emptyLabel.intrinsicContentSize.ceilValue
+            let emptySize2 = emptyButton.intrinsicContentSize.ceilValue
             resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
         }
         view.addSubview(resultLabel)
