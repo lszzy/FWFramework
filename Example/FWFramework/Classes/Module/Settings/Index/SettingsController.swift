@@ -48,7 +48,7 @@ extension SettingsController: TableViewControllerProtocol {
     func setupTableLayout() {
         // 示例父视图布局，scrollView自适应contentInset
         tableView.contentInsetAdjustmentBehavior = .automatic
-        tableView.chain.edges()
+        tableView.layoutChain.edges()
     }
     
     func renderData() {

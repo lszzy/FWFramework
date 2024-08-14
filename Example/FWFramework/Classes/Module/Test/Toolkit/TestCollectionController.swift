@@ -56,7 +56,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     }
     
     func setupCollectionLayout() {
-        collectionView.chain.edges(excludingEdge: .top).top(toSafeArea: .zero)
+        collectionView.layoutChain.edges(excludingEdge: .top).top(toSafeArea: .zero)
     }
     
     func setupNavbar() {
@@ -431,16 +431,16 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         contentView.addSubview(myTextLabel)
         contentView.addSubview(myImageView)
         
-        myTitleLabel.chain
+        myTitleLabel.layoutChain
             .horizontal(15)
             .top(15)
         
-        myTextLabel.chain
+        myTextLabel.layoutChain
             .horizontal(15)
             .top(toViewBottom: myTitleLabel, offset: 10).collapse()
             .autoCollapse(true)
         
-        myImageView.chain
+        myImageView.layoutChain
             .left(15)
             .bottom(15)
             .top(toViewBottom: myTextLabel, offset: 10).collapse()

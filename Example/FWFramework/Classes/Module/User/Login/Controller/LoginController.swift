@@ -48,13 +48,13 @@ extension LoginController: ViewControllerProtocol {
     }
     
     func setupLayout() {
-        nicknameField.chain
+        nicknameField.layoutChain
             .width(APP.screenWidth - 30)
             .height(50)
             .top(toSafeArea: 20)
             .centerX()
         
-        loginButton.chain
+        loginButton.layoutChain
             .top(toViewBottom: nicknameField, offset: 20)
             .centerX()
     }
