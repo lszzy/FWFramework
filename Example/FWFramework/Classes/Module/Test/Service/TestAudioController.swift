@@ -118,8 +118,8 @@ extension TestAudioController: ViewControllerProtocol {
         audioLabel.app.layoutChain.centerX().attribute(.top, toAttribute: .centerY, ofView: view, offset: 8)
         
         let margin = (APP.screenWidth - 100.0 * 3) / 4.0
-        previousImage.chain.centerY(toView: audioImage).right(toViewLeft: audioImage, offset: -margin).size(CGSize(width: 100, height: 100))
-        nextImage.chain.centerY(toView: audioImage).left(toViewRight: audioImage, offset: margin).size(CGSize(width: 100, height: 100))
+        previousImage.layoutChain.centerY(toView: audioImage).right(toViewLeft: audioImage, offset: -margin).size(CGSize(width: 100, height: 100))
+        nextImage.layoutChain.centerY(toView: audioImage).left(toViewRight: audioImage, offset: margin).size(CGSize(width: 100, height: 100))
         
         audioPlayer.delegate = self
         audioPlayer.dataSource = self

@@ -71,7 +71,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         cartLabel.text = "我是购物车"
         cartLabel.textAlignment = .center
         result.addSubview(cartLabel)
-        cartLabel.chain.edges()
+        cartLabel.layoutChain.edges()
         return result
     }()
     
@@ -135,10 +135,10 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     
     func setupSubviews() {
         view.addSubview(self.pagerView)
-        pagerView.chain.edges()
+        pagerView.layoutChain.edges()
         
         view.addSubview(cartView)
-        cartView.chain.edges(excludingEdge: .top).height(TestPagingController.cartViewHeight)
+        cartView.layoutChain.edges(excludingEdge: .top).height(TestPagingController.cartViewHeight)
     }
     
     func tableHeaderViewHeight(in pagingView: PagingView) -> Int {
@@ -248,7 +248,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     var scrollCallback: ((UIScrollView) -> Void)?
     
     func setupTableLayout() {
-        tableView.chain.edges(UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
+        tableView.layoutChain.edges(UIEdgeInsets(top: 0, left: self.cart ? TestPagingController.categoryViewWidth : 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0))
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -262,8 +262,8 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     
     func setupCollectionLayout() {
         collectionView.backgroundColor = AppTheme.backgroundColor
-        collectionView.chain.edges(UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
-        collectionView.chain.width(self.cart ? TestPagingController.categoryViewWidth : 0)
+        collectionView.layoutChain.edges(UIEdgeInsets(top: 0, left: 0, bottom: self.cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
+        collectionView.layoutChain.width(self.cart ? TestPagingController.categoryViewWidth : 0)
     }
     
     func setupSubviews() {
