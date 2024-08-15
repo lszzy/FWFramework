@@ -307,10 +307,14 @@ extension Wrapper where Base: UIDevice {
         return CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
     }
     
-    /// 获取设备模型，格式："iPhone6,1"
-    public static var deviceModel: String? {
+    /// 获取设备模型，格式："iPhone15,1"
+    public static var deviceModel: String {
+        if let deviceModel = UIDevice.innerDeviceModel {
+            return deviceModel
+        }
+        
         #if targetEnvironment(simulator)
-        return String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
+        let deviceModel = String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
         #else
         var systemInfo = utsname()
         uname(&systemInfo)
@@ -319,8 +323,9 @@ extension Wrapper where Base: UIDevice {
             guard let value = element.value as? Int8, value != 0 else { return identifier }
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
-        return deviceModel
         #endif
+        UIDevice.innerDeviceModel = deviceModel
+        return deviceModel
     }
 }
 
@@ -777,6 +782,7 @@ extension UIDevice {
     
     nonisolated(unsafe) fileprivate static var innerIsIphone: Bool?
     nonisolated(unsafe) fileprivate static var innerIsIpad: Bool?
+    nonisolated(unsafe) fileprivate static var innerDeviceModel: String?
     nonisolated(unsafe) internal static var innerDeviceIDFV: String?
     
 }

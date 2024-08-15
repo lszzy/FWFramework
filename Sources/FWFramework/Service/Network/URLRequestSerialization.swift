@@ -52,7 +52,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         }
         setValue(acceptLanguagesComponents.joined(separator: ", "), forHTTPHeaderField: "Accept-Language")
         
-        let userAgent = String(format: "%@/%@ (%@; build:%@; iOS %@) FWFramework/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIApplication.fw.appBuildVersion, UIDevice.fw.iosVersionString, WrapperGlobal.version)
+        let userAgent = String(format: "%@/%@ (%@; %@; iOS %@) FWFramework/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIDevice.fw.deviceModel, UIDevice.fw.iosVersionString, WrapperGlobal.version)
         setValue(userAgent, forHTTPHeaderField: "User-Agent")
     }
     
