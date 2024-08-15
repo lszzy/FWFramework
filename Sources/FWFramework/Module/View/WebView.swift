@@ -44,9 +44,9 @@ import JavaScriptCore
         return userAgent
     }
 
-    /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (site.wuyong.Example; build:1.0.0.1; iOS 14.2) FWFramework/6.0.0
+    /// 获取默认请求UserAgent，可用于网络请求，示例：Example/1.0.0 (site.wuyong.Example; iPhone15,1; iOS 14.2) FWFramework/6.0.0
     nonisolated public static var requestUserAgent: String {
-        let userAgent = String(format: "%@/%@ (%@; build:%@; iOS %@) FWFramework/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIApplication.fw.appBuildVersion, UIDevice.fw.iosVersionString, WrapperGlobal.version)
+        let userAgent = String(format: "%@/%@ (%@; %@; iOS %@) FWFramework/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIDevice.fw.deviceModel, UIDevice.fw.iosVersionString, WrapperGlobal.version)
         return userAgent
     }
     
