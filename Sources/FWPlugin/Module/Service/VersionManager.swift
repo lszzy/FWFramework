@@ -64,7 +64,7 @@ public class VersionManager: @unchecked Sendable {
     // MARK: - Public
     /// 检查应用版本号并进行比较，检查成功时回调。interval为频率(天)，0立即检查，1一天一次，7一周一次
     @discardableResult
-    public func checkVersion(_ interval: Int, completion: (@Sendable () -> Void)?) -> Bool {
+    public func checkVersion(_ interval: Int, completion: (@MainActor @Sendable () -> Void)?) -> Bool {
         if interval > 0 {
             if let checkDate = checkDate {
                 // 根据当天0点时间和缓存0点时间计算间隔天数，大于等于interval需要请求。效果为每隔N天第一次运行时检查更新
@@ -140,7 +140,7 @@ public class VersionManager: @unchecked Sendable {
     }
     
     // MARK: - Private
-    private func requestVersion(_ completion: (@Sendable () -> Void)?) {
+    private func requestVersion(_ completion: (@MainActor @Sendable () -> Void)?) {
         var requestUrl = "https://itunes.apple.com/lookup"
         if let appId = appId {
             requestUrl.append("?id=\(appId)")
@@ -160,7 +160,7 @@ public class VersionManager: @unchecked Sendable {
         task.resume()
     }
     
-    private func parseResponse(_ data: Data, completion: (@Sendable () -> Void)?) {
+    private func parseResponse(_ data: Data, completion: (@MainActor @Sendable () -> Void)?) {
         // 解析数据错误
         guard let dataDict = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any] else { return }
         guard let results = dataDict["results"] as? [[String: Any]] else { return }
@@ -196,7 +196,7 @@ public class VersionManager: @unchecked Sendable {
         checkCallback(completion)
     }
     
-    private func checkCallback(_ completion: (@Sendable () -> Void)?) {
+    private func checkCallback(_ completion: (@MainActor @Sendable () -> Void)?) {
         DispatchQueue.main.async {
             if let latestVersion = self.latestVersion {
                 let result = self.currentVersion.compare(latestVersion, options: .numeric)
