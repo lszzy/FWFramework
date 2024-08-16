@@ -28,11 +28,11 @@ extension Text {
         self = items().reduce(Text(""), +)
     }
     
-    /// 拼接行内文本
+    /// 拼接行内多文本
     public func concatenate(
-        @ViewBuilder _ builder: () -> Text
+        @ArrayResultBuilder<Text> _ items: () -> [Text]
     ) -> Self {
-        self + builder()
+        items().reduce(self, +)
     }
     
 }
