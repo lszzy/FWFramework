@@ -128,6 +128,8 @@ struct TestSwiftUIContent: View {
     @State var topSize: CGSize = .zero
     @State var contentOffset: CGPoint = .zero
     @State var shouldRefresh: Bool = false
+    @State var attributedColor = UIColor.app.randomColor
+    @State var attributedChanged: Bool = false
     
     @State var moreItems: [String] = []
     
@@ -177,6 +179,46 @@ struct TestSwiftUIContent: View {
                         .hostingViewInitialize { hostingView in
                             hostingView.backgroundColor = UIColor.app.randomColor
                         }
+                        
+                        AttributedText(NSMutableAttributedString({
+                            "我是富文本，"
+                            
+                            NSAttributedString(string: "我可以变色，", attributes: [
+                                .foregroundColor: attributedColor,
+                                .init("URL"): 1,
+                            ])
+                            
+                            if attributedChanged {
+                                "我是动态内容，"
+                            }
+                            
+                            NSAttributedString(string: "我可以点击，", attributes: [
+                                .foregroundColor: UIColor.blue,
+                                .init("URL"): 2,
+                            ])
+                            
+                            "我可以跳转"
+                            
+                            NSAttributedString(string: "https://www.baidu.com", attributes: [
+                                .foregroundColor: UIColor.blue,
+                                .link: APP.safeURL("https://www.baidu.com"),
+                            ])
+                        })) { link in
+                            if let url = link as? URL {
+                                Router.openURL(url)
+                            } else if let value = link as? Int {
+                                if value == 1 {
+                                    attributedColor = UIColor.app.randomColor
+                                } else if value == 2 {
+                                    attributedChanged.toggle()
+                                }
+                            }
+                        }
+                        .font(APP.font(16))
+                        .foregroundColor(Color.black)
+                        .lineHeight(24)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
                     }
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
