@@ -412,15 +412,67 @@ public struct OpacityButtonStyle: ButtonStyle {
 extension View {
     
     /// 设置按钮高亮和禁用时的透明度，nil时使用默认
-    public func opacityButtonStyle(disabled: Bool = false, highlightedAlpha: CGFloat? = nil, disabledAlpha: CGFloat? = nil) -> some View {
+    public func opacityButtonStyle(
+        disabled: Bool = false,
+        highlightedAlpha: CGFloat? = nil,
+        disabledAlpha: CGFloat? = nil
+    ) -> some View {
         self.buttonStyle(OpacityButtonStyle(disabled: disabled, highlightedAlpha: highlightedAlpha, disabledAlpha: disabledAlpha))
             .disabled(disabled)
     }
     
     /// 包装到Button并指定点击事件
-    public func wrappedButton(action: @escaping () -> Void) -> some View {
+    public func wrappedButton(
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             self
+        }
+    }
+    
+    /// 包装到VStack
+    public func wrappedVStack(
+        alignment: HorizontalAlignment = .center,
+        spacing: CGFloat? = nil
+    ) -> some View {
+        VStack(alignment: alignment, spacing: spacing) {
+            self
+        }
+    }
+    
+    /// 包装到VStack并指定内容(如Spacer)
+    public func wrappedVStack<Content: View>(
+        alignment: HorizontalAlignment = .center,
+        spacing: CGFloat? = nil,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        VStack(alignment: alignment, spacing: spacing) {
+            self
+            
+            content()
+        }
+    }
+    
+    /// 包装到HStack
+    public func wrappedHStack(
+        alignment: VerticalAlignment = .center,
+        spacing: CGFloat? = nil
+    ) -> some View {
+        HStack(alignment: alignment, spacing: spacing) {
+            self
+        }
+    }
+    
+    /// 包装到HStack并指定内容(如Spacer)
+    public func wrappedHStack<Content: View>(
+        alignment: VerticalAlignment = .center,
+        spacing: CGFloat? = nil,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        HStack(alignment: alignment, spacing: spacing) {
+            self
+            
+            content()
         }
     }
     

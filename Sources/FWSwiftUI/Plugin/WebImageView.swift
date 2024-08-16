@@ -56,9 +56,9 @@ public struct WebImageView: View {
         }
     }
     
-    public func placeholder<Content: View>(@ViewBuilder _ builder: () -> Content) -> Self {
+    public func placeholder<Content: View>(@ViewBuilder content: () -> Content) -> Self {
         var result = self
-        result.placeholder = AnyView(builder())
+        result.placeholder = AnyView(content())
         return result
     }
     
