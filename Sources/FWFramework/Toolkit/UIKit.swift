@@ -1526,6 +1526,15 @@ extension Wrapper where Base: UIButton {
             }
         }
     }
+    
+    /// 快速切换按钮是否可用
+    public func toggleEnabled(_ enabled: Bool? = nil) {
+        if let enabled = enabled {
+            base.isEnabled = enabled
+        } else {
+            base.isEnabled = !base.isEnabled
+        }
+    }
 
     /// 自定义按钮高亮状态改变时的句柄，默认nil
     public var highlightedChanged: ((UIButton, Bool) -> Void)? {

@@ -108,3 +108,60 @@ extension NSMutableAttributedString {
     }
     
 }
+
+// MARK: - UIView+ResultBuilder
+/// UIView兼容ArrayResultBuilder
+public protocol ViewResultBuilderCompatible {
+    @_spi(FW) var resultBuilderView: UIView? { get }
+}
+
+extension UIView: ViewResultBuilderCompatible {
+    @_spi(FW) public var resultBuilderView: UIView? { self }
+}
+extension LayoutChain: ViewResultBuilderCompatible {
+    @_spi(FW) public var resultBuilderView: UIView? { view }
+}
+
+extension ViewResultBuilderCompatible where Self: UIView {
+    
+    /// 初始化并批量配置子视图
+    public init(
+        frame: CGRect = .zero,
+        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+    ) {
+        self.init(frame: frame)
+        arrangeSubviews(items)
+    }
+    
+    /// 配置当前视图，用于兼容ArrayResultBuilder
+    @discardableResult
+    public func arrangeSetup(
+        _ closure: (Self) -> Void
+    ) -> Self {
+        closure(self)
+        return self
+    }
+    
+    /// 批量配置子视图
+    @discardableResult
+    public func arrangeSubviews(
+        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+    ) -> Self {
+        items().forEach { item in
+            if let view = item.resultBuilderView, view.superview == nil {
+                addSubview(view)
+            }
+        }
+        return self
+    }
+    
+    /// 批量布局子视图
+    @discardableResult
+    public func arrangeLayout(
+        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+    ) -> Self {
+        _ = items()
+        return self
+    }
+    
+}
