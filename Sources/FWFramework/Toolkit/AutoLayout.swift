@@ -1332,6 +1332,13 @@ extension UIView {
     /// 链式布局对象
     public var layoutChain: LayoutChain { fw.layoutChain }
     
+    /// 链式布局闭包
+    @discardableResult
+    public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) -> Self {
+        fw.layoutMaker(closure)
+        return self
+    }
+    
 }
 
 // MARK: - UIView+AutoLayout
