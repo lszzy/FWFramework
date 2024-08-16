@@ -125,44 +125,47 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .top(toViewBottom: gifImageView, offset: 10)
             .size(activitySize)
         
-        let textLabel = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
+        let textLabel = UILabel.app.label(font: UIFont.app.font(ofSize: 14), textColor: AppTheme.textColor)
         textLabel.numberOfLines = 0
         textLabel.textAlignment = .center
         view.addSubview(textLabel)
         textLabel.app.layoutChain.centerX()
             .top(toViewBottom: activityView, offset: 10)
         
-        let attrStr = NSMutableAttributedString()
-        var attrFont = APP.font(16, .light)
-        attrStr.append(NSAttributedString.app.attributedString("细体16 ", font: attrFont))
-        attrFont = APP.font(16, .regular)
-        attrStr.append(NSAttributedString(string: "常规16 ", attributes: [
-            .font: attrFont,
-            .foregroundColor: AppTheme.buttonColor,
-            .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-        ]))
-        attrFont = APP.font(16, .bold)
-        attrStr.append(NSAttributedString.app.attributedString("粗体16 ", font: attrFont))
-        attrFont = UIFont.italicSystemFont(ofSize: 16)
-        attrStr.append(NSAttributedString.app.attributedString("斜体16 ", font: attrFont))
-        attrFont = UIFont.italicSystemFont(ofSize: 16).app.boldFont
-        attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: attrFont))
+        let attrStr = NSMutableAttributedString {
+            "常规14 "
+            
+            NSAttributedString.app.attributedString("细体16 ", font: APP.font(16, .light))
+            
+            NSAttributedString(string: "常规16 ", attributes: [
+                .font: APP.font(16, .regular),
+                .foregroundColor: AppTheme.buttonColor,
+                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+            ])
+            
+            NSAttributedString.app.attributedString("粗体16 ", font: APP.font(16, .bold))
+            
+            NSAttributedString.app.attributedString("斜体16 ", font: UIFont.italicSystemFont(ofSize: 16))
+        }
+        attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: UIFont.italicSystemFont(ofSize: 16).app.boldFont))
         
-        attrFont = UIFont.app.font(ofSize: 16, weight: .light)
-        attrStr.append(NSAttributedString.app.attributedString("\n细体16 ", font: attrFont))
-        attrFont = UIFont.app.font(ofSize: 16, weight: .regular)
-        attrStr.append(NSAttributedString(string: "常规16 ", attributes: [
-            .font: attrFont,
-            .foregroundColor: AppTheme.buttonColor,
-            .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
-            .strikethroughColor: AppTheme.textColor,
-        ]))
-        attrFont = UIFont.app.font(ofSize: 16, weight: .bold)
-        attrStr.append(NSAttributedString.app.attributedString("粗体16 ", font: attrFont))
-        attrFont = UIFont.app.font(ofSize: 16).app.italicFont
-        attrStr.append(NSAttributedString.app.attributedString("斜体16 ", font: attrFont))
-        attrFont = UIFont.app.font(ofSize: 16, weight: .bold).app.italicFont.app.nonBoldFont.app.boldFont.app.nonItalicFont.app.italicFont
-        attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: attrFont))
+        attrStr.concatenate {
+            "\n常规14 "
+            
+            NSAttributedString.app.attributedString("细体16 ", font: UIFont.app.font(ofSize: 16, weight: .light))
+            
+            NSAttributedString(string: "常规16 ", attributes: [
+                .font: UIFont.app.font(ofSize: 16, weight: .regular),
+                .foregroundColor: AppTheme.buttonColor,
+                .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
+                .strikethroughColor: AppTheme.textColor,
+            ])
+            
+            NSAttributedString.app.attributedString("粗体16 ", font: UIFont.app.font(ofSize: 16, weight: .bold))
+            
+            NSAttributedString.app.attributedString("斜体16 ", font: UIFont.app.font(ofSize: 16).app.italicFont)
+        }
+        attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: UIFont.app.font(ofSize: 16, weight: .bold).app.italicFont.app.nonBoldFont.app.boldFont.app.nonItalicFont.app.italicFont))
         textLabel.attributedText = attrStr
         
         let label = AttributedLabel()

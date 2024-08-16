@@ -121,12 +121,12 @@ extension View {
     public func hoverContentOffset<Content: View>(
         alignment: Alignment = .top,
         visible: Bool = true,
-        @ViewBuilder builder: @escaping () -> Content
+        @ViewBuilder content: () -> Content
     ) -> some View {
         ZStack(alignment: alignment) {
             self
             
-            builder()
+            content()
                 .hidden(!visible)
         }
     }
