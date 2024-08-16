@@ -16,14 +16,14 @@ extension Text {
     
     /// 拼接行内多文本
     public static func concatenate(
-        @ArrayBuilder<Text> _ items: () -> [Text]
+        @ArrayResultBuilder<Text> _ items: () -> [Text]
     ) -> Self {
         items().reduce(Text(""), +)
     }
     
     /// 初始化并拼接行内多文本
     public init(
-        @ArrayBuilder<Text> _ items: () -> [Text]
+        @ArrayResultBuilder<Text> _ items: () -> [Text]
     ) {
         self = items().reduce(Text(""), +)
     }
