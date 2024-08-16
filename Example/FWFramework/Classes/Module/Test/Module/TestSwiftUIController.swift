@@ -216,7 +216,6 @@ struct TestSwiftUIContent: View {
                         }
                         .font(APP.font(16))
                         .foregroundColor(Color.black)
-                        .lineHeight(24)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 16)
                     }
