@@ -10,9 +10,9 @@ import FWFramework
 
 class TestLayoutController: UIViewController, ViewControllerProtocol {
     
-    var buttonWidth: CGFloat = 0
+    private var buttonWidth: CGFloat = 0
     
-    lazy var attributedLabel: AttributedLabel = {
+    private lazy var attributedLabel: AttributedLabel = {
         let result = AttributedLabel()
         result.clipsToBounds = true
         result.numberOfLines = 3
@@ -43,9 +43,23 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         return result
     }()
     
-    lazy var debugView: UIView = {
+    private lazy var debugView: UIView = {
         let result = UIView()
-        result.backgroundColor = AppTheme.textColor
+        return result
+    }()
+    
+    private lazy var debugLabel: UILabel = {
+        let result = UILabel()
+        return result
+    }()
+    
+    private lazy var debugButton: UIButton = {
+        let result = UIButton(type: .custom)
+        return result
+    }()
+    
+    private lazy var debugImage: UIImageView = {
+        let result = UIImageView()
         return result
     }()
     
@@ -63,64 +77,78 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     }
     
     func setupSubviews() {
-        let subview = debugView
-        view.addSubview(subview)
-        subview.app.addTapGesture { _ in
-            subview.app.isCollapsed = !subview.app.isCollapsed
+        view.arrangeSubviews {
+            debugView
+                .arrangeSetup({ result in
+                    result.backgroundColor = AppTheme.textColor
+                    result.app.addTapGesture { _ in
+                        result.app.toggleCollapsed()
+                    }
+                    view.addSubview(result)
+                })
+                .layoutMaker { make in
+                    make.top(toSafeArea: 20).identifier("debugView.top")
+                        .left(20).collapse().identifier("debugView.left")
+                        .size(CGSize(width: 100, height: 100)).identifier("debugView.size")
+                        .width(50).collapse().identifier("debugView.width")
+                        .height(50)
+                }
+            
+            debugLabel
+                .arrangeSetup { label in
+                    label.text = "text"
+                    label.textAlignment = .center
+                    label.textColor = AppTheme.textColor
+                    label.backgroundColor = AppTheme.backgroundColor
+                    label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+                    label.app.setCornerRadius(5)
+                    label.isUserInteractionEnabled = true
+                    label.app.addTapGesture { [weak self] _ in
+                        self?.debugView.app.toggleCollapsed()
+                    }
+                    view.addSubview(label)
+                }
+                .layoutChain
+                    .width(50)
+                    .centerY(toView: debugView)
+                    .left(toViewRight: debugView, offset: 20)
+            
+            debugButton
+                .arrangeSetup { button in
+                    button.setTitleColor(AppTheme.textColor, for: .normal)
+                    button.setTitle("btn", for: .normal)
+                    view.addSubview(button)
+                }
+            
+            debugImage
+                .arrangeSetup { image in
+                    image.image = UIImage.app.appIconImage()
+                    image.isUserInteractionEnabled = true
+                    image.app.addTapGesture { _ in
+                        image.app.isCollapsed = !image.app.isCollapsed
+                    }
+                }
         }
-        subview.app.layoutChain.remake()
-            .top(toSafeArea: 20).identifier("debugView.top")
-            .left(20).collapse().identifier("debugView.left")
-            .size(CGSize(width: 100, height: 100)).identifier("debugView.size")
-            .width(50).collapse().identifier("debugView.width")
-            .height(50)
-        
-        let label = UILabel()
-        label.text = "text"
-        label.textAlignment = .center
-        label.textColor = AppTheme.textColor
-        label.backgroundColor = AppTheme.backgroundColor
-        label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        label.app.setCornerRadius(5)
-        label.isUserInteractionEnabled = true
-        label.app.addTapGesture { _ in
-            subview.app.isCollapsed = !subview.app.isCollapsed
+        .arrangeLayout {
+            debugButton.layoutMaker { make in
+                make.width(50)
+                    .height(toView: debugView)
+                    .left(toViewRight: debugLabel, offset: 20)
+                    .top(toView: debugView, offset: 0)
+            }
+            
+            debugImage.layoutChain
+                .width(50)
+                .height(toWidth: 1.0)
+                .centerY(toView: debugView)
+                .right(20).collapseActive(false)
+                .attribute(.left, toAttribute: .right, ofView: debugButton, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         }
-        view.addSubview(label)
-        label.app.layoutMaker { make in
-            make.width(50)
-                .centerY(toView: subview)
-                .left(toViewRight: subview, offset: 20)
-        }
-        
-        let button = UIButton(type: .custom)
-        button.setTitleColor(AppTheme.textColor, for: .normal)
-        button.setTitle("btn", for: .normal)
-        view.addSubview(button)
-        button.app.layoutChain
-            .width(50)
-            .height(toView: subview)
-            .left(toViewRight: label, offset: 20)
-            .top(toView: subview, offset: 0)
-        
-        let image = UIImageView()
-        image.image = UIImage.app.appIconImage()
-        image.isUserInteractionEnabled = true
-        image.app.addTapGesture { _ in
-            image.app.isCollapsed = !image.app.isCollapsed
-        }
-        view.addSubview(image)
-        image.app.layoutChain
-            .width(50)
-            .height(toWidth: 1.0)
-            .centerY(toView: subview)
-            .right(20).collapseActive(false)
-            .attribute(.left, toAttribute: .right, ofView: button, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         
         let iconsView = UIView()
         view.addSubview(iconsView)
         iconsView.layoutChain
-            .top(toViewBottom: subview, offset: 20)
+            .top(toViewBottom: debugView, offset: 20)
             .horizontal(20)
             .height(50)
         
