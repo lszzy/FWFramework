@@ -111,7 +111,7 @@ extension NSMutableAttributedString {
 
 // MARK: - UIView+ResultBuilder
 /// UIView兼容ArrayResultBuilder
-public protocol ViewResultBuilderCompatible {
+@MainActor public protocol ViewResultBuilderCompatible {
     @_spi(FW) var resultBuilderView: UIView? { get }
 }
 
