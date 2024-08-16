@@ -147,6 +147,24 @@ import UIKit
         set { setPropertyBool(newValue, forName: "hiddenCollapse") }
     }
     
+    /// 快速切换视图是否收缩
+    public func toggleCollapsed(_ collapsed: Bool? = nil) {
+        if let collapsed = collapsed {
+            isCollapsed = collapsed
+        } else {
+            isCollapsed = !isCollapsed
+        }
+    }
+    
+    /// 快速切换视图是否隐藏
+    public func toggleHidden(_ hidden: Bool? = nil) {
+        if let hidden = hidden {
+            base.isHidden = hidden
+        } else {
+            base.isHidden = !base.isHidden
+        }
+    }
+    
     /// 添加视图的偏移收缩约束，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
