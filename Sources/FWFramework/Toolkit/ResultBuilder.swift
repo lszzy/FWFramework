@@ -1,5 +1,5 @@
 //
-//  ArrayBuilder.swift
+//  ResultBuilder.swift
 //  FWFramework
 //
 //  Created by wuyong on 2024/8/26.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-// MARK: - ArrayBuilder
-/// 常用ArrayBuilder
+// MARK: - ArrayResultBuilder
+/// 常用ArrayResultBuilder
 ///
 /// [SwiftUIX](https://github.com/swiftuix/SwiftUIX)
 @resultBuilder
-public struct ArrayBuilder<Element> {
+public struct ArrayResultBuilder<Element> {
     @_optimize(speed) @_transparent
     public static func buildBlock() -> [Element] {
         return []
@@ -72,4 +72,39 @@ public struct ArrayBuilder<Element> {
     public static func buildArray(_ contents: [[Element]]) -> [Element] {
         contents.flatMap({ $0 })
     }
+}
+
+// MARK: - NSMutableAttributedString+ResultBuilder
+extension NSMutableAttributedString {
+    
+    /// 拼接NSAttributedString
+    public static func concatenate(
+        @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
+    ) -> Self {
+        let result = Self.init()
+        items().forEach { item in
+            result.append(item.attributedStringValue)
+        }
+        return result
+    }
+    
+    /// 初始化并拼接NSAttributedString
+    public convenience init(
+        @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
+    ) {
+        self.init()
+        concatenate(items)
+    }
+    
+    /// 拼接NSAttributedString
+    @discardableResult
+    public func concatenate(
+        @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
+    ) -> Self {
+        items().forEach { item in
+            append(item.attributedStringValue)
+        }
+        return self
+    }
+    
 }
