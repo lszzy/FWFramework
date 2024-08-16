@@ -1279,18 +1279,21 @@ extension Wrapper where Base: UILabel {
         }
     }
     
-    /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
+    /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击
     public func attributes(
         gesture: UIGestureRecognizer,
         allowsSpacing: Bool
     ) -> [NSAttributedString.Key: Any] {
-        guard let attributedString = base.attributedText else { return [:] }
+        guard let attributedString = base.attributedText?.mutableCopy() as? NSMutableAttributedString else { return [:] }
         let textContainer = NSTextContainer(size: base.bounds.size)
         textContainer.lineFragmentPadding = 0
         textContainer.maximumNumberOfLines = base.numberOfLines
         textContainer.lineBreakMode = base.lineBreakMode
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
+        
+        attributedString.fw.addAttributeIfNotExist(.font, value: base.font as Any)
+        attributedString.fw.setParagraphStyleValue(NSNumber(value: base.textAlignment.rawValue), forKey: "alignment")
         let textStorage = NSTextStorage(attributedString: attributedString)
         textStorage.addLayoutManager(layoutManager)
         

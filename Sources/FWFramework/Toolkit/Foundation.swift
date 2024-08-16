@@ -1098,6 +1098,78 @@ extension Wrapper where Base: NSAttributedString {
     }
 }
 
+// MARK: - Wrapper+NSMutableAttributedString
+extension Wrapper where Base: NSMutableAttributedString {
+    
+    /// 当指定属性不存在时添加对应值，默认整个range
+    public func addAttributeIfNotExist(_ name: NSAttributedString.Key, value: Any, range: NSRange? = nil) {
+        let fullRange = NSMakeRange(0, (base.string as NSString).length)
+        let range = range ?? fullRange
+        var ranges: [NSRange] = []
+        base.enumerateAttribute(name, in: range) { aValue, aRange, stop in
+            if aValue != nil {
+                ranges.append(aRange)
+            }
+        }
+        
+        let complementaryRanges = complementaryRanges(ranges, inRange: range)
+        for complementaryRange in complementaryRanges {
+            base.addAttribute(name, value: value, range: complementaryRange)
+        }
+    }
+    
+    private func complementaryRanges(_ ranges: [NSRange], inRange: NSRange) -> [NSRange] {
+        var targets: [NSRange] = []
+        if ranges.count < 1 {
+            targets.append(inRange)
+            return targets
+        }
+        
+        for (i, range) in ranges.enumerated() {
+            var begin = inRange.location
+            let end = range.location
+            
+            if i != 0 {
+                let previousRange = ranges[i - 1]
+                begin = previousRange.location + previousRange.length
+            }
+            
+            if end > begin {
+                targets.append(NSMakeRange(begin, end - begin))
+            }
+        }
+        
+        if ranges.count > 0 {
+            let lastRange = ranges.last!
+            let begin = lastRange.location + lastRange.length
+            let end = inRange.location + inRange.length
+            
+            if end > begin {
+                targets.append(NSMakeRange(begin, end - begin))
+            }
+        }
+        
+        return targets
+    }
+    
+    /// 设置指定段落样式key对应值，默认整个range
+    public func setParagraphStyleValue(_ value: Any, forKey key: String, range: NSRange? = nil) {
+        let fullRange = NSMakeRange(0, (base.string as NSString).length)
+        let range = range ?? fullRange
+        var style: NSParagraphStyle?
+        if NSEqualRanges(range, fullRange) {
+            style = base.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle
+        } else {
+            style = base.attribute(.paragraphStyle, at: range.location, longestEffectiveRange: nil, in: range) as? NSParagraphStyle
+        }
+        
+        let mutableStyle = style?.mutableCopy() as? NSMutableParagraphStyle ?? .init()
+        mutableStyle.setValue(value, forKey: key)
+        base.addAttribute(.paragraphStyle, value: mutableStyle, range: range)
+    }
+    
+}
+
 // MARK: - Wrapper+URL
 /// 第三方URL生成器，可先判断canOpenURL，再openURL，需添加对应URL SCHEME到LSApplicationQueriesSchemes配置数组
 extension Wrapper where Base == URL {

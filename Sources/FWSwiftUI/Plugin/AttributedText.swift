@@ -13,7 +13,7 @@ import SwiftUI
 #endif
 
 // MARK: - AttributedText
-/// 富文本，兼容NSAttributedString
+/// 富文本组件，兼容NSAttributedString
 public struct AttributedText: View {
     
     // MARK: - Accessor
