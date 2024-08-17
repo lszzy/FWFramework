@@ -79,8 +79,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.arrangeSubviews {
             debugView
-                .arrangeSetup({ result in
-                    result.backgroundColor = AppTheme.textColor
+                .arrangeValue(\.backgroundColor, AppTheme.textColor)
+                .arrangeBlock({ result in
                     result.app.addTapGesture { _ in
                         result.app.toggleCollapsed()
                     }
@@ -95,11 +95,11 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 }
             
             debugLabel
-                .arrangeSetup { label in
-                    label.text = "text"
-                    label.textAlignment = .center
-                    label.textColor = AppTheme.textColor
-                    label.backgroundColor = AppTheme.backgroundColor
+                .arrangeValue(\.text, "text")
+                .arrangeValue(\.textAlignment, .center)
+                .arrangeValue(\.textColor, AppTheme.textColor)
+                .arrangeValue(\.backgroundColor, AppTheme.backgroundColor)
+                .arrangeBlock { label in
                     label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                     label.app.setCornerRadius(5)
                     label.isUserInteractionEnabled = true
@@ -114,16 +114,16 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                     .left(toViewRight: debugView, offset: 20)
             
             debugButton
-                .arrangeSetup { button in
+                .arrangeBlock { button in
                     button.setTitleColor(AppTheme.textColor, for: .normal)
                     button.setTitle("btn", for: .normal)
                     view.addSubview(button)
                 }
             
             debugImage
-                .arrangeSetup { image in
-                    image.image = UIImage.app.appIconImage()
-                    image.isUserInteractionEnabled = true
+                .arrangeValue(\.image, UIImage.app.appIconImage())
+                .arrangeValue(\.isUserInteractionEnabled, true)
+                .arrangeBlock { image in
                     image.app.addTapGesture { _ in
                         image.app.isCollapsed = !image.app.isCollapsed
                     }
