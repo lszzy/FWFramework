@@ -172,33 +172,34 @@ extension Wrapper where Base: UIView {
     }
     
     /// 添加点击手势事件，可自定义点击高亮句柄等
-    public func addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) {
+    @discardableResult
+    public func addTapGesture(target: Any, action: Selector, customize: ((TapGestureRecognizer) -> Void)? = nil) -> UITapGestureRecognizer {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer(target: target, action: action) : UITapGestureRecognizer(target: target, action: action)
         base.addGestureRecognizer(gesture)
         if customize != nil, let tapGesture = gesture as? TapGestureRecognizer {
             customize?(tapGesture)
         }
+        return gesture
     }
 
     /// 添加点击手势句柄，可自定义点击高亮句柄等
     @discardableResult
-    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> String {
+    public func addTapGesture(block: @escaping (UITapGestureRecognizer) -> Void, customize: ((TapGestureRecognizer) -> Void)? = nil) -> UITapGestureRecognizer {
         let gesture: UITapGestureRecognizer = customize != nil ? TapGestureRecognizer() : UITapGestureRecognizer()
-        let identifier = gesture.fw.addBlock(block)
+        gesture.fw.addBlock(block)
         base.addGestureRecognizer(gesture)
         if customize != nil, let tapGesture = gesture as? TapGestureRecognizer {
             customize?(tapGesture)
         }
-        return identifier
+        return gesture
     }
 
-    /// 根据监听唯一标志移除点击手势句柄，返回是否成功
+    /// 移除指定点击手势，返回是否成功
     @discardableResult
-    public func removeTapGesture(identifier: String) -> Bool {
+    public func removeTapGesture(_ tapGesture: UITapGestureRecognizer) -> Bool {
         var result = false
         base.gestureRecognizers?.forEach({ gesture in
-            if gesture is UITapGestureRecognizer,
-               gesture.fw.removeBlock(identifier: identifier) {
+            if tapGesture == gesture {
                 base.removeGestureRecognizer(gesture)
                 result = true
             }

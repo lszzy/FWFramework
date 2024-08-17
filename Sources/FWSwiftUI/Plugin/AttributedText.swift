@@ -43,10 +43,6 @@ public struct AttributedText: View {
         configure({ $0.viewModel.foregroundColor = foregroundColor?.toUIColor() })
     }
     
-    public func lineHeight(_ lineHeight: CGFloat) -> Self {
-        configure({ $0.viewModel.lineHeight = lineHeight })
-    }
-    
     public func baselineAdjustment(_ baselineAdjustment: UIBaselineAdjustment) -> Self {
         configure({ $0.viewModel.baselineAdjustment = baselineAdjustment })
     }
@@ -79,7 +75,6 @@ extension AttributedText {
         @Published var textSize: CGSize?
         var font: UIFont?
         var foregroundColor: UIColor?
-        var lineHeight: CGFloat?
         var baselineAdjustment: UIBaselineAdjustment?
         var adjustsFontSizeToFitWidth: Bool?
     }
@@ -98,11 +93,7 @@ extension AttributedText {
         }
         
         func updateUIView(_ label: ViewLabel, context: Context) {
-            if let lineHeight = viewModel.lineHeight {
-                label.fw.setFont(viewModel.font, lineHeight: lineHeight)
-            } else if let font = viewModel.font {
-                label.font = font
-            }
+            if let font = viewModel.font { label.font = font }
             if let foregroundColor = viewModel.foregroundColor { label.textColor = foregroundColor }
             if let baselineAdjustment = viewModel.baselineAdjustment { label.baselineAdjustment = baselineAdjustment }
             if let adjustsFontSizeToFitWidth = viewModel.adjustsFontSizeToFitWidth { label.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth }
@@ -156,13 +147,19 @@ extension AttributedText {
             }
         }
         
-        var clickedOnLink: ((Any?) -> Void)?
+        var clickedOnLink: ((Any?) -> Void)? {
+            didSet {
+                linkGesture?.isEnabled = clickedOnLink != nil
+            }
+        }
+        
+        private var linkGesture: UITapGestureRecognizer?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
             
             backgroundColor = .clear
-            fw.addLinkGesture { [weak self] link in
+            linkGesture = fw.addLinkGesture { [weak self] link in
                 self?.clickedOnLink?(link)
             }
         }
