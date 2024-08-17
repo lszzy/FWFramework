@@ -79,15 +79,16 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.arrangeSubviews {
             debugView
-                .arrangeValue(\.backgroundColor, AppTheme.textColor)
-                .arrangeBlock({ result in
+                .chainValue(\.backgroundColor, AppTheme.textColor)
+                .chainBlock({ result in
                     result.app.addTapGesture { _ in
                         result.app.toggleCollapsed()
                     }
                     view.addSubview(result)
                 })
-                .layoutMaker { make in
-                    make.top(toSafeArea: 20).identifier("debugView.top")
+                .arrangeLayout { result in
+                    result.layoutChain
+                        .top(toSafeArea: 20).identifier("debugView.top")
                         .left(20).collapse().identifier("debugView.left")
                         .size(CGSize(width: 100, height: 100)).identifier("debugView.size")
                         .width(50).collapse().identifier("debugView.width")
@@ -95,11 +96,11 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 }
             
             debugLabel
-                .arrangeValue(\.text, "text")
-                .arrangeValue(\.textAlignment, .center)
-                .arrangeValue(\.textColor, AppTheme.textColor)
-                .arrangeValue(\.backgroundColor, AppTheme.backgroundColor)
-                .arrangeBlock { label in
+                .chainValue(\.text, "text")
+                .chainValue(\.textAlignment, .center)
+                .chainValue(\.textColor, AppTheme.textColor)
+                .chainValue(\.backgroundColor, AppTheme.backgroundColor)
+                .chainBlock { label in
                     label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                     label.app.setCornerRadius(5)
                     label.isUserInteractionEnabled = true
@@ -108,28 +109,29 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                     }
                     view.addSubview(label)
                 }
-                .layoutChain
-                    .width(50)
-                    .centerY(toView: debugView)
-                    .left(toViewRight: debugView, offset: 20)
+                .layoutMaker { make in
+                    make.width(50)
+                        .centerY(toView: debugView)
+                        .left(toViewRight: debugView, offset: 20)
+                }
             
             debugButton
-                .arrangeBlock { button in
+                .chainBlock { button in
                     button.setTitleColor(AppTheme.textColor, for: .normal)
                     button.setTitle("btn", for: .normal)
                     view.addSubview(button)
                 }
             
             debugImage
-                .arrangeValue(\.image, UIImage.app.appIconImage())
-                .arrangeValue(\.isUserInteractionEnabled, true)
-                .arrangeBlock { image in
+                .chainValue(\.image, UIImage.app.appIconImage())
+                .chainValue(\.isUserInteractionEnabled, true)
+                .chainBlock { image in
                     image.app.addTapGesture { _ in
                         image.app.isCollapsed = !image.app.isCollapsed
                     }
                 }
         }
-        .arrangeLayout {
+        .arrangeLayout { _ in
             debugButton.layoutMaker { make in
                 make.width(50)
                     .height(toView: debugView)
@@ -174,7 +176,9 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         
         attributedLabel.text = "我是非常长的文本，我可以附加"
         attributedLabel.appendImage(UIImage.app.appIconImage()!, maxSize: CGSize(width: 16, height: 16))
-        attributedLabel.appendAttributedText(NSAttributedString(string: "，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本", attributes: [.font: APP.font(16)]))
+        attributedLabel.appendAttributedText(NSAttributedString(string: "，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本", attributes: .init()
+            .chainValue(.font, APP.font(16))
+        ))
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(APP.font(16).lineHeight))
