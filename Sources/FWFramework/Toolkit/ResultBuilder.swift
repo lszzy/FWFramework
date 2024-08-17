@@ -115,7 +115,7 @@ public protocol ArrayResultBuilderCompatible {}
 
 extension UIView: ArrayResultBuilderCompatible {}
 
-extension ArrayResultBuilderCompatible where Self: UIView {
+@MainActor extension ArrayResultBuilderCompatible where Self: UIView {
     
     /// 初始化并批量配置子视图
     public init(
