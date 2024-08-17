@@ -2338,6 +2338,17 @@ extension Wrapper where Base: UITextView {
         return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
     }
     
+    /// 重置输入框默认间距样式，可指定是否只读(禁用编辑、选择、滚动，类似UILabel)
+    public func resetTextStyle(readOnly: Bool? = nil) {
+        base.textContainerInset = .zero
+        base.textContainer.lineFragmentPadding = 0
+        if let readOnly = readOnly {
+            base.isEditable = !readOnly
+            base.isSelectable = !readOnly
+            base.isScrollEnabled = !readOnly
+        }
+    }
+    
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
     @discardableResult
     public func addLinkGesture(block: @escaping (Any?) -> Void) -> UITapGestureRecognizer {
