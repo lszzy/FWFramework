@@ -43,6 +43,10 @@ public struct AttributedText: View {
         configure({ $0.viewModel.foregroundColor = foregroundColor?.toUIColor() })
     }
     
+    public func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Self {
+        configure({ $0.viewModel.lineBreakMode = lineBreakMode })
+    }
+    
     public func baselineAdjustment(_ baselineAdjustment: UIBaselineAdjustment) -> Self {
         configure({ $0.viewModel.baselineAdjustment = baselineAdjustment })
     }
@@ -75,6 +79,7 @@ extension AttributedText {
         @Published var textSize: CGSize?
         var font: UIFont?
         var foregroundColor: UIColor?
+        var lineBreakMode: NSLineBreakMode?
         var baselineAdjustment: UIBaselineAdjustment?
         var adjustsFontSizeToFitWidth: Bool?
     }
@@ -102,7 +107,7 @@ extension AttributedText {
             label.minimumScaleFactor = context.environment.minimumScaleFactor
             label.numberOfLines = context.environment.lineLimit ?? 0
             label.textAlignment = textAlignment(from: context.environment.multilineTextAlignment)
-            label.lineBreakMode = lineBreakMode(from: context.environment.truncationMode)
+            label.lineBreakMode = viewModel.lineBreakMode ?? lineBreakMode(from: context.environment.truncationMode)
             label.isUserInteractionEnabled = context.environment.isEnabled
             label.clickedOnLink = clickedOnLink
             
