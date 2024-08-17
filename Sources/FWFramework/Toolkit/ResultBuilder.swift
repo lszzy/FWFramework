@@ -111,66 +111,40 @@ extension NSMutableAttributedString {
 
 // MARK: - UIView+ResultBuilder
 /// UIView兼容ArrayResultBuilder
-public protocol ViewResultBuilderCompatible {
-    @_spi(FW) var resultBuilderView: UIView? { get }
-}
+public protocol ArrayResultBuilderCompatible {}
 
-extension UIView: ViewResultBuilderCompatible {
-    @_spi(FW) public var resultBuilderView: UIView? { self }
-}
-extension LayoutChain: ViewResultBuilderCompatible {
-    @_spi(FW) public var resultBuilderView: UIView? { view }
-}
+extension UIView: ArrayResultBuilderCompatible {}
 
-extension ViewResultBuilderCompatible where Self: UIView {
+extension ArrayResultBuilderCompatible where Self: UIView {
     
     /// 初始化并批量配置子视图
     public init(
         frame: CGRect = .zero,
-        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+        @ArrayResultBuilder<UIView> _ items: () -> [UIView]
     ) {
         self.init(frame: frame)
         arrangeSubviews(items)
     }
     
-    /// 调用句柄配置视图，支持链式调用，用于兼容ArrayResultBuilder
-    @discardableResult
-    public func arrangeBlock(
-        _ closure: (Self) -> Void
-    ) -> Self {
-        closure(self)
-        return self
-    }
-    
-    /// 配置指定keyPath属性值，支持链式调用
-    @discardableResult
-    public func arrangeValue<Value>(
-        _ keyPath: ReferenceWritableKeyPath<Self, Value>,
-        _ value: Value
-    ) -> Self {
-        self[keyPath: keyPath] = value
-        return self
-    }
-    
     /// 批量配置子视图，支持链式调用
     @discardableResult
     public func arrangeSubviews(
-        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+        @ArrayResultBuilder<UIView> _ items: () -> [UIView]
     ) -> Self {
-        items().forEach { item in
-            if let view = item.resultBuilderView, view.superview == nil {
+        items().forEach { view in
+            if view.superview == nil {
                 addSubview(view)
             }
         }
         return self
     }
     
-    /// 批量布局子视图，支持链式调用
+    /// 调用布局句柄，支持链式调用
     @discardableResult
     public func arrangeLayout(
-        @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
+        _ block: (Self) -> Void
     ) -> Self {
-        _ = items()
+        block(self)
         return self
     }
     
