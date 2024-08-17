@@ -1152,8 +1152,8 @@ extension Wrapper where Base: NSMutableAttributedString {
         return targets
     }
     
-    /// 设置指定段落样式key对应值，默认整个range
-    public func setParagraphStyleValue(_ value: Any, forKey key: String, range: NSRange? = nil) {
+    /// 设置指定段落样式keyPath对应值，默认整个range
+    public func setParagraphStyleValue<Value>(_ value: Value, for keyPath: ReferenceWritableKeyPath<NSMutableParagraphStyle, Value>, range: NSRange? = nil) {
         let fullRange = NSMakeRange(0, (base.string as NSString).length)
         let range = range ?? fullRange
         var style: NSParagraphStyle?
@@ -1164,7 +1164,7 @@ extension Wrapper where Base: NSMutableAttributedString {
         }
         
         let mutableStyle = style?.mutableCopy() as? NSMutableParagraphStyle ?? .init()
-        mutableStyle.setValue(value, forKey: key)
+        mutableStyle[keyPath: keyPath] = value
         base.addAttribute(.paragraphStyle, value: mutableStyle, range: range)
     }
     
