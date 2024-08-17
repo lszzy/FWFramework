@@ -133,16 +133,26 @@ extension ViewResultBuilderCompatible where Self: UIView {
         arrangeSubviews(items)
     }
     
-    /// 配置当前视图，用于兼容ArrayResultBuilder
+    /// 调用句柄配置视图，支持链式调用，用于兼容ArrayResultBuilder
     @discardableResult
-    public func arrangeSetup(
+    public func arrangeBlock(
         _ closure: (Self) -> Void
     ) -> Self {
         closure(self)
         return self
     }
     
-    /// 批量配置子视图
+    /// 配置指定keyPath属性值，支持链式调用
+    @discardableResult
+    public func arrangeValue<Value>(
+        _ keyPath: ReferenceWritableKeyPath<Self, Value>,
+        _ value: Value
+    ) -> Self {
+        self[keyPath: keyPath] = value
+        return self
+    }
+    
+    /// 批量配置子视图，支持链式调用
     @discardableResult
     public func arrangeSubviews(
         @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
@@ -155,7 +165,7 @@ extension ViewResultBuilderCompatible where Self: UIView {
         return self
     }
     
-    /// 批量布局子视图
+    /// 批量布局子视图，支持链式调用
     @discardableResult
     public func arrangeLayout(
         @ArrayResultBuilder<ViewResultBuilderCompatible> _ items: () -> [ViewResultBuilderCompatible]
