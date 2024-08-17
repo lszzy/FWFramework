@@ -1277,9 +1277,10 @@ extension Wrapper where Base: UIDevice {
     }
     
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
-    public func addLinkGesture(block: @escaping (Any?) -> Void) {
+    @discardableResult
+    public func addLinkGesture(block: @escaping (Any?) -> Void) -> UITapGestureRecognizer {
         base.isUserInteractionEnabled = true
-        addTapGesture { gesture in
+        return addTapGesture { gesture in
             guard let label = gesture.view as? UILabel else { return }
             let attributes = label.fw.attributes(gesture: gesture, allowsSpacing: false)
             let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
@@ -1287,24 +1288,27 @@ extension Wrapper where Base: UIDevice {
         }
     }
     
-    /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击。为了识别更准确，attributedText需指定font
+    /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击
     public func attributes(
         gesture: UIGestureRecognizer,
         allowsSpacing: Bool
     ) -> [NSAttributedString.Key: Any] {
-        guard let attributedString = base.attributedText else { return [:] }
+        guard let attributedString = base.attributedText?.mutableCopy() as? NSMutableAttributedString else { return [:] }
         let textContainer = NSTextContainer(size: base.bounds.size)
         textContainer.lineFragmentPadding = 0
         textContainer.maximumNumberOfLines = base.numberOfLines
         textContainer.lineBreakMode = base.lineBreakMode
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
+        
+        attributedString.fw.addDefaultAttribute(.font, value: base.font as Any)
+        attributedString.fw.setParagraphStyleValue(\.alignment, value: base.textAlignment)
         let textStorage = NSTextStorage(attributedString: attributedString)
         textStorage.addLayoutManager(layoutManager)
         
-        let point = gesture.location(in: base)
+        let location = gesture.location(in: base)
         var distance: CGFloat = 0
-        let index = layoutManager.characterIndex(for: point, in: textContainer, fractionOfDistanceBetweenInsertionPoints: &distance)
+        let index = layoutManager.characterIndex(for: location, in: textContainer, fractionOfDistanceBetweenInsertionPoints: &distance)
         if !allowsSpacing && distance >= 1 { return [:] }
         return attributedString.attributes(at: index, effectiveRange: nil)
     }
@@ -2340,6 +2344,42 @@ extension Wrapper where Base: UIDevice {
         let inset = contentInset ?? base.textContainerInset
         let size = base.attributedText?.boundingRect(with: CGSize(width: drawSize.width - inset.left - inset.right, height: drawSize.height - inset.top - inset.bottom), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size ?? .zero
         return CGSize(width: min(drawSize.width, ceil(size.width)) + inset.left + inset.right, height: min(drawSize.height, ceil(size.height)) + inset.top + inset.bottom)
+    }
+    
+    /// 重置输入框默认间距样式，可指定是否只读(禁用编辑、选择、滚动，类似UILabel)
+    public func resetTextStyle(readOnly: Bool? = nil) {
+        base.textContainerInset = .zero
+        base.textContainer.lineFragmentPadding = 0
+        if let readOnly = readOnly {
+            base.isEditable = !readOnly
+            base.isSelectable = !readOnly
+            base.isScrollEnabled = !readOnly
+        }
+    }
+    
+    /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
+    @discardableResult
+    public func addLinkGesture(block: @escaping (Any?) -> Void) -> UITapGestureRecognizer {
+        return addTapGesture { gesture in
+            guard let textView = gesture.view as? UITextView else { return }
+            let attributes = textView.fw.attributes(gesture: gesture, allowsSpacing: false)
+            let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
+            block(link)
+        }
+    }
+    
+    /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击
+    public func attributes(
+        gesture: UIGestureRecognizer,
+        allowsSpacing: Bool
+    ) -> [NSAttributedString.Key: Any] {
+        guard let attributedString = base.attributedText else { return [:] }
+        var location = gesture.location(in: base)
+        location = CGPoint(x: location.x - base.textContainerInset.left, y: location.y - base.textContainerInset.top)
+        var distance: CGFloat = 0
+        let index = base.layoutManager.characterIndex(for: location, in: base.textContainer, fractionOfDistanceBetweenInsertionPoints: &distance)
+        if !allowsSpacing && distance >= 1 { return [:] }
+        return attributedString.attributes(at: index, effectiveRange: nil)
     }
     
     /// 快捷设置行高，兼容placeholder和typingAttributes。小于等于0时恢复默认行高
