@@ -1293,8 +1293,8 @@ extension Wrapper where Base: UILabel {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
         
-        attributedString.fw.addAttributeIfNotExist(.font, value: base.font as Any)
-        attributedString.fw.setParagraphStyleValue(base.textAlignment, for: \.alignment)
+        attributedString.fw.addDefaultAttribute(.font, value: base.font as Any)
+        attributedString.fw.setParagraphStyleValue(\.alignment, value: base.textAlignment)
         let textStorage = NSTextStorage(attributedString: attributedString)
         textStorage.addLayoutManager(layoutManager)
         

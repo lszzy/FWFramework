@@ -1101,8 +1101,8 @@ extension Wrapper where Base: NSAttributedString {
 // MARK: - Wrapper+NSMutableAttributedString
 extension Wrapper where Base: NSMutableAttributedString {
     
-    /// 当指定属性不存在时添加对应值，默认整个range
-    public func addAttributeIfNotExist(_ name: NSAttributedString.Key, value: Any, range: NSRange? = nil) {
+    /// 当指定属性不存在时添加默认值，默认整个range
+    public func addDefaultAttribute(_ name: NSAttributedString.Key, value: Any, range: NSRange? = nil) {
         let fullRange = NSMakeRange(0, (base.string as NSString).length)
         let range = range ?? fullRange
         var ranges: [NSRange] = []
@@ -1153,7 +1153,7 @@ extension Wrapper where Base: NSMutableAttributedString {
     }
     
     /// 设置指定段落样式keyPath对应值，默认整个range
-    public func setParagraphStyleValue<Value>(_ value: Value, for keyPath: ReferenceWritableKeyPath<NSMutableParagraphStyle, Value>, range: NSRange? = nil) {
+    public func setParagraphStyleValue<Value>(_ keyPath: ReferenceWritableKeyPath<NSMutableParagraphStyle, Value>, value: Value, range: NSRange? = nil) {
         let fullRange = NSMakeRange(0, (base.string as NSString).length)
         let range = range ?? fullRange
         var style: NSParagraphStyle?
