@@ -2357,17 +2357,6 @@ extension Wrapper where Base: UIDevice {
         }
     }
     
-    /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
-    @discardableResult
-    public func addLinkGesture(block: @escaping (Any?) -> Void) -> UITapGestureRecognizer {
-        return addTapGesture { gesture in
-            guard let textView = gesture.view as? UITextView else { return }
-            let attributes = textView.fw.attributes(gesture: gesture, allowsSpacing: false)
-            let link = attributes[.link] ?? attributes[NSAttributedString.Key("URL")]
-            block(link)
-        }
-    }
-    
     /// 获取手势触发位置的文本属性，可实现行内点击效果等，allowsSpacing默认为NO空白处不可点击
     public func attributes(
         gesture: UIGestureRecognizer,
