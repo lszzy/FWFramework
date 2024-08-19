@@ -114,9 +114,9 @@ extension View {
 extension UIHostingController where Content == AnyView {
     
     /// 快速创建视图上下文控制器
-    public static func contextController<T: View>(@ViewBuilder _ builder: () -> T) -> UIHostingController<AnyView> {
+    public static func contextController<T: View>(@ViewBuilder content: () -> T) -> UIHostingController<AnyView> {
         let hostingController = UIHostingController(rootView: AnyView(EmptyView()))
-        hostingController.rootView = AnyView(builder().viewContext(hostingController))
+        hostingController.rootView = AnyView(content().viewContext(hostingController))
         return hostingController
     }
     

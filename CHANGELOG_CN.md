@@ -1,5 +1,18 @@
 # 更新日志
 
+## [5.10.0] - 2024-08-19
+
+### Added
+* 新增AnyChainable协议支持链式调用，NSObject默认实现chainValue、chainBlock链式方法
+* 新增ArrayResultBuilder，用于实现类似SwiftUI布局代码等功能
+* SwiftUI新增AttributedText富文本组件，兼容NSAttributedString显示
+* SwiftUI.Text支持多文本拼接，兼容ArrayResultBuilder
+* SwiftUI部分工具方法参数名称builder修改为content
+* NSAttributedString支持多文本拼接，兼容ArrayResultBuilder
+* UIView新增arrangeSubviews、arrangeLayout方法，兼容ArrayResultBuilder
+* UILabel点击attributedText时兼容font和textAlignment设置
+* UITextView支持获取点击位置的文本样式属性，类似UILabel
+
 ## [5.9.8] - 2024-08-14
 
 ### Changed

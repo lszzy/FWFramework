@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.10.0] - 2024-08-19
+
+### Added
+* Added AnyChainable protocol to support chain calls, NSObject implements chainValue and chainBlock chain methods by default
+* Added ArrayResultBuilder to implement functions similar to SwiftUI layout code
+* SwiftUI added AttributedText rich text component, compatible with NSAttributedString display
+* SwiftUI.Text supports multiple text splicing, compatible with ArrayResultBuilder
+* Modified the parameter name of some SwiftUI tool methods from builder to content
+* NSAttributedString supports multiple text splicing, compatible with ArrayResultBuilder
+* UIView added arrangeSubviews and arrangeLayout methods, compatible with ArrayResultBuilder
+* UILabel is compatible with font and textAlignment settings when clicking attributedText
+* UITextView supports getting text style attributes of the click position, similar to UILabel
+
 ## [5.9.8] - 2024-08-14
 
 ### Changed
