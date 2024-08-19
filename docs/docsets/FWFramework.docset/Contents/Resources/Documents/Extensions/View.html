@@ -17,7 +17,7 @@
     <a title="View Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.9.8 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.10.0 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1353,6 +1353,9 @@
                 <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/NSMutableAttributedString.html">NSMutableAttributedString</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/NSObject.html">NSObject</a>
               </li>
               <li class="nav-group-task">
@@ -1390,6 +1393,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Text.html">Text</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/UIActivityIndicatorView.html">UIActivityIndicatorView</a>
@@ -1558,6 +1564,9 @@
                 <a href="../Protocols/AnyArchivable.html">AnyArchivable</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/AnyChainable.html">AnyChainable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/AnyDateFormatter.html">AnyDateFormatter</a>
               </li>
               <li class="nav-group-task">
@@ -1574,6 +1583,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ArrayParameter.html">ArrayParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ArrayResultBuilderCompatible.html">ArrayResultBuilderCompatible</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/AttributedLabelDelegate.html">AttributedLabelDelegate</a>
@@ -2041,6 +2053,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AnyCodingKey.html">AnyCodingKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ArrayResultBuilder.html">ArrayResultBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AttributedText.html">AttributedText</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AuthorizeType.html">AuthorizeType</a>
@@ -2919,9 +2937,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE010showPluginC0_7builderQrSb_qd__yctAaBRd__lF"></a>
-                    <a name="//apple_ref/swift/Method/showPluginView(_:builder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE010showPluginC0_7builderQrSb_qd__yctAaBRd__lF">showPluginView(_:<wbr>builder:<wbr>)</a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE010showPluginC0_7contentQrSb_qd__yXEtAaBRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/showPluginView(_:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE010showPluginC0_7contentQrSb_qd__yXEtAaBRd__lF">showPluginView(_:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2939,7 +2957,7 @@
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="n">showPluginView</span><span class="o">&lt;</span><span class="kt">Plugin</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="kd">@ViewBuilder</span> <span class="nv">builder</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Plugin</span>
+    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Plugin</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -2950,9 +2968,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE09showEmptyC0_7builderQrSb_AD0f6PluginC0VycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/showEmptyView(_:builder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE09showEmptyC0_7builderQrSb_AD0f6PluginC0VycSgtF">showEmptyView(_:<wbr>builder:<wbr>)</a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE09showEmptyC0_7contentQrSb_AD0f6PluginC0VycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/showEmptyView(_:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE09showEmptyC0_7contentQrSb_AD0f6PluginC0VycSgtF">showEmptyView(_:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2970,7 +2988,7 @@
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">showEmptyView</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nv">builder</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/EmptyPluginView.html">EmptyPluginView</a></span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">content</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/EmptyPluginView.html">EmptyPluginView</a></span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -2981,9 +2999,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE011showLoadingC0_7builderQrSb_AD0f6PluginC0VycSgtF"></a>
-                    <a name="//apple_ref/swift/Method/showLoadingView(_:builder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE011showLoadingC0_7builderQrSb_AD0f6PluginC0VycSgtF">showLoadingView(_:<wbr>builder:<wbr>)</a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE011showLoadingC0_7contentQrSb_AD0f6PluginC0VycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/showLoadingView(_:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE011showLoadingC0_7contentQrSb_AD0f6PluginC0VycSgtF">showLoadingView(_:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3001,7 +3019,7 @@
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">showLoadingView</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nv">builder</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/LoadingPluginView.html">LoadingPluginView</a></span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">content</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/LoadingPluginView.html">LoadingPluginView</a></span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3012,9 +3030,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE012showProgressC0_7builderQrSb_AD0f6PluginC0VyctF"></a>
-                    <a name="//apple_ref/swift/Method/showProgressView(_:builder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE012showProgressC0_7builderQrSb_AD0f6PluginC0VyctF">showProgressView(_:<wbr>builder:<wbr>)</a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE012showProgressC0_7contentQrSb_AD0f6PluginC0VyctF"></a>
+                    <a name="//apple_ref/swift/Method/showProgressView(_:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE012showProgressC0_7contentQrSb_AD0f6PluginC0VyctF">showProgressView(_:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3032,7 +3050,7 @@
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">showProgressView</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nv">builder</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/ProgressPluginView.html">ProgressPluginView</a></span>
+    <span class="nv">content</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/ProgressPluginView.html">ProgressPluginView</a></span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -4132,9 +4150,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE18hoverContentOffset9alignment7visible7builderQrAA9AlignmentV_Sbqd__yctAaBRd__lF"></a>
-                    <a name="//apple_ref/swift/Method/hoverContentOffset(alignment:visible:builder:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE18hoverContentOffset9alignment7visible7builderQrAA9AlignmentV_Sbqd__yctAaBRd__lF">hoverContentOffset(alignment:<wbr>visible:<wbr>builder:<wbr>)</a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE18hoverContentOffset9alignment7visible7contentQrAA9AlignmentV_Sbqd__yXEtAaBRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/hoverContentOffset(alignment:visible:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE18hoverContentOffset9alignment7visible7contentQrAA9AlignmentV_Sbqd__yXEtAaBRd__lF">hoverContentOffset(alignment:<wbr>visible:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4168,7 +4186,7 @@ GeometryReader { proxy in
 <span class="kd">public</span> <span class="kd">func</span> <span class="n">hoverContentOffset</span><span class="o">&lt;</span><span class="kt">Content</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
     <span class="nv">alignment</span><span class="p">:</span> <span class="kt">Alignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">top</span><span class="p">,</span>
     <span class="nv">visible</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="kd">@ViewBuilder</span> <span class="nv">builder</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
+    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -4531,7 +4549,11 @@ GeometryReader { proxy in
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">opacityButtonStyle</span><span class="p">(</span><span class="nv">disabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">highlightedAlpha</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">disabledAlpha</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">opacityButtonStyle</span><span class="p">(</span>
+    <span class="nv">disabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">highlightedAlpha</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">disabledAlpha</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -4559,7 +4581,135 @@ GeometryReader { proxy in
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedButton</span><span class="p">(</span><span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedButton</span><span class="p">(</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacingQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgtF"></a>
+                    <a name="//apple_ref/swift/Method/wrappedVStack(alignment:spacing:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacingQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgtF">wrappedVStack(alignment:<wbr>spacing:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>包装到VStack</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedVStack</span><span class="p">(</span>
+    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">HorizontalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
+    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/wrappedVStack(alignment:spacing:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF">wrappedVStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>包装到VStack并指定内容(如Spacer)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">wrappedVStack</span><span class="o">&lt;</span><span class="kt">Content</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">HorizontalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
+    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacingQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgtF"></a>
+                    <a name="//apple_ref/swift/Method/wrappedHStack(alignment:spacing:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacingQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgtF">wrappedHStack(alignment:<wbr>spacing:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>包装到HStack</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedHStack</span><span class="p">(</span>
+    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">VerticalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
+    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/wrappedHStack(alignment:spacing:content:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF">wrappedHStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>包装到HStack并指定内容(如Spacer)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">wrappedHStack</span><span class="o">&lt;</span><span class="kt">Content</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">VerticalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
+    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -4571,7 +4721,7 @@ GeometryReader { proxy in
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-14)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-19)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
