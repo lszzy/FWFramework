@@ -193,7 +193,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenImage() {
-        Router.openURL("app://tests/1?url=https://kvm.wuyong.site/test.php")
+        Router.openURL("app://tests/1?url=http://kvm.wuyong.site/test.php")
     }
     
     func onOpenSlash() {
@@ -330,7 +330,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     }
     
     func onOpenPreload() {
-        Router.openURL("https://www.wuyong.site/#slide=1")
+        Router.openURL("http://www.wuyong.site/#slide=1")
     }
     
     func onOpenCookie() {
