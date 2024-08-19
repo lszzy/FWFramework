@@ -183,7 +183,7 @@ struct TestSwiftUIContent: View {
                         AttributedText(NSMutableAttributedString({
                             "我是富文本，"
                             
-                            NSAttributedString(string: "我可以变色，", attributes: [
+                            NSAttributedString(string: "点击我可以变色，", attributes: [
                                 .foregroundColor: attributedColor,
                                 .init("URL"): 1,
                             ])
@@ -192,7 +192,7 @@ struct TestSwiftUIContent: View {
                                 "我是动态内容，"
                             }
                             
-                            NSAttributedString(string: "我可以点击，", attributes: [
+                            NSAttributedString(string: "点击我切换动态内容，", attributes: [
                                 .foregroundColor: UIColor.blue,
                                 .init("URL"): 2,
                             ])
