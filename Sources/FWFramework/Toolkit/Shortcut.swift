@@ -226,4 +226,11 @@ extension UIView {
     @available(*, deprecated, renamed: "layoutChain", message: "Use layoutChain instead")
     public var chain: LayoutChain { layoutChain }
     
+    /// 链式布局闭包
+    @discardableResult
+    public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) -> Self {
+        fw.layoutMaker(closure)
+        return self
+    }
+    
 }

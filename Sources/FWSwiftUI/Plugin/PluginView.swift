@@ -284,12 +284,13 @@ extension View {
     /// 显示通用插件视图，需手工切换
     public func showPluginView<Plugin: View>(
         _ isShowing: Bool = true,
-        @ViewBuilder builder: @escaping () -> Plugin
+        @ViewBuilder content: () -> Plugin
     ) -> some View {
         ZStack {
             self
+            
             if isShowing {
-                builder()
+                content()
             }
         }
     }
@@ -297,9 +298,9 @@ extension View {
     /// 显示空界面插件视图，需手工切换。如果需要显示空界面时可滚动，放到滚动视图内部即可
     public func showEmptyView(
         _ isShowing: Bool = true,
-        builder: (() -> EmptyPluginView)? = nil
+        content: (() -> EmptyPluginView)? = nil
     ) -> some View {
-        showPluginView(isShowing, builder: builder ?? {
+        showPluginView(isShowing, content: content ?? {
             EmptyPluginView()
         })
     }
@@ -307,9 +308,9 @@ extension View {
     /// 显示加载插件视图，需手工切换
     public func showLoadingView(
         _ isShowing: Bool = true,
-        builder: (() -> LoadingPluginView)? = nil
+        content: (() -> LoadingPluginView)? = nil
     ) -> some View {
-        showPluginView(isShowing, builder: builder ?? {
+        showPluginView(isShowing, content: content ?? {
             LoadingPluginView()
         })
     }
@@ -317,9 +318,9 @@ extension View {
     /// 显示进度插件视图，需手工切换
     public func showProgressView(
         _ isShowing: Bool = true,
-        builder: @escaping () -> ProgressPluginView
+        content: @escaping () -> ProgressPluginView
     ) -> some View {
-        showPluginView(isShowing, builder: builder)
+        showPluginView(isShowing, content: content)
     }
     
 }
