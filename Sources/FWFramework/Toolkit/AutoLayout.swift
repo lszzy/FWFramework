@@ -140,6 +140,17 @@ extension Wrapper where Base: UIView {
         get { propertyBool(forName: "autoCollapse") }
         set { setPropertyBool(newValue, forName: "autoCollapse") }
     }
+    
+    /// 设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false
+    ///
+    /// 备注：开启时当intrinsicContentSize有值时，会自动添加优先级为defaultHigh的matchDimension约束。
+    /// 可据此创建不同优先级的另一边约束，从而实现不同效果，示例：
+    /// 固定高度时如存在优先级为required的width约束，则matchDimension约束不生效，width约束生效；
+    /// 固定高度时如存在优先级为defaultLow的width约束，则matchDimension约束生效，width约束不生效
+    public var autoMatchDimension: Bool {
+        get { propertyBool(forName: "autoMatchDimension") }
+        set { setPropertyBool(newValue, forName: "autoMatchDimension") }
+    }
 
     /// 设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
     public var hiddenCollapse: Bool {
@@ -213,6 +224,11 @@ extension Wrapper where Base: UIView {
     fileprivate var collapseConstraints: [NSLayoutConstraint] {
         get { return property(forName: "collapseConstraints") as? [NSLayoutConstraint] ?? [] }
         set { setProperty(newValue, forName: "collapseConstraints") }
+    }
+    
+    fileprivate var matchDimensionConstraint: NSLayoutConstraint? {
+        get { property(forName: "matchDimensionConstraint") as? NSLayoutConstraint }
+        set { setProperty(newValue, forName: "matchDimensionConstraint") }
     }
     
     // MARK: - Axis
@@ -1450,6 +1466,12 @@ public class LayoutChain {
     }
     
     @discardableResult
+    public func autoMatchDimension(_ matchDimension: Bool) -> Self {
+        view?.fw.autoMatchDimension = matchDimension
+        return self
+    }
+    
+    @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
         view?.fw.hiddenCollapse = hiddenCollapse
         return self
@@ -1975,15 +1997,23 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector)
             
             if selfObject.fw.autoCollapse && selfObject.fw.collapseConstraints.count > 0 {
-                // Absent意味着视图没有固有size，即{-1, -1}
-                let absentContentSize = CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
-                // 计算固有尺寸
                 let contentSize = selfObject.intrinsicContentSize
-                // 如果视图没有固定尺寸，自动设置约束
-                if contentSize.equalTo(absentContentSize) || contentSize.equalTo(.zero) {
-                    selfObject.fw.isCollapsed = true
-                } else {
+                if !contentSize.equalTo(CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)) && contentSize.width > 0 && contentSize.height > 0 {
                     selfObject.fw.isCollapsed = false
+                } else {
+                    selfObject.fw.isCollapsed = true
+                }
+            }
+            
+            if selfObject.fw.autoMatchDimension {
+                if let constraint = selfObject.fw.matchDimensionConstraint {
+                    selfObject.fw.removeConstraints([constraint])
+                    selfObject.fw.matchDimensionConstraint = nil
+                }
+                
+                let contentSize = selfObject.intrinsicContentSize
+                if !contentSize.equalTo(CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)) && contentSize.width > 0 && contentSize.height > 0 {
+                    selfObject.fw.matchDimensionConstraint = selfObject.fw.matchDimension(.width, toDimension: .height, multiplier: contentSize.width / contentSize.height, priority: .defaultHigh, autoScale: false)
                 }
             }
         }}
