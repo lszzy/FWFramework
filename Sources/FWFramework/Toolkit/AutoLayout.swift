@@ -148,6 +148,7 @@ extension Wrapper where Base: UIView {
         set {
             setPropertyBool(newValue, forName: "autoMatchDimension")
             base.setNeedsUpdateConstraints()
+            base.invalidateIntrinsicContentSize()
         }
     }
 
