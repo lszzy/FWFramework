@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.10.1] - 2024-08-21
+
+### Added
+* UIView adds autoMatchDimension to handle issues such as fixed image height and adaptive width size layout
+
 ## [5.10.0] - 2024-08-19
 
 ### Added
