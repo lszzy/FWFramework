@@ -141,15 +141,19 @@ import UIKit
         set { setPropertyBool(newValue, forName: "autoCollapse") }
     }
     
-    /// 设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false
-    ///
-    /// 备注：开启时当intrinsicContentSize有值时，会自动添加优先级为defaultHigh的matchDimension约束。
-    /// 可据此创建不同优先级的另一边约束，从而实现不同效果，示例：
-    /// 固定高度时如存在优先级为required的width约束，则matchDimension约束不生效，width约束生效；
-    /// 固定高度时如存在优先级为defaultLow的width约束，则matchDimension约束生效，width约束不生效
+    /// 设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false；
+    /// 开启时当intrinsicContentSize有值时，会自动添加matchDimension约束
     public var autoMatchDimension: Bool {
         get { propertyBool(forName: "autoMatchDimension") }
-        set { setPropertyBool(newValue, forName: "autoMatchDimension") }
+        set {
+            let oldValue = autoMatchDimension
+            setPropertyBool(newValue, forName: "autoMatchDimension")
+            if newValue != oldValue {
+                base.setNeedsUpdateConstraints()
+                base.updateConstraintsIfNeeded()
+                base.invalidateIntrinsicContentSize()
+            }
+        }
     }
 
     /// 设置视图是否隐藏时自动收缩、显示时自动展开，默认NO
@@ -2020,15 +2024,14 @@ extension FrameworkAutoloader {
                 }
             }
             
+            if let constraint = selfObject.fw.matchDimensionConstraint {
+                selfObject.fw.removeConstraints([constraint])
+                selfObject.fw.matchDimensionConstraint = nil
+            }
             if selfObject.fw.autoMatchDimension {
-                if let constraint = selfObject.fw.matchDimensionConstraint {
-                    selfObject.fw.removeConstraints([constraint])
-                    selfObject.fw.matchDimensionConstraint = nil
-                }
-                
                 let contentSize = selfObject.intrinsicContentSize
                 if !contentSize.equalTo(CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)) && contentSize.width > 0 && contentSize.height > 0 {
-                    selfObject.fw.matchDimensionConstraint = selfObject.fw.matchDimension(.width, toDimension: .height, multiplier: contentSize.width / contentSize.height, priority: .defaultHigh, autoScale: false)
+                    selfObject.fw.matchDimensionConstraint = selfObject.fw.matchDimension(.width, toDimension: .height, multiplier: contentSize.width / contentSize.height, autoScale: false)
                 }
             }
         }}
