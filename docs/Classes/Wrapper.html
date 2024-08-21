@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.10.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.10.2 Docs</a> (63% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -23480,12 +23480,8 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false</p>
-
-<p>备注：开启时当intrinsicContentSize有值时，会自动添加优先级为defaultHigh的matchDimension约束。
-可据此创建不同优先级的另一边约束，从而实现不同效果，示例：
-固定高度时如存在优先级为required的width约束，则matchDimension约束不生效，width约束生效；
-固定高度时如存在优先级为defaultLow的width约束，则matchDimension约束生效，width约束不生效</p>
+                        <p>设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false；
+开启时当intrinsicContentSize有值时，会自动添加matchDimension约束</p>
 
                       </div>
                       <div class="declaration">

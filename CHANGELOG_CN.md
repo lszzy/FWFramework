@@ -1,5 +1,11 @@
 # 更新日志
 
+## [5.10.2] - 2024-08-21
+
+### Fixed
+* 优化autoMatchDimension生成约束为required，防止与imageView自动约束冲突不生效
+* autoMatchDimension支持动态切换开启或关闭
+
 ## [5.10.1] - 2024-08-21
 
 ### Added
