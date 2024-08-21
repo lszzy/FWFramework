@@ -55,11 +55,25 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     
     private lazy var debugButton: UIButton = {
         let result = UIButton(type: .custom)
+        result.app.addTouch { [weak self] _ in
+            self?.randomImage()
+        }
         return result
     }()
     
     private lazy var debugImage: UIImageView = {
         let result = UIImageView()
+        return result
+    }()
+    
+    private lazy var matchImage: UIImageView = {
+        let result = UIImageView()
+        result.image = UIImage.app.appIconImage()
+        result.app.scaleAspectFit()
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { [weak self] _ in
+            self?.randomImage()
+        }
         return result
     }()
     
@@ -146,6 +160,13 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .right(20).collapseActive(false)
                 .attribute(.left, toAttribute: .right, ofView: debugButton, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         }
+        
+        view.addSubview(matchImage)
+        matchImage.layoutChain
+            .height(50)
+            .autoMatchDimension(true)
+            .centerY(toView: debugView)
+            .left(toViewRight: debugImage, offset: 20)
         
         let iconsView = UIView()
         view.addSubview(iconsView)
@@ -291,6 +312,17 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .size(width: 50, height: 50)
             .right(20).collapse()
             .bottom(20 + APP.safeAreaInsets.bottom).collapse(APP.safeAreaInsets.bottom)
+    }
+    
+    func randomImage() {
+        let imageUrls = [
+            "",
+            "https://img2.baidu.com/it/u=1624963289,2527746346&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
+            "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg",
+            "https://up.enterdesk.com/edpic_source/59/fc/06/59fc069244210ceb384c3fb88ec88121.jpg",
+            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
+        ]
+        matchImage.app.setImage(url: imageUrls.randomElement())
     }
     
     func numberString() -> String {
