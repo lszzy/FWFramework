@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.10.2] - 2024-08-21
+
+### Fixed
+* Optimize autoMatchDimension to generate constraints as required to prevent conflicts with imageView automatic constraints
+* autoMatchDimension supports dynamic switching on or off
+
 ## [5.10.1] - 2024-08-21
 
 ### Added
