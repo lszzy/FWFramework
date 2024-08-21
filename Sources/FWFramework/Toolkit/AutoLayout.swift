@@ -146,9 +146,13 @@ extension Wrapper where Base: UIView {
     public var autoMatchDimension: Bool {
         get { propertyBool(forName: "autoMatchDimension") }
         set {
+            let oldValue = autoMatchDimension
             setPropertyBool(newValue, forName: "autoMatchDimension")
-            base.setNeedsUpdateConstraints()
-            base.invalidateIntrinsicContentSize()
+            if newValue != oldValue {
+                base.setNeedsUpdateConstraints()
+                base.updateConstraintsIfNeeded()
+                base.invalidateIntrinsicContentSize()
+            }
         }
     }
 
