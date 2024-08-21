@@ -13883,595 +13883,595 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1419,
+      "line": 1423,
       "symbol": "LayoutChain.remake()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1425,
+      "line": 1429,
       "symbol": "LayoutChain.autoScale(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1432,
+      "line": 1436,
       "symbol": "LayoutChain.compression(horizontal:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1438,
+      "line": 1442,
       "symbol": "LayoutChain.compression(vertical:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1444,
+      "line": 1448,
       "symbol": "LayoutChain.hugging(horizontal:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1450,
+      "line": 1454,
       "symbol": "LayoutChain.hugging(vertical:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1457,
+      "line": 1461,
       "symbol": "LayoutChain.isCollapsed(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1463,
+      "line": 1467,
       "symbol": "LayoutChain.autoCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1469,
+      "line": 1473,
       "symbol": "LayoutChain.autoMatchDimension(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1475,
+      "line": 1479,
       "symbol": "LayoutChain.hiddenCollapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1482,
+      "line": 1486,
       "symbol": "LayoutChain.center(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1488,
+      "line": 1492,
       "symbol": "LayoutChain.centerX(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1494,
+      "line": 1498,
       "symbol": "LayoutChain.centerY(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1500,
+      "line": 1504,
       "symbol": "LayoutChain.center(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1513,
+      "line": 1517,
       "symbol": "LayoutChain.centerX(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1519,
+      "line": 1523,
       "symbol": "LayoutChain.centerY(toView:offset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1525,
+      "line": 1529,
       "symbol": "LayoutChain.centerX(toView:multiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1531,
+      "line": 1535,
       "symbol": "LayoutChain.centerY(toView:multiplier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1538,
+      "line": 1542,
       "symbol": "LayoutChain.edges(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1544,
+      "line": 1548,
       "symbol": "LayoutChain.edges(_:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1550,
+      "line": 1554,
       "symbol": "LayoutChain.horizontal(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1556,
+      "line": 1560,
       "symbol": "LayoutChain.vertical(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1562,
+      "line": 1566,
       "symbol": "LayoutChain.top(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1568,
+      "line": 1572,
       "symbol": "LayoutChain.bottom(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1574,
+      "line": 1578,
       "symbol": "LayoutChain.left(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1580,
+      "line": 1584,
       "symbol": "LayoutChain.right(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1586,
+      "line": 1590,
       "symbol": "LayoutChain.top(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1592,
+      "line": 1596,
       "symbol": "LayoutChain.bottom(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1598,
+      "line": 1602,
       "symbol": "LayoutChain.left(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1604,
+      "line": 1608,
       "symbol": "LayoutChain.right(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1610,
+      "line": 1614,
       "symbol": "LayoutChain.horizontal(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1623,
+      "line": 1627,
       "symbol": "LayoutChain.vertical(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1636,
+      "line": 1640,
       "symbol": "LayoutChain.top(toViewBottom:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1642,
+      "line": 1646,
       "symbol": "LayoutChain.bottom(toViewTop:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1648,
+      "line": 1652,
       "symbol": "LayoutChain.left(toViewRight:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1654,
+      "line": 1658,
       "symbol": "LayoutChain.right(toViewLeft:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1661,
+      "line": 1665,
       "symbol": "LayoutChain.center(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1667,
+      "line": 1671,
       "symbol": "LayoutChain.centerX(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1673,
+      "line": 1677,
       "symbol": "LayoutChain.centerY(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1679,
+      "line": 1683,
       "symbol": "LayoutChain.edges(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1685,
+      "line": 1689,
       "symbol": "LayoutChain.edges(toSafeArea:excludingEdge:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1691,
+      "line": 1695,
       "symbol": "LayoutChain.horizontal(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1697,
+      "line": 1701,
       "symbol": "LayoutChain.vertical(toSafeArea:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1703,
+      "line": 1707,
       "symbol": "LayoutChain.top(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1709,
+      "line": 1713,
       "symbol": "LayoutChain.bottom(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1715,
+      "line": 1719,
       "symbol": "LayoutChain.left(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1721,
+      "line": 1725,
       "symbol": "LayoutChain.right(toSafeArea:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1728,
+      "line": 1732,
       "symbol": "LayoutChain.size(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1734,
+      "line": 1738,
       "symbol": "LayoutChain.size(width:height:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1740,
+      "line": 1744,
       "symbol": "LayoutChain.width(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1746,
+      "line": 1750,
       "symbol": "LayoutChain.height(_:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1752,
+      "line": 1756,
       "symbol": "LayoutChain.width(toHeight:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1758,
+      "line": 1762,
       "symbol": "LayoutChain.height(toWidth:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1764,
+      "line": 1768,
       "symbol": "LayoutChain.size(toView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1777,
+      "line": 1781,
       "symbol": "LayoutChain.width(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1783,
+      "line": 1787,
       "symbol": "LayoutChain.height(toView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1789,
+      "line": 1793,
       "symbol": "LayoutChain.width(toView:multiplier:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1795,
+      "line": 1799,
       "symbol": "LayoutChain.height(toView:multiplier:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1802,
+      "line": 1806,
       "symbol": "LayoutChain.attribute(_:toAttribute:ofView:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1808,
+      "line": 1812,
       "symbol": "LayoutChain.attribute(_:toAttribute:ofView:multiplier:offset:relation:priority:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1815,
+      "line": 1819,
       "symbol": "LayoutChain.subviews(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1821,
+      "line": 1825,
       "symbol": "LayoutChain.subviews(along:itemSpacing:leadSpacing:tailSpacing:itemLength:equalLength:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1827,
+      "line": 1831,
       "symbol": "LayoutChain.subviews(along:itemLength:leadSpacing:tailSpacing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1833,
+      "line": 1837,
       "symbol": "LayoutChain.subviews(along:alignCenter:itemWidth:leftSpacing:rightSpacing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1840,
+      "line": 1844,
       "symbol": "LayoutChain.relative()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1848,
+      "line": 1852,
       "symbol": "LayoutChain.fixed()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1856,
+      "line": 1860,
       "symbol": "LayoutChain.offset(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1864,
+      "line": 1868,
       "symbol": "LayoutChain.constant(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1872,
+      "line": 1876,
       "symbol": "LayoutChain.priority(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1880,
+      "line": 1884,
       "symbol": "LayoutChain.collapse(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1888,
+      "line": 1892,
       "symbol": "LayoutChain.original(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1896,
+      "line": 1900,
       "symbol": "LayoutChain.collapseActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1904,
+      "line": 1908,
       "symbol": "LayoutChain.collapsePriority(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1912,
+      "line": 1916,
       "symbol": "LayoutChain.originalPriority(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1920,
+      "line": 1924,
       "symbol": "LayoutChain.identifier(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1928,
+      "line": 1932,
       "symbol": "LayoutChain.active(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1936,
+      "line": 1940,
       "symbol": "LayoutChain.remove()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1942,
+      "line": 1946,
       "symbol": "LayoutChain.constraints",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1946,
+      "line": 1950,
       "symbol": "LayoutChain.constraint",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1950,
+      "line": 1954,
       "symbol": "LayoutChain.constraint(_:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1954,
+      "line": 1958,
       "symbol": "LayoutChain.constraint(toSafeArea:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1958,
+      "line": 1962,
       "symbol": "LayoutChain.constraint(_:toAttribute:ofView:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1962,
+      "line": 1966,
       "symbol": "LayoutChain.constraint(_:toAttribute:ofView:multiplier:relation:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1966,
+      "line": 1970,
       "symbol": "LayoutChain.constraint(identifier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/AutoLayout.swift",
-      "line": 1972,
+      "line": 1976,
       "symbol": "LayoutChain.layoutKey(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
