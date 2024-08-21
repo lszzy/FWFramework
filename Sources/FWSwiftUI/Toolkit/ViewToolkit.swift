@@ -506,14 +506,14 @@ extension EdgeInsets {
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
 extension Binding {
     
-    public func onSet(_ body: @escaping @Sendable (Value) -> ()) -> Self {
+    public func onSet(_ body: @escaping @Sendable (Value) -> ()) -> Self where Value: Sendable {
         return .init(
             get: { self.wrappedValue },
             set: { self.wrappedValue = $0; body($0) }
         )
     }
     
-    public func onChange(perform action: @escaping @Sendable (Value) -> ()) -> Self where Value: Equatable {
+    public func onChange(perform action: @escaping @Sendable (Value) -> ()) -> Self where Value: Equatable, Value: Sendable {
         return .init(
             get: { self.wrappedValue },
             set: { newValue in
@@ -527,7 +527,7 @@ extension Binding {
         )
     }
     
-    public func onChange(toggle value: Binding<Bool>) -> Self where Value: Equatable {
+    public func onChange(toggle value: Binding<Bool>) -> Self where Value: Equatable, Value: Sendable {
         let sendableValue = SendableObject(value)
         return onChange { _ in
             sendableValue.object.wrappedValue.toggle()
