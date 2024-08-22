@@ -304,10 +304,15 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
     private var _transitionType: AnimatedTransitionType = .none
     
-    /// 创建动画转场，可自定义句柄
-    public init(block: ((AnimatedTransition) -> Void)? = nil) {
+    /// 创建动画转场
+    public override init() {
         super.init()
         self.completionSpeed = 0.35
+    }
+    
+    /// 创建动画句柄转场
+    public convenience init(block: ((AnimatedTransition) -> Void)?) {
+        self.init()
         self.transitionBlock = block
     }
 
@@ -991,6 +996,10 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     public override init(target: Any?, action: Selector?) {
         super.init(target: target, action: action)
         self.delegate = self
+    }
+    
+    public convenience init() {
+        self.init(target: nil, action: nil)
     }
     
     // MARK: - Override
