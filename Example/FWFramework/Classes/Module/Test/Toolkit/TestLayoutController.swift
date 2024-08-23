@@ -175,16 +175,15 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .horizontal(20)
             .height(50)
         
-        UIView.app.autoScaleLayout = true
         for _ in 0..<4 {
             let iconView = UIImageView()
             iconView.image = UIImage.app.appIconImage()
+            iconView.app.autoScaleLayout = true
             iconsView.addSubview(iconView)
         }
         iconsView.layoutChain
             .subviews(along: .horizontal, itemLength: APP.fixed(50), leadSpacing: 0, tailSpacing: 0)
             .subviews(along: .horizontal, leftSpacing: 0, rightSpacing: 0)
-        UIView.app.autoScaleLayout = false
         
         let lineHeight = ceil(APP.font(16).lineHeight)
         let moreText = "点击展开"
