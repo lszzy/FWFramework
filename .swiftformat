@@ -15,7 +15,7 @@
 --importgrouping testable-top
 --operatorfunc no-space
 --nospaceoperators ..<, ...
---self init-only
+--self remove
 --someAny false
 --stripunusedargs closure-only
 --wraparguments preserve
