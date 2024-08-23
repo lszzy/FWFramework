@@ -90,8 +90,8 @@ extension AnyModel where Self == JSON {
     
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
-        let object = self.object
-        return !(object is NSNull) ? object : nil
+        let obj = self.object
+        return !(obj is NSNull) ? obj : nil
     }
 }
 
