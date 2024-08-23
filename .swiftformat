@@ -1,11 +1,9 @@
 # file options
-
 --exclude Pods
 --symlinks ignore
 --swiftversion 5.9
 
 # format options
-
 --commas inline
 --comments indent
 --decimalgrouping 3,5
@@ -17,7 +15,7 @@
 --importgrouping testable-top
 --operatorfunc no-space
 --nospaceoperators ..<, ...
---selfrequired validate
+--self init-only
 --someAny false
 --stripunusedargs closure-only
 --wraparguments preserve
@@ -25,9 +23,10 @@
 --wrapparameters preserve
 
 # rules
-
 --disable andOperator
 --disable opaqueGenericParameters
 --disable wrapMultilineStatementBraces
 --disable blankLinesAroundMark
 --disable redundantBackticks
+--disable initCoderUnavailable
+--disable conditionalAssignment
