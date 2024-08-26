@@ -15,32 +15,32 @@ import UIKit
 public struct ArrayResultBuilder<Element> {
     @_optimize(speed) @_transparent
     public static func buildBlock() -> [Element] {
-        return []
+        []
     }
 
     @_optimize(speed) @_transparent
     public static func buildBlock(_ element: Element) -> [Element] {
-        return [element]
+        [element]
     }
 
     @_optimize(speed) @_transparent
     public static func buildBlock(_ elements: Element...) -> [Element] {
-        return elements
+        elements
     }
-    
+
     @_optimize(speed) @_transparent
     public static func buildBlock(_ arrays: [Element]...) -> [Element] {
-        arrays.flatMap({ $0 })
+        arrays.flatMap { $0 }
     }
 
     @_optimize(speed) @_transparent
     public static func buildEither(first component: Element) -> [Element] {
-        return [component]
+        [component]
     }
 
     @_optimize(speed) @_transparent
     public static func buildEither(first component: [Element]) -> [Element] {
-        return component
+        component
     }
 
     @_optimize(speed) @_transparent
@@ -55,7 +55,7 @@ public struct ArrayResultBuilder<Element> {
 
     @_optimize(speed) @_transparent
     public static func buildExpression(_ element: Element?) -> [Element] {
-        element.map({ [$0] }) ?? []
+        element.map { [$0] } ?? []
     }
 
     @_optimize(speed) @_transparent
@@ -65,29 +65,28 @@ public struct ArrayResultBuilder<Element> {
 
     @_optimize(speed) @_transparent
     public static func buildOptional(_ component: [Element]?) -> [Element] {
-        return component ?? []
+        component ?? []
     }
 
     @_optimize(speed) @_transparent
     public static func buildArray(_ contents: [[Element]]) -> [Element] {
-        contents.flatMap({ $0 })
+        contents.flatMap { $0 }
     }
 }
 
 // MARK: - NSMutableAttributedString+ResultBuilder
 extension NSMutableAttributedString {
-    
     /// 拼接NSAttributedString
     public static func concatenate(
         @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
     ) -> Self {
-        let result = Self.init()
-        items().forEach { item in
+        let result = Self()
+        for item in items() {
             result.append(item.attributedStringValue)
         }
         return result
     }
-    
+
     /// 初始化并拼接NSAttributedString
     public convenience init(
         @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
@@ -95,18 +94,17 @@ extension NSMutableAttributedString {
         self.init()
         concatenate(items)
     }
-    
+
     /// 拼接NSAttributedString
     @discardableResult
     public func concatenate(
         @ArrayResultBuilder<AttributedStringParameter> _ items: () -> [AttributedStringParameter]
     ) -> Self {
-        items().forEach { item in
+        for item in items() {
             append(item.attributedStringValue)
         }
         return self
     }
-    
 }
 
 // MARK: - UIView+ResultBuilder
@@ -116,7 +114,6 @@ public protocol ArrayResultBuilderCompatible {}
 extension UIView: ArrayResultBuilderCompatible {}
 
 @MainActor extension ArrayResultBuilderCompatible where Self: UIView {
-    
     /// 初始化并批量配置子视图
     public init(
         frame: CGRect = .zero,
@@ -125,20 +122,20 @@ extension UIView: ArrayResultBuilderCompatible {}
         self.init(frame: frame)
         arrangeSubviews(items)
     }
-    
+
     /// 批量配置子视图，支持链式调用
     @discardableResult
     public func arrangeSubviews(
         @ArrayResultBuilder<UIView> _ items: () -> [UIView]
     ) -> Self {
-        items().forEach { view in
+        for view in items() {
             if view.superview == nil {
                 addSubview(view)
             }
         }
         return self
     }
-    
+
     /// 调用布局句柄，支持链式调用
     @discardableResult
     public func arrangeLayout(
@@ -147,5 +144,4 @@ extension UIView: ArrayResultBuilderCompatible {}
         block(self)
         return self
     }
-    
 }

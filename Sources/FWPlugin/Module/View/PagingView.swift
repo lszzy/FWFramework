@@ -13,7 +13,7 @@ import UIKit
 // MARK: - PagingListContainerView
 
 /// 列表容器视图的类型
-///- ScrollView: UIScrollView。优势：没有其他副作用。劣势：实时的视图内存占用相对大一点，因为所有加载之后的列表视图都在视图层级里面。
+/// - ScrollView: UIScrollView。优势：没有其他副作用。劣势：实时的视图内存占用相对大一点，因为所有加载之后的列表视图都在视图层级里面。
 /// - CollectionView: 使用UICollectionView。优势：因为列表被添加到cell上，实时的视图内存占用更少，适合内存要求特别高的场景。劣势：因为cell重用机制的问题，导致列表被移除屏幕外之后，会被放入缓存区，而不存在于视图层级中。如果刚好你的列表使用了下拉刷新视图，在快速切换过程中，就会导致下拉刷新回调不成功的问题。一句话概括：使用CollectionView的时候，就不要让列表使用下拉刷新加载。
 public enum PagingListContainerType: Int, Sendable {
     case scrollView
@@ -34,7 +34,7 @@ public enum PagingListContainerType: Int, Sendable {
     /// 当listView内部持有的UIScrollView或UITableView或UICollectionView的代理方法`scrollViewDidScroll`回调时，需要调用该代理方法传入的callback
     ///
     /// - Parameter callback: `scrollViewDidScroll`回调时调用的callback
-    func listViewDidScrollCallback(callback: @escaping (UIScrollView)->())
+    func listViewDidScrollCallback(callback: @escaping (UIScrollView) -> Void)
 
     /// 将要重置listScrollView的contentOffset
     @objc optional func listScrollViewWillResetContentOffset()
@@ -65,7 +65,6 @@ public enum PagingListContainerType: Int, Sendable {
     /// - Returns: 遵从FWPagingViewListViewDelegate协议的实例
     func listContainerView(_ listContainerView: PagingListContainerView, initListAt index: Int) -> PagingViewListViewDelegate
 
-
     /// 控制能否初始化对应index的列表。有些业务需求，需要在某些情况才允许初始化某些列表，通过通过该代理实现控制。
     @objc optional func listContainerView(_ listContainerView: PagingListContainerView, canInitListAt index: Int) -> Bool
 
@@ -92,13 +91,14 @@ open class PagingListContainerView: UIView {
         didSet {
             if let containerScrollView = scrollView as? PagingListContainerScrollView {
                 containerScrollView.isCategoryNestPagingEnabled = isCategoryNestPagingEnabled
-            }else if let containerScrollView = scrollView as? PagingListContainerCollectionView {
+            } else if let containerScrollView = scrollView as? PagingListContainerCollectionView {
                 containerScrollView.isCategoryNestPagingEnabled = isCategoryNestPagingEnabled
             }
         }
     }
+
     /// 已经加载过的列表字典。key是index，value是对应的列表
-    open var validListDict = [Int:PagingViewListViewDelegate]()
+    open var validListDict = [Int: PagingViewListViewDelegate]()
     /// 滚动切换的时候，滚动距离超过一页的多少百分比，就触发列表的初始化。默认0.01（即列表显示了一点就触发加载）。范围0~1，开区间不包括0和1
     open var initListPercent: CGFloat = 0.01 {
         didSet {
@@ -107,6 +107,7 @@ open class PagingListContainerView: UIView {
             }
         }
     }
+
     public var listCellBackgroundColor: UIColor = .white
     /// 需要和segmentedView.defaultSelectedIndex保持一致，用于触发默认index列表的加载
     public var defaultSelectedIndex: Int = 0 {
@@ -114,6 +115,7 @@ open class PagingListContainerView: UIView {
             currentIndex = defaultSelectedIndex
         }
     }
+
     weak var delegate: PagingListContainerViewDelegate?
     public private(set) var currentIndex: Int = 0
     private var collectionView: UICollectionView!
@@ -129,32 +131,32 @@ open class PagingListContainerView: UIView {
         commonInit()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     open func commonInit() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         containerVC = PagingListContainerViewController()
         containerVC.view.backgroundColor = .clear
         addSubview(containerVC.view)
-        containerVC.viewWillAppearClosure = {[weak self] in
+        containerVC.viewWillAppearClosure = { [weak self] in
             self?.listWillAppear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewDidAppearClosure = {[weak self] in
+        containerVC.viewDidAppearClosure = { [weak self] in
             self?.listDidAppear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewWillDisappearClosure = {[weak self] in
+        containerVC.viewWillDisappearClosure = { [weak self] in
             self?.listWillDisappear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewDidDisappearClosure = {[weak self] in
+        containerVC.viewDidDisappearClosure = { [weak self] in
             self?.listDidDisappear(at: self?.currentIndex ?? 0)
         }
         if type == .scrollView {
             if let scrollViewClass = dataSource.scrollViewClass?(in: self) as? UIScrollView.Type {
                 scrollView = scrollViewClass.init()
-            }else {
-                scrollView = PagingListContainerScrollView.init()
+            } else {
+                scrollView = PagingListContainerScrollView()
             }
             scrollView.backgroundColor = .clear
             scrollView.delegate = self
@@ -165,15 +167,15 @@ open class PagingListContainerView: UIView {
             scrollView.bounces = false
             scrollView.contentInsetAdjustmentBehavior = .never
             containerVC.view.addSubview(scrollView)
-        }else if type == .collectionView {
+        } else if type == .collectionView {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
             layout.minimumLineSpacing = 0
             layout.minimumInteritemSpacing = 0
             if let collectionViewClass = dataSource.scrollViewClass?(in: self) as? UICollectionView.Type {
                 collectionView = collectionViewClass.init(frame: CGRect.zero, collectionViewLayout: layout)
-            }else {
-                collectionView = PagingListContainerCollectionView.init(frame: CGRect.zero, collectionViewLayout: layout)
+            } else {
+                collectionView = PagingListContainerCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
             }
             collectionView.backgroundColor = .clear
             collectionView.isPagingEnabled = true
@@ -185,18 +187,18 @@ open class PagingListContainerView: UIView {
             collectionView.delegate = self
             collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
             collectionView.isPrefetchingEnabled = false
-            self.collectionView.contentInsetAdjustmentBehavior = .never
+            collectionView.contentInsetAdjustmentBehavior = .never
             containerVC.view.addSubview(collectionView)
-            //让外部统一访问scrollView
+            // 让外部统一访问scrollView
             scrollView = collectionView
         }
     }
 
-    open override func willMove(toSuperview newSuperview: UIView?) {
+    override open func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
         var next: UIResponder? = newSuperview
         while next != nil {
-            if let vc = next as? UIViewController{
+            if let vc = next as? UIViewController {
                 vc.addChild(containerVC)
                 containerVC.didMove(toParent: vc)
                 break
@@ -205,42 +207,41 @@ open class PagingListContainerView: UIView {
         }
     }
 
-    open override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         containerVC.view.frame = bounds
         if type == .scrollView {
             if scrollView.frame == CGRect.zero || scrollView.bounds.size != bounds.size {
                 scrollView.frame = bounds
-                scrollView.contentSize = CGSize(width: scrollView.bounds.size.width*CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
+                scrollView.contentSize = CGSize(width: scrollView.bounds.size.width * CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
                 for (index, list) in validListDict {
-                    list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
+                    list.listView().frame = CGRect(x: CGFloat(index) * scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
                 }
-                scrollView.contentOffset = CGPoint(x: CGFloat(currentIndex)*scrollView.bounds.size.width, y: 0)
-            }else {
+                scrollView.contentOffset = CGPoint(x: CGFloat(currentIndex) * scrollView.bounds.size.width, y: 0)
+            } else {
                 scrollView.frame = bounds
-                scrollView.contentSize = CGSize(width: scrollView.bounds.size.width*CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
+                scrollView.contentSize = CGSize(width: scrollView.bounds.size.width * CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
             }
-        }else {
+        } else {
             if collectionView.frame == CGRect.zero || collectionView.bounds.size != bounds.size {
                 collectionView.frame = bounds
                 collectionView.collectionViewLayout.invalidateLayout()
                 collectionView.reloadData()
-                collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex)*collectionView.bounds.size.width, y: 0), animated: false)
-            }else {
+                collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex) * collectionView.bounds.size.width, y: 0), animated: false)
+            } else {
                 collectionView.frame = bounds
             }
         }
     }
 
-    //MARK: - ListContainer
+    // MARK: - ListContainer
     public func contentScrollView() -> UIScrollView {
-           return scrollView
+        scrollView
     }
 
-    public func scrolling(from leftIndex: Int, to rightIndex: Int, percent: CGFloat, selectedIndex: Int) {
-    }
+    public func scrolling(from leftIndex: Int, to rightIndex: Int, percent: CGFloat, selectedIndex: Int) {}
 
     public func didClickSelectedItem(at index: Int) {
         guard checkIndexValid(index) else {
@@ -257,14 +258,14 @@ open class PagingListContainerView: UIView {
     }
 
     public func reloadData() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         var resetContentOffset = false
         if currentIndex < 0 || currentIndex >= dataSource.numberOfLists(in: self) {
             defaultSelectedIndex = 0
             currentIndex = 0
             resetContentOffset = true
         }
-        validListDict.values.forEach { (list) in
+        for list in validListDict.values {
             if let listVC = list as? UIViewController {
                 listVC.willMove(toParent: nil)
                 listVC.removeFromParent()
@@ -273,29 +274,29 @@ open class PagingListContainerView: UIView {
         }
         validListDict.removeAll()
         if type == .scrollView {
-            scrollView.contentSize = CGSize(width: scrollView.bounds.size.width*CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
+            scrollView.contentSize = CGSize(width: scrollView.bounds.size.width * CGFloat(dataSource.numberOfLists(in: self)), height: scrollView.bounds.size.height)
             if resetContentOffset {
-                scrollView.contentOffset = CGPoint(x: CGFloat(currentIndex)*scrollView.bounds.size.width, y: 0)
+                scrollView.contentOffset = CGPoint(x: CGFloat(currentIndex) * scrollView.bounds.size.width, y: 0)
             }
-        }else {
+        } else {
             collectionView.reloadData()
             if resetContentOffset {
-                collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex)*collectionView.bounds.size.width, y: 0), animated: false)
+                collectionView.setContentOffset(CGPoint(x: CGFloat(currentIndex) * collectionView.bounds.size.width, y: 0), animated: false)
             }
         }
         listWillAppear(at: currentIndex)
         listDidAppear(at: currentIndex)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     func initListIfNeeded(at index: Int) {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         if dataSource.listContainerView?(self, canInitListAt: index) == false {
             return
         }
         var existedList = validListDict[index]
         if existedList != nil {
-            //列表已经创建好了
+            // 列表已经创建好了
             return
         }
         existedList = dataSource.listContainerView(self, initListAt: index)
@@ -308,20 +309,20 @@ open class PagingListContainerView: UIView {
         }
         validListDict[index] = list
         switch type {
-            case .scrollView:
-                list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
-                scrollView.addSubview(list.listView())
-            case .collectionView:
-                if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) {
-                    cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-                    list.listView().frame = cell.contentView.bounds
-                    cell.contentView.addSubview(list.listView())
-                }
+        case .scrollView:
+            list.listView().frame = CGRect(x: CGFloat(index) * scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
+            scrollView.addSubview(list.listView())
+        case .collectionView:
+            if let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) {
+                cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                list.listView().frame = cell.contentView.bounds
+                cell.contentView.addSubview(list.listView())
+            }
         }
     }
 
     private func listWillAppear(at index: Int) {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         guard checkIndexValid(index) else {
             return
         }
@@ -331,8 +332,8 @@ open class PagingListContainerView: UIView {
             if let vc = existedList as? UIViewController {
                 vc.beginAppearanceTransition(true, animated: false)
             }
-        }else {
-            //当前列表未被创建（页面初始化或通过点击触发的listWillAppear）
+        } else {
+            // 当前列表未被创建（页面初始化或通过点击触发的listWillAppear）
             guard dataSource.listContainerView?(self, canInitListAt: index) != false else {
                 return
             }
@@ -347,14 +348,14 @@ open class PagingListContainerView: UIView {
             validListDict[index] = list
             if type == .scrollView {
                 if list.listView().superview == nil {
-                    list.listView().frame = CGRect(x: CGFloat(index)*scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
+                    list.listView().frame = CGRect(x: CGFloat(index) * scrollView.bounds.size.width, y: 0, width: scrollView.bounds.size.width, height: scrollView.bounds.size.height)
                     scrollView.addSubview(list.listView())
                 }
                 list.listWillAppear?()
                 if let vc = list as? UIViewController {
                     vc.beginAppearanceTransition(true, animated: false)
                 }
-            }else {
+            } else {
                 let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0))
                 cell?.contentView.subviews.forEach { $0.removeFromSuperview() }
                 list.listView().frame = cell?.contentView.bounds ?? CGRect.zero
@@ -403,7 +404,7 @@ open class PagingListContainerView: UIView {
     }
 
     private func checkIndexValid(_ index: Int) -> Bool {
-        guard let dataSource = dataSource else { return false }
+        guard let dataSource else { return false }
         let count = dataSource.numberOfLists(in: self)
         if count <= 0 || index >= count {
             return false
@@ -412,20 +413,20 @@ open class PagingListContainerView: UIView {
     }
 
     private func listDidAppearOrDisappear(scrollView: UIScrollView) {
-        let currentIndexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
+        let currentIndexPercent = scrollView.contentOffset.x / scrollView.bounds.size.width
         if willAppearIndex != -1 || willDisappearIndex != -1 {
             let disappearIndex = willDisappearIndex
             let appearIndex = willAppearIndex
             if willAppearIndex > willDisappearIndex {
-                //将要出现的列表在右边
+                // 将要出现的列表在右边
                 if currentIndexPercent >= CGFloat(willAppearIndex) {
                     willDisappearIndex = -1
                     willAppearIndex = -1
                     listDidDisappear(at: disappearIndex)
                     listDidAppear(at: appearIndex)
                 }
-            }else {
-                //将要出现的列表在左边
+            } else {
+                // 将要出现的列表在左边
                 if currentIndexPercent <= CGFloat(willAppearIndex) {
                     willDisappearIndex = -1
                     willAppearIndex = -1
@@ -439,7 +440,7 @@ open class PagingListContainerView: UIView {
 
 extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let dataSource = dataSource else { return 0 }
+        guard let dataSource else { return 0 }
         return dataSource.numberOfLists(in: self)
     }
 
@@ -451,7 +452,7 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
         if list != nil {
             if list is UIViewController {
                 list?.listView().frame = cell.contentView.bounds
-            }else {
+            } else {
                 list?.listView().frame = cell.bounds
             }
             cell.contentView.addSubview(list!.listView())
@@ -460,7 +461,7 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return bounds.size
+        bounds.size
     }
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -468,23 +469,23 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
         guard scrollView.isTracking || scrollView.isDragging || scrollView.isDecelerating else {
             return
         }
-        let percent = scrollView.contentOffset.x/scrollView.bounds.size.width
-        let maxCount = Int(round(scrollView.contentSize.width/scrollView.bounds.size.width))
+        let percent = scrollView.contentOffset.x / scrollView.bounds.size.width
+        let maxCount = Int(round(scrollView.contentSize.width / scrollView.bounds.size.width))
         var leftIndex = Int(floor(Double(percent)))
         leftIndex = max(0, min(maxCount - 1, leftIndex))
-        let rightIndex = leftIndex + 1;
+        let rightIndex = leftIndex + 1
         if percent < 0 || rightIndex >= maxCount {
             listDidAppearOrDisappear(scrollView: scrollView)
             return
         }
         let remainderRatio = percent - CGFloat(leftIndex)
         if rightIndex == currentIndex {
-            //当前选中的在右边，用户正在从右边往左边滑动
+            // 当前选中的在右边，用户正在从右边往左边滑动
             if validListDict[leftIndex] == nil && remainderRatio < (1 - initListPercent) {
                 initListIfNeeded(at: leftIndex)
-            }else if validListDict[leftIndex] != nil {
+            } else if validListDict[leftIndex] != nil {
                 if willAppearIndex == -1 {
-                    willAppearIndex = leftIndex;
+                    willAppearIndex = leftIndex
                     listWillAppear(at: willAppearIndex)
                 }
             }
@@ -492,11 +493,11 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
                 willDisappearIndex = rightIndex
                 listWillDisappear(at: willDisappearIndex)
             }
-        }else {
-            //当前选中的在左边，用户正在从左边往右边滑动
+        } else {
+            // 当前选中的在左边，用户正在从左边往右边滑动
             if validListDict[rightIndex] == nil && remainderRatio > initListPercent {
                 initListIfNeeded(at: rightIndex)
-            }else if validListDict[rightIndex] != nil {
+            } else if validListDict[rightIndex] != nil {
                 if willAppearIndex == -1 {
                     willAppearIndex = rightIndex
                     listWillAppear(at: willAppearIndex)
@@ -511,7 +512,7 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        //滑动到一半又取消滑动处理
+        // 滑动到一半又取消滑动处理
         if willAppearIndex != -1 || willDisappearIndex != -1 {
             listWillDisappear(at: willAppearIndex)
             listWillAppear(at: willDisappearIndex)
@@ -539,23 +540,26 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
 }
 
 class PagingListContainerViewController: UIViewController {
-    var viewWillAppearClosure: (()->())?
-    var viewDidAppearClosure: (()->())?
-    var viewWillDisappearClosure: (()->())?
-    var viewDidDisappearClosure: (()->())?
-    override var shouldAutomaticallyForwardAppearanceMethods: Bool { return false }
+    var viewWillAppearClosure: (() -> Void)?
+    var viewDidAppearClosure: (() -> Void)?
+    var viewWillDisappearClosure: (() -> Void)?
+    var viewDidDisappearClosure: (() -> Void)?
+    override var shouldAutomaticallyForwardAppearanceMethods: Bool { false }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewWillAppearClosure?()
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewDidAppearClosure?()
     }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         viewWillDisappearClosure?()
     }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         viewDidDisappearClosure?()
@@ -569,12 +573,12 @@ class PagingListContainerScrollView: UIScrollView, UIGestureRecognizerDelegate {
             let panGesture = gestureRecognizer as! UIPanGestureRecognizer
             let velocityX = panGesture.velocity(in: panGesture.view!).x
             if velocityX > 0 {
-                //当前在第一个页面，且往左滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
+                // 当前在第一个页面，且往左滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
                 if contentOffset.x == 0 {
                     return false
                 }
-            }else if velocityX < 0 {
-                //当前在最后一个页面，且往右滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
+            } else if velocityX < 0 {
+                // 当前在最后一个页面，且往右滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
                 if contentOffset.x + bounds.size.width == contentSize.width {
                     return false
                 }
@@ -587,16 +591,16 @@ class PagingListContainerScrollView: UIScrollView, UIGestureRecognizerDelegate {
 class PagingListContainerCollectionView: UICollectionView, UIGestureRecognizerDelegate {
     var isCategoryNestPagingEnabled = false
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if isCategoryNestPagingEnabled, let panGestureClass = NSClassFromString("UIScrollViewPanGestureRecognizer"), gestureRecognizer.isMember(of: panGestureClass)  {
+        if isCategoryNestPagingEnabled, let panGestureClass = NSClassFromString("UIScrollViewPanGestureRecognizer"), gestureRecognizer.isMember(of: panGestureClass) {
             let panGesture = gestureRecognizer as! UIPanGestureRecognizer
             let velocityX = panGesture.velocity(in: panGesture.view!).x
             if velocityX > 0 {
-                //当前在第一个页面，且往左滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
+                // 当前在第一个页面，且往左滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
                 if contentOffset.x == 0 {
                     return false
                 }
-            }else if velocityX < 0 {
-                //当前在最后一个页面，且往右滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
+            } else if velocityX < 0 {
+                // 当前在最后一个页面，且往右滑动，就放弃该手势响应，让外层接收，达到多个PagingView左右切换效果
                 if contentOffset.x + bounds.size.width == contentSize.width {
                     return false
                 }
@@ -609,7 +613,7 @@ class PagingListContainerCollectionView: UICollectionView, UIGestureRecognizerDe
 // MARK: - PagingMainTableView
 
 @MainActor @objc public protocol PagingMainTableViewGestureDelegate {
-    //如果headerView（或其他地方）有水平滚动的scrollView，当其正在左右滑动的时候，就不能让列表上下滑动，所以有此代理方法进行对应处理
+    // 如果headerView（或其他地方）有水平滚动的scrollView，当其正在左右滑动的时候，就不能让列表上下滑动，所以有此代理方法进行对应处理
     func mainTableViewGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
 }
 
@@ -618,8 +622,8 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureDelegate != nil {
-            return gestureDelegate!.mainTableViewGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith:otherGestureRecognizer)
-        }else {
+            return gestureDelegate!.mainTableViewGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+        } else {
             return gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self)
         }
     }
@@ -646,7 +650,7 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
     ///   - pagingView: pagingView description
     ///   - index: 新生成的列表实例
     func pagingView(_ pagingView: PagingView, initListAtIndex index: Int) -> PagingViewListViewDelegate
-    
+
     /// 返回对应index的列表唯一标识
     /// - Parameters:
     ///   - pagingView: pagingView description
@@ -658,7 +662,7 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
     @objc optional func pagingView(_ pagingView: PagingView, mainTableViewDidEndDragging scrollView: UIScrollView, willDecelerate decelerate: Bool)
     @objc optional func pagingView(_ pagingView: PagingView, mainTableViewDidEndDecelerating scrollView: UIScrollView)
     @objc optional func pagingView(_ pagingView: PagingView, mainTableViewDidEndScrollingAnimation scrollView: UIScrollView)
-    
+
     /// 滚动到指定index内容视图时回调方法
     @objc optional func pagingView(_ pagingView: PagingView, didScrollToIndex index: Int)
 
@@ -672,7 +676,7 @@ open class PagingMainTableView: UITableView, UIGestureRecognizerDelegate {
 
 /**
  FWPagingView
- 
+
  [JXPagingView 2.1.0](https://github.com/pujiaxin33/JXPagingView)
  */
 open class PagingView: UIView {
@@ -682,10 +686,11 @@ open class PagingView: UIView {
             listContainerView.defaultSelectedIndex = defaultSelectedIndex
         }
     }
-    public private(set) lazy var mainTableView: PagingMainTableView = PagingMainTableView(frame: CGRect.zero, style: .plain)
-    public private(set) lazy var listContainerView: PagingListContainerView = PagingListContainerView(dataSource: self, type: listContainerType)
+
+    public private(set) lazy var mainTableView: PagingMainTableView = .init(frame: CGRect.zero, style: .plain)
+    public private(set) lazy var listContainerView: PagingListContainerView = .init(dataSource: self, type: listContainerType)
     /// 当前已经加载过可用的列表字典，key就是index值，value是对应的列表。
-    public private(set) var validListDict = [Int:PagingViewListViewDelegate]()
+    public private(set) var validListDict = [Int: PagingViewListViewDelegate]()
     /// 顶部固定sectionHeader的垂直偏移量。数值越大越往下沉。
     public var pinSectionHeaderVerticalOffset: Int = 0
     public var isListHorizontalScrollEnabled = true {
@@ -693,18 +698,19 @@ open class PagingView: UIView {
             listContainerView.scrollView.isScrollEnabled = isListHorizontalScrollEnabled
         }
     }
+
     /// 是否允许当前列表自动显示或隐藏列表是垂直滚动指示器。true：悬浮的headerView滚动到顶部开始滚动列表时，就会显示，反之隐藏。false：内部不会处理列表的垂直滚动指示器。默认为：true。
     public var automaticallyDisplayListVerticalScrollIndicator = true
     /// 当allowsCacheList为true时，请务必实现代理方法`func pagingView(_ pagingView: PagingView, listIdentifierAtIndex index: Int) -> String`
     public var allowsCacheList: Bool = false
     public private(set) var currentScrollingListView: UIScrollView?
-    internal var currentList: PagingViewListViewDelegate?
+    var currentList: PagingViewListViewDelegate?
     private var currentIndex: Int = 0
     private weak var delegate: PagingViewDelegate?
     private var tableHeaderContainerView: UIView!
     private let cellIdentifier = "cell"
     private let listContainerType: PagingListContainerType
-    private var listCache = [String:PagingViewListViewDelegate]()
+    private var listCache = [String: PagingViewListViewDelegate]()
 
     public init(delegate: PagingViewDelegate, listContainerType: PagingListContainerType = .collectionView) {
         self.delegate = delegate
@@ -729,7 +735,7 @@ open class PagingView: UIView {
     }
 
     @available(*, unavailable)
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -747,7 +753,7 @@ open class PagingView: UIView {
         currentScrollingListView = nil
         validListDict.removeAll()
         if allowsCacheList, let listCount = delegate?.numberOfLists(in: self) {
-            //根据新数据删除不需要的list
+            // 根据新数据删除不需要的list
             var newListIdentifierArray = [String]()
             for index in 0..<listCount {
                 if let listIdentifier = delegate?.pagingView?(self, listIdentifierAtIndex: index) {
@@ -770,7 +776,7 @@ open class PagingView: UIView {
     }
 
     open func resizeTableHeaderViewHeight(animatable: Bool = false, duration: TimeInterval = 0.25, curve: UIView.AnimationCurve = .linear) {
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         if animatable {
             var options: UIView.AnimationOptions = .curveLinear
             switch curve {
@@ -787,7 +793,7 @@ open class PagingView: UIView {
                 self.mainTableView.setNeedsLayout()
                 self.mainTableView.layoutIfNeeded()
             }, completion: nil)
-        }else {
+        } else {
             var bounds = tableHeaderContainerView.bounds
             bounds.size.height = CGFloat(delegate.tableHeaderViewHeight(in: self))
             tableHeaderContainerView.frame = bounds
@@ -796,15 +802,15 @@ open class PagingView: UIView {
     }
 
     open func preferredProcessListViewDidScroll(scrollView: UIScrollView) {
-        if (mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY()) {
-            //mainTableView的header还没有消失，让listScrollView一直为0
+        if mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY() {
+            // mainTableView的header还没有消失，让listScrollView一直为0
             currentList?.listScrollViewWillResetContentOffset?()
             setListScrollViewToMinContentOffsetY(scrollView)
             if automaticallyDisplayListVerticalScrollIndicator {
                 scrollView.showsVerticalScrollIndicator = false
             }
         } else {
-            //mainTableView的header刚好消失，固定mainTableView的位置，显示listScrollView的滚动条
+            // mainTableView的header刚好消失，固定mainTableView的位置，显示listScrollView的滚动条
             setMainTableViewToMaxContentOffsetY()
             if automaticallyDisplayListVerticalScrollIndicator {
                 scrollView.showsVerticalScrollIndicator = true
@@ -813,14 +819,14 @@ open class PagingView: UIView {
     }
 
     open func preferredProcessMainTableViewDidScroll(_ scrollView: UIScrollView) {
-        guard let currentScrollingListView = currentScrollingListView else { return }
-        if (currentScrollingListView.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView)) {
-            //mainTableView的header已经滚动不见，开始滚动某一个listView，那么固定mainTableView的contentOffset，让其不动
+        guard let currentScrollingListView else { return }
+        if currentScrollingListView.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView) {
+            // mainTableView的header已经滚动不见，开始滚动某一个listView，那么固定mainTableView的contentOffset，让其不动
             setMainTableViewToMaxContentOffsetY()
         }
 
-        if (mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY()) {
-            //mainTableView已经显示了header，listView的contentOffset需要重置
+        if mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY() {
+            // mainTableView已经显示了header，listView的contentOffset需要重置
             for list in validListDict.values {
                 list.listScrollViewWillResetContentOffset?()
                 setListScrollViewToMinContentOffsetY(list.listScrollView())
@@ -828,15 +834,15 @@ open class PagingView: UIView {
         }
 
         if scrollView.contentOffset.y > mainTableViewMaxContentOffsetY() && currentScrollingListView.contentOffset.y == minContentOffsetYInListScrollView(currentScrollingListView) {
-            //当往上滚动mainTableView的headerView时，滚动到底时，修复listView往上小幅度滚动
+            // 当往上滚动mainTableView的headerView时，滚动到底时，修复listView往上小幅度滚动
             setMainTableViewToMaxContentOffsetY()
         }
     }
 
-    //MARK: - Private
+    // MARK: - Private
 
     func refreshTableHeaderView() {
-        guard let delegate = delegate else { return }
+        guard let delegate else { return }
         let tableHeaderView = delegate.tableHeaderView(in: self)
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat(delegate.tableHeaderViewHeight(in: self))))
         containerView.addSubview(tableHeaderView)
@@ -852,21 +858,21 @@ open class PagingView: UIView {
 
     func adjustMainScrollViewToTargetContentInsetIfNeeded(inset: UIEdgeInsets) {
         if mainTableView.contentInset != inset {
-            //防止循环调用
+            // 防止循环调用
             mainTableView.delegate = nil
             mainTableView.contentInset = inset
             mainTableView.delegate = self
         }
     }
 
-    //仅用于处理设置了pinSectionHeaderVerticalOffset，又添加了MJRefresh的下拉刷新。这种情况会导致FWPagingView和MJRefresh来回设置contentInset值。针对这种及其特殊的情况，就内部特殊处理了。通过下面的判断条件，来判定当前是否处于下拉刷新中。请勿让pinSectionHeaderVerticalOffset和下拉刷新设置的contentInset.top值相同。
-    //具体原因参考：https://github.com/pujiaxin33/FWPagingView/issues/203
+    // 仅用于处理设置了pinSectionHeaderVerticalOffset，又添加了MJRefresh的下拉刷新。这种情况会导致FWPagingView和MJRefresh来回设置contentInset值。针对这种及其特殊的情况，就内部特殊处理了。通过下面的判断条件，来判定当前是否处于下拉刷新中。请勿让pinSectionHeaderVerticalOffset和下拉刷新设置的contentInset.top值相同。
+    // 具体原因参考：https://github.com/pujiaxin33/FWPagingView/issues/203
     func isSetMainScrollViewContentInsetToZeroEnabled(scrollView: UIScrollView) -> Bool {
-        return !(scrollView.contentInset.top != 0 && scrollView.contentInset.top != CGFloat(pinSectionHeaderVerticalOffset))
+        !(scrollView.contentInset.top != 0 && scrollView.contentInset.top != CGFloat(pinSectionHeaderVerticalOffset))
     }
 
     public func mainTableViewMaxContentOffsetY() -> CGFloat {
-        guard let delegate = delegate else { return 0 }
+        guard let delegate else { return 0 }
         return CGFloat(delegate.tableHeaderViewHeight(in: self)) - CGFloat(pinSectionHeaderVerticalOffset)
     }
 
@@ -875,7 +881,7 @@ open class PagingView: UIView {
     }
 
     open func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
-        return -scrollView.adjustedContentInset.top
+        -scrollView.adjustedContentInset.top
     }
 
     open func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
@@ -883,7 +889,7 @@ open class PagingView: UIView {
     }
 
     func pinSectionHeaderHeight() -> CGFloat {
-        guard let delegate = delegate else { return 0 }
+        guard let delegate else { return 0 }
         return CGFloat(delegate.heightForPinSectionHeader(in: self))
     }
 
@@ -892,21 +898,21 @@ open class PagingView: UIView {
         currentScrollingListView = scrollView
         preferredProcessListViewDidScroll(scrollView: scrollView)
     }
-    
+
     public func scrollToIndex(_ index: Int, animated: Bool = true) {
         listContainerView.contentScrollView().setContentOffset(CGPoint(x: listContainerView.contentScrollView().bounds.size.width * CGFloat(index), y: 0), animated: animated)
         listContainerView.didClickSelectedItem(at: index)
     }
 }
 
-//MARK: - UITableViewDataSource, UITableViewDelegate
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension PagingView: UITableViewDataSource, UITableViewDelegate {
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        1
     }
 
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return max(bounds.height - pinSectionHeaderHeight() - CGFloat(pinSectionHeaderVerticalOffset), 0)
+        max(bounds.height - pinSectionHeaderHeight() - CGFloat(pinSectionHeaderVerticalOffset), 0)
     }
 
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -923,17 +929,17 @@ extension PagingView: UITableViewDataSource, UITableViewDelegate {
     }
 
     open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return pinSectionHeaderHeight()
+        pinSectionHeaderHeight()
     }
 
     open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let delegate = delegate else { return nil }
+        guard let delegate else { return nil }
         return delegate.viewForPinSectionHeader(in: self)
     }
 
-    //加上footer之后，下滑滚动就变得丝般顺滑了
+    // 加上footer之后，下滑滚动就变得丝般顺滑了
     open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
+        1
     }
 
     open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -945,11 +951,11 @@ extension PagingView: UITableViewDataSource, UITableViewDelegate {
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if pinSectionHeaderVerticalOffset != 0 {
             if !(currentScrollingListView != nil && currentScrollingListView!.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView!)) {
-                //没有处于滚动某一个listView的状态
+                // 没有处于滚动某一个listView的状态
                 if scrollView.contentOffset.y >= CGFloat(pinSectionHeaderVerticalOffset) {
-                    //固定的位置就是contentInset.top
-                   adjustMainScrollViewToTargetContentInsetIfNeeded(inset: UIEdgeInsets(top: CGFloat(pinSectionHeaderVerticalOffset), left: 0, bottom: 0, right: 0))
-                }else {
+                    // 固定的位置就是contentInset.top
+                    adjustMainScrollViewToTargetContentInsetIfNeeded(inset: UIEdgeInsets(top: CGFloat(pinSectionHeaderVerticalOffset), left: 0, bottom: 0, right: 0))
+                } else {
                     if isSetMainScrollViewContentInsetToZeroEnabled(scrollView: scrollView) {
                         adjustMainScrollViewToTargetContentInsetIfNeeded(inset: UIEdgeInsets.zero)
                     }
@@ -961,7 +967,7 @@ extension PagingView: UITableViewDataSource, UITableViewDelegate {
     }
 
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        //用户正在上下滚动的时候，就不允许左右滚动
+        // 用户正在上下滚动的时候，就不允许左右滚动
         listContainerView.scrollView.isScrollEnabled = false
         delegate?.pagingView?(self, mainTableViewWillBeginDragging: scrollView)
     }
@@ -995,19 +1001,19 @@ extension PagingView: UITableViewDataSource, UITableViewDelegate {
 
 extension PagingView: PagingListContainerViewDataSource {
     public func numberOfLists(in listContainerView: PagingListContainerView) -> Int {
-        guard let delegate = delegate else { return 0 }
+        guard let delegate else { return 0 }
         return delegate.numberOfLists(in: self)
     }
 
     public func listContainerView(_ listContainerView: PagingListContainerView, initListAt index: Int) -> PagingViewListViewDelegate {
-        guard let delegate = delegate else { fatalError("FWPaingView.delegate must not be nil") }
+        guard let delegate else { fatalError("FWPaingView.delegate must not be nil") }
         var list = validListDict[index]
         if list == nil, let listIdentifier = delegate.pagingView?(self, listIdentifierAtIndex: index) {
             list = listCache[listIdentifier]
         }
         if list == nil {
             list = delegate.pagingView(self, initListAtIndex: index)
-            list?.listViewDidScrollCallback {[weak self, weak list] (scrollView) in
+            list?.listViewDidScrollCallback { [weak self, weak list] scrollView in
                 self?.currentList = list
                 self?.listViewDidScroll(scrollView: scrollView)
             }
@@ -1041,7 +1047,7 @@ extension PagingView: PagingListContainerViewDelegate {
         for listItem in validListDict.values {
             if listItem === validListDict[index] {
                 listItem.listScrollView().scrollsToTop = true
-            }else {
+            } else {
                 listItem.listScrollView().scrollsToTop = false
             }
         }
@@ -1052,12 +1058,12 @@ extension PagingView: PagingListContainerViewDelegate {
 // MARK: - PagingListRefreshView
 
 open class PagingListRefreshView: PagingView {
-    //listScrollView悬停时可下拉的contentInset，用于实现悬停时子页面下拉刷新效果
+    // listScrollView悬停时可下拉的contentInset，用于实现悬停时子页面下拉刷新效果
     public var listScrollViewPinContentInsetBlock: ((UIScrollView) -> CGFloat)?
-    
+
     private var lastScrollingListViewContentOffsetY: CGFloat = 0
 
-    public override init(delegate: PagingViewDelegate, listContainerType: PagingListContainerType = .collectionView) {
+    override public init(delegate: PagingViewDelegate, listContainerType: PagingListContainerType = .collectionView) {
         super.init(delegate: delegate, listContainerType: listContainerType)
 
         mainTableView.bounces = false
@@ -1066,26 +1072,26 @@ open class PagingListRefreshView: PagingView {
     override open func preferredProcessMainTableViewDidScroll(_ scrollView: UIScrollView) {
         if pinSectionHeaderVerticalOffset != 0 {
             if !(currentScrollingListView != nil && currentScrollingListView!.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView!)) {
-                //没有处于滚动某一个listView的状态
+                // 没有处于滚动某一个listView的状态
                 if scrollView.contentOffset.y <= 0 {
                     mainTableView.bounces = false
                     mainTableView.contentOffset = CGPoint.zero
                     return
-                }else {
+                } else {
                     mainTableView.bounces = true
                 }
             }
         }
-        guard let currentScrollingListView = currentScrollingListView else { return }
-        if (currentScrollingListView.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView)) {
-            //mainTableView的header已经滚动不见，开始滚动某一个listView，那么固定mainTableView的contentOffset，让其不动
+        guard let currentScrollingListView else { return }
+        if currentScrollingListView.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView) {
+            // mainTableView的header已经滚动不见，开始滚动某一个listView，那么固定mainTableView的contentOffset，让其不动
             setMainTableViewToMaxContentOffsetY()
         }
 
-        if (mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY()) {
-            //mainTableView已经显示了header，listView的contentOffset需要重置
+        if mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY() {
+            // mainTableView已经显示了header，listView的contentOffset需要重置
             for list in validListDict.values {
-                //正在下拉刷新时，不需要重置
+                // 正在下拉刷新时，不需要重置
                 if list.listScrollView().contentOffset.y > minContentOffsetYInListScrollView(list.listScrollView()) {
                     setListScrollViewToMinContentOffsetY(list.listScrollView())
                 }
@@ -1093,58 +1099,57 @@ open class PagingListRefreshView: PagingView {
         }
 
         if scrollView.contentOffset.y > mainTableViewMaxContentOffsetY() && currentScrollingListView.contentOffset.y == minContentOffsetYInListScrollView(currentScrollingListView) {
-            //当往上滚动mainTableView的headerView时，滚动到底时，修复listView往上小幅度滚动
+            // 当往上滚动mainTableView的headerView时，滚动到底时，修复listView往上小幅度滚动
             setMainTableViewToMaxContentOffsetY()
         }
     }
-    
+
     override open func preferredProcessListViewDidScroll(scrollView: UIScrollView) {
-        guard let currentScrollingListView = currentScrollingListView else { return }
+        guard let currentScrollingListView else { return }
         var shouldProcess = true
         if currentScrollingListView.contentOffset.y > lastScrollingListViewContentOffsetY {
-            //往上滚动
-        }else {
-            //往下滚动
+            // 往上滚动
+        } else {
+            // 往下滚动
             if mainTableView.contentOffset.y == 0 {
                 shouldProcess = false
-            }else {
-                if (mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY()) {
-                    //mainTableView的header还没有消失，让listScrollView一直为0
+            } else {
+                if mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY() {
+                    // mainTableView的header还没有消失，让listScrollView一直为0
                     setListScrollViewToMinContentOffsetY(currentScrollingListView)
-                    currentScrollingListView.showsVerticalScrollIndicator = false;
+                    currentScrollingListView.showsVerticalScrollIndicator = false
                 }
             }
         }
         if shouldProcess {
-            if (mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY()) {
-                //处于下拉刷新的状态，scrollView.contentOffset.y为负数，就重置为0
+            if mainTableView.contentOffset.y < mainTableViewMaxContentOffsetY() {
+                // 处于下拉刷新的状态，scrollView.contentOffset.y为负数，就重置为0
                 if currentScrollingListView.contentOffset.y > minContentOffsetYInListScrollView(currentScrollingListView) {
-                    //mainTableView的header还没有消失，让listScrollView一直为0
+                    // mainTableView的header还没有消失，让listScrollView一直为0
                     setListScrollViewToMinContentOffsetY(currentScrollingListView)
-                    currentScrollingListView.showsVerticalScrollIndicator = false;
+                    currentScrollingListView.showsVerticalScrollIndicator = false
                 }
             } else {
-                //mainTableView的header刚好消失，固定mainTableView的位置，显示listScrollView的滚动条
+                // mainTableView的header刚好消失，固定mainTableView的位置，显示listScrollView的滚动条
                 setMainTableViewToMaxContentOffsetY()
-                currentScrollingListView.showsVerticalScrollIndicator = true;
+                currentScrollingListView.showsVerticalScrollIndicator = true
             }
         }
-        lastScrollingListViewContentOffsetY = currentScrollingListView.contentOffset.y;
+        lastScrollingListViewContentOffsetY = currentScrollingListView.contentOffset.y
     }
-    
-    open override func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
+
+    override open func minContentOffsetYInListScrollView(_ scrollView: UIScrollView) -> CGFloat {
         var minContentOffsetY = super.minContentOffsetYInListScrollView(scrollView)
         if let block = listScrollViewPinContentInsetBlock {
             minContentOffsetY -= block(scrollView)
         }
         return minContentOffsetY
     }
-    
-    open override func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
-        //不修改子页面原始的minContentOffsetY，停留原始位置
+
+    override open func setListScrollViewToMinContentOffsetY(_ scrollView: UIScrollView) {
+        // 不修改子页面原始的minContentOffsetY，停留原始位置
         scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: super.minContentOffsetYInListScrollView(scrollView))
     }
-
 }
 
 // MARK: - PagingSmoothView
@@ -1180,13 +1185,13 @@ open class PagingListRefreshView: PagingView {
 }
 
 open class PagingSmoothView: UIView {
-    public private(set) var listDict = [Int : PagingSmoothViewListViewDelegate]()
+    public private(set) var listDict = [Int: PagingSmoothViewListViewDelegate]()
     public let listCollectionView: PagingSmoothCollectionView
     public var defaultSelectedIndex: Int = 0
     public weak var delegate: PagingSmoothViewDelegate?
 
     weak var dataSource: PagingSmoothViewDataSource?
-    var listHeaderDict = [Int : UIView]()
+    var listHeaderDict = [Int: UIView]()
     var isSyncListContentOffsetEnabled: Bool = false
     let pagingHeaderContainerView: UIView
     var currentPagingHeaderContainerViewY: CGFloat = 0
@@ -1198,7 +1203,7 @@ open class PagingSmoothView: UIView {
     let cellIdentifier = "cell"
     var currentListInitializeContentOffsetY: CGFloat = 0
     var singleScrollView: UIScrollView?
-    nonisolated(unsafe) var listScrollViewDict = [Int : UIScrollView]()
+    nonisolated(unsafe) var listScrollViewDict = [Int: UIScrollView]()
 
     deinit {
         listScrollViewDict.values.forEach {
@@ -1230,24 +1235,24 @@ open class PagingSmoothView: UIView {
         addSubview(listCollectionView)
     }
 
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     public func reloadData() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         currentListScrollView = nil
         currentIndex = defaultSelectedIndex
         currentPagingHeaderContainerViewY = 0
         isSyncListContentOffsetEnabled = false
 
         listHeaderDict.removeAll()
-        listScrollViewDict.values.forEach { (list) in
+        for list in listScrollViewDict.values {
             list.removeObserver(self, forKeyPath: "contentOffset")
             list.removeObserver(self, forKeyPath: "contentSize")
         }
         listScrollViewDict.removeAll()
-        listDict.values.forEach { (list) in
+        for list in listDict.values {
             list.listView().removeFromSuperview()
         }
         listDict.removeAll()
@@ -1264,7 +1269,7 @@ open class PagingSmoothView: UIView {
         pagingHeaderContainerView.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: heightForPagingHeaderContainerView)
         pagingHeader.frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: heightForPagingHeader)
         pinHeader.frame = CGRect(x: 0, y: heightForPagingHeader, width: bounds.size.width, height: heightForPinHeader)
-        listCollectionView.setContentOffset(CGPoint(x: listCollectionView.bounds.size.width*CGFloat(defaultSelectedIndex), y: 0), animated: false)
+        listCollectionView.setContentOffset(CGPoint(x: listCollectionView.bounds.size.width * CGFloat(defaultSelectedIndex), y: 0), animated: false)
         listCollectionView.reloadData()
 
         if dataSource.numberOfLists(in: self) == 0 {
@@ -1272,13 +1277,13 @@ open class PagingSmoothView: UIView {
             addSubview(singleScrollView!)
             singleScrollView?.addSubview(pagingHeader)
             singleScrollView?.contentSize = CGSize(width: bounds.size.width, height: heightForPagingHeader)
-        }else if singleScrollView != nil {
+        } else if singleScrollView != nil {
             singleScrollView?.removeFromSuperview()
             singleScrollView = nil
         }
     }
 
-    open override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
 
         listCollectionView.frame = bounds
@@ -1313,7 +1318,7 @@ open class PagingSmoothView: UIView {
                 pagingHeaderContainerView.frame.origin.y = 0
                 header?.addSubview(pagingHeaderContainerView)
             }
-        }else {
+        } else {
             if pagingHeaderContainerView.superview != self {
                 pagingHeaderContainerView.frame.origin.y = -heightForPagingHeader
                 addSubview(pagingHeaderContainerView)
@@ -1330,35 +1335,35 @@ open class PagingSmoothView: UIView {
         }
     }
 
-    //MARK: - KVO
+    // MARK: - KVO
 
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "contentOffset" {
             if let scrollView = object as? UIScrollView {
                 DispatchQueue.fw.mainAsync { [weak self] in
                     self?.listDidScroll(scrollView: scrollView)
                 }
             }
-        }else if keyPath == "contentSize" {
+        } else if keyPath == "contentSize" {
             if let scrollView = object as? UIScrollView {
                 DispatchQueue.fw.mainAsync { [weak self] in
-                    guard let self = self else { return }
-                    let minContentSizeHeight = self.bounds.size.height - self.heightForPinHeader
+                    guard let self else { return }
+                    let minContentSizeHeight = bounds.size.height - heightForPinHeader
                     if minContentSizeHeight > scrollView.contentSize.height {
                         scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: minContentSizeHeight)
-                        //新的scrollView第一次加载的时候重置contentOffset
-                        if self.currentListScrollView != nil, scrollView != self.currentListScrollView! {
-                            scrollView.contentOffset = CGPoint(x: 0, y: self.currentListInitializeContentOffsetY)
+                        // 新的scrollView第一次加载的时候重置contentOffset
+                        if currentListScrollView != nil, scrollView != currentListScrollView! {
+                            scrollView.contentOffset = CGPoint(x: 0, y: currentListInitializeContentOffsetY)
                         }
                     }
                 }
             }
-        }else {
+        } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
 
-    //MARK: - Private
+    // MARK: - Private
     func listHeader(for listScrollView: UIScrollView) -> UIView? {
         for (index, list) in listDict {
             if list.listScrollView() == listScrollView {
@@ -1378,7 +1383,7 @@ open class PagingSmoothView: UIView {
     }
 
     func listDidAppear(at index: Int) {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         let count = dataSource.numberOfLists(in: self)
         if count <= 0 || index >= count {
             return
@@ -1387,7 +1392,7 @@ open class PagingSmoothView: UIView {
     }
 
     func listDidDisappear(at index: Int) {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource else { return }
         let count = dataSource.numberOfLists(in: self)
         if count <= 0 || index >= count {
             return
@@ -1411,16 +1416,16 @@ open class PagingSmoothView: UIView {
 
 extension PagingSmoothView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return bounds.size
+        bounds.size
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let dataSource = dataSource else { return 0 }
+        guard let dataSource else { return 0 }
         return dataSource.numberOfLists(in: self)
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let dataSource = dataSource else { return UICollectionViewCell(frame: CGRect.zero) }
+        guard let dataSource else { return UICollectionViewCell(frame: CGRect.zero) }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         var list = listDict[indexPath.item]
         if list == nil {
@@ -1466,13 +1471,13 @@ extension PagingSmoothView: UICollectionViewDataSource, UICollectionViewDelegate
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.pagingSmoothViewDidScroll?(scrollView)
-        let indexPercent = scrollView.contentOffset.x/scrollView.bounds.size.width
-        let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
+        let indexPercent = scrollView.contentOffset.x / scrollView.bounds.size.width
+        let index = Int(scrollView.contentOffset.x / scrollView.bounds.size.width)
         let listScrollView = listDict[index]?.listScrollView()
         if (indexPercent - CGFloat(index) == 0) && index != currentIndex && !(scrollView.isDragging || scrollView.isDecelerating) && listScrollView?.contentOffset.y ?? 0 <= -heightForPinHeader {
             horizontalScrollDidEnd(at: index)
-        }else {
-            //左右滚动的时候，就把listHeaderContainerView添加到self，达到悬浮在顶部的效果
+        } else {
+            // 左右滚动的时候，就把listHeaderContainerView添加到self，达到悬浮在顶部的效果
             if pagingHeaderContainerView.superview != self {
                 pagingHeaderContainerView.frame.origin.y = currentPagingHeaderContainerViewY
                 addSubview(pagingHeaderContainerView)
@@ -1485,13 +1490,13 @@ extension PagingSmoothView: UICollectionViewDataSource, UICollectionViewDelegate
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
+            let index = Int(scrollView.contentOffset.x / scrollView.bounds.size.width)
             horizontalScrollDidEnd(at: index)
         }
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
+        let index = Int(scrollView.contentOffset.x / scrollView.bounds.size.width)
         horizontalScrollDidEnd(at: index)
     }
 }

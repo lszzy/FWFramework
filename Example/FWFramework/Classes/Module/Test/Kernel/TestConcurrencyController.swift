@@ -9,15 +9,14 @@
 import FWFramework
 
 class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
-    
     typealias TableElement = [String]
-    
+
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -26,13 +25,13 @@ class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
         cell.textLabel?.text = rowData[0]
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        _ = self.perform(NSSelectorFromString(rowData[1]))
+        _ = perform(NSSelectorFromString(rowData[1]))
     }
-    
+
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["Promise(Success)", "onPromiseSuccess"],
@@ -47,22 +46,20 @@ class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
             ["Authorize(Location)", "onAuthorizeLocation"],
             ["Authorize(Biometry)", "onAuthorizeBiometry"],
             ["Toolkit(Safari)", "onToolkitSafari"],
-            ["Toolkit(App)", "onToolkitApp"],
+            ["Toolkit(App)", "onToolkitApp"]
         ])
     }
-    
 }
 
 extension TestConcurrencyController {
-    
     @objc func onPromiseSuccess() {
         app.showLoading()
-        
+
         Task.init {
-            let promise = Promise.delay(1).then { (value: Sendable) in
-                return "Promise succeed"
+            let promise = Promise.delay(1).then { (_: Sendable) in
+                "Promise succeed"
             }
-            
+
             do {
                 let result: String = try await promise.value()
                 DispatchQueue.app.mainAsync {
@@ -77,15 +74,15 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onPromiseFailure() {
         app.showLoading()
-        
+
         Task.init {
-            let promise = Promise.delay(1).then { (value: Sendable) in
+            let promise = Promise.delay(1).then { (_: Sendable) in
                 throw PromiseError.failed
             }
-            
+
             do {
                 let result: String = try await promise.value()
                 DispatchQueue.app.mainAsync {
@@ -100,13 +97,13 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onDownloadSuccess() {
         app.showLoading()
-        
+
         Task.init {
             let url = "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg?t=\(Date.app.currentTime)"
-            
+
             do {
                 let image = try await UIImage.app.downloadImage(url)
                 DispatchQueue.app.mainAsync {
@@ -121,13 +118,13 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onDownloadFailure() {
         app.showLoading()
-        
+
         Task.init {
             let url = "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada_404.jpg?t=\(Date.app.currentTime)"
-            
+
             do {
                 let image = try await UIImage.app.downloadImage(url)
                 DispatchQueue.app.mainAsync {
@@ -142,16 +139,16 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onDownloadCancel() {
         app.showLoading()
-        
+
         let task = Task.init {
             let url = "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg?t=\(Date.app.currentTime)"
-            
+
             do {
                 try Task.checkCancellation()
-                
+
                 let image = try await UIImage.app.downloadImage(url)
                 DispatchQueue.app.mainAsync {
                     self.app.hideLoading()
@@ -166,21 +163,21 @@ extension TestConcurrencyController {
         }
         task.cancel()
     }
-    
+
     @objc func onRequestSuccess() {
         Task.init {
             let request = TestModelRequest()
             request.context = self
             request.autoShowLoading = true
             request.autoShowError = true
-            
+
             let result = try await request.safeResponseModel()
             DispatchQueue.app.mainAsync {
                 self.app.showMessage(text: result.name)
             }
         }
     }
-    
+
     @objc func onRequestFailure() {
         Task.init {
             let request = TestModelRequest()
@@ -188,7 +185,7 @@ extension TestConcurrencyController {
             request.autoShowLoading = true
             request.autoShowError = true
             request.testFailed = true
-            
+
             let result = await request.response()
             DispatchQueue.app.mainAsync {
                 if result.error == nil {
@@ -197,16 +194,16 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onRequestCancel() {
         let task = Task.init {
             let request = TestModelRequest()
             request.context = self
             request.autoShowLoading = true
-            
+
             do {
                 try Task.checkCancellation()
-                
+
                 let result = try await request.responseSuccess()
                 DispatchQueue.app.mainAsync {
                     self.app.showMessage(text: result.safeResponseModel.name)
@@ -219,19 +216,19 @@ extension TestConcurrencyController {
         }
         task.cancel()
     }
-    
+
     @objc func onRequestClear() {
         Task {
             let request = TestModelRequest()
             request.context = self
             request.autoShowLoading = true
-            
+
             let accessory = RequestAccessory()
             accessory.willStartBlock = { _ in
                 RequestManager.shared.cancelAllRequests()
             }
             request.addAccessory(accessory)
-            
+
             do {
                 let result = try await request.responseSuccess()
                 DispatchQueue.app.mainAsync {
@@ -244,7 +241,7 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onAuthorizeLocation() {
         Task {
             let result = await AuthorizeLocation.shared.requestAuthorize()
@@ -262,7 +259,7 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onAuthorizeBiometry() {
         Task {
             let result = await AuthorizeBiometry.shared.requestAuthorize()
@@ -280,7 +277,7 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onToolkitSafari() {
         Task {
             let success = await UIApplication.app.openURL("https://www.baidu.com")
@@ -289,7 +286,7 @@ extension TestConcurrencyController {
             }
         }
     }
-    
+
     @objc func onToolkitApp() {
         Task {
             let success = await UIApplication.app.openUniversalLinks("https://v.douyin.com/JYmHJ9k/")
@@ -298,5 +295,4 @@ extension TestConcurrencyController {
             }
         }
     }
-    
 }

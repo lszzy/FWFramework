@@ -114,7 +114,7 @@ extension WrapperGlobal {
         if !Logger.check(.error) { return }
         Logger.log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 记录类型日志
     ///
     /// - Parameters:
@@ -142,9 +142,8 @@ extension WrapperGlobal {
 // MARK: - Logger
 /// 日志类型枚举
 public struct LogType: OptionSet, Sendable {
-    
     public let rawValue: UInt
-    
+
     /// 错误类型
     public static let error: LogType = .init(rawValue: 1 << 0)
     /// 警告类型
@@ -155,18 +154,16 @@ public struct LogType: OptionSet, Sendable {
     public static let debug: LogType = .init(rawValue: 1 << 3)
     /// 详细类型
     public static let verbose: LogType = .init(rawValue: 1 << 4)
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 日志级别定义
 public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
-    
     public typealias RawValue = UInt
-    
+
     /// 关闭日志
     public static let off: LogLevel = .init(0)
     /// 错误以上级别
@@ -181,32 +178,30 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
     public static let verbose: LogLevel = .init(LogType.debug.union(.verbose).rawValue)
     /// 所有级别
     public static let all: LogLevel = .init(.max)
-    
+
     public var rawValue: UInt
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: UInt) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
 @objc(ObjCLogger)
 public class Logger: NSObject {
-    
     /// 全局日志级别，默认调试为All，正式为Off
-    nonisolated(unsafe) public static var level: LogLevel = {
+    public nonisolated(unsafe) static var level: LogLevel = {
         #if DEBUG
         .all
         #else
         .off
         #endif
     }()
-    
+
     /// 记录类型日志，支持分组和用户信息
     /// - Parameters:
     ///   - type: 日志类型
@@ -215,11 +210,11 @@ public class Logger: NSObject {
     public class func log(_ type: LogType, group: String = "", message: String) {
         // 过滤不支持的级别
         if !check(type) { return }
-        
+
         let plugin = PluginManager.loadPlugin(LoggerPlugin.self) ?? LoggerPluginImpl.shared
         plugin.log(type, group: group, message: message)
     }
-    
+
     /// 记录详细日志
     ///
     /// - Parameters:
@@ -240,7 +235,7 @@ public class Logger: NSObject {
         if !check(.verbose) { return }
         log(.verbose, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 记录调试日志
     ///
     /// - Parameters:
@@ -261,7 +256,7 @@ public class Logger: NSObject {
         if !check(.debug) { return }
         log(.debug, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 记录信息日志
     ///
     /// - Parameters:
@@ -282,7 +277,7 @@ public class Logger: NSObject {
         if !check(.info) { return }
         log(.info, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 记录警告日志
     ///
     /// - Parameters:
@@ -303,7 +298,7 @@ public class Logger: NSObject {
         if !check(.warn) { return }
         log(.warn, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 记录错误日志
     ///
     /// - Parameters:
@@ -324,38 +319,34 @@ public class Logger: NSObject {
         if !check(.error) { return }
         log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
     }
-    
+
     /// 检查是否需要记录指定类型日志
     /// - Parameter type: 日志类型
     /// - Returns: 是否需要记录
     class func check(_ type: LogType) -> Bool {
-        return LogType(rawValue: level.rawValue).contains(type)
+        LogType(rawValue: level.rawValue).contains(type)
     }
-    
 }
 
 // MARK: - LoggerPlugin
 /// 日志插件协议
 public protocol LoggerPlugin {
-    
     /// 记录日志协议方法
     /// - Parameters:
     ///   - type: 日志类型
     ///   - group: 日志分组
     ///   - message: 日志消息
     func log(_ type: LogType, group: String, message: String)
-    
 }
 
 /// NSLog日志插件，兼容FWDebug等组件
 public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
-    
     @objc(sharedInstance)
     public static let shared = LoggerPluginNSLog()
-    
+
     /// 自定义日志处理句柄
     public var logHandler: ((String) -> Void)?
-    
+
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
         switch type {
@@ -371,19 +362,19 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
             logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
         }
     }
-    
+
     private func logMessage(_ message: String) {
         if logHandler != nil {
             logHandler?(message)
             return
         }
-        
+
         #if DEBUG
         // DEBUG模式时兼容FWDebug等组件
         let debugClass = NSClassFromString("FWDebugManager") as? NSObject.Type
         let instanceSelector = NSSelectorFromString("sharedInstance")
         let logSelector = NSSelectorFromString("systemLog:")
-        if let debugClass = debugClass,
+        if let debugClass,
            debugClass.responds(to: instanceSelector),
            let debugManager = debugClass.perform(instanceSelector)?.takeUnretainedValue(),
            debugManager.responds(to: logSelector) {
@@ -391,26 +382,24 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
             return
         }
         #endif
-        
+
         NSLog("%@", message)
     }
-    
 }
 
 /// OSLog日志插件
 public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
-    
     @objc(sharedInstance)
     public static let shared = LoggerPluginOSLog()
-    
+
     private var log: OSLog
-    
+
     /// 指定OSLog初始化，默认default
     public init(log: OSLog = .default) {
         self.log = log
         super.init()
     }
-    
+
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
         switch type {
@@ -426,60 +415,57 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
             os_log("%@ VERBOSE:%@ %@", log: log, type: .debug, "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
         }
     }
-    
 }
 
 // MARK: - LoggerPluginImpl
 /// 日志插件管理器，默认使用NSLog
 public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
-    
     /// 单例模式对象
     @objc(sharedInstance)
     public static let shared = LoggerPluginImpl()
-    
+
     private class Target {
         var logger: LoggerPlugin
         var level: LogLevel
-        
+
         init(logger: LoggerPlugin, level: LogLevel) {
             self.logger = logger
             self.level = level
         }
     }
-    
+
     private var allTargets: [Target] = []
-    
+
     /// 初始化方法，默认使用NSLog
-    public override init() {
+    override public init() {
         super.init()
         addLogger(LoggerPluginNSLog.shared)
     }
-    
+
     /// 添加日志插件，并在指定等级生效(默认all)
     public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all) {
         allTargets.append(Target(logger: logger, level: level))
     }
-    
+
     /// 移除指定日志插件
-    public func removeLogger<T: LoggerPlugin>(_ logger: T) where T : Equatable {
+    public func removeLogger<T: LoggerPlugin>(_ logger: T) where T: Equatable {
         allTargets.removeAll { target in
             guard let obj = target.logger as? T else { return false }
             return logger == obj
         }
     }
-    
+
     /// 移除所有的日志插件
     public func removeAllLoggers() {
         allTargets.removeAll()
     }
-    
+
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
-        allTargets.forEach { target in
+        for target in allTargets {
             if LogType(rawValue: target.level.rawValue).contains(type) {
                 target.logger.log(type, group: group, message: message)
             }
         }
     }
-    
 }

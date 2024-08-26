@@ -9,14 +9,13 @@ import Foundation
 
 /// Keychain缓存。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheKeychain: CacheEngine, @unchecked Sendable {
-
     /// 单例模式
     public static let shared = CacheKeychain()
-    
+
     private var group: String?
     private var service = "FWCache"
-    
-    public override init() {
+
+    override public init() {
         super.init()
     }
 
@@ -24,25 +23,25 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
     public init(group: String?, service: String? = nil) {
         super.init()
         self.group = group
-        if let service = service, !service.isEmpty {
+        if let service, !service.isEmpty {
             self.service = service
         }
     }
 
     // MARK: - CacheEngineProtocol
-    open override func readCache(forKey key: String) -> Any? {
-        return passwordObject(forService: service, account: key)
+    override open func readCache(forKey key: String) -> Any? {
+        passwordObject(forService: service, account: key)
     }
 
-    open override func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache(_ object: Any, forKey key: String) {
         setPasswordObject(object, forService: service, account: key)
     }
 
-    open override func clearCache(forKey key: String) {
+    override open func clearCache(forKey key: String) {
         deletePassword(forService: service, account: key)
     }
 
-    open override func clearAllCaches() {
+    override open func clearAllCaches() {
         deletePassword(forService: service, account: nil)
     }
 
@@ -79,7 +78,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
             var query = [String: Any]()
             query[kSecValueData as String] = passwordData
             status = SecItemUpdate(searchQuery as CFDictionary, query as CFDictionary)
-        // 添加数据
+            // 添加数据
         } else if status == errSecItemNotFound {
             var query = query(forService: service, account: account)
             query[kSecValueData as String] = passwordData
@@ -105,13 +104,12 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
         var query = [String: Any]()
         query[kSecClass as String] = kSecClassGenericPassword
         query[kSecAttrService as String] = service
-        if let account = account {
+        if let account {
             query[kSecAttrAccount as String] = account
         }
-        if let group = group {
+        if let group {
             query[kSecAttrAccessGroup as String] = group
         }
         return query
     }
-
 }

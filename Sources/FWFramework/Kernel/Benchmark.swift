@@ -22,38 +22,37 @@ extension WrapperGlobal {
     /// - Returns: 消耗时间
     @discardableResult
     public static func end(_ name: String = "") -> TimeInterval {
-        return Benchmark.end(name)
+        Benchmark.end(name)
     }
 }
 
 // MARK: - Benchmark
 /// 时间调试器
 public class Benchmark {
-    
     // MARK: - Accessor
-    nonisolated(unsafe) private static var beginTimes: [String : TimeInterval] = [:]
-    nonisolated(unsafe) private static var endTimes: [String : TimeInterval] = [:]
-    
+    private nonisolated(unsafe) static var beginTimes: [String: TimeInterval] = [:]
+    private nonisolated(unsafe) static var endTimes: [String: TimeInterval] = [:]
+
     // MARK: - Public
     /// 标记时间调试开始
     public static func begin(_ name: String) {
         beginTimes[name] = Date().timeIntervalSince1970
     }
-    
+
     /// 标记时间调试结束并打印消耗时间
     @discardableResult
     public static func end(_ name: String) -> TimeInterval {
         let beginTime = beginTimes[name] ?? Date().timeIntervalSince1970
         let endTime = Date().timeIntervalSince1970
         endTimes[name] = endTime
-        
+
         let timeInterval = endTime - beginTime
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "Benchmark-%@: %.3fms", name, timeInterval * 1000)
         #endif
         return timeInterval
     }
-    
+
     /// 获取所有的消耗时间数据
     public static func benchmarks() -> [String: TimeInterval] {
         var times: [String: TimeInterval] = [:]
@@ -63,5 +62,4 @@ public class Benchmark {
         }
         return times
     }
-    
 }

@@ -9,7 +9,6 @@
 import FWFramework
 
 class TestSwiftController: UIViewController, TableViewControllerProtocol {
-    
     func setupSubviews() {
         tableData.append(contentsOf: [
             "ViewController",
@@ -26,14 +25,14 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             "TestObjcProtocol类实现",
             "TestObjcProtocol继承实现",
             "InvokeMethod返回对象",
-            "InvokeMethod返回整数",
+            "InvokeMethod返回整数"
         ])
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView)
         let value = tableData[indexPath.row] as? String
@@ -41,7 +40,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         cell.accessoryType = .disclosureIndicator
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         var viewController: UIViewController? = nil
@@ -77,11 +76,11 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         case 12:
             viewController = TestObjcProtocolViewController()
         case 13:
-            let value = app.invokeMethod(#selector(self.onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), "3"])?.takeUnretainedValue() as? String
+            let value = app.invokeMethod(#selector(onInvokeObject(param1:param2:param3:)), objects: ["参数1", NSNull(), "3"])?.takeUnretainedValue() as? String
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
         case 14:
-            let value = app.invokeMethod(#selector(self.onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 3)])?.takeUnretainedValue() as? Int
+            let value = app.invokeMethod(#selector(onInvokeInt(param1:param2:param3:)), objects: [NSObject(), NSNull(), NSNumber(value: 3)])?.takeUnretainedValue() as? Int
             app.showMessage(text: value != nil ? "调用成功：\(value!)" : "调用失败")
             return
         default:
@@ -90,15 +89,14 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
         viewController?.navigationItem.title = tableData[indexPath.row] as? String
         navigationController?.pushViewController(viewController!, animated: true)
     }
-    
+
     @objc func onInvokeObject(param1: NSObject, param2: Any?, param3: String) -> String {
-        return "\(param1.description)-\(String(describing: param2))-\(param3)"
+        "\(param1.description)-\(String(describing: param2))-\(param3)"
     }
-    
+
     @objc func onInvokeInt(param1: NSObject, param2: Any?, param3: Int) -> Int {
-        return param3
+        param3
     }
-    
 }
 
 class SwiftTestViewController: UIViewController, ViewControllerProtocol {
@@ -107,7 +105,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
             setupSubviews()
         }
     }
-    
+
     func setupSubviews() {
         switch state {
         case .ready:
@@ -117,45 +115,44 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
             view.app.showLoading(text: "开始加载")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 self?.view.app.hideLoading()
-                
+
                 if [0, 1].randomElement() == 1 {
                     self?.state = .success("加载成功")
                 } else {
                     self?.state = .failure(NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "加载失败"]))
                 }
             }
-        case .success(let object):
+        case let .success(object):
             view.app.showEmptyView(text: object as? String)
-        case .failure(let error):
-            view.app.showEmptyView(text: error?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] (sender) in
+        case let .failure(error):
+            view.app.showEmptyView(text: error?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] _ in
                 self?.view.app.hideEmptyView()
-                
+
                 self?.state = .loading
             }
         }
     }
-    
 }
 
 class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol {
     var dataModel: String = ""
-    
+
     func setupSubviews() {
         view.backgroundColor = AppTheme.backgroundColor
-        
+
         requestData()
     }
-    
+
     func setupData() {
         view.app.showEmptyView(text: dataModel)
     }
-    
+
     func startDataRequest(isRefreshing: Bool, completion: @escaping Completion) {
         let request = TestModelRequest()
         request.testFailed = [0, 1].randomElement() == 0
         request.start { request in
             self.dataModel = Date(timeIntervalSince1970: request.responseServerTime).app.stringValue
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 completion(request, true)
             }
@@ -165,7 +162,7 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
             }
         }
     }
-    
+
     func showRequestLoading(isShowing: Bool) {
         if isShowing {
             if !app.isDataLoaded {
@@ -175,7 +172,6 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
             app.hideEmptyView()
         }
     }
-    
 }
 
 class SwiftTestCollectionViewController: UIViewController, CollectionDelegateControllerProtocol, CollectionViewDelegateFlowLayout {
@@ -184,7 +180,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         contentView.layer.masksToBounds = true
         return contentView
     }()
-    
+
     lazy var flowLayout: CollectionViewFlowLayout = {
         let flowLayout = CollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
@@ -195,7 +191,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         flowLayout.verticalRowCount = 3
         return flowLayout
     }()
-    
+
     lazy var centerView: UICollectionView = {
         let layout = CollectionViewFlowLayout()
         layout.isPagingEnabled = true
@@ -205,7 +201,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
         layout.itemSize = CGSize(width: APP.screenWidth - 60, height: 150)
-        
+
         let result = UICollectionView.app.collectionView(layout)
         result.decelerationRate = .fast
         result.backgroundColor = AppTheme.backgroundColor
@@ -217,12 +213,12 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             cell.contentView.backgroundColor = UIColor.app.randomColor
             return cell
         }
-        result.app.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+        result.app.collectionDelegate.didSelectItem = { [weak self] _, indexPath in
             layout.scrollToPage(indexPath.item)
         }
         return result
     }()
-    
+
     lazy var bottomView: UICollectionView = {
         let layout = CollectionViewFlowLayout()
         layout.isPagingEnabled = true
@@ -231,7 +227,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
         layout.itemSize = CGSize(width: (APP.screenWidth - 40) / 3.0 * 2.0, height: 150)
-        
+
         let result = UICollectionView.app.collectionView(layout)
         result.decelerationRate = .fast
         result.backgroundColor = AppTheme.backgroundColor
@@ -243,27 +239,27 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             cell.contentView.backgroundColor = UIColor.app.randomColor
             return cell
         }
-        result.app.collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
+        result.app.collectionDelegate.didSelectItem = { [weak self] _, indexPath in
             layout.scrollToPage(indexPath.item)
         }
         return result
     }()
-    
+
     func setupCollectionViewLayout() -> UICollectionViewLayout {
-        return flowLayout
+        flowLayout
     }
-    
+
     func setupCollectionView() {
         view.backgroundColor = AppTheme.backgroundColor
         collectionView.backgroundColor = AppTheme.tableColor
         collectionView.isPagingEnabled = true
         collectionDelegate.sectionCount = 2
         collectionDelegate.numberOfItems = { [weak self] _ in
-            guard let self = self else { return 0 }
-            return self.flowLayout.itemRenderCount(self.collectionData.count)
+            guard let self else { return 0 }
+            return flowLayout.itemRenderCount(collectionData.count)
         }
         collectionDelegate.cellForItem = { [weak self] collectionView, indexPath in
-            guard let self = self else { return nil }
+            guard let self else { return nil }
             let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
             var label = cell.contentView.viewWithTag(100) as? UILabel
             if label == nil {
@@ -273,15 +269,15 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
                 cell.contentView.addSubview(textLabel)
                 textLabel.app.layoutChain.center()
             }
-            if indexPath.item < self.collectionData.count {
+            if indexPath.item < collectionData.count {
                 label?.text = "\(indexPath.section) : \(indexPath.item)"
             } else {
                 label?.text = nil
             }
             return cell
         }
-        collectionDelegate.sizeForItem = { collectionView, indexPath in
-            return CGSize(width: (APP.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 70 : 40)
+        collectionDelegate.sizeForItem = { _, indexPath in
+            CGSize(width: (APP.screenWidth - 40) / 4, height: indexPath.item % 3 == 0 ? 70 : 40)
         }
         collectionDelegate.viewForHeader = { collectionView, indexPath in
             let view = UICollectionReusableView.app.reusableView(collectionView: collectionView, kind: UICollectionView.elementKindSectionHeader, indexPath: indexPath)
@@ -293,66 +289,65 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
             view.backgroundColor = UIColor.app.randomColor
             return view
         }
-        collectionDelegate.sizeForHeader = { collectionView, section in
-            return CGSize(width: 40, height: 150)
+        collectionDelegate.sizeForHeader = { _, _ in
+            CGSize(width: 40, height: 150)
         }
-        collectionDelegate.sizeForFooter = { collectionView, section in
-            return CGSize(width: 40, height: 150)
+        collectionDelegate.sizeForFooter = { _, _ in
+            CGSize(width: 40, height: 150)
         }
-        collectionDelegate.didSelectItem = { [weak self] collectionView, indexPath in
-            guard let self = self else { return }
-            if indexPath.item < self.collectionData.count {
-                self.app.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
+        collectionDelegate.didSelectItem = { [weak self] _, indexPath in
+            guard let self else { return }
+            if indexPath.item < collectionData.count {
+                app.showMessage(text: "点击section: \(indexPath.section) item: \(indexPath.item)")
             }
         }
     }
-    
+
     func setupCollectionLayout() {
         view.addSubview(contentView)
         contentView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
             .height(150)
-        
+
         collectionView.removeFromSuperview()
         contentView.addSubview(collectionView)
         collectionView.app.layoutChain.edges(excludingEdge: .bottom).height(150)
-        
+
         view.addSubview(centerView)
         centerView.app.layoutChain
             .horizontal()
             .top(toViewBottom: contentView, offset: 20)
             .height(150)
-        
+
         view.addSubview(bottomView)
         bottomView.app.layoutChain
             .horizontal()
             .top(toViewBottom: centerView, offset: 20)
             .height(150)
     }
-    
+
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] (sender) in
-            guard let self = self else { return }
-            
-            self.flowLayout.itemRenderVertical = !self.flowLayout.itemRenderVertical
-            self.collectionView.reloadData()
+        app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
+            guard let self else { return }
+
+            flowLayout.itemRenderVertical = !flowLayout.itemRenderVertical
+            collectionView.reloadData()
         }
     }
-    
+
     func setupSubviews() {
-        for _ in 0 ..< 18 {
+        for _ in 0..<18 {
             collectionData.append(UIColor.app.randomColor)
         }
         collectionView.reloadData()
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, configForSectionAt section: Int) -> CollectionViewSectionConfig? {
         let sectionConfig = CollectionViewSectionConfig()
         sectionConfig.backgroundColor = UIColor.app.randomColor
         return sectionConfig
     }
-    
 }
 
 class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProtocol {
@@ -360,7 +355,7 @@ class SwiftTestScrollViewController: UIViewController, ScrollViewControllerProto
         let view = UIView()
         view.backgroundColor = UIColor.app.randomColor
         contentView.addSubview(view)
-        view.app.layoutMaker { (make) in
+        view.app.layoutMaker { make in
             make.edges().height(1000).width(APP.screenWidth)
         }
     }
@@ -370,7 +365,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
     class Cell: UITableViewCell {
         var index: Int = 0
     }
-    
+
     func setupTableView() {
         view.backgroundColor = AppTheme.backgroundColor
         tableDelegate.cellClass = Cell.self
@@ -390,7 +385,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
             self?.loadingData()
         }
     }
-    
+
     func setupSubviews() {
         if [0, 1].randomElement() == 1 {
             tableView.app.beginRefreshing()
@@ -399,7 +394,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
             requestData()
         }
     }
-    
+
     func startDataRequest(isRefreshing: Bool, completion: @escaping Completion) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             if [0, 1, 2].randomElement() != 0 {
@@ -408,7 +403,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
                 }
                 let count = self?.tableData.count ?? 0
                 self?.tableData.append(contentsOf: [count, count + 1, count + 2])
-                
+
                 let request = HTTPRequest()
                 completion(request, count >= 12)
             } else {
@@ -426,7 +421,7 @@ class SwiftTestWebViewController: UIViewController, WebViewControllerProtocol {
             Icon.backImage as Any,
             Icon.closeImage as Any
         ]
-        
+
         webRequest = "http://kvm.wuyong.site/test.php"
     }
 }
@@ -451,16 +446,16 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
             UIWindow.app.showMessage(text: "Popup已关闭")
         }
     }
-    
+
     func setupPopupView() {
         guard navigationController != nil else { return }
-        
+
         popupView.backgroundColor = UIColor.app.randomColor
         popupView.app.addTapGesture { _ in
             Router.openURL("https://www.baidu.com")
         }
     }
-    
+
     func setupPopupLayout() {
         let useWidth = popupConfiguration.animationEdge == .left || popupConfiguration.animationEdge == .right
         if !popupConfiguration.centerAnimation, useWidth {
@@ -499,7 +494,7 @@ class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol,
             self?.testMethod()
         }
     }
-    
+
     // 如果testMethod方法放到extension中，则不能继承; 非extension中可以继承
     func testMethod() {
         UIWindow.app.showMessage(text: "SwiftBaseController.testMethod") { [weak self] in

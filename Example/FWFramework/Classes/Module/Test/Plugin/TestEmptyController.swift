@@ -9,22 +9,21 @@
 import FWFramework
 
 class TestEmptyController: UIViewController, TableViewControllerProtocol {
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { [weak self] _ in
             self?.app.hideEmptyView()
             self?.tableView.reloadData()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return view.app.hasEmptyView ? 0 : 6
+        view.app.hasEmptyView ? 0 : 6
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView)
         let row = indexPath.row
@@ -43,7 +42,7 @@ class TestEmptyController: UIViewController, TableViewControllerProtocol {
         }
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let row = indexPath.row
@@ -72,5 +71,4 @@ class TestEmptyController: UIViewController, TableViewControllerProtocol {
         }
         tableView.reloadData()
     }
-    
 }

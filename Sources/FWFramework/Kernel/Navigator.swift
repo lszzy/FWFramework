@@ -15,21 +15,21 @@ import UIKit
         get {
             var mainWindow = Navigator.staticWindow
             if mainWindow != nil { return mainWindow }
-            
+
             mainWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
-            
+
             #if DEBUG
             // DEBUG模式时兼容FLEX、FWDebug等组件
             let flexClass: AnyClass? = NSClassFromString("FLEXWindow")
             let flexSelector = NSSelectorFromString("previousKeyWindow")
-            if let flexClass = flexClass,
+            if let flexClass,
                let flexWindow = mainWindow,
                flexWindow.isKind(of: flexClass),
                flexWindow.responds(to: flexSelector) {
                 mainWindow = flexWindow.perform(flexSelector)?.takeUnretainedValue() as? UIWindow
             }
             #endif
-            
+
             return mainWindow
         }
         set {
@@ -40,37 +40,37 @@ import UIKit
     /// 获取当前主场景，可自定义
     public static var mainScene: UIWindowScene? {
         get {
-            return Navigator.staticScene ?? main?.windowScene
+            Navigator.staticScene ?? main?.windowScene
         }
         set {
             Navigator.staticScene = newValue
         }
     }
-    
+
     // MARK: - Public
     /// 获取最顶部的视图控制器
     public var topViewController: UIViewController? {
         guard let presentedController = topPresentedController else { return nil }
         return topViewController(presentedController)
     }
-    
+
     private func topViewController(_ viewController: UIViewController) -> UIViewController {
         if let tabBarController = viewController as? UITabBarController,
            let topController = tabBarController.selectedViewController {
             return topViewController(topController)
         }
-        
+
         if let navigationController = viewController as? UINavigationController,
            let topController = navigationController.topViewController {
             return topViewController(topController)
         }
-        
+
         return viewController
     }
 
     /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
     public var topNavigationController: UINavigationController? {
-        return topViewController?.navigationController
+        topViewController?.navigationController
     }
 
     /// 获取最顶部的显示控制器
@@ -91,7 +91,7 @@ import UIKit
         }
         return false
     }
-    
+
     /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
     @discardableResult
     public func push(_ viewController: UIViewController, pop count: Int, animated: Bool = true) -> Bool {
@@ -115,7 +115,7 @@ import UIKit
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
     public func close(animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) -> Bool {
-        return topViewController?.fw.close(animated: animated, options: options, completion: completion) ?? false
+        topViewController?.fw.close(animated: animated, options: options, completion: completion) ?? false
     }
 }
 
@@ -130,7 +130,7 @@ import UIKit
             targetController = UINavigationController(rootViewController: targetController)
             isNavigation = true
         }
-        
+
         if options.contains(.styleFullScreen) {
             targetController.modalPresentationStyle = .fullScreen
         } else if options.contains(.stylePageSheet) {
@@ -138,7 +138,7 @@ import UIKit
         } else if options.contains(.styleCustom) {
             targetController.modalPresentationStyle = .custom
         }
-        
+
         var isPush = false
         if options.contains(.transitionPush) {
             isPush = true
@@ -148,7 +148,7 @@ import UIKit
             isPush = base.navigationController != nil ? true : false
         }
         if isNavigation { isPush = false }
-        
+
         if isPush {
             let popCount = popCount(for: options)
             base.navigationController?.fw.pushViewController(targetController, pop: popCount, animated: animated, completion: completion)
@@ -173,7 +173,7 @@ import UIKit
                 isDismiss = true
             }
         }
-        
+
         if isPop {
             let popCount = max(1, popCount(for: options))
             if base.navigationController?.fw.popViewControllers(popCount, animated: animated, completion: completion) != nil {
@@ -185,9 +185,9 @@ import UIKit
         }
         return false
     }
-    
+
     private func popCount(for options: NavigatorOptions) -> Int {
-        var popCount: Int = 0
+        var popCount = 0
         // 优先级：7 > 6、5、3 > 4、2、1
         if options.contains(.popToRoot) {
             popCount = .max
@@ -206,7 +206,7 @@ import UIKit
         }
         return popCount
     }
-    
+
     // MARK: - Workflow
     /// 自定义工作流名称，支持二级("."分隔)；默认返回小写类名(去掉ViewController、Controller)
     public var workflowName: String {
@@ -214,7 +214,7 @@ import UIKit
             if let workflowName = property(forName: "workflowName") as? String {
                 return workflowName
             }
-            
+
             let className = NSStringFromClass(type(of: base))
                 .components(separatedBy: ".").last ?? ""
             let workflowName = className
@@ -301,14 +301,14 @@ import UIKit
             base.setViewControllers(viewControllers, animated: animated)
         }
     }
-    
+
     /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
     public func pushViewController(_ viewController: UIViewController, pop count: Int, animated: Bool, completion: (() -> Void)? = nil) {
         if count < 1 || base.viewControllers.count < 2 {
             pushViewController(viewController, animated: animated, completion: completion)
             return
         }
-        
+
         let remainCount = base.viewControllers.count > count ? base.viewControllers.count - count : 1
         var viewControllers = Array(base.viewControllers.prefix(upTo: remainCount))
         viewControllers.append(viewController)
@@ -322,17 +322,17 @@ import UIKit
             completion?()
             return nil
         }
-        
+
         let toIndex = max(base.viewControllers.count - count - 1, 0)
         return popToViewController(base.viewControllers[toIndex], animated: animated, completion: completion)
     }
-    
+
     // MARK: - Workflow
     /// 当前最外层工作流名称，即topViewController的工作流名称
     public var topWorkflowName: String? {
-        return base.topViewController?.fw.workflowName
+        base.topViewController?.fw.workflowName
     }
-    
+
     /// push控制器，并清理最外层工作流（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
@@ -343,7 +343,7 @@ import UIKit
         }
         push(viewController, popWorkflows: workflows, animated: animated, completion: completion)
     }
-    
+
     /// push控制器，并清理到指定工作流（不属于工作流则清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、9
@@ -359,7 +359,7 @@ import UIKit
             pushViewController(viewController, animated: animated, completion: completion)
             return
         }
-        
+
         var viewControllers: [UIViewController] = []
         if let firstController = base.viewControllers.first {
             viewControllers.append(firstController)
@@ -374,13 +374,13 @@ import UIKit
     public func push(_ viewController: UIViewController, popWorkflows workflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
         push(viewController, popWorkflows: workflows ?? [], isMatch: true, animated: animated, completion: completion)
     }
-    
+
     private func push(_ viewController: UIViewController, popWorkflows workflows: [String], isMatch: Bool, animated: Bool, completion: (() -> Void)?) {
         if workflows.count < 1 {
             pushViewController(viewController, animated: animated, completion: completion)
             return
         }
-        
+
         // 从外到内查找移除的控制器列表
         var popControllers: [UIViewController] = []
         for controller in base.viewControllers.reversed() {
@@ -394,14 +394,14 @@ import UIKit
                     }
                 }
             }
-            
+
             if !isStop {
                 popControllers.append(controller)
             } else {
                 break
             }
         }
-        
+
         if popControllers.count < 1 {
             pushViewController(viewController, animated: animated, completion: completion)
         } else {
@@ -422,7 +422,7 @@ import UIKit
         }
         popWorkflows(workflows, animated: animated, completion: completion)
     }
-    
+
     /// pop方式清理到指定工作流，至少保留一个根控制器（不属于工作流则清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）
@@ -436,13 +436,13 @@ import UIKit
     public func popWorkflows(_ workflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
         popWorkflows(workflows ?? [], isMatch: true, animated: animated, completion: completion)
     }
-    
+
     private func popWorkflows(_ workflows: [String], isMatch: Bool, animated: Bool, completion: (() -> Void)?) {
         if workflows.count < 1 {
             completion?()
             return
         }
-        
+
         // 从外到内查找停止目标控制器
         var toController: UIViewController?
         for controller in base.viewControllers.reversed() {
@@ -456,14 +456,14 @@ import UIKit
                     }
                 }
             }
-            
+
             if isStop {
                 toController = controller
                 break
             }
         }
-        
-        if let toController = toController {
+
+        if let toController {
             popToViewController(toController, animated: animated, completion: completion)
         } else {
             // 至少保留一个根控制器
@@ -475,12 +475,11 @@ import UIKit
 // MARK: - NavigatorOptions
 /// 控制器导航选项定义
 public struct NavigatorOptions: OptionSet, Sendable {
-    
     public let rawValue: Int
-    
+
     /// 嵌入导航控制器并使用present转场方式
     public static let embedInNavigation = NavigatorOptions(rawValue: 1 << 0)
-    
+
     /// 指定push转场方式，仅open生效，默认自动判断转场方式
     public static let transitionPush = NavigatorOptions(rawValue: 1 << 16)
     /// 指定present转场方式，仅open生效
@@ -489,7 +488,7 @@ public struct NavigatorOptions: OptionSet, Sendable {
     public static let transitionPop = NavigatorOptions(rawValue: 3 << 16)
     /// 指定dismiss转场方式，仅close生效
     public static let transitionDismiss = NavigatorOptions(rawValue: 4 << 16)
-    
+
     /// 同时pop顶部控制器，仅push|pop生效，默认不pop控制器
     public static let popTop = NavigatorOptions(rawValue: 1 << 20)
     /// 同时pop顶部2个控制器，仅push|pop生效
@@ -504,52 +503,50 @@ public struct NavigatorOptions: OptionSet, Sendable {
     public static let popTop6 = NavigatorOptions(rawValue: 6 << 20)
     /// 同时pop到根控制器，仅push|pop生效
     public static let popToRoot = NavigatorOptions(rawValue: 7 << 20)
-    
+
     /// 指定present样式为fullScreen，仅present生效，默认自动使用系统present样式
     public static let styleFullScreen = NavigatorOptions(rawValue: 1 << 24)
     /// 指定present样式为pageSheet，仅present生效
     public static let stylePageSheet = NavigatorOptions(rawValue: 2 << 24)
     /// 指定present样式为custom，仅present生效
     public static let styleCustom = NavigatorOptions(rawValue: 3 << 24)
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 // MARK: - Navigator
 /// 导航管理器
 @MainActor public class Navigator {
-    
     fileprivate static var staticWindow: UIWindow?
     fileprivate static var staticScene: UIWindowScene?
-    
+
     /// 获取最顶部的视图控制器
     public static var topViewController: UIViewController? {
-        return UIWindow.fw.main?.fw.topViewController
+        UIWindow.fw.main?.fw.topViewController
     }
 
     /// 获取最顶部的导航栏控制器。如果顶部VC不含导航栏，返回nil
     public static var topNavigationController: UINavigationController? {
-        return UIWindow.fw.main?.fw.topNavigationController
+        UIWindow.fw.main?.fw.topNavigationController
     }
 
     /// 获取最顶部的显示控制器
     public static var topPresentedController: UIViewController? {
-        return UIWindow.fw.main?.fw.topPresentedController
+        UIWindow.fw.main?.fw.topPresentedController
     }
 
     /// 使用最顶部的导航栏控制器打开控制器
     @discardableResult
     public static func push(_ viewController: UIViewController, animated: Bool = true) -> Bool {
-        return UIWindow.fw.main?.fw.push(viewController, animated: animated) ?? false
+        UIWindow.fw.main?.fw.push(viewController, animated: animated) ?? false
     }
-    
+
     /// 使用最顶部的导航栏控制器打开控制器，同时pop指定数量控制器
     @discardableResult
     public static func push(_ viewController: UIViewController, pop count: Int, animated: Bool = true) -> Bool {
-        return UIWindow.fw.main?.fw.push(viewController, pop: count, animated: animated) ?? false
+        UIWindow.fw.main?.fw.push(viewController, pop: count, animated: animated) ?? false
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
@@ -565,7 +562,6 @@ public struct NavigatorOptions: OptionSet, Sendable {
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
     public static func close(animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) -> Bool {
-        return UIWindow.fw.main?.fw.close(animated: animated, options: options, completion: completion) ?? false
+        UIWindow.fw.main?.fw.close(animated: animated, options: options, completion: completion) ?? false
     }
-    
 }

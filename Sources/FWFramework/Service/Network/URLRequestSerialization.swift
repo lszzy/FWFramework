@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 import MobileCoreServices
+import UIKit
 
 public protocol URLRequestSerialization: AnyObject {
     func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest
@@ -33,15 +33,15 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         }
         return headers
     }
-    
+
     private var mutableHTTPRequestHeaders: [String: String] = [:]
     private let requestHeaderModificationQueue = DispatchQueue(label: "requestHeaderModificationQueue", attributes: .concurrent)
     private var queryStringSerializationStyle: HTTPRequestQueryStringSerializationStyle = .default
     private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?
-    
-    public override init() {
+
+    override public init() {
         super.init()
-        
+
         var acceptLanguagesComponents: [String] = []
         for (idx, obj) in NSLocale.preferredLanguages.enumerated() {
             let q: Float = 1.0 - (Float(idx) * 0.1)
@@ -51,17 +51,17 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
             }
         }
         setValue(acceptLanguagesComponents.joined(separator: ", "), forHTTPHeaderField: "Accept-Language")
-        
+
         let userAgent = String(format: "%@/%@ (%@; %@; iOS %@) FWFramework/%@", UIApplication.fw.appExecutable, UIApplication.fw.appVersion, UIApplication.fw.appIdentifier, UIDevice.fw.deviceModel, UIDevice.fw.iosVersionString, WrapperGlobal.version)
         setValue(userAgent, forHTTPHeaderField: "User-Agent")
     }
-    
+
     open func setValue(_ value: String?, forHTTPHeaderField field: String) {
         requestHeaderModificationQueue.sync(flags: .barrier) {
             self.mutableHTTPRequestHeaders[field] = value
         }
     }
-    
+
     open func value(forHTTPHeaderField field: String) -> String? {
         var value: String?
         requestHeaderModificationQueue.sync {
@@ -69,34 +69,34 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         }
         return value
     }
-    
+
     open func setAuthorizationHeaderField(username: String, password: String) {
         let basicAuthCredentials = String(format: "%@:%@", username, password).data(using: .utf8)
         let base64AuthCredentials = basicAuthCredentials?.base64EncodedString()
         setValue(String(format: "Basic %@", base64AuthCredentials ?? ""), forHTTPHeaderField: "Authorization")
     }
-    
+
     open func clearAuthorizationHeader() {
         requestHeaderModificationQueue.sync(flags: .barrier) {
             _ = self.mutableHTTPRequestHeaders.removeValue(forKey: "Authorization")
         }
     }
-    
+
     open func setQueryStringSerialization(style: HTTPRequestQueryStringSerializationStyle) {
         queryStringSerializationStyle = style
         queryStringSerialization = nil
     }
-    
+
     open func setQueryStringSerialization(block: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?) {
         queryStringSerialization = block
     }
-    
+
     open func request(method: String, urlString: String, parameters: Any?) throws -> URLRequest {
         var url = URL(string: urlString)
         if url == nil, let encodeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             url = URL(string: encodeString)
         }
-        
+
         var urlRequest = URLRequest(url: url ?? URL())
         urlRequest.httpMethod = method
         urlRequest.allowsCellularAccess = allowsCellularAccess
@@ -105,20 +105,20 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         urlRequest.httpShouldUsePipelining = httpShouldUsePipelining
         urlRequest.networkServiceType = networkServiceType
         urlRequest.timeoutInterval = timeoutInterval
-        
+
         let mutableRequest = try requestBySerializingRequest(urlRequest, parameters: parameters)
         return mutableRequest
     }
-    
+
     open func multipartFormRequest(method: String, urlString: String, parameters: [String: Any]?, constructingBody block: ((MultipartFormData) -> Void)?) throws -> URLRequest {
         guard method != "GET" && method != "HEAD" else {
             throw NSError(domain: NSURLErrorDomain, code: NSURLErrorUnsupportedURL, userInfo: nil)
         }
-        
+
         let mutableRequest = try request(method: method, urlString: urlString, parameters: nil)
         let formData = StreamingMultipartFormData(urlRequest: mutableRequest, stringEncoding: .utf8)
-        
-        if let parameters = parameters {
+
+        if let parameters {
             let pairs = Self.queryStringPairs(from: parameters)
             for pair in pairs {
                 var data: Data?
@@ -129,35 +129,35 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 } else {
                     data = String.fw.safeString(pair.value).data(using: stringEncoding)
                 }
-                
-                if let data = data {
+
+                if let data {
                     formData.appendPart(formData: data, name: String.fw.safeString(pair.field))
                 }
             }
         }
-        
+
         block?(formData)
         return formData.requestByFinalizingMultipartFormData()
     }
-    
+
     open func request(multipartFormRequest request: URLRequest, writingStreamContentsToFile fileURL: URL, completionHandler: (@Sendable (Error?) -> Void)?) -> URLRequest? {
         guard let inputStream = request.httpBodyStream,
               fileURL.isFileURL,
               let outputStream = OutputStream(url: fileURL, append: false) else { return nil }
-        
+
         let sendableError = SendableObject<Error?>(nil)
         let sendableInputStream = SendableObject(inputStream)
         let sendableOutputStream = SendableObject(outputStream)
         DispatchQueue.global(qos: .default).async {
             sendableInputStream.object.schedule(in: .current, forMode: .default)
             sendableOutputStream.object.schedule(in: .current, forMode: .default)
-            
+
             sendableInputStream.object.open()
             sendableOutputStream.object.open()
 
             while sendableInputStream.object.hasBytesAvailable && sendableOutputStream.object.hasSpaceAvailable {
                 var buffer = [UInt8](repeating: 0, count: 1024)
-                
+
                 let bytesRead = sendableInputStream.object.read(&buffer, maxLength: 1024)
                 if sendableInputStream.object.streamError != nil || bytesRead < 0 {
                     sendableError.object = sendableInputStream.object.streamError
@@ -184,22 +184,22 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 }
             }
         }
-        
+
         var mutableRequest = request
         mutableRequest.httpBodyStream = nil
         return mutableRequest
     }
-    
+
     open func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         var mutableRequest = request
-        httpRequestHeaders.forEach { (field, value) in
+        for (field, value) in httpRequestHeaders {
             if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
         }
-        
+
         var query: String?
-        if let parameters = parameters {
+        if let parameters {
             if queryStringSerialization != nil {
                 query = try queryStringSerialization?(request, parameters)
             } else {
@@ -209,9 +209,9 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 }
             }
         }
-        
+
         if httpMethodsEncodingParametersInURI.contains(request.httpMethod?.uppercased() ?? "") {
-            if let query = query, !query.isEmpty {
+            if let query, !query.isEmpty {
                 let urlString = mutableRequest.url?.absoluteString ?? ""
                 mutableRequest.url = URL(string: urlString.appendingFormat(mutableRequest.url?.query != nil ? "&%@" : "?%@", query))
             }
@@ -221,7 +221,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
             }
             mutableRequest.httpBody = (query ?? "").data(using: stringEncoding)
         }
-        
+
         return mutableRequest
     }
 }
@@ -231,14 +231,14 @@ extension HTTPRequestSerializer {
     public static let NetworkingOperationFailingURLRequestErrorKey = "site.wuyong.serialization.request.error.response"
     public static let UploadStream3GSuggestedPacketSize: UInt = 1024 * 16
     public static let UploadStream3GSuggestedDelay: TimeInterval = 0.2
-    
+
     public static func percentEscapedString(from string: String) -> String {
         let CharactersGeneralDelimitersToEncode = ":#[]@"
         let CharactersSubDelimitersToEncode = "!$&'()*+,;="
 
         var allowedCharacterSet = CharacterSet.urlQueryAllowed
         allowedCharacterSet.remove(charactersIn: CharactersGeneralDelimitersToEncode + CharactersSubDelimitersToEncode)
-        
+
         let batchSize = 50
         var index = 0
         var escaped = ""
@@ -257,7 +257,7 @@ extension HTTPRequestSerializer {
 
         return escaped
     }
-    
+
     public static func queryString(from parameters: [AnyHashable: Any]) -> String {
         var mutablePairs: [String] = []
         let pairs = queryStringPairs(from: parameters)
@@ -266,14 +266,14 @@ extension HTTPRequestSerializer {
         }
         return mutablePairs.joined(separator: "&")
     }
-    
+
     private static func queryStringPairs(from dictionary: [AnyHashable: Any]) -> [QueryStringPair] {
-        return queryStringPairs(key: nil, value: dictionary)
+        queryStringPairs(key: nil, value: dictionary)
     }
-    
+
     private static func queryStringPairs(key: String?, value: Any) -> [QueryStringPair] {
         var queryStringComponents: [QueryStringPair] = []
-        
+
         if let dictionary = value as? [AnyHashable: Any] {
             let nestedKeys = dictionary.keys.map { String.fw.safeString($0) }.sorted { $0 < $1 }
             for nestedKey in nestedKeys {
@@ -296,18 +296,18 @@ extension HTTPRequestSerializer {
 
         return queryStringComponents
     }
-    
+
     private class QueryStringPair {
         let field: Any?
         let value: Any?
-        
+
         init(field: Any?, value: Any?) {
             self.field = field
             self.value = value
         }
-        
+
         var urlEncodedStringValue: String {
-            if Optional<Any>.isNil(value) || value is NSNull {
+            if Any?.isNil(value) || value is NSNull {
                 return HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field))
             } else {
                 return String(format: "%@=%@", HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(field)), HTTPRequestSerializer.percentEscapedString(from: String.fw.safeString(value)))
@@ -318,19 +318,19 @@ extension HTTPRequestSerializer {
 
 public protocol MultipartFormData: AnyObject {
     func appendPart(fileURL: URL, name: String) throws
-    
+
     func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String) throws
-    
+
     func appendPart(inputStream: InputStream?, length: UInt64, name: String, fileName: String, mimeType: String)
-    
+
     func appendPart(fileData: Data, name: String, fileName: String, mimeType: String)
-    
+
     func appendPart(formData: Data, name: String)
-    
+
     func appendPart(headers: [String: String]?, body: Data)
-    
+
     func appendPart(inputStream: InputStream?, length: UInt64, headers: [String: String]?)
-    
+
     func throttleBandwidth(packetSize numberOfBytes: Int, delay: TimeInterval)
 }
 
@@ -339,44 +339,44 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
     private var stringEncoding: String.Encoding
     private var boundary: String
     private var bodyStream: MultipartBodyStream
-    
+
     public init(urlRequest: URLRequest, stringEncoding: String.Encoding) {
-        self.request = urlRequest
+        request = urlRequest
         self.stringEncoding = stringEncoding
-        self.boundary = Self.createMultipartFormBoundary()
-        self.bodyStream = MultipartBodyStream(stringEncoding: stringEncoding)
+        boundary = Self.createMultipartFormBoundary()
+        bodyStream = MultipartBodyStream(stringEncoding: stringEncoding)
         super.init()
     }
-    
+
     open func requestByFinalizingMultipartFormData() -> URLRequest {
         if bodyStream.isEmpty {
             return request
         }
-        
+
         bodyStream.setInitialAndFinalBoundaries()
         request.httpBodyStream = bodyStream
-        
+
         request.setValue(String(format: "multipart/form-data; boundary=%@", boundary), forHTTPHeaderField: "Content-Type")
         request.setValue(String(format: "%llu", bodyStream.contentLength), forHTTPHeaderField: "Content-Length")
-        return self.request
+        return request
     }
-    
+
     open func appendPart(fileURL: URL, name: String) throws {
         let fileName = fileURL.lastPathComponent
         let mimeType = Self.contentTypeForPathExtension(fileURL.pathExtension)
         try appendPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
     }
-    
+
     open func appendPart(fileURL: URL, name: String, fileName: String, mimeType: String) throws {
         if !fileURL.isFileURL {
             throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "Expected URL to be a file URL"])
         }
-        
+
         let checkResult = try? fileURL.checkResourceIsReachable()
         if checkResult == nil || checkResult == false {
             throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "File URL not reachable."])
         }
-        
+
         guard let fileAttributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path) else {
             throw NSError(domain: HTTPRequestSerializer.URLRequestSerializationErrorDomain, code: NSURLErrorBadURL, userInfo: [NSLocalizedDescriptionKey: "File URL not reachable."])
         }
@@ -393,7 +393,7 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
         bodyPart.bodyContentLength = fileAttributes[.size] as? UInt64 ?? 0
         bodyStream.appendHTTPBodyPart(bodyPart)
     }
-    
+
     open func appendPart(inputStream: InputStream?, length: UInt64, name: String, fileName: String, mimeType: String) {
         var headers = [String: String]()
         headers["Content-Disposition"] = String(format: "form-data; name=\"%@\"; filename=\"%@\"", name, fileName)
@@ -407,23 +407,23 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
         bodyPart.bodyContentLength = length
         bodyStream.appendHTTPBodyPart(bodyPart)
     }
-    
+
     open func appendPart(fileData data: Data, name: String, fileName: String, mimeType: String) {
         var headers = [String: String]()
         headers["Content-Disposition"] = String(format: "form-data; name=\"%@\"; filename=\"%@\"", name, fileName)
         headers["Content-Type"] = mimeType
-        
+
         appendPart(headers: headers, body: data)
     }
-    
+
     open func appendPart(formData data: Data, name: String) {
         var headers = [String: String]()
         headers["Content-Disposition"] = String(format: "form-data; name=\"%@\"", name)
-        
+
         appendPart(headers: headers, body: data)
     }
-    
-    open func appendPart(headers: [String : String]?, body: Data) {
+
+    open func appendPart(headers: [String: String]?, body: Data) {
         let bodyPart = HTTPBodyPart()
         bodyPart.stringEncoding = stringEncoding
         bodyPart.headers = headers
@@ -432,8 +432,8 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
         bodyPart.bodyContentLength = UInt64(body.count)
         bodyStream.appendHTTPBodyPart(bodyPart)
     }
-    
-    open func appendPart(inputStream: InputStream?, length: UInt64, headers: [String : String]?) {
+
+    open func appendPart(inputStream: InputStream?, length: UInt64, headers: [String: String]?) {
         let bodyPart = HTTPBodyPart()
         bodyPart.stringEncoding = stringEncoding
         bodyPart.headers = headers
@@ -442,7 +442,7 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
         bodyPart.bodyContentLength = length
         bodyStream.appendHTTPBodyPart(bodyPart)
     }
-    
+
     open func throttleBandwidth(packetSize numberOfBytes: Int, delay: TimeInterval) {
         bodyStream.numberOfBytesInPacket = numberOfBytes
         bodyStream.delay = delay
@@ -451,21 +451,21 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
 
 extension StreamingMultipartFormData {
     private static let multipartFormCRLF = "\r\n"
-    
+
     private static func createMultipartFormBoundary() -> String {
-        return String(format: "Boundary+%08X%08X", arc4random(), arc4random())
+        String(format: "Boundary+%08X%08X", arc4random(), arc4random())
     }
 
     private static func multipartFormInitialBoundary(_ boundary: String) -> String {
-        return "--\(boundary)\(multipartFormCRLF)"
+        "--\(boundary)\(multipartFormCRLF)"
     }
 
     private static func multipartFormEncapsulationBoundary(_ boundary: String) -> String {
-        return "\(multipartFormCRLF)--\(boundary)\(multipartFormCRLF)"
+        "\(multipartFormCRLF)--\(boundary)\(multipartFormCRLF)"
     }
 
     private static func multipartFormFinalBoundary(_ boundary: String) -> String {
-        return "\(multipartFormCRLF)--\(boundary)--\(multipartFormCRLF)"
+        "\(multipartFormCRLF)--\(boundary)--\(multipartFormCRLF)"
     }
 
     private static func contentTypeForPathExtension(_ ext: String) -> String {
@@ -475,14 +475,14 @@ extension StreamingMultipartFormData {
         }
         return "application/octet-stream"
     }
-    
+
     private enum HTTPBodyPartReadPhase: Int {
         case encapsulationBoundary = 1
         case header = 2
         case body = 3
         case finalBoundary = 4
     }
-    
+
     private class HTTPBodyPart: NSObject, @unchecked Sendable {
         var stringEncoding: String.Encoding = .utf8
         var headers: [String: String]?
@@ -508,8 +508,9 @@ extension StreamingMultipartFormData {
                 _inputStream = newValue
             }
         }
+
         private var _inputStream: InputStream?
-        
+
         var hasInitialBoundary = false
         var hasFinalBoundary = false
         var hasBytesAvailable: Bool {
@@ -525,6 +526,7 @@ extension StreamingMultipartFormData {
                 return false
             }
         }
+
         var contentLength: UInt64 {
             var length: UInt64 = 0
 
@@ -541,64 +543,64 @@ extension StreamingMultipartFormData {
 
             return length
         }
-        
+
         private var phase: HTTPBodyPartReadPhase?
         private var phaseReadOffset: Int = 0
         private var stringForHeaders: String {
             var headerString = ""
-            for (field, value) in (headers ?? [:]) {
+            for (field, value) in headers ?? [:] {
                 headerString.append(String(format: "%@: %@%@", field, value, StreamingMultipartFormData.multipartFormCRLF))
             }
             headerString.append(StreamingMultipartFormData.multipartFormCRLF)
             return headerString
         }
-        
+
         override init() {
             super.init()
             transitionToNextPhase()
         }
-        
+
         deinit {
             if _inputStream != nil {
                 _inputStream?.close()
                 _inputStream = nil
             }
         }
-        
+
         func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength length: Int) -> Int {
             var totalNumberOfBytesRead = 0
-            
+
             if phase == .encapsulationBoundary {
                 let encapsulationBoundaryData = (hasInitialBoundary ? multipartFormInitialBoundary(boundary) : multipartFormEncapsulationBoundary(boundary)).data(using: stringEncoding) ?? Data()
                 totalNumberOfBytesRead += readData(encapsulationBoundaryData as NSData, into: &buffer[totalNumberOfBytesRead], maxLength: length - totalNumberOfBytesRead)
             }
-            
+
             if phase == .header {
                 let headersData = stringForHeaders.data(using: stringEncoding) ?? Data()
                 totalNumberOfBytesRead += readData(headersData as NSData, into: &buffer[totalNumberOfBytesRead], maxLength: length - totalNumberOfBytesRead)
             }
-            
+
             if phase == .body {
                 let numberOfBytesRead = inputStream?.read(&buffer[totalNumberOfBytesRead], maxLength: length - totalNumberOfBytesRead) ?? 0
                 if numberOfBytesRead == -1 {
                     return -1
                 } else {
                     totalNumberOfBytesRead += numberOfBytesRead
-                    
+
                     if (inputStream?.streamStatus.rawValue ?? 0) >= Stream.Status.atEnd.rawValue {
                         transitionToNextPhase()
                     }
                 }
             }
-            
+
             if phase == .finalBoundary {
                 let closingBoundaryData = hasFinalBoundary ? (multipartFormFinalBoundary(boundary).data(using: stringEncoding) ?? Data()) : Data()
                 totalNumberOfBytesRead += readData(closingBoundaryData as NSData, into: &buffer[totalNumberOfBytesRead], maxLength: length - totalNumberOfBytesRead)
             }
-            
+
             return totalNumberOfBytesRead
         }
-        
+
         @discardableResult
         private func transitionToNextPhase() -> Bool {
             if !Thread.isMainThread {
@@ -607,7 +609,7 @@ extension StreamingMultipartFormData {
                 }
                 return true
             }
-            
+
             switch phase {
             case .encapsulationBoundary:
                 phase = .header
@@ -622,10 +624,10 @@ extension StreamingMultipartFormData {
                 phase = .encapsulationBoundary
             }
             phaseReadOffset = 0
-            
+
             return true
         }
-        
+
         private func readData(_ data: NSData, into buffer: UnsafeMutablePointer<UInt8>, maxLength length: Int) -> Int {
             let range = NSRange(location: phaseReadOffset, length: min(data.length - phaseReadOffset, length))
             data.getBytes(buffer, range: range)
@@ -637,7 +639,7 @@ extension StreamingMultipartFormData {
             return range.length
         }
     }
-    
+
     private class MultipartBodyStream: InputStream, StreamDelegate {
         var numberOfBytesInPacket: Int = .max
         var delay: TimeInterval = 0
@@ -649,53 +651,54 @@ extension StreamingMultipartFormData {
             }
             return length
         }
+
         var isEmpty: Bool { httpBodyParts.count == 0 }
-        
+
         private var stringEncoding: String.Encoding = .utf8
         private var httpBodyParts: [HTTPBodyPart] = []
         private var httpBodyPartEnumerator: NSEnumerator?
         private var currentHTTPBodyPart: HTTPBodyPart?
-        
+
         private var _streamStatus: Stream.Status = .notOpen
         private var _streamError: Error?
-        
+
         init(stringEncoding: String.Encoding) {
             super.init(data: Data())
             self.stringEncoding = stringEncoding
         }
-        
+
         func setInitialAndFinalBoundaries() {
             if httpBodyParts.count > 0 {
                 for bodyPart in httpBodyParts {
                     bodyPart.hasInitialBoundary = false
                     bodyPart.hasFinalBoundary = false
                 }
-                
+
                 httpBodyParts.first?.hasInitialBoundary = true
                 httpBodyParts.last?.hasFinalBoundary = true
             }
         }
-        
+
         func appendHTTPBodyPart(_ bodyPart: HTTPBodyPart) {
             httpBodyParts.append(bodyPart)
         }
-        
+
         override var streamStatus: Stream.Status {
-            return _streamStatus
+            _streamStatus
         }
-        
+
         override var streamError: Error? {
-            return _streamError
+            _streamError
         }
-        
+
         override var hasBytesAvailable: Bool {
-            return streamStatus == .open
+            streamStatus == .open
         }
-        
+
         override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength length: Int) -> Int {
             if streamStatus == .closed { return 0 }
-            
-            var totalNumberOfBytesRead: Int = 0
+
+            var totalNumberOfBytesRead = 0
 
             while totalNumberOfBytesRead < min(length, numberOfBytesInPacket) {
                 if currentHTTPBodyPart == nil || !currentHTTPBodyPart!.hasBytesAvailable {
@@ -721,64 +724,64 @@ extension StreamingMultipartFormData {
 
             return totalNumberOfBytesRead
         }
-        
+
         override func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
-            return false
+            false
         }
-        
+
         override func open() {
             if streamStatus == .open { return }
             _streamStatus = .open
-            
+
             setInitialAndFinalBoundaries()
             httpBodyPartEnumerator = (httpBodyParts as NSArray).objectEnumerator()
         }
-        
+
         override func close() {
             _streamStatus = .closed
         }
-        
+
         override func property(forKey key: Stream.PropertyKey) -> Any? {
-            return nil
+            nil
         }
-        
+
         override func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
-            return false
+            false
         }
-        
+
         override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {}
-        
+
         override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {}
-        
-        @objc func _scheduleInCFRunLoop(_ aRunLoop: CFRunLoop, forMode aMode:CFString) {}
-        
+
+        @objc func _scheduleInCFRunLoop(_ aRunLoop: CFRunLoop, forMode aMode: CFString) {}
+
         @objc func _unscheduleFromCFRunLoop(_ aRunLoop: CFRunLoop, forMode mode: CFString) {}
-        
+
         @objc func _setCFClientFlags(_ inFlags: CFOptionFlags, callback: CFReadStreamClientCallBack!, context: UnsafeMutablePointer<CFStreamClientContext>) -> Bool {
-            return false
+            false
         }
     }
 }
 
 open class JSONRequestSerializer: HTTPRequestSerializer {
     open var writingOptions: JSONSerialization.WritingOptions = []
-    
-    public override init() {
+
+    override public init() {
         super.init()
     }
-    
+
     public convenience init(writingOptions: JSONSerialization.WritingOptions) {
         self.init()
         self.writingOptions = writingOptions
     }
-    
-    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
+
+    override open func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         if httpMethodsEncodingParametersInURI.contains(request.httpMethod?.uppercased() ?? "") {
             return try super.requestBySerializingRequest(request, parameters: parameters)
         }
-        
+
         var mutableRequest = request
-        httpRequestHeaders.forEach { (field, value) in
+        for (field, value) in httpRequestHeaders {
             if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
@@ -786,16 +789,16 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
         if mutableRequest.value(forHTTPHeaderField: "Content-Type") == nil {
             mutableRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
-        
-        if let parameters = parameters {
+
+        if let parameters {
             if !JSONSerialization.isValidJSONObject(parameters) {
                 throw NSError(domain: Self.URLRequestSerializationErrorDomain, code: NSURLErrorCannotDecodeContentData, userInfo: [NSLocalizedDescriptionKey: "The `parameters` argument is not valid JSON."])
             }
-            
+
             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: writingOptions)
             mutableRequest.httpBody = jsonData
         }
-        
+
         return mutableRequest
     }
 }
@@ -803,24 +806,24 @@ open class JSONRequestSerializer: HTTPRequestSerializer {
 open class PropertyListRequestSerializer: HTTPRequestSerializer {
     open var format: PropertyListSerialization.PropertyListFormat = .xml
     open var writeOptions: PropertyListSerialization.WriteOptions = 0
-    
-    public override init() {
+
+    override public init() {
         super.init()
     }
-    
+
     public convenience init(format: PropertyListSerialization.PropertyListFormat, writeOptions: PropertyListSerialization.WriteOptions) {
         self.init()
         self.format = format
         self.writeOptions = writeOptions
     }
-    
-    open override func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
+
+    override open func requestBySerializingRequest(_ request: URLRequest, parameters: Any?) throws -> URLRequest {
         if httpMethodsEncodingParametersInURI.contains(request.httpMethod?.uppercased() ?? "") {
             return try super.requestBySerializingRequest(request, parameters: parameters)
         }
-        
+
         var mutableRequest = request
-        httpRequestHeaders.forEach { (field, value) in
+        for (field, value) in httpRequestHeaders {
             if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
@@ -828,12 +831,12 @@ open class PropertyListRequestSerializer: HTTPRequestSerializer {
         if mutableRequest.value(forHTTPHeaderField: "Content-Type") == nil {
             mutableRequest.setValue("application/x-plist", forHTTPHeaderField: "Content-Type")
         }
-        
-        if let parameters = parameters {
+
+        if let parameters {
             let plistData = try PropertyListSerialization.data(fromPropertyList: parameters, format: format, options: writeOptions)
             mutableRequest.httpBody = plistData
         }
-        
+
         return mutableRequest
     }
 }

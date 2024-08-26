@@ -14,11 +14,11 @@ enum TestEncodeEnum: Int {
 
 struct TestEncodeOption: OptionSet {
     let rawValue: Int
-    
+
     init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     static let `default`: TestEncodeOption = .init(rawValue: 1 << 0)
 }
 
@@ -36,16 +36,15 @@ class TestEncodeObject: NSObject, @unchecked Sendable {
     var id: Int = 1
     var name: String = "name"
     var closure: () -> Void = {}
-    
+
     @objc func testFunction() {}
 }
 
 class TestEncodeController: UIViewController, TableViewControllerProtocol {
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-   
+
     func setupSubviews() {
         let encodeList: [[Any]] = [
             ["String", "1", "1"],
@@ -65,25 +64,24 @@ class TestEncodeController: UIViewController, TableViewControllerProtocol {
             ["Selector", "#selector(TestEncodeObject.testFunction)", #selector(TestEncodeObject.testFunction)],
             ["Struct.Type", "TestEncodeStruct.self", TestEncodeStruct.self],
             ["Class.Type", "TestEncodeClass.self", TestEncodeClass.self],
-            ["NSObject.Type", "TestEncodeObject.self", TestEncodeObject.self],
+            ["NSObject.Type", "TestEncodeObject.self", TestEncodeObject.self]
         ]
         tableData.append(contentsOf: encodeList)
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let rowData = tableData[indexPath.row] as! [Any]
         var text = (rowData[0] as! String) + ": " + (rowData[1] as! String)
         text += "\nsafeString: \(APP.safeString(rowData[2]))"
         text += "\nsafeNumber: \(APP.safeNumber(rowData[2]))"
-        
+
         let cell = UITableViewCell.app.cell(tableView: tableView)
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.text = text
         return cell
     }
-    
 }

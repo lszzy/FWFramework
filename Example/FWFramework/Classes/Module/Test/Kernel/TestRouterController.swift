@@ -9,14 +9,13 @@
 import FWFramework
 
 class TestRouterController: UIViewController, TableViewControllerProtocol, UISearchResultsUpdating {
-    
     typealias TableElement = [String]
-    
+
     static var popCount: Int = 0
-    
+
     @StoredValue("routerStrictMode")
     static var routerStrictMode: Bool = false
-    
+
     var testData: [TableElement] = [
         ["打开Web", "onOpenHttp"],
         ["打开完整Web", "onOpenHttp2"],
@@ -60,15 +59,15 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["内部safari", "onOpenSafari"],
         ["打开两个界面", "onOpenMulti"],
         ["界面完成回调", "onOpenResult"],
-        ["iOS14bug", "onOpen14"],
+        ["iOS14bug", "onOpen14"]
     ]
-    
+
     private lazy var searchController: UISearchController = {
         let result = UISearchController(searchResultsController: nil)
         result.searchResultsUpdater = self
         result.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
-        
+
         let searchBar = result.searchBar
         searchBar.placeholder = "Search"
         searchBar.barTintColor = AppTheme.barColor
@@ -81,7 +80,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         searchBar.app.textField.app.setCornerRadius(18)
         return result
     }()
-    
+
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text?.app.trimString ?? ""
         if searchText.isEmpty {
@@ -89,7 +88,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
             tableView.reloadData()
             return
         }
-        
+
         var resultData: [TableElement] = []
         for rowData in testData {
             if APP.safeString(rowData[0]).lowercased()
@@ -100,19 +99,19 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         tableData = resultData
         tableView.reloadData()
     }
-    
+
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupTableView() {
         tableView.tableHeaderView = searchController.searchBar
     }
-    
+
     func setupTableLayout() {
         tableView.layoutChain.edges()
     }
-    
+
     func setupNavbar() {
         navigationItem.title = "Router"
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
@@ -121,13 +120,13 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
                 Router.strictMode = TestRouterController.routerStrictMode
             })
         }
-        
+
         var url = "http://test.com?id=我是中文"
         APP.debug("urlEncode: %@", String(describing: url.app.urlEncode))
         APP.debug("urlDecode: %@", String(describing: url.app.urlEncode?.app.urlDecode))
         APP.debug("urlEncodeComponent: %@", String(describing: url.app.urlEncodeComponent))
         APP.debug("urlDecodeComponent: %@", String(describing: url.app.urlEncodeComponent?.app.urlDecodeComponent))
-        
+
         url = "app://tests/1?value=2&name=name2&title=我是字符串100%&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2"
         APP.debug("string.queryDecode: %@", String(describing: url.app.queryDecode))
         APP.debug("string.queryEncode: %@", String(describing: String.app.queryEncode(url.app.queryDecode)))
@@ -135,14 +134,14 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         APP.debug("query.queryDecode: %@", String(describing: nsurl?.query?.app.queryDecode))
         APP.debug("url.queryParameters: %@", String(describing: nsurl?.app.queryParameters))
     }
-    
+
     func setupSubviews() {
         let str = "http://test.com?id=我是中文"
         var url = URL(string: str)
         APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
         url = URL.app.url(string: str)
         APP.debug("str: %@ =>\nurl: %@", str, String(describing: url))
-        
+
         var urlStr = Router.generateURL(TestRouter.testUrl, parameters: nil)
         APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: [1])
@@ -151,192 +150,190 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         APP.debug("url: %@", urlStr)
         urlStr = Router.generateURL(TestRouter.testUrl, parameters: 3)
         APP.debug("url: %@", urlStr)
-        
+
         tableData.append(contentsOf: testData)
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView)
         let rowData = tableData[indexPath.row]
         cell.textLabel?.text = rowData[0]
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        _ = self.perform(NSSelectorFromString(rowData[1]))
+        _ = perform(NSSelectorFromString(rowData[1]))
     }
-    
 }
 
 @objc extension TestRouterController {
-    
     func onOpenApp() {
         Router.openURL("app://")
     }
-    
+
     func onOpen() {
         Router.openURL("app://tests/1#anchor")
     }
-    
+
     func onOpenChinese() {
         Router.openURL("app://tests/%E4%B8%AD%E6%96%87?value=1#anchor")
     }
-    
+
     func onOpenEncode() {
         Router.openURL("app://tests/1?value=2&name=name2&url=https%3A%2F%2Fkvm.wuyong.site%2Ftest.php%3Fvalue%3D1%26name%3Dname1%23%2Fhome1#/home2")
     }
-    
+
     func onOpenImage() {
         Router.openURL("app://tests/1?url=http://kvm.wuyong.site/test.php")
     }
-    
+
     func onOpenSlash() {
         Router.openURL("app:tests/1#anchor")
     }
-    
+
     func onOpenWild() {
         Router.openURL(Router.generateURL(TestRouter.wildcardUrl, parameters: "not_found?id=1#anchor"))
     }
-    
+
     func onOpenPage() {
         Router.openURL(Router.generateURL(TestRouter.pageUrl, parameters: ["id": "test/1"]))
     }
-    
+
     func onOpenShop() {
         Router.openURL(Router.generateURL(TestRouter.shopUrl, parameters: 1))
     }
-    
+
     func onOpenItem() {
         Router.openURL(Router.generateURL(TestRouter.itemUrl, parameters: [1, 2]))
     }
-    
+
     func onOpenHtml() {
         Router.openURL(Router.generateURL(TestRouter.htmlUrl, parameters: ["id": 1]))
     }
-    
+
     func onOpenCallback() {
         Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") { result in
             UIWindow.app.showMessage(text: result as? String)
         }
     }
-    
+
     func onOpenObject() {
         let vc = Router.object(forURL: TestRouter.objectUrl) as! TestRouterResultController
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
-    
+
     func onOpenFailed() {
         Router.openURL("app://tests?FWRouterBlock=1")
     }
-    
+
     func onRewrite1() {
         Router.openURL("https://www.baidu.com/tests/66666")
     }
-    
+
     func onRewrite2() {
         Router.openURL("https://www.baidu.com/wildcard/字符串?title=我是字符串100%")
     }
-    
+
     func onRewrite3() {
         Router.openURL("https://www.baidu.com/wildcard2/%E5%8E%9F%E5%AD%90%E5%BC%B9")
     }
-    
+
     func onOpenUnmatch() {
         Router.openURL(TestRouter.objectUnmatchUrl)
     }
-    
+
     func onOpenUnmatch2() {
         _ = Router.object(forURL: TestRouter.objectUnmatchUrl)
     }
-    
+
     func onOpenUnmatch3() {
         Router.openURL(TestRouter.objectUrl)
     }
-    
+
     func onOpenParameter() {
         let parameter = Router.Parameter()
         parameter.routerOptions = [.embedInNavigation, .styleFullScreen]
-        
+
         Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
     }
-    
+
     func onOpenHandler() {
         let parameter = Router.Parameter()
-        parameter.routerHandler = { context, vc in
+        parameter.routerHandler = { _, vc in
             let nav = UINavigationController(rootViewController: vc)
             Navigator.present(nav)
         }
-        
+
         Router.openURL("http://www.wuyong.site/", userInfo: parameter.dictionaryValue)
     }
-    
+
     func onOpenLoader() {
         Router.openURL(TestRouter.loaderUrl)
     }
-    
+
     func onOpenFilter() {
         Router.openURL("app://filter/1")
     }
-    
+
     func onRewriteFilter() {
         Router.openURL("https://www.baidu.com/filter/1")
     }
-    
+
     func onOpenTel() {
         Router.openURL("tel:10000")
     }
-    
+
     func onOpenSettings() {
         Router.openURL(UIApplication.openSettingsURLString)
     }
-    
+
     func onOpenHome() {
         Router.openURL(TestRouter.homeUrl)
     }
-    
+
     func onOpenHome2() {
         Router.openURL("app://tab/home/undefined")
     }
-    
+
     func onOpenHome3() {
         Router.openURL("app://tab")
     }
-    
+
     func onOpenClose() {
         Router.openURL(TestRouter.closeUrl)
     }
-    
+
     func onOpenHttp() {
         Router.openURL("http://kvm.wuyong.site/test.php#anchor")
     }
-    
+
     func onOpenHttp2() {
         Router.openURL("https://www.baidu.com/?param=value#anchor")
     }
-    
+
     func onOpenHttp3() {
         Router.openURL("http://username:password@localhost:8000/test:8001/directory%202/index.html?param=value#anchor")
     }
-    
+
     func onOpenHttp4() {
         Router.openURL("http://www.wuyong.site/redirect.php?param=value#anchor")
     }
-    
+
     func onOpenPreload() {
         Router.openURL("http://www.wuyong.site/#slide=1")
     }
-    
+
     func onOpenCookie() {
         Router.openURL("http://kvm.wuyong.site/cookie.php?param=value#anchor")
     }
-    
+
     func onOpenUniversalLinks() {
         let url = "https://v.douyin.com/JYmHJ9k/"
         UIApplication.app.openUniversalLinks(url) { success in
@@ -345,21 +342,21 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
             }
         }
     }
-    
+
     func onOpenUrl() {
         UIApplication.app.openURL("http://kvm.wuyong.site/test.php")
     }
-    
+
     func onOpenSafari() {
         UIApplication.app.openSafariController("http://kvm.wuyong.site/test.php") {
             APP.debug("SafariController completionHandler")
         }
     }
-    
+
     func onOpenMulti() {
         Router.openURL(TestRouter.multiUrl)
     }
-    
+
     func onOpenResult() {
         let vc = UIViewController()
         vc.title = "弹出框"
@@ -376,11 +373,11 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
             vc?.app.completionResult = "点击完成"
             vc?.dismiss(animated: true)
         }
-        
+
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
-    
+
     func onOpen14() {
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
@@ -403,7 +400,6 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         }
         navigationController?.pushViewController(vc, animated: true)
     }
-    
 }
 
 @objc extension Autoloader {
@@ -414,7 +410,6 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 }
 
 class TestRouter: NSObject {
-    
     @objc static let testUrl = "app://tests/:id"
     @objc static let homeUrl = "app://tab/home"
     @objc static let wildcardUrl = "wildcard://*"
@@ -429,7 +424,7 @@ class TestRouter: NSObject {
     @objc static let javascriptUrl = "app://javascript"
     @objc static let closeUrl = "app://close"
     @objc static let multiUrl = "app://multi"
-    
+
     @MainActor @objc static func testRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = testUrl
@@ -437,12 +432,12 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func homeRouter(_ context: Router.Context) -> Any? {
         UIWindow.app.main?.app.selectTabBarController(index: 0)
         return nil
     }
-    
+
     @MainActor @objc static func wildcardTestRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = wildcardTestUrl
@@ -450,7 +445,7 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func pageRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = pageUrl
@@ -458,7 +453,7 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func shopRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = shopUrl
@@ -466,7 +461,7 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func itemRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = itemUrl
@@ -474,7 +469,7 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func htmlRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = htmlUrl
@@ -482,14 +477,14 @@ class TestRouter: NSObject {
         Navigator.push(vc, animated: true)
         return nil
     }
-    
+
     @MainActor @objc static func objectRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = objectUrl
         vc.context = context
         return vc
     }
-    
+
     @MainActor @objc static func objectUnmatchRouter(_ context: Router.Context) -> Any? {
         if context.isOpening {
             return "OBJECT UNMATCH"
@@ -498,69 +493,67 @@ class TestRouter: NSObject {
             return nil
         }
     }
-    
+
     @MainActor @objc static func javascriptRouter(_ context: Router.Context) -> Any? {
         guard let webVC = Navigator.topViewController as? WebController,
               webVC.isViewLoaded else { return nil }
-        
+
         let param = context.parameters["param"].safeString
         let result = "js:\(param) => app:2"
         let callback = context.parameters["callback"].safeString
         let javascript = "\(callback)('\(result)');"
-        
-        webVC.webView.evaluateJavaScript(javascript) { value, error in
+
+        webVC.webView.evaluateJavaScript(javascript) { value, _ in
             Navigator.topViewController?.app.showAlert(title: "App", message: "app:2 => js:\(String(describing: value))")
         }
         return nil
     }
-    
+
     @MainActor @objc static func closeDefaultRouter(_ context: Router.Context) -> Any? {
         guard let topVC = Navigator.topViewController else { return nil }
         topVC.app.close()
         return nil
     }
-    
+
     @MainActor @objc static func multiRouter(_ context: Router.Context) -> Any? {
         guard context.isOpening else { return nil }
         guard let nav = Navigator.topNavigationController else { return nil }
-        
+
         let vc = TestRouterResultController()
         vc.showLoading = true
         vc.rule = context.url + "?page=1"
         vc.context = context
-        
+
         let vc2 = TestRouterResultController()
         vc2.showLoading = true
         vc2.rule = context.url + "?page=2"
         vc2.context = context
-        
+
         var vcs = nav.viewControllers
         vcs.append(vc)
         vcs.append(vc2)
         nav.setViewControllers(vcs, animated: true)
-        
+
         // 预加载第一个界面，需放到setViewControllers之后导航栏才能获取到
         vc.loadViewIfNeeded()
         return nil
     }
-    
+
     @MainActor @objc static func loaderRouter(_ context: Router.Context) -> Any? {
         let vc = TestRouterResultController()
         vc.rule = loaderUrl
         vc.context = context
         return vc
     }
-    
 }
 
 extension TestRouter: AutoloadProtocol {
-    
     static func autoload() {
         registerFilters()
         registerRouters()
         registerRewrites()
     }
-    
+
     static func registerFilters() {
         Router.sharedLoader.append { input in
             if (input as String) == TestRouter.loaderUrl {
@@ -568,7 +561,7 @@ extension TestRouter: AutoloadProtocol {
             }
             return nil
         }
-        
+
         Router.routeFilter = { context in
             let url = APP.safeURL(context.url)
             if UIApplication.app.isSystemURL(url) {
@@ -577,7 +570,7 @@ extension TestRouter: AutoloadProtocol {
                 }
                 return false
             }
-            
+
             if url.absoluteString.hasPrefix("app://filter/") {
                 let vc = TestRouterResultController()
                 vc.rule = "app://filter/"
@@ -587,10 +580,10 @@ extension TestRouter: AutoloadProtocol {
                 }
                 return false
             }
-            
+
             return true
         }
-        
+
         Router.routeHandler = { context, object in
             if context.isOpening {
                 if let vc = object as? UIViewController {
@@ -608,10 +601,10 @@ extension TestRouter: AutoloadProtocol {
                     }
                 }
             }
-            
+
             return object
         }
-        
+
         Router.errorHandler = { context in
             if context.url == "app://" {
                 DispatchQueue.app.mainAsync {
@@ -624,10 +617,10 @@ extension TestRouter: AutoloadProtocol {
             }
         }
     }
-    
+
     static func registerRouters() {
         Router.registerClass(TestRouter.self)
-        
+
         Router.registerURL(TestRouter.wildcardUrl) { context in
             let vc = TestRouterResultController()
             vc.rule = TestRouter.wildcardUrl
@@ -636,44 +629,42 @@ extension TestRouter: AutoloadProtocol {
             return nil
         }
     }
-    
+
     static func registerRewrites() {
         Router.rewriteFilter = { url in
-            return url.replacingOccurrences(of: "https://www.baidu.com/filter/", with: "app://filter/")
+            url.replacingOccurrences(of: "https://www.baidu.com/filter/", with: "app://filter/")
         }
-        
+
         Router.addRewriteRule("(?:https://)?www.baidu.com/tests/(\\d+)", targetRule: "app://tests/$1")
         Router.addRewriteRule("(?:https://)?www.baidu.com/wildcard/(.*)", targetRule: "wildcard://$$1")
         Router.addRewriteRule("(?:https://)?www.baidu.com/wildcard2/(.*)", targetRule: "wildcard://$#1")
     }
-    
 }
 
 class TestRouterResultController: UIViewController, ViewControllerProtocol {
-    
     var rule: String?
     var context: Router.Context?
     var showLoading: Bool = false
-    
+
     func setupNavbar() {
         navigationItem.title = rule ?? context?.url
-        
+
         if app.isPresented {
             app.setLeftBarItem(Icon.closeImage) { [weak self] _ in
                 self?.app.close()
             }
         }
-        
+
         if context?.completion != nil {
             app.setRightBarItem("完成") { [weak self] _ in
                 guard let context = self?.context else { return }
-                
+
                 Router.completeURL(context, result: "我是回调数据")
                 self?.app.close()
             }
         }
     }
-    
+
     func setupSubviews() {
         let label = UILabel()
         label.numberOfLines = 0
@@ -682,7 +673,7 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
         label.app.layoutChain
             .center()
             .width(APP.screenWidth - 40)
-        
+
         if showLoading {
             label.isHidden = true
             app.showLoading()
@@ -692,5 +683,4 @@ class TestRouterResultController: UIViewController, ViewControllerProtocol {
             }
         }
     }
-    
 }

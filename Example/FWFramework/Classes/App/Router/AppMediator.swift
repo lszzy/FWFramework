@@ -21,13 +21,12 @@ protocol AppModuleProtocol: ModuleProtocol {
     }
 }
 
-/*final*/ class AppModule: NSObject, AppModuleProtocol {
-    
-    /*public static let shared = AppModule()*/
-    
+/* final */ class AppModule: NSObject, AppModuleProtocol {
+    /* public static let shared = AppModule() */
+
     func setup() {
         #if DEBUG
-        FWDebugManager.sharedInstance().openUrl = { (url) in
+        FWDebugManager.sharedInstance().openUrl = { url in
             if let scheme = URL.app.url(string: url)?.scheme, scheme.count > 0 {
                 DispatchQueue.app.mainAsync {
                     Router.openURL(url)
@@ -37,37 +36,37 @@ protocol AppModuleProtocol: ModuleProtocol {
             return false
         }
         #endif
-        
+
         DispatchQueue.main.async {
             ThemeManager.shared.overrideWindow = true
         }
     }
-    
+
     func moduleMethod() {
         APP.debug("AppModule.moduleMethod")
     }
-    
+
     // MARK: - UIApplicationDelegate
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         NotificationManager.shared.clearNotificationBadges()
         if let remoteNotification = launchOptions?[.remoteNotification] {
             NotificationManager.shared.handleRemoteNotification(remoteNotification)
         }
-        
+
         NotificationManager.shared.registerNotificationHandler()
         NotificationManager.shared.requestAuthorize(nil)
-        NotificationManager.shared.remoteNotificationHandler = { (userInfo, notification) in
+        NotificationManager.shared.remoteNotificationHandler = { userInfo, notification in
             NotificationManager.shared.clearNotificationBadges()
-            
+
             var title: String?
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
             }
             UIWindow.app.showMessage(text: "收到远程通知：\(title ?? "")\n\(APP.safeString(userInfo))")
         }
-        NotificationManager.shared.localNotificationHandler = { (userInfo, notification) in
+        NotificationManager.shared.localNotificationHandler = { userInfo, notification in
             NotificationManager.shared.clearNotificationBadges()
-            
+
             var title: String?
             if let response = notification as? UNNotificationResponse {
                 title = response.notification.request.content.title
@@ -76,20 +75,20 @@ protocol AppModuleProtocol: ModuleProtocol {
         }
         return true
     }
-    
+
     func applicationWillEnterForeground(_ application: UIApplication) {
         NotificationManager.shared.clearNotificationBadges()
     }
-    
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         UIDevice.app.setDeviceTokenData(deviceToken)
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         UIDevice.app.setDeviceTokenData(nil)
     }
-    
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         NotificationManager.shared.handleRemoteNotification(userInfo)
         completionHandler(.newData)
     }

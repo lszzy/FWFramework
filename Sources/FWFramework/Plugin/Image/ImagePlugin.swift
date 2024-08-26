@@ -11,7 +11,7 @@ import UIKit
 extension WrapperGlobal {
     /// 根据名称加载UIImage，优先加载图片文件(无缓存)，文件不存在时尝试系统imageNamed方式(有缓存)
     public static func image(_ named: String, bundle: Bundle? = nil) -> UIImage? {
-        return UIImage.fw.imageNamed(named, bundle: bundle)
+        UIImage.fw.imageNamed(named, bundle: bundle)
     }
 }
 
@@ -25,7 +25,7 @@ extension Wrapper where Base: UIImage {
             let scale = stringPathScale(name)
             return image(data: data as? Data, scale: scale, options: options)
         }
-        
+
         var path: String?
         var scale: CGFloat = 1
         let bundle = bundle ?? Bundle.main
@@ -42,9 +42,9 @@ extension Wrapper where Base: UIImage {
             }
             if path != nil { break }
         }
-        
+
         var data: Data?
-        if let path = path, !path.isEmpty {
+        if let path, !path.isEmpty {
             data = NSData(contentsOfFile: path) as? Data
         }
         if (data?.count ?? 0) < 1 {
@@ -52,7 +52,7 @@ extension Wrapper where Base: UIImage {
         }
         return image(data: data, scale: scale, options: options)
     }
-    
+
     private static func bundlePreferredScales() -> [CGFloat] {
         let screenScale = UIScreen.fw.screenScale
         if screenScale <= 1 {
@@ -63,19 +63,19 @@ extension Wrapper where Base: UIImage {
             return [3, 2, 1]
         }
     }
-    
+
     private static func appendingNameScale(_ string: String, scale: CGFloat) -> String {
         if abs(scale - 1) <= CGFloat.leastNonzeroMagnitude || string.isEmpty || string.hasSuffix("/") { return string }
         return string.appendingFormat("@%@x", NSNumber(value: scale))
     }
-    
+
     private static func stringPathScale(_ string: String) -> CGFloat {
         if string.isEmpty || string.hasSuffix("/") { return 1 }
         let name = (string as NSString).deletingPathExtension
         var scale: CGFloat = 1
         let pattern = try? NSRegularExpression(pattern: "@[0-9]+\\.?[0-9]*x$", options: .anchorsMatchLines)
         pattern?.enumerateMatches(in: name, options: [], range: NSMakeRange(0, (name as NSString).length), using: { result, _, _ in
-            if let result = result, result.range.location >= 3 {
+            if let result, result.range.location >= 3 {
                 let scaleString = (string as NSString).substring(with: NSMakeRange(result.range.location + 1, result.range.length - 1))
                 scale = (scaleString as NSString).doubleValue
             }
@@ -92,13 +92,13 @@ extension Wrapper where Base: UIImage {
 
     /// 从图片数据解码创建UIImage，默认scale为1，支持动图。支持设置图片解码选项
     public static func image(data: Data?, scale: CGFloat = 1, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
-        guard let data = data, data.count > 0 else { return nil }
-        
+        guard let data, data.count > 0 else { return nil }
+
         let imagePlugin: ImagePlugin? = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
-        if let imagePlugin = imagePlugin {
+        if let imagePlugin {
             return imagePlugin.imageDecode(data, scale: scale, options: options)
         }
-        
+
         var targetScale = scale
         if let scaleFactor = options?[.scaleFactor] as? NSNumber {
             targetScale = scaleFactor.doubleValue
@@ -108,13 +108,13 @@ extension Wrapper where Base: UIImage {
 
     /// 从UIImage编码创建图片数据，支持动图。支持设置图片编码选项
     public static func data(image: UIImage?, options: [ImageCoderOptions: Any]? = nil) -> Data? {
-        guard let image = image else { return nil }
-        
+        guard let image else { return nil }
+
         let imagePlugin: ImagePlugin? = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
-        if let imagePlugin = imagePlugin {
+        if let imagePlugin {
             return imagePlugin.imageEncode(image, options: options)
         }
-        
+
         if image.fw.hasAlpha {
             return image.pngData()
         } else {
@@ -159,18 +159,18 @@ extension Wrapper where Base: UIImage {
         let imagePlugin = imagePlugin ?? ImagePluginImpl.shared
         return imagePlugin.imageURL(for: base)
     }
-    
+
     /// 加载网络图片内部方法，支持占位、选项、图片句柄、回调和进度，优先加载插件，默认使用框架网络库
     public func setImage(url: URLParameter?, placeholderImage: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?) {
         // 兼容URLRequest.cachePolicy缓存策略
         var targetOptions = options
         if let urlRequest = url as? URLRequest,
-            (urlRequest.cachePolicy == .reloadIgnoringLocalCacheData ||
-             urlRequest.cachePolicy == .reloadIgnoringLocalAndRemoteCacheData ||
-             urlRequest.cachePolicy == .reloadIgnoringCacheData) {
+           urlRequest.cachePolicy == .reloadIgnoringLocalCacheData ||
+           urlRequest.cachePolicy == .reloadIgnoringLocalAndRemoteCacheData ||
+           urlRequest.cachePolicy == .reloadIgnoringCacheData {
             targetOptions.formUnion(.ignoreCache)
         }
-        
+
         let imageURL = url?.urlValue
         let imagePlugin = imagePlugin ?? ImagePluginImpl.shared
         imagePlugin.setImageURL(url: imageURL, placeholder: placeholderImage, options: targetOptions, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: base)
@@ -181,14 +181,14 @@ extension Wrapper where Base: UIImage {
         let imagePlugin = imagePlugin ?? ImagePluginImpl.shared
         imagePlugin.cancelImageRequest(for: base)
     }
-    
+
     /// 加载指定URL的本地缓存图片
     public func loadImageCache(url: URLParameter?) -> UIImage? {
         let imageURL = url?.urlValue
         let imagePlugin = imagePlugin ?? ImagePluginImpl.shared
         return imagePlugin.loadImageCache(imageURL)
     }
-    
+
     /// 是否隐藏全局图片加载指示器，默认false，仅全局图片指示器开启时生效
     public var hidesImageIndicator: Bool {
         get { propertyBool(forName: #function) }
@@ -202,7 +202,7 @@ extension Wrapper where Base: UIImageView {
     @MainActor public func setImage(url: URLParameter?, placeholderImage: UIImage? = nil, options: WebImageOptions = [], context: [ImageCoderOptions: Any]? = nil, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)? = nil, progress: (@MainActor @Sendable (Double) -> Void)? = nil) {
         setImage(url: url, placeholderImage: placeholderImage, options: options, context: context, setImageBlock: nil, completion: completion, progress: progress)
     }
-    
+
     /// 加载指定URL的本地缓存图片
     public static func loadImageCache(url: URLParameter?) -> UIImage? {
         let imageURL = url?.urlValue
@@ -215,14 +215,14 @@ extension Wrapper where Base: UIImageView {
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         imagePlugin.clearImageCaches(completion)
     }
-    
+
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
     @MainActor public static func animatedImageView() -> UIImageView {
         let imagePlugin: ImagePlugin? = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
-        if let imagePlugin = imagePlugin {
+        if let imagePlugin {
             return imagePlugin.animatedImageView()
         }
-        
+
         return UIImageView()
     }
 }
@@ -238,9 +238,8 @@ extension Wrapper where Base: UIImageView {
 // MARK: - ImagePlugin
 /// 网络图片加载选项，默认兼容SDWebImage
 public struct WebImageOptions: OptionSet, Sendable {
-    
     public let rawValue: UInt
-    
+
     /// 是否图片缓存存在时仍重新请求(依赖NSURLCache)
     public static let refreshCached: WebImageOptions = .init(rawValue: 1 << 3)
     /// 是否延迟占位，将加载占位图作为错误占位图
@@ -251,98 +250,95 @@ public struct WebImageOptions: OptionSet, Sendable {
     public static let queryMemoryData: WebImageOptions = .init(rawValue: 1 << 12)
     /// 忽略图片缓存，始终重新请求
     public static let ignoreCache: WebImageOptions = .init(rawValue: 1 << 16)
-    
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 图片插件协议，应用可自定义图片插件
 public protocol ImagePlugin: AnyObject {
     /// 创建动画视图插件方法，默认使用UIImageView
     @MainActor func animatedImageView() -> UIImageView
-    
+
     /// 获取view正在加载的URL插件方法
     @MainActor func imageURL(for view: UIView) -> URL?
-    
+
     /// view加载网络图片插件方法
     @MainActor func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?, for view: UIView)
-    
+
     /// view取消加载网络图片请求插件方法
     @MainActor func cancelImageRequest(for view: UIView)
-    
+
     /// 加载指定URL的本地缓存图片
     func loadImageCache(_ imageURL: URL?) -> UIImage?
-    
+
     /// 清除所有本地图片缓存
     func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)?)
-    
+
     /// image下载网络图片插件方法，返回下载凭据
     func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)?) -> Any?
-    
+
     /// image取消下载网络图片插件方法，指定下载凭据
     func cancelImageDownload(_ receipt: Any?)
-    
+
     /// image本地解码插件方法，默认使用系统方法
     func imageDecode(_ data: Data, scale: CGFloat, options: [ImageCoderOptions: Any]?) -> UIImage?
-    
+
     /// image本地编码插件方法，默认使用系统方法
     func imageEncode(_ image: UIImage, options: [ImageCoderOptions: Any]?) -> Data?
 }
 
 extension ImagePlugin {
-    
     /// 创建动画视图插件方法，默认使用UIImageView
     @MainActor public func animatedImageView() -> UIImageView {
-        return ImagePluginImpl.shared.animatedImageView()
+        ImagePluginImpl.shared.animatedImageView()
     }
-    
+
     /// 获取view正在加载的URL插件方法
     @MainActor public func imageURL(for view: UIView) -> URL? {
-        return ImagePluginImpl.shared.imageURL(for: view)
+        ImagePluginImpl.shared.imageURL(for: view)
     }
-    
+
     /// view加载网络图片插件方法
     @MainActor public func setImageURL(url: URL?, placeholder: UIImage?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, setImageBlock: (@MainActor @Sendable (UIImage?) -> Void)?, completion: (@MainActor @Sendable (UIImage?, Error?) -> Void)?, progress: (@MainActor @Sendable (Double) -> Void)?, for view: UIView) {
         ImagePluginImpl.shared.setImageURL(url: url, placeholder: placeholder, options: options, context: context, setImageBlock: setImageBlock, completion: completion, progress: progress, for: view)
     }
-    
+
     /// view取消加载网络图片请求插件方法
     @MainActor public func cancelImageRequest(for view: UIView) {
         ImagePluginImpl.shared.cancelImageRequest(for: view)
     }
-    
+
     /// 加载指定URL的本地缓存图片
     public func loadImageCache(_ imageURL: URL?) -> UIImage? {
-        return ImagePluginImpl.shared.loadImageCache(imageURL)
+        ImagePluginImpl.shared.loadImageCache(imageURL)
     }
-    
+
     /// 清除所有本地图片缓存
     public func clearImageCaches(_ completion: (@MainActor @Sendable () -> Void)?) {
         ImagePluginImpl.shared.clearImageCaches(completion)
     }
-    
+
     /// image下载网络图片插件方法，返回下载凭据
     public func downloadImage(_ imageURL: URL?, options: WebImageOptions, context: [ImageCoderOptions: Any]?, completion: @escaping @MainActor @Sendable (UIImage?, Data?, Error?) -> Void, progress: (@MainActor @Sendable (Double) -> Void)?) -> Any? {
-        return ImagePluginImpl.shared.downloadImage(imageURL, options: options, context: context, completion: completion, progress: progress)
+        ImagePluginImpl.shared.downloadImage(imageURL, options: options, context: context, completion: completion, progress: progress)
     }
-    
+
     /// image取消下载网络图片插件方法，指定下载凭据
     public func cancelImageDownload(_ receipt: Any?) {
         ImagePluginImpl.shared.cancelImageDownload(receipt)
     }
-    
+
     /// image本地解码插件方法，默认使用系统方法
     public func imageDecode(_ data: Data, scale: CGFloat, options: [ImageCoderOptions: Any]?) -> UIImage? {
-        return ImagePluginImpl.shared.imageDecode(data, scale: scale, options: options)
+        ImagePluginImpl.shared.imageDecode(data, scale: scale, options: options)
     }
-    
+
     /// image本地编码插件方法，默认使用系统方法
     public func imageEncode(_ image: UIImage, options: [ImageCoderOptions: Any]?) -> Data? {
-        return ImagePluginImpl.shared.imageEncode(image, options: options)
+        ImagePluginImpl.shared.imageEncode(image, options: options)
     }
-    
 }
 
 // MARK: - Concurrency+ImagePlugin
@@ -354,7 +350,7 @@ extension Wrapper where Base: UIImage {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 let receipt = UIImage.fw.downloadImage(url, options: options, context: context) { image, _, error in
-                    if let image = image {
+                    if let image {
                         continuation.resume(returning: image)
                     } else {
                         continuation.resume(throwing: error ?? RequestError.unknown)
@@ -372,15 +368,13 @@ extension Wrapper where Base: UIImage {
 
 // MARK: - FrameworkAutoloader+ImagePlugin
 extension FrameworkAutoloader {
-    
     @objc static func loadPlugin_ImagePlugin() {
         ModuleBundle.imageNamedBlock = { name, bundle in
-            return UIImage.fw.imageNamed(name, bundle: bundle)
+            UIImage.fw.imageNamed(name, bundle: bundle)
         }
-        
+
         ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
-            return UIImage.fw.image(data: data, scale: scale, options: options)
+            UIImage.fw.image(data: data, scale: scale, options: options)
         }
     }
-    
 }

@@ -25,27 +25,23 @@ import UIKit
 /// }
 /// ```
 @MainActor public protocol ViewProtocol {
-    
     /// 初始化完成，一般init(frame:)调用，默认空实现
     func didInitialize()
-    
+
     /// 初始化子视图，一般init(frame:)调用，默认空实现
     func setupSubviews()
-    
+
     /// 初始化布局，一般init(frame:)调用，默认空实现
     func setupLayout()
-    
 }
 
 extension ViewProtocol where Self: UIView {
-    
     /// 初始化完成，一般init(frame:)调用，默认空实现
     public func didInitialize() {}
-    
+
     /// 初始化子视图，一般init(frame:)调用，默认空实现
     public func setupSubviews() {}
-    
+
     /// 初始化布局，一般init(frame:)调用，默认空实现
     public func setupLayout() {}
-    
 }

@@ -9,7 +9,6 @@
 import FWFramework
 
 class TestFloatingController: UIViewController, ViewControllerProtocol {
-    
     private lazy var floatView: FloatingView = {
         let result = FloatingView()
         result.padding = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
@@ -19,16 +18,16 @@ class TestFloatingController: UIViewController, ViewControllerProtocol {
         result.layer.borderColor = AppTheme.textColor.cgColor
         return result
     }()
-    
+
     func setupSubviews() {
         view.addSubview(floatView)
         floatView.app.layoutChain
             .left(24)
             .right(24)
             .top(toSafeArea: 36)
-        
+
         let suggestions = ["东野圭吾\n多行文本", "三体", "爱", "红楼梦", "", "理智与情感\n多行文本", "读书热榜", "免费榜"]
-        for i in 0 ..< suggestions.count {
+        for i in 0..<suggestions.count {
             if i < 3 {
                 let label = UILabel()
                 label.textColor = AppTheme.textColor
@@ -50,10 +49,9 @@ class TestFloatingController: UIViewController, ViewControllerProtocol {
                 floatView.addSubview(button)
             }
         }
-        
+
         floatView.setNeedsLayout()
         floatView.layoutIfNeeded()
         floatView.invalidateIntrinsicContentSize()
     }
-    
 }

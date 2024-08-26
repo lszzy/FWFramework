@@ -20,10 +20,8 @@ import QuartzCore
 /// APP.safeString(object)
 /// ```
 public class WrapperGlobal {
-    
     /// 当前框架版本号
     public static let version = "6.0.0"
-    
 }
 
 /// 全局包装器别名
@@ -32,15 +30,13 @@ public class WrapperGlobal {
 // MARK: - Wrapper
 /// 属性包装器
 public class Wrapper<Base> {
-    
     /// 原始对象
     public let base: Base
-    
+
     /// 初始化方法
     public init(_ base: Base) {
         self.base = base
     }
-    
 }
 
 // MARK: - WrapperCompatible
@@ -58,15 +54,13 @@ public class Wrapper<Base> {
 /// String.app.jsonEncode(object)
 /// ```
 public protocol WrapperCompatible {
-    
     /// 关联类型
     associatedtype WrapperBase
-    
+
     /// wrapperExtension类包装器属性
     static var wrapperExtension: Wrapper<WrapperBase>.Type { get set }
     /// wrapperExtension对象包装器属性
     var wrapperExtension: Wrapper<WrapperBase> { get set }
-    
 }
 
 /// 注意事项：
@@ -75,31 +69,29 @@ public protocol WrapperCompatible {
 ///   示例2：ModuleBundle类 class var 实现时使用 self.fw.method()，此时子类method中Base.self可能为父类，与预期结果不一致
 /// 2. 扩展方法闭包中请勿使用[weak self]，而应该使用[weak base]，因为self使用完就会释放；闭包如需强引用base，可外部声明let strongBase = base，再在内部使用strongBase即可；详情可参见Block实现
 extension WrapperCompatible {
-    
     /// wrapperExtension类包装器属性
     public static var wrapperExtension: Wrapper<Self>.Type {
         get { Wrapper<Self>.self }
         set {}
     }
-    
+
     /// wrapperExtension对象包装器属性
     public var wrapperExtension: Wrapper<Self> {
         get { Wrapper(self) }
         set {}
     }
-    
+
     /// fw类包装器属性
     @_spi(FW) public static var fw: Wrapper<Self>.Type {
         get { Wrapper<Self>.self }
         set {}
     }
-    
+
     /// fw对象包装器属性
     @_spi(FW) public var fw: Wrapper<Self> {
         get { Wrapper(self) }
         set {}
     }
-    
 }
 
 // MARK: - WrapperObject

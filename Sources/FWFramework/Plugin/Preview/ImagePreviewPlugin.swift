@@ -23,7 +23,7 @@ import UIKit
             setProperty(newValue, forName: "imagePreviewPlugin")
         }
     }
-    
+
     /// 显示图片预览(简单版)
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
@@ -86,7 +86,6 @@ import UIKit
 // MARK: - ImagePreviewPlugin
 /// 图片预览插件协议，应用可自定义图片预览插件实现
 @MainActor public protocol ImagePreviewPlugin: AnyObject {
-    
     /// 显示图片预览方法
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
@@ -98,14 +97,11 @@ import UIKit
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - viewController: 当前视图控制器
     func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController)
-    
 }
 
 extension ImagePreviewPlugin {
-    
     /// 显示图片预览方法
     public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController) {
         ImagePreviewPluginImpl.shared.showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock, in: viewController)
     }
-    
 }

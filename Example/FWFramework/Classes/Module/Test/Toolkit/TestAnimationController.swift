@@ -12,27 +12,26 @@ import FWDebug
 #endif
 
 class TestAnimationController: UIViewController, ViewControllerProtocol {
-    
     var animationIndex: Int = 0
-    
+
     lazy var animationView: UIView = {
         let result = UIView()
         result.frame = CGRect(x: APP.screenWidth / 2 - 75, y: 170, width: 150, height: 200)
         result.backgroundColor = UIColor.red
         return result
     }()
-    
+
     func didInitialize() {
         app.extendedLayoutEdge = .bottom
     }
-    
+
     func setupNavbar() {
         app.setRightBarItem(Icon.iconImage("zmdi-var-bug", size: 24)) { _ in
             guard UIWindow.app.main?.app.subview(tag: 1000) == nil else {
                 UIWindow.app.main?.app.subview(tag: 1000)?.removeFromSuperview()
                 return
             }
-            
+
             let circleView = UIView(frame: CGRect(x: APP.screenWidth / 2 - 25, y: APP.screenHeight / 2 - 25, width: 50, height: 50))
             circleView.tag = 1000
             circleView.app.setCornerRadius(25)
@@ -41,7 +40,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             circleView.app.dragLimit = CGRect(x: 0, y: 0, width: APP.screenWidth, height: APP.screenHeight)
             circleView.app.isPenetrable = true
             UIWindow.app.main?.addSubview(circleView)
-            
+
             let clickView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
             clickView.isUserInteractionEnabled = true
             clickView.image = UIImage.app.appIconImage()
@@ -57,7 +56,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             circleView.addSubview(clickView)
         }
     }
-    
+
     func setupSubviews() {
         let button = AppTheme.largeButton()
         button.setTitle("转场动画", for: .normal)
@@ -66,7 +65,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
         button.app.layoutChain
             .bottom(15)
             .centerX()
-        
+
         let button2 = AppTheme.largeButton()
         button2.setTitle("切换拖动", for: .normal)
         button2.app.addTouch(target: self, action: #selector(onDrag(_:)))
@@ -74,7 +73,7 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
         button2.app.layoutChain
             .bottom(toViewTop: button, offset: -15)
             .centerX()
-        
+
         let button3 = AppTheme.largeButton()
         button3.setTitle("切换动画", for: .normal)
         button3.app.addTouch(target: self, action: #selector(onAnimation(_:)))
@@ -82,13 +81,13 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
         button3.app.layoutChain
             .bottom(toViewTop: button2, offset: -15)
             .centerX()
-        
+
         view.addSubview(animationView)
     }
-    
+
     @objc func onPresent() {
         app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["VC present", "VC alert", "VC fade", "nav present", "nav alert", "nav fade", "view present", "view alert", "view fade", "wrapped present", "wrapped alert", "wrapped fade"], currentIndex: -1) { [weak self] index in
-            guard let self = self else { return }
+            guard let self else { return }
             if index < 3 {
                 let vc = TestAnimationChildController()
                 vc.transitionType = index
@@ -103,9 +102,9 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             }
         }
     }
-    
+
     @objc func onAnimation(_ sender: UIButton) {
-        self.animationIndex += 1
+        animationIndex += 1
         var title: String? = nil
         if animationIndex == 1 {
             title = "Push.FromTop"
@@ -148,10 +147,10 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             title = "切换动画"
             animationIndex = 0
         }
-        
+
         sender.setTitle(title, for: .normal)
     }
-    
+
     @objc func onDrag(_ sender: UIButton) {
         if !animationView.app.dragEnabled {
             animationView.app.dragEnabled = true
@@ -160,20 +159,18 @@ class TestAnimationController: UIViewController, ViewControllerProtocol {
             animationView.app.dragEnabled = false
         }
     }
-    
 }
 
 class TestAnimationView: UIView {
-    
     var transitionType: Int = 0
     var edge: UIRectEdge = .bottom
-    
+
     lazy var bottomView: UIView = {
         let result = UIView()
         result.backgroundColor = .white
         return result
     }()
-    
+
     init(transitionType: Int) {
         super.init(frame: .zero)
         self.transitionType = transitionType
@@ -186,7 +183,7 @@ class TestAnimationView: UIView {
         } else {
             backgroundColor = .app.color(hex: 0x000000, alpha: 0.5)
         }
-        
+
         addSubview(bottomView)
         if transitionType == 6 || transitionType == 9 {
             switch edge {
@@ -202,28 +199,28 @@ class TestAnimationView: UIView {
         } else {
             bottomView.app.layoutChain.center().width(300).height(200)
         }
-        
+
         app.addTapGesture { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             if self.transitionType > 8 {
-                self.app.viewController?.dismiss(animated: true)
+                app.viewController?.dismiss(animated: true)
                 return
             }
-            
+
             if self.transitionType == 6 {
-                self.app.setPresentTransition(.dismiss, contentView: self.bottomView, edge: edge, completion: nil)
+                app.setPresentTransition(.dismiss, contentView: bottomView, edge: edge, completion: nil)
             } else if self.transitionType == 7 {
-                self.app.setAlertTransition(.dismiss, completion: nil)
+                app.setAlertTransition(.dismiss, completion: nil)
             } else {
-                self.app.setFadeTransition(.dismiss, completion: nil)
+                app.setFadeTransition(.dismiss, completion: nil)
             }
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func show(in viewController: UIViewController) {
         if transitionType > 8 {
             let wrappedVC = app.wrappedTransitionController(true)
@@ -237,29 +234,27 @@ class TestAnimationView: UIView {
             viewController.present(wrappedVC, animated: true)
             return
         }
-        
+
         app.transition(to: viewController, pinEdges: true)
         if transitionType == 6 {
-            app.setPresentTransition(.present, contentView: self.bottomView, edge: edge, completion: nil)
+            app.setPresentTransition(.present, contentView: bottomView, edge: edge, completion: nil)
         } else if transitionType == 7 {
             app.setAlertTransition(.present, completion: nil)
         } else {
             app.setFadeTransition(.present, completion: nil)
         }
     }
-    
 }
 
 class TestAnimationChildController: UIViewController, ViewControllerProtocol {
-    
     var transitionType: Int = 0
-    
+
     lazy var bottomView: UIView = {
         let result = UIView()
         result.backgroundColor = .white
         return result
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         app.navigationBarHidden = true
@@ -267,17 +262,17 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
         view.app.addTapGesture { [weak self] _ in
             self?.app.close()
         }
-        
-        view.addSubview(self.bottomView)
+
+        view.addSubview(bottomView)
         if transitionType == 0 || transitionType == 3 {
             bottomView.app.layoutChain.horizontal().bottom().height(APP.screenHeight / 2)
         } else {
             bottomView.app.layoutChain.center().width(300).height(200)
         }
-        
+
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
-        button.setTitle(self.navigationController != nil ? "支持push" : "不支持push", for: .normal)
+        button.setTitle(navigationController != nil ? "支持push" : "不支持push", for: .normal)
         bottomView.addSubview(button)
         button.app.addTouch { [weak self] _ in
             let vc = TestAnimationChildController()
@@ -286,7 +281,7 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
         }
         button.app.layoutChain.center()
     }
-    
+
     func show(in viewController: UIViewController) {
         if transitionType == 0 {
             app.setPresentTransition(nil)
@@ -297,7 +292,7 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
         }
         viewController.present(self, animated: true)
     }
-    
+
     func showNav(in viewController: UIViewController) {
         let nav = UINavigationController(rootViewController: self)
         if transitionType == 3 {
@@ -309,5 +304,4 @@ class TestAnimationChildController: UIViewController, ViewControllerProtocol {
         }
         viewController.present(nav, animated: true)
     }
-    
 }

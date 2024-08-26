@@ -9,14 +9,13 @@
 import FWFramework
 
 class TestController: UIViewController {
-    
     var testData: [[Any]] = [
         ["Kernel", [
             ["Router", "TestRouterController"],
             ["Navigator", "TestWorkflowController"],
             ["Promise", "TestPromiseController"],
             ["Concurrency", "TestConcurrencyController"],
-            ["State", "TestStateController"],
+            ["State", "TestStateController"]
         ]],
         ["Service", [
             ["Theme", "TestThemeController"],
@@ -29,7 +28,7 @@ class TestController: UIViewController {
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
-            ["VideoPlayer", "TestVideoController"],
+            ["VideoPlayer", "TestVideoController"]
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
@@ -41,7 +40,7 @@ class TestController: UIViewController {
             ["Keyboard", "TestKeyboardController"],
             ["Thread", "TestThreadController"],
             ["Button", "TestButtonController"],
-            ["Icon", "TestIconController"],
+            ["Icon", "TestIconController"]
         ]],
         ["Plugin", [
             ["AlertPlugin", "TestAlertController"],
@@ -52,7 +51,7 @@ class TestController: UIViewController {
             ["ImagePlugin", "TestImageController"],
             ["ImagePicker", "TestPickerController"],
             ["ImageCamera", "TestCameraController"],
-            ["ImagePreview", "TestPreviewController"],
+            ["ImagePreview", "TestPreviewController"]
         ]],
         ["Module", [
             ["BadgeView", "TestBadgeController"],
@@ -74,13 +73,13 @@ class TestController: UIViewController {
             ["SegmentedControl", "TestSegmentController"],
             ["Statistical", "TestStatisticalController"],
             ["SkeletonView", "TestSkeletonController"],
-            ["SwiftUI", "TestSwiftUIController"],
-        ]],
+            ["SwiftUI", "TestSwiftUIController"]
+        ]]
     ]
-    
+
     var isSearch: Bool = false
     var searchResult = [Any]()
-    
+
     // MARK: - Subviews
     private lazy var searchBar: UISearchBar = {
         let result = UISearchBar()
@@ -93,23 +92,23 @@ class TestController: UIViewController {
         result.app.searchIconOffset = 10
         result.app.searchTextOffset = 4
         result.app.clearIconOffset = -6
-        
+
         result.app.font = APP.font(12)
         result.app.textField.app.setCornerRadius(16)
         return result
     }()
-    
+
     private var displayData: [Any] {
-        return isSearch ? searchResult : tableData
+        isSearch ? searchResult : tableData
     }
-    
+
     // MARK: - Public
     static func mockProgress(_ block: @escaping @MainActor @Sendable (Double, Bool) -> Void) {
         block(0, false)
         DispatchQueue.global().async {
             let progress = SendableObject<Double>(0)
             while progress.object < 1 {
-                usleep(50000)
+                usleep(50_000)
                 progress.object += 0.02
                 DispatchQueue.main.async {
                     block(min(progress.object, 1), progress.object >= 1)
@@ -117,51 +116,47 @@ class TestController: UIViewController {
             }
         }
     }
-    
 }
 
 extension TestController: TableViewControllerProtocol {
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupTableView() {
         tableView.backgroundColor = AppTheme.tableColor
         tableView.keyboardDismissMode = .onDrag
     }
-    
+
     func setupTableLayout() {
         // 示例安全区域布局，scrollView关闭contentInset自适应
         app.adjustExtendedLayout(compatible: true)
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.layoutChain.edges(toSafeArea: .zero)
     }
-    
+
     func setupNavbar() {
         let titleView = ExpandedTitleView.titleView(searchBar)
         navigationItem.titleView = titleView
     }
-    
+
     func setupSubviews() {
         tableData.append(contentsOf: testData)
         tableView.reloadData()
     }
-    
 }
 
 extension TestController {
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return displayData.count
+        displayData.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionData = displayData[section] as! [Any]
         let sectionList = sectionData[1] as! [Any]
         return sectionList.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView)
         cell.accessoryType = .disclosureIndicator
@@ -172,51 +167,49 @@ extension TestController {
         cell.textLabel?.text = title
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionData = displayData[section] as! [Any]
         return sectionData[0] as? String
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let sectionData = displayData[indexPath.section] as! [Any]
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
         let title = rowData[0] as? String ?? ""
-        
+
         var className = rowData[1] as! String
         var controllerClass: AnyClass? = NSClassFromString(className)
         if controllerClass == nil {
             className = UIApplication.app.appExecutable + "." + className
             controllerClass = NSClassFromString(className)
         }
-        
+
         if let controllerClass = controllerClass as? UIViewController.Type {
             let viewController = controllerClass.init()
             viewController.navigationItem.title = title
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
-    
 }
 
 extension TestController: UISearchBarDelegate {
-    
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.app.searchIconCenter = false
         return true
     }
-    
+
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.app.searchIconCenter = true
         return true
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-    
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         isSearch = !searchText.app.trimString.isEmpty
         if !isSearch {
@@ -224,7 +217,7 @@ extension TestController: UISearchBarDelegate {
             tableView.reloadData()
             return
         }
-        
+
         var resultData: [Any] = []
         for sectionData in tableData as! [NSArray] {
             var sectionResult: [Any] = []
@@ -241,5 +234,4 @@ extension TestController: UISearchBarDelegate {
         searchResult = resultData
         tableView.reloadData()
     }
-    
 }

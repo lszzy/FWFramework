@@ -17,12 +17,12 @@ extension Wrapper where Base: DispatchQueue {
             DispatchQueue.main.async(execute: block)
         }
     }
-    
+
     /// 主线程安全同步执行句柄
     public static func mainSync(execute block: @MainActor () -> Void) {
         MainActor.runSync(execute: block)
     }
-    
+
     /// 当主线程时执行句柄，非主线程不执行
     public static func mainSyncIf(execute block: @MainActor () -> Void) {
         MainActor.runSyncIf(execute: block)
@@ -41,7 +41,7 @@ extension MainActor {
             }
         }
     }
-    
+
     /// 主Actor安全同步执行句柄
     public static func runSync(execute block: @MainActor () -> Void) {
         if Thread.isMainThread {
@@ -50,7 +50,7 @@ extension MainActor {
             DispatchQueue.main.sync(execute: block)
         }
     }
-    
+
     /// 当主线程时执行句柄，非主线程不执行
     public static func runSyncIf(execute block: @MainActor () -> Void) {
         if Thread.isMainThread {
@@ -62,7 +62,6 @@ extension MainActor {
 // MARK: - TaskOperation
 /// 任务操作类，可继承或直接使用
 open class TaskOperation: Operation, @unchecked Sendable {
-    
     private enum TaskState: Int {
         case created = 0
         case ready
@@ -71,21 +70,21 @@ open class TaskOperation: Operation, @unchecked Sendable {
         case failure
         case cancelled
     }
-    
+
     /// 任务句柄，执行完成需调用task.finish(error:)
     open var taskBlock: ((TaskOperation) -> Void)?
-    
+
     /// 是否在主线程执行，会阻碍UI渲染，默认false
     open var onMainThread = false
-    
+
     /// 任务错误信息
     open private(set) var error: Error?
-    
-    public override init() {
+
+    override public init() {
         super.init()
-        self.state = .ready
+        state = .ready
     }
-    
+
     public convenience init(onMainThread: Bool = false, queuePriority: Operation.QueuePriority = .normal, taskBlock: ((TaskOperation) -> Void)?) {
         self.init()
         self.onMainThread = onMainThread
@@ -97,10 +96,10 @@ open class TaskOperation: Operation, @unchecked Sendable {
     @objc open func executeTask() {
         taskBlock?(self)
     }
-    
+
     /// 是否主线程执行，子类可重写，会阻碍UI渲染，默认返回onMainThread
     open func needMainThread() -> Bool {
-        return onMainThread
+        onMainThread
     }
 
     /// 标记任务完成，error为空表示任务成功
@@ -110,38 +109,38 @@ open class TaskOperation: Operation, @unchecked Sendable {
             lock.unlock()
             return
         }
-        
+
         if error != nil {
             self.error = error
             state = .failure
-            
+
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Task failed: %@", NSStringFromClass(type(of: self)))
             #endif
         } else {
             state = .success
-            
+
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Task finished: %@", NSStringFromClass(type(of: self)))
             #endif
         }
         lock.unlock()
     }
-    
-    open override func start() {
+
+    override open func start() {
         lock.lock()
         guard isReady else {
             lock.unlock()
             return
         }
-        
+
         state = .loading
         lock.unlock()
-        
+
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "Task started: %@", NSStringFromClass(type(of: self)))
         #endif
-        
+
         if needMainThread() {
             if Thread.isMainThread {
                 executeTask()
@@ -152,41 +151,41 @@ open class TaskOperation: Operation, @unchecked Sendable {
             executeTask()
         }
     }
-    
-    open override func cancel() {
+
+    override open func cancel() {
         lock.lock()
-        
+
         if !isFinished {
             state = .cancelled
             super.cancel()
-            
+
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Task cancelled: %@", NSStringFromClass(type(of: self)))
             #endif
         }
-        
+
         lock.unlock()
     }
-    
-    open override var isAsynchronous: Bool {
-        return true
+
+    override open var isAsynchronous: Bool {
+        true
     }
-    
-    open override var isReady: Bool {
-        return state == .ready && super.isReady
+
+    override open var isReady: Bool {
+        state == .ready && super.isReady
     }
-    
-    open override var isFinished: Bool {
-        return state == .success || state == .failure || state == .cancelled
+
+    override open var isFinished: Bool {
+        state == .success || state == .failure || state == .cancelled
     }
-    
-    open override var isExecuting: Bool {
-        return state == .loading
+
+    override open var isExecuting: Bool {
+        state == .loading
     }
-    
+
     private var state: TaskState {
         get {
-            return _state
+            _state
         }
         set {
             lock.lock()
@@ -194,7 +193,7 @@ open class TaskOperation: Operation, @unchecked Sendable {
                 lock.unlock()
                 return
             }
-            
+
             switch newValue {
             case .cancelled:
                 willChangeValue(forKey: "isExecuting")
@@ -220,16 +219,15 @@ open class TaskOperation: Operation, @unchecked Sendable {
                 didChangeValue(forKey: "isReady")
             default:
                 _state = newValue
-                break
             }
             lock.unlock()
         }
     }
-    
+
     private var _state: TaskState = .created
-    
+
     private var lock = NSRecursiveLock()
-    
+
     private func isValidTransition(from fromState: TaskState, to toState: TaskState) -> Bool {
         switch fromState {
         case .ready:
@@ -266,16 +264,14 @@ open class TaskOperation: Operation, @unchecked Sendable {
             return false
         }
     }
-    
 }
 
 // MARK: - TaskManager
 /// 任务管理器，兼容NSBlockOperation和NSInvocationOperation
 open class TaskManager: @unchecked Sendable {
-    
     /// 单例模式
     public static let shared = TaskManager()
-    
+
     /// 并发操作的最大任务数
     open var maxConcurrentTaskCount: Int {
         get { taskQueue.maxConcurrentOperationCount }
@@ -287,37 +283,37 @@ open class TaskManager: @unchecked Sendable {
         get { taskQueue.isSuspended }
         set { taskQueue.isSuspended = newValue }
     }
-    
+
     private lazy var taskQueue: OperationQueue = {
         let queue = OperationQueue()
         queue.name = "FWTaskManager.taskQueue"
         return queue
     }()
-    
+
     public init() {}
-    
+
     public convenience init(maxConcurrentTaskCount: Int, isSuspended: Bool = false) {
         self.init()
         self.maxConcurrentTaskCount = maxConcurrentTaskCount
         if isSuspended { self.isSuspended = isSuspended }
     }
-    
+
     /// 添加单个任务
     open func addTask(_ task: Operation) {
         taskQueue.addOperation(task)
     }
-    
+
     /// 批量添加任务
     open func addTasks(_ tasks: [Operation]) {
         guard !tasks.isEmpty else { return }
         taskQueue.addOperations(tasks, waitUntilFinished: false)
     }
-    
+
     /// 从配置数组按顺序添加任务，支持className|dependency
     open func addTaskConfig(_ config: [[String: String]]) {
         var tasks: [Operation] = []
         var taskMap: [String: Operation] = [:]
-        
+
         for taskInfo in config {
             // className
             if let className = taskInfo["className"],
@@ -325,7 +321,7 @@ open class TaskManager: @unchecked Sendable {
                 let task = operationClass.init()
                 tasks.append(task)
                 taskMap[className] = task
-                
+
                 // dependency
                 if let dependencyList = taskInfo["dependency"]?.components(separatedBy: ","),
                    !dependencyList.isEmpty {
@@ -337,18 +333,17 @@ open class TaskManager: @unchecked Sendable {
                 }
             }
         }
-        
+
         addTasks(tasks)
     }
-    
+
     /// 取消所有任务
     open func cancelAllTasks() {
         taskQueue.cancelAllOperations()
     }
-    
+
     /// 等待所有任务执行完成，会阻塞线程
     open func waitUntilFinished() {
         taskQueue.waitUntilAllOperationsAreFinished()
     }
-    
 }
