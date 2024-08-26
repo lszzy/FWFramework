@@ -1,9 +1,11 @@
 # file options
+
 --exclude Pods
 --symlinks ignore
 --swiftversion 5.9
 
 # format options
+
 --commas inline
 --comments indent
 --decimalgrouping 3,5
@@ -24,6 +26,7 @@
 --anonymousforeach ignore
 
 # rules
+
 --disable andOperator
 --disable opaqueGenericParameters
 --disable wrapMultilineStatementBraces
