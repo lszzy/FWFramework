@@ -762,9 +762,9 @@ open class VideoPlayer: UIViewController {
 
     func addPlayerObservers() {
         playerTimeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] _ in
-            DispatchQueue.fw.mainAsync { [weak self] in
-                guard let self else { return }
-                playbackDelegate?.playerCurrentTimeDidChange?(self)
+            guard let self else { return }
+            DispatchQueue.fw.mainAsync {
+                self.playbackDelegate?.playerCurrentTimeDidChange?(self)
             }
         })
 
