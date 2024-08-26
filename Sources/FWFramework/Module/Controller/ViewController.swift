@@ -12,7 +12,6 @@ import UIKit
 ///
 /// 如果需要支持继承，建议基类在非extension中实现该协议的所有方法，从而忽略协议扩展的默认实现
 @MainActor public protocol ViewControllerProtocol: ViewControllerLifecycleObservable {
-    
     /// 初始化完成，init自动调用，默认空实现
     func didInitialize()
 
@@ -24,11 +23,9 @@ import UIKit
 
     /// 初始化布局，viewDidLoad自动调用，默认空实现
     func setupLayout()
-    
 }
 
 extension ViewControllerProtocol where Self: UIViewController {
-    
     /// 初始化完成，init自动调用，默认空实现
     public func didInitialize() {}
 
@@ -40,13 +37,11 @@ extension ViewControllerProtocol where Self: UIViewController {
 
     /// 初始化布局，viewDidLoad自动调用，默认空实现
     public func setupLayout() {}
-    
 }
 
 // MARK: - ViewControllerIntercepter
 /// 视图控制器拦截器
 public class ViewControllerIntercepter: NSObject {
-    
     public var initIntercepter: (@MainActor (UIViewController) -> Void)?
     public var viewDidLoadIntercepter: (@MainActor (UIViewController) -> Void)?
     public var viewWillAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
@@ -55,9 +50,8 @@ public class ViewControllerIntercepter: NSObject {
     public var viewDidAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
     public var viewWillDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
     public var viewDidDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
-    
+
     fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
-    
 }
 
 // MARK: - ViewControllerManager
@@ -65,10 +59,9 @@ public class ViewControllerIntercepter: NSObject {
 ///
 /// 框架默认未注册ViewControllerProtocol协议拦截器，如需全局配置控制器，使用全局自定义block即可
 public class ViewControllerManager: NSObject, @unchecked Sendable {
-    
     /// 单例模式
     public static let shared = ViewControllerManager()
-    
+
     // MARK: - Global
     /// 默认全局控制器init钩子句柄，init优先自动调用
     public var hookInit: (@MainActor (UIViewController) -> Void)?
@@ -86,7 +79,7 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
     public var hookViewWillDisappear: (@MainActor (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidDisappear钩子句柄，viewDidDisappear优先自动调用
     public var hookViewDidDisappear: (@MainActor (UIViewController, Bool) -> Void)?
-    
+
     // MARK: - ViewController
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
     public var hookScrollViewController: (@MainActor (UIViewController & ScrollViewControllerProtocol) -> Void)?
@@ -98,7 +91,7 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
     public var hookWebViewController: (@MainActor (UIViewController & WebViewControllerProtocol) -> Void)?
     /// 默认全局popupViewController钩子句柄，viewDidLoad自动调用，先于setupPopupView
     public var hookPopupViewController: (@MainActor (UIViewController & PopupViewControllerProtocol) -> Void)?
-    
+
     /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
     @MainActor public var webViewReuseIdentifier: String? {
         didSet {
@@ -107,10 +100,10 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     // MARK: - Intercepter
     private var intercepters: [String: ViewControllerIntercepter] = [:]
-    
+
     private var classIntercepters: [String: [String]] = [:]
 
     /// 注册协议拦截器，提供拦截和调用方法
@@ -119,21 +112,21 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
     ///   - intercepter: 控制器拦截器对象，传nil时取消注册
     public func registerProtocol<T>(_ type: T.Type, intercepter: ViewControllerIntercepter?) {
         let intercepterId = String.fw.safeString(type)
-        if let intercepter = intercepter {
+        if let intercepter {
             intercepter.intercepterValidator = { $0 is T }
             intercepters[intercepterId] = intercepter
         } else {
             intercepters.removeValue(forKey: intercepterId)
         }
     }
-    
+
     private func intercepterNames(for viewController: UIViewController) -> [String] {
         // 同一个类只解析一次，优先加载类缓存
         let className = NSStringFromClass(type(of: viewController))
         if let intercepterNames = classIntercepters[className] {
             return intercepterNames
         }
-        
+
         // 解析拦截器列表，ViewControllerProtocol始终位于第一位
         var intercepterNames: [String] = []
         intercepterNames.append(String.fw.safeString(ViewControllerProtocol.self))
@@ -143,37 +136,37 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
                 intercepterNames.append(intercepterName)
             }
         }
-        
+
         // 写入类拦截器缓存
         classIntercepters[className] = intercepterNames
         return intercepterNames
     }
-    
+
     fileprivate static func registerDefaultIntercepters() {
         let scrollIntercepter = ViewControllerIntercepter()
         scrollIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.scrollViewControllerViewDidLoad(viewController)
         }
         ViewControllerManager.shared.registerProtocol(ScrollViewControllerProtocol.self, intercepter: scrollIntercepter)
-        
+
         let collectionIntercepter = ViewControllerIntercepter()
         collectionIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.collectionViewControllerViewDidLoad(viewController)
         }
         ViewControllerManager.shared.registerProtocol((any CollectionDelegateControllerProtocol).self, intercepter: collectionIntercepter)
-        
+
         let tableIntercepter = ViewControllerIntercepter()
         tableIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.tableViewControllerViewDidLoad(viewController)
         }
         ViewControllerManager.shared.registerProtocol((any TableDelegateControllerProtocol).self, intercepter: tableIntercepter)
-        
+
         let webIntercepter = ViewControllerIntercepter()
         webIntercepter.viewDidLoadIntercepter = { viewController in
             ViewControllerManager.shared.webViewControllerViewDidLoad(viewController)
         }
         ViewControllerManager.shared.registerProtocol(WebViewControllerProtocol.self, intercepter: webIntercepter)
-        
+
         let popupIntercepter = ViewControllerIntercepter()
         popupIntercepter.initIntercepter = { viewController in
             ViewControllerManager.shared.popupViewControllerInit(viewController)
@@ -186,22 +179,22 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
         }
         ViewControllerManager.shared.registerProtocol(PopupViewControllerProtocol.self, intercepter: popupIntercepter)
     }
-    
+
     // MARK: - Hook
     @MainActor fileprivate func hookInit(_ viewController: UIViewController) {
         /*
-        // ViewControllerProtocol全局拦截器init方法示例：
-        // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
-        viewController.extendedLayoutIncludesOpaqueBars = true
-        // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
-        viewController.hidesBottomBarWhenPushed = true
-        // 视图默认all延伸到全部工具栏，可指定top|bottom不被工具栏遮挡
-        viewController.edgesForExtendedLayout = .all
-         */
-        
+         // ViewControllerProtocol全局拦截器init方法示例：
+         // 开启不透明bar(translucent为NO)情况下视图延伸到屏幕顶部，顶部推荐safeArea方式布局
+         viewController.extendedLayoutIncludesOpaqueBars = true
+         // 默认push时隐藏TabBar，TabBar初始化控制器时设置为NO
+         viewController.hidesBottomBarWhenPushed = true
+         // 视图默认all延伸到全部工具栏，可指定top|bottom不被工具栏遮挡
+         viewController.edgesForExtendedLayout = .all
+          */
+
         // 1. 默认init
         hookInit?(viewController)
-        
+
         // 2. 拦截器init
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -209,17 +202,17 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
                 intercepter.initIntercepter?(viewController)
             }
         }
-        
+
         if let viewController = viewController as? ViewControllerProtocol {
             // 3. 控制器didInitialize
             viewController.didInitialize()
         }
     }
-    
+
     @MainActor fileprivate func hookViewDidLoad(_ viewController: UIViewController) {
         // 1. 默认viewDidLoad
         hookViewDidLoad?(viewController)
-        
+
         // 2. 拦截器viewDidLoad
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -227,7 +220,7 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
                 intercepter.viewDidLoadIntercepter?(viewController)
             }
         }
-        
+
         if let viewController = viewController as? ViewControllerProtocol {
             // 3. 控制器setupNavbar
             viewController.setupNavbar()
@@ -237,11 +230,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             viewController.setupLayout()
         }
     }
-    
+
     @MainActor fileprivate func hookViewWillAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillAppear
         hookViewWillAppear?(viewController, animated)
-        
+
         // 2. 拦截器viewWillAppear
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -250,11 +243,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     @MainActor fileprivate func hookViewIsAppearing(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewIsAppearing
         hookViewIsAppearing?(viewController, animated)
-        
+
         // 2. 拦截器viewIsAppearing
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -263,11 +256,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     @MainActor fileprivate func hookViewDidLayoutSubviews(_ viewController: UIViewController) {
         // 1. 默认viewDidLayoutSubviews
         hookViewDidLayoutSubviews?(viewController)
-        
+
         // 2. 拦截器viewDidLayoutSubviews
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -276,11 +269,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     @MainActor fileprivate func hookViewDidAppear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidAppear
         hookViewDidAppear?(viewController, animated)
-        
+
         // 2. 拦截器viewDidAppear
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -289,11 +282,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     @MainActor fileprivate func hookViewWillDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewWillDisappear
         hookViewWillDisappear?(viewController, animated)
-        
+
         // 2. 拦截器viewWillDisappear
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -302,11 +295,11 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     @MainActor fileprivate func hookViewDidDisappear(_ viewController: UIViewController, animated: Bool) {
         // 1. 默认viewDidDisappear
         hookViewDidDisappear?(viewController, animated)
-        
+
         // 2. 拦截器viewDidDisappear
         let intercepterNames = intercepterNames(for: viewController)
         for intercepterName in intercepterNames {
@@ -315,17 +308,15 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
             }
         }
     }
-    
 }
 
 // MARK: - FrameworkAutoloader+ViewController
 extension FrameworkAutoloader {
-    
     @objc static func loadModule_ViewController() {
         swizzleViewController()
         ViewControllerManager.registerDefaultIntercepters()
     }
-    
+
     private static func swizzleViewController() {
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
@@ -334,13 +325,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
-            
+
             if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
@@ -348,13 +339,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
-            
+
             if viewController is ViewControllerProtocol {
                 ViewControllerManager.shared.hookInit(viewController)
             }
             return viewController
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
@@ -362,12 +353,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLoad(selfObject)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
@@ -375,12 +366,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillAppear(selfObject, animated: animated)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
@@ -388,12 +379,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewIsAppearing(selfObject, animated: animated)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLayoutSubviews),
@@ -401,12 +392,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidLayoutSubviews(selfObject)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
@@ -414,12 +405,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidAppear(selfObject, animated: animated)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
@@ -427,12 +418,12 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewWillDisappear(selfObject, animated: animated)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
@@ -440,11 +431,10 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerProtocol {
                 ViewControllerManager.shared.hookViewDidDisappear(selfObject, animated: animated)
             }
         }}
     }
-    
 }

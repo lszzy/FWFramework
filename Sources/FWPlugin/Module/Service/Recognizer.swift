@@ -12,7 +12,6 @@ import Vision
 
 /// 图像文本识别器
 public class Recognizer {
-    
     /// 识别结果
     public struct Result: Sendable {
         /// 识别文本
@@ -23,10 +22,10 @@ public class Recognizer {
         public var imageSize: CGSize = .zero
         /// 识别区域
         public var rect: CGRect = .zero
-        
+
         public init() {}
     }
-    
+
     /// 识别图片文字，可设置语言(zh-CN,en-US)等，完成时主线程回调结果
     public static func recognizeText(in image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping @MainActor @Sendable ([Result]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
@@ -37,26 +36,26 @@ public class Recognizer {
             }
         }
     }
-    
+
     // MARK: - Private
     private static func performOcr(image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
-        let textRequest = VNRecognizeTextRequest() { request, error in
+        let textRequest = VNRecognizeTextRequest { request, _ in
             let imageSize = CGSize(width: image.width, height: image.height)
             guard let results = request.results as? [VNRecognizedTextObservation], !results.isEmpty else {
                 completion([])
                 return
             }
-            
+
             let outputObjects: [Result] = results.compactMap { result in
                 guard let candidate = result.topCandidates(1).first,
                       let box = try? candidate.boundingBox(for: candidate.string.startIndex..<candidate.string.endIndex) else {
                     return nil
                 }
-                
+
                 let unwrappedBox: VNRectangleObservation = box
                 let boxRect = convertToImageRect(boundingBox: unwrappedBox, imageSize: imageSize)
                 let confidence: Float = candidate.confidence
-                
+
                 var result = Result()
                 result.text = candidate.string
                 result.confidence = confidence
@@ -66,11 +65,11 @@ public class Recognizer {
             }
             completion(outputObjects)
         }
-       
+
         textRequest.recognitionLevel = .accurate
         textRequest.usesLanguageCorrection = false
         configuration?(textRequest)
-       
+
         let handler = VNImageRequestHandler(cgImage: image, options: [:])
         do {
             try handler.perform([textRequest])
@@ -78,7 +77,7 @@ public class Recognizer {
             completion([])
         }
     }
-    
+
     private static func convertToImageRect(boundingBox: VNRectangleObservation, imageSize: CGSize) -> CGRect {
         let topLeft = VNImagePointForNormalizedPoint(boundingBox.topLeft,
                                                      Int(imageSize.width),
@@ -90,5 +89,4 @@ public class Recognizer {
                       width: abs(bottomRight.x - topLeft.x),
                       height: abs(topLeft.y - bottomRight.y))
     }
-    
 }

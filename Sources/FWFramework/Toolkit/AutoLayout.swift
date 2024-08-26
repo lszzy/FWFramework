@@ -24,10 +24,10 @@ import UIKit
     /// 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
     /// 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
     public static var autoLayoutRTL: Bool {
-        get { return UIView.innerAutoLayoutRTL }
+        get { UIView.innerAutoLayoutRTL }
         set { UIView.innerAutoLayoutRTL = newValue }
     }
-    
+
     /// 自定义全局自动等比例缩放适配句柄，默认nil
     ///
     /// 启用全局等比例缩放后，所有offset值都会调用该句柄，需注意可能产生的影响。
@@ -40,7 +40,7 @@ import UIKit
         get { UIView.innerAutoScaleBlock }
         set { UIView.innerAutoScaleBlock = newValue }
     }
-    
+
     /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
     ///
     /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
@@ -54,13 +54,13 @@ import UIKit
             autoScaleBlock = newValue ? { @MainActor @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatLayout) } : nil
         }
     }
-    
+
     /// 是否启用全局自动像素取整布局，默认false
     public static var autoFlatLayout: Bool {
         get { UIView.innerAutoFlatLayout }
         set { UIView.innerAutoFlatLayout = newValue }
     }
-    
+
     /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
     ///
     /// 框架仅BadgeView和ToolbarView默认关闭等比例缩放布局，采用固定值布局；
@@ -81,16 +81,16 @@ import UIKit
     public func autoLayoutSubviews() {
         // 保存当前的自动布局配置
         let translateConstraint = base.translatesAutoresizingMaskIntoConstraints
-        
+
         // 启动自动布局，计算子视图尺寸
         base.translatesAutoresizingMaskIntoConstraints = false
         base.setNeedsLayout()
         base.layoutIfNeeded()
-        
+
         // 还原自动布局设置
         base.translatesAutoresizingMaskIntoConstraints = translateConstraint
     }
-    
+
     // MARK: - Compression
     /// 设置水平方向抗压缩优先级
     public var compressionHorizontal: UILayoutPriority {
@@ -115,12 +115,12 @@ import UIKit
         get { base.contentHuggingPriority(for: .vertical) }
         set { base.setContentHuggingPriority(newValue, for: .vertical) }
     }
-    
+
     // MARK: - Collapse
     /// 设置视图是否收缩，默认NO为原始值，YES时为收缩值
     public var isCollapsed: Bool {
         get {
-            return propertyBool(forName: "isCollapsed")
+            propertyBool(forName: "isCollapsed")
         }
         set {
             // 为了防止修改active时约束冲突，始终将已激活的约束放到前面修改
@@ -130,7 +130,7 @@ import UIKit
             }.forEach { constraint in
                 constraint.fw.isCollapsed = newValue
             }
-            
+
             setPropertyBool(newValue, forName: "isCollapsed")
         }
     }
@@ -140,7 +140,7 @@ import UIKit
         get { propertyBool(forName: "autoCollapse") }
         set { setPropertyBool(newValue, forName: "autoCollapse") }
     }
-    
+
     /// 设置视图宽度或高度布局固定时，是否根据尺寸自适应另一边，默认false；
     /// 开启时当intrinsicContentSize有值时，会自动添加matchDimension约束
     public var autoMatchDimension: Bool {
@@ -161,30 +161,30 @@ import UIKit
         get { propertyBool(forName: "hiddenCollapse") }
         set { setPropertyBool(newValue, forName: "hiddenCollapse") }
     }
-    
+
     /// 快速切换视图是否收缩
     public func toggleCollapsed(_ collapsed: Bool? = nil) {
-        if let collapsed = collapsed {
+        if let collapsed {
             isCollapsed = collapsed
         } else {
             isCollapsed = !isCollapsed
         }
     }
-    
+
     /// 快速切换视图是否隐藏
     public func toggleHidden(_ hidden: Bool? = nil) {
-        if let hidden = hidden {
+        if let hidden {
             base.isHidden = hidden
         } else {
             base.isHidden = !base.isHidden
         }
     }
-    
+
     /// 添加视图的偏移收缩约束，必须先添加才能生效
     ///
     /// - see: [UIView-FDCollapsibleConstraints](https://github.com/forkingdog/UIView-FDCollapsibleConstraints)
     public func addCollapseConstraint(_ constraint: NSLayoutConstraint, offset: CGFloat? = nil) {
-        if let offset = offset {
+        if let offset {
             constraint.fw.collapseOffset = offset
         }
         constraint.fw.shouldCollapseOffset = true
@@ -192,10 +192,10 @@ import UIKit
             collapseConstraints.append(constraint)
         }
     }
-    
+
     /// 添加视图的有效性收缩约束，必须先添加才能生效
     public func addCollapseActiveConstraint(_ constraint: NSLayoutConstraint, active: Bool? = nil) {
-        if let active = active {
+        if let active {
             constraint.isActive = active
         }
         constraint.fw.shouldCollapseActive = true
@@ -203,10 +203,10 @@ import UIKit
             collapseConstraints.append(constraint)
         }
     }
-    
+
     /// 添加视图的优先级收缩约束，必须先添加才能生效
     public func addCollapsePriorityConstraint(_ constraint: NSLayoutConstraint, priority: UILayoutPriority? = nil) {
-        if let priority = priority {
+        if let priority {
             constraint.fw.collapsePriority = priority
         }
         constraint.fw.shouldCollapsePriority = true
@@ -214,27 +214,27 @@ import UIKit
             collapseConstraints.append(constraint)
         }
     }
-    
+
     /// 移除指定的视图收缩约束
     public func removeCollapseConstraint(_ constraint: NSLayoutConstraint) {
         collapseConstraints.removeAll { $0 == constraint }
     }
-    
+
     /// 移除所有的视图收缩约束
     public func removeAllCollapseConstraints() {
         collapseConstraints.removeAll()
     }
-    
+
     fileprivate var collapseConstraints: [NSLayoutConstraint] {
-        get { return property(forName: "collapseConstraints") as? [NSLayoutConstraint] ?? [] }
+        get { property(forName: "collapseConstraints") as? [NSLayoutConstraint] ?? [] }
         set { setProperty(newValue, forName: "collapseConstraints") }
     }
-    
+
     fileprivate var matchDimensionConstraint: NSLayoutConstraint? {
         get { property(forName: "matchDimensionConstraint") as? NSLayoutConstraint }
         set { setProperty(newValue, forName: "matchDimensionConstraint") }
     }
-    
+
     // MARK: - Axis
     /// 父视图居中，可指定偏移距离
     /// - Parameters:
@@ -252,7 +252,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 父视图属性居中，可指定偏移距离
     /// - Parameters:
     ///   - axis: 居中属性
@@ -265,9 +265,9 @@ import UIKit
         offset: CGFloat = 0,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
+        constrainAttribute(axis, toSuperview: base.superview, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
     }
-    
+
     /// 与另一视图居中相同，可指定偏移距离
     /// - Parameters:
     ///   - axis: 居中属性
@@ -282,7 +282,7 @@ import UIKit
         offset: CGFloat = 0,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset, autoScale: autoScale)
+        constrainAttribute(axis, toAttribute: axis, ofView: toView, offset: offset, autoScale: autoScale)
     }
 
     /// 与另一视图居中指定比例
@@ -299,9 +299,9 @@ import UIKit
         multiplier: CGFloat,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier, autoScale: autoScale)
+        constrainAttribute(axis, toAttribute: axis, ofView: toView, multiplier: multiplier, autoScale: autoScale)
     }
-    
+
     // MARK: - Edge
     /// 与父视图四条边属性相同，可指定insets距离
     /// - Parameters:
@@ -350,7 +350,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 与父视图水平方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
@@ -367,7 +367,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 与父视图垂直方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
@@ -384,7 +384,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 与父视图边属性相同，可指定偏移距离和关系
     /// - Parameters:
     ///   - edge: 指定边属性
@@ -401,7 +401,7 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(edge, toSuperview: base.superview, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图边属性相同，可指定偏移距离和关系
@@ -424,9 +424,9 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(edge, toAttribute: toEdge, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
-    
+
     // MARK: - SafeArea
     /// 父视图安全区域居中，可指定偏移距离。iOS11以下使用Superview实现，下同
     /// - Parameters:
@@ -444,7 +444,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 父视图安全区域属性居中，可指定偏移距离
     /// - Parameters:
     ///   - axis: 居中属性
@@ -457,7 +457,7 @@ import UIKit
         offset: CGFloat = .zero,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(axis, toSuperview: base.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
+        constrainAttribute(axis, toSuperview: base.superview?.safeAreaLayoutGuide, offset: offset, relation: .equal, priority: .required, autoScale: autoScale)
     }
 
     /// 与父视图安全区域四条边属性相同，可指定距离insets
@@ -524,7 +524,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 与父视图安全区域垂直方向两条边属性相同，可指定偏移距离
     /// - Parameters:
     ///   - inset: 偏移距离
@@ -541,7 +541,7 @@ import UIKit
         lastConstraints = constraints
         return constraints
     }
-    
+
     /// 与父视图安全区域边属性相同，可指定偏移距离和关系
     /// - Parameters:
     ///   - edge: 指定边属性
@@ -558,9 +558,9 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(edge, toSuperview: base.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(edge, toSuperview: base.superview?.safeAreaLayoutGuide, offset: inset, relation: relation, priority: priority, autoScale: autoScale)
     }
-    
+
     // MARK: - Dimension
     /// 设置宽高尺寸
     /// - Parameters:
@@ -595,7 +595,7 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(dimension, toAttribute: .notAnAttribute, ofView: nil, multiplier: 0, offset: size, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与视图自身尺寸属性指定比例，指定关系
@@ -616,7 +616,7 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return matchDimension(dimension, toDimension: toDimension, ofView: base, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
+        matchDimension(dimension, toDimension: toDimension, ofView: base, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图尺寸属性相同，可指定相差大小和关系
@@ -639,7 +639,7 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图尺寸属性指定比例，可指定关系
@@ -662,9 +662,9 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(dimension, toAttribute: toDimension, ofView: ofView, multiplier: multiplier, relation: relation, priority: priority, autoScale: autoScale)
     }
-    
+
     // MARK: - Constrain
     /// 与指定视图属性偏移指定距离，指定关系
     /// - Parameters:
@@ -686,7 +686,7 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
+        constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, offset: offset, relation: relation, priority: priority, autoScale: autoScale)
     }
 
     /// 与指定视图属性指定比例，指定关系
@@ -711,9 +711,9 @@ import UIKit
         priority: UILayoutPriority = .required,
         autoScale: Bool? = nil
     ) -> NSLayoutConstraint {
-        return constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority, isOpposite: false, autoScale: autoScale)
+        constrainAttribute(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: multiplier, offset: offset, relation: relation, priority: priority, isOpposite: false, autoScale: autoScale)
     }
-    
+
     // MARK: - Constraint
     /// 获取添加的与父视图属性的约束，指定关系
     /// - Parameters:
@@ -721,7 +721,7 @@ import UIKit
     ///   - relation: 约束关系
     /// - Returns: 布局约束
     public func constraint(toSuperview attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toSuperview: base.superview, relation: relation)
+        constraint(attribute, toSuperview: base.superview, relation: relation)
     }
 
     /// 获取添加的与父视图安全区域属性的约束，指定关系
@@ -730,9 +730,9 @@ import UIKit
     ///   - relation: 约束关系
     /// - Returns: 布局约束
     public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toSuperview: base.superview?.safeAreaLayoutGuide, relation: relation)
+        constraint(attribute, toSuperview: base.superview?.safeAreaLayoutGuide, relation: relation)
     }
-    
+
     private func constraint(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, relation: NSLayoutConstraint.Relation) -> NSLayoutConstraint? {
         assert(base.superview != nil, "View's superview must not be nil.\nView: \(base)")
         var targetRelation = relation
@@ -754,7 +754,7 @@ import UIKit
     ///   - relation: 约束关系
     /// - Returns: 布局约束
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
-        return constraint(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, relation: relation)
+        constraint(attribute, toAttribute: toAttribute, ofView: ofView, multiplier: 1.0, relation: relation)
     }
 
     /// 获取添加的与指定视图属性指定比例的约束，指定关系
@@ -794,51 +794,51 @@ import UIKit
                 break
             }
         }
-        
+
         // 自动生成唯一约束标记，存在则获取之
         let constraintIdentifier = constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
         return constraint(identifier: constraintIdentifier)
     }
-    
+
     /// 根据唯一标志获取布局约束
     /// - Parameters:
     ///   - identifier: 唯一标志
     /// - Returns: 布局约束
     public func constraint(identifier: String?) -> NSLayoutConstraint? {
-        guard let identifier = identifier, !identifier.isEmpty else { return nil }
+        guard let identifier, !identifier.isEmpty else { return nil }
         return allConstraints.first { obj in
-            return identifier == obj.fw.layoutIdentifier || identifier == obj.identifier
+            identifier == obj.fw.layoutIdentifier || identifier == obj.identifier
         }
     }
-    
+
     /// 最近一批添加或更新的布局约束
     public var lastConstraints: [NSLayoutConstraint] {
-        get { return property(forName: "lastConstraints") as? [NSLayoutConstraint] ?? [] }
+        get { property(forName: "lastConstraints") as? [NSLayoutConstraint] ?? [] }
         set { setProperty(newValue, forName: "lastConstraints") }
     }
-    
+
     /// 获取当前所有约束
     public private(set) var allConstraints: [NSLayoutConstraint] {
-        get { return property(forName: "allConstraints") as? [NSLayoutConstraint] ?? [] }
+        get { property(forName: "allConstraints") as? [NSLayoutConstraint] ?? [] }
         set { setProperty(newValue, forName: "allConstraints") }
     }
-    
+
     /// 移除当前指定约束数组
     /// - Parameter constraints: 布局约束数组
     public func removeConstraints(_ constraints: [NSLayoutConstraint]?) {
-        guard let constraints = constraints, !constraints.isEmpty else { return }
+        guard let constraints, !constraints.isEmpty else { return }
         NSLayoutConstraint.deactivate(constraints)
         allConstraints.removeAll { constraints.contains($0) }
         lastConstraints.removeAll { constraints.contains($0) }
     }
-    
+
     /// 移除当前所有约束
     public func removeAllConstraints() {
         NSLayoutConstraint.deactivate(allConstraints)
         allConstraints.removeAll()
         lastConstraints.removeAll()
     }
-    
+
     private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toSuperview superview: Any?, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, autoScale: Bool?) -> NSLayoutConstraint {
         assert(base.superview != nil, "View's superview must not be nil.\nView: \(base)")
         var isOpposite = false
@@ -851,10 +851,10 @@ import UIKit
                 targetRelation = .lessThanOrEqual
             }
         }
-        
+
         return constrainAttribute(attribute, toAttribute: attribute, ofView: superview, multiplier: 1.0, offset: offset, relation: targetRelation, priority: priority, isOpposite: isOpposite, autoScale: autoScale)
     }
-    
+
     private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool, autoScale: Bool?) -> NSLayoutConstraint {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
@@ -884,7 +884,7 @@ import UIKit
                 break
             }
         }
-        
+
         base.translatesAutoresizingMaskIntoConstraints = false
         // 自动生成唯一约束标记，存在则更新，否则添加
         let constraintIdentifier = constraintIdentifier(targetAttribute, toAttribute: targetToAttribute, ofView: ofView, multiplier: multiplier, relation: relation)
@@ -899,7 +899,7 @@ import UIKit
             allConstraints.append(targetConstraint)
         }
         lastConstraints = [targetConstraint]
-        if let autoScale = autoScale {
+        if let autoScale {
             targetConstraint.fw.autoScaleLayout = autoScale
         }
         targetConstraint.fw.offset = offset
@@ -911,29 +911,29 @@ import UIKit
         }
         return targetConstraint
     }
-    
+
     private func constraintIdentifier(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation) -> String {
         var viewHash = ""
         if let view = view as? NSObject {
             viewHash = "\(view.hash)"
-        } else if let view = view {
+        } else if let view {
             viewHash = String(describing: view)
         }
         return String(format: "%ld-%ld-%@-%ld-%@", attribute.rawValue, relation.rawValue, viewHash, toAttribute.rawValue, NSNumber(value: multiplier))
     }
-    
+
     // MARK: - Debug
     /// 自动布局调试开关，默认调试打开，正式关闭
     public static var autoLayoutDebug: Bool {
-        get { 
-            return UIView.innerAutoLayoutDebug
+        get {
+            UIView.innerAutoLayoutDebug
         }
         set {
             UIView.innerAutoLayoutDebug = newValue
             if newValue { FrameworkAutoloader.swizzleAutoLayoutDebug() }
         }
     }
-    
+
     /// 布局调试Key，默认accessibilityIdentifier
     public var layoutKey: String? {
         get { property(forName: "layoutKey") as? String ?? base.accessibilityIdentifier }
@@ -949,7 +949,7 @@ import UIKit
             if let number = propertyNumber(forName: "autoScaleLayout") {
                 return number.boolValue
             }
-            
+
             var autoScaleLayout = UIView.fw.autoScaleLayout
             if let view = base.firstItem as? UIView {
                 autoScaleLayout = view.fw.autoScaleLayout
@@ -960,13 +960,13 @@ import UIKit
         }
         set {
             setPropertyNumber(NSNumber(value: newValue), forName: "autoScaleLayout")
-            
+
             if let offsetNumber = propertyNumber(forName: "offset") {
                 offset = offsetNumber.doubleValue
             }
         }
     }
-    
+
     /// 设置偏移值，根据配置自动等比例缩放和取反
     public var offset: CGFloat {
         get {
@@ -975,7 +975,7 @@ import UIKit
         }
         set {
             setPropertyNumber(NSNumber(value: newValue), forName: "offset")
-            
+
             var offset = newValue
             if autoScaleLayout {
                 offset = UIView.innerAutoScaleBlock?(newValue) ?? UIScreen.fw.relativeValue(newValue, flat: UIView.innerAutoFlatLayout)
@@ -983,25 +983,25 @@ import UIKit
             base.constant = isOpposite ? -offset : offset
         }
     }
-    
+
     /// 标记是否是相反的约束，一般相对于父视图
     public var isOpposite: Bool {
         get { propertyBool(forName: "isOpposite") }
         set { setPropertyBool(newValue, forName: "isOpposite") }
     }
-    
+
     /// 可收缩约束的收缩偏移值，默认0
     public var collapseOffset: CGFloat {
         get { propertyDouble(forName: "collapseOffset") }
         set { setPropertyDouble(newValue, forName: "collapseOffset") }
     }
-    
+
     /// 可收缩约束的原始偏移值，默认为添加收缩约束时的值，未添加时为0
     public var originalOffset: CGFloat {
         get { propertyDouble(forName: "originalOffset") }
         set { setPropertyDouble(newValue, forName: "originalOffset") }
     }
-    
+
     /// 可收缩约束的收缩优先级，默认defaultLow。注意Required不能修改，否则iOS13以下崩溃
     public var collapsePriority: UILayoutPriority {
         get {
@@ -1014,7 +1014,7 @@ import UIKit
             setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "collapsePriority")
         }
     }
-    
+
     /// 可收缩约束的原始优先级，默认为添加收缩约束时的值，未添加时为defaultHigh。注意Required不能修改，否则iOS13以下崩溃
     public var originalPriority: UILayoutPriority {
         get {
@@ -1027,7 +1027,7 @@ import UIKit
             setPropertyNumber(NSNumber(value: newValue.rawValue), forName: "originalPriority")
         }
     }
-    
+
     /// 可收缩约束的原始有效值，默认为添加收缩约束时的有效值，未添加时为false
     public var originalActive: Bool {
         get {
@@ -1040,7 +1040,7 @@ import UIKit
             setPropertyNumber(NSNumber(value: newValue), forName: "originalActive")
         }
     }
-    
+
     /// 约束偏移是否可收缩，默认false，开启时自动初始化originalOffset
     public var shouldCollapseOffset: Bool {
         get {
@@ -1052,7 +1052,7 @@ import UIKit
             setPropertyBool(newValue, forName: "shouldCollapseOffset")
         }
     }
-    
+
     /// 约束有效性是否可收缩，默认false，开启时自动初始化originalActive
     public var shouldCollapseActive: Bool {
         get {
@@ -1064,7 +1064,7 @@ import UIKit
             setPropertyBool(newValue, forName: "shouldCollapseActive")
         }
     }
-    
+
     /// 约束优先级是否可收缩，默认false，开启时自动初始化originalPriority
     public var shouldCollapsePriority: Bool {
         get {
@@ -1076,11 +1076,11 @@ import UIKit
             setPropertyBool(newValue, forName: "shouldCollapsePriority")
         }
     }
-    
+
     /// 自动布局是否收缩，启用收缩后生效，默认NO为原始值，YES时为收缩值
     public var isCollapsed: Bool {
         get {
-            return propertyBool(forName: "isCollapsed")
+            propertyBool(forName: "isCollapsed")
         }
         set {
             if shouldCollapseActive {
@@ -1092,16 +1092,16 @@ import UIKit
             if shouldCollapseOffset {
                 offset = newValue ? collapseOffset : originalOffset
             }
-            
+
             setPropertyBool(newValue, forName: "isCollapsed")
         }
     }
-    
+
     fileprivate var layoutIdentifier: String? {
         get { property(forName: "layoutIdentifier") as? String }
         set { setPropertyCopy(newValue, forName: "layoutIdentifier") }
     }
-    
+
     /// 布局调试描述，参考：[Masonry](https://github.com/SnapKit/Masonry)
     fileprivate var layoutDescription: String {
         var description = "<"
@@ -1110,14 +1110,14 @@ import UIKit
             description += String(format: " %@", NSLayoutConstraint.fw.layoutDescription(firstItem))
         }
         if base.firstAttribute != .notAnAttribute {
-            description += String(format: ".%@", (UIView.innerAttributeDescriptions[base.firstAttribute] ?? NSNumber(value: base.firstAttribute.rawValue)))
+            description += String(format: ".%@", UIView.innerAttributeDescriptions[base.firstAttribute] ?? NSNumber(value: base.firstAttribute.rawValue))
         }
-        description += String(format: " %@", (UIView.innerRelationDescriptions[base.relation] ?? NSNumber(value: base.relation.rawValue)))
+        description += String(format: " %@", UIView.innerRelationDescriptions[base.relation] ?? NSNumber(value: base.relation.rawValue))
         if let secondItem = base.secondItem {
             description += String(format: " %@", NSLayoutConstraint.fw.layoutDescription(secondItem))
         }
         if base.secondAttribute != .notAnAttribute {
-            description += String(format: ".%@", (UIView.innerAttributeDescriptions[base.secondAttribute] ?? NSNumber(value: base.secondAttribute.rawValue)))
+            description += String(format: ".%@", UIView.innerAttributeDescriptions[base.secondAttribute] ?? NSNumber(value: base.secondAttribute.rawValue))
         }
         if base.multiplier != 1 {
             description += String(format: " * %g", base.multiplier)
@@ -1126,7 +1126,7 @@ import UIKit
             description += String(format: " %g", base.constant)
         } else {
             if base.constant != 0 {
-                description += String(format: " %@ %g", (base.constant < 0 ? "-" : "+"), abs(base.constant))
+                description += String(format: " %@ %g", base.constant < 0 ? "-" : "+", abs(base.constant))
             }
         }
         if base.priority != .required {
@@ -1135,7 +1135,7 @@ import UIKit
         description += ">"
         return description
     }
-    
+
     private static func layoutDescription(_ object: AnyObject) -> String {
         var objectDesc = ""
         if let constraint = object as? NSLayoutConstraint, let identifier = constraint.identifier {
@@ -1156,12 +1156,12 @@ import UIKit
         if let layoutChain = property(forName: "layoutChain") as? LayoutChain {
             return layoutChain
         }
-        
+
         let layoutChain = LayoutChain(view: base)
         setProperty(layoutChain, forName: "layoutChain")
         return layoutChain
     }
-    
+
     /// 链式布局闭包
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
         closure(layoutChain)
@@ -1169,14 +1169,14 @@ import UIKit
 }
 
 // MARK: - Wrapper+Array<UIView>
-@MainActor extension Wrapper where Base == Array<UIView> {
+@MainActor extension Wrapper where Base == [UIView] {
     /// 批量链式布局闭包
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) {
-        base.forEach { view in
+        for view in base {
             closure(view.fw.layoutChain)
         }
     }
-    
+
     /// 批量对齐布局，适用于间距固定场景，尺寸未设置(可手工指定)，若只有一个则间距不生效
     public func layoutAlong(
         _ axis: NSLayoutConstraint.Axis,
@@ -1188,26 +1188,26 @@ import UIKit
         autoScale: Bool? = nil
     ) {
         guard base.count > 0 else { return }
-        
+
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
-                if let prev = prev {
+                if let prev {
                     view.fw.pinEdge(.left, toEdge: .right, ofView: prev, offset: itemSpacing, autoScale: autoScale)
-                    if let itemLength = itemLength {
+                    if let itemLength {
                         view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
                         view.fw.matchDimension(.width, toDimension: .width, ofView: prev, autoScale: autoScale)
                     }
                 } else {
-                    if let leadSpacing = leadSpacing {
+                    if let leadSpacing {
                         view.fw.pinEdge(toSuperview: .left, inset: leadSpacing, autoScale: autoScale)
                     }
-                    if let itemLength = itemLength {
+                    if let itemLength {
                         view.fw.setDimension(.width, size: itemLength, autoScale: autoScale)
                     }
                 }
-                if index == base.count - 1, let tailSpacing = tailSpacing {
+                if index == base.count - 1, let tailSpacing {
                     view.fw.pinEdge(toSuperview: .right, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
@@ -1215,29 +1215,29 @@ import UIKit
         } else {
             var prev: UIView?
             for (index, view) in base.enumerated() {
-                if let prev = prev {
+                if let prev {
                     view.fw.pinEdge(.top, toEdge: .bottom, ofView: prev, offset: itemSpacing, autoScale: autoScale)
-                    if let itemLength = itemLength {
+                    if let itemLength {
                         view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     } else if equalLength {
                         view.fw.matchDimension(.height, toDimension: .height, ofView: prev, autoScale: autoScale)
                     }
                 } else {
-                    if let leadSpacing = leadSpacing {
+                    if let leadSpacing {
                         view.fw.pinEdge(toSuperview: .top, inset: leadSpacing, autoScale: autoScale)
                     }
-                    if let itemLength = itemLength {
+                    if let itemLength {
                         view.fw.setDimension(.height, size: itemLength, autoScale: autoScale)
                     }
                 }
-                if index == base.count - 1, let tailSpacing = tailSpacing {
+                if index == base.count - 1, let tailSpacing {
                     view.fw.pinEdge(toSuperview: .bottom, inset: tailSpacing, autoScale: autoScale)
                 }
                 prev = view
             }
         }
     }
-    
+
     /// 批量对齐布局，适用于尺寸固定场景，间距自适应，若只有一个则尺寸不生效
     public func layoutAlong(
         _ axis: NSLayoutConstraint.Axis,
@@ -1247,7 +1247,7 @@ import UIKit
         autoScale: Bool? = nil
     ) {
         guard base.count > 0 else { return }
-        
+
         if axis == .horizontal {
             var prev: UIView?
             for (index, view) in base.enumerated() {
@@ -1292,7 +1292,7 @@ import UIKit
             }
         }
     }
-    
+
     /// 批量对齐布局，用于补齐Along之后该方向上的其他约束
     public func layoutAlong(
         _ axis: NSLayoutConstraint.Axis,
@@ -1303,19 +1303,19 @@ import UIKit
         autoScale: Bool? = nil
     ) {
         guard base.count > 0 else { return }
-        
+
         if axis == .horizontal {
             for view in base {
                 if alignCenter {
                     view.fw.alignAxis(toSuperview: .centerY, autoScale: autoScale)
                 }
-                if let itemWidth = itemWidth {
+                if let itemWidth {
                     view.fw.setDimension(.height, size: itemWidth, autoScale: autoScale)
                 }
-                if let leftSpacing = leftSpacing {
+                if let leftSpacing {
                     view.fw.pinEdge(toSuperview: .bottom, inset: leftSpacing, autoScale: autoScale)
                 }
-                if let rightSpacing = rightSpacing {
+                if let rightSpacing {
                     view.fw.pinEdge(toSuperview: .top, inset: rightSpacing, autoScale: autoScale)
                 }
             }
@@ -1324,13 +1324,13 @@ import UIKit
                 if alignCenter {
                     view.fw.alignAxis(toSuperview: .centerX, autoScale: autoScale)
                 }
-                if let itemWidth = itemWidth {
+                if let itemWidth {
                     view.fw.setDimension(.width, size: itemWidth, autoScale: autoScale)
                 }
-                if let leftSpacing = leftSpacing {
+                if let leftSpacing {
                     view.fw.pinEdge(toSuperview: .left, inset: leftSpacing, autoScale: autoScale)
                 }
-                if let rightSpacing = rightSpacing {
+                if let rightSpacing {
                     view.fw.pinEdge(toSuperview: .right, inset: rightSpacing, autoScale: autoScale)
                 }
             }
@@ -1340,89 +1340,82 @@ import UIKit
 
 // MARK: - UILayoutPriority+Shortcut
 extension UILayoutPriority {
-    
     /// 中优先级，500
     public static let defaultMedium: UILayoutPriority = .init(500)
-    
 }
 
 // MARK: - UIView+Shortcut
 extension UIView {
-    
     /// 链式布局对象
     public var layoutChain: LayoutChain { fw.layoutChain }
-    
+
     /// 链式布局闭包
     @discardableResult
     public func layoutMaker(_ closure: (_ make: LayoutChain) -> Void) -> Self {
         fw.layoutMaker(closure)
         return self
     }
-    
 }
 
 // MARK: - UIView+AutoLayout
 extension UIView {
-    
     fileprivate static var innerAutoLayoutRTL = false
     fileprivate static var innerAutoScaleBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)?
     fileprivate static var innerAutoFlatLayout = false
-    
-    nonisolated(unsafe) fileprivate static var innerAutoLayoutDebug: Bool = {
+
+    fileprivate nonisolated(unsafe) static var innerAutoLayoutDebug: Bool = {
         #if DEBUG
         true
         #else
         false
         #endif
     }()
-    
+
     fileprivate static var innerRelationDescriptions: [NSLayoutConstraint.Relation: String] = [
-        .equal              : "==",
-        .greaterThanOrEqual : ">=",
-        .lessThanOrEqual    : "<=",
+        .equal: "==",
+        .greaterThanOrEqual: ">=",
+        .lessThanOrEqual: "<="
     ]
-    
+
     fileprivate static var innerAttributeDescriptions: [NSLayoutConstraint.Attribute: String] = [
-        .top                  : "top",
-        .left                 : "left",
-        .bottom               : "bottom",
-        .right                : "right",
-        .leading              : "leading",
-        .trailing             : "trailing",
-        .width                : "width",
-        .height               : "height",
-        .centerX              : "centerX",
-        .centerY              : "centerY",
-        .firstBaseline        : "firstBaseline",
-        .lastBaseline         : "lastBaseline",
-        .leftMargin           : "leftMargin",
-        .rightMargin          : "rightMargin",
-        .topMargin            : "topMargin",
-        .bottomMargin         : "bottomMargin",
-        .leadingMargin        : "leadingMargin",
-        .trailingMargin       : "trailingMargin",
-        .centerXWithinMargins : "centerXWithinMargins",
-        .centerYWithinMargins : "centerYWithinMargins",
-        .notAnAttribute       : "notAnAttribute",
+        .top: "top",
+        .left: "left",
+        .bottom: "bottom",
+        .right: "right",
+        .leading: "leading",
+        .trailing: "trailing",
+        .width: "width",
+        .height: "height",
+        .centerX: "centerX",
+        .centerY: "centerY",
+        .firstBaseline: "firstBaseline",
+        .lastBaseline: "lastBaseline",
+        .leftMargin: "leftMargin",
+        .rightMargin: "rightMargin",
+        .topMargin: "topMargin",
+        .bottomMargin: "bottomMargin",
+        .leadingMargin: "leadingMargin",
+        .trailingMargin: "trailingMargin",
+        .centerXWithinMargins: "centerXWithinMargins",
+        .centerYWithinMargins: "centerYWithinMargins",
+        .notAnAttribute: "notAnAttribute"
     ]
-    
+
     fileprivate static var innerPriorityDescriptions: [UILayoutPriority: String] = [
-        .required                  : "required",
-        .defaultHigh               : "defaultHigh",
-        .defaultLow                : "defaultLow",
-        .dragThatCanResizeScene    : "dragThatCanResizeScene",
-        .dragThatCannotResizeScene : "dragThatCannotResizeScene",
-        .sceneSizeStayPut          : "sceneSizeStayPut",
-        .fittingSizeLevel          : "fittingSizeLevel",
+        .required: "required",
+        .defaultHigh: "defaultHigh",
+        .defaultLow: "defaultLow",
+        .dragThatCanResizeScene: "dragThatCanResizeScene",
+        .dragThatCannotResizeScene: "dragThatCannotResizeScene",
+        .sceneSizeStayPut: "sceneSizeStayPut",
+        .fittingSizeLevel: "fittingSizeLevel"
     ]
-    
 }
 
 // MARK: - LayoutChain
 /// 视图链式布局类。如果约束条件完全相同，会自动更新约束而不是重新添加。
 /// 另外，默认布局方式使用LTR，如果需要RTL布局，可通过autoLayoutRTL统一启用
 @MainActor public class LayoutChain {
-    
     // MARK: - Accessor
     /// 布局视图
     public private(set) weak var view: UIView?
@@ -1439,7 +1432,7 @@ extension UIView {
         view?.fw.removeAllConstraints()
         return self
     }
-    
+
     @discardableResult
     public func autoScale(_ autoScale: Bool) -> Self {
         view?.fw.autoScaleLayout = autoScale
@@ -1458,7 +1451,7 @@ extension UIView {
         view?.fw.compressionVertical = priority
         return self
     }
-    
+
     @discardableResult
     public func hugging(horizontal priority: UILayoutPriority) -> Self {
         view?.fw.huggingHorizontal = priority
@@ -1470,7 +1463,7 @@ extension UIView {
         view?.fw.huggingVertical = priority
         return self
     }
-    
+
     // MARK: - Collapse
     @discardableResult
     public func isCollapsed(_ isCollapsed: Bool) -> Self {
@@ -1483,13 +1476,13 @@ extension UIView {
         view?.fw.autoCollapse = autoCollapse
         return self
     }
-    
+
     @discardableResult
     public func autoMatchDimension(_ matchDimension: Bool) -> Self {
         view?.fw.autoMatchDimension = matchDimension
         return self
     }
-    
+
     @discardableResult
     public func hiddenCollapse(_ hiddenCollapse: Bool) -> Self {
         view?.fw.hiddenCollapse = hiddenCollapse
@@ -1558,7 +1551,7 @@ extension UIView {
         view?.fw.pinEdges(toSuperview: insets)
         return self
     }
-    
+
     @discardableResult
     public func edges(_ insets: UIEdgeInsets = UIEdgeInsets.zero, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
         view?.fw.pinEdges(toSuperview: insets, excludingEdge: edge)
@@ -1576,55 +1569,55 @@ extension UIView {
         view?.fw.pinVertical(toSuperview: inset)
         return self
     }
-    
+
     @discardableResult
     public func top(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSuperview: .top, inset: inset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func bottom(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSuperview: .bottom, inset: inset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func left(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSuperview: .left, inset: inset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func right(_ inset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSuperview: .right, inset: inset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func top(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.top, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func bottom(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.bottom, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func left(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.left, toEdge: .left, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func right(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.right, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func horizontal(toView view: Any) -> Self {
         var constraints: [NSLayoutConstraint] = []
@@ -1637,7 +1630,7 @@ extension UIView {
         self.view?.fw.lastConstraints = constraints
         return self
     }
-    
+
     @discardableResult
     public func vertical(toView view: Any) -> Self {
         var constraints: [NSLayoutConstraint] = []
@@ -1650,7 +1643,7 @@ extension UIView {
         self.view?.fw.lastConstraints = constraints
         return self
     }
-    
+
     @discardableResult
     public func top(toViewBottom view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.top, toEdge: .bottom, ofView: view, offset: offset, relation: relation, priority: priority)
@@ -1662,7 +1655,7 @@ extension UIView {
         self.view?.fw.pinEdge(.bottom, toEdge: .top, ofView: view, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func left(toViewRight view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.pinEdge(.left, toEdge: .right, ofView: view, offset: offset, relation: relation, priority: priority)
@@ -1699,7 +1692,7 @@ extension UIView {
         view?.fw.pinEdges(toSafeArea: insets)
         return self
     }
-    
+
     @discardableResult
     public func edges(toSafeArea insets: UIEdgeInsets, excludingEdge edge: NSLayoutConstraint.Attribute) -> Self {
         view?.fw.pinEdges(toSafeArea: insets, excludingEdge: edge)
@@ -1717,7 +1710,7 @@ extension UIView {
         view?.fw.pinVertical(toSafeArea: inset)
         return self
     }
-    
+
     @discardableResult
     public func top(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSafeArea: .top, inset: inset, relation: relation, priority: priority)
@@ -1729,7 +1722,7 @@ extension UIView {
         view?.fw.pinEdge(toSafeArea: .bottom, inset: inset, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func left(toSafeArea inset: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.pinEdge(toSafeArea: .left, inset: inset, relation: relation, priority: priority)
@@ -1748,7 +1741,7 @@ extension UIView {
         view?.fw.setDimensions(size)
         return self
     }
-    
+
     @discardableResult
     public func size(width: CGFloat, height: CGFloat) -> Self {
         view?.fw.setDimensions(CGSize(width: width, height: height))
@@ -1766,13 +1759,13 @@ extension UIView {
         view?.fw.setDimension(.height, size: height, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func width(toHeight multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.matchDimension(.width, toDimension: .height, multiplier: multiplier, relation: relation, priority: priority)
         return self
     }
-    
+
     @discardableResult
     public func height(toWidth multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         view?.fw.matchDimension(.height, toDimension: .width, multiplier: multiplier, relation: relation, priority: priority)
@@ -1791,7 +1784,7 @@ extension UIView {
         self.view?.fw.lastConstraints = constraints
         return self
     }
-    
+
     @discardableResult
     public func width(toView view: Any, offset: CGFloat = 0, relation: NSLayoutConstraint.Relation = .equal, priority: UILayoutPriority = .required) -> Self {
         self.view?.fw.matchDimension(.width, toDimension: .width, ofView: view, offset: offset, relation: relation, priority: priority)
@@ -1828,184 +1821,182 @@ extension UIView {
         self.view?.fw.constrainAttribute(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, offset: offset, relation: relation, priority: priority)
         return self
     }
-    
+
     // MARK: - Subviews
     @discardableResult
     public func subviews(_ closure: (_ make: LayoutChain) -> Void) -> Self {
-        self.view?.subviews.fw.layoutMaker(closure)
+        view?.subviews.fw.layoutMaker(closure)
         return self
     }
-    
+
     @discardableResult
     public func subviews(along axis: NSLayoutConstraint.Axis, itemSpacing: CGFloat, leadSpacing: CGFloat? = nil, tailSpacing: CGFloat? = nil, itemLength: CGFloat? = nil, equalLength: Bool = false) -> Self {
-        self.view?.subviews.fw.layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, itemLength: itemLength, equalLength: equalLength)
+        view?.subviews.fw.layoutAlong(axis, itemSpacing: itemSpacing, leadSpacing: leadSpacing, tailSpacing: tailSpacing, itemLength: itemLength, equalLength: equalLength)
         return self
     }
-    
+
     @discardableResult
     public func subviews(along axis: NSLayoutConstraint.Axis, itemLength: CGFloat, leadSpacing: CGFloat, tailSpacing: CGFloat) -> Self {
-        self.view?.subviews.fw.layoutAlong(axis, itemLength: itemLength, leadSpacing: leadSpacing, tailSpacing: tailSpacing)
+        view?.subviews.fw.layoutAlong(axis, itemLength: itemLength, leadSpacing: leadSpacing, tailSpacing: tailSpacing)
         return self
     }
-    
+
     @discardableResult
     public func subviews(along axis: NSLayoutConstraint.Axis, alignCenter: Bool = false, itemWidth: CGFloat? = nil, leftSpacing: CGFloat? = nil, rightSpacing: CGFloat? = nil) -> Self {
-        self.view?.subviews.fw.layoutAlong(axis, alignCenter: alignCenter, itemWidth: itemWidth, leftSpacing: leftSpacing, rightSpacing: rightSpacing)
+        view?.subviews.fw.layoutAlong(axis, alignCenter: alignCenter, itemWidth: itemWidth, leftSpacing: leftSpacing, rightSpacing: rightSpacing)
         return self
     }
-    
+
     // MARK: - Offset
     @discardableResult
     public func relative() -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.fw.autoScaleLayout = true
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func fixed() -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.fw.autoScaleLayout = false
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func offset(_ offset: CGFloat) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.fw.offset = offset
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func constant(_ constant: CGFloat) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.constant = constant
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func priority(_ priority: UILayoutPriority) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.priority = priority
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func collapse(_ offset: CGFloat? = nil) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             self.view?.fw.addCollapseConstraint(obj, offset: offset)
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func original(_ offset: CGFloat) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.fw.originalOffset = offset
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func collapseActive(_ active: Bool? = nil) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             self.view?.fw.addCollapseActiveConstraint(obj, active: active)
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func collapsePriority(_ priority: UILayoutPriority? = nil) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             self.view?.fw.addCollapsePriorityConstraint(obj, priority: priority)
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func originalPriority(_ priority: UILayoutPriority) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.fw.originalPriority = priority
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func identifier(_ identifier: String?) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.identifier = identifier
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func active(_ active: Bool) -> Self {
-        self.view?.fw.lastConstraints.forEach({ obj in
+        view?.fw.lastConstraints.forEach { obj in
             obj.isActive = active
-        })
+        }
         return self
     }
-    
+
     @discardableResult
     public func remove() -> Self {
-        self.view?.fw.removeConstraints(self.view?.fw.lastConstraints)
+        view?.fw.removeConstraints(view?.fw.lastConstraints)
         return self
     }
-    
+
     // MARK: - Constraint
     public var constraints: [NSLayoutConstraint] {
-        return self.view?.fw.lastConstraints ?? []
+        view?.fw.lastConstraints ?? []
     }
-    
+
     public var constraint: NSLayoutConstraint? {
-        return self.view?.fw.lastConstraints.last
+        view?.fw.lastConstraints.last
     }
-    
+
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(toSuperview: attribute, relation: relation)
+        view?.fw.constraint(toSuperview: attribute, relation: relation)
     }
-    
+
     public func constraint(toSafeArea attribute: NSLayoutConstraint.Attribute, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(toSafeArea: attribute, relation: relation)
+        view?.fw.constraint(toSafeArea: attribute, relation: relation)
     }
 
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, relation: relation)
+        self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, relation: relation)
     }
-    
+
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView view: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = NSLayoutConstraint.Relation.equal) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation)
+        self.view?.fw.constraint(attribute, toAttribute: toAttribute, ofView: view, multiplier: multiplier, relation: relation)
     }
-    
+
     public func constraint(identifier: String?) -> NSLayoutConstraint? {
-        return self.view?.fw.constraint(identifier: identifier)
+        view?.fw.constraint(identifier: identifier)
     }
-    
+
     // MARK: - Debug
     @discardableResult
     public func layoutKey(_ layoutKey: String?) -> Self {
         view?.fw.layoutKey = layoutKey
         return self
     }
-    
 }
 
 // MARK: - FrameworkAutoloader+AutoLayout
 extension FrameworkAutoloader {
-    
     @objc static func loadToolkit_AutoLayout() {
         swizzleAutoLayoutView()
-        
+
         if UIView.innerAutoLayoutDebug {
             swizzleAutoLayoutDebug()
         }
     }
-    
+
     private static func swizzleAutoLayoutView() {
         NSObject.fw.swizzleInstanceMethod(
             UIView.self,
@@ -2014,7 +2005,7 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIView) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            
+
             if selfObject.fw.autoCollapse && selfObject.fw.collapseConstraints.count > 0 {
                 let contentSize = selfObject.intrinsicContentSize
                 if !contentSize.equalTo(CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)) && contentSize.width > 0 && contentSize.height > 0 {
@@ -2023,7 +2014,7 @@ extension FrameworkAutoloader {
                     selfObject.fw.isCollapsed = true
                 }
             }
-            
+
             if let constraint = selfObject.fw.matchDimensionConstraint {
                 selfObject.fw.removeConstraints([constraint])
                 selfObject.fw.matchDimensionConstraint = nil
@@ -2035,7 +2026,7 @@ extension FrameworkAutoloader {
                 }
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIView.self,
             selector: #selector(setter: UIView.isHidden),
@@ -2043,19 +2034,19 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIView, Bool) -> Void).self
         ) { store in { selfObject, hidden in
             store.original(selfObject, store.selector, hidden)
-            
+
             if selfObject.fw.hiddenCollapse && selfObject.fw.collapseConstraints.count > 0 {
                 selfObject.fw.isCollapsed = hidden
             }
         }}
     }
-    
-    nonisolated(unsafe) private static var swizzleAutoLayoutDebugFinished = false
-    
+
+    private nonisolated(unsafe) static var swizzleAutoLayoutDebugFinished = false
+
     fileprivate static func swizzleAutoLayoutDebug() {
         guard !swizzleAutoLayoutDebugFinished else { return }
         swizzleAutoLayoutDebugFinished = true
-        
+
         NSObject.fw.swizzleInstanceMethod(
             NSLayoutConstraint.self,
             selector: #selector(NSLayoutConstraint.description),
@@ -2065,9 +2056,8 @@ extension FrameworkAutoloader {
             guard UIView.innerAutoLayoutDebug else {
                 return store.original(selfObject, store.selector)
             }
-            
+
             return selfObject.fw.layoutDescription
         }}
     }
-    
 }

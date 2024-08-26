@@ -18,8 +18,8 @@ import UIKit
         // 自动布局引擎计算
         fittingHeight = base.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         base.removeConstraint(widthFenceConstraint)
-        
-        if (fittingHeight == 0) {
+
+        if fittingHeight == 0 {
             // 尝试frame布局，调用sizeThatFits:
             fittingHeight = base.sizeThatFits(CGSize(width: width, height: 0)).height
         }
@@ -35,14 +35,14 @@ import UIKit
         // 自动布局引擎计算
         fittingWidth = base.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
         base.removeConstraint(heightFenceConstraint)
-        
-        if (fittingWidth == 0) {
+
+        if fittingWidth == 0 {
             // 尝试frame布局，调用sizeThatFits:
             fittingWidth = base.sizeThatFits(CGSize(width: 0, height: height)).width
         }
         return fittingWidth
     }
-    
+
     /// 计算动态AutoLayout布局视图指定宽度时的高度。
     ///
     /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
@@ -62,18 +62,18 @@ import UIKit
         view.addSubview(base)
         view.frame = CGRect(x: 0, y: 0, width: width, height: 0)
         base.frame = CGRect(x: 0, y: 0, width: width, height: 0)
-        
+
         var dynamicHeight: CGFloat = 0
         // 自动撑开方式
         if maxYViewExpanded {
             dynamicHeight = layoutHeight(width: width)
-        // 无需撑开
+            // 无需撑开
         } else {
             view.setNeedsLayout()
             view.layoutIfNeeded()
-            
+
             var maxY: CGFloat = 0
-            if let maxYView = maxYView {
+            if let maxYView {
                 maxY = CGRectGetMaxY(maxYView.frame)
             } else {
                 for tempView in base.subviews.reversed() {
@@ -85,12 +85,12 @@ import UIKit
             }
             dynamicHeight = maxY + maxYViewPadding
         }
-        
+
         base.removeFromSuperview()
         base.frame = CGRect(x: 0, y: 0, width: width, height: dynamicHeight)
         return dynamicHeight
     }
-    
+
     /// 计算动态AutoLayout布局视图指定高度时的宽度。
     ///
     /// 注意调用后会重置superview和frame，一般用于未添加到superview时的场景，cell等请使用DynamicLayout
@@ -110,18 +110,18 @@ import UIKit
         view.addSubview(base)
         view.frame = CGRect(x: 0, y: 0, width: 0, height: height)
         base.frame = CGRect(x: 0, y: 0, width: 0, height: height)
-        
+
         var dynamicWidth: CGFloat = 0
         // 自动撑开方式
         if maxYViewExpanded {
             dynamicWidth = layoutWidth(height: height)
-        // 无需撑开
+            // 无需撑开
         } else {
             view.setNeedsLayout()
             view.layoutIfNeeded()
-            
+
             var maxY: CGFloat = 0
-            if let maxYView = maxYView {
+            if let maxYView {
                 maxY = CGRectGetMaxX(maxYView.frame)
             } else {
                 for tempView in base.subviews.reversed() {
@@ -133,12 +133,12 @@ import UIKit
             }
             dynamicWidth = maxY + maxYViewPadding
         }
-        
+
         base.removeFromSuperview()
         base.frame = CGRect(x: 0, y: 0, width: dynamicWidth, height: height)
         return dynamicWidth
     }
-    
+
     /// 获取动态布局视图类的尺寸，可固定宽度或高度
     /// - Parameters:
     ///   - viewClass: 视图类
@@ -171,7 +171,7 @@ import UIKit
             dict?[classIdentifier] = view
         }
         guard let dynamicView = view.subviews.first as? T else { return .zero }
-        
+
         // 自动获取宽度
         var width = fixedWidth
         var height = fixedHeight
@@ -180,20 +180,20 @@ import UIKit
             if width <= 0, let superview = base.superview {
                 if !superview.fw.propertyBool(forName: "dynamicSizeLayouted") {
                     superview.fw.setPropertyBool(true, forName: "dynamicSizeLayouted")
-                    
+
                     superview.setNeedsLayout()
                     superview.layoutIfNeeded()
                 }
                 width = CGRectGetWidth(base.frame)
             }
         }
-        
+
         // 设置frame并布局视图
         view.frame = CGRect(x: 0, y: 0, width: width, height: height)
         dynamicView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         dynamicView.dynamicLayoutPrepare()
         configuration(dynamicView)
-        
+
         // 自动撑开方式
         if dynamicView.maxYViewExpanded {
             if fixedHeight > 0 {
@@ -203,14 +203,14 @@ import UIKit
             }
             return CGSize(width: width, height: height)
         }
-        
+
         // 无需撑开方式
         view.setNeedsLayout()
         view.layoutIfNeeded()
-        
+
         var maxY: CGFloat = 0
         let maxYBlock: (UIView) -> CGFloat = { view in
-            return fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
+            fixedHeight > 0 ? CGRectGetMaxX(view.frame) : CGRectGetMaxY(view.frame)
         }
         if dynamicView.maxYViewFixed {
             if let maxYView = dynamicView.maxYView {
@@ -243,38 +243,38 @@ import UIKit
 @MainActor extension Wrapper where Base: UITableViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.maxYViewFixed }
+        get { base.maxYViewFixed }
         set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.maxYViewPadding }
+        get { base.maxYViewPadding }
         set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.maxYViewExpanded }
+        get { base.maxYViewExpanded }
         set { base.maxYViewExpanded = newValue }
     }
-    
+
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
     public static func cell(
         tableView: UITableView,
         style: UITableViewCell.CellStyle = .default,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return tableView.fw.cell(of: Base.self, style: style, reuseIdentifier: reuseIdentifier)
+        tableView.fw.cell(of: Base.self, style: style, reuseIdentifier: reuseIdentifier)
     }
-    
+
     /// 根据配置自动计算cell高度，可指定key使用缓存，子类可重写
     public static func height(
         tableView: UITableView,
         cacheBy key: AnyHashable? = nil,
         configuration: (Base) -> Void
     ) -> CGFloat {
-        return tableView.fw.height(cellClass: Base.self, cacheBy: key, configuration: configuration)
+        tableView.fw.height(cellClass: Base.self, cacheBy: key, configuration: configuration)
     }
 }
 
@@ -282,30 +282,30 @@ import UIKit
 @MainActor extension Wrapper where Base: UITableViewHeaderFooterView {
     /// 如果用来确定HeaderFooterView所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.maxYViewFixed }
+        get { base.maxYViewFixed }
         set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距，可避免新创建View来撑开HeaderFooterView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.maxYViewPadding }
+        get { base.maxYViewPadding }
         set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.maxYViewExpanded }
+        get { base.maxYViewExpanded }
         set { base.maxYViewExpanded = newValue }
     }
-    
+
     /// 免注册alloc创建UITableViewHeaderFooterView，内部自动处理缓冲池，指定reuseIdentifier
     public static func headerFooterView(
         tableView: UITableView,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return tableView.fw.headerFooterView(of: Base.self, reuseIdentifier: reuseIdentifier)
+        tableView.fw.headerFooterView(of: Base.self, reuseIdentifier: reuseIdentifier)
     }
-    
+
     /// 根据配置自动计算cell高度，可指定key使用缓存，子类可重写
     public static func height(
         tableView: UITableView,
@@ -313,7 +313,7 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (Base) -> Void
     ) -> CGFloat {
-        return tableView.fw.height(headerFooterViewClass: Base.self, type: type, cacheBy: key, configuration: configuration)
+        tableView.fw.height(headerFooterViewClass: Base.self, type: type, cacheBy: key, configuration: configuration)
     }
 }
 
@@ -331,10 +331,10 @@ import UIKit
         let heightCache = dynamicLayoutHeightCache
         heightCache.heightHorizontalDictionary.removeAll()
         heightCache.heightVerticalDictionary.removeAll()
-        
+
         heightCache.headerHorizontalDictionary.removeAll()
         heightCache.headerVerticalDictionary.removeAll()
-        
+
         heightCache.footerHorizontalDictionary.removeAll()
         heightCache.footerVerticalDictionary.removeAll()
     }
@@ -394,7 +394,7 @@ import UIKit
             }
         }
     }
-    
+
     private var dynamicLayoutHeightCache: DynamicLayoutHeightCache {
         if let heightCache = property(forName: "dynamicLayoutHeightCache") as? DynamicLayoutHeightCache {
             return heightCache
@@ -416,7 +416,7 @@ import UIKit
         if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T { return cell }
         return cellClass.init(style: style, reuseIdentifier: identifier)
     }
-    
+
     /// 获取 Cell 需要的高度，可指定key使用缓存
     /// - Parameters:
     ///   - cellClass: cell class
@@ -428,11 +428,11 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (T) -> Void
     ) -> CGFloat {
-        guard let key = key else {
+        guard let key else {
             let cellSize = dynamicSize(viewClass: cellClass, viewIdentifier: "", configuration: configuration)
             return cellSize.height
         }
-        
+
         var cellHeight = cellHeightCache(for: key)
         if cellHeight != UITableView.automaticDimension {
             return cellHeight
@@ -459,7 +459,7 @@ import UIKit
         }
         return base.dequeueReusableHeaderFooterView(withIdentifier: identifier) as! T
     }
-    
+
     /// 获取 HeaderFooter 需要的高度，可指定key使用缓存
     /// - Parameters:
     ///   - headerFooterViewClass: HeaderFooter class
@@ -473,11 +473,11 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (T) -> Void
     ) -> CGFloat {
-        guard let key = key else {
+        guard let key else {
             let viewSize = dynamicSize(viewClass: headerFooterViewClass, viewIdentifier: "\(type.rawValue)", configuration: configuration)
             return viewSize.height
         }
-        
+
         var viewHeight = headerFooterHeightCache(type, for: key)
         if viewHeight != UITableView.automaticDimension {
             return viewHeight
@@ -496,19 +496,19 @@ import UIKit
 @MainActor extension Wrapper where Base: UICollectionViewCell {
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.maxYViewFixed }
+        get { base.maxYViewFixed }
         set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开Cell，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.maxYViewPadding }
+        get { base.maxYViewPadding }
         set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.maxYViewExpanded }
+        get { base.maxYViewExpanded }
         set { base.maxYViewExpanded = newValue }
     }
 
@@ -518,7 +518,7 @@ import UIKit
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return collectionView.fw.cell(of: Base.self, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
+        collectionView.fw.cell(of: Base.self, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
 
     /// 根据配置自动计算view大小，可固定宽度或高度，可指定key使用缓存，子类可重写
@@ -529,7 +529,7 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (Base) -> Void
     ) -> CGSize {
-        return collectionView.fw.size(cellClass: Base.self, width: width, height: height, cacheBy: key, configuration: configuration)
+        collectionView.fw.size(cellClass: Base.self, width: width, height: height, cacheBy: key, configuration: configuration)
     }
 }
 
@@ -537,22 +537,22 @@ import UIKit
 @MainActor extension Wrapper where Base: UICollectionReusableView {
     /// 如果用来确定ReusableView所需尺寸的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
-        get { return base.maxYViewFixed }
+        get { base.maxYViewFixed }
         set { base.maxYViewFixed = newValue }
     }
 
     /// 最大Y尺寸视图的底部内边距(横向滚动时为X)，可避免新创建View来撑开ReusableView，默认0
     public var maxYViewPadding: CGFloat {
-        get { return base.maxYViewPadding }
+        get { base.maxYViewPadding }
         set { base.maxYViewPadding = newValue }
     }
 
     /// 最大Y视图是否撑开布局(横向滚动时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     public var maxYViewExpanded: Bool {
-        get { return base.maxYViewExpanded }
+        get { base.maxYViewExpanded }
         set { base.maxYViewExpanded = newValue }
     }
-    
+
     /// 免注册alloc创建UICollectionReusableView，内部自动处理缓冲池，指定reuseIdentifier
     public static func reusableView(
         collectionView: UICollectionView,
@@ -560,9 +560,9 @@ import UIKit
         indexPath: IndexPath,
         reuseIdentifier: String? = nil
     ) -> Base {
-        return collectionView.fw.reusableView(of: Base.self, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
+        collectionView.fw.reusableView(of: Base.self, kind: kind, indexPath: indexPath, reuseIdentifier: reuseIdentifier)
     }
-    
+
     /// 根据配置自动计算view大小，可固定宽度或高度，可指定key使用缓存，子类可重写
     public static func size(
         collectionView: UICollectionView,
@@ -572,7 +572,7 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (Base) -> Void
     ) -> CGSize {
-        return collectionView.fw.size(reusableViewClass: Base.self, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
+        collectionView.fw.size(reusableViewClass: Base.self, width: width, height: height, kind: kind, cacheBy: key, configuration: configuration)
     }
 }
 
@@ -587,10 +587,10 @@ import UIKit
         let sizeCache = dynamicLayoutSizeCache
         sizeCache.sizeHorizontalDictionary.removeAll()
         sizeCache.sizeVerticalDictionary.removeAll()
-        
+
         sizeCache.headerHorizontalDictionary.removeAll()
         sizeCache.headerVerticalDictionary.removeAll()
-        
+
         sizeCache.footerHorizontalDictionary.removeAll()
         sizeCache.footerVerticalDictionary.removeAll()
     }
@@ -650,7 +650,7 @@ import UIKit
             }
         }
     }
-    
+
     private var dynamicLayoutSizeCache: DynamicLayoutSizeCache {
         if let sizeCache = property(forName: "dynamicLayoutSizeCache") as? DynamicLayoutSizeCache {
             return sizeCache
@@ -675,7 +675,7 @@ import UIKit
         }
         return base.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! T
     }
-    
+
     /// 获取 Cell 需要的尺寸，可固定宽度或高度，可指定key使用缓存
     /// - Parameters:
     ///   - cellClass: cell类
@@ -691,10 +691,10 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (T) -> Void
     ) -> CGSize {
-        guard let key = key else {
+        guard let key else {
             return dynamicSize(viewClass: cellClass, viewIdentifier: "\(width)-\(height)", width: width, height: height, configuration: configuration)
         }
-        
+
         var cacheKey = key
         if width > 0 || height > 0 {
             cacheKey = "\(cacheKey)-\(width)-\(height)"
@@ -727,7 +727,7 @@ import UIKit
         }
         return base.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: identifier, for: indexPath) as! T
     }
-    
+
     /// 获取 ReusableView 需要的尺寸，可固定宽度或高度，可指定key使用缓存
     /// - Parameters:
     ///   - reusableViewClass: ReusableView class
@@ -745,10 +745,10 @@ import UIKit
         cacheBy key: AnyHashable? = nil,
         configuration: (T) -> Void
     ) -> CGSize {
-        guard let key = key else {
+        guard let key else {
             return dynamicSize(viewClass: reusableViewClass, viewIdentifier: "\(kind)-\(width)-\(height)", width: width, height: height, configuration: configuration)
         }
-        
+
         var cacheKey = key
         if width > 0 || height > 0 {
             cacheKey = "\(cacheKey)-\(width)-\(height)"
@@ -775,29 +775,26 @@ public enum HeaderFooterViewType: Int, Sendable {
 // MARK: - DynamicLayoutViewProtocol
 /// 动态布局视图协议
 @MainActor @_spi(FW) public protocol DynamicLayoutViewProtocol {
-    
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     var maxYViewFixed: Bool { get set }
-    
+
     /// 最大Y视图的底部内边距(横向时为X)，可避免新创建View来撑开Cell，默认0
     var maxYViewPadding: CGFloat { get set }
-    
+
     /// 最大Y视图是否撑开布局(横向时为X)，需布局约束完整。默认NO，无需撑开布局；YES时padding不起作用
     var maxYViewExpanded: Bool { get set }
-    
+
     /// 创建可重用动态布局视图方法
     static func dynamicLayoutView() -> Self
-    
+
     /// 获取可重用动态布局视图内容视图
     var dynamicLayoutContentView: UIView { get }
-    
+
     /// 准备可重用动态布局视图方法
     func dynamicLayoutPrepare()
-    
 }
 
 @_spi(FW) extension DynamicLayoutViewProtocol where Self: UIView {
-    
     /// 如果用来确定Cell所需高度的View是唯一的，请把此值设置为YES，可提升一定的性能
     public var maxYViewFixed: Bool {
         get { fw.propertyBool(forName: "maxYViewFixed") }
@@ -822,12 +819,12 @@ public enum HeaderFooterViewType: Int, Sendable {
         get { fw.propertyBool(forName: "maxYViewExpanded") }
         set { fw.setPropertyBool(newValue, forName: "maxYViewExpanded") }
     }
-    
+
     fileprivate var maxYView: UIView? {
         get { fw.property(forName: "maxYView") as? UIView }
         set { fw.setProperty(newValue, forName: "maxYView") }
     }
-    
+
     /// 创建可重用动态布局视图方法
     public static func dynamicLayoutView() -> Self {
         if let cellClass = self as? UITableViewCell.Type {
@@ -837,7 +834,7 @@ public enum HeaderFooterViewType: Int, Sendable {
         }
         return self.init(frame: .zero)
     }
-    
+
     /// 获取可重用动态布局视图内容视图
     public var dynamicLayoutContentView: UIView {
         if let cell = self as? UITableViewCell {
@@ -849,7 +846,7 @@ public enum HeaderFooterViewType: Int, Sendable {
         }
         return self
     }
-    
+
     /// 可重用动态布局视图重用方法
     public func dynamicLayoutPrepare() {
         if let cell = self as? UITableViewCell {
@@ -862,7 +859,6 @@ public enum HeaderFooterViewType: Int, Sendable {
             view.prepareForReuse()
         }
     }
-    
 }
 
 @_spi(FW) extension UITableViewCell: DynamicLayoutViewProtocol {}
@@ -870,29 +866,25 @@ public enum HeaderFooterViewType: Int, Sendable {
 @_spi(FW) extension UICollectionReusableView: DynamicLayoutViewProtocol {}
 
 // MARK: - DynamicLayoutHeightCache
-fileprivate class DynamicLayoutHeightCache {
-    
+private class DynamicLayoutHeightCache {
     var heightHorizontalDictionary: [AnyHashable: CGFloat] = [:]
     var heightVerticalDictionary: [AnyHashable: CGFloat] = [:]
-    
+
     var headerHorizontalDictionary: [AnyHashable: CGFloat] = [:]
     var headerVerticalDictionary: [AnyHashable: CGFloat] = [:]
-    
+
     var footerHorizontalDictionary: [AnyHashable: CGFloat] = [:]
     var footerVerticalDictionary: [AnyHashable: CGFloat] = [:]
-    
 }
 
 // MARK: - DynamicLayoutSizeCache
-fileprivate class DynamicLayoutSizeCache {
-    
+private class DynamicLayoutSizeCache {
     var sizeHorizontalDictionary: [AnyHashable: CGSize] = [:]
     var sizeVerticalDictionary: [AnyHashable: CGSize] = [:]
-    
+
     var headerHorizontalDictionary: [AnyHashable: CGSize] = [:]
     var headerVerticalDictionary: [AnyHashable: CGSize] = [:]
-    
+
     var footerHorizontalDictionary: [AnyHashable: CGSize] = [:]
     var footerVerticalDictionary: [AnyHashable: CGSize] = [:]
-    
 }

@@ -9,7 +9,6 @@ import UIKit
 
 /// 默认空界面插件
 open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
-    
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
@@ -37,9 +36,9 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
     open var errorImageFormatter: ((Error?) -> UIImage?)?
     /// 错误空界面动作按钮格式化句柄，error生效，默认nil
     open var errorActionFormatter: ((Error?) -> AttributedStringParameter?)?
-    
+
     private var emptyViewTag: Int = 2021
-    
+
     // MARK: - EmptyPlugin
     open func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: ((Int, Any) -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         var emptyText = text
@@ -59,16 +58,16 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
             emptyAction = defaultAction?()?.attributedStringValue
         }
         let emptyMoreAction = (actions?.count ?? 0) > 1 ? actions?[1] : nil
-        
+
         let previousView = view.fw.subview(tag: emptyViewTag) as? PlaceholderView
-        let fadeAnimated = self.fadeAnimated && previousView == nil
+        let fadeAnimated = fadeAnimated && previousView == nil
         previousView?.removeFromSuperview()
-        
+
         let emptyView = PlaceholderView(frame: view.bounds)
         emptyView.tag = emptyViewTag
         view.addSubview(emptyView)
         emptyView.fw.pinEdges(toSuperview: view.fw.emptyInsets, autoScale: false)
-        
+
         emptyView.setLoadingViewHidden(!loading)
         emptyView.setImage(emptyImage)
         emptyView.setTextLabelText(emptyText)
@@ -85,10 +84,10 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
                 block?(1, sender)
             }
         }
-        
+
         self.customBlock?(emptyView)
         customBlock?(emptyView)
-        
+
         if fadeAnimated {
             emptyView.alpha = 0
             UIView.animate(withDuration: 0.25) {
@@ -96,10 +95,10 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
             }
         }
     }
-    
+
     open func hideEmptyView(in view: UIView) {
         guard let emptyView = view.fw.subview(tag: emptyViewTag) else { return }
-        
+
         if let overlayView = emptyView.superview as? ScrollOverlayView {
             emptyView.removeFromSuperview()
             overlayView.removeFromSuperview()
@@ -107,10 +106,9 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
             emptyView.removeFromSuperview()
         }
     }
-    
+
     open func showingEmptyView(in view: UIView) -> UIView? {
         let emptyView = view.fw.subview(tag: emptyViewTag)
         return emptyView
     }
-    
 }

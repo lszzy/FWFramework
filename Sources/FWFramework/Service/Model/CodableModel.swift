@@ -40,17 +40,17 @@ extension CodableModel where Self: AnyObject {
 /// [ExCodable](https://github.com/iwill/ExCodable)
 public protocol KeyMappable {}
 
-public extension KeyMappable where Self: Codable & ObjectType {
-    func encode(to encoder: Encoder) throws {
+extension KeyMappable where Self: Codable & ObjectType {
+    public func encode(to encoder: Encoder) throws {
         try encodeMirror(to: encoder)
     }
-    
-    init(from decoder: Decoder) throws {
+
+    public init(from decoder: Decoder) throws {
         self.init()
         try decodeMirror(from: decoder)
     }
-    
-    func encodeMirror(to encoder: Encoder) throws {
+
+    public func encodeMirror(to encoder: Encoder) throws {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
@@ -63,8 +63,8 @@ public extension KeyMappable where Self: Codable & ObjectType {
             mirror = mirror.superclassMirror
         }
     }
-    
-    func decodeMirror(from decoder: Decoder) throws {
+
+    public func decodeMirror(from decoder: Decoder) throws {
         var mirror: Mirror! = Mirror(reflecting: self)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
@@ -86,34 +86,34 @@ public final class MappedValue<Value> {
     let stringKeys: [String]?
     let ignored: Bool
     public var wrappedValue: Value
-    
+
     let encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?
     let decode: ((_ decoder: Decoder) throws -> Value?)?
-    
+
     init(wrappedValue: Value, stringKeys: [String]?, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
-        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
+        (self.wrappedValue, self.stringKeys, ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
     }
-    
+
     public init(wrappedValue: Value, ignored: Bool) {
-        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, nil, ignored, nil, nil)
+        (self.wrappedValue, stringKeys, self.ignored, encode, decode) = (wrappedValue, nil, ignored, nil, nil)
     }
-    
+
     public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKey.map { [$0] }, encode: encode, decode: decode)
     }
-    
+
     public convenience init(wrappedValue: Value, _ stringKeys: String..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
         self.init(wrappedValue: wrappedValue, stringKeys: stringKeys, encode: encode, decode: decode)
     }
-    
+
     public convenience init(wrappedValue: Value, _ codingKeys: CodingKey..., encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {
-        self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map { $0.stringValue }, encode: encode, decode: decode)
+        self.init(wrappedValue: wrappedValue, stringKeys: codingKeys.map(\.stringValue), encode: encode, decode: decode)
     }
 }
 
 extension MappedValue: Equatable where Value: Equatable {
-    public static func == (lhs: MappedValue<Value>, rhs: MappedValue<Value>) -> Bool {
-        return lhs.wrappedValue == rhs.wrappedValue
+    public static func ==(lhs: MappedValue<Value>, rhs: MappedValue<Value>) -> Bool {
+        lhs.wrappedValue == rhs.wrappedValue
     }
 }
 
@@ -129,8 +129,8 @@ public protocol EncodableMappedValue {
 extension MappedValue: EncodableMappedValue where Value: Encodable {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
         guard !ignored else { return }
-        
-        if let encode = encode {
+
+        if let encode {
             try encode(encoder, wrappedValue)
         } else {
             let value = Optional<Any>.deepUnwrap(wrappedValue)
@@ -148,8 +148,8 @@ public protocol DecodableMappedValue {
 extension MappedValue: DecodableMappedValue where Value: Decodable {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
         guard !ignored else { return }
-        
-        if let decode = decode {
+
+        if let decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
             }
@@ -160,7 +160,7 @@ extension MappedValue: DecodableMappedValue where Value: Decodable {
                 }
             } catch {
                 /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
-                if Optional<Any>.isOptional(wrappedValue) {
+                if Any?.isOptional(wrappedValue) {
                     let value: Value? = nil
                     wrappedValue = (value as Any) as! Value
                 }
@@ -176,8 +176,8 @@ public protocol EncodableAnyMappedValue {
 extension MappedValue: EncodableAnyMappedValue {
     public func encode<Label: StringProtocol>(to encoder: Encoder, label: Label) throws {
         guard !ignored else { return }
-        
-        if let encode = encode {
+
+        if let encode {
             try encode(encoder, wrappedValue)
         } else {
             let value = Optional<Any>.deepUnwrap(wrappedValue)
@@ -195,8 +195,8 @@ public protocol DecodableAnyMappedValue {
 extension MappedValue: DecodableAnyMappedValue {
     public func decode<Label: StringProtocol>(from decoder: Decoder, label: Label) throws {
         guard !ignored else { return }
-        
-        if let decode = decode {
+
+        if let decode {
             if let value = try decode(decoder) {
                 wrappedValue = value
             }
@@ -207,7 +207,7 @@ extension MappedValue: DecodableAnyMappedValue {
                 }
             } catch {
                 /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
-                if Optional<Any>.isOptional(wrappedValue) {
+                if Any?.isOptional(wrappedValue) {
                     let value: Value? = nil
                     wrappedValue = (value as Any) as! Value
                 }

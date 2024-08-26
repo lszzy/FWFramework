@@ -9,20 +9,17 @@
 import FWFramework
 
 class TabController: TabBarController {
-    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupSubviews()
         setupController()
     }
-    
 }
 
 // MARK: - Setup
 extension TabController {
-    
     func setupSubviews() {
         delegate = self
         tabBar.app.foregroundColor = AppTheme.textColor
@@ -35,7 +32,7 @@ extension TabController {
         tabBar.app.shadowColor = nil
         tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
-    
+
     func setupController() {
         let homeController = Router.object(forURL: AppRouter.homeUrl) as! UIViewController
         homeController.hidesBottomBarWhenPushed = false
@@ -44,14 +41,14 @@ extension TabController {
         homeNav.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
         homeNav.tabBarItem.title = APP.localized("homeTitle")
         homeNav.tabBarItem.app.showBadgeView(BadgeView(badgeStyle: .small), badgeValue: "1")
-        
+
         let testController = Router.object(forURL: AppRouter.testUrl) as! UIViewController
         testController.hidesBottomBarWhenPushed = false
         let testNav = UINavigationController(rootViewController: testController)
         testNav.tabBarItem.accessibilityIdentifier = "id.test"
         testNav.tabBarItem.image = Icon.iconImage("zmdi-var-toys", size: 26)
         testNav.tabBarItem.title = APP.localized("testTitle")
-        
+
         let settingsControlelr = Router.object(forURL: AppRouter.settingsUrl) as! UIViewController
         settingsControlelr.hidesBottomBarWhenPushed = false
         let settingsNav = UINavigationController(rootViewController: settingsControlelr)
@@ -64,19 +61,17 @@ extension TabController {
         settingsNav.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
         settingsNav.tabBarItem.title = APP.localized("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
-        
-        app.safeObserveNotification(.LanguageChanged) { (notification) in
+
+        app.safeObserveNotification(.LanguageChanged) { _ in
             homeNav.tabBarItem.title = APP.localized("homeTitle")
             testNav.tabBarItem.title = APP.localized("testTitle")
             settingsNav.tabBarItem.title = APP.localized("settingTitle")
         }
     }
-    
 }
 
 // MARK: - UITabBarControllerDelegate
 extension TabController: UITabBarControllerDelegate {
-    
     public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let animation: CAAnimation
         let identifier = viewController.tabBarItem.accessibilityIdentifier
@@ -93,12 +88,11 @@ extension TabController: UITabBarControllerDelegate {
             keyframeAnimation.calculationMode = .cubic
             animation = keyframeAnimation
         }
-        
+
         var animationView = viewController.tabBarItem.app.imageView
         if let tabBarItem = viewController.tabBarItem as? TabBarItem {
             animationView = tabBarItem.contentView.imageView
         }
         animationView?.layer.add(animation, forKey: nil)
     }
-    
 }

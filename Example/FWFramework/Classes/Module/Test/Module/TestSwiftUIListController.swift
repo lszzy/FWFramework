@@ -7,20 +7,19 @@
 //
 
 #if canImport(SwiftUI)
-import SwiftUI
 import Combine
 import FWFramework
+import SwiftUI
 
 class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
-    
     var style: Int = 0
-    
+
     private lazy var contentView: TestSwiftUIListContent = {
         let result = TestSwiftUIListContent()
         result.viewModel.style = style
         return result
     }()
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["automatic", "plain", "grouped", "sidebar (14+)", "insetGrouped (14+)", "inset (14+)", "beginRefreshing", "beginLoading"], actionBlock: { index in
@@ -36,7 +35,7 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
             })
         }
     }
-    
+
     func setupSubviews() {
         let hostingView = contentView
             .navigationBarConfigure(
@@ -45,22 +44,20 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
                 background: AppTheme.barColor
             )
             .wrappedHostingView()
-        
+
         view.addSubview(hostingView)
         hostingView.app.layoutChain
             .horizontal()
             .top(toSafeArea: .zero)
             .bottom()
     }
-    
 }
 
 struct TestSwiftUIListContent: View {
-    
     @Environment(\.viewContext) var viewContext: ViewContext
-    
+
     @ObservedObject var viewModel = TestSwiftUIListModel()
-    
+
     var body: some View {
         List {
             Section {
@@ -81,7 +78,7 @@ struct TestSwiftUIListContent: View {
                     .removable(viewModel.items.isEmpty)
             }
         }
-        .then({ list in
+        .then { list in
             switch viewModel.style {
             case 0:
                 return list.listStyle(.automatic).eraseToAnyView()
@@ -105,18 +102,20 @@ struct TestSwiftUIListContent: View {
                 break
             }
             return list.eraseToAnyView()
-        })
+        }
         .resetListStyle(background: Color(AppTheme.tableColor), isPlainStyle: viewModel.style == 1)
         .listViewRefreshing(
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in
                 viewModel.refreshData(completionHandler: completionHandler)
-            })
+            }
+        )
         .listViewLoading(
             shouldBegin: $viewModel.beginLoading,
             action: { completionHandler in
                 viewModel.loadData(completionHandler: completionHandler)
-            })
+            }
+        )
         .showListEmpty(viewModel.showsEmpty) { scrollView in
             scrollView.app.showEmptyView(text: viewModel.error?.localizedDescription) { _ in
                 viewModel.beginRefreshing = true
@@ -128,60 +127,57 @@ struct TestSwiftUIListContent: View {
             }
         }
     }
-    
 }
 
 class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
-    
     var style: Int = 0
     var error: Error? {
         didSet {
             showsEmpty = error != nil
         }
     }
-    
+
     @Published var beginRefreshing = false
     @Published var beginLoading = false
     @Published var showsEmpty = false
-    
+
     @Published var items: [String] = []
-    
+
     func refreshData(completionHandler: @escaping @MainActor @Sendable (Bool?) -> Void) {
-        self.error = nil
-        
+        error = nil
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self = self else { return }
-            
+            guard let self else { return }
+
             let isSuccess = Bool.random()
             if isSuccess {
                 var newItems: [String] = []
-                for i in 0 ..< 5 {
+                for i in 0..<5 {
                     newItems.append("\(i + 1)")
                 }
-                
-                self.items = newItems
-                completionHandler(self.items.count >= 30)
+
+                items = newItems
+                completionHandler(items.count >= 30)
             } else {
-                self.error = NSError(domain: "Test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
-                self.items = []
+                error = NSError(domain: "Test", code: 0, userInfo: [NSLocalizedDescriptionKey: "请求失败"])
+                items = []
                 completionHandler(true)
             }
         }
     }
-    
+
     func loadData(completionHandler: @escaping @MainActor @Sendable (Bool?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self = self else { return }
-            
-            var newItems = self.items
-            for i in 0 ..< 5 {
-                newItems.append("\(self.items.count + i + 1)")
+            guard let self else { return }
+
+            var newItems = items
+            for i in 0..<5 {
+                newItems.append("\(items.count + i + 1)")
             }
-            self.items = newItems
-            completionHandler(self.items.count >= 30)
+            items = newItems
+            completionHandler(items.count >= 30)
         }
     }
-    
 }
 
 #endif

@@ -12,11 +12,11 @@ import SwiftUI
 /// 通用视图配置Key类
 open class ViewPreferenceKey<T: Equatable>: PreferenceKey {
     public typealias Value = T?
-    
+
     public static var defaultValue: Value {
-        return nil
+        nil
     }
-    
+
     public static func reduce(value: inout Value, nextValue: () -> Value) {
         let newValue = nextValue() ?? value
         if value != newValue {
@@ -29,7 +29,6 @@ open class ViewPreferenceKey<T: Equatable>: PreferenceKey {
 private final class ViewSizePreferenceKey: ViewPreferenceKey<CGSize> {}
 
 extension View {
-    
     /// 捕获当前视图大小
     public func captureSize(in binding: Binding<CGSize>) -> some View {
         overlay(
@@ -46,20 +45,18 @@ extension View {
             }
         )
         .onPreferenceChange(ViewSizePreferenceKey.self) { size in
-            if let size = size, binding.wrappedValue != size {
+            if let size, binding.wrappedValue != size {
                 binding.wrappedValue = size
             }
         }
         .preference(key: ViewSizePreferenceKey.self, value: nil)
     }
-    
 }
 
 // MARK: - ViewContentOffsetPreferenceKey
 private final class ViewContentOffsetPreferenceKey: ViewPreferenceKey<CGPoint> {}
 
 extension View {
-    
     /// 捕获当前滚动视图内容偏移，需滚动视图调用，且用GeometryReader包裹滚动视图
     ///
     /// 使用示例：
@@ -68,11 +65,11 @@ extension View {
     ///     .captureContentOffset(in: $contentOffsets)
     /// }
     public func captureContentOffset(in binding: Binding<CGPoint>) -> some View {
-        self.onPreferenceChange(ViewContentOffsetPreferenceKey.self, perform: { value in
+        onPreferenceChange(ViewContentOffsetPreferenceKey.self, perform: { value in
             binding.wrappedValue = value ?? .zero
         })
     }
-    
+
     /// 捕获当前滚动视图内容偏移，需滚动视图第一个子视图调用
     ///
     /// 使用示例：
@@ -87,7 +84,7 @@ extension View {
     /// }
     public func captureContentOffset(proxy outsideProxy: GeometryProxy) -> some View {
         let outsideFrame = outsideProxy.frame(in: .global)
-        
+
         return ZStack {
             GeometryReader { insideProxy in
                 Color.clear.preference(
@@ -102,7 +99,7 @@ extension View {
             self
         }
     }
-    
+
     /// 监听当前滚动视图内容偏移实现悬停效果，需GeometryReader调用
     ///
     /// 使用示例：
@@ -125,12 +122,11 @@ extension View {
     ) -> some View {
         ZStack(alignment: alignment) {
             self
-            
+
             content()
                 .hidden(!visible)
         }
     }
-    
 }
 
 #endif

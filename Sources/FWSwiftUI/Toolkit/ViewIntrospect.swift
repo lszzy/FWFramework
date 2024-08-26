@@ -55,11 +55,11 @@ extension View {
     /// ```
     @MainActor public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
         _ viewType: SwiftUIViewType,
-        on platforms: (PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>)...,
+        on platforms: PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>...,
         scope: IntrospectionScope? = nil,
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) -> some View {
-        self.modifier(IntrospectModifier(viewType, platforms: platforms, scope: scope, customize: customize))
+        modifier(IntrospectModifier(viewType, platforms: platforms, scope: scope, customize: customize))
     }
 }
 
@@ -76,7 +76,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) {
         self.scope = scope ?? viewType.scope
-        self.selector = platforms.lazy.compactMap(\.selector).first
+        selector = platforms.lazy.compactMap(\.selector).first
         self.customize = customize
     }
 
@@ -155,7 +155,7 @@ extension PlatformEntity {
     }
 
     func allDescendants(between bottomEntity: Base, and topEntity: Base) -> some Sequence<Base> {
-        self.allDescendants
+        allDescendants
             .lazy
             .drop(while: { $0 !== bottomEntity })
             .prefix(while: { $0 !== topEntity })
@@ -182,7 +182,7 @@ extension PlatformEntity {
     func ancestor<PlatformSpecificEntity: PlatformEntity>(
         ofType type: PlatformSpecificEntity.Type
     ) -> PlatformSpecificEntity? {
-        self.ancestors
+        ancestors
             .lazy
             .filter { !$0.isIntrospectionPlatformEntity }
             .compactMap { $0 as? PlatformSpecificEntity }
@@ -215,7 +215,7 @@ extension PlatformViewController: PlatformEntity {
 
     @_spi(FW)
     public func isDescendant(of other: PlatformViewController) -> Bool {
-        self.ancestors.contains(other)
+        ancestors.contains(other)
     }
 }
 
@@ -288,14 +288,12 @@ extension IntrospectableViewType {
     func callAsFunction(_ controller: IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
         if
             scope.contains(.receiver),
-            let target = receiverSelector(controller)
-        {
+            let target = receiverSelector(controller) {
             return target
         }
         if
             scope.contains(.ancestor),
-            let target = ancestorSelector(controller)
-        {
+            let target = ancestorSelector(controller) {
             return target
         }
         return nil
@@ -332,8 +330,7 @@ extension PlatformEntity {
         }
         if
             let view = self as? PlatformView,
-            let introspectionController = view.introspectionController
-        {
+            let introspectionController = view.introspectionController {
             return IntrospectionStore.shared[introspectionController.id]?.anchor?.view~
         }
         return nil
@@ -349,7 +346,7 @@ struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
     let id: IntrospectionViewID
 
     init(id: IntrospectionViewID) {
-        self._observed = .constant(())
+        _observed = .constant(())
         self.id = id
     }
 
@@ -365,7 +362,7 @@ struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
 final class IntrospectionAnchorPlatformViewController: PlatformViewController {
     init(id: IntrospectionViewID) {
         super.init(nibName: nil, bundle: nil)
-        self.isIntrospectionPlatformEntity = true
+        isIntrospectionPlatformEntity = true
         IntrospectionStore.shared[id, default: .init()].anchor = self
     }
 
@@ -398,7 +395,7 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
         selector: @escaping (IntrospectionPlatformViewController) -> Target?,
         customize: @escaping (Target) -> Void
     ) {
-        self._observed = .constant(())
+        _observed = .constant(())
         self.id = id
         self.selector = selector
         self.customize = customize
@@ -452,12 +449,12 @@ final class IntrospectionPlatformViewController: PlatformViewController {
         self.id = id
         super.init(nibName: nil, bundle: nil)
         self.handler = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             handler?(self)
         }
-        self.isIntrospectionPlatformEntity = true
+        isIntrospectionPlatformEntity = true
         IntrospectionStore.shared[id, default: .init()].controller = self
     }
 
@@ -465,7 +462,7 @@ final class IntrospectionPlatformViewController: PlatformViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         parent?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
     }
@@ -578,7 +575,7 @@ extension iOSVersion {
         }
         return .future
     }
-    
+
     public static let v16 = iOSVersion {
         if #available(iOS 17, *) {
             return .past
@@ -588,7 +585,7 @@ extension iOSVersion {
         }
         return .future
     }
-    
+
     public static let v17 = iOSVersion {
         if #available(iOS 18, *) {
             return .past
@@ -598,18 +595,18 @@ extension iOSVersion {
         }
         return .future
     }
-    
+
     public static let v18 = iOSVersion {
         if #available(iOS 18, *) {
             return .current
         }
         return .future
     }
-    
+
     public static func earlier(_ version: iOSVersion, from: iOSVersion? = nil) -> iOSVersion {
-        return iOSVersion {
+        iOSVersion {
             if version.condition == .current || version.condition == .future {
-                if let from = from {
+                if let from {
                     return from.isCurrentOrPast ? .current : .future
                 }
                 return .current
@@ -617,15 +614,15 @@ extension iOSVersion {
             return .future
         }
     }
-    
+
     public static func later(_ version: iOSVersion) -> iOSVersion {
-        return iOSVersion {
-            return version.isCurrentOrPast ? .current : .future
+        iOSVersion {
+            version.isCurrentOrPast ? .current : .future
         }
     }
-    
+
     public static let all = iOSVersion {
-        return .current
+        .current
     }
 }
 
@@ -648,9 +645,11 @@ extension PlatformViewControllerRepresentable {
     func makeUIViewController(context: Context) -> ViewController {
         makePlatformViewController(context: context)
     }
+
     func updateUIViewController(_ controller: ViewController, context: Context) {
         updatePlatformViewController(controller, context: context)
     }
+
     static func dismantleUIViewController(_ controller: ViewController, coordinator: Coordinator) {
         dismantlePlatformViewController(controller, coordinator: coordinator)
     }
@@ -665,13 +664,13 @@ extension PlatformViewControllerRepresentable {
         matches: (PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>) -> Bool
     ) {
         if let matchingVersion = versions.first(where: matches) {
-            self.selector = matchingVersion.selector ?? .default
+            selector = matchingVersion.selector ?? .default
         } else {
-            self.selector = nil
+            selector = nil
         }
     }
 
-    public static func iOS(_ versions: (iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>)...) -> Self {
+    public static func iOS(_ versions: iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>...) -> Self {
         Self(versions, matches: \.isCurrent)
     }
 
@@ -702,7 +701,7 @@ public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, Platfor
     }
 
     private var version: Version? {
-        if case .available(let version, _) = self {
+        if case let .available(version, _) = self {
             return version
         } else {
             return nil
@@ -710,7 +709,7 @@ public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, Platfor
     }
 
     @MainActor fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
-        if case .available(_, let selector) = self {
+        if case let .available(_, selector) = self {
             return selector
         } else {
             return nil
@@ -727,11 +726,11 @@ public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, Platfor
 }
 
 extension PlatformViewVersion: Comparable {
-    nonisolated public static func == (lhs: Self, rhs: Self) -> Bool {
+    public nonisolated static func ==(lhs: Self, rhs: Self) -> Bool {
         true
     }
 
-    nonisolated public static func < (lhs: Self, rhs: Self) -> Bool {
+    public nonisolated static func <(lhs: Self, rhs: Self) -> Bool {
         true
     }
 }

@@ -12,48 +12,45 @@ import FWDebug
 #endif
 
 class SettingsController: UIViewController {
-    
     // MARK: - Accessor
     private lazy var mediatorButton: UIButton = {
         let button = AppTheme.largeButton()
         button.app.addTouch(target: self, action: #selector(onMediator))
         return button
     }()
-    
+
     // MARK: - Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         renderData()
     }
-    
 }
 
 extension SettingsController: TableViewControllerProtocol {
-    
     typealias TableElement = [String]
-    
+
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupTableView() {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: APP.screenWidth, height: 90))
         tableView.tableFooterView = footerView
-        
+
         footerView.addSubview(mediatorButton)
         mediatorButton.app.layoutChain.center()
     }
-    
+
     func setupTableLayout() {
         // 示例父视图布局，scrollView自适应contentInset
         tableView.contentInsetAdjustmentBehavior = .automatic
         tableView.layoutChain.edges()
     }
-    
+
     func renderData() {
         navigationItem.title = APP.localized("settingTitle")
-        
+
         #if DEBUG
         app.setRightBarItem(Icon.iconImage("zmdi-var-bug", size: 24)) { _ in
             FWDebugManager.sharedInstance().toggle()
@@ -72,32 +69,30 @@ extension SettingsController: TableViewControllerProtocol {
         tableData.append([APP.localized("pluginTitle"), "onPlugin"])
         tableView.reloadData()
     }
-    
 }
 
 extension SettingsController {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .value1)
         cell.accessoryType = .disclosureIndicator
-        
+
         let rowData = tableData[indexPath.row]
         let text = APP.safeValue(rowData[0])
         let action = APP.safeValue(rowData[1])
         cell.textLabel?.text = text
-        
-        if "onLanguage" == action {
+
+        if action == "onLanguage" {
             let currentLanguage = Bundle.app.currentLanguage ?? ""
             var language = Bundle.app.languageName(for: currentLanguage, localeIdentifier: currentLanguage)
             if Bundle.app.localizedLanguage == nil {
                 language = APP.localized("systemTitle") + "(\(language))"
             }
             cell.detailTextLabel?.text = language
-        } else if "onTheme" == action {
+        } else if action == "onTheme" {
             if UIWindow.app.main?.app.hasGrayView ?? false {
                 cell.detailTextLabel?.text = APP.localized("themeGray")
             } else {
@@ -110,20 +105,18 @@ extension SettingsController {
         }
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
         let action = APP.safeValue(rowData[1])
-        _ = self.perform(Selector(action))
+        _ = perform(Selector(action))
     }
-    
 }
 
 // MARK: - Action
-private extension SettingsController {
-    
-    @objc func onMediator() {
+extension SettingsController {
+    @objc private func onMediator() {
         if UserService.shared.isLogin() {
             UserService.shared.logout { [weak self] in
                 self?.renderData()
@@ -134,29 +127,29 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onLanguage() {
+
+    @objc private func onLanguage() {
         var actions: [String] = [APP.localized("systemTitle")]
         let languages = Bundle.app.availableLanguages
-        actions.append(contentsOf: languages.map({ Bundle.app.languageName(for: $0, localeIdentifier: $0) }))
-        
-        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { (index) in
+        actions.append(contentsOf: languages.map { Bundle.app.languageName(for: $0, localeIdentifier: $0) })
+
+        app.showSheet(title: APP.localized("languageTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { index in
             var language: String?
             if index > 0 {
                 language = languages[index - 1]
             }
-            
+
             Bundle.app.localizedLanguage = language
             AppDelegate.shared.reloadController()
         }
     }
-    
-    @objc func onTheme() {
+
+    @objc private func onTheme() {
         var actions = [APP.localized("systemTitle"), APP.localized("themeLight")]
         actions.append(APP.localized("themeDark"))
         actions.append(APP.localized("themeGray"))
-        
-        app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex:-1) { (index) in
+
+        app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { index in
             if index == actions.count - 1 {
                 if UIWindow.app.main?.app.hasGrayView ?? false {
                     UIWindow.app.main?.app.hideGrayView()
@@ -169,8 +162,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onPlugin() {
+
+    @objc private func onPlugin() {
         let plugins: [[String]] = [
             ["AlertPlugin", "onAlertPlugin"],
             ["EmptyPlugin", "onEmptyPlugin"],
@@ -180,16 +173,16 @@ private extension SettingsController {
             ["ImagePlugin", "onImagePlugin"],
             ["ImagePickerPlugin", "onImagePickerPlugin"],
             ["ImagePreviewPlugin", "onImagePreviewPlugin"],
-            ["RequestPlugin", "onRequestPlugin"],
+            ["RequestPlugin", "onRequestPlugin"]
         ]
-        
-        app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map({ $0[0] })) { [weak self] index in
+
+        app.showSheet(title: APP.localized("pluginTitle"), message: nil, actions: plugins.map { $0[0] }) { [weak self] index in
             let action = plugins[index][1]
             _ = self?.perform(Selector(action))
         }
     }
-    
-    @objc func onAlertPlugin() {
+
+    @objc private func onAlertPlugin() {
         var actions = SettingsController.alertPlugins.map {
             $0 == SettingsController.alertPluginImpl ? "[\($0)]" : $0
         }
@@ -207,8 +200,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onEmptyPlugin() {
+
+    @objc private func onEmptyPlugin() {
         var actions = SettingsController.emptyPlugins.map {
             $0 == SettingsController.emptyPluginImpl ? "[\($0)]" : $0
         }
@@ -222,8 +215,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onToastPlugin() {
+
+    @objc private func onToastPlugin() {
         var actions = SettingsController.toastPlugins.map {
             $0 == SettingsController.toastPluginImpl ? "[\($0)]" : $0
         }
@@ -253,8 +246,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onViewPlugin() {
+
+    @objc private func onViewPlugin() {
         var actions = SettingsController.viewPlugins.map {
             $0 == SettingsController.viewPluginImpl ? "[\($0)]" : $0
         }
@@ -268,8 +261,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onRefreshPlugin() {
+
+    @objc private func onRefreshPlugin() {
         var actions = SettingsController.refreshPlugins.map {
             $0 == SettingsController.refreshPluginImpl ? "[\($0)]" : $0
         }
@@ -287,8 +280,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onImagePlugin() {
+
+    @objc private func onImagePlugin() {
         var actions = SettingsController.imagePlugins.map {
             $0 == SettingsController.imagePluginImpl ? "[\($0)]" : $0
         }
@@ -310,8 +303,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onImagePickerPlugin() {
+
+    @objc private func onImagePickerPlugin() {
         var actions = SettingsController.imagePickerPlugins.map {
             $0 == SettingsController.imagePickerPluginImpl ? "[\($0)]" : $0
         }
@@ -345,8 +338,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onImagePreviewPlugin() {
+
+    @objc private func onImagePreviewPlugin() {
         var actions = SettingsController.imagePreviewPlugins.map {
             $0 == SettingsController.imagePreviewPluginImpl ? "[\($0)]" : $0
         }
@@ -360,8 +353,8 @@ private extension SettingsController {
             }
         }
     }
-    
-    @objc func onRequestPlugin() {
+
+    @objc private func onRequestPlugin() {
         var actions = SettingsController.requestPlugins.map {
             $0 == SettingsController.requestPluginImpl ? "[\($0)]" : $0
         }
@@ -375,7 +368,6 @@ private extension SettingsController {
             }
         }
     }
-    
 }
 
 extension SettingsController {
@@ -384,17 +376,17 @@ extension SettingsController {
     static let alertPlugins = ["AlertPluginImpl", "AlertControllerImpl"]
     @StoredValue("alertHidesSheetCancel")
     static var alertHidesSheetCancel = false
-    
+
     @StoredValue("emptyPluginImpl")
     static var emptyPluginImpl = emptyPlugins[0]
     static let emptyPlugins = ["EmptyPluginImpl"]
-    
+
     @StoredValue("refreshPluginImpl")
     static var refreshPluginImpl = refreshPlugins[0]
     static let refreshPlugins = ["RefreshPluginImpl"]
     @StoredValue("refreshShowsFinishedView")
     static var refreshShowsFinishedView = true
-    
+
     @StoredValue("toastPluginImpl")
     static var toastPluginImpl = toastPlugins[0]
     static let toastPlugins = ["ToastPluginImpl"]
@@ -402,11 +394,11 @@ extension SettingsController {
     static var toastHorizontalAlignment = false
     @StoredValue("toastPluginPosition")
     static var toastPluginPosition: Int = 0
-    
+
     @StoredValue("viewPluginImpl")
     static var viewPluginImpl = viewPlugins[0]
     static let viewPlugins = ["ViewPluginImpl"]
-    
+
     @StoredValue("imagePluginImpl")
     static var imagePluginImpl = imagePlugins[0]
     static let imagePlugins = ["ImagePluginImpl", "SDWebImageImpl"]
@@ -414,7 +406,7 @@ extension SettingsController {
     static var imageShowsIndicator = false
     @StoredValue("imageHidesPlaceholderIndicator")
     static var imageHidesPlaceholderIndicator = false
-    
+
     @StoredValue("imagePickerPluginImpl")
     static var imagePickerPluginImpl = imagePickerPlugins[0]
     static let imagePickerPlugins = ["ImagePickerPluginImpl", "ImagePickerControllerImpl"]
@@ -428,11 +420,11 @@ extension SettingsController {
     static var imagePickerPresentationFullScreen = false
     @StoredValue("imagePickerShowsAlbumController")
     static var imagePickerShowsAlbumController = false
-    
+
     @StoredValue("imagePreviewPluginImpl")
     static var imagePreviewPluginImpl = imagePreviewPlugins[0]
     static let imagePreviewPlugins = ["ImagePreviewPluginImpl"]
-    
+
     @StoredValue("requestPluginImpl")
     static var requestPluginImpl = requestPlugins[0]
     static let requestPlugins = ["RequestPluginImpl", "AlamofireImpl"]
@@ -443,21 +435,21 @@ extension SettingsController {
         PluginManager.unloadPlugin(AlertPlugin.self)
         PluginManager.registerPlugin(AlertPlugin.self, object: SettingsController.alertPluginImpl == SettingsController.alertPlugins[0] ? AlertPluginImpl.self : AlertControllerImpl.self)
         AlertControllerImpl.shared.hidesSheetCancel = SettingsController.alertHidesSheetCancel
-        
+
         ToastPluginImpl.shared.customBlock = { toastView in
             toastView.horizontalAlignment = SettingsController.toastHorizontalAlignment
             toastView.position = .init(rawValue: SettingsController.toastPluginPosition) ?? .center
         }
-        
+
         RefreshPluginImpl.shared.showsFinishedView = SettingsController.refreshShowsFinishedView
-        
+
         PluginManager.unloadPlugin(ImagePlugin.self)
         PluginManager.registerPlugin(ImagePlugin.self, object: SettingsController.imagePluginImpl == SettingsController.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
         ImagePluginImpl.shared.showsIndicator = SettingsController.imageShowsIndicator
         SDWebImageImpl.shared.showsIndicator = SettingsController.imageShowsIndicator
         ImagePluginImpl.shared.hidesPlaceholderIndicator = SettingsController.imageHidesPlaceholderIndicator
         SDWebImageImpl.shared.hidesPlaceholderIndicator = SettingsController.imageHidesPlaceholderIndicator
-        
+
         PluginManager.unloadPlugin(ImagePickerPlugin.self)
         PluginManager.registerPlugin(ImagePickerPlugin.self, object: SettingsController.imagePickerPluginImpl == SettingsController.imagePickerPlugins[0] ? ImagePickerPluginImpl.self : ImagePickerControllerImpl.self)
         ImagePickerPluginImpl.shared.cropControllerEnabled = SettingsController.imagePickerCropControllerEnabled
@@ -465,7 +457,7 @@ extension SettingsController {
         ImagePickerPluginImpl.shared.photoNavigationEnabled = SettingsController.imagePickerPhotoNavigationEnabled
         ImagePickerPluginImpl.shared.presentationFullScreen = SettingsController.imagePickerPresentationFullScreen
         ImagePickerControllerImpl.shared.showsAlbumController = SettingsController.imagePickerShowsAlbumController
-        
+
         PluginManager.unloadPlugin(RequestPlugin.self)
         PluginManager.registerPlugin(RequestPlugin.self, object: SettingsController.requestPluginImpl == SettingsController.requestPlugins[0] ? RequestPluginImpl.self : AlamofireImpl.self)
     }

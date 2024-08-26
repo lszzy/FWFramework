@@ -13,20 +13,19 @@ import Foundation
 ///
 /// - see: [Mocker](https://github.com/WeTransfer/Mocker)
 open class NetworkMockerURLProtocol: URLProtocol {
-
     enum Error: Swift.Error, LocalizedError, CustomDebugStringConvertible {
         case missingMockedData(url: String)
         case explicitMockFailure(url: String)
 
         var errorDescription: String? {
-            return debugDescription
+            debugDescription
         }
 
         var debugDescription: String {
             switch self {
-            case .missingMockedData(let url):
+            case let .missingMockedData(url):
                 return "Missing mock for URL: \(url)"
-            case .explicitMockFailure(url: let url):
+            case let .explicitMockFailure(url: url):
                 return "Induced error for URL: \(url)"
             }
         }
@@ -55,9 +54,9 @@ open class NetworkMockerURLProtocol: URLProtocol {
             return
         }
 
-        self.responseWorkItem = DispatchWorkItem(block: { [weak self] in
-            guard let self = self else { return }
-            self.finishRequest(for: mock, data: data, response: response)
+        responseWorkItem = DispatchWorkItem(block: { [weak self] in
+            guard let self else { return }
+            finishRequest(for: mock, data: data, response: response)
         })
 
         DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).asyncAfter(deadline: .now() + delay, execute: responseWorkItem!)
@@ -65,13 +64,13 @@ open class NetworkMockerURLProtocol: URLProtocol {
 
     private func finishRequest(for mock: NetworkMock, data: Data, response: HTTPURLResponse) {
         if let redirectLocation = data.redirectLocation {
-            self.client?.urlProtocol(self, wasRedirectedTo: URLRequest(url: redirectLocation), redirectResponse: response)
+            client?.urlProtocol(self, wasRedirectedTo: URLRequest(url: redirectLocation), redirectResponse: response)
         } else if let requestError = mock.requestError {
-            self.client?.urlProtocol(self, didFailWithError: requestError)
+            client?.urlProtocol(self, didFailWithError: requestError)
         } else {
-            self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: mock.cacheStoragePolicy)
-            self.client?.urlProtocol(self, didLoad: data)
-            self.client?.urlProtocolDidFinishLoading(self)
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: mock.cacheStoragePolicy)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
         }
 
         mock.completion?()
@@ -84,19 +83,19 @@ open class NetworkMockerURLProtocol: URLProtocol {
 
     /// Simply sends back the passed request. Implementation is needed for a valid inheritance of URLProtocol.
     override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        return request
+        request
     }
 
     /// Overrides needed to define a valid inheritance of URLProtocol.
     override public class func canInit(with request: URLRequest) -> Bool {
-        return NetworkMocker.shouldHandle(request)
+        NetworkMocker.shouldHandle(request)
     }
 }
 
-private extension Data {
+extension Data {
     /// Returns the redirect location from the raw HTTP response if exists.
-    var redirectLocation: URL? {
-        let locationComponent = String(data: self, encoding: String.Encoding.utf8)?.components(separatedBy: "\n").first(where: { (value) -> Bool in
+    fileprivate var redirectLocation: URL? {
+        let locationComponent = String(data: self, encoding: String.Encoding.utf8)?.components(separatedBy: "\n").first(where: { value -> Bool in
             return value.contains("Location:")
         })
 
@@ -109,7 +108,6 @@ private extension Data {
 
 /// A handler for verifying outgoing requests.
 public struct NetworkMockOnRequestHandler {
-
     public typealias OnRequest<HTTPBody> = (_ request: URLRequest, _ httpBody: HTTPBody?) -> Void
 
     private let internalCallback: (_ request: URLRequest) -> Void
@@ -120,7 +118,7 @@ public struct NetworkMockOnRequestHandler {
     ///   - httpBodyType: The decodable type to use for parsing the request body.
     ///   - callback: The callback which will be called just before the request executes.
     public init<HTTPBody: Decodable>(httpBodyType: HTTPBody.Type?, callback: @escaping OnRequest<HTTPBody>) {
-        self.internalCallback = { request in
+        internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let decodedObject = try? JSONDecoder().decode(HTTPBody.self, from: httpBody)
@@ -136,14 +134,14 @@ public struct NetworkMockOnRequestHandler {
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments.
     /// - Parameter requestCallback: The callback which will be executed just before the request executes, containing the request.
     public init(requestCallback: @escaping (_ request: URLRequest) -> Void) {
-        self.internalCallback = requestCallback
+        internalCallback = requestCallback
         legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments and without passing the request.
     /// - Parameter callback: The callback which will be executed just before the request executes.
     public init(callback: @escaping () -> Void) {
-        self.internalCallback = { _ in
+        internalCallback = { _ in
             callback()
         }
         legacyCallback = nil
@@ -152,7 +150,7 @@ public struct NetworkMockOnRequestHandler {
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Dictionary.
     public init(jsonDictionaryCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void)) {
-        self.internalCallback = { request in
+        internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [String: Any]
@@ -162,13 +160,13 @@ public struct NetworkMockOnRequestHandler {
             }
             jsonDictionaryCallback(request, jsonObject)
         }
-        self.legacyCallback = nil
+        legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Array.
     public init(jsonArrayCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [[String: Any]]?) -> Void)) {
-        self.internalCallback = { request in
+        internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [[String: Any]]
@@ -178,11 +176,11 @@ public struct NetworkMockOnRequestHandler {
             }
             jsonArrayCallback(request, jsonObject)
         }
-        self.legacyCallback = nil
+        legacyCallback = nil
     }
 
     init(legacyCallback: NetworkMock.OnRequest?) {
-        self.internalCallback = { request in
+        internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [String: Any]
@@ -200,15 +198,15 @@ public struct NetworkMockOnRequestHandler {
     }
 }
 
-private extension URLRequest {
+extension URLRequest {
     /// We need to use the http body stream data as the URLRequest once launched converts the `httpBody` to this stream of data.
-    func httpBodyStreamData() -> Data? {
-        guard let bodyStream = self.httpBodyStream else { return nil }
+    fileprivate func httpBodyStreamData() -> Data? {
+        guard let bodyStream = httpBodyStream else { return nil }
 
         bodyStream.open()
 
         // Will read 16 chars per iteration. Can use bigger buffer if needed
-        let bufferSize: Int = 16
+        let bufferSize = 16
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
         var data = Data()
 
@@ -266,20 +264,20 @@ public struct NetworkMocker {
     }
 
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
-    nonisolated(unsafe) public static var mode: Mode = .optout
+    public nonisolated(unsafe) static var mode: Mode = .optout
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
-    nonisolated(unsafe) internal static var shared = NetworkMocker()
+    nonisolated(unsafe) static var shared = NetworkMocker()
 
     /// The HTTP Version to use in the mocked response.
-    nonisolated(unsafe) public static var httpVersion: HTTPVersion = HTTPVersion.http1_1
+    public nonisolated(unsafe) static var httpVersion: HTTPVersion = .http1_1
 
     /// The registrated mocks.
     private(set) var mocks: [NetworkMock] = []
 
     /// URLs to ignore for mocking.
     public var ignoredURLs: [URL] {
-        ignoredRules.map { $0.urlToIgnore }
+        ignoredRules.map(\.urlToIgnore)
     }
 
     private var ignoredRules: [IgnoredRule] = []
@@ -356,24 +354,23 @@ public struct NetworkMocker {
 
 /// A Mock which can be used for mocking data requests with the `Mocker` by calling `Mocker.register(...)`.
 public struct NetworkMock: Equatable, @unchecked Sendable {
-
     /// HTTP method definitions.
     ///
     /// See https://tools.ietf.org/html/rfc7231#section-4.3
     public enum HTTPMethod: String, Sendable {
         case options = "OPTIONS"
-        case get     = "GET"
-        case head    = "HEAD"
-        case post    = "POST"
-        case put     = "PUT"
-        case patch   = "PATCH"
-        case delete  = "DELETE"
-        case trace   = "TRACE"
+        case get = "GET"
+        case head = "HEAD"
+        case post = "POST"
+        case put = "PUT"
+        case patch = "PATCH"
+        case delete = "DELETE"
+        case trace = "TRACE"
         case connect = "CONNECT"
     }
 
     public typealias OnRequest = (_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void
-    
+
     /// The type of the data which designates the Content-Type header. If set to `nil`, no Content-Type header is added to the headers.
     public let contentType: DataType?
 
@@ -428,8 +425,8 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
         guard data.count > 0 else {
             preconditionFailure("At least one entry is required in the data dictionary")
         }
-        
-        self.urlToMock = url
+
+        urlToMock = url
         let generatedURL = URL(string: "https://mocked.wetransfer.com/\(contentType?.name ?? "no-content")/\(statusCode)/\(data.keys.first!.rawValue)")!
         self.generatedURL = generatedURL
         var request = URLRequest(url: url ?? generatedURL)
@@ -443,14 +440,14 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
         self.cacheStoragePolicy = cacheStoragePolicy
 
         var headers = additionalHeaders
-        if let contentType = contentType {
+        if let contentType {
             headers["Content-Type"] = contentType.headerValue
         }
         self.headers = headers
 
-        self.fileExtensions = fileExtensions?.map({ $0.replacingOccurrences(of: ".", with: "") })
+        self.fileExtensions = fileExtensions?.map { $0.replacingOccurrences(of: ".", with: "") }
     }
-    
+
     /// Creates a `Mock` for the given content type. The mock will be automatically matched based on a URL created from the given parameters.
     ///
     /// - Parameters:
@@ -468,7 +465,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
             fileExtensions: nil
         )
     }
-    
+
     /// Creates a `Mock` for the given URL.
     ///
     /// - Parameters:
@@ -493,7 +490,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
             fileExtensions: nil
         )
     }
-    
+
     /// Creates a `Mock` for the given file extensions. The mock will only be used for urls matching the extension.
     ///
     /// - Parameters:
@@ -512,7 +509,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
             fileExtensions: fileExtensions
         )
     }
-    
+
     /// Creates a `Mock` for the given `URLRequest`.
     ///
     /// - Parameters:
@@ -557,7 +554,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
     }
 
     /// Used to compare the Mock data with the given `URLRequest`.
-    static func == (mock: NetworkMock, request: URLRequest) -> Bool {
+    static func ==(mock: NetworkMock, request: URLRequest) -> Bool {
         guard let requestHTTPMethod = NetworkMock.HTTPMethod(rawValue: request.httpMethod ?? "") else { return false }
 
         if let fileExtensions = mock.fileExtensions {
@@ -571,11 +568,11 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
         return mock.request.url!.absoluteString == request.url?.absoluteString && mock.data.keys.contains(requestHTTPMethod)
     }
 
-    public static func == (lhs: NetworkMock, rhs: NetworkMock) -> Bool {
-        let lhsHTTPMethods: [String] = lhs.data.keys.compactMap { $0.rawValue }.sorted()
-        let rhsHTTPMethods: [String] = rhs.data.keys.compactMap { $0.rawValue }.sorted()
+    public static func ==(lhs: NetworkMock, rhs: NetworkMock) -> Bool {
+        let lhsHTTPMethods: [String] = lhs.data.keys.compactMap(\.rawValue).sorted()
+        let rhsHTTPMethods: [String] = rhs.data.keys.compactMap(\.rawValue).sorted()
 
-        if let lhsFileExtensions = lhs.fileExtensions, let rhsFileExtensions = rhs.fileExtensions, (!lhsFileExtensions.isEmpty || !rhsFileExtensions.isEmpty) {
+        if let lhsFileExtensions = lhs.fileExtensions, let rhsFileExtensions = rhs.fileExtensions, !lhsFileExtensions.isEmpty || !rhsFileExtensions.isEmpty {
             /// The mocks are targeting file extensions specifically, check on those.
             return lhsFileExtensions == rhsFileExtensions && lhsHTTPMethods == rhsHTTPMethods
         }
@@ -587,7 +584,6 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
 extension NetworkMock {
     /// The types of content of a request. Will be used as Content-Type header inside a `Mock`.
     public struct DataType: Sendable {
-
         /// Name of the data type.
         public let name: String
 
@@ -613,7 +609,7 @@ extension NetworkMock.DataType {
 extension URL {
     /// Returns the base URL string build with the scheme, host and path. "https://www.wetransfer.com/v1/test?param=test" would be "https://www.wetransfer.com/v1/test".
     var baseString: String? {
-        guard let scheme = scheme, let host = host else { return nil }
+        guard let scheme, let host else { return nil }
         return scheme + "://" + host + path
     }
 }

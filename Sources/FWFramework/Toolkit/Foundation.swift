@@ -5,8 +5,8 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import UIKit
 import CommonCrypto
+import UIKit
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
@@ -14,18 +14,18 @@ extension WrapperGlobal {
     public static func synchronized(_ object: Any, closure: () -> Void) {
         objc_sync_enter(object)
         defer { objc_sync_exit(object) }
-        
+
         closure()
     }
-    
+
     /// 通用互斥锁方法，返回指定对象
     public static func synchronized<T>(_ object: Any, closure: () -> T) -> T {
         objc_sync_enter(object)
         defer { objc_sync_exit(object) }
-        
+
         return closure()
     }
-    
+
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
         _ token: AnyHashable,
@@ -46,9 +46,9 @@ extension Wrapper where Base: WrapperObject {
     public func unlock() {
         lockSemaphore.signal()
     }
-    
+
     private var lockSemaphore: DispatchSemaphore {
-        return synchronized {
+        synchronized {
             if let semaphore = property(forName: #function) as? DispatchSemaphore {
                 return semaphore
             } else {
@@ -58,11 +58,11 @@ extension Wrapper where Base: WrapperObject {
             }
         }
     }
-    
+
     /// 延迟创建队列，默认串行队列
     public var queue: DispatchQueue {
         get {
-            return synchronized {
+            synchronized {
                 if let queue = property(forName: #function) as? DispatchQueue {
                     return queue
                 } else {
@@ -78,39 +78,39 @@ extension Wrapper where Base: WrapperObject {
             }
         }
     }
-    
+
     /// 通用互斥锁方法
     public static func synchronized(_ closure: () -> Void) {
         objc_sync_enter(Base.self)
         defer { objc_sync_exit(Base.self) }
-        
+
         closure()
     }
-    
+
     /// 通用互斥锁方法，返回指定对象
     public static func synchronized<T>(_ closure: () -> T) -> T {
         objc_sync_enter(Base.self)
         defer { objc_sync_exit(Base.self) }
-        
+
         return closure()
     }
-    
+
     /// 通用互斥锁方法
     public func synchronized(_ closure: () -> Void) {
         objc_sync_enter(base)
         defer { objc_sync_exit(base) }
-        
+
         closure()
     }
-    
+
     /// 通用互斥锁方法，返回指定对象
     public func synchronized<T>(_ closure: () -> T) -> T {
         objc_sync_enter(base)
         defer { objc_sync_exit(base) }
-        
+
         return closure()
     }
-    
+
     /// 同一个token仅执行一次block，对象范围
     public func dispatchOnce(
         _ token: String,
@@ -124,20 +124,20 @@ extension Wrapper where Base: WrapperObject {
                 tokens = NSMutableSet()
                 setProperty(tokens, forName: "dispatchOnce")
             }
-            
+
             guard !tokens.contains(token) else { return }
             tokens.add(token)
             closure()
         }
     }
-    
+
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
         _ block: @escaping @Sendable (Any) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any where Base: Sendable {
-        return performBlock(block, on: .main, afterDelay: delay)
+        performBlock(block, on: .main, afterDelay: delay)
     }
 
     /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
@@ -146,7 +146,7 @@ extension Wrapper where Base: WrapperObject {
         inBackground block: @escaping @Sendable (Any) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any where Base: Sendable {
-        return performBlock(block, on: .global(qos: .background), afterDelay: delay)
+        performBlock(block, on: .global(qos: .background), afterDelay: delay)
     }
 
     /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
@@ -167,7 +167,7 @@ extension Wrapper where Base: WrapperObject {
                 block(strongBase)
             }
         }
-        
+
         queue.asyncAfter(deadline: .now() + delay) {
             wrapper(false)
         }
@@ -184,19 +184,19 @@ extension Wrapper where Base: NSObject {
     ) {
         objc_sync_enter(NSObject.self)
         defer { objc_sync_exit(NSObject.self) }
-        
+
         guard !NSObject.innerOnceTokens.contains(token) else { return }
         NSObject.innerOnceTokens.append(token)
         closure()
     }
-    
+
     /// 延迟delay秒后主线程执行，返回可取消的block，全局范围
     @discardableResult
     public static func performBlock(
         _ block: @escaping @Sendable () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return performBlock(block, on: .main, afterDelay: delay)
+        performBlock(block, on: .main, afterDelay: delay)
     }
 
     /// 延迟delay秒后后台线程执行，返回可取消的block，全局范围
@@ -205,7 +205,7 @@ extension Wrapper where Base: NSObject {
         inBackground block: @escaping @Sendable () -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
-        return performBlock(block, on: .global(qos: .background), afterDelay: delay)
+        performBlock(block, on: .global(qos: .background), afterDelay: delay)
     }
 
     /// 延迟delay秒后指定线程执行，返回可取消的block，全局范围
@@ -225,7 +225,7 @@ extension Wrapper where Base: NSObject {
                 block()
             }
         }
-        
+
         queue.asyncAfter(deadline: .now() + delay) {
             wrapper(false)
         }
@@ -263,7 +263,7 @@ extension Wrapper where Base: NSObject {
         let startTime = Date().timeIntervalSince1970
         performBlock(block, completion: completion, retryCount: retryCount, remainCount: retryCount, timeoutInterval: timeoutInterval, delayInterval: delayInterval, isCancelled: isCancelled, startTime: startTime)
     }
-    
+
     private static func performBlock(
         _ block: @escaping @Sendable (@escaping @Sendable (Bool, Any?) -> Void) -> Void,
         completion: @escaping @Sendable (Bool, Any?) -> Void,
@@ -275,7 +275,7 @@ extension Wrapper where Base: NSObject {
         startTime: TimeInterval
     ) {
         if isCancelled?() ?? false { return }
-        block({ success, obj in
+        block { success, obj in
             if isCancelled?() ?? false { return }
             let canRetry = !success && (retryCount < 0 || remainCount > 0)
             let waitTime = canRetry ? delayInterval(retryCount - remainCount + 1) : 0
@@ -286,7 +286,7 @@ extension Wrapper where Base: NSObject {
             } else {
                 completion(success, obj)
             }
-        })
+        }
     }
 
     /// 执行轮询block任务，返回任务Id可取消
@@ -295,12 +295,12 @@ extension Wrapper where Base: NSObject {
         let queue: DispatchQueue = async ? .global() : .main
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(deadline: .now() + start, repeating: interval, leeway: .seconds(0))
-        
+
         NSObject.innerTaskSemaphore.wait()
         let taskId = "\(NSObject.innerTaskPool.count)"
         NSObject.innerTaskPool[taskId] = timer
         NSObject.innerTaskSemaphore.signal()
-        
+
         timer.setEventHandler {
             task()
             if !repeats {
@@ -333,15 +333,15 @@ extension Wrapper where Base == Date {
                 // 是否本地有服务器时间
                 let preCurrentTime = UserDefaults.standard.object(forKey: "FWCurrentTime") as? NSNumber
                 let preLocalTime = UserDefaults.standard.object(forKey: "FWLocalTime") as? NSNumber
-                if let preCurrentTime = preCurrentTime,
-                   let preLocalTime = preLocalTime {
+                if let preCurrentTime,
+                   let preLocalTime {
                     // 计算当前服务器时间
                     let offsetTime = Date().timeIntervalSince1970 - preLocalTime.doubleValue
                     return preCurrentTime.doubleValue + offsetTime
                 } else {
                     return Date().timeIntervalSince1970
                 }
-            // 同步过计算当前服务器时间
+                // 同步过计算当前服务器时间
             } else {
                 let offsetTime = systemUptime - Date.innerLocalBaseTime
                 return Date.innerCurrentBaseTime + offsetTime
@@ -351,14 +351,14 @@ extension Wrapper where Base == Date {
             Date.innerCurrentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
             Date.innerLocalBaseTime = systemUptime
-            
+
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
             UserDefaults.standard.set(NSNumber(value: Date().timeIntervalSince1970), forKey: "FWLocalTime")
             UserDefaults.standard.synchronize()
         }
     }
-    
+
     private static var systemUptime: TimeInterval {
         var bootTime = timeval()
         var mib = [CTL_KERN, KERN_BOOTTIME]
@@ -376,13 +376,13 @@ extension Wrapper where Base == Date {
         }
         return uptime
     }
-    
+
     /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
     public static var dateFormatter: DateFormatter {
         get { Base.innerDateFormatter }
         set { Base.innerDateFormatter = newValue }
     }
-    
+
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
     public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
         let formatter = Date.innerDateFormatter
@@ -390,12 +390,12 @@ extension Wrapper where Base == Date {
         let date = formatter.date(from: string)
         return date
     }
-    
+
     /// 转化为字符串，格式：yyyy-MM-dd HH:mm:ss
     public var stringValue: String {
-        return string(format: "yyyy-MM-dd HH:mm:ss")
+        string(format: "yyyy-MM-dd HH:mm:ss")
     }
-    
+
     /// 转化为字符串，自定义格式
     public func string(format: String) -> String {
         let formatter = Date.innerDateFormatter
@@ -403,7 +403,7 @@ extension Wrapper where Base == Date {
         let string = formatter.string(from: base)
         return string
     }
-    
+
     /// 格式化时长，格式"00:00"或"00:00:00"
     public static func formatDuration(_ duration: TimeInterval, hasHour: Bool) -> String {
         var seconds = Int64(duration)
@@ -419,7 +419,7 @@ extension Wrapper where Base == Date {
             return String(format: "%02ld:%02ld", minute, second)
         }
     }
-    
+
     /// 格式化16位、13位时间戳为10位(秒)
     public static func formatTimestamp(_ timestamp: TimeInterval) -> TimeInterval {
         let string = String(format: "%ld", Int64(timestamp))
@@ -431,14 +431,14 @@ extension Wrapper where Base == Date {
             return timestamp
         }
     }
-    
+
     /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
     public static func formatServerDate(_ dateString: String) -> TimeInterval {
         let dateFormatter = Date.innerServerDateFormatter
         let date = dateFormatter.date(from: dateString)
         return date?.timeIntervalSince1970 ?? 0
     }
-    
+
     /// 是否是闰年
     public var isLeapYear: Bool {
         let year = Calendar.current.component(.year, from: base)
@@ -456,7 +456,7 @@ extension Wrapper where Base == Date {
     public func isSameDay(_ date: Date) -> Bool {
         var components = Calendar.current.dateComponents([.era, .year, .month, .day], from: date)
         let dateOne = Calendar.current.date(from: components)
-        
+
         components = Calendar.current.dateComponents([.era, .year, .month, .day], from: base)
         let dateTwo = Calendar.current.date(from: components)
         return dateOne == dateTwo
@@ -464,7 +464,7 @@ extension Wrapper where Base == Date {
 
     /// 添加指定日期，如year:1|month:-1|day:1等
     public func date(byAdding: DateComponents) -> Date? {
-        return Calendar.current.date(byAdding: byAdding, to: base)
+        Calendar.current.date(byAdding: byAdding, to: base)
     }
 
     /// 与指定日期相隔天数
@@ -569,19 +569,19 @@ extension Wrapper where Base: NSNumber {
 extension Wrapper where Base == String {
     /// 将波浪线相对路径展开为绝对路径
     public var expandingTildePath: String {
-        return (base as NSString).expandingTildeInPath
+        (base as NSString).expandingTildeInPath
     }
-    
+
     /// 将绝对路径替换为波浪线相对路径
     public var abbreviatingTildePath: String {
-        return (base as NSString).abbreviatingWithTildeInPath
+        (base as NSString).abbreviatingWithTildeInPath
     }
-    
+
     /// 附加路径组件
     public func appendingPath(_ component: String) -> String {
-        return (base as NSString).appendingPathComponent(component)
+        (base as NSString).appendingPathComponent(component)
     }
-    
+
     /// 附加路径组件数组
     public func appendingPath(_ components: [String]) -> String {
         var result = base
@@ -590,12 +590,12 @@ extension Wrapper where Base == String {
         }
         return result
     }
-    
+
     /// 附加路径后缀，失败时返回空
     public func appendingPathExtension(_ ext: String) -> String {
-        return (base as NSString).appendingPathExtension(ext) ?? ""
+        (base as NSString).appendingPathExtension(ext) ?? ""
     }
-    
+
     /// 计算多行字符串指定字体、指定属性在指定绘制区域内所占尺寸
     public func size(
         font: UIFont,
@@ -604,15 +604,15 @@ extension Wrapper where Base == String {
     ) -> CGSize {
         var attr: [NSAttributedString.Key: Any] = [:]
         attr[.font] = font
-        if let attributes = attributes {
+        if let attributes {
             attr.merge(attributes) { _, last in last }
         }
-        
+
         let str = base as NSString
         let size = str.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attr, context: nil).size
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
-    
+
     /// 格式化文件大小为".0K/.1M/.1G"
     public static func sizeString(_ aFileSize: UInt64) -> String {
         guard aFileSize > 0 else { return "0K" }
@@ -629,13 +629,13 @@ extension Wrapper where Base == String {
             return String(format: "%dK", Int(ceil(fileSize)))
         }
     }
-    
+
     /// 是否匹配正则表达式，示例：^[a-zA-Z0-9_\u4e00-\u9fa5]{4,14}$
     public func matchesRegex(_ regex: String) -> Bool {
         let regexPredicate = NSPredicate(format: "SELF MATCHES %@", regex)
         return regexPredicate.evaluate(with: base)
     }
-    
+
     /**
      *  安全截取字符串。解决末尾半个Emoji问题(半个Emoji调UTF8String为NULL，导致MD5签名等失败)
      *
@@ -689,23 +689,23 @@ extension Wrapper where Base == String {
         guard let regexObj = try? NSRegularExpression(pattern: regex) else { return }
         let matches = regexObj.matches(in: base, range: NSMakeRange(0, (base as NSString).length))
         // 倒序循环，避免replace等越界
-        for match in (reverse ? matches.reversed() : matches) {
+        for match in reverse ? matches.reversed() : matches {
             block(match.range)
         }
     }
-    
+
     /// 检测链接并回调，NSAttributedString调用时请使用string防止range越界
     public func detectLinks(types: NSTextCheckingTypes? = nil, block: (NSTextCheckingResult, String, UnsafeMutablePointer<ObjCBool>) -> Void) {
         if let dataDetector = try? NSDataDetector(types: types ?? NSTextCheckingResult.CheckingType.link.rawValue) {
             let string = base as NSString
-            dataDetector.enumerateMatches(in: base, range: NSMakeRange(0, string.length)) { result, flags, stop in
-                if let result = result {
+            dataDetector.enumerateMatches(in: base, range: NSMakeRange(0, string.length)) { result, _, stop in
+                if let result {
                     block(result, string.substring(with: result.range), stop)
                 }
             }
         }
     }
-    
+
     /// 转义Html，如"a<"转义为"a&lt;"
     public var escapeHtml: String {
         let len = (base as NSString).length
@@ -715,18 +715,18 @@ extension Wrapper where Base == String {
         (base as NSString).getCharacters(&buf, range: NSRange(location: 0, length: len))
 
         let result = NSMutableString()
-        for i in 0 ..< len {
+        for i in 0..<len {
             var c = buf[i]
             var esc: String? = nil
             switch c {
-            case 34: esc = "&quot;"; break;
-            case 38: esc = "&amp;"; break;
-            case 39: esc = "&apos;"; break;
-            case 60: esc = "&lt;"; break;
-            case 62: esc = "&gt;"; break;
-            default: break;
+            case 34: esc = "&quot;"
+            case 38: esc = "&amp;"
+            case 39: esc = "&apos;"
+            case 60: esc = "&lt;"
+            case 62: esc = "&gt;"
+            default: break
             }
-            if let esc = esc {
+            if let esc {
                 result.append(esc)
             } else {
                 CFStringAppendCharacters(result as CFMutableString, &c, 1)
@@ -734,10 +734,10 @@ extension Wrapper where Base == String {
         }
         return result as String
     }
-    
+
     /// 是否符合验证器
     public func isValid(_ validator: Validator<String>) -> Bool {
-        return validator.validate(base)
+        validator.validate(base)
     }
 }
 
@@ -748,49 +748,49 @@ extension Wrapper where Base: FileManager {
     /// - Parameter directory: 搜索目录
     /// - Returns: 目标路径
     public static func pathSearch(_ directory: FileManager.SearchPathDirectory) -> String {
-        return NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true).first ?? ""
+        NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true).first ?? ""
     }
 
     /// 沙盒路径，常量
     public static var pathHome: String {
-        return NSHomeDirectory()
+        NSHomeDirectory()
     }
 
     /// 文档路径，iTunes会同步备份
     public static var pathDocument: String {
-        return pathSearch(.documentDirectory)
+        pathSearch(.documentDirectory)
     }
 
     /// 缓存路径，系统不会删除，iTunes会删除
     public static var pathCaches: String {
-        return pathSearch(.cachesDirectory)
+        pathSearch(.cachesDirectory)
     }
 
     /// Library路径
     public static var pathLibrary: String {
-        return pathSearch(.libraryDirectory)
+        pathSearch(.libraryDirectory)
     }
 
     /// 配置路径，配置文件保存位置
     public static var pathPreference: String {
-        return (pathLibrary as NSString).appendingPathComponent("Preference")
+        (pathLibrary as NSString).appendingPathComponent("Preference")
     }
 
     /// 临时路径，App退出后可能会删除
     public static var pathTmp: String {
-        return NSTemporaryDirectory()
+        NSTemporaryDirectory()
     }
 
     /// bundle路径，不可写
     public static var pathBundle: String {
-        return Bundle.main.bundlePath
+        Bundle.main.bundlePath
     }
 
     /// 资源路径，不可写
     public static var pathResource: String {
-        return Bundle.main.resourcePath ?? ""
+        Bundle.main.resourcePath ?? ""
     }
-    
+
     /// 递归创建目录，返回是否成功
     @discardableResult
     public static func createDirectory(atPath: String, attributes: [FileAttributeKey: Any]? = nil) -> Bool {
@@ -801,7 +801,7 @@ extension Wrapper where Base: FileManager {
             return false
         }
     }
-    
+
     /// 递归删除目录|文件，返回是否成功
     @discardableResult
     public static func removeItem(atPath: String) -> Bool {
@@ -812,7 +812,7 @@ extension Wrapper where Base: FileManager {
             return false
         }
     }
-    
+
     /// 移动目录|文件，返回是否成功
     @discardableResult
     public static func moveItem(atPath: String, toPath: String) -> Bool {
@@ -823,10 +823,10 @@ extension Wrapper where Base: FileManager {
             return false
         }
     }
-    
+
     /// 查询目录|文件是否存在
     public static func fileExists(atPath: String, isDirectory: Bool? = nil) -> Bool {
-        if let isDirectory = isDirectory {
+        if let isDirectory {
             var objCBool: ObjCBool = false
             if FileManager.default.fileExists(atPath: atPath, isDirectory: &objCBool) {
                 return isDirectory == objCBool.boolValue
@@ -836,7 +836,7 @@ extension Wrapper where Base: FileManager {
             return FileManager.default.fileExists(atPath: atPath)
         }
     }
-    
+
     /// 获取文件大小，单位：B
     public static func fileSize(_ filePath: String) -> UInt64 {
         var fileSize: UInt64 = 0
@@ -861,7 +861,7 @@ extension Wrapper where Base: FileManager {
         }
         return folderSize
     }
-    
+
     /// 将路径标记为禁止iCloud备份
     @discardableResult
     public static func skipBackup(_ path: String) -> Bool {
@@ -886,7 +886,7 @@ extension Wrapper where Base: NSAttributedString {
         guard base.length > 0 else { return nil }
         return base.attributes(at: 0, effectiveRange: nil)
     }
-    
+
     /// NSAttributedString对象转换为html字符串
     public func htmlString() -> String? {
         let htmlData = try? base.data(
@@ -896,13 +896,13 @@ extension Wrapper where Base: NSAttributedString {
                 .characterEncoding: String.Encoding.utf8.rawValue
             ]
         )
-        guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
+        guard let htmlData, !htmlData.isEmpty else { return nil }
         return String(data: htmlData, encoding: .utf8)
     }
 
     /// 计算所占尺寸，需设置Font等
     public var textSize: CGSize {
-        return textSize(drawSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        textSize(drawSize: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
     }
 
     /// 计算在指定绘制区域内所占尺寸，需设置Font等
@@ -910,13 +910,13 @@ extension Wrapper where Base: NSAttributedString {
         let size = base.boundingRect(with: drawSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size
         return CGSize(width: min(drawSize.width, ceil(size.width)), height: min(drawSize.height, ceil(size.height)))
     }
-    
+
     /// html字符串转换为NSAttributedString对象。如需设置默认字体和颜色，请使用addAttributes方法或附加CSS样式
     public static func attributedString(htmlString: String) -> Base? {
         let htmlData = htmlString.data(using: .utf8)
-        guard let htmlData = htmlData, !htmlData.isEmpty else { return nil }
-        
-        return try? Base.init(
+        guard let htmlData, !htmlData.isEmpty else { return nil }
+
+        return try? Base(
             data: htmlData,
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
@@ -933,7 +933,7 @@ extension Wrapper where Base: NSAttributedString {
         imageAttachment.bounds = CGRect(x: 0, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
         let imageString = NSAttributedString(attachment: imageAttachment)
         if bounds.origin.x <= 0 { return imageString }
-        
+
         let attributedString = NSMutableAttributedString()
         let spacingAttachment = NSTextAttachment()
         spacingAttachment.image = nil
@@ -942,19 +942,19 @@ extension Wrapper where Base: NSAttributedString {
         attributedString.append(imageString)
         return attributedString
     }
-    
+
     /// 快速创建NSAttributedString并指定单个高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
-    public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key : Any]?) -> NSAttributedString {
+    public static func attributedString(string: String, attributes: [NSAttributedString.Key: Any]?, highlight: String, highlightAttributes: [NSAttributedString.Key: Any]?) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         let range = (string as NSString).range(of: highlight)
-        if range.location != NSNotFound, let highlightAttributes = highlightAttributes {
+        if range.location != NSNotFound, let highlightAttributes {
             attributedString.addAttributes(highlightAttributes, range: range)
         }
         return attributedString
     }
-    
+
     /// 快速创建NSAttributedString并指定所有高亮部分文字和样式，链接设置NSLinkAttributeName|URL属性即可
-    public static func attributedString(string: String, attributes: [NSAttributedString.Key : Any]?, highlights: [String: [NSAttributedString.Key : Any]]) -> NSAttributedString {
+    public static func attributedString(string: String, attributes: [NSAttributedString.Key: Any]?, highlights: [String: [NSAttributedString.Key: Any]]) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         for (highlight, highlightAttributes) in highlights {
             let range = (string as NSString).range(of: highlight)
@@ -964,35 +964,35 @@ extension Wrapper where Base: NSAttributedString {
         }
         return attributedString
     }
-    
+
     /// 快速创建NSAttributedString，自定义字体和颜色
-    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil, attributes: [NSAttributedString.Key : Any]? = nil) -> Base {
+    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor? = nil, attributes: [NSAttributedString.Key: Any]? = nil) -> Base {
         var attributes = attributes ?? [:]
-        if let font = font {
+        if let font {
             attributes[.font] = font
         }
-        if let textColor = textColor {
+        if let textColor {
             attributes[.foregroundColor] = textColor
         }
-        return Base.init(string: string, attributes: attributes)
+        return Base(string: string, attributes: attributes)
     }
-    
+
     /// 快速创建NSAttributedString，自定义字体、颜色、行高、对齐方式和换行模式
-    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping, attributes: [NSAttributedString.Key : Any]? = nil) -> Base {
+    public static func attributedString(_ string: String, font: UIFont?, textColor: UIColor?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping, attributes: [NSAttributedString.Key: Any]? = nil) -> Base {
         var attributes = attributes ?? [:]
         attributes[.paragraphStyle] = paragraphStyle(lineHeight: lineHeight, textAlignment: textAlignment, lineBreakMode: lineBreakMode)
-        if let font = font {
+        if let font {
             attributes[.font] = font
             if lineHeight > 0 {
                 attributes[.baselineOffset] = NSNumber(value: (lineHeight - font.lineHeight) / 4.0)
             }
         }
-        if let textColor = textColor {
+        if let textColor {
             attributes[.foregroundColor] = textColor
         }
-        return Base.init(string: string, attributes: attributes)
+        return Base(string: string, attributes: attributes)
     }
-    
+
     /// 快速创建指定行高、对齐方式和换行模式的段落样式对象
     public static func paragraphStyle(lineHeight: CGFloat, textAlignment: NSTextAlignment = .left, lineBreakMode: NSLineBreakMode = .byWordWrapping) -> NSMutableParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -1004,7 +1004,7 @@ extension Wrapper where Base: NSAttributedString {
         paragraphStyle.alignment = textAlignment
         return paragraphStyle
     }
-    
+
     /// html字符串转换为NSAttributedString对象，可设置默认系统字体和颜色(附加CSS方式)
     public static func attributedString(htmlString string: String, defaultAttributes: [NSAttributedString.Key: Any]?) -> Base? {
         guard !string.isEmpty else { return nil }
@@ -1036,7 +1036,7 @@ extension Wrapper where Base: NSAttributedString {
             lightAttributes[.font] = font
             darkAttributes[.font] = font
         }
-        
+
         let lightObject = attributedString(htmlString: htmlString, defaultAttributes: lightAttributes)
         let darkObject = attributedString(htmlString: htmlString, defaultAttributes: darkAttributes)
         return ThemeObject(light: lightObject, dark: darkObject)
@@ -1054,7 +1054,7 @@ extension Wrapper where Base: NSAttributedString {
                 b = r
             }
         }
-        
+
         if a >= 1.0 {
             return String(format: "rgb(%u, %u, %u)", UInt(round(r * 255.0)), UInt(round(g * 255.0)), UInt(round(b * 255.0)))
         } else {
@@ -1075,9 +1075,9 @@ extension Wrapper where Base: NSAttributedString {
             "ultrabold": "800",
             "bold": "700",
             "heavy": "900",
-            "black": "900",
+            "black": "900"
         ]
-        
+
         let fontName = font.fontName.lowercased()
         var fontStyle = "normal"
         if fontName.range(of: "italic") != nil {
@@ -1085,7 +1085,7 @@ extension Wrapper where Base: NSAttributedString {
         } else if fontName.range(of: "oblique") != nil {
             fontStyle = "oblique"
         }
-        
+
         var fontWeight = "400"
         for (key, value) in fontWeights {
             if fontName.range(of: key) != nil {
@@ -1093,65 +1093,64 @@ extension Wrapper where Base: NSAttributedString {
                 break
             }
         }
-        
+
         return String(format: "font-family:-apple-system;font-weight:%@;font-style:%@;font-size:%.0fpx;", fontWeight, fontStyle, font.pointSize)
     }
 }
 
 // MARK: - Wrapper+NSMutableAttributedString
 extension Wrapper where Base: NSMutableAttributedString {
-    
     /// 当指定属性不存在时添加默认值，默认整个range
     public func addDefaultAttribute(_ name: NSAttributedString.Key, value: Any, range: NSRange? = nil) {
         let fullRange = NSMakeRange(0, (base.string as NSString).length)
         let range = range ?? fullRange
         var ranges: [NSRange] = []
-        base.enumerateAttribute(name, in: range) { aValue, aRange, stop in
+        base.enumerateAttribute(name, in: range) { aValue, aRange, _ in
             if aValue != nil {
                 ranges.append(aRange)
             }
         }
-        
+
         let complementaryRanges = complementaryRanges(ranges, inRange: range)
         for complementaryRange in complementaryRanges {
             base.addAttribute(name, value: value, range: complementaryRange)
         }
     }
-    
+
     private func complementaryRanges(_ ranges: [NSRange], inRange: NSRange) -> [NSRange] {
         var targets: [NSRange] = []
         if ranges.count < 1 {
             targets.append(inRange)
             return targets
         }
-        
+
         for (i, range) in ranges.enumerated() {
             var begin = inRange.location
             let end = range.location
-            
+
             if i != 0 {
                 let previousRange = ranges[i - 1]
                 begin = previousRange.location + previousRange.length
             }
-            
+
             if end > begin {
                 targets.append(NSMakeRange(begin, end - begin))
             }
         }
-        
+
         if ranges.count > 0 {
             let lastRange = ranges.last!
             let begin = lastRange.location + lastRange.length
             let end = inRange.location + inRange.length
-            
+
             if end > begin {
                 targets.append(NSMakeRange(begin, end - begin))
             }
         }
-        
+
         return targets
     }
-    
+
     /// 设置指定段落样式keyPath对应值，默认整个range
     public func setParagraphStyleValue<Value>(_ keyPath: ReferenceWritableKeyPath<NSMutableParagraphStyle, Value>, value: Value, range: NSRange? = nil) {
         let fullRange = NSMakeRange(0, (base.string as NSString).length)
@@ -1162,12 +1161,11 @@ extension Wrapper where Base: NSMutableAttributedString {
         } else {
             style = base.attribute(.paragraphStyle, at: range.location, longestEffectiveRange: nil, in: range) as? NSParagraphStyle
         }
-        
+
         let mutableStyle = style?.mutableCopy() as? NSMutableParagraphStyle ?? .init()
         mutableStyle[keyPath: keyPath] = value
         base.addAttribute(.paragraphStyle, value: mutableStyle, range: range)
     }
-    
 }
 
 // MARK: - Wrapper+URL
@@ -1175,24 +1173,24 @@ extension Wrapper where Base: NSMutableAttributedString {
 extension Wrapper where Base == URL {
     /**
      生成App Store外部URL
-     
+
      @param appId 应用Id
      @return NSURL
      */
     public static func appStoreURL(_ appId: String) -> URL {
-        return URL(string: "https://apps.apple.com/app/id\(appId)") ?? URL()
+        URL(string: "https://apps.apple.com/app/id\(appId)") ?? URL()
     }
 
     /**
      生成苹果地图地址外部URL
-     
+
      @param addr 显示地址，格式latitude,longitude或搜索地址
      @param options 可选附加参数，如["ll": "latitude,longitude", "z": "14"]
      @return NSURL
      */
-    public static func appleMapsURL(addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func appleMapsURL(addr: String?, options: [AnyHashable: Any]? = nil) -> URL? {
         var params = options ?? [:]
-        if let addr = addr, !addr.isEmpty {
+        if let addr, !addr.isEmpty {
             params["q"] = addr
         }
         return vendorURL("https://maps.apple.com/", params: params)
@@ -1200,18 +1198,18 @@ extension Wrapper where Base == URL {
 
     /**
      生成苹果地图导航外部URL
-     
+
      @param saddr 导航起始点，格式latitude,longitude或搜索地址
      @param daddr 导航结束点，格式latitude,longitude或搜索地址
      @param options 可选附加参数，如["ll": "latitude,longitude", "z": "14"]
      @return NSURL
      */
-    public static func appleMapsURL(saddr: String?, daddr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func appleMapsURL(saddr: String?, daddr: String?, options: [AnyHashable: Any]? = nil) -> URL? {
         var params = options ?? [:]
-        if let saddr = saddr, !saddr.isEmpty {
+        if let saddr, !saddr.isEmpty {
             params["saddr"] = saddr
         }
-        if let daddr = daddr, !daddr.isEmpty {
+        if let daddr, !daddr.isEmpty {
             params["daddr"] = daddr
         }
         return vendorURL("https://maps.apple.com/", params: params)
@@ -1219,15 +1217,15 @@ extension Wrapper where Base == URL {
 
     /**
      生成谷歌地图外部URL
-     
+
      @param addr 显示地址，格式latitude,longitude或搜索地址
      @param options 可选附加参数，如["query_place_id": ""]
      @return NSURL
      */
-    public static func googleMapsURL(addr: String?, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func googleMapsURL(addr: String?, options: [AnyHashable: Any]? = nil) -> URL? {
         var params = options ?? [:]
         params["api"] = "1"
-        if let addr = addr, !addr.isEmpty {
+        if let addr, !addr.isEmpty {
             params["query"] = addr
         }
         return vendorURL("https://www.google.com/maps/search/", params: params)
@@ -1235,31 +1233,31 @@ extension Wrapper where Base == URL {
 
     /**
      生成谷歌地图导航外部URL
-     
+
      @param saddr 导航起始点，格式latitude,longitude或搜索地址
      @param daddr 导航结束点，格式latitude,longitude或搜索地址
      @param mode 导航模式，支持driving|transit|bicycling|walking
      @param options 可选附加参数，如["origin_place_id": ""]
      @return NSURL
      */
-    public static func googleMapsURL(saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable : Any]? = nil) -> URL? {
+    public static func googleMapsURL(saddr: String?, daddr: String?, mode: String? = nil, options: [AnyHashable: Any]? = nil) -> URL? {
         var params = options ?? [:]
         params["api"] = "1"
-        if let saddr = saddr, !saddr.isEmpty {
+        if let saddr, !saddr.isEmpty {
             params["origin"] = saddr
         }
-        if let daddr = daddr, !daddr.isEmpty {
+        if let daddr, !daddr.isEmpty {
             params["destination"] = daddr
         }
-        if let mode = mode, !mode.isEmpty {
+        if let mode, !mode.isEmpty {
             params["travelmode"] = mode
         }
         return vendorURL("https://www.google.com/maps/dir/", params: params)
     }
-    
+
     /**
      生成外部URL，需配置对应URL SCHEME
-     
+
      @param string 外部主URL
      @param params 附加参数
      @return NSURL
@@ -1282,14 +1280,14 @@ extension Wrapper where Base: URLSession {
     /// 是否禁止网络代理抓包，不影响App请求，默认false
     public static var httpProxyDisabled: Bool {
         get {
-            return Base.innerHttpProxyDisabled
+            Base.innerHttpProxyDisabled
         }
         set {
             Base.innerHttpProxyDisabled = newValue
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
-    
+
     /// 获取手机网络代理，可能为空
     public static var httpProxyString: String? {
         let proxy = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
@@ -1301,44 +1299,44 @@ extension Wrapper where Base: URLSession {
 extension Wrapper where Base: UserDefaults {
     /// 从standard读取对象，支持unarchive对象
     public static func object(forKey: String) -> Any? {
-        return UserDefaults.standard.object(forKey: forKey)
+        UserDefaults.standard.object(forKey: forKey)
     }
 
     /// 保存对象到standard，支持archive对象
     public static func setObject(_ object: Any?, forKey: String) {
-        if let object = object {
+        if let object {
             UserDefaults.standard.set(object, forKey: forKey)
         } else {
             UserDefaults.standard.removeObject(forKey: forKey)
         }
         UserDefaults.standard.synchronize()
     }
-    
+
     /// 读取对象，支持unarchive对象
     public func object(forKey: String) -> Any? {
-        return base.object(forKey: forKey)
+        base.object(forKey: forKey)
     }
 
     /// 保存对象，支持archive对象
     public func setObject(_ object: Any?, forKey: String) {
-        if let object = object {
+        if let object {
             base.set(object, forKey: forKey)
         } else {
             base.removeObject(forKey: forKey)
         }
         base.synchronize()
     }
-    
+
     /// 从standard解档对象，兼容NSCoding和AnyArchivable
     public static func archivableObject(forKey: String) -> Any? {
-        return UserDefaults.standard.fw.archivableObject(forKey: forKey)
+        UserDefaults.standard.fw.archivableObject(forKey: forKey)
     }
 
     /// 归档对象到standard，兼容NSCoding和AnyArchivable
     public static func setArchivableObject(_ object: Any?, forKey: String) {
         UserDefaults.standard.fw.setArchivableObject(object, forKey: forKey)
     }
-    
+
     /// 解档对象，兼容NSCoding和AnyArchivable
     public func archivableObject(forKey: String) -> Any? {
         let data = base.object(forKey: forKey) as? Data
@@ -1348,7 +1346,7 @@ extension Wrapper where Base: UserDefaults {
     /// 归档对象，兼容NSCoding和AnyArchivable
     public func setArchivableObject(_ object: Any?, forKey: String) {
         let data = Data.fw.archivedData(object)
-        if let data = data {
+        if let data {
             base.set(data, forKey: forKey)
         } else {
             base.removeObject(forKey: forKey)
@@ -1359,25 +1357,23 @@ extension Wrapper where Base: UserDefaults {
 
 // MARK: - NSObject+Foundation
 extension NSObject {
-    
-    nonisolated(unsafe) fileprivate static var innerOnceTokens = [AnyHashable]()
-    nonisolated(unsafe) fileprivate static var innerTaskPool = NSMutableDictionary()
-    nonisolated(unsafe) fileprivate static var innerTaskSemaphore = DispatchSemaphore(value: 1)
-    
+    fileprivate nonisolated(unsafe) static var innerOnceTokens = [AnyHashable]()
+    fileprivate nonisolated(unsafe) static var innerTaskPool = NSMutableDictionary()
+    fileprivate nonisolated(unsafe) static var innerTaskSemaphore = DispatchSemaphore(value: 1)
 }
 
 // MARK: - Date+Foundation
 extension Date {
-    
-    nonisolated(unsafe) fileprivate static var innerCurrentBaseTime: TimeInterval = 0
-    nonisolated(unsafe) fileprivate static var innerLocalBaseTime: TimeInterval = 0
-    nonisolated(unsafe) fileprivate static var innerDateFormatter: DateFormatter = {
+    fileprivate nonisolated(unsafe) static var innerCurrentBaseTime: TimeInterval = 0
+    fileprivate nonisolated(unsafe) static var innerLocalBaseTime: TimeInterval = 0
+    fileprivate nonisolated(unsafe) static var innerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
         return formatter
     }()
-    nonisolated(unsafe) fileprivate static var innerServerDateFormatter: DateFormatter = {
+
+    fileprivate nonisolated(unsafe) static var innerServerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "GMT")
         formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
@@ -1388,20 +1384,17 @@ extension Date {
 
 // MARK: - UserDefaults+Foundation
 extension URLSession {
-    
-    nonisolated(unsafe) fileprivate static var innerHttpProxyDisabled = false
-    
+    fileprivate nonisolated(unsafe) static var innerHttpProxyDisabled = false
 }
 
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
-    
-    nonisolated(unsafe) private static var swizzleHttpProxyFinished = false
-    
+    private nonisolated(unsafe) static var swizzleHttpProxyFinished = false
+
     fileprivate static func swizzleHttpProxy() {
         guard !swizzleHttpProxyFinished else { return }
         swizzleHttpProxyFinished = true
-        
+
         NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:)),
@@ -1413,7 +1406,7 @@ extension FrameworkAutoloader {
             }
             return store.original(selfObject, store.selector, configuration)
         }}
-        
+
         NSObject.fw.swizzleClassMethod(
             URLSession.self,
             selector: #selector(URLSession.init(configuration:delegate:delegateQueue:)),
@@ -1426,5 +1419,4 @@ extension FrameworkAutoloader {
             return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
         }}
     }
-    
 }

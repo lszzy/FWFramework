@@ -23,7 +23,7 @@ import UIKit
             setProperty(newValue, forName: "alertPlugin")
         }
     }
-    
+
     /// 显示错误警告框
     /// - Parameters:
     ///   - error: 错误对象
@@ -80,7 +80,7 @@ import UIKit
     ) {
         showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: 0, promptBlock: nil, actionBlock: { _, index in actionBlock?(index) }, cancelBlock: cancelBlock, customBlock: nil)
     }
-    
+
     /// 显示确认框(简单版)
     /// - Parameters:
     ///   - title: 确认框标题
@@ -113,8 +113,8 @@ import UIKit
         cancelBlock: (() -> Void)? = nil
     ) {
         let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? FrameworkBundle.confirmButton)
-        
-        showAlert(title: title, message: message, style: .default, cancel: cancel, actions: [targetConfirm], promptCount: 0, promptBlock: nil, actionBlock: { _, index in confirmBlock?() }, cancelBlock: cancelBlock, customBlock: nil)
+
+        showAlert(title: title, message: message, style: .default, cancel: cancel, actions: [targetConfirm], promptCount: 0, promptBlock: nil, actionBlock: { _, _ in confirmBlock?() }, cancelBlock: cancelBlock, customBlock: nil)
     }
 
     /// 显示输入框(简单版)
@@ -159,10 +159,10 @@ import UIKit
         cancelBlock: (() -> Void)? = nil
     ) {
         let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? FrameworkBundle.confirmButton)
-        
+
         showAlert(title: title, message: message, style: .default, cancel: cancel, actions: [targetConfirm], promptCount: promptCount, promptBlock: promptBlock, actionBlock: { values, _ in confirmBlock?(values) }, cancelBlock: cancelBlock, customBlock: nil)
     }
-    
+
     /// 显示弹出框(完整版)
     /// - Parameters:
     ///   - title: 弹出框标题
@@ -196,11 +196,11 @@ import UIKit
                 targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.alert) ?? FrameworkBundle.closeButton
             }
         }
-        
+
         let plugin = alertPlugin ?? AlertPluginImpl.shared
         plugin.showAlert(title: title, message: message, style: style, cancel: targetCancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
     }
-    
+
     /// 显示操作表(无动作)
     /// - Parameters:
     ///   - title: 操作表标题
@@ -283,11 +283,11 @@ import UIKit
                 targetCancel = AlertPluginImpl.shared.defaultCloseButton?(.actionSheet) ?? FrameworkBundle.closeButton
             }
         }
-        
+
         let plugin = alertPlugin ?? AlertPluginImpl.shared
         plugin.showSheet(title: title, message: message, cancel: targetCancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: base)
     }
-    
+
     /// 手工隐藏弹出框，完成后回调。当animated为false时如需获取最新控制器等，也需在异步completion中处理
     /// - Parameters:
     ///   - animated: 是否执行动画
@@ -299,7 +299,7 @@ import UIKit
         let plugin = alertPlugin ?? AlertPluginImpl.shared
         plugin.hideAlert(animated: animated, completion: completion, in: base)
     }
-    
+
     /// 判断是否正在显示弹出框
     public var isShowingAlert: Bool {
         let plugin = alertPlugin ?? AlertPluginImpl.shared
@@ -325,7 +325,7 @@ import UIKit
         }
         ctrl?.fw.showAlert(error: error, cancel: cancel, cancelBlock: cancelBlock)
     }
-    
+
     /// 显示警告框(简单版)
     /// - Parameters:
     ///   - title: 警告框标题
@@ -371,7 +371,7 @@ import UIKit
         }
         ctrl?.fw.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, actionBlock: actionBlock, cancelBlock: cancelBlock)
     }
-    
+
     /// 显示确认框(简单版)
     /// - Parameters:
     ///   - title: 确认框标题
@@ -465,7 +465,7 @@ import UIKit
         }
         ctrl?.fw.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
-    
+
     /// 显示弹出框(完整版)
     /// - Parameters:
     ///   - title: 弹出框标题
@@ -496,7 +496,7 @@ import UIKit
         }
         ctrl?.fw.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock)
     }
-    
+
     /// 显示操作表(无动作)
     /// - Parameters:
     ///   - title: 操作表标题
@@ -588,7 +588,7 @@ import UIKit
         }
         ctrl?.fw.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock)
     }
-    
+
     /// 手工隐藏弹出框，完成后回调
     /// - Parameters:
     ///   - animated: 是否执行动画
@@ -603,7 +603,7 @@ import UIKit
         }
         ctrl?.fw.hideAlert(animated: animated, completion: completion)
     }
-    
+
     /// 判断是否正在显示弹出框
     public var isShowingAlert: Bool {
         var ctrl = viewController
@@ -627,16 +627,16 @@ import UIKit
             setProperty(newValue, forName: "alertAppearance")
         }
     }
-    
+
     /// 是否是推荐动作
     public var isPreferred: Bool {
         get {
-            return propertyBool(forName: "isPreferred")
+            propertyBool(forName: "isPreferred")
         }
         set {
             setPropertyBool(newValue, forName: "isPreferred")
             if titleColor != nil || (base.title?.count ?? 0) < 1 || !alertAppearance.actionEnabled { return }
-            
+
             var titleColor: UIColor?
             if !base.isEnabled {
                 titleColor = alertAppearance.disabledActionColor
@@ -649,7 +649,7 @@ import UIKit
             } else {
                 titleColor = alertAppearance.actionColor
             }
-            if let titleColor = titleColor {
+            if let titleColor {
                 invokeSetter("titleTextColor", object: titleColor)
             }
         }
@@ -658,31 +658,31 @@ import UIKit
     /// 指定标题颜色
     public var titleColor: UIColor? {
         get {
-            return property(forName: "titleColor") as? UIColor
+            property(forName: "titleColor") as? UIColor
         }
         set {
             setProperty(newValue, forName: "titleColor")
             invokeSetter("titleTextColor", object: newValue)
         }
     }
-    
+
     /// 快速创建弹出动作，title仅支持NSString
     public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
-        return action(object: object, style: style, appearance: nil, handler: handler)
+        action(object: object, style: style, appearance: nil, handler: handler)
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
     public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
         let title = object as? String
         let attributedTitle = title != nil ? nil : object?.attributedStringValue
-        
+
         let alertAction = UIAlertAction(title: attributedTitle != nil ? attributedTitle?.string : title, style: style, handler: handler)
-        
-        if let attributedTitle = attributedTitle, attributedTitle.length > 0,
+
+        if let attributedTitle, attributedTitle.length > 0,
            let titleColor = attributedTitle.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor {
             alertAction.fw.titleColor = titleColor
         }
-        
+
         alertAction.fw.alertAppearance = appearance
         alertAction.fw.isPreferred = false
         return alertAction
@@ -701,11 +701,11 @@ import UIKit
             setProperty(newValue, forName: "alertAppearance")
         }
     }
-    
+
     /// 弹出框样式，默认为Default
     public var alertStyle: AlertStyle {
         get {
-            return .init(rawValue: propertyInt(forName: "alertStyle"))
+            .init(rawValue: propertyInt(forName: "alertStyle"))
         }
         set {
             setPropertyInt(newValue.rawValue, forName: "alertStyle")
@@ -715,7 +715,7 @@ import UIKit
     /// 设置属性标题
     public var attributedTitle: NSAttributedString? {
         get {
-            return property(forName: "attributedTitle") as? NSAttributedString
+            property(forName: "attributedTitle") as? NSAttributedString
         }
         set {
             setPropertyCopy(newValue, forName: "attributedTitle")
@@ -726,17 +726,17 @@ import UIKit
     /// 设置属性消息
     public var attributedMessage: NSAttributedString? {
         get {
-            return property(forName: "attributedMessage") as? NSAttributedString
+            property(forName: "attributedMessage") as? NSAttributedString
         }
         set {
             setPropertyCopy(newValue, forName: "attributedMessage")
             invokeSetter("attributedMessage", object: newValue)
         }
     }
-    
+
     /// 快速创建弹出控制器，title和message仅支持NSString
     public static func alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style) -> UIAlertController {
-        return alertController(title: title, message: message, preferredStyle: preferredStyle, appearance: nil)
+        alertController(title: title, message: message, preferredStyle: preferredStyle, appearance: nil)
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
@@ -745,13 +745,13 @@ import UIKit
         let attributedTitle = title != nil ? nil : titleObject?.attributedStringValue
         let message = messageObject as? String
         let attributedMessage = message != nil ? nil : messageObject?.attributedStringValue
-        
+
         let alertController = UIAlertController(title: attributedTitle != nil ? attributedTitle?.string : title, message: attributedMessage != nil ? attributedMessage?.string : message, preferredStyle: preferredStyle)
-        
+
         alertController.fw.alertAppearance = appearance
         if attributedTitle != nil {
             alertController.fw.attributedTitle = attributedTitle
-        } else if let title = title, title.count > 0 && alertController.fw.alertAppearance.controllerEnabled {
+        } else if let title, title.count > 0 && alertController.fw.alertAppearance.controllerEnabled {
             var titleAttributes: [NSAttributedString.Key: Any] = [:]
             if let titleFont = alertController.fw.alertAppearance.titleFont {
                 titleAttributes[.font] = titleFont
@@ -761,10 +761,10 @@ import UIKit
             }
             alertController.fw.attributedTitle = NSAttributedString(string: title, attributes: titleAttributes)
         }
-        
+
         if attributedMessage != nil {
             alertController.fw.attributedMessage = attributedMessage
-        } else if let message = message, message.count > 0 && alertController.fw.alertAppearance.controllerEnabled {
+        } else if let message, message.count > 0 && alertController.fw.alertAppearance.controllerEnabled {
             var messageAttributes: [NSAttributedString.Key: Any] = [:]
             if let messageFont = alertController.fw.alertAppearance.messageFont {
                 messageAttributes[.font] = messageFont
@@ -774,30 +774,30 @@ import UIKit
             }
             alertController.fw.attributedMessage = NSAttributedString(string: message, attributes: messageAttributes)
         }
-        
+
         alertController.fw.safeObserveProperty(\.preferredAction) { object, _ in
             for action in object.actions {
                 if action.fw.isPreferred { action.fw.isPreferred = false }
             }
             object.preferredAction?.fw.isPreferred = true
         }
-        
+
         return alertController
     }
-    
+
     @discardableResult
     fileprivate static func alertSubview(_ view: UIView, block: (UIView) -> Bool) -> UIView? {
         if block(view) {
             return view
         }
-        
+
         for subview in view.subviews {
             let resultView = alertSubview(subview, block: block)
             if resultView != nil {
                 return resultView
             }
         }
-        
+
         return nil
     }
 }
@@ -805,9 +805,8 @@ import UIKit
 // MARK: - AlertPlugin
 /// 弹框样式可扩展枚举
 public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
-    
     public typealias RawValue = Int
-    
+
     /// 默认弹框样式
     public static let `default`: AlertStyle = .init(0)
     /// 成功弹框样式
@@ -816,58 +815,53 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
     public static let failure: AlertStyle = .init(2)
     /// 警告弹框样式
     public static let warning: AlertStyle = .init(3)
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 弹窗插件协议，应用可自定义弹窗实现
 @MainActor public protocol AlertPlugin: AnyObject {
-    
     /// 显示弹出框插件方法，默认使用系统UIAlertController
     func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
-    
+
     /// 显示操作表插件方法，默认使用系统UIAlertController
     func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
-    
+
     /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
     func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController)
-    
+
     /// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|AlertController
     func isShowingAlert(in viewController: UIViewController) -> Bool
-    
 }
 
 extension AlertPlugin {
-    
     /// 显示弹出框插件方法，默认使用系统UIAlertController
     public func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
         AlertPluginImpl.shared.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
-    
+
     /// 显示操作表插件方法，默认使用系统UIAlertController
     public func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
         AlertPluginImpl.shared.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
-    
+
     /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
     public func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController) {
         AlertPluginImpl.shared.hideAlert(animated: animated, completion: completion, in: viewController)
     }
-    
+
     /// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|AlertController
     public func isShowingAlert(in viewController: UIViewController) -> Bool {
-        return AlertPluginImpl.shared.isShowingAlert(in: viewController)
+        AlertPluginImpl.shared.isShowingAlert(in: viewController)
     }
-    
 }
 
 // MARK: - AlertAppearance
@@ -875,13 +869,12 @@ extension AlertPlugin {
 ///
 /// 备注：如果未自定义样式，显示效果和系统一致，不会产生任何影响；框架会先渲染actions动作再渲染cancel动作
 public class AlertAppearance: NSObject, @unchecked Sendable {
-    
     /// 单例模式，统一设置样式
     public static let appearance = AlertAppearance()
-    
+
     /// 自定义首选动作句柄，默认nil，跟随系统
     public var preferredActionBlock: ((_ alertController: UIAlertController) -> UIAlertAction?)?
-    
+
     /// 标题颜色，仅全局生效，默认nil
     public var titleColor: UIColor?
     /// 标题字体，仅全局生效，默认nil
@@ -890,7 +883,7 @@ public class AlertAppearance: NSObject, @unchecked Sendable {
     public var messageColor: UIColor?
     /// 消息字体，仅全局生效，默认nil
     public var messageFont: UIFont?
-    
+
     /// 默认动作颜色，仅全局生效，默认nil
     public var actionColor: UIColor?
     /// 首选动作颜色，仅全局生效，默认nil
@@ -901,26 +894,24 @@ public class AlertAppearance: NSObject, @unchecked Sendable {
     public var destructiveActionColor: UIColor?
     /// 禁用动作颜色，仅全局生效，默认nil
     public var disabledActionColor: UIColor?
-    
+
     /// 是否启用Controller样式，设置后自动启用
     public var controllerEnabled: Bool {
-        return titleColor != nil || titleFont != nil || messageColor != nil || messageFont != nil
+        titleColor != nil || titleFont != nil || messageColor != nil || messageFont != nil
     }
-    
+
     /// 是否启用Action样式，设置后自动启用
     public var actionEnabled: Bool {
-        return actionColor != nil || preferredActionColor != nil || cancelActionColor != nil || destructiveActionColor != nil || disabledActionColor != nil
+        actionColor != nil || preferredActionColor != nil || cancelActionColor != nil || destructiveActionColor != nil || disabledActionColor != nil
     }
-    
 }
 
 // MARK: - FrameworkAutoloader+AlertPlugin
 extension FrameworkAutoloader {
-    
     @objc static func loadPlugin_AlertPlugin() {
         swizzleAlertController()
     }
-    
+
     private static func swizzleAlertController() {
         NSObject.fw.swizzleInstanceMethod(
             UIAlertController.self,
@@ -929,16 +920,16 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) @MainActor (UIAlertController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            
+
             if selfObject.preferredStyle != .actionSheet { return }
             if selfObject.fw.attributedTitle == nil && selfObject.fw.attributedMessage == nil { return }
-            
+
             // 兼容iOS13操作表设置title和message样式不生效问题
             guard let targetClass = objc_getClass(String(format: "%@%@%@", "_U", "IInterfaceActionGrou", "pHeaderScrollView")) as? AnyClass else { return }
-            
+
             UIAlertController.fw.alertSubview(selfObject.view) { view in
                 if !view.isKind(of: targetClass) { return false }
-                
+
                 UIAlertController.fw.alertSubview(view) { view in
                     if let effectView = view as? UIVisualEffectView {
                         // 取消effect效果，否则样式不生效，全是灰色
@@ -951,5 +942,4 @@ extension FrameworkAutoloader {
             }
         }}
     }
-    
 }

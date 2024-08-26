@@ -23,7 +23,7 @@ import UIKit
             setProperty(newValue, forName: "toastPlugin")
         }
     }
-    
+
     /// 设置吐司外间距，默认zero
     public var toastInsets: UIEdgeInsets {
         get {
@@ -36,7 +36,7 @@ import UIKit
             setProperty(NSValue(uiEdgeInsets: newValue), forName: "toastInsets")
         }
     }
-    
+
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
@@ -50,18 +50,18 @@ import UIKit
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         plugin.hideLoading(delayed: delayed, in: base)
     }
-    
+
     /// 获取正在显示的加载吐司视图
     public var showingLoadingView: UIView? {
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingLoadingView(in: base)
     }
-    
+
     /// 是否正在显示加载吐司
     public var isShowingLoading: Bool {
-        return showingLoadingView != nil
+        showingLoadingView != nil
     }
-    
+
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         let attributedText = text?.attributedStringValue
@@ -75,18 +75,18 @@ import UIKit
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         plugin.hideProgress(in: base)
     }
-    
+
     /// 获取正在显示的进度条吐司视图
     public var showingProgressView: UIView? {
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingProgressView(in: base)
     }
-    
+
     /// 是否正在显示进度条吐司
     public var isShowingProgress: Bool {
-        return showingProgressView != nil
+        showingProgressView != nil
     }
-    
+
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
     public func showMessage(error: Error?, completion: (() -> Void)? = nil) {
         showMessage(
@@ -110,16 +110,16 @@ import UIKit
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         plugin.hideMessage(in: base)
     }
-    
+
     /// 获取正在显示的消息吐司视图
     public var showingMessageView: UIView? {
         let plugin = toastPlugin ?? ToastPluginImpl.shared
         return plugin.showingMessageView(in: base)
     }
-    
+
     /// 是否正在显示消息吐司
     public var isShowingMessage: Bool {
-        return showingMessageView != nil
+        showingMessageView != nil
     }
 }
 
@@ -130,25 +130,25 @@ import UIKit
         get { propertyBool(forName: "toastInWindow") }
         set { setPropertyBool(newValue, forName: "toastInWindow") }
     }
-    
+
     /// 设置吐司是否显示在祖先视图上，默认NO，显示到view上
     public var toastInAncestor: Bool {
         get { propertyBool(forName: "toastInAncestor") }
         set { setPropertyBool(newValue, forName: "toastInAncestor") }
     }
-    
+
     /// 自定义吐司插件，未设置时自动从插件池加载
     public var toastPlugin: ToastPlugin! {
-        get { return toastContainer.fw.toastPlugin }
+        get { toastContainer.fw.toastPlugin }
         set { toastContainer.fw.toastPlugin = newValue }
     }
-    
+
     /// 设置吐司外间距，默认zero
     public var toastInsets: UIEdgeInsets {
-        get { return toastContainer.fw.toastInsets }
+        get { toastContainer.fw.toastInsets }
         set { toastContainer.fw.toastInsets = newValue }
     }
-    
+
     /// 获取或设置吐司容器视图，默认view
     public var toastContainer: UIView! {
         get {
@@ -163,7 +163,7 @@ import UIKit
             setPropertyWeak(newValue, forName: "toastContainer")
         }
     }
-    
+
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         toastContainer.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
@@ -173,17 +173,17 @@ import UIKit
     public func hideLoading(delayed: Bool = false) {
         toastContainer.fw.hideLoading(delayed: delayed)
     }
-    
+
     /// 获取正在显示的加载吐司视图
     public var showingLoadingView: UIView? {
-        return toastContainer.fw.showingLoadingView
+        toastContainer.fw.showingLoadingView
     }
-    
+
     /// 是否正在显示加载吐司
     public var isShowingLoading: Bool {
-        return toastContainer.fw.isShowingLoading
+        toastContainer.fw.isShowingLoading
     }
-    
+
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         toastContainer.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
@@ -193,17 +193,17 @@ import UIKit
     public func hideProgress() {
         toastContainer.fw.hideProgress()
     }
-    
+
     /// 获取正在显示的进度条吐司视图
     public var showingProgressView: UIView? {
-        return toastContainer.fw.showingProgressView
+        toastContainer.fw.showingProgressView
     }
-    
+
     /// 是否正在显示进度条吐司
     public var isShowingProgress: Bool {
-        return toastContainer.fw.isShowingProgress
+        toastContainer.fw.isShowingProgress
     }
-    
+
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
     public func showMessage(error: Error?, completion: (() -> Void)? = nil) {
         toastContainer.fw.showMessage(error: error, completion: completion)
@@ -218,15 +218,15 @@ import UIKit
     public func hideMessage() {
         toastContainer.fw.hideMessage()
     }
-    
+
     /// 获取正在显示的消息吐司视图
     public var showingMessageView: UIView? {
-        return toastContainer.fw.showingMessageView
+        toastContainer.fw.showingMessageView
     }
-    
+
     /// 是否正在显示消息吐司
     public var isShowingMessage: Bool {
-        return toastContainer.fw.isShowingMessage
+        toastContainer.fw.isShowingMessage
     }
 }
 
@@ -234,16 +234,16 @@ import UIKit
 @MainActor extension Wrapper where Base: UIWindow {
     /// 自定义吐司插件，未设置时自动从插件池加载
     public static var toastPlugin: ToastPlugin! {
-        get { return UIWindow.fw.main?.fw.toastPlugin }
+        get { UIWindow.fw.main?.fw.toastPlugin }
         set { UIWindow.fw.main?.fw.toastPlugin = newValue }
     }
-    
+
     /// 设置吐司外间距，默认zero
     public static var toastInsets: UIEdgeInsets {
-        get { return UIWindow.fw.main?.fw.toastInsets ?? .zero }
+        get { UIWindow.fw.main?.fw.toastInsets ?? .zero }
         set { UIWindow.fw.main?.fw.toastInsets = newValue }
     }
-    
+
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public static func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw.main?.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
@@ -253,17 +253,17 @@ import UIKit
     public static func hideLoading(delayed: Bool = false) {
         UIWindow.fw.main?.fw.hideLoading(delayed: delayed)
     }
-    
+
     /// 获取正在显示的加载吐司视图
     public static var showingLoadingView: UIView? {
-        return UIWindow.fw.main?.fw.showingLoadingView
+        UIWindow.fw.main?.fw.showingLoadingView
     }
-    
+
     /// 是否正在显示加载吐司
     public static var isShowingLoading: Bool {
-        return UIWindow.fw.main?.fw.isShowingLoading ?? false
+        UIWindow.fw.main?.fw.isShowingLoading ?? false
     }
-    
+
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
     public static func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (() -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
         UIWindow.fw.main?.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
@@ -273,17 +273,17 @@ import UIKit
     public static func hideProgress() {
         UIWindow.fw.main?.fw.hideProgress()
     }
-    
+
     /// 获取正在显示的进度条吐司视图
     public static var showingProgressView: UIView? {
-        return UIWindow.fw.main?.fw.showingProgressView
+        UIWindow.fw.main?.fw.showingProgressView
     }
-    
+
     /// 是否正在显示进度条吐司
     public static var isShowingProgress: Bool {
-        return UIWindow.fw.main?.fw.isShowingProgress ?? false
+        UIWindow.fw.main?.fw.isShowingProgress ?? false
     }
-    
+
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
     public static func showMessage(error: Error?, completion: (() -> Void)? = nil) {
         UIWindow.fw.main?.fw.showMessage(error: error, completion: completion)
@@ -298,24 +298,23 @@ import UIKit
     public static func hideMessage() {
         UIWindow.fw.main?.fw.hideMessage()
     }
-    
+
     /// 获取正在显示的消息吐司视图
     public static var showingMessageView: UIView? {
-        return UIWindow.fw.main?.fw.showingMessageView
+        UIWindow.fw.main?.fw.showingMessageView
     }
-    
+
     /// 是否正在显示消息吐司
     public static var isShowingMessage: Bool {
-        return UIWindow.fw.main?.fw.isShowingMessage ?? false
+        UIWindow.fw.main?.fw.isShowingMessage ?? false
     }
 }
 
 // MARK: - ToastPlugin
 /// 消息吐司可扩展样式枚举
 public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
-    
     public typealias RawValue = Int
-    
+
     /// 默认消息样式
     public static let `default`: ToastStyle = .init(0)
     /// 加载吐司样式
@@ -328,22 +327,20 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
     public static let failure: ToastStyle = .init(4)
     /// 警告消息样式
     public static let warning: ToastStyle = .init(5)
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 吐司插件协议，应用可自定义吐司插件实现
 @MainActor public protocol ToastPlugin: AnyObject {
-    
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
     func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView)
 
@@ -370,11 +367,9 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
 
     /// 获取正在显示的消息吐司视图
     func showingMessageView(in view: UIView) -> UIView?
-    
 }
 
 extension ToastPlugin {
-    
     /// 默认实现，显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
     public func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)?, in view: UIView) {
         ToastPluginImpl.shared.showLoading(attributedText: attributedText, attributedDetail: attributedDetail, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
@@ -387,7 +382,7 @@ extension ToastPlugin {
 
     /// 默认实现，获取正在显示的加载吐司视图
     public func showingLoadingView(in view: UIView) -> UIView? {
-        return ToastPluginImpl.shared.showingLoadingView(in: view)
+        ToastPluginImpl.shared.showingLoadingView(in: view)
     }
 
     /// 默认实现，显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
@@ -402,7 +397,7 @@ extension ToastPlugin {
 
     /// 默认实现，获取正在显示的进度条吐司视图
     public func showingProgressView(in view: UIView) -> UIView? {
-        return ToastPluginImpl.shared.showingProgressView(in: view)
+        ToastPluginImpl.shared.showingProgressView(in: view)
     }
 
     /// 默认实现，显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
@@ -417,14 +412,12 @@ extension ToastPlugin {
 
     /// 默认实现，获取正在显示的消息吐司视图
     public func showingMessageView(in view: UIView) -> UIView? {
-        return ToastPluginImpl.shared.showingMessageView(in: view)
+        ToastPluginImpl.shared.showingMessageView(in: view)
     }
-    
 }
 
 // MARK: - FrameworkAutoloader+ToastPlugin
 extension FrameworkAutoloader {
-    
     @objc static func loadPlugin_ToastPlugin() {
         RequestContextAccessory.showErrorBlock = { @MainActor @Sendable context, error in
             if let viewController = context as? UIViewController {
@@ -435,7 +428,7 @@ extension FrameworkAutoloader {
                 UIWindow.fw.showMessage(error: error)
             }
         }
-        
+
         RequestContextAccessory.showLoadingBlock = { @MainActor @Sendable context in
             if let viewController = context as? UIViewController {
                 viewController.fw.showLoading()
@@ -443,7 +436,7 @@ extension FrameworkAutoloader {
                 view.fw.showLoading()
             }
         }
-        
+
         RequestContextAccessory.hideLoadingBlock = { @MainActor @Sendable context in
             if let viewController = context as? UIViewController {
                 viewController.fw.hideLoading()
@@ -452,5 +445,4 @@ extension FrameworkAutoloader {
             }
         }
     }
-    
 }

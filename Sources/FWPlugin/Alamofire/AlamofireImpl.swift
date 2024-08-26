@@ -5,8 +5,8 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-import Foundation
 import Alamofire
+import Foundation
 #if FWMacroSPM
 @_spi(FW) import FWFramework
 #endif
@@ -14,12 +14,11 @@ import Alamofire
 // MARK: - AlamofireImpl
 /// Alamofire请求插件，启用Alamofire子模块后生效
 open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
-    
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
     public static let shared = AlamofireImpl()
-    
+
     /// SessionConfiguration配置，默认nil
     open var sessionConfiguration: URLSessionConfiguration = .af.default
     /// 全局intercepter配置，默认nil
@@ -34,29 +33,29 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
     open var eventMonitors: [EventMonitor] = []
     /// 自定义请求intercepter句柄，如配置RetryPolicy等，默认nil
     open var requestIntercepterBlock: ((HTTPRequest) -> RequestInterceptor?)?
-    
+
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
     /// 有效状态码范围，默认为(100-600)
     open var acceptableStatusCodes: [Int] = Array(100..<600)
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: [String]?
-    
+
     #if DEBUG
     /// 是否启用Mock，配合NetworkMocker使用，默认false
     open var mockEnabled: Bool = false {
         didSet {
             guard mockEnabled else { return }
-            
+
             let protocolClasses = sessionConfiguration.protocolClasses ?? []
             sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
         }
     }
     #endif
-    
+
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
     private var urlEncodingMethods: [RequestMethod] = [.GET, .HEAD, .DELETE]
-    
+
     /// 会话，延迟加载前可配置
     open lazy var session: Session = {
         let result = Session(
@@ -71,20 +70,20 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         )
         return result
     }()
-    
+
     // MARK: - RequestPlugin
     open func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest {
         if let customUrlRequest = request.customUrlRequest() {
             return customUrlRequest
         }
-        
+
         let requestUrl = RequestManager.shared.buildRequestUrl(for: request)
         let method: HTTPMethod = .init(rawValue: request.requestMethod().rawValue)
         var headers: HTTPHeaders?
         if let requestHeaders = request.requestHeaders() {
             headers = .init(requestHeaders)
         }
-        
+
         var urlRequest = try URLRequest(url: requestUrl, method: method, headers: headers)
         if request.constructingBodyBlock == nil {
             let encoding: ParameterEncoding
@@ -94,21 +93,21 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             } else {
                 encoding = URLEncoding.default
             }
-            
+
             let parameters = request.requestArgument() as? [String: Any]
             urlRequest = try encoding.encode(urlRequest, with: parameters)
         }
-        
+
         urlRequest.timeoutInterval = request.requestTimeoutInterval()
         urlRequest.allowsCellularAccess = request.allowsCellularAccess()
         if let cachePolicy = request.requestCachePolicy() {
             urlRequest.cachePolicy = cachePolicy
         }
         RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
-        
+
         return urlRequest
     }
-    
+
     open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         let urlRequest: URLRequest
         do {
@@ -117,27 +116,27 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             completionHandler?(HTTPURLResponse(), nil, error)
             return
         }
-        
+
         let requestIntercepter = requestIntercepterBlock?(request)
         let dataRequest: DataRequest
-        
+
         if request.constructingBodyBlock != nil {
             dataRequest = session.upload(multipartFormData: { formData in
                 let parameters = request.requestArgument() as? [String: Any]
-                parameters?.forEach { (field, value) in
+                parameters?.forEach { field, value in
                     if let data = (value as? Data) ?? String.fw.safeString(value).data(using: .utf8) {
                         formData.append(data, name: field)
                     }
                 }
-                
+
                 request.constructingBodyBlock?(formData)
             }, with: urlRequest, interceptor: requestIntercepter)
         } else {
             dataRequest = session.request(urlRequest, interceptor: requestIntercepter)
         }
-        
+
         adaptRequest(dataRequest, for: request)
-        
+
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
@@ -154,14 +153,14 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
         }
     }
-    
+
     open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
         let requestIntercepter = requestIntercepterBlock?(request)
         let downloadRequest: DownloadRequest
-        
-        if let resumeData = resumeData {
+
+        if let resumeData {
             downloadRequest = session.download(resumingWith: resumeData, interceptor: requestIntercepter, to: { _, _ in
-                return (URL(fileURLWithPath: destination, isDirectory: false), [])
+                (URL(fileURLWithPath: destination, isDirectory: false), [])
             })
         } else {
             let urlRequest: URLRequest
@@ -171,14 +170,14 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
                 completionHandler?(HTTPURLResponse(), nil, error)
                 return
             }
-            
+
             downloadRequest = session.download(urlRequest, interceptor: requestIntercepter, to: { _, _ in
-                return (URL(fileURLWithPath: destination, isDirectory: false), [])
+                (URL(fileURLWithPath: destination, isDirectory: false), [])
             })
         }
-        
+
         adaptRequest(downloadRequest, for: request)
-        
+
         if let authHeaders = request.requestAuthorizationHeaders(),
            let authUser = authHeaders.first,
            let authPwd = authHeaders.last {
@@ -197,19 +196,19 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             })
         }
     }
-    
+
     open func suspendRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.suspend()
     }
-    
+
     open func resumeRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.resume()
     }
-    
+
     open func cancelRequest(_ request: HTTPRequest) {
         (request.requestAdapter as? Request)?.cancel()
     }
-    
+
     // MARK: - Private
     private func adaptRequest(_ alamofireRequest: Request, for request: HTTPRequest) {
         alamofireRequest.onURLSessionTaskCreation { requestTask in
@@ -221,20 +220,20 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             default:
                 requestTask.priority = URLSessionTask.defaultPriority
             }
-            
+
             request.requestTask = requestTask
         }
-        
+
         request.requestAdapter = alamofireRequest
     }
-    
+
     private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
         var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {
             request.responseData = responseData
             request.responseString = String(data: responseData, encoding: RequestManager.shared.stringEncoding(for: request))
-            
+
             switch request.responseSerializerType() {
             case .JSON:
                 do {
@@ -242,12 +241,12 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
                     if removeNullValues {
                         jsonObject = HTTPResponseSerializer.removingKeysWithNullValues(jsonObject)
                     }
-                    
+
                     request.responseObject = jsonObject
                     request.responseJSONObject = request.responseObject
                 } catch {
                     serializationError = AFError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error))
-                    
+
                     request.responseObject = nil
                     request.responseJSONObject = request.responseObject
                 }
@@ -255,10 +254,9 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
                 break
             }
         }
-        
+
         completionHandler?(response, request.responseObject, error ?? serializationError)
     }
-    
 }
 
 // MARK: - AFError+AlamofireImpl
@@ -269,27 +267,27 @@ extension Alamofire.MultipartFormData: RequestMultipartFormData {
     public func append(_ formData: Data, name: String) {
         append(formData, withName: name)
     }
-    
+
     public func append(_ fileData: Data, name: String, fileName: String, mimeType: String) {
         append(fileData, withName: name, fileName: fileName, mimeType: mimeType)
     }
-    
+
     public func append(_ fileURL: URL, name: String) {
         append(fileURL, withName: name)
     }
-    
+
     public func append(_ fileURL: URL, name: String, fileName: String, mimeType: String) {
         append(fileURL, withName: name, fileName: fileName, mimeType: mimeType)
     }
-    
+
     public func append(_ inputStream: InputStream, length: UInt64, name: String, fileName: String, mimeType: String) {
         append(inputStream, withLength: length, name: name, fileName: fileName, mimeType: mimeType)
     }
-    
+
     public func append(_ inputStream: InputStream, length: UInt64, headers: [String: String]) {
         append(inputStream, withLength: length, headers: .init(headers))
     }
-    
+
     public func append(_ body: Data, headers: [String: String]) {
         append(InputStream(data: body), withLength: UInt64(body.count), headers: .init(headers))
     }

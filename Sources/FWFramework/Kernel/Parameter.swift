@@ -28,13 +28,13 @@ public protocol URLParameter: AnyParameter {
 
 public protocol ArrayParameter<E>: AnyParameter {
     associatedtype E
-    var arrayValue: Array<E> { get }
+    var arrayValue: [E] { get }
 }
 
 public protocol DictionaryParameter<K, V>: AnyParameter where K: Hashable {
     associatedtype K
     associatedtype V
-    var dictionaryValue: Dictionary<K, V> { get }
+    var dictionaryValue: [K: V] { get }
 }
 
 public protocol ObjectParameter: DictionaryParameter, ObjectType {
@@ -70,11 +70,11 @@ extension URLRequest: URLParameter, StringParameter {
 }
 
 extension Array: ArrayParameter {
-    public var arrayValue: Array<Element> { self }
+    public var arrayValue: [Element] { self }
 }
 
 extension Dictionary: DictionaryParameter {
-    public var dictionaryValue: Dictionary<Key, Value> { self }
+    public var dictionaryValue: [Key: Value] { self }
 }
 
 extension ObjectParameter {

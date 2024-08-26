@@ -9,7 +9,6 @@ import UIKit
 
 /// 默认图片预览插件
 open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin, @unchecked Sendable {
-    
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
@@ -20,11 +19,11 @@ open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin, @unchecked Send
 
     /// 图片预览全局自定义句柄，show方法自动调用
     open var customBlock: ((ImagePreviewController) -> Void)?
-    
+
     // MARK: - ImagePreviewPlugin
     open func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
         var previewController: ImagePreviewController
-        if let previewControllerBlock = previewControllerBlock {
+        if let previewControllerBlock {
             previewController = previewControllerBlock()
         } else {
             previewController = ImagePreviewController()
@@ -33,17 +32,16 @@ open class ImagePreviewPluginImpl: NSObject, ImagePreviewPlugin, @unchecked Send
             previewController.dismissingWhenTappedVideo = true
             previewController.presentingStyle = .zoom
         }
-        
+
         previewController.imagePreviewView.placeholderImage = placeholderImage
         previewController.imagePreviewView.renderZoomImageView = renderBlock
         previewController.sourceImageView = sourceView
         previewController.imagePreviewView.imageURLs = imageURLs
         previewController.imagePreviewView.imageInfos = imageInfos
-        
+
         self.customBlock?(previewController)
         customBlock?(previewController)
         previewController.imagePreviewView.currentImageIndex = currentIndex
         viewController.present(previewController, animated: true)
     }
-    
 }

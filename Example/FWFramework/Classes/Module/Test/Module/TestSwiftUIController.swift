@@ -7,15 +7,14 @@
 //
 
 #if canImport(SwiftUI)
-import SwiftUI
 import Combine
 import FWFramework
+import SwiftUI
 
 class TestSwiftUIController: UIViewController, ViewControllerProtocol {
-    
     func setupSubviews() {
         app.navigationBarHidden = Bool.random()
-        
+
         let hostingView = TestSwiftUIContent()
             .viewContext(self, userInfo: [
                 "color": Color.green
@@ -32,16 +31,14 @@ class TestSwiftUIController: UIViewController, ViewControllerProtocol {
             .top(toSafeArea: .zero)
             .bottom()
     }
-    
 }
 
 class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
-    
     // MARK: - Accessor
     var mode: Int = [0, 1, 2].randomElement()!
-    
+
     var error: String?
-    
+
     // MARK: - Subviews
     var stateView: some View {
         StateView { view in
@@ -56,7 +53,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
                         }
                     }
                 }
-        } content: { view, _ in
+        } content: { _, _ in
             TestSwiftUIContent()
         } failure: { view, error in
             Button(error?.localizedDescription ?? "") {
@@ -64,7 +61,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             }
         }
     }
-    
+
     // MARK: - Lifecycle
     override func setupNavbar() {
         hidesBottomBarWhenPushed = true
@@ -74,7 +71,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             app.navigationBarHidden = Bool.random()
         }
     }
-    
+
     override func setupSubviews() {
         rootView = stateView
             .viewContext(self)
@@ -97,52 +94,50 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             )
             .eraseToAnyView()
     }
-    
 }
 
 class TestSwiftUIModel: ViewModel {
     // View中可通过$viewModel.isEnglish获取Binding<Bool>
     @Published var isEnglish: Bool = true
-    
+
     @Published var items: [String] = []
-    
+
     // 数据改变时调用editSubject.send(self)通知视图刷新
     var editPublisher: AnyPublisher<String, Never> { editSubject.eraseToAnyPublisher() }
     private let editSubject = PassthroughSubject<String, Never>()
-    
+
     init(isEnglish: Bool = true) {
         self.isEnglish = isEnglish
     }
-    
+
     func reloadData() {
         // 请求数据，并修改items，通知View刷新
     }
 }
 
 struct TestSwiftUIContent: View {
-    
     @Environment(\.viewContext) var viewContext: ViewContext
-    
-    @ObservedObject var viewModel: TestSwiftUIModel = TestSwiftUIModel()
-    
+
+    @ObservedObject var viewModel: TestSwiftUIModel = .init()
+
     @State var topSize: CGSize = .zero
     @State var contentOffset: CGPoint = .zero
     @State var shouldRefresh: Bool = false
     @State var attributedColor = UIColor.app.randomColor
     @State var attributedChanged: Bool = false
-    
+
     @State var moreItems: [String] = []
-    
+
     @State var buttonRemovable: Bool = false
     @State var buttonVisible: Bool = true
-    
+
     @State var showingAlert: Bool = false
     @State var showingToast: Bool = false
     @State var showingEmpty: Bool = false
     @State var showingLoading: Bool = false
     @State var showingProgress: Bool = false
     @State var progressValue: CGFloat = 0
-    
+
     var body: some View {
         GeometryReader { proxy in
             ScrollView {
@@ -150,10 +145,10 @@ struct TestSwiftUIContent: View {
                     ZStack {
                         InvisibleView()
                             .captureContentOffset(proxy: proxy)
-                        
+
                         Text("contentOffset: \(Int(contentOffset.y))")
                     }
-                    
+
                     VStack {
                         HStack(alignment: .center, spacing: 50) {
                             ImageView(url: "https://ww4.sinaimg.cn/bmiddle/eaeb7349jw1ewbhiu69i2g20b4069e86.gif")
@@ -161,49 +156,49 @@ struct TestSwiftUIContent: View {
                                 .clipped()
                                 .cornerRadius(50)
                                 .frame(width: 100, height: 100)
-                            
+
                             WebImageView("http://kvm.wuyong.site/images/images/animation.png")
                                 .resizable()
                                 .clipped()
                                 .frame(width: 100, height: 100)
                         }
-                        
+
                         Text {
                             Text("width: \(Int(topSize.width))")
                                 .concatenate {
                                     Text(" ")
                                 }
-                            
+
                             Text("height: \(Int(topSize.height))")
                         }
                         .hostingViewInitialize { hostingView in
                             hostingView.backgroundColor = UIColor.app.randomColor
                         }
-                        
-                        AttributedText(NSMutableAttributedString({
+
+                        AttributedText(NSMutableAttributedString {
                             "我是富文本，"
-                            
+
                             NSAttributedString(string: "点击我可以变色，", attributes: [
                                 .foregroundColor: attributedColor,
-                                .init("URL"): 1,
+                                .init("URL"): 1
                             ])
-                            
+
                             if attributedChanged {
                                 "我是动态内容，"
                             }
-                            
+
                             NSAttributedString(string: "点击我切换动态内容，", attributes: [
                                 .foregroundColor: UIColor.blue,
-                                .init("URL"): 2,
+                                .init("URL"): 2
                             ])
-                            
+
                             "我可以跳转"
-                            
+
                             NSAttributedString(string: "https://www.baidu.com", attributes: [
                                 .foregroundColor: UIColor.blue,
-                                .link: APP.safeURL("https://www.baidu.com"),
+                                .link: APP.safeURL("https://www.baidu.com")
                             ])
-                        })) { link in
+                        }) { link in
                             if let url = link as? URL {
                                 Router.openURL(url)
                             } else if let value = link as? Int {
@@ -221,12 +216,12 @@ struct TestSwiftUIContent: View {
                     }
                     .padding(.top, 16)
                     .captureSize(in: $topSize)
-                    
+
                     Toggle(isOn: $buttonRemovable) {
                         EmptyView()
                     }
                     .toggleStyle(TestSwiftUIToggleStyle())
-                    
+
                     HStack(alignment: .center, spacing: 16) {
                         HStack {
                             Spacer()
@@ -239,7 +234,7 @@ struct TestSwiftUIContent: View {
                         .buttonStyle(BorderlessButtonStyle())
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
-                        
+
                         Button {
                             buttonVisible.toggle()
                         } label: {
@@ -253,7 +248,7 @@ struct TestSwiftUIContent: View {
                         .frame(width: (APP.screenWidth - 64) / 3, height: 40)
                         .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
                         .removable(buttonRemovable)
-                        
+
                         Button {
                             buttonRemovable.toggle()
                         } label: {
@@ -269,11 +264,11 @@ struct TestSwiftUIContent: View {
                         .buttonStyle(BorderlessButtonStyle())
                     }
                 }
-                
+
                 Button {
                     let vc = TestSwiftUIListController()
                     Navigator.open(vc)
-                    
+
                     viewContext.object = "Object"
                     viewContext.userInfo = ["color": Color(UIColor.app.randomColor)]
                     viewContext.send()
@@ -285,25 +280,25 @@ struct TestSwiftUIContent: View {
                     .frame(height: 44)
                     .background(viewContext.userInfo?["color"] as? Color ?? .yellow)
                 }
-                
+
                 Button("Push SwiftUI") {
                     let viewController = TestSwiftUIController()
                     Navigator.topNavigationController?.pushViewController(viewController, animated: true)
                 }
                 .frame(height: 44)
-                
+
                 Button("Push HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.app.open(viewController)
                 }
                 .frame(height: 44)
-                
+
                 Button("Present HostingController") {
                     let viewController = TestSwiftUIHostingController()
                     viewContext.viewController?.present(viewController, animated: true)
                 }
                 .frame(height: 44)
-                
+
                 ForEach(["Show Alert", "Show Toast", "Show Empty"], id: \.self) { title in
                     Button(title) {
                         if title == "Show Alert" {
@@ -316,7 +311,7 @@ struct TestSwiftUIContent: View {
                     }
                     .frame(height: 44)
                 }
-                
+
                 Button("Show Loading") {
                     showingLoading = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -324,7 +319,7 @@ struct TestSwiftUIContent: View {
                     }
                 }
                 .frame(height: 44)
-                
+
                 Button("Show Progress") {
                     showingProgress = true
                     TestController.mockProgress { progress, finished in
@@ -336,12 +331,12 @@ struct TestSwiftUIContent: View {
                     }
                 }
                 .frame(height: 44)
-                
+
                 Button(viewModel.isEnglish ? "Language" : "多语言") {
                     viewModel.isEnglish = !viewModel.isEnglish
                 }
                 .frame(height: 44)
-                
+
                 ForEach(moreItems, id: \.self) { title in
                     Button {
                         Router.openURL(title)
@@ -404,31 +399,28 @@ struct TestSwiftUIContent: View {
             print("object: \(String(describing: object))")
         }
     }
-    
 }
 
 struct TestSwiftUIToggleStyle: ToggleStyle {
-    
     func makeBody(configuration: ToggleStyleConfiguration) -> some View {
         HStack {
             configuration.label
-            
+
             RoundedRectangle(cornerRadius: 25.5)
                 .frame(width: 51, height: 31, alignment: .center)
-                .overlay((
+                .overlay(
                     Circle()
                         .foregroundColor(Color(.systemBackground))
                         .padding(3)
                         .offset(x: configuration.isOn ? 10 : -10, y: 0)
                         .animation(.linear(duration: 0.2))
-                ))
+                )
                 .foregroundColor(Color(.label))
                 .onTapGesture(perform: {
                     configuration.isOn.toggle()
                 })
         }
     }
-    
 }
 
 #endif

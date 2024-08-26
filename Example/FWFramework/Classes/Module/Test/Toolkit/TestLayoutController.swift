@@ -9,9 +9,8 @@
 import FWFramework
 
 class TestLayoutController: UIViewController, ViewControllerProtocol {
-    
     private var buttonWidth: CGFloat = 0
-    
+
     private lazy var attributedLabel: AttributedLabel = {
         let result = AttributedLabel()
         result.clipsToBounds = true
@@ -31,7 +30,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 self?.app.showMessage(text: "点击了 \(linkData)")
             }
         }
-        
+
         let linkDetector = AttributedLabelURLDetector()
         if let tagDetector = try? NSRegularExpression(pattern: "#[^#]+#") {
             linkDetector.addRegularExpression(tagDetector, attributes: [.underlineStyle: NSUnderlineStyle().rawValue])
@@ -42,17 +41,17 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         result.linkDetector = linkDetector
         return result
     }()
-    
+
     private lazy var debugView: UIView = {
         let result = UIView()
         return result
     }()
-    
+
     private lazy var debugLabel: UILabel = {
         let result = UILabel()
         return result
     }()
-    
+
     private lazy var debugButton: UIButton = {
         let result = UIButton(type: .custom)
         result.app.addTouch { [weak self] _ in
@@ -60,12 +59,12 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         return result
     }()
-    
+
     private lazy var debugImage: UIImageView = {
         let result = UIImageView()
         return result
     }()
-    
+
     private lazy var matchImage: UIImageView = {
         let result = UIImageView()
         result.image = UIImage.app.appIconImage()
@@ -76,7 +75,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         }
         return result
     }()
-    
+
     func setupNavbar() {
         view.app.layoutKey = "view"
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
@@ -89,17 +88,17 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             })
         }
     }
-    
+
     func setupSubviews() {
         view.arrangeSubviews {
             debugView
                 .chainValue(\.backgroundColor, AppTheme.textColor)
-                .chainBlock({ result in
+                .chainBlock { result in
                     result.app.addTapGesture { _ in
                         result.app.toggleCollapsed()
                     }
                     view.addSubview(result)
-                })
+                }
                 .arrangeLayout { result in
                     result.layoutChain
                         .top(toSafeArea: 20).identifier("debugView.top")
@@ -108,7 +107,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                         .width(50).collapse().identifier("debugView.width")
                         .height(50)
                 }
-            
+
             debugLabel
                 .chainValue(\.text, "text")
                 .chainValue(\.textAlignment, .center)
@@ -128,14 +127,14 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                         .centerY(toView: debugView)
                         .left(toViewRight: debugView, offset: 20)
                 }
-            
+
             debugButton
                 .chainBlock { button in
                     button.setTitleColor(AppTheme.textColor, for: .normal)
                     button.setTitle("btn", for: .normal)
                     view.addSubview(button)
                 }
-            
+
             debugImage
                 .chainValue(\.image, UIImage.app.appIconImage())
                 .chainValue(\.isUserInteractionEnabled, true)
@@ -152,7 +151,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                     .left(toViewRight: debugLabel, offset: 20)
                     .top(toView: debugView, offset: 0)
             }
-            
+
             debugImage.layoutChain
                 .width(50)
                 .height(toWidth: 1.0)
@@ -160,21 +159,21 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .right(20).collapseActive(false)
                 .attribute(.left, toAttribute: .right, ofView: debugButton, offset: 20, relation: .equal, priority: .defaultHigh).collapseActive()
         }
-        
+
         view.addSubview(matchImage)
         matchImage.layoutChain
             .height(50)
             .autoMatchDimension(true)
             .centerY(toView: debugView)
             .left(toViewRight: debugImage, offset: 20)
-        
+
         let iconsView = UIView()
         view.addSubview(iconsView)
         iconsView.layoutChain
             .top(toViewBottom: debugView, offset: 20)
             .horizontal(20)
             .height(50)
-        
+
         for _ in 0..<4 {
             let iconView = UIImageView()
             iconView.image = UIImage.app.appIconImage()
@@ -184,7 +183,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         iconsView.layoutChain
             .subviews(along: .horizontal, itemLength: APP.fixed(50), leadSpacing: 0, tailSpacing: 0)
             .subviews(along: .horizontal, leftSpacing: 0, rightSpacing: 0)
-        
+
         let lineHeight = ceil(APP.font(16).lineHeight)
         let moreText = "点击展开"
         buttonWidth = moreText.app.size(font: APP.font(16)).width + 20
@@ -193,12 +192,11 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .left(20)
             .right(20)
             .top(toViewBottom: iconsView, offset: 20)
-        
+
         attributedLabel.text = "我是非常长的文本，我可以附加"
         attributedLabel.appendImage(UIImage.app.appIconImage()!, maxSize: CGSize(width: 16, height: 16))
         attributedLabel.appendAttributedText(NSAttributedString(string: "，支持链接高亮https://www.baidu.com， #也可以实现标签# ， @实现用户对话 。我是更多更多的文本，我是更多更多的文本，我是更多更多的文本，我是更多更多的文本", attributes: .init()
-            .chainValue(.font, APP.font(16))
-        ))
+                .chainValue(.font, APP.font(16))))
         let collapseLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: "点击收起")
         collapseLabel.textAlignment = .center
         collapseLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: ceil(APP.font(16).lineHeight))
@@ -209,7 +207,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             self?.attributedLabel.lineBreakMode = .byTruncatingTail
         }
         attributedLabel.appendView(collapseLabel, margin: .zero)
-        
+
         let expandLabel = UILabel.app.label(font: APP.font(16), textColor: UIColor.blue, text: moreText)
         expandLabel.textAlignment = .center
         expandLabel.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: lineHeight)
@@ -220,7 +218,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             self?.attributedLabel.lineBreakMode = .byWordWrapping
         }
         attributedLabel.lineTruncatingAttachment = AttributedLabelAttachment(content: expandLabel, margin: .zero, alignment: .center, maxSize: .zero)
-        
+
         let numberLabel = UILabel()
         numberLabel.textAlignment = .center
         numberLabel.numberOfLines = 0
@@ -232,7 +230,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .width((APP.screenWidth - 60) / 2.0)
                 .top(toViewBottom: attributedLabel, offset: 20)
         }
-        
+
         let number2Label = UILabel()
         number2Label.textAlignment = .center
         number2Label.numberOfLines = 0
@@ -244,7 +242,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .width((APP.screenWidth - 60) / 2.0)
                 .top(toViewBottom: attributedLabel, offset: 20)
         }
-        
+
         let emptyLabel = UILabel()
         emptyLabel.textAlignment = .center
         emptyLabel.textColor = AppTheme.textColor
@@ -256,7 +254,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             make.top(toViewBottom: numberLabel, offset: 20)
             make.left(20)
         }
-        
+
         let emptyButton = UIButton()
         emptyButton.app.contentCollapse = true
         emptyButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -267,7 +265,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             make.top(toViewBottom: numberLabel, offset: 20)
             make.left(toViewRight: emptyLabel, offset: 20)
         }
-        
+
         let resultLabel = UILabel()
         let emptySize = emptyLabel.intrinsicContentSize.ceilValue
         let emptySize2 = emptyButton.intrinsicContentSize.ceilValue
@@ -287,7 +285,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         resultLabel.app.layoutMaker { make in
             make.right(20).top(toViewBottom: numberLabel, offset: 20)
         }
-        
+
         let bottomLeftImage = UIImageView()
         bottomLeftImage.image = UIImage.app.appIconImage()
         bottomLeftImage.isUserInteractionEnabled = true
@@ -299,7 +297,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .size(width: 50, height: 50)
             .left(20).collapse()
             .bottom(20 + APP.safeAreaInsets.bottom).collapse(APP.safeAreaInsets.bottom)
-        
+
         let bottomRightImage = UIImageView()
         bottomRightImage.image = UIImage.app.appIconImage()
         bottomRightImage.isUserInteractionEnabled = true
@@ -312,18 +310,18 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             .right(20).collapse()
             .bottom(20 + APP.safeAreaInsets.bottom).collapse(APP.safeAreaInsets.bottom)
     }
-    
+
     func randomImage() {
         let imageUrls = [
             "",
             "https://img2.baidu.com/it/u=1624963289,2527746346&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
             "https://up.enterdesk.com/edpic_source/b0/d1/f3/b0d1f35504e4106d48c84434f2298ada.jpg",
             "https://up.enterdesk.com/edpic_source/59/fc/06/59fc069244210ceb384c3fb88ec88121.jpg",
-            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8",
+            "https://pics1.baidu.com/feed/377adab44aed2e73f1080b24cbbc338c86d6fa1e.jpeg?token=d6d74d0211e3f22534f0986a53ebf7e8"
         ]
         matchImage.app.setImage(url: imageUrls.randomElement())
     }
-    
+
     func numberString() -> String {
         let number = NSNumber(value: 2345.6789)
         let string = NSMutableString()
@@ -336,7 +334,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         string.appendFormat("floord: %@\n", number.app.floorString(2, groupingSeparator: ","))
         return string as String
     }
-    
+
     func number2String() -> String {
         let number = NSNumber(value: -2345.6049)
         let string = NSMutableString()
@@ -349,5 +347,4 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         string.appendFormat("floorc: %@\n", number.app.floorString(2, groupingSeparator: ",", currencySymbol: "$"))
         return string as String
     }
-    
 }

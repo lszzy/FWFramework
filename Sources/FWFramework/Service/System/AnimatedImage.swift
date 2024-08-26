@@ -5,9 +5,9 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-import UIKit
-import MobileCoreServices
 import ImageIO
+import MobileCoreServices
+import UIKit
 
 // MARK: - Wrapper+UIImage
 extension Wrapper where Base: UIImage {
@@ -26,14 +26,14 @@ extension Wrapper where Base: UIImage {
 
     /// 是否是动图，内部检查images数组
     public var isAnimated: Bool {
-        return base.images != nil
+        base.images != nil
     }
-    
+
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
     public var isVector: Bool {
-        return ImageCoder.isVectorImage(base)
+        ImageCoder.isVectorImage(base)
     }
-    
+
     /// 获取图片原始数据格式，未指定时尝试从CGImage获取，获取失败返回ImageFormatUndefined
     public var imageFormat: ImageFormat {
         get {
@@ -52,69 +52,66 @@ extension Wrapper where Base: UIImage {
 extension Wrapper where Base == Data {
     /// 获取图片数据的格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(for imageData: Data?) -> ImageFormat {
-        return ImageCoder.imageFormat(for: imageData)
+        ImageCoder.imageFormat(for: imageData)
     }
-    
+
     /// 图片格式转化为UTType，未知格式返回kUTTypeImage
     public static func utType(from imageFormat: ImageFormat) -> CFString {
-        return ImageCoder.utType(from: imageFormat)
+        ImageCoder.utType(from: imageFormat)
     }
 
     /// UTType转化为图片格式，未知格式返回ImageFormatUndefined
     public static func imageFormat(from utType: CFString) -> ImageFormat {
-        return ImageCoder.imageFormat(from: utType)
+        ImageCoder.imageFormat(from: utType)
     }
 
     /// 图片格式转化为mimeType，未知格式返回application/octet-stream
     public static func mimeType(from imageFormat: ImageFormat) -> String {
-        return ImageCoder.mimeType(from: imageFormat)
+        ImageCoder.mimeType(from: imageFormat)
     }
-    
+
     /// 文件后缀转化为mimeType，未知后缀返回application/octet-stream
     public static func mimeType(from fileExtension: String) -> String {
-        return ImageCoder.mimeType(from: fileExtension)
+        ImageCoder.mimeType(from: fileExtension)
     }
 
     /// 图片数据编码为base64字符串，可直接用于H5显示等，字符串格式：data:image/png;base64,数据
     public static func base64String(for imageData: Data?) -> String? {
-        return ImageCoder.base64String(for: imageData)
+        ImageCoder.base64String(for: imageData)
     }
-    
+
     /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
     public static func imageData(for base64String: String?) -> Data? {
-        return ImageCoder.imageData(for: base64String)
+        ImageCoder.imageData(for: base64String)
     }
 }
 
 // MARK: - ImageCoderOptions
 /// 本地图片解码编码选项，默认兼容SDWebImage
 public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable, Sendable {
-    
     public typealias RawValue = String
-    
+
     /// 图片解码scale选项，默认未指定时为1
     public static let scaleFactor: ImageCoderOptions = .init("imageScaleFactor")
     /// 图片解码缩略图像素尺寸选项，默认未指定时为zero
     public static let thumbnailPixelSize: ImageCoderOptions = .init("decodeThumbnailPixelSize")
-    
+
     public var rawValue: String
-    
+
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
-    
 }
 
 // MARK: - ImageFormat
 /// 图片格式可扩展枚举
 public struct ImageFormat: RawRepresentable, Equatable, Hashable, Sendable {
-    
     public typealias RawValue = Int
-    
+
     public static let undefined: ImageFormat = .init(-1)
     public static let jpeg: ImageFormat = .init(0)
     public static let png: ImageFormat = .init(1)
@@ -125,23 +122,21 @@ public struct ImageFormat: RawRepresentable, Equatable, Hashable, Sendable {
     public static let heif: ImageFormat = .init(6) // iOS13+
     public static let pdf: ImageFormat = .init(7)
     public static let svg: ImageFormat = .init(8) // iOS13+
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 // MARK: - ImageFrame
 /// 动图单帧对象
 public class ImageFrame {
-    
     /// 单帧图片
     public let image: UIImage
     /// 单帧时长
@@ -156,13 +151,13 @@ public class ImageFrame {
     /// 根据单帧对象创建动图Image
     public class func animatedImage(frames: [ImageFrame]?) -> UIImage? {
         guard let frameCount = frames?.count,
-              let frames = frames,
+              let frames,
               frameCount > 0 else {
             return nil
         }
 
         var durations = [Int](repeating: 0, count: frameCount)
-        for i in 0 ..< frameCount {
+        for i in 0..<frameCount {
             durations[i] = Int(frames[i].duration * 1000)
         }
         let gcd = gcdArray(durations)
@@ -176,17 +171,17 @@ public class ImageFrame {
             if gcd != 0 {
                 repeatCount = duration / gcd
             }
-            for _ in 0 ..< repeatCount {
+            for _ in 0..<repeatCount {
                 animatedImages.append(image)
             }
         }
-        
+
         return UIImage.animatedImage(with: animatedImages, duration: TimeInterval(totalDuration) / 1000)
     }
 
     /// 从动图Image创建单帧对象数组
     public class func frames(animatedImage: UIImage?) -> [ImageFrame]? {
-        guard let animatedImage = animatedImage,
+        guard let animatedImage,
               let animatedImages = animatedImage.images,
               animatedImages.count > 0 else {
             return nil
@@ -224,7 +219,7 @@ public class ImageFrame {
         }
         return frames
     }
-    
+
     private class func gcd(_ a: Int, with b: Int) -> Int {
         var c = 0
         var a = a
@@ -236,18 +231,17 @@ public class ImageFrame {
         }
         return b
     }
-    
+
     private class func gcdArray(_ values: [Int]) -> Int {
         if values.count == 0 {
             return 0
         }
         var result = values[0]
-        for i in 1 ..< values.count {
+        for i in 1..<values.count {
             result = gcd(values[i], with: result)
         }
         return result
     }
-    
 }
 
 // MARK: - ImageCoder
@@ -255,38 +249,37 @@ public class ImageFrame {
 ///
 /// [SDWebImage](https://github.com/SDWebImage/SDWebImage)
 open class ImageCoder: @unchecked Sendable {
-    
     /// 单例模式
     public static let shared = ImageCoder()
-    
+
     /// 扩展系统UTType
-    nonisolated(unsafe) public static let kUTTypeHEIC = "public.heic" as CFString
-    nonisolated(unsafe) public static let kUTTypeHEIF = "public.heif" as CFString
-    nonisolated(unsafe) public static let kUTTypeHEICS = "public.heics" as CFString
-    nonisolated(unsafe) public static let kUTTypeWEBP = "org.webmproject.webp" as CFString
+    public nonisolated(unsafe) static let kUTTypeHEIC = "public.heic" as CFString
+    public nonisolated(unsafe) static let kUTTypeHEIF = "public.heif" as CFString
+    public nonisolated(unsafe) static let kUTTypeHEICS = "public.heics" as CFString
+    public nonisolated(unsafe) static let kUTTypeWEBP = "org.webmproject.webp" as CFString
 
     /// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
     open var heicsEnabled: Bool = false
-    
+
     private lazy var decodeUTTypes: Set<String> = {
         let result = CGImageSourceCopyTypeIdentifiers() as? [String]
         return Set(result ?? [])
     }()
-    
+
     private lazy var encodeUTTypes: Set<String> = {
         let result = CGImageDestinationCopyTypeIdentifiers() as? [String]
         return Set(result ?? [])
     }()
-    
+
     public init() {}
 
     /// 解析图片数据到Image，可指定scale
     open func decodedImage(data: Data?, scale: CGFloat, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
-        guard let data = data, data.count > 0,
+        guard let data, data.count > 0,
               let source = CGImageSourceCreateWithData(data as CFData, nil) else {
             return nil
         }
-        
+
         var scale = max(scale, 1)
         if let scaleFactor = options?[.scaleFactor] as? NSNumber {
             scale = max(scaleFactor.doubleValue, 1)
@@ -307,9 +300,9 @@ open class ImageCoder: @unchecked Sendable {
             animatedImage = createFrame(at: 0, source: source, scale: scale, thumbnailSize: thumbnailSize)
         } else {
             var frames = [ImageFrame]()
-            for i in 0 ..< count {
+            for i in 0..<count {
                 guard let image = createFrame(at: i, source: source, scale: scale, thumbnailSize: thumbnailSize) else { continue }
-                
+
                 let duration = frameDuration(at: i, source: source, format: format)
                 let frame = ImageFrame(image: image, duration: duration)
                 frames.append(frame)
@@ -319,17 +312,17 @@ open class ImageCoder: @unchecked Sendable {
             animatedImage = ImageFrame.animatedImage(frames: frames)
             animatedImage?.fw.imageLoopCount = loopCount
         }
-        
+
         animatedImage?.fw.imageFormat = format
         return animatedImage
     }
 
     /// 编码UIImage到图片数据，可指定格式
     open func encodedData(image: UIImage?, format: ImageFormat, options: [ImageCoderOptions: Any]? = nil) -> Data? {
-        guard let image = image else {
+        guard let image else {
             return nil
         }
-        
+
         var format = format
         if format == .undefined {
             format = image.fw.hasAlpha ? .png : .jpeg
@@ -367,7 +360,7 @@ open class ImageCoder: @unchecked Sendable {
 
             for i in 0..<count {
                 guard let frame = frames?[i], let frameImageRef = frame.image.cgImage else { continue }
-                
+
                 var frameProperties: [String: Any] = [:]
                 if let delayTimeProperty = delayTimeProperty(format) {
                     frameProperties[delayTimeProperty] = frame.duration
@@ -436,7 +429,7 @@ open class ImageCoder: @unchecked Sendable {
         default:
             break
         }
-        
+
         return .undefined
     }
 
@@ -470,7 +463,7 @@ open class ImageCoder: @unchecked Sendable {
 
     /// UTType转化为图片格式，未知格式返回ImageFormat.undefined
     open class func imageFormat(from utType: CFString?) -> ImageFormat {
-        guard let utType = utType else {
+        guard let utType else {
             return .undefined
         }
         var imageFormat: ImageFormat
@@ -534,7 +527,7 @@ open class ImageCoder: @unchecked Sendable {
         }
         return "application/octet-stream"
     }
-    
+
     /// 图片方向转为EXIF方向
     open class func exifOrientation(from imageOrientation: UIImage.Orientation) -> CGImagePropertyOrientation {
         var exifOrientation: CGImagePropertyOrientation = .up
@@ -560,7 +553,7 @@ open class ImageCoder: @unchecked Sendable {
         }
         return exifOrientation
     }
-    
+
     /// EXIF方向转为图片方向
     open class func imageOrientation(from exifOrientation: CGImagePropertyOrientation) -> UIImage.Orientation {
         var imageOrientation: UIImage.Orientation = .up
@@ -595,7 +588,7 @@ open class ImageCoder: @unchecked Sendable {
         let base64Prefix = "data:\(mimeType);base64,"
         return base64Prefix + base64String
     }
-    
+
     /// 图片base64字符串解码为数据，兼容格式：data:image/png;base64,数据
     open class func imageData(for base64String: String?) -> Data? {
         guard var string = base64String, string.count > 0 else {
@@ -612,7 +605,7 @@ open class ImageCoder: @unchecked Sendable {
 
     /// 是否是向量图，内部检查isSymbolImage属性，iOS11+支持PDF，iOS13+支持SVG
     open class func isVectorImage(_ image: UIImage?) -> Bool {
-        guard let image = image else {
+        guard let image else {
             return false
         }
         if image.isSymbolImage {
@@ -628,7 +621,7 @@ open class ImageCoder: @unchecked Sendable {
         }
         return false
     }
-    
+
     private func isAnimated(_ format: ImageFormat, forDecode: Bool) -> Bool {
         var isAnimated = false
         switch format {
@@ -651,7 +644,7 @@ open class ImageCoder: @unchecked Sendable {
         let imageUTTypes = forDecode ? decodeUTTypes : encodeUTTypes
         return imageUTTypes.contains(imageUTType as String)
     }
-    
+
     private func dictionaryProperty(_ format: ImageFormat) -> String? {
         switch format {
         case .gif:
@@ -687,7 +680,7 @@ open class ImageCoder: @unchecked Sendable {
             return nil
         }
     }
-    
+
     private func delayTimeProperty(_ format: ImageFormat) -> String? {
         switch format {
         case .gif:
@@ -705,34 +698,34 @@ open class ImageCoder: @unchecked Sendable {
             return nil
         }
     }
-    
+
     private func loopCountProperty(_ format: ImageFormat) -> String? {
         switch format {
-            case .gif:
-                return kCGImagePropertyGIFLoopCount as String
-            case .png:
-                return kCGImagePropertyAPNGLoopCount as String
-            case .heic, .heif:
-                return kCGImagePropertyHEICSLoopCount as String
-            case .webp:
-                if #available(iOS 14.0, *) {
-                    return kCGImagePropertyWebPLoopCount as String
-                }
-                return "LoopCount"
-            default:
-                return nil
+        case .gif:
+            return kCGImagePropertyGIFLoopCount as String
+        case .png:
+            return kCGImagePropertyAPNGLoopCount as String
+        case .heic, .heif:
+            return kCGImagePropertyHEICSLoopCount as String
+        case .webp:
+            if #available(iOS 14.0, *) {
+                return kCGImagePropertyWebPLoopCount as String
+            }
+            return "LoopCount"
+        default:
+            return nil
         }
     }
 
     private func defaultLoopCount(_ format: ImageFormat) -> UInt {
         switch format {
-            case .gif:
-                return 1
-            default:
-                return 0
+        case .gif:
+            return 1
+        default:
+            return 0
         }
     }
-    
+
     private func imageLoopCount(source: CGImageSource, format: ImageFormat) -> UInt {
         var loopCount = defaultLoopCount(format)
         if let dictionaryProperty = dictionaryProperty(format),
@@ -744,7 +737,7 @@ open class ImageCoder: @unchecked Sendable {
         }
         return loopCount
     }
-    
+
     private func frameDuration(at index: Int, source: CGImageSource, format: ImageFormat) -> TimeInterval {
         var options: [String: Any] = [:]
         options[kCGImageSourceShouldCacheImmediately as String] = true
@@ -768,12 +761,12 @@ open class ImageCoder: @unchecked Sendable {
         }
         return frameDuration
     }
-    
+
     private func createFrame(at index: Int, source: CGImageSource, scale: CGFloat, thumbnailSize: CGSize) -> UIImage? {
         let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as NSDictionary?
         let pixelWidth = properties?[kCGImagePropertyPixelWidth] as? Double ?? .zero
         let pixelHeight = properties?[kCGImagePropertyPixelHeight] as? Double ?? .zero
-        
+
         var decodingOptions: [AnyHashable: Any] = [:]
         var imageRef: CGImage?
         let createFullImage = thumbnailSize.width == 0 || thumbnailSize.height == 0 || pixelWidth == 0 || pixelHeight == 0 || (pixelWidth <= thumbnailSize.width && pixelHeight <= thumbnailSize.height)
@@ -793,19 +786,19 @@ open class ImageCoder: @unchecked Sendable {
             decodingOptions[kCGImageSourceCreateThumbnailFromImageAlways] = true
             imageRef = CGImageSourceCreateThumbnailAtIndex(source, index, decodingOptions as CFDictionary)
         }
-        guard let imageRef = imageRef else {
+        guard let imageRef else {
             return nil
         }
 
         let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
         return image
     }
-    
+
     private func createBitmapPDF(data: Data, thumbnailSize: CGSize) -> UIImage? {
-        let pageNumber: Int = 0
+        let pageNumber = 0
         guard let provider = CGDataProvider(data: data as CFData),
-            let document = CGPDFDocument(provider),
-            let page = document.page(at: pageNumber + 1)
+              let document = CGPDFDocument(provider),
+              let page = document.page(at: pageNumber + 1)
         else {
             return nil
         }
@@ -830,7 +823,7 @@ open class ImageCoder: @unchecked Sendable {
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil
         }
-        
+
         context.translateBy(x: 0, y: targetRect.size.height)
         context.scaleBy(x: 1, y: -1)
         context.concatenate(scaleTransform)
@@ -841,5 +834,4 @@ open class ImageCoder: @unchecked Sendable {
         UIGraphicsEndImageContext()
         return image
     }
-
 }

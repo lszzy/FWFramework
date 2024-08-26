@@ -17,7 +17,7 @@ import Foundation
 public struct StoredValue<Value> {
     private let key: String
     private let defaultValue: Value
-    
+
     public init(
         wrappedValue: Value,
         _ key: String,
@@ -26,7 +26,7 @@ public struct StoredValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
     }
-    
+
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
@@ -35,7 +35,7 @@ public struct StoredValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
     }
-    
+
     public var wrappedValue: Value {
         get {
             let object = UserDefaults.standard.object(forKey: key)
@@ -43,14 +43,14 @@ public struct StoredValue<Value> {
             if let data = object as? Data, let coder = ArchiveCoder.unarchiveData(data) {
                 value = coder.archivableObject as? Value
             }
-            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
+            return !Any?.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
             var value: Any? = newValue
             if ArchiveCoder.isArchivableObject(newValue) {
                 value = Data.fw.archivedData(newValue)
             }
-            if !Optional<Any>.isNil(value) {
+            if !Any?.isNil(value) {
                 UserDefaults.standard.set(value, forKey: key)
             } else {
                 UserDefaults.standard.removeObject(forKey: key)
@@ -72,7 +72,7 @@ public class ValidatedValue<Value> {
     private let defaultValue: Value
     private var value: Value
     private var isValid: Bool
-    
+
     public init(
         wrappedValue: Value,
         _ validator: Validator<Value>,
@@ -80,10 +80,10 @@ public class ValidatedValue<Value> {
     ) {
         self.validator = validator
         self.defaultValue = defaultValue ?? wrappedValue
-        self.value = wrappedValue
-        self.isValid = validator.validate(wrappedValue)
+        value = wrappedValue
+        isValid = validator.validate(wrappedValue)
     }
-    
+
     public convenience init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ validator: Validator<WrappedValue>,
@@ -95,7 +95,7 @@ public class ValidatedValue<Value> {
             defaultValue: defaultValue
         )
     }
-    
+
     public var wrappedValue: Value {
         get {
             isValid ? value : defaultValue
@@ -117,17 +117,17 @@ public class ValidatedValue<Value> {
 public struct ModuleValue<Value> {
     private let serviceProtocol: Value.Type
     private var module: Value?
-    
+
     public init(
         _ serviceProtocol: Value.Type,
         module: ModuleProtocol.Type? = nil
     ) {
         self.serviceProtocol = serviceProtocol
-        if let module = module {
+        if let module {
             Mediator.registerService(serviceProtocol, module: module)
         }
     }
-    
+
     public var wrappedValue: Value {
         get {
             if let value = module {
@@ -152,17 +152,17 @@ public struct ModuleValue<Value> {
 public struct PluginValue<Value> {
     private let pluginProtocol: Value.Type
     private var plugin: Value?
-    
+
     public init(
         _ pluginProtocol: Value.Type,
         object: Any? = nil
     ) {
         self.pluginProtocol = pluginProtocol
-        if let object = object {
+        if let object {
             PluginManager.registerPlugin(pluginProtocol, object: object)
         }
     }
-    
+
     public var wrappedValue: Value {
         get {
             if let value = plugin {
@@ -187,19 +187,19 @@ public struct PluginValue<Value> {
 public struct RouterValue {
     private var pattern: String
     private let parameters: Any?
-    
+
     public init(
         wrappedValue value: String,
         parameters: Any? = nil,
         _ handler: Router.Handler? = nil
     ) {
-        self.pattern = value
+        pattern = value
         self.parameters = parameters
-        if let handler = handler {
+        if let handler {
             Router.registerURL(value, handler: handler)
         }
     }
-    
+
     public init(
         _ pattern: String,
         parameters: Any? = nil,
@@ -207,14 +207,14 @@ public struct RouterValue {
     ) {
         self.pattern = pattern
         self.parameters = parameters
-        if let handler = handler {
+        if let handler {
             Router.registerURL(pattern, handler: handler)
         }
     }
-    
+
     public var wrappedValue: String {
         get {
-            if let parameters = parameters {
+            if let parameters {
                 return Router.generateURL(pattern, parameters: parameters)
             } else {
                 return pattern

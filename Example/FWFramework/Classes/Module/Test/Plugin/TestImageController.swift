@@ -10,19 +10,18 @@ import FWFramework
 import SDWebImage
 
 class TestImageController: UIViewController, TableViewControllerProtocol {
-    
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: ["清除图片缓存"], actionBlock: { index in
-                guard let self = self else { return }
-                
+            self?.app.showSheet(title: nil, message: nil, actions: ["清除图片缓存"], actionBlock: { _ in
+                guard let self else { return }
+
                 ImagePluginImpl.shared.clearImageCaches()
                 SDWebImageImpl.shared.clearImageCaches()
-                
+
                 self.tableData.removeAll()
                 self.tableView.reloadData()
                 self.tableView.layoutIfNeeded()
@@ -31,12 +30,12 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             })
         }
     }
-    
+
     func setupSubviews() {
         navigationItem.title = SettingsController.imagePluginImpl
         SDWebImageImpl.shared.fadeAnimated = true
         ImagePluginImpl.shared.fadeAnimated = true
-        
+
         tableData = [
             "Animation.png",
             "Loading.gif",
@@ -62,19 +61,19 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             "https://nr-platform.s3.amazonaws.com/uploads/platform/published_extension/branding_icon/275/AmazonS3.png",
             "https://upload.wikimedia.org/wikipedia/commons/1/14/Mahuri.svg",
             "https://simpleicons.org/icons/github.svg",
-            "http://via.placeholder.com/200x200.jpg",
+            "http://via.placeholder.com/200x200.jpg"
         ]
         tableView.reloadData()
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         150
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TestImageCell.app.cell(tableView: tableView)
         let fileName = tableData[indexPath.row] as? String ?? ""
@@ -99,52 +98,49 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
         }
         return cell
     }
-    
 }
 
 class TestImageCell: UITableViewCell {
-    
     lazy var nameLabel: UILabel = {
         let result = UILabel()
         return result
     }()
-    
+
     lazy var systemView: UIImageView = {
         let result = UIImageView()
         return result
     }()
-    
+
     lazy var animatedView: UIImageView = {
         let result = UIImageView.app.animatedImageView()
         return result
     }()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(nameLabel)
         contentView.addSubview(systemView)
         contentView.addSubview(animatedView)
-        
+
         nameLabel.app.layoutChain
             .left(10)
             .top(10)
             .height(20)
-        
+
         systemView.app.layoutChain
             .left(10)
             .top(toViewBottom: nameLabel, offset: 10)
             .bottom(10)
             .width(100)
-        
+
         animatedView.app.layoutChain
             .left(toViewRight: systemView, offset: 60)
             .top(toView: systemView)
             .bottom(toView: systemView)
             .width(toView: systemView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
