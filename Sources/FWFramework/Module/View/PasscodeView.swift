@@ -461,11 +461,11 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
 
     private func delaySecurityProcessLastOne() {
         DispatchQueue.main.asyncAfter(deadline: .now() + securityDelay) { [weak self] in
-            guard let this = self else { return }
+            guard let self else { return }
 
-            if this.valueArray.count > 0 {
-                this.replaceSecurityValue(index: this.valueArray.count - 1, equalCount: true)
-                DispatchQueue.main.async {
+            if valueArray.count > 0 {
+                replaceSecurityValue(index: valueArray.count - 1, equalCount: true)
+                DispatchQueue.main.async { [weak self] in
                     self?.reloadAllCells()
                 }
             }

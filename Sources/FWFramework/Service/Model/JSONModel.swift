@@ -1339,9 +1339,7 @@ protocol AnyExtensions {}
 
 extension AnyExtensions {
     static func write(_ value: Any, to storage: UnsafeMutableRawPointer) {
-        guard let this = value as? Self else {
-            return
-        }
+        guard let this = value as? Self else { return }
         storage.assumingMemoryBound(to: self).pointee = this
     }
 

@@ -112,8 +112,8 @@ open class LottiePluginView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
         if animated {
             let currentProgress = animationView.currentProgress
             animationView.play(fromProgress: currentProgress, toProgress: progress, loopMode: .playOnce) { [weak self] _ in
-                guard let this = self else { return }
-                if !showingProgress && this.hidesWhenStopped { this.isHidden = true }
+                guard let self else { return }
+                if !showingProgress && hidesWhenStopped { isHidden = true }
             }
         } else {
             animationView.currentProgress = progress
