@@ -250,7 +250,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             controller.permittedArrowDirections = .up
             let cell = self?.tableView.cellForRow(at: indexPath)
             controller.passthroughViews = cell != nil ? [cell!] : []
-        }, shouldDismiss: [true, false].randomElement()!)
+        }, shouldDismiss: Bool.random())
         vc.app.presentationDidDismiss = {
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }

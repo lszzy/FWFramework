@@ -277,8 +277,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         resultLabel.isUserInteractionEnabled = true
         resultLabel.app.addTapGesture { _ in
             emptyLabel.text = ["", "UILabel"].randomElement()
-            emptyButton.setTitle([true, false].randomElement() == true ? "UILabel" : nil, for: .normal)
-            emptyButton.setImage([true, false].randomElement() == true ? UIImage.app.appIconImage() : nil, for: .normal)
+            emptyButton.setTitle(Bool.random() ? "UILabel" : nil, for: .normal)
+            emptyButton.setImage(Bool.random() ? UIImage.app.appIconImage() : nil, for: .normal)
             let emptySize = emptyLabel.intrinsicContentSize.ceilValue
             let emptySize2 = emptyButton.intrinsicContentSize.ceilValue
             resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"

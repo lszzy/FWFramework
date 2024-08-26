@@ -56,7 +56,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
             viewController = SwiftTestWebViewController()
         case 5:
             let popupController = SwiftTestPopupViewController()
-            if [true, false].randomElement()! {
+            if Bool.random() {
                 present(popupController, animated: true)
             } else {
                 present(popupController.wrappedNavigationController(), animated: true)
@@ -437,15 +437,15 @@ class SwiftTestPopupViewController: UIViewController, PopupViewControllerProtoco
         let edge = edges.randomElement()!
         if edge == .all {
             configuration.centerAnimation = true
-            configuration.alertAnimation = [true, false].randomElement()!
+            configuration.alertAnimation = Bool.random()
             configuration.padding = 50
         } else {
             configuration.animationEdge = edge
             configuration.padding = 0
         }
         configuration.cornerRadius = 8
-        configuration.interactEnabled = [true, false].randomElement()!
-        configuration.interactScreenEdge = [true, false].randomElement()!
+        configuration.interactEnabled = Bool.random()
+        configuration.interactScreenEdge = Bool.random()
         configuration.dismissCompletion = {
             print("Popup已关闭")
             UIWindow.app.showMessage(text: "Popup已关闭")

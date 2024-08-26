@@ -434,7 +434,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
         app.modalTransition = nil
         
         var radian = Double.pi
-        if [true, false].randomElement() == true {
+        if Bool.random() {
             radian = 2 * radian
         } else {
             radian = -1 * radian

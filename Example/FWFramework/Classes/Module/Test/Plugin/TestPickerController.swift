@@ -19,7 +19,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
             let pickerController = ImagePickerController()
             pickerController.titleAccessoryImage = APP.iconImage("zmdi-var-caret-down", 24)?.app.image(tintColor: .white)
             
-            let showsCheckedIndexLabel = [true, false].randomElement() ?? false
+            let showsCheckedIndexLabel = Bool.random()
             pickerController.customCellBlock = { cell, indexPath in
                 cell.showsCheckedIndexLabel = showsCheckedIndexLabel
                 cell.editedIconImage = APP.iconImage("zmdi-var-edit", 12)?.app.image(tintColor: .white)
@@ -35,8 +35,8 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
         }
         ImagePickerControllerImpl.shared.previewControllerBlock = {
             let previewController = ImagePickerPreviewController()
-            previewController.showsOriginImageCheckboxButton = [true, false].randomElement() ?? false
-            previewController.showsEditButton = [true, false].randomElement() ?? false
+            previewController.showsOriginImageCheckboxButton = Bool.random()
+            previewController.showsEditButton = Bool.random()
             previewController.customCellBlock = { cell, indexPath in
                 cell.editedIconImage = APP.iconImage("zmdi-var-edit", 12)?.app.image(tintColor: .white)
             }
