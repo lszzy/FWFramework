@@ -845,7 +845,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
 
         if type == .text && segmentWidthStyle == .fixed {
-            for (index, titleString) in sectionTitles.enumerated() {
+            for (index, _) in sectionTitles.enumerated() {
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 segmentWidth = max(stringWidth, segmentWidth)
             }
@@ -853,7 +853,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             var mutableSegmentWidths: [CGFloat] = []
             var totalWidth: CGFloat = 0.0
 
-            for (index, titleString) in sectionTitles.enumerated() {
+            for (index, _) in sectionTitles.enumerated() {
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 totalWidth += stringWidth
                 mutableSegmentWidths.append(stringWidth)
@@ -875,7 +875,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
                 segmentWidth = max(imageWidth, segmentWidth)
             }
         } else if type == .textImages && segmentWidthStyle == .fixed {
-            for (index, titleString) in sectionTitles.enumerated() {
+            for (index, _) in sectionTitles.enumerated() {
                 let stringWidth = measureTitleAtIndex(index).width + segmentEdgeInset.left + segmentEdgeInset.right
                 segmentWidth = max(stringWidth, segmentWidth)
             }
@@ -883,7 +883,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
             var mutableSegmentWidths: [CGFloat] = []
             var totalWidth: CGFloat = 0.0
 
-            for (idx, titleString) in sectionTitles.enumerated() {
+            for (idx, _) in sectionTitles.enumerated() {
                 let stringWidth = measureTitleAtIndex(idx).width + segmentEdgeInset.right
                 let sectionImage = sectionImages[idx]
                 let imageWidth = sectionImage.size.width + segmentEdgeInset.left
