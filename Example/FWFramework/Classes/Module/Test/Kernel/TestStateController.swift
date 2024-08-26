@@ -30,10 +30,10 @@ class TestStateController: UIViewController {
 extension TestStateController: ViewControllerProtocol {
     func setupNavbar() {
         app.setRightBarItem(Icon.iconImage("zmdi-var-lock-open", size: 24)) { [weak self] sender in
-            guard let this = self else { return }
+            guard let self else { return }
 
-            this.isLocked = !this.isLocked
-            sender.image = this.isLocked ? Icon.iconImage("zmdi-var-lock", size: 24) : Icon.iconImage("zmdi-var-lock-open", size: 24)
+            isLocked = !isLocked
+            sender.image = isLocked ? Icon.iconImage("zmdi-var-lock", size: 24) : Icon.iconImage("zmdi-var-lock-open", size: 24)
         }
     }
 

@@ -686,52 +686,48 @@ open class VideoPlayer: UIViewController {
         })
 
         playerItemObservers.append(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new, .old]) { [weak self] object, _ in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let self else { return }
 
             if object.isPlaybackLikelyToKeepUp {
-                strongSelf.bufferingState = .ready
-                if strongSelf.playbackState == .playing {
+                bufferingState = .ready
+                if playbackState == .playing {
                     DispatchQueue.fw.mainAsync {
-                        strongSelf.playFromCurrentTime()
+                        self.playFromCurrentTime()
                     }
                 }
             }
 
             switch object.status {
             case .failed:
-                strongSelf.playbackState = VideoPlayerPlaybackState.failed
+                playbackState = VideoPlayerPlaybackState.failed
             default:
                 break
             }
         })
 
         playerItemObservers.append(playerItem.observe(\.loadedTimeRanges, options: [.new, .old]) { [weak self] object, _ in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let self else { return }
 
             let timeRanges = object.loadedTimeRanges
             if let timeRange = timeRanges.first?.timeRangeValue {
                 let bufferedTime = CMTimeGetSeconds(CMTimeAdd(timeRange.start, timeRange.duration))
-                if strongSelf.lastBufferTime != bufferedTime {
-                    strongSelf.lastBufferTime = bufferedTime
+                if lastBufferTime != bufferedTime {
+                    lastBufferTime = bufferedTime
                     DispatchQueue.fw.mainAsync {
-                        strongSelf.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
+                        self.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
                     }
                 }
             }
 
             let currentTime = CMTimeGetSeconds(object.currentTime())
-            let passedTime = strongSelf.lastBufferTime <= 0 ? currentTime : (strongSelf.lastBufferTime - currentTime)
+            let passedTime = lastBufferTime <= 0 ? currentTime : (lastBufferTime - currentTime)
 
-            if (passedTime >= strongSelf.bufferSizeInSeconds ||
-                strongSelf.lastBufferTime == strongSelf.maximumDuration ||
+            if (passedTime >= bufferSizeInSeconds ||
+                lastBufferTime == maximumDuration ||
                 timeRanges.first == nil) &&
-                strongSelf.playbackState == .playing {
+                playbackState == .playing {
                 DispatchQueue.fw.mainAsync {
-                    strongSelf.play()
+                    self.play()
                 }
             }
         })
@@ -767,8 +763,8 @@ open class VideoPlayer: UIViewController {
     func addPlayerObservers() {
         playerTimeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] _ in
             DispatchQueue.fw.mainAsync { [weak self] in
-                guard let strongSelf = self else { return }
-                strongSelf.playbackDelegate?.playerCurrentTimeDidChange?(strongSelf)
+                guard let self else { return }
+                playbackDelegate?.playerCurrentTimeDidChange?(self)
             }
         })
 
