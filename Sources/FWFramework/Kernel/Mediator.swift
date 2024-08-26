@@ -39,8 +39,8 @@ public protocol ModuleProtocol: UIApplicationDelegate {
     /// 单例对象
     nonisolated static var shared: Self { get }
 
-    /// 模块初始化方法，默认不处理，setupAllModules自动调用
-    nonisolated func setup()
+    /// 模块初始化方法，setupAllModules自动主线程调用
+    func setup()
 
     /// 模块优先级，0最低。默认为default优先级
     nonisolated static func priority() -> ModulePriority
@@ -48,7 +48,7 @@ public protocol ModuleProtocol: UIApplicationDelegate {
 
 extension ModuleProtocol {
     /// 默认初始化不处理
-    public nonisolated func setup() {}
+    public func setup() {}
 
     /// 默认优先级default
     public nonisolated static func priority() -> ModulePriority { .default }
@@ -161,7 +161,9 @@ public class Mediator {
     public static func setupAllModules() {
         let modules = allRegisteredModules()
         for moduleType in modules {
-            moduleType.shared.setup()
+            DispatchQueue.fw.mainAsync {
+                moduleType.shared.setup()
+            }
         }
 
         #if DEBUG
