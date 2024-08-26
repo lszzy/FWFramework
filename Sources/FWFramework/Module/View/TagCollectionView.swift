@@ -398,7 +398,7 @@ open class TagCollectionView: UIView {
                 }
             }
 
-            for (idx, tagIndex) in eachLineTagIndexs[currentLine].enumerated() {
+            for (_, tagIndex) in eachLineTagIndexs[currentLine].enumerated() {
                 let tagView = dataSource?.tagCollectionView(self, tagViewFor: tagIndex)
                 var tagSize = delegate?.tagCollectionView(self, sizeForTagAt: tagIndex) ?? .zero
 
