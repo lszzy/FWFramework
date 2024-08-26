@@ -108,7 +108,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         randomButton.setTitle("随机", for: .normal)
         view.addSubview(randomButton)
         randomButton.app.addTouch { sender in
-            let hasDigit = [true, false].randomElement()!
+            let hasDigit = Bool.random()
             if hasDigit {
                 odometerView.setNumber("$\(arc4random() % 1000).\(arc4random() % 100)")
             } else {

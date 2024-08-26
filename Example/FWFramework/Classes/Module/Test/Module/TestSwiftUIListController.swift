@@ -152,7 +152,7 @@ class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self = self else { return }
             
-            let isSuccess = [true, false].randomElement()!
+            let isSuccess = Bool.random()
             if isSuccess {
                 var newItems: [String] = []
                 for i in 0 ..< 5 {

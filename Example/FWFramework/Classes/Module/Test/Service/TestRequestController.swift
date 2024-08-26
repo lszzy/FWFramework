@@ -55,7 +55,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     }
     
     override func requestArgument() -> Any? {
-        let isNull = [true, false].randomElement()!
+        let isNull = Bool.random()
         if isNull {
             return ["optional": NSNull()]
         } else {

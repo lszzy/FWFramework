@@ -108,7 +108,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         app.statusBarStyle = .default
         
         app.showLoading()
-        let soFast = [true, false].randomElement()!
+        let soFast = Bool.random()
         // 模拟启用转场且请求太快的情况时导航栏是否正常
         if soFast { UINavigationController.app.enableBarTransition() }
         DispatchQueue.main.asyncAfter(deadline: .now() + (soFast ? 0.2 : 1)) {

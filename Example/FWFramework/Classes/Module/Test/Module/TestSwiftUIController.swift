@@ -14,7 +14,7 @@ import FWFramework
 class TestSwiftUIController: UIViewController, ViewControllerProtocol {
     
     func setupSubviews() {
-        app.navigationBarHidden = [true, false].randomElement()!
+        app.navigationBarHidden = Bool.random()
         
         let hostingView = TestSwiftUIContent()
             .viewContext(self, userInfo: [
@@ -48,7 +48,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             LoadingPluginView()
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        let success = [true, false].randomElement()!
+                        let success = Bool.random()
                         if success {
                             view.state = .success()
                         } else {
@@ -71,7 +71,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.hidesBackButton = true
         if mode != 2 {
-            app.navigationBarHidden = [true, false].randomElement()!
+            app.navigationBarHidden = Bool.random()
         }
     }
     
@@ -80,7 +80,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
             .viewContext(self)
             .then(mode == 2, body: { view in
                 view.navigationBarBackButtonHidden(true)
-                    .navigationBarHidden([true, false].randomElement()!)
+                    .navigationBarHidden(Bool.random())
             })
             .navigationBarConfigure(
                 leading: Button(action: {
