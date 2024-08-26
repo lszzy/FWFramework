@@ -21,6 +21,7 @@
 --wraparguments preserve
 --wrapcollections preserve
 --wrapparameters preserve
+--anonymousforeach ignore
 
 # rules
 --disable andOperator
