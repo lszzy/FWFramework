@@ -163,7 +163,7 @@ open class Icon {
     /// 根据字符编码和大小创建图标对象
     public init(code: String, size: CGFloat) {
         let font = Self.iconFont(size: size)
-        mutableAttributedString = NSMutableAttributedString(string: code, attributes: [.font: font])
+        self.mutableAttributedString = NSMutableAttributedString(string: code, attributes: [.font: font])
     }
 
     /// 根据图标名称和大小创建图标对象

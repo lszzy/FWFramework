@@ -17,7 +17,7 @@
 --importgrouping testable-top
 --operatorfunc no-space
 --nospaceoperators ..<, ...
---self remove
+--self init-only
 --someAny false
 --stripunusedargs closure-only
 --wraparguments preserve
@@ -34,3 +34,4 @@
 --disable redundantBackticks
 --disable initCoderUnavailable
 --disable conditionalAssignment
+--disable preferKeyPath

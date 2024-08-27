@@ -55,9 +55,9 @@ public class VersionManager: @unchecked Sendable {
 
     // MARK: - Lifecycle
     public init() {
-        currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-        checkDate = UserDefaults.standard.object(forKey: "FWVersionManagerCheckDate") as? Date
-        dataVersion = UserDefaults.standard.object(forKey: "FWVersionManagerDataVersion") as? String
+        self.currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        self.checkDate = UserDefaults.standard.object(forKey: "FWVersionManagerCheckDate") as? Date
+        self.dataVersion = UserDefaults.standard.object(forKey: "FWVersionManagerDataVersion") as? String
     }
 
     // MARK: - Public

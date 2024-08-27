@@ -243,7 +243,7 @@ extension Refresh {
         @State private var footerPreviousRefreshAt: Date?
 
         public init(enable: Bool) {
-            isEnabled = enable
+            self.isEnabled = enable
             _headerUpdate = State(initialValue: .init(enable: enable))
             _footerUpdate = State(initialValue: .init(enable: enable))
         }

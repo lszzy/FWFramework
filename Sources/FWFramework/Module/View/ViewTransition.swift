@@ -313,7 +313,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     /// 创建动画句柄转场
     public convenience init(block: ((AnimatedTransition) -> Void)?) {
         self.init()
-        transitionBlock = block
+        self.transitionBlock = block
     }
 
     // MARK: - Interactive

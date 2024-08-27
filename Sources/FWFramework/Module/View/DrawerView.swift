@@ -215,7 +215,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     public init(view: UIView) {
         super.init()
         self.view = view
-        position = isVertical ? view.frame.origin.y : view.frame.origin.x
+        self.position = isVertical ? view.frame.origin.y : view.frame.origin.x
 
         if let scrollView = view as? UIScrollView {
             self.scrollView = scrollView

@@ -130,12 +130,12 @@ public class MulticastDelegate<T> {
     // MARK: - Lifecycle
     /// 初始化，是否强引用delegate，默认false
     public init(strongReferences: Bool = false) {
-        delegates = strongReferences ? NSHashTable<AnyObject>() : NSHashTable<AnyObject>.weakObjects()
+        self.delegates = strongReferences ? NSHashTable<AnyObject>() : NSHashTable<AnyObject>.weakObjects()
     }
 
     /// 初始化，自定义引用选项
     public init(options: NSPointerFunctions.Options) {
-        delegates = NSHashTable<AnyObject>(options: options, capacity: 0)
+        self.delegates = NSHashTable<AnyObject>(options: options, capacity: 0)
     }
 
     // MARK: - Public

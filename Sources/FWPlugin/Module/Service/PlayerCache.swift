@@ -141,8 +141,8 @@ public class PlayerCacheLoader: NSObject, PlayerCacheRequestWorkerDelegate {
 
     public init(url: URL) {
         self.url = url
-        cacheWorker = PlayerCacheWorker(url: url)
-        mediaDownloader = PlayerCacheDownloader(url: url, cacheWorker: cacheWorker)
+        self.cacheWorker = PlayerCacheWorker(url: url)
+        self.mediaDownloader = PlayerCacheDownloader(url: url, cacheWorker: cacheWorker)
         super.init()
     }
 
@@ -265,7 +265,7 @@ public class PlayerCacheDownloader: NSObject, PlayerCacheActionWorkerDelegate {
     public init(url: URL, cacheWorker: PlayerCacheWorker) {
         self.url = url
         self.cacheWorker = cacheWorker
-        info = cacheWorker.cacheConfiguration.contentInfo
+        self.info = cacheWorker.cacheConfiguration.contentInfo
         super.init()
         PlayerCacheDownloaderStatus.shared.addUrl(self.url)
     }
@@ -596,7 +596,7 @@ public class PlayerCacheRequestWorker: NSObject, PlayerCacheDownloaderDelegate {
 
     public init(mediaDownloader: PlayerCacheDownloader, resourceLoadingRequest: AVAssetResourceLoadingRequest) {
         self.mediaDownloader = mediaDownloader
-        request = resourceLoadingRequest
+        self.request = resourceLoadingRequest
         super.init()
 
         self.mediaDownloader.delegate = self
@@ -678,9 +678,9 @@ public class PlayerCacheContentInfo: NSObject, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
-        contentLength = UInt64(coder.decodeInt64(forKey: "contentLength"))
-        contentType = coder.decodeObject(forKey: "contentType") as? String ?? ""
-        byteRangeAccessSupported = coder.decodeBool(forKey: "byteRangeAccessSupported")
+        self.contentLength = UInt64(coder.decodeInt64(forKey: "contentLength"))
+        self.contentType = coder.decodeObject(forKey: "contentType") as? String ?? ""
+        self.byteRangeAccessSupported = coder.decodeBool(forKey: "byteRangeAccessSupported")
     }
 
     public func encode(with coder: NSCoder) {
@@ -824,11 +824,11 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding, @unc
 
     public required init?(coder: NSCoder) {
         super.init()
-        fileName = coder.decodeObject(forKey: "fileName") as? String ?? ""
-        internalCacheFragments = coder.decodeObject(forKey: "internalCacheFragments") as? [NSValue] ?? []
-        downloadInfo = coder.decodeObject(forKey: "downloadInfo") as? [[NSNumber]] ?? []
-        contentInfo = coder.decodeObject(forKey: "contentInfo") as? PlayerCacheContentInfo
-        url = coder.decodeObject(forKey: "url") as? URL
+        self.fileName = coder.decodeObject(forKey: "fileName") as? String ?? ""
+        self.internalCacheFragments = coder.decodeObject(forKey: "internalCacheFragments") as? [NSValue] ?? []
+        self.downloadInfo = coder.decodeObject(forKey: "downloadInfo") as? [[NSNumber]] ?? []
+        self.contentInfo = coder.decodeObject(forKey: "contentInfo") as? PlayerCacheContentInfo
+        self.url = coder.decodeObject(forKey: "url") as? URL
     }
 
     public func encode(with coder: NSCoder) {
@@ -1081,7 +1081,7 @@ public class PlayerCacheWorker: NSObject {
             do {
                 try FileManager.default.createDirectory(atPath: cacheFolder, withIntermediateDirectories: true)
             } catch {
-                setupError = error
+                self.setupError = error
             }
         }
 
@@ -1090,13 +1090,13 @@ public class PlayerCacheWorker: NSObject {
         }
         let fileURL = URL(fileURLWithPath: filePath)
         do {
-            readFileHandle = try FileHandle(forReadingFrom: fileURL)
-            writeFileHandle = try FileHandle(forWritingTo: fileURL)
+            self.readFileHandle = try FileHandle(forReadingFrom: fileURL)
+            self.writeFileHandle = try FileHandle(forWritingTo: fileURL)
         } catch {
-            setupError = error
+            self.setupError = error
         }
 
-        cacheConfiguration = PlayerCacheConfiguration.configuration(filePath: filePath)
+        self.cacheConfiguration = PlayerCacheConfiguration.configuration(filePath: filePath)
         cacheConfiguration.url = url
 
         super.init()

@@ -80,8 +80,8 @@ public class ValidatedValue<Value> {
     ) {
         self.validator = validator
         self.defaultValue = defaultValue ?? wrappedValue
-        value = wrappedValue
-        isValid = validator.validate(wrappedValue)
+        self.value = wrappedValue
+        self.isValid = validator.validate(wrappedValue)
     }
 
     public convenience init<WrappedValue>(
@@ -193,7 +193,7 @@ public struct RouterValue {
         parameters: Any? = nil,
         _ handler: Router.Handler? = nil
     ) {
-        pattern = value
+        self.pattern = value
         self.parameters = parameters
         if let handler {
             Router.registerURL(value, handler: handler)

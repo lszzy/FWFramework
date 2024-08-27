@@ -568,7 +568,7 @@ open class PasscodeCellProperty: NSObject, NSCopying {
     override public required init() {
         super.init()
 
-        customSecurityViewBlock = {
+        self.customSecurityViewBlock = {
             let securityView = UIView()
             securityView.backgroundColor = .clear
 
@@ -581,7 +581,7 @@ open class PasscodeCellProperty: NSObject, NSCopying {
             return securityView
         }
 
-        customLineViewBlock = {
+        self.customLineViewBlock = {
             let lineView = PasscodeLineView()
             return lineView
         }

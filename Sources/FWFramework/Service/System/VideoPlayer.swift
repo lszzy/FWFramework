@@ -842,12 +842,12 @@ open class VideoPlayerView: UIView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
         playerLayer.isHidden = true
-        playerFillMode = .resizeAspect
+        self.playerFillMode = .resizeAspect
     }
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playerLayer.isHidden = true
-        playerFillMode = .resizeAspect
+        self.playerFillMode = .resizeAspect
     }
 }

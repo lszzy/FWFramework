@@ -214,14 +214,14 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     public init(sectionTitles: [StringParameter]) {
         super.init(frame: .zero)
         didInitialize()
-        type = .text
+        self.type = .text
         self.sectionTitles = sectionTitles
     }
 
     public init(sectionImages: [UIImage], sectionSelectedImages: [UIImage]) {
         super.init(frame: .zero)
         didInitialize()
-        type = .images
+        self.type = .images
         self.sectionImages = sectionImages
         self.sectionSelectedImages = sectionSelectedImages
     }
@@ -229,7 +229,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     public init(sectionImages: [UIImage], sectionSelectedImages: [UIImage], sectionTitles: [StringParameter]) {
         super.init(frame: .zero)
         didInitialize()
-        type = .textImages
+        self.type = .textImages
         self.sectionImages = sectionImages
         self.sectionSelectedImages = sectionSelectedImages
         self.sectionTitles = sectionTitles

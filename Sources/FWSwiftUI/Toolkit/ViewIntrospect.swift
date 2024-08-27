@@ -76,7 +76,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) {
         self.scope = scope ?? viewType.scope
-        selector = platforms.lazy.compactMap(\.selector).first
+        self.selector = platforms.lazy.compactMap(\.selector).first
         self.customize = customize
     }
 
@@ -664,9 +664,9 @@ extension PlatformViewControllerRepresentable {
         matches: (PlatformViewVersion<Version, SwiftUIViewType, PlatformSpecificEntity>) -> Bool
     ) {
         if let matchingVersion = versions.first(where: matches) {
-            selector = matchingVersion.selector ?? .default
+            self.selector = matchingVersion.selector ?? .default
         } else {
-            selector = nil
+            self.selector = nil
         }
     }
 

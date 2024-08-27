@@ -1529,8 +1529,8 @@ open class HexColorTransform: TransformType {
     var alpha: Bool = false
 
     public init(prefixToJSON: Bool = false, alphaToJSON: Bool = false) {
-        alpha = alphaToJSON
-        prefix = prefixToJSON
+        self.alpha = alphaToJSON
+        self.prefix = prefixToJSON
     }
 
     open func transformFromJSON(_ value: Any?) -> Object? {

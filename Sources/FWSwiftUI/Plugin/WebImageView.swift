@@ -21,8 +21,8 @@ public struct WebImageView: View {
     var configurations: [(Image) -> Image]
 
     public init(_ url: URLParameter?, isLoaded: Binding<Bool> = .constant(false)) {
-        binder = ImageBinder(url: url, isLoaded: isLoaded)
-        configurations = []
+        self.binder = ImageBinder(url: url, isLoaded: isLoaded)
+        self.configurations = []
         binder.start()
     }
 
@@ -115,7 +115,7 @@ extension WebImageView {
         init(url: URLParameter?, isLoaded: Binding<Bool>) {
             self.url = url
             self.isLoaded = isLoaded
-            image = nil
+            self.image = nil
         }
 
         func start() {

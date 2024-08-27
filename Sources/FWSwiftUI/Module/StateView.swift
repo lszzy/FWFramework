@@ -31,10 +31,10 @@ public struct StateView: View {
     public init<Content: View>(
         @ViewBuilder content: @escaping (Self, Any?) -> Content
     ) {
-        ready = { $0.transition(to: .success()) }
-        loading = { $0.transition(to: .success()) }
+        self.ready = { $0.transition(to: .success()) }
+        self.loading = { $0.transition(to: .success()) }
         self.content = { content($0, $1).eraseToAnyView() }
-        failure = { $0.transition(to: .success($1)) }
+        self.failure = { $0.transition(to: .success($1)) }
     }
 
     public init<Loading: View, Content: View, Failure: View>(
@@ -42,7 +42,7 @@ public struct StateView: View {
         @ViewBuilder content: @escaping (Self, Any?) -> Content,
         @ViewBuilder failure: @escaping (Self, Error?) -> Failure
     ) {
-        ready = { $0.transition(to: .loading) }
+        self.ready = { $0.transition(to: .loading) }
         self.loading = { loading($0).eraseToAnyView() }
         self.content = { content($0, $1).eraseToAnyView() }
         self.failure = { failure($0, $1).eraseToAnyView() }

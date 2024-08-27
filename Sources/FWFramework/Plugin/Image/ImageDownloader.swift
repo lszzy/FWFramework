@@ -558,7 +558,7 @@ open class AutoPurgingImageCache: NSObject, ImageRequestCache, @unchecked Sendab
     public init(memoryCapacity: UInt64, preferredMemoryCapacity: UInt64) {
         super.init()
         self.memoryCapacity = memoryCapacity
-        preferredMemoryUsageAfterPurge = preferredMemoryCapacity
+        self.preferredMemoryUsageAfterPurge = preferredMemoryCapacity
         didInitialize()
     }
 
@@ -681,8 +681,8 @@ private class CachedImage: NSObject {
         let imageSize = CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale)
         let bytesPerPixel: CGFloat = 4.0
         let bytesPerSize = imageSize.width * imageSize.height
-        totalBytes = UInt64(bytesPerPixel * bytesPerSize)
-        lastAccessDate = Date()
+        self.totalBytes = UInt64(bytesPerPixel * bytesPerSize)
+        self.lastAccessDate = Date()
 
         super.init()
     }

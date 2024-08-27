@@ -293,7 +293,7 @@ public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServer
     }
 
     init(transport: WebSocketTCPTransport) {
-        id = UUID().uuidString
+        self.id = UUID().uuidString
         self.transport = transport
         transport.register(delegate: self)
         httpHandler.register(delegate: self)
@@ -995,7 +995,7 @@ public class WebSocketEngine: WebSocketEngineProtocol, WebSocketTransportEventCl
         self.framer = framer
         self.httpHandler = httpHandler
         self.certPinner = certPinner
-        headerChecker = headerValidator
+        self.headerChecker = headerValidator
         self.compressionHandler = compressionHandler
         framer.updateCompression(supports: compressionHandler != nil)
         frameHandler.delegate = self

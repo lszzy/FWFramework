@@ -36,46 +36,46 @@ struct TestCodableModel: CodableModel {
     init() {}
 
     init(from decoder: any Decoder) throws {
-        id = try decoder.decode("id")
-        name = try decoder.decode("name")
+        self.id = try decoder.decode("id")
+        self.name = try decoder.decode("name")
         if let int = try? decoder.decodeIf("age", as: Int.self) {
-            age = int
+            self.age = int
         } else if let string = try? decoder.decodeIf("age", as: String.self) {
-            age = Int(string) ?? .zero
+            self.age = Int(string) ?? .zero
         }
-        amount = try decoder.decode("amount")
-        alias = try decoder.decode("alias_key")
-        camelName = try decoder.decode("camel_name")
-        any = try decoder.decodeAnyIf("any")
-        dict = try decoder.decodeAnyIf("dict")
-        array = try decoder.decodeAnyIf("array")
-        optional1 = try decoder.decodeIf("optional1") ?? ""
+        self.amount = try decoder.decode("amount")
+        self.alias = try decoder.decode("alias_key")
+        self.camelName = try decoder.decode("camel_name")
+        self.any = try decoder.decodeAnyIf("any")
+        self.dict = try decoder.decodeAnyIf("dict")
+        self.array = try decoder.decodeAnyIf("array")
+        self.optional1 = try decoder.decodeIf("optional1") ?? ""
         if let value2 = try decoder.decodeIf("optional2", as: String.self) {
-            optional2 = value2
+            self.optional2 = value2
         }
         if let value3 = try decoder.decodeIf("optional3", as: String.self) {
-            optional3 = value3
+            self.optional3 = value3
         }
         // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
         do {
             if let value4 = try decoder.decodeIf("optional4", as: Int?.self) {
-                optional4 = value4
+                self.optional4 = value4
             }
         } catch {
-            optional4 = nil
+            self.optional4 = nil
         }
-        optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
-        sub = try decoder.decodeIf("sub")
+        self.optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
+        self.sub = try decoder.decodeIf("sub")
         if let val2 = try decoder.decodeIf("sub2", as: TestCodableSubModel.self) {
-            sub2 = val2
+            self.sub2 = val2
         }
-        subs = try decoder.decodeIf("subs") ?? []
-        subdict = try decoder.decodeIf("subdict") ?? [:]
-        enum1 = try decoder.decode("enum1")
+        self.subs = try decoder.decodeIf("subs") ?? []
+        self.subdict = try decoder.decodeIf("subdict") ?? [:]
+        self.enum1 = try decoder.decode("enum1")
         if let val2 = try? decoder.decodeIf("enum2", as: TestCodableEnum.self) {
-            enum2 = val2
+            self.enum2 = val2
         }
-        enum3 = try? decoder.decodeIf("enum3")
+        self.enum3 = try? decoder.decodeIf("enum3")
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -141,32 +141,32 @@ struct TestCustomCodableModel: CodableModel {
     init() {}
 
     init(from decoder: any Decoder) throws {
-        id = try decoder.json("id").intValue
-        age = try decoder.jsonIf("age")?.intValue
-        name = try decoder.decodeSafe("name") ?? ""
-        amount = try decoder.decodeSafe("amount") ?? .zero
-        alias = try decoder.decodeSafe("alias_key") ?? ""
-        camelName = try decoder.decodeSafe("camel_name") ?? ""
-        any = try decoder.decodeSafeAny("any")
-        dict = try decoder.decodeSafeAny("dict")
-        array = try decoder.decodeSafeAny("array")
-        optional1 = try decoder.decodeSafe("optional1") ?? ""
-        optional2 = try decoder.decodeSafe("optional2") ?? ""
-        optional3 = try decoder.decodeSafe("optional3") ?? "default"
+        self.id = try decoder.json("id").intValue
+        self.age = try decoder.jsonIf("age")?.intValue
+        self.name = try decoder.decodeSafe("name") ?? ""
+        self.amount = try decoder.decodeSafe("amount") ?? .zero
+        self.alias = try decoder.decodeSafe("alias_key") ?? ""
+        self.camelName = try decoder.decodeSafe("camel_name") ?? ""
+        self.any = try decoder.decodeSafeAny("any")
+        self.dict = try decoder.decodeSafeAny("dict")
+        self.array = try decoder.decodeSafeAny("array")
+        self.optional1 = try decoder.decodeSafe("optional1") ?? ""
+        self.optional2 = try decoder.decodeSafe("optional2") ?? ""
+        self.optional3 = try decoder.decodeSafe("optional3") ?? "default"
         // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
         do {
-            optional4 = try decoder.decodeSafe("optional4", throws: true) ?? 4
+            self.optional4 = try decoder.decodeSafe("optional4", throws: true) ?? 4
         } catch {
-            optional4 = nil
+            self.optional4 = nil
         }
-        optional5 = try decoder.decodeSafe("optional5")
-        sub = try decoder.decodeSafe("sub")
-        sub2 = try decoder.decodeSafe("sub2") ?? .init()
-        subs = try decoder.decodeSafe("subs") ?? []
-        subdict = try decoder.decodeSafe("subdict") ?? [:]
-        enum1 = try decoder.decodeSafe("enum1") ?? .unknown
-        enum2 = try decoder.decodeSafe("enum2") ?? .unknown
-        enum3 = try decoder.decodeSafe("enum3")
+        self.optional5 = try decoder.decodeSafe("optional5")
+        self.sub = try decoder.decodeSafe("sub")
+        self.sub2 = try decoder.decodeSafe("sub2") ?? .init()
+        self.subs = try decoder.decodeSafe("subs") ?? []
+        self.subdict = try decoder.decodeSafe("subdict") ?? [:]
+        self.enum1 = try decoder.decodeSafe("enum1") ?? .unknown
+        self.enum2 = try decoder.decodeSafe("enum2") ?? .unknown
+        self.enum3 = try decoder.decodeSafe("enum3")
     }
 
     func encode(to encoder: any Encoder) throws {

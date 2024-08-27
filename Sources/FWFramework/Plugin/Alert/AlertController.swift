@@ -661,18 +661,18 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
         self.preferredStyle = preferredStyle
         self.animationType = animationType
         if preferredStyle == .alert {
-            minDistanceToEdges = alertAppearance.alertEdgeDistance
-            cornerRadius = alertAppearance.alertCornerRadius
-            _actionAxis = .horizontal
+            self.minDistanceToEdges = alertAppearance.alertEdgeDistance
+            self.cornerRadius = alertAppearance.alertCornerRadius
+            self._actionAxis = .horizontal
         } else {
-            minDistanceToEdges = alertAppearance.sheetEdgeDistance
-            cornerRadius = alertAppearance.sheetCornerRadius
-            _actionAxis = .vertical
+            self.minDistanceToEdges = alertAppearance.sheetEdgeDistance
+            self.cornerRadius = alertAppearance.sheetCornerRadius
+            self._actionAxis = .vertical
         }
-        _customAlertView = customAlertView
-        _customHeaderView = customHeaderView
-        _customActionSequenceView = customActionSequenceView
-        _componentView = componentView
+        self._customAlertView = customAlertView
+        self._customHeaderView = customHeaderView
+        self._customActionSequenceView = customActionSequenceView
+        self._componentView = componentView
     }
 
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -1379,7 +1379,7 @@ open class AlertAnimation: NSObject, UIViewControllerAnimatedTransitioning {
 
     public init(isPresenting: Bool) {
         super.init()
-        presenting = isPresenting
+        self.presenting = isPresenting
     }
 
     open func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -1816,22 +1816,22 @@ public class AlertAction: NSObject {
         self.handler = handler
 
         if style == .destructive {
-            titleColor = alertAppearance.alertRedColor
-            titleFont = alertAppearance.actionFont
+            self.titleColor = alertAppearance.alertRedColor
+            self.titleFont = alertAppearance.actionFont
         } else if style == .cancel {
-            titleColor = alertAppearance.titleDynamicColor
-            titleFont = alertAppearance.actionBoldFont
+            self.titleColor = alertAppearance.titleDynamicColor
+            self.titleFont = alertAppearance.actionBoldFont
         } else {
-            titleColor = alertAppearance.titleDynamicColor
-            titleFont = alertAppearance.actionFont
+            self.titleColor = alertAppearance.titleDynamicColor
+            self.titleFont = alertAppearance.actionFont
         }
     }
 
     override public init() {
         super.init()
 
-        titleColor = alertAppearance.titleDynamicColor
-        titleFont = alertAppearance.actionFont
+        self.titleColor = alertAppearance.titleDynamicColor
+        self.titleFont = alertAppearance.actionFont
     }
 }
 
@@ -1994,7 +1994,7 @@ class AlertHeaderScrollView: UIScrollView {
         self.appearance = appearance
         showsHorizontalScrollIndicator = false
         contentInsetAdjustmentBehavior = .never
-        contentEdgeInsets = appearanceContentInsets
+        self.contentEdgeInsets = appearanceContentInsets
     }
 
     required init?(coder: NSCoder) {
@@ -2176,7 +2176,7 @@ class AlertControllerActionView: UIView {
     init(appearance: AlertControllerAppearance?) {
         super.init(frame: .zero)
         self.appearance = appearance
-        afterSpacing = alertAppearance.lineWidth
+        self.afterSpacing = alertAppearance.lineWidth
     }
 
     required init?(coder: NSCoder) {

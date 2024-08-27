@@ -48,7 +48,7 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
     // MARK: - Lifecycle
     /// 指定操作完成句柄初始化
     public init(completion: @escaping @MainActor @Sendable (_ completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) -> Void) {
-        operation = completion
+        self.operation = completion
     }
 
     /// 指定操作成功和失败句柄初始化

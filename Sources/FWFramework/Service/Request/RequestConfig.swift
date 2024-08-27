@@ -519,13 +519,13 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
     public required init?(coder aDecoder: NSCoder) {
         super.init()
 
-        version = aDecoder.decodeObject(forKey: "version") as? Int
-        sensitiveDataString = aDecoder.decodeObject(forKey: "sensitiveDataString") as? String
+        self.version = aDecoder.decodeObject(forKey: "version") as? Int
+        self.sensitiveDataString = aDecoder.decodeObject(forKey: "sensitiveDataString") as? String
         if let encode = aDecoder.decodeObject(forKey: "stringEncoding") as? UInt {
-            stringEncoding = String.Encoding(rawValue: encode)
+            self.stringEncoding = String.Encoding(rawValue: encode)
         }
-        creationDate = aDecoder.decodeObject(forKey: "creationDate") as? Date
-        appVersionString = aDecoder.decodeObject(forKey: "appVersionString") as? String
+        self.creationDate = aDecoder.decodeObject(forKey: "creationDate") as? Date
+        self.appVersionString = aDecoder.decodeObject(forKey: "appVersionString") as? String
     }
 
     public func encode(with aCoder: NSCoder) {

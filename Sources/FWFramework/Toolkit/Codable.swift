@@ -306,17 +306,17 @@ public struct AnyCodingKey: CodingKey {
 
     public init?(stringValue: String) {
         self.stringValue = stringValue
-        intValue = nil
+        self.intValue = nil
     }
 
     public init?(intValue: Int) {
         self.intValue = intValue
-        stringValue = String(intValue)
+        self.stringValue = String(intValue)
     }
 
     public init<S: LosslessStringConvertible>(_ stringValue: S) {
         self.stringValue = stringValue as? String ?? String(stringValue)
-        intValue = nil
+        self.intValue = nil
     }
 }
 

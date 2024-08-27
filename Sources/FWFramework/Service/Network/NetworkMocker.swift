@@ -118,7 +118,7 @@ public struct NetworkMockOnRequestHandler {
     ///   - httpBodyType: The decodable type to use for parsing the request body.
     ///   - callback: The callback which will be called just before the request executes.
     public init<HTTPBody: Decodable>(httpBodyType: HTTPBody.Type?, callback: @escaping OnRequest<HTTPBody>) {
-        internalCallback = { request in
+        self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let decodedObject = try? JSONDecoder().decode(HTTPBody.self, from: httpBody)
@@ -128,29 +128,29 @@ public struct NetworkMockOnRequestHandler {
             }
             callback(request, decodedObject)
         }
-        legacyCallback = nil
+        self.legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments.
     /// - Parameter requestCallback: The callback which will be executed just before the request executes, containing the request.
     public init(requestCallback: @escaping (_ request: URLRequest) -> Void) {
-        internalCallback = requestCallback
-        legacyCallback = nil
+        self.internalCallback = requestCallback
+        self.legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments and without passing the request.
     /// - Parameter callback: The callback which will be executed just before the request executes.
     public init(callback: @escaping () -> Void) {
-        internalCallback = { _ in
+        self.internalCallback = { _ in
             callback()
         }
-        legacyCallback = nil
+        self.legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Dictionary.
     public init(jsonDictionaryCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void)) {
-        internalCallback = { request in
+        self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [String: Any]
@@ -160,13 +160,13 @@ public struct NetworkMockOnRequestHandler {
             }
             jsonDictionaryCallback(request, jsonObject)
         }
-        legacyCallback = nil
+        self.legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Array.
     public init(jsonArrayCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [[String: Any]]?) -> Void)) {
-        internalCallback = { request in
+        self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [[String: Any]]
@@ -176,11 +176,11 @@ public struct NetworkMockOnRequestHandler {
             }
             jsonArrayCallback(request, jsonObject)
         }
-        legacyCallback = nil
+        self.legacyCallback = nil
     }
 
     init(legacyCallback: NetworkMock.OnRequest?) {
-        internalCallback = { request in
+        self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
                 let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: .fragmentsAllowed) as? [String: Any]
@@ -426,7 +426,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
             preconditionFailure("At least one entry is required in the data dictionary")
         }
 
-        urlToMock = url
+        self.urlToMock = url
         let generatedURL = URL(string: "https://mocked.wetransfer.com/\(contentType?.name ?? "no-content")/\(statusCode)/\(data.keys.first!.rawValue)")!
         self.generatedURL = generatedURL
         var request = URLRequest(url: url ?? generatedURL)
@@ -569,8 +569,8 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
     }
 
     public static func ==(lhs: NetworkMock, rhs: NetworkMock) -> Bool {
-        let lhsHTTPMethods: [String] = lhs.data.keys.compactMap(\.rawValue).sorted()
-        let rhsHTTPMethods: [String] = rhs.data.keys.compactMap(\.rawValue).sorted()
+        let lhsHTTPMethods: [String] = lhs.data.keys.compactMap { $0.rawValue }.sorted()
+        let rhsHTTPMethods: [String] = rhs.data.keys.compactMap { $0.rawValue }.sorted()
 
         if let lhsFileExtensions = lhs.fileExtensions, let rhsFileExtensions = rhs.fileExtensions, !lhsFileExtensions.isEmpty || !rhsFileExtensions.isEmpty {
             /// The mocks are targeting file extensions specifically, check on those.

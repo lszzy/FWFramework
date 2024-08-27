@@ -239,8 +239,8 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
-        archiveData = coder.decodeObject(forKey: "archiveData") as? Data
-        archiveType = coder.decodeObject(forKey: "archiveType") as? String
+        self.archiveData = coder.decodeObject(forKey: "archiveData") as? Data
+        self.archiveType = coder.decodeObject(forKey: "archiveType") as? String
     }
 
     public func encode(with coder: NSCoder) {

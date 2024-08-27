@@ -745,14 +745,14 @@ open class BannerViewFlowLayout: UICollectionViewFlowLayout {
         super.init()
 
         scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
+        self.lastScrollDirection = scrollDirection
     }
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
 
         scrollDirection = .horizontal
-        lastScrollDirection = scrollDirection
+        self.lastScrollDirection = scrollDirection
     }
 
     // MARK: - Public
