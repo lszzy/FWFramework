@@ -82,7 +82,7 @@ open class TaskOperation: Operation, @unchecked Sendable {
 
     override public init() {
         super.init()
-        state = .ready
+        self.state = .ready
     }
 
     public convenience init(onMainThread: Bool = false, queuePriority: Operation.QueuePriority = .normal, taskBlock: ((TaskOperation) -> Void)?) {

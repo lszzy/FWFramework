@@ -91,11 +91,11 @@ public final class MappedValue<Value> {
     let decode: ((_ decoder: Decoder) throws -> Value?)?
 
     init(wrappedValue: Value, stringKeys: [String]?, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)?, decode: ((_ decoder: Decoder) throws -> Value?)?) {
-        (self.wrappedValue, self.stringKeys, ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, stringKeys, false, encode, decode)
     }
 
     public init(wrappedValue: Value, ignored: Bool) {
-        (self.wrappedValue, stringKeys, self.ignored, encode, decode) = (wrappedValue, nil, ignored, nil, nil)
+        (self.wrappedValue, self.stringKeys, self.ignored, self.encode, self.decode) = (wrappedValue, nil, ignored, nil, nil)
     }
 
     public convenience init(wrappedValue: Value, _ stringKey: String? = nil, encode: ((_ encoder: Encoder, _ value: Value) throws -> Void)? = nil, decode: ((_ decoder: Decoder) throws -> Value?)? = nil) {

@@ -68,7 +68,7 @@ public struct Validator<Value> {
 
     /// 默认验证器，值为nil时返回false
     public init() {
-        predicate = { value in
+        self.predicate = { value in
             value != nil
         }
     }
@@ -77,7 +77,7 @@ public struct Validator<Value> {
     public init<WrappedValue>(
         _ validator: Validator<WrappedValue>
     ) where WrappedValue? == Value {
-        predicate = { value in
+        self.predicate = { value in
             validator.validate(value as? WrappedValue)
         }
     }

@@ -341,10 +341,10 @@ open class StreamingMultipartFormData: NSObject, MultipartFormData {
     private var bodyStream: MultipartBodyStream
 
     public init(urlRequest: URLRequest, stringEncoding: String.Encoding) {
-        request = urlRequest
+        self.request = urlRequest
         self.stringEncoding = stringEncoding
-        boundary = Self.createMultipartFormBoundary()
-        bodyStream = MultipartBodyStream(stringEncoding: stringEncoding)
+        self.boundary = Self.createMultipartFormBoundary()
+        self.bodyStream = MultipartBodyStream(stringEncoding: stringEncoding)
         super.init()
     }
 

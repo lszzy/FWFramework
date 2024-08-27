@@ -54,7 +54,7 @@ open class HostingView<Content: View>: UIView {
 
     // MARK: - Lifecycle
     public required init(rootView: Content) {
-        contentHostingController = .init(rootView: .init(parent: nil, content: rootView))
+        self.contentHostingController = .init(rootView: .init(parent: nil, content: rootView))
         contentHostingController.rootView.parent = contentHostingController
         super.init(frame: .zero)
 

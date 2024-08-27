@@ -53,7 +53,7 @@ open class GradientView: UIView {
 
     /// 设置渐变颜色、位置和渐变方向
     open func setColors(_ colors: [UIColor]?, locations: [NSNumber]?, startPoint: CGPoint, endPoint: CGPoint) {
-        gradientLayer.colors = colors?.compactMap(\.cgColor)
+        gradientLayer.colors = colors?.compactMap { $0.cgColor }
         gradientLayer.locations = locations
         gradientLayer.startPoint = startPoint
         gradientLayer.endPoint = endPoint

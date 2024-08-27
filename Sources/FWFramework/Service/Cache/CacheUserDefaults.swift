@@ -16,13 +16,13 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
 
     /// 初始化
     override public init() {
-        userDefaults = UserDefaults.standard
+        self.userDefaults = UserDefaults.standard
         super.init()
     }
 
     /// 分组对象
     public init(group: String?) {
-        userDefaults = UserDefaults(suiteName: group) ?? .standard
+        self.userDefaults = UserDefaults(suiteName: group) ?? .standard
         super.init()
     }
 

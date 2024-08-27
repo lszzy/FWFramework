@@ -358,7 +358,7 @@ private class ImagePreviewCell: UICollectionViewCell {
 
         backgroundColor = .clear
         contentView.addSubview(zoomImageView)
-        contentViewBounds = contentView.bounds
+        self.contentViewBounds = contentView.bounds
         zoomImageView.fw.frameApplyTransform = contentView.bounds
     }
 
@@ -752,7 +752,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     override public init() {
         super.init()
 
-        animationEnteringBlock = { animator, isPresenting, style, sourceImageRect, zoomImageView, _ in
+        self.animationEnteringBlock = { animator, isPresenting, style, sourceImageRect, zoomImageView, _ in
             animator.imagePreviewViewController?.modalPresentationCapturesStatusBarAppearance = true
             let previewView = animator.imagePreviewViewController?.view
 
@@ -850,7 +850,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
             }
         }
 
-        animationBlock = { animator, isPresenting, style, _, _, _ in
+        self.animationBlock = { animator, isPresenting, style, _, _, _ in
             if style == .fade {
                 animator.imagePreviewViewController?.view.alpha = isPresenting ? 1 : 0
             } else if style == .zoom {
@@ -858,7 +858,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
             }
         }
 
-        animationCompletionBlock = { animator, _, _, _, zoomImageView, _ in
+        self.animationCompletionBlock = { animator, _, _, _, zoomImageView, _ in
             // fade清理，由于支持 zoom presenting 和 fade dismissing 搭配使用，所以这里不管是哪种 style 都要做相同的清理工作
             animator.imagePreviewViewController?.modalPresentationCapturesStatusBarAppearance = false
             animator.imagePreviewViewController?.view.alpha = 1

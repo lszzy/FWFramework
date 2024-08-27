@@ -176,7 +176,7 @@ class TestAnimationView: UIView {
         self.transitionType = transitionType
         if transitionType == 6 || transitionType == 9 {
             let edges: [UIRectEdge] = [.top, .left, .right, .bottom]
-            edge = edges.randomElement()!
+            self.edge = edges.randomElement()!
         }
         if transitionType > 8 {
             backgroundColor = .clear

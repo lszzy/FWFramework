@@ -448,7 +448,7 @@ public class ThemeManager: @unchecked Sendable {
 
     /// 初始化方法
     public init() {
-        _mode = .init(UserDefaults.standard.integer(forKey: "FWThemeMode"))
+        self._mode = .init(UserDefaults.standard.integer(forKey: "FWThemeMode"))
     }
 
     /// 当前全局主题样式

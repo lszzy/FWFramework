@@ -161,7 +161,7 @@ extension AttributedText {
             super.init(frame: frame)
 
             backgroundColor = .clear
-            linkGesture = fw.addLinkGesture { [weak self] link in
+            self.linkGesture = fw.addLinkGesture { [weak self] link in
                 self?.clickedOnLink?(link)
             }
         }

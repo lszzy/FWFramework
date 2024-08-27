@@ -93,12 +93,12 @@ public class Router: NSObject {
         public required init() {}
 
         public required init(dictionaryValue: [AnyHashable: Any]) {
-            routerSource = dictionaryValue[Self.routerSourceKey].string
+            self.routerSource = dictionaryValue[Self.routerSourceKey].string
             if let options = dictionaryValue[Self.routerOptionsKey] {
-                routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
+                self.routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
             }
-            routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
-            routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) @MainActor @Sendable (Context, UIViewController) -> Void
+            self.routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
+            self.routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) @MainActor @Sendable (Context, UIViewController) -> Void
         }
 
         public var dictionaryValue: [AnyHashable: Any] {

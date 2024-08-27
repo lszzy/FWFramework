@@ -56,8 +56,8 @@ class TestDatabaseCodingModel: NSObject, NSSecureCoding {
 
     required init?(coder: NSCoder) {
         super.init()
-        id = coder.decodeInteger(forKey: "id")
-        tag = coder.decodeObject(forKey: "tag").safeString
+        self.id = coder.decodeInteger(forKey: "id")
+        self.tag = coder.decodeObject(forKey: "tag").safeString
     }
 
     func encode(with coder: NSCoder) {

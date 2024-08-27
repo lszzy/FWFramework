@@ -90,22 +90,22 @@ public class Asset: NSObject, @unchecked Sendable {
 
         switch phAsset.mediaType {
         case .image:
-            assetType = .image
+            self.assetType = .image
             if (phAsset.fw.invokeGetter("uniformTypeIdentifier") as? String) == (kUTTypeGIF as String) {
-                assetSubType = .gif
+                self.assetSubType = .gif
             } else {
                 if phAsset.mediaSubtypes.contains(.photoLive) {
-                    assetSubType = .livePhoto
+                    self.assetSubType = .livePhoto
                 } else {
-                    assetSubType = .image
+                    self.assetSubType = .image
                 }
             }
         case .video:
-            assetType = .video
+            self.assetType = .video
         case .audio:
-            assetType = .audio
+            self.assetType = .audio
         default:
-            assetType = .unknown
+            self.assetType = .unknown
         }
     }
 
@@ -522,7 +522,7 @@ public class AssetGroup: NSObject, @unchecked Sendable {
     /// 初始化方法
     public init(phAssetCollection: PHAssetCollection, fetchAssetsOptions: PHFetchOptions? = nil) {
         self.phAssetCollection = phAssetCollection
-        phFetchResult = PHAsset.fetchAssets(in: phAssetCollection, options: fetchAssetsOptions)
+        self.phFetchResult = PHAsset.fetchAssets(in: phAssetCollection, options: fetchAssetsOptions)
         super.init()
     }
 
@@ -1469,8 +1469,8 @@ open class AssetSessionExporter: NSObject, @unchecked Sendable {
     }
 
     override public init() {
-        _inputQueue = DispatchQueue(label: InputQueueLabel, autoreleaseFrequency: .workItem, target: DispatchQueue.global())
-        timeRange = CMTimeRange(start: CMTime.zero, end: CMTime.positiveInfinity)
+        self._inputQueue = DispatchQueue(label: InputQueueLabel, autoreleaseFrequency: .workItem, target: DispatchQueue.global())
+        self.timeRange = CMTimeRange(start: CMTime.zero, end: CMTime.positiveInfinity)
         super.init()
     }
 

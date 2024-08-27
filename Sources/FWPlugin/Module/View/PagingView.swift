@@ -1214,12 +1214,12 @@ open class PagingSmoothView: UIView {
 
     public init(dataSource: PagingSmoothViewDataSource) {
         self.dataSource = dataSource
-        pagingHeaderContainerView = UIView()
+        self.pagingHeaderContainerView = UIView()
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.scrollDirection = .horizontal
-        listCollectionView = PagingSmoothCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        self.listCollectionView = PagingSmoothCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         super.init(frame: CGRect.zero)
 
         listCollectionView.dataSource = self

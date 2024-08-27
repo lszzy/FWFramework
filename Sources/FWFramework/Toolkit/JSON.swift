@@ -99,7 +99,7 @@ public struct JSON: @unchecked Sendable {
     }
 
     fileprivate init(jsonObject: Any) {
-        object = jsonObject
+        self.object = jsonObject
     }
 
     public mutating func merge(with other: JSON) throws {

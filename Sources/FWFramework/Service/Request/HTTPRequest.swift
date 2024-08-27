@@ -685,11 +685,11 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         self.builder = builder
         if let tag = builder.tag { self.tag = tag }
-        if let block = builder.constructingBodyBlock { constructingBodyBlock = block }
-        if let path = builder.resumableDownloadPath { resumableDownloadPath = path }
-        if let priority = builder.requestPriority { requestPriority = priority }
-        if let userInfo = builder.requestUserInfo { requestUserInfo = userInfo }
-        if let synchronously = builder.isSynchronously { isSynchronously = synchronously }
+        if let block = builder.constructingBodyBlock { self.constructingBodyBlock = block }
+        if let path = builder.resumableDownloadPath { self.resumableDownloadPath = path }
+        if let priority = builder.requestPriority { self.requestPriority = priority }
+        if let userInfo = builder.requestUserInfo { self.requestUserInfo = userInfo }
+        if let synchronously = builder.isSynchronously { self.isSynchronously = synchronously }
     }
 
     /// 请求描述

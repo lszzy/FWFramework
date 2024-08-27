@@ -58,8 +58,8 @@ public class StateEvent: @unchecked Sendable {
     /// 初始化事件
     public init(name: String, from states: [StateObject], to state: StateObject) {
         self.name = name
-        sourceStates = states
-        targetState = state
+        self.sourceStates = states
+        self.targetState = state
     }
 }
 
@@ -87,7 +87,7 @@ public class StateTransition: @unchecked Sendable {
     public init(in machine: StateMachine, for event: StateEvent, from state: StateObject, object: Any? = nil) {
         self.machine = machine
         self.event = event
-        sourceState = state
+        self.sourceState = state
         self.object = object
     }
 }

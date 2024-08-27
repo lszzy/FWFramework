@@ -43,7 +43,7 @@ open class GridView: UIView {
     public init(column: Int, rowHeight: CGFloat) {
         super.init(frame: .zero)
         didInitialize()
-        columnCount = column
+        self.columnCount = column
         self.rowHeight = rowHeight
     }
 
