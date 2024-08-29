@@ -198,14 +198,17 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
     }
 
     // MARK: - EventViewDelegate
-    func eventTriggered(_ eventView: EventView, event: Notification) {
-        if eventView == dataView, event.name == SwiftTestRequestView.EventName.refresh {
+    func eventTriggered(_ view: UIView, event: Notification) {
+        switch event.name {
+        case SwiftTestRequestView.EventName.refresh:
             requestData()
+        default:
+            break
         }
     }
 }
 
-class SwiftTestRequestView: UIView, ViewProtocol, EventViewProtocol {
+class SwiftTestRequestView: UIView, EventViewProtocol {
     enum EventName {
         static let refresh = Notification.Name("refresh")
     }
@@ -218,17 +221,6 @@ class SwiftTestRequestView: UIView, ViewProtocol, EventViewProtocol {
 
     private var emptyView: PlaceholderView? {
         app.showingEmptyView as? PlaceholderView
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        setupSubviews()
-        setupLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     func setupSubviews() {
