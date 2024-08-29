@@ -49,20 +49,17 @@ extension ViewProtocol where Self: UIView {
 // MARK: - EventViewProtocol
 /// 通用事件视图代理，可继承也可直接使用
 @MainActor public protocol EventViewDelegate: AnyObject {
-    /// EventView别名
-    typealias EventView = UIView & EventViewProtocol
-
     /// 事件已触发代理方法，默认空实现
-    func eventTriggered(_ eventView: EventView, event: Notification)
+    func eventTriggered(_ view: UIView, event: Notification)
 }
 
 extension EventViewDelegate {
     /// 事件已触发代理方法，默认空实现
-    public func eventTriggered(_ eventView: EventView, event: Notification) {}
+    public func eventTriggered(_ view: UIView, event: Notification) {}
 }
 
-/// 通用事件视图协议，可选实现
-@MainActor public protocol EventViewProtocol {}
+/// 通用事件视图协议，可选使用
+@MainActor public protocol EventViewProtocol: ViewProtocol {}
 
 extension EventViewProtocol where Self: UIView {
     /// 弱引用事件代理
@@ -72,14 +69,14 @@ extension EventViewProtocol where Self: UIView {
     }
 
     /// 事件已触发句柄，同eventDelegate.eventTriggered方法，句柄方式
-    public var eventTriggered: (@MainActor @Sendable (Self, Notification) -> Void)? {
-        get { fw.property(forName: "eventTriggered") as? @MainActor @Sendable (Self, Notification) -> Void }
+    public var eventTriggered: (@MainActor @Sendable (Notification) -> Void)? {
+        get { fw.property(forName: "eventTriggered") as? @MainActor @Sendable (Notification) -> Void }
         set { fw.setPropertyCopy(newValue, forName: "eventTriggered") }
     }
 
     /// 触发指定事件，通知代理，参数为通知对象
     public func triggerEvent(_ event: Notification) {
-        eventTriggered?(self, event)
+        eventTriggered?(event)
         eventDelegate?.eventTriggered(self, event: event)
     }
 
