@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: - ViewProtocol
-/// 视图规范协议，init自动调用
+// MARK: - SetupViewProtocol
+/// 通用视图初始化协议，init自动调用
 ///
 /// 渲染数据规范示例：
 /// 1. 无需外部数据时，实现 setupData() ，示例如下：
@@ -24,7 +24,7 @@ import UIKit
 ///     ...
 /// }
 /// ```
-@MainActor public protocol ViewProtocol {
+@MainActor public protocol SetupViewProtocol {
     /// 初始化完成，init自动调用，默认空实现
     func didInitialize()
 
@@ -35,7 +35,7 @@ import UIKit
     func setupLayout()
 }
 
-extension ViewProtocol where Self: UIView {
+extension SetupViewProtocol where Self: UIView {
     /// 初始化完成，init自动调用，默认空实现
     public func didInitialize() {}
 
@@ -101,7 +101,7 @@ extension FrameworkAutoloader {
         ) { store in { selfObject, frame in
             let view = store.original(selfObject, store.selector, frame)
 
-            if let viewProtocol = view as? ViewProtocol {
+            if let viewProtocol = view as? SetupViewProtocol {
                 viewProtocol.didInitialize()
                 viewProtocol.setupSubviews()
                 viewProtocol.setupLayout()
@@ -117,7 +117,7 @@ extension FrameworkAutoloader {
         ) { store in { selfObject, coder in
             guard let view = store.original(selfObject, store.selector, coder) else { return nil }
 
-            if let viewProtocol = view as? ViewProtocol {
+            if let viewProtocol = view as? SetupViewProtocol {
                 viewProtocol.didInitialize()
                 viewProtocol.setupSubviews()
                 viewProtocol.setupLayout()

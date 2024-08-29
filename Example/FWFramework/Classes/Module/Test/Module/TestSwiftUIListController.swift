@@ -129,7 +129,7 @@ struct TestSwiftUIListContent: View {
     }
 }
 
-class TestSwiftUIListModel: ViewModel, @unchecked Sendable {
+class TestSwiftUIListModel: ObservableViewModel, @unchecked Sendable {
     var style: Int = 0
     var error: Error? {
         didSet {
