@@ -35,3 +35,4 @@
 --disable initCoderUnavailable
 --disable conditionalAssignment
 --disable preferKeyPath
+--disable sortTypealiases
