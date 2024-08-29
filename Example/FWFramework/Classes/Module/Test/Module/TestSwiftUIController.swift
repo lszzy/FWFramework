@@ -96,7 +96,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     }
 }
 
-class TestSwiftUIModel: ViewModel {
+class TestSwiftUIModel: ObservableViewModel {
     // View中可通过$viewModel.isEnglish获取Binding<Bool>
     @Published var isEnglish: Bool = true
 

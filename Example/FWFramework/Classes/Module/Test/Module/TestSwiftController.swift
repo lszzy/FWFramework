@@ -208,7 +208,7 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
     }
 }
 
-class SwiftTestRequestView: UIView, ViewProtocol, EventViewProtocol {
+class SwiftTestRequestView: UIView, SetupViewProtocol, EventViewProtocol {
     enum EventName {
         static let refresh = Notification.Name("refresh")
     }
