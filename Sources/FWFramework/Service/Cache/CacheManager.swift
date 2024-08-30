@@ -104,10 +104,10 @@ public struct CachedValue<Value> {
     public var wrappedValue: Value {
         get {
             let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value
-            return !Any?.isNil(value) ? (value ?? defaultValue) : defaultValue
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            if !Any?.isNil(newValue) {
+            if !Optional<Any>.isNil(newValue) {
                 CacheManager.manager(type: type)?.setObject(newValue, forKey: key)
             } else {
                 CacheManager.manager(type: type)?.removeObject(forKey: key)

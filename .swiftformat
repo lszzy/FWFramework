@@ -36,3 +36,4 @@
 --disable conditionalAssignment
 --disable preferKeyPath
 --disable sortTypealiases
+--disable typeSugar
