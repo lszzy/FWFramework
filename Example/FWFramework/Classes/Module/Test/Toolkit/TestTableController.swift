@@ -19,7 +19,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
 
     @StoredValue("testRandomKey")
     static var testRandomKey: String = ""
-    
+
     private lazy var floatingView: UIImageView = {
         let result = UIImageView()
         result.image = UIImage.app.appIconImage()
@@ -94,13 +94,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupSubviews() {
         view.addSubview(floatingView)
     }
-    
+
     func setupLayout() {
         floatingView.layoutChain
             .right(10)
             .bottom(toSafeArea: 10)
             .size(width: 40, height: 40)
-        
+
         tableView.app.beginRefreshing()
     }
 
@@ -190,7 +190,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         }
     }
-    
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         scrollView.app.beginFoldingView(floatingView) { view in
             view.layoutChain.right(-30)
@@ -198,7 +198,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             view.superview?.layoutIfNeeded()
         }
     }
-    
+
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         scrollView.app.endFoldingView(floatingView, willDecelerate: decelerate) { view in
             view.layoutChain.right(10)
@@ -206,7 +206,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             view.superview?.layoutIfNeeded()
         }
     }
-    
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         scrollViewDidEndDragging(scrollView, willDecelerate: false)
     }
