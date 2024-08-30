@@ -17,7 +17,8 @@
     <a title="Protocols  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.10.2 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 5.10.3 Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1694,6 +1695,12 @@
                 <a href="Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/EventViewDelegate.html">EventViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/EventViewProtocol.html">EventViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1773,6 +1780,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ObjectType.html">ObjectType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/PageControlDelegate.html">PageControlDelegate</a>
@@ -1877,6 +1887,9 @@
                 <a href="Protocols/ScrollViewControllerProtocol.html">ScrollViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/SetupViewProtocol.html">SetupViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/SingletonProtocol.html">SingletonProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1944,9 +1957,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Protocols.html#/s:11FWFramework9ViewModelP">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
@@ -2467,6 +2477,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -4107,6 +4120,62 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/SetupViewProtocol"></a>
+                <a name="//apple_ref/swift/Section/SetupViewProtocol" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/SetupViewProtocol"></a>
+                  <h3 class="section-name"><span>SetupViewProtocol</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17SetupViewProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/SetupViewProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17SetupViewProtocolP">SetupViewProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>通用视图初始化协议，init自动调用</p>
+
+<p>渲染数据规范示例：</p>
+
+<ol>
+<li><p>无需外部数据时，实现 setupData() ，示例如下：</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setupData</span><span class="p">()</span> <span class="p">{</span>
+<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></li>
+<li><p>需外部数据时，实现：configure(&hellip;)，示例如下：</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="p">)</span> <span class="p">{</span>
+<span class="o">...</span>
+<span class="p">}</span>
+</code></pre></li>
+</ol>
+
+                        <a href="Protocols/SetupViewProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">SetupViewProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/ViewProtocol"></a>
                 <a name="//apple_ref/swift/Section/ViewProtocol" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -4129,22 +4198,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>视图规范协议，需手工调用</p>
-
-<p>渲染数据规范示例：</p>
-
-<ol>
-<li><p>无需外部数据时，实现 setupData() ，示例如下：</p>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setupData</span><span class="p">()</span> <span class="p">{</span>
-<span class="o">...</span>
-<span class="p">}</span>
-</code></pre></li>
-<li><p>需外部数据时，实现：configure(&hellip;)，示例如下：</p>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="p">)</span> <span class="p">{</span>
-<span class="o">...</span>
-<span class="p">}</span>
-</code></pre></li>
-</ol>
+                        <p>已废弃，视图规范协议，需手工调用</p>
 
                         <a href="Protocols/ViewProtocol.html" class="slightly-smaller">See more</a>
                       </div>
@@ -4152,7 +4206,77 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="nv">renamed</span><span class="p">:</span> <span class="s">"SetupViewProtocol"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Use SetupViewProtocol instead and related methods will be invoked automatically"</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/EventViewProtocol"></a>
+                <a name="//apple_ref/swift/Section/EventViewProtocol" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/EventViewProtocol"></a>
+                  <h3 class="section-name"><span>EventViewProtocol</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17EventViewDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/EventViewDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17EventViewDelegateP">EventViewDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>通用事件视图代理，可继承也可直接使用</p>
+
+                        <a href="Protocols/EventViewDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework17EventViewProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/EventViewProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework17EventViewProtocolP">EventViewProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>通用事件视图协议，可选使用</p>
+
+                        <a href="Protocols/EventViewProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -4203,9 +4327,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ViewModelP"></a>
-                    <a name="//apple_ref/swift/Protocol/ViewModel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ViewModelP">ViewModel</a>
+                    <a name="/s:11FWFramework19ObservableViewModelP"></a>
+                    <a name="//apple_ref/swift/Protocol/ObservableViewModel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4213,14 +4337,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit和SwiftUI使用</p>
+                        <p>可监听ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit和SwiftUI使用</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewModel</span> <span class="p">:</span> <span class="kt">ObservableObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ObservableViewModel</span> <span class="p">:</span> <span class="kt">ObservableObject</span></code></pre>
 
                         </div>
                       </div>
@@ -8686,7 +8810,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

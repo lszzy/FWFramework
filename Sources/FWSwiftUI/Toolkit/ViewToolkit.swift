@@ -430,49 +430,33 @@ extension View {
         }
     }
     
-    /// 包装到VStack
-    public func wrappedVStack(
-        alignment: HorizontalAlignment = .center,
-        spacing: CGFloat? = nil
-    ) -> some View {
-        VStack(alignment: alignment, spacing: spacing) {
-            self
-        }
-    }
-    
-    /// 包装到VStack并指定内容(如Spacer)
+    /// 包装到VStack，可指定内容(如Spacer)
     public func wrappedVStack<Content: View>(
         alignment: HorizontalAlignment = .center,
         spacing: CGFloat? = nil,
-        @ViewBuilder content: () -> Content
+        content: (() -> Content)? = nil
     ) -> some View {
         VStack(alignment: alignment, spacing: spacing) {
             self
-            
-            content()
+
+            if let content {
+                content()
+            }
         }
     }
-    
-    /// 包装到HStack
-    public func wrappedHStack(
-        alignment: VerticalAlignment = .center,
-        spacing: CGFloat? = nil
-    ) -> some View {
-        HStack(alignment: alignment, spacing: spacing) {
-            self
-        }
-    }
-    
-    /// 包装到HStack并指定内容(如Spacer)
+
+    /// 包装到HStack，可指定内容(如Spacer)
     public func wrappedHStack<Content: View>(
         alignment: VerticalAlignment = .center,
         spacing: CGFloat? = nil,
-        @ViewBuilder content: () -> Content
+        content: (() -> Content)? = nil
     ) -> some View {
         HStack(alignment: alignment, spacing: spacing) {
             self
-            
-            content()
+
+            if let content {
+                content()
+            }
         }
     }
     
