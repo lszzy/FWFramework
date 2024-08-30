@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.10.3] - 2024-08-30
+
+### Changed
+* ViewModel renamed to ObservableViewModel, marked as deprecated, migration and upgrade required
+* ViewProtocol marked as deprecated, SetupViewProtocol protocol added and related methods automatically called, migration and upgrade required
+* EventViewProtocol general event view protocol added, optional use
+
 ## [5.10.2] - 2024-08-21
 
 ### Fixed
