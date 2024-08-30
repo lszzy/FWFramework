@@ -43,14 +43,14 @@ public struct StoredValue<Value> {
             if let data = object as? Data, let coder = ArchiveCoder.unarchiveData(data) {
                 value = coder.archivableObject as? Value
             }
-            return !Any?.isNil(value) ? (value ?? defaultValue) : defaultValue
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
             var value: Any? = newValue
             if ArchiveCoder.isArchivableObject(newValue) {
                 value = Data.fw.archivedData(newValue)
             }
-            if !Any?.isNil(value) {
+            if !Optional<Any>.isNil(value) {
                 UserDefaults.standard.set(value, forKey: key)
             } else {
                 UserDefaults.standard.removeObject(forKey: key)

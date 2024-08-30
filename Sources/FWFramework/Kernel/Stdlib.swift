@@ -56,7 +56,7 @@ extension WrapperGlobal {
 
     /// 判断是否为nil，兼容嵌套Optional
     public static func isNil(_ value: Any?) -> Bool {
-        Any?.isNil(value)
+        Optional<Any>.isNil(value)
     }
 }
 
@@ -327,7 +327,7 @@ extension Optional {
     public var array: [Any]? { self as? [Any] }
     public var dictionary: [AnyHashable: Any]? { self as? [AnyHashable: Any] }
 
-    public var isNil: Bool { Any?.isNil(self) }
+    public var isNil: Bool { Optional<Any>.isNil(self) }
     public static func isNil(_ value: Wrapped?) -> Bool {
         if let value { return deepUnwrap(value) == nil }
         return true

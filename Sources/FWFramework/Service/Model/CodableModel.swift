@@ -160,7 +160,7 @@ extension MappedValue: DecodableMappedValue where Value: Decodable {
                 }
             } catch {
                 /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
-                if Any?.isOptional(wrappedValue) {
+                if Optional<Any>.isOptional(wrappedValue) {
                     let value: Value? = nil
                     wrappedValue = (value as Any) as! Value
                 }
@@ -207,7 +207,7 @@ extension MappedValue: DecodableAnyMappedValue {
                 }
             } catch {
                 /// 当值是可选类型、且键值存在但解析失败时，重置wrappedValue为nil
-                if Any?.isOptional(wrappedValue) {
+                if Optional<Any>.isOptional(wrappedValue) {
                     let value: Value? = nil
                     wrappedValue = (value as Any) as! Value
                 }
