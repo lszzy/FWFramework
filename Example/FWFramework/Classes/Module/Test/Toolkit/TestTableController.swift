@@ -7,6 +7,9 @@
 //
 
 import FWFramework
+#if DEBUG
+import FWDebug
+#endif
 
 class TestTableController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = TestTableDynamicLayoutObject
@@ -16,6 +19,19 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
 
     @StoredValue("testRandomKey")
     static var testRandomKey: String = ""
+    
+    private lazy var floatingView: UIImageView = {
+        let result = UIImageView()
+        result.image = UIImage.app.appIconImage()
+        result.app.setCornerRadius(20)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { _ in
+            #if DEBUG
+            FWDebugManager.sharedInstance().toggle()
+            #endif
+        }
+        return result
+    }()
 
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -48,7 +64,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         }
     }
 
-    func setupCollectionLayout() {
+    func setupTableLayout() {
         tableView.layoutChain.edges(excludingEdge: .top).top(toSafeArea: .zero)
     }
 
@@ -76,6 +92,15 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
 
     func setupSubviews() {
+        view.addSubview(floatingView)
+    }
+    
+    func setupLayout() {
+        floatingView.layoutChain
+            .right(10)
+            .bottom(toSafeArea: 10)
+            .size(width: 40, height: 40)
+        
         tableView.app.beginRefreshing()
     }
 
@@ -164,6 +189,26 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         return tableView.app.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .footer) { footerView in
             footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollView.app.beginFoldingView(floatingView) { view in
+            view.layoutChain.right(-30)
+            view.alpha = 0.5
+            view.superview?.layoutIfNeeded()
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollView.app.endFoldingView(floatingView, willDecelerate: decelerate) { view in
+            view.layoutChain.right(10)
+            view.alpha = 1.0
+            view.superview?.layoutIfNeeded()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollViewDidEndDragging(scrollView, willDecelerate: false)
     }
 
     func randomObject() -> TestTableDynamicLayoutObject {
