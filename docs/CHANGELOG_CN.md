@@ -1,5 +1,67 @@
 # 更新日志
 
+## [5.10.3] - 2024-08-30
+
+### Changed
+* ViewModel重命名为ObservableViewModel，标记弃用，需迁移升级
+* ViewProtocol标记弃用，新增SetupViewProtocol协议且相关方法会自动调用，需迁移升级
+* 新增EventViewProtocol通用事件视图协议，可选使用
+
+## [5.10.2] - 2024-08-21
+
+### Fixed
+* 优化autoMatchDimension生成约束为required，防止与imageView自动约束冲突不生效
+* autoMatchDimension支持动态切换开启或关闭
+
+## [5.10.1] - 2024-08-21
+
+### Added
+* UIView新增autoMatchDimension处理图片高度固定，宽度自适应尺寸布局等问题
+
+## [5.10.0] - 2024-08-19
+
+### Added
+* 新增AnyChainable协议支持链式调用，NSObject默认实现chainValue、chainBlock链式方法
+* 新增ArrayResultBuilder，用于实现类似SwiftUI布局代码等功能
+* SwiftUI新增AttributedText富文本组件，兼容NSAttributedString显示
+* SwiftUI.Text支持多文本拼接，兼容ArrayResultBuilder
+* SwiftUI部分工具方法参数名称builder修改为content
+* NSAttributedString支持多文本拼接，兼容ArrayResultBuilder
+* UIView新增arrangeSubviews、arrangeLayout方法，兼容ArrayResultBuilder
+* UILabel点击attributedText时兼容font和textAlignment设置
+* UITextView支持获取点击位置的文本样式属性，类似UILabel
+
+## [5.9.8] - 2024-08-14
+
+### Changed
+* 新增Shortcut工具方法，原方法标记deprecated下个版本删除，建议逐步迁移
+
+## [5.9.7] - 2024-08-14
+
+### Fixed
+* 兼容SwiftPackageIndex
+
+## [5.9.6] - 2024-08-13
+
+### Changed
+* 兼容Swift5.8编译
+
+## [5.9.5] - 2024-08-06
+
+### Changed
+* UIButton新增contentCollapse属性快速处理按钮收缩问题
+
+## [5.9.4] - 2024-08-01
+
+### Fixed
+* 兼容SwiftPackageIndex
+
+## [5.9.3] - 2024-08-01
+
+### Changed
+* 新增UITableView和UICollectionView计算高度和frame相关方法
+* 修复WebView配置reuseConfigurationBlock未生效问题
+
 ## [5.9.2] - 2024-07-19
 
 ### Changed

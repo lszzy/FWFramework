@@ -15,8 +15,9 @@ iOS development framework, mainly solves the routine and pain points in native d
 	* Easily customizable UI plug-ins, including pop-up windows, toast, empty interface, pull-down refresh, image selection and other plug-ins
 	* Completely replaceable network images and network request layer, compatible with SDWebImage, Alamofire, etc. by default
 	* Automatically updated AutoLayout chain layout, commonly used UI view components are all available
-	* Extensible Model, View, and Controller architecture encapsulation to quickly write business code
+	* Extensible Model, View, and Controller architecture encapsulation for quick writing of business codes
 	* Compatible with SwiftUI, easily implement UIKit and SwiftUI hybrid interface development
+    * Compatible with Swift 6, quickly write more robust, less crash-prone, and thread-safe code   
 	* Any replaceable fw. code prefix, commonly used Toolkit methods, Theme, multi-language processing
 	* Everything you want is available here
 
@@ -73,11 +74,11 @@ Example of importing default fw code prefix:
 ## [Changelog](https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md)
 As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:
 
-	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.9.2'
+	1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '6.0.0'
 	2. Upgrade to the new version, please pay attention to the version update log
 
 ### Swift
-From version 5.0, only compatible with Swift, compatible with iOS 13+. The 5.x version is completely refactored using Swift and is incompatible with some APIs of the 4.x version. When migrating, old users not only use the new API to fix compilation errors, but also need to test whether the relevant functions are normal. We apologize for the inconvenience caused to you.
+Starting from version 6.0, it is compatible with Swift 6 and iOS 13+. Version 5.x is only compatible with Swift 5. When migrating, in addition to using the new API to fix compilation errors, you also need to test whether the relevant functions are normal. We apologize for the inconvenience caused to you.
 
 ### Objective-C
 For OC compatibility, please use version 4.x, compatible with iOS 11+. Subsequent versions of version 4.x will only fix bugs and no new features will be added.

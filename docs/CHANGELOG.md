@@ -1,5 +1,67 @@
 # Changelog
 
+## [5.10.3] - 2024-08-30
+
+### Changed
+* ViewModel renamed to ObservableViewModel, marked as deprecated, migration and upgrade required
+* ViewProtocol marked as deprecated, SetupViewProtocol protocol added and related methods automatically called, migration and upgrade required
+* EventViewProtocol general event view protocol added, optional use
+
+## [5.10.2] - 2024-08-21
+
+### Fixed
+* Optimize autoMatchDimension to generate constraints as required to prevent conflicts with imageView automatic constraints
+* autoMatchDimension supports dynamic switching on or off
+
+## [5.10.1] - 2024-08-21
+
+### Added
+* UIView adds autoMatchDimension to handle issues such as fixed image height and adaptive width size layout
+
+## [5.10.0] - 2024-08-19
+
+### Added
+* Added AnyChainable protocol to support chain calls, NSObject implements chainValue and chainBlock chain methods by default
+* Added ArrayResultBuilder to implement functions similar to SwiftUI layout code
+* SwiftUI added AttributedText rich text component, compatible with NSAttributedString display
+* SwiftUI.Text supports multiple text splicing, compatible with ArrayResultBuilder
+* Modified the parameter name of some SwiftUI tool methods from builder to content
+* NSAttributedString supports multiple text splicing, compatible with ArrayResultBuilder
+* UIView added arrangeSubviews and arrangeLayout methods, compatible with ArrayResultBuilder
+* UILabel is compatible with font and textAlignment settings when clicking attributedText
+* UITextView supports getting text style attributes of the click position, similar to UILabel
+
+## [5.9.8] - 2024-08-14
+
+### Changed
+* Added Shortcut tool method, the original method is marked as deprecated and will be deleted in the next version, it is recommended to migrate gradually
+
+## [5.9.7] - 2024-08-14
+
+### Fixed
+* Compatible with SwiftPackageIndex
+
+## [5.9.6] - 2024-08-13
+
+### Changed
+* Compatible with Swift5.8 compilation
+
+## [5.9.5] - 2024-08-06
+
+### Changed
+* UIButton adds contentCollapse property to quickly handle button shrinkage issues
+
+## [5.9.4] - 2024-08-01
+
+### Fixed
+* Compatible with SwiftPackageIndex
+
+## [5.9.3] - 2024-08-01
+
+### Changed
+* Added UITableView and UICollectionView methods for calculating height and frame
+* Fixed the issue that WebView configuration reuseConfigurationBlock did not take effect
+
 ## [5.9.2] - 2024-07-19
 
 ### Changed
