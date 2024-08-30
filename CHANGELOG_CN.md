@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.10.3] - 2024-08-30
+
+### Changed
+* ViewModel重命名为ObservableViewModel，标记弃用，需迁移升级
+* ViewProtocol标记弃用，新增SetupViewProtocol协议且相关方法会自动调用，需迁移升级
+* 新增EventViewProtocol通用事件视图协议，可选使用
+
 ## [5.10.2] - 2024-08-21
 
 ### Fixed

@@ -137,25 +137,51 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
     
 }
 
-class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol {
+class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, RequestViewControllerProtocol, EventViewDelegate {
+    // MARK: - Accessor
     var dataModel: String = ""
-    
-    func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
-        
+
+    // MARK: - Subviews
+    private lazy var dataView: SwiftTestRequestView = {
+        let result = SwiftTestRequestView()
+        result.eventDelegate = self
+        result.isHidden = true
+        return result
+    }()
+
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
         requestData()
     }
-    
-    func setupData() {
-        view.app.showEmptyView(text: dataModel)
+
+    // MARK: - ViewControllerProtocol
+    func setupSubviews() {
+        view.backgroundColor = AppTheme.backgroundColor
+
+        view.addSubview(dataView)
     }
-    
+
+    func setupLayout() {
+        dataView.layoutChain
+            .top(toSafeArea: .zero)
+            .horizontal()
+            .bottom()
+    }
+
+    // MARK: - RequestViewControllerProtocol
+    func setupData() {
+        dataView.configure(model: dataModel)
+        dataView.isHidden = false
+    }
+
     func startDataRequest(isRefreshing: Bool, completion: @escaping Completion) {
         let request = TestModelRequest()
         request.testFailed = [0, 1].randomElement() == 0
         request.start { request in
             self.dataModel = Date(timeIntervalSince1970: request.responseServerTime).app.stringValue
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 completion(request, true)
             }
@@ -165,17 +191,50 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
             }
         }
     }
-    
+
     func showRequestLoading(isShowing: Bool) {
-        if isShowing {
-            if !app.isDataLoaded {
-                app.showEmptyLoading()
-            }
+        if !app.isDataLoaded {
+            isShowing ? app.showEmptyLoading() : app.hideEmptyView()
         } else {
-            app.hideEmptyView()
+            dataView.isLoading = isShowing
         }
     }
-    
+
+    // MARK: - EventViewDelegate
+    func eventTriggered(_ view: UIView, event: Notification) {
+        switch event.name {
+        case SwiftTestRequestView.EventName.refresh:
+            requestData()
+        default:
+            break
+        }
+    }
+}
+
+class SwiftTestRequestView: UIView, SetupViewProtocol, EventViewProtocol {
+    enum EventName {
+        static let refresh = Notification.Name("refresh")
+    }
+
+    var isLoading: Bool = false {
+        didSet {
+            emptyView?.setActionButtonTitle(isLoading ? "加载中..." : "刷新")
+        }
+    }
+
+    private var emptyView: PlaceholderView? {
+        app.showingEmptyView as? PlaceholderView
+    }
+
+    func setupSubviews() {
+        app.showEmptyView(text: nil, action: "刷新") { [weak self] _ in
+            self?.triggerEvent(EventName.refresh)
+        }
+    }
+
+    func configure(model: String) {
+        emptyView?.setTextLabelText(model)
+    }
 }
 
 class SwiftTestCollectionViewController: UIViewController, CollectionDelegateControllerProtocol, CollectionViewDelegateFlowLayout {
