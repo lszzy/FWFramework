@@ -373,7 +373,7 @@
 			repositoryURL = "https://github.com/lszzy/FWFramework.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.0;
+				minimumVersion = 5.10.2;
 			};
 		};
 		2FE6E85F2BE0AF0100F0CC00 /* XCRemoteSwiftPackageReference "FWDebug" */ = {
@@ -381,7 +381,7 @@
 			repositoryURL = "https://github.com/lszzy/FWDebug.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.4.2;
+				minimumVersion = 5.4.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

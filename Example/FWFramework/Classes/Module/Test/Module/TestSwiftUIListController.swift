@@ -131,7 +131,7 @@ struct TestSwiftUIListContent: View {
     
 }
 
-class TestSwiftUIListModel: ViewModel {
+class TestSwiftUIListModel: ObservableViewModel {
     
     var style: Int = 0
     var error: Error? {
