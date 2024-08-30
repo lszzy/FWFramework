@@ -17,7 +17,8 @@
     <a title="View Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.10.2 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.10.3 Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1696,6 +1697,12 @@
                 <a href="../Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/EventViewDelegate.html">EventViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EventViewProtocol.html">EventViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1775,6 +1782,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ObjectType.html">ObjectType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/PageControlDelegate.html">PageControlDelegate</a>
@@ -1879,6 +1889,9 @@
                 <a href="../Protocols/ScrollViewControllerProtocol.html">ScrollViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/SetupViewProtocol.html">SetupViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/SingletonProtocol.html">SingletonProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1946,9 +1959,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Protocols.html#/s:11FWFramework9ViewModelP">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
@@ -2469,6 +2479,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -4593,40 +4606,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacingQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/wrappedVStack(alignment:spacing:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacingQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgtF">wrappedVStack(alignment:<wbr>spacing:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>包装到VStack</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedVStack</span><span class="p">(</span>
-    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">HorizontalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
-    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__ycSgtAaBRd__lF"></a>
                     <a name="//apple_ref/swift/Method/wrappedVStack(alignment:spacing:content:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF">wrappedVStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedVStack9alignment7spacing7contentQrAA19HorizontalAlignmentV_14CoreFoundation7CGFloatVSgqd__ycSgtAaBRd__lF">wrappedVStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4634,7 +4616,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>包装到VStack并指定内容(如Spacer)</p>
+                        <p>包装到VStack，可指定内容(如Spacer)</p>
 
                       </div>
                       <div class="declaration">
@@ -4645,7 +4627,7 @@ GeometryReader { proxy in
 <span class="kd">public</span> <span class="kd">func</span> <span class="n">wrappedVStack</span><span class="o">&lt;</span><span class="kt">Content</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
     <span class="nv">alignment</span><span class="p">:</span> <span class="kt">HorizontalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
     <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
+    <span class="nv">content</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Content</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -4656,40 +4638,9 @@ GeometryReader { proxy in
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacingQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/wrappedHStack(alignment:spacing:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacingQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgtF">wrappedHStack(alignment:<wbr>spacing:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>包装到HStack</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">wrappedHStack</span><span class="p">(</span>
-    <span class="nv">alignment</span><span class="p">:</span> <span class="kt">VerticalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
-    <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__ycSgtAaBRd__lF"></a>
                     <a name="//apple_ref/swift/Method/wrappedHStack(alignment:spacing:content:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__yXEtAaBRd__lF">wrappedHStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13wrappedHStack9alignment7spacing7contentQrAA17VerticalAlignmentV_14CoreFoundation7CGFloatVSgqd__ycSgtAaBRd__lF">wrappedHStack(alignment:<wbr>spacing:<wbr>content:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -4697,7 +4648,7 @@ GeometryReader { proxy in
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>包装到HStack并指定内容(如Spacer)</p>
+                        <p>包装到HStack，可指定内容(如Spacer)</p>
 
                       </div>
                       <div class="declaration">
@@ -4708,7 +4659,7 @@ GeometryReader { proxy in
 <span class="kd">public</span> <span class="kd">func</span> <span class="n">wrappedHStack</span><span class="o">&lt;</span><span class="kt">Content</span><span class="p">:</span> <span class="kt">View</span><span class="o">&gt;</span><span class="p">(</span>
     <span class="nv">alignment</span><span class="p">:</span> <span class="kt">VerticalAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span><span class="p">,</span>
     <span class="nv">spacing</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="kd">@ViewBuilder</span> <span class="nv">content</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Content</span>
+    <span class="nv">content</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Content</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -4721,7 +4672,7 @@ GeometryReader { proxy in
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

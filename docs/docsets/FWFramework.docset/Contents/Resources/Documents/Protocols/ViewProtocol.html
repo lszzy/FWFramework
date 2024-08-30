@@ -17,7 +17,8 @@
     <a title="ViewProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.10.2 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.10.3 Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1696,6 +1697,12 @@
                 <a href="../Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/EventViewDelegate.html">EventViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EventViewProtocol.html">EventViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1775,6 +1782,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ObjectType.html">ObjectType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/PageControlDelegate.html">PageControlDelegate</a>
@@ -1879,6 +1889,9 @@
                 <a href="../Protocols/ScrollViewControllerProtocol.html">ScrollViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/SetupViewProtocol.html">SetupViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/SingletonProtocol.html">SingletonProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1946,9 +1959,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Protocols.html#/s:11FWFramework9ViewModelP">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
@@ -2471,6 +2481,9 @@
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2487,26 +2500,12 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewProtocol</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="nv">renamed</span><span class="p">:</span> <span class="s">"SetupViewProtocol"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Use SetupViewProtocol instead and related methods will be invoked automatically"</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewProtocol</span></code></pre>
 
                 </div>
               </div>
-            <p>视图规范协议，需手工调用</p>
-
-<p>渲染数据规范示例：</p>
-
-<ol>
-<li><p>无需外部数据时，实现 setupData() ，示例如下：</p>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setupData</span><span class="p">()</span> <span class="p">{</span>
-<span class="o">...</span>
-<span class="p">}</span>
-</code></pre></li>
-<li><p>需外部数据时，实现：configure(&hellip;)，示例如下：</p>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="nv">model</span><span class="p">:</span> <span class="kt">Model</span><span class="p">)</span> <span class="p">{</span>
-<span class="o">...</span>
-<span class="p">}</span>
-</code></pre></li>
-</ol>
+            <p>已废弃，视图规范协议，需手工调用</p>
 
           </section>
           <section class="section task-group-section">
@@ -2713,7 +2712,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

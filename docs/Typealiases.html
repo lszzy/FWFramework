@@ -17,7 +17,8 @@
     <a title="Type Aliases  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.10.2 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 5.10.3 Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -1694,6 +1695,12 @@
                 <a href="Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/EventViewDelegate.html">EventViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/EventViewProtocol.html">EventViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1773,6 +1780,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ObjectType.html">ObjectType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/PageControlDelegate.html">PageControlDelegate</a>
@@ -1877,6 +1887,9 @@
                 <a href="Protocols/ScrollViewControllerProtocol.html">ScrollViewControllerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/SetupViewProtocol.html">SetupViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/SingletonProtocol.html">SingletonProtocol</a>
               </li>
               <li class="nav-group-task">
@@ -1944,9 +1957,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Protocols.html#/s:11FWFramework9ViewModelP">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
@@ -2469,6 +2479,9 @@
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
+                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2607,6 +2620,34 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">AttributedLinkDetectCompletion</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">links</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="Classes/AttributedLabelURL.html">AttributedLabelURL</a></span><span class="p">]?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9ViewModela"></a>
+                    <a name="//apple_ref/swift/Alias/ViewModel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9ViewModela">ViewModel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>已废弃，ViewModel协议，被View持有(Controller和View都视为View层)，负责处理数据并通知View，兼容UIKit和SwiftUI使用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="nv">renamed</span><span class="p">:</span> <span class="s">"ObservableViewModel"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Use ObservableViewModel instead"</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">ViewModel</span> <span class="o">=</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3144,7 +3185,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-21)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
