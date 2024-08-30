@@ -161,10 +161,7 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
     }
 
     func setupLayout() {
-        dataView.layoutChain
-            .top(toSafeArea: .zero)
-            .horizontal()
-            .bottom()
+        dataView.layoutChain.edges()
     }
 
     // MARK: - RequestViewControllerProtocol
