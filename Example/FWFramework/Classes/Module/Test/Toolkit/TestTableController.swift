@@ -7,6 +7,9 @@
 //
 
 import FWFramework
+#if DEBUG
+import FWDebug
+#endif
 
 class TestTableController: UIViewController, TableViewControllerProtocol {
     
@@ -17,6 +20,19 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     
     @StoredValue("testRandomKey")
     static var testRandomKey: String = ""
+    
+    private lazy var floatingView: UIImageView = {
+        let result = UIImageView()
+        result.image = UIImage.app.appIconImage()
+        result.app.setCornerRadius(20)
+        result.isUserInteractionEnabled = true
+        result.app.addTapGesture { _ in
+            #if DEBUG
+            FWDebugManager.sharedInstance().toggle()
+            #endif
+        }
+        return result
+    }()
     
     func setupTableStyle() -> UITableView.Style {
         .grouped
@@ -49,7 +65,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         }
     }
     
-    func setupCollectionLayout() {
+    func setupTableLayout() {
         tableView.layoutChain.edges(excludingEdge: .top).top(toSafeArea: .zero)
     }
     
@@ -59,13 +75,13 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
             self?.app.showSheet(title: nil, message: "滚动视图顶部未延伸", cancel: "取消", actions: [self?.tableView.contentInsetAdjustmentBehavior == .never ? "contentInset自适应" : "contentInset不适应", Self.isExpanded ? "布局不撑开" : "布局撑开", Self.faceAware ? "禁用人脸识别" : "开启人脸识别", "reloadData", "重置图片缓存"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
                     self?.tableView.contentInsetAdjustmentBehavior = self?.tableView.contentInsetAdjustmentBehavior == .never ? .automatic : .never
-                    self?.setupSubviews()
+                    self?.tableView.app.beginRefreshing()
                 } else if index == 1 {
                     Self.isExpanded = !Self.isExpanded
-                    self?.setupSubviews()
+                    self?.tableView.app.beginRefreshing()
                 } else if index == 2 {
                     Self.faceAware = !Self.faceAware
-                    self?.setupSubviews()
+                    self?.tableView.app.beginRefreshing()
                 } else if index == 3 {
                     self?.tableView.reloadData()
                 } else {
@@ -77,6 +93,15 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     }
     
     func setupSubviews() {
+        view.addSubview(floatingView)
+    }
+    
+    func setupLayout() {
+        floatingView.layoutChain
+            .right(10)
+            .bottom(toSafeArea: 20)
+            .size(width: 40, height: 40)
+
         tableView.app.beginRefreshing()
     }
     
@@ -165,6 +190,26 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
         return tableView.app.height(headerFooterViewClass: TestTableDynamicLayoutHeaderView.self, type: .footer) { footerView in
             footerView.renderData("我是表格Footer\n我是表格Footer\n我是表格Footer")
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollView.app.beginFoldingView(floatingView) { view in
+            view.layoutChain.right(-30)
+            view.alpha = 0.5
+            view.superview?.layoutIfNeeded()
+        }
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        scrollView.app.endFoldingView(floatingView, willDecelerate: decelerate) { view in
+            view.layoutChain.right(10)
+            view.alpha = 1.0
+            view.superview?.layoutIfNeeded()
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollViewDidEndDragging(scrollView, willDecelerate: false)
     }
     
     func randomObject() -> TestTableDynamicLayoutObject {
