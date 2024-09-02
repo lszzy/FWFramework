@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.10.5] - 2024-09-02
+
+### Changed
+* Optimize the method of folding the specified view effect when scrolling ScrollView
+
 ## [5.10.4] - 2024-09-02
 
 ### Added
