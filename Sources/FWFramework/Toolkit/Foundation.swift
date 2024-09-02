@@ -134,7 +134,7 @@ extension Wrapper where Base: WrapperObject {
     /// 延迟delay秒后主线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        _ block: @escaping (Any) -> Void,
+        _ block: @escaping (Base) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
         return performBlock(block, on: .main, afterDelay: delay)
@@ -143,7 +143,7 @@ extension Wrapper where Base: WrapperObject {
     /// 延迟delay秒后后台线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        inBackground block: @escaping (Any) -> Void,
+        inBackground block: @escaping (Base) -> Void,
         afterDelay delay: TimeInterval
     ) -> Any {
         return performBlock(block, on: .global(qos: .background), afterDelay: delay)
@@ -152,7 +152,7 @@ extension Wrapper where Base: WrapperObject {
     /// 延迟delay秒后指定线程执行，返回可取消的block，对象范围
     @discardableResult
     public func performBlock(
-        _ block: @escaping (Any) -> Void,
+        _ block: @escaping (Base) -> Void,
         on: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
@@ -233,7 +233,7 @@ extension Wrapper where Base: NSObject {
     }
 
     /// 取消指定延迟block，全局范围
-    public static func cancelBlock(_ block: Any) {
+    public static func cancelBlock(_ block: Any?) {
         let wrapper = block as? (Bool) -> Void
         wrapper?(true)
     }
@@ -312,8 +312,8 @@ extension Wrapper where Base: NSObject {
     }
 
     /// 指定任务Id取消轮询任务
-    public static func cancelTask(_ taskId: String) {
-        guard !taskId.isEmpty else { return }
+    public static func cancelTask(_ taskId: String?) {
+        guard let taskId, !taskId.isEmpty else { return }
         NSObject.innerTaskSemaphore.wait()
         if let timer = NSObject.innerTaskPool[taskId] as? DispatchSourceTimer {
             timer.cancel()
