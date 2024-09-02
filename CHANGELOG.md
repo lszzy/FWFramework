@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.10.4] - 2024-09-02
+
+### Added
+* Added a method to achieve the effect of folding a specified view when scrolling ScrollView
+
 ## [5.10.3] - 2024-08-30
 
 ### Changed
