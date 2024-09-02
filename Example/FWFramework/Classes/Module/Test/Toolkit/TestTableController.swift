@@ -98,7 +98,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupLayout() {
         floatingView.layoutChain
             .right(10)
-            .bottom(toSafeArea: 10)
+            .bottom(toSafeArea: 20)
             .size(width: 40, height: 40)
 
         tableView.app.beginRefreshing()
