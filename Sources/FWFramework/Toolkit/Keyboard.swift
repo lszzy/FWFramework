@@ -162,7 +162,7 @@ extension Wrapper where Base: UITextField {
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: ((UIBarButtonItem) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -380,7 +380,7 @@ extension Wrapper where Base: UITextView {
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: ((Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: ((UIBarButtonItem) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
     
@@ -975,7 +975,7 @@ fileprivate class KeyboardTarget<T: UIView & UITextInput>: NSObject {
         UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: animations, completion: completion)
     }
     
-    func addToolbar(title: Any?, doneBlock: ((Any) -> Void)?) {
+    func addToolbar(title: Any?, doneBlock: ((UIBarButtonItem) -> Void)?) {
         let titleItem = title != nil ? UIBarButtonItem.fw.item(object: title, block: nil) : nil
         titleItem?.isEnabled = false
         
