@@ -162,7 +162,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (UIBarButtonItem) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
 
@@ -380,7 +380,7 @@ import UIKit
     /// - Parameters:
     ///   - title: 标题，不能点击
     ///   - doneBlock: 右侧完成按钮句柄，默认收起键盘
-    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func addToolbar(title: Any? = nil, doneBlock: (@MainActor @Sendable (UIBarButtonItem) -> Void)? = nil) {
         keyboardTarget.addToolbar(title: title, doneBlock: doneBlock)
     }
 
@@ -963,7 +963,7 @@ extension UITextView {
         UIView.animate(withDuration: animationDuration, delay: 0, options: .init(rawValue: animationCurve).union(.beginFromCurrentState), animations: animations, completion: completion)
     }
 
-    func addToolbar(title: Any?, doneBlock: (@MainActor @Sendable (Any) -> Void)?) {
+    func addToolbar(title: Any?, doneBlock: (@MainActor @Sendable (UIBarButtonItem) -> Void)?) {
         let titleItem = title != nil ? UIBarButtonItem.fw.item(object: title, block: nil) : nil
         titleItem?.isEnabled = false
 
