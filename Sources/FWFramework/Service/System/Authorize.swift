@@ -213,9 +213,22 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
 /// 相册授权
 public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizePhotoLibrary()
+    public static let addOnly = AuthorizePhotoLibrary(addOnly: true)
+    
+    private var addOnly = false
+    
+    public init(addOnly: Bool = false) {
+        super.init()
+        self.addOnly = addOnly
+    }
 
     public func authorizeStatus() -> AuthorizeStatus {
-        let status = PHPhotoLibrary.authorizationStatus()
+        let status: PHAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = PHPhotoLibrary.authorizationStatus(for: addOnly ? .addOnly : .readWrite)
+        } else {
+            status = PHPhotoLibrary.authorizationStatus()
+        }
         switch status {
         case .restricted:
             return .restricted
@@ -229,10 +242,20 @@ public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol, @unchecked Send
     }
 
     public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
-        PHPhotoLibrary.requestAuthorization { _ in
-            if completion != nil {
-                DispatchQueue.fw.mainAsync {
-                    completion?(self.authorizeStatus(), nil)
+        if #available(iOS 14.0, *) {
+            PHPhotoLibrary.requestAuthorization(for: addOnly ? .addOnly : .readWrite) { _ in
+                if completion != nil {
+                    DispatchQueue.fw.mainAsync {
+                        completion?(self.authorizeStatus(), nil)
+                    }
+                }
+            }
+        } else {
+            PHPhotoLibrary.requestAuthorization { _ in
+                if completion != nil {
+                    DispatchQueue.fw.mainAsync {
+                        completion?(self.authorizeStatus(), nil)
+                    }
                 }
             }
         }

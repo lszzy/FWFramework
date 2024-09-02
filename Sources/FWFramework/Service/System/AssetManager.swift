@@ -626,7 +626,12 @@ public class AssetManager: @unchecked Sendable {
     /// 获取当前应用的“照片”访问授权状态
     public static var authorizationStatus: AssetAuthorizationStatus {
         let status: AssetAuthorizationStatus
-        let phStatus = PHPhotoLibrary.authorizationStatus()
+        let phStatus: PHAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            phStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        } else {
+            phStatus = PHPhotoLibrary.authorizationStatus()
+        }
         if phStatus == .restricted || phStatus == .denied {
             status = .notAuthorized
         } else if phStatus == .notDetermined {
@@ -641,16 +646,14 @@ public class AssetManager: @unchecked Sendable {
     ///
     /// - Parameter completion: 授权结束后调用的 block，默认不在主线程上执行，如果需要在 block 中修改 UI，记得 dispatch 到 mainqueue
     public static func requestAuthorization(completion: ((AssetAuthorizationStatus) -> Void)? = nil) {
-        PHPhotoLibrary.requestAuthorization { phStatus in
-            let status: AssetAuthorizationStatus
-            if phStatus == .restricted || phStatus == .denied {
-                status = .notAuthorized
-            } else if phStatus == .notDetermined {
-                status = .notDetermined
-            } else {
-                status = .authorized
+        if #available(iOS 14.0, *) {
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in
+                completion?(self.authorizationStatus)
             }
-            completion?(status)
+        } else {
+            PHPhotoLibrary.requestAuthorization { phStatus in
+                completion?(self.authorizationStatus)
+            }
         }
     }
 
