@@ -1873,8 +1873,8 @@ extension Wrapper where Base: UIScrollView {
         guard !view.fw.propertyBool(forName: "isViewFolding") else { return }
         view.fw.setPropertyBool(true, forName: "isViewFolding")
 
-        UIView.animate(withDuration: duration) {
-            animations(view)
+        UIView.animate(withDuration: duration) { [weak view] in
+            if let view, view.superview != nil { animations(view) }
         }
     }
 
@@ -1899,12 +1899,12 @@ extension Wrapper where Base: UIScrollView {
         }
 
         // 手动实现时可使用：NSObject.perform(_:with:afterDelay:)
-        let timer = Timer.fw.commonTimer(timeInterval: delay, block: { _ in
-            guard view.fw.propertyBool(forName: "isViewFolding") else { return }
+        let timer = Timer.fw.commonTimer(timeInterval: delay, block: { [weak view] _ in
+            guard let view, view.fw.propertyBool(forName: "isViewFolding") else { return }
             view.fw.setProperty(nil, forName: "isViewFolding")
 
-            UIView.animate(withDuration: duration) {
-                animations(view)
+            UIView.animate(withDuration: duration) { [weak view] in
+                if let view, view.superview != nil { animations(view) }
             }
         }, repeats: false)
         view.fw.setProperty(timer, forName: "foldingViewTimer")
