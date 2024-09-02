@@ -1829,7 +1829,12 @@ extension Wrapper where Base: UIScrollView {
      @return 相对于悬浮位置的距离，可用来设置导航栏透明度等
      */
     @discardableResult
-    public func hoverView(_ view: UIView, fromSuperview: UIView, toSuperview: UIView, toPosition: CGFloat) -> CGFloat {
+    public func hoverView(
+        _ view: UIView,
+        fromSuperview: UIView,
+        toSuperview: UIView,
+        toPosition: CGFloat
+    ) -> CGFloat {
         let distance = (fromSuperview.superview?.convert(fromSuperview.frame.origin, to: toSuperview) ?? .zero).y - toPosition
         if distance <= 0 {
             if view.superview != toSuperview {
@@ -1847,6 +1852,62 @@ extension Wrapper where Base: UIScrollView {
             }
         }
         return distance
+    }
+    
+    /// 设置开始拖动时折叠视图动画，在scrollViewWillBeginDragging中调用即可
+    /// - Parameters:
+    ///   - view: 折叠视图
+    ///   - duration: 动画时间，默认0.25秒
+    ///   - animations: 动画句柄，AutoLayout动画需调用：view.superview?.layoutIfNeeded()
+    public func beginFoldingView(
+        _ view: UIView,
+        duration: TimeInterval = 0.25,
+        animations: @escaping (UIView) -> Void
+    ) {
+        // 手动实现时可使用：NSObject.cancelPreviousPerformRequests(withTarget:selector:object:)
+        if let timer = view.fw.property(forName: "foldingViewTimer") as? Timer, timer.isValid {
+            timer.invalidate()
+        }
+        view.fw.setProperty(nil, forName: "foldingViewTimer")
+
+        guard !view.fw.propertyBool(forName: "isViewFolding") else { return }
+        view.fw.setPropertyBool(true, forName: "isViewFolding")
+
+        UIView.animate(withDuration: duration) {
+            animations(view)
+        }
+    }
+
+    /// 设置结束拖动时展开视图动画，在scrollViewDidEndDragging、scrollViewDidEndDecelerating中调用即可
+    /// - Parameters:
+    ///   - view: 展示视图
+    ///   - decelerate: 是否将要减速，scrollViewDidEndDragging中传decelerate，scrollViewDidEndDecelerating不传
+    ///   - delay: 延迟展开时间，默认1.0秒
+    ///   - duration: 动画时间，默认0.25秒
+    ///   - animations: 动画句柄，AutoLayout动画需调用：view.superview?.layoutIfNeeded()
+    public func endFoldingView(
+        _ view: UIView,
+        willDecelerate decelerate: Bool? = nil,
+        afterDelay delay: TimeInterval = 1.0,
+        duration: TimeInterval = 0.25,
+        animations: @escaping (UIView) -> Void
+    ) {
+        if let decelerate, decelerate { return }
+
+        if let timer = view.fw.property(forName: "foldingViewTimer") as? Timer, timer.isValid {
+            timer.invalidate()
+        }
+
+        // 手动实现时可使用：NSObject.perform(_:with:afterDelay:)
+        let timer = Timer.fw.commonTimer(timeInterval: delay, block: { _ in
+            guard view.fw.propertyBool(forName: "isViewFolding") else { return }
+            view.fw.setProperty(nil, forName: "isViewFolding")
+
+            UIView.animate(withDuration: duration) {
+                animations(view)
+            }
+        }, repeats: false)
+        view.fw.setProperty(timer, forName: "foldingViewTimer")
     }
     
     /// 是否开始识别pan手势
