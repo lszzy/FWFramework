@@ -1873,8 +1873,10 @@ extension Wrapper where Base: UIDevice {
         animations: @escaping (UIView) -> Void
     ) {
         // 手动实现时可使用：NSObject.cancelPreviousPerformRequests(withTarget:selector:object:)
-        NSObject.fw.cancelBlock(view.fw.property(forName: "unfoldViewBlock"))
-        view.fw.setProperty(nil, forName: "unfoldViewBlock")
+        if let timer = view.fw.property(forName: "foldingViewTimer") as? Timer, timer.isValid {
+            timer.invalidate()
+        }
+        view.fw.setProperty(nil, forName: "foldingViewTimer")
 
         guard !view.fw.propertyBool(forName: "isViewFolding") else { return }
         view.fw.setPropertyBool(true, forName: "isViewFolding")
@@ -1900,20 +1902,20 @@ extension Wrapper where Base: UIDevice {
     ) {
         if let decelerate, decelerate { return }
 
-        NSObject.fw.cancelBlock(view.fw.property(forName: "unfoldViewBlock"))
+        if let timer = view.fw.property(forName: "foldingViewTimer") as? Timer, timer.isValid {
+            timer.invalidate()
+        }
 
         // 手动实现时可使用：NSObject.perform(_:with:afterDelay:)
-        let unfoldViewBlock = NSObject.fw.performBlock({
+        let timer = Timer.fw.commonTimer(timeInterval: delay, block: { _ in
             guard view.fw.propertyBool(forName: "isViewFolding") else { return }
             view.fw.setProperty(nil, forName: "isViewFolding")
 
             UIView.animate(withDuration: duration) {
                 animations(view)
-            } completion: { _ in
-                view.fw.setProperty(nil, forName: "unfoldViewBlock")
             }
-        }, afterDelay: delay)
-        view.fw.setProperty(unfoldViewBlock, forName: "unfoldViewBlock")
+        }, repeats: false)
+        view.fw.setProperty(timer, forName: "foldingViewTimer")
     }
 
     /// 是否开始识别pan手势
