@@ -1022,8 +1022,8 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
 
             if isLivePhoto {
             } else if imageAsset.assetSubType == .gif {
-                imageAsset.requestImageData { imageData, _, _, _ in
-                    DispatchQueue.global(qos: .default).async {
+                DispatchQueue.global(qos: .default).async {
+                    imageAsset.requestImageData(synchronous: true) { imageData, _, _, _ in
                         let resultImage = UIImage.fw.image(data: imageData, scale: 1)
                         DispatchQueue.main.async {
                             if resultImage != nil {
@@ -1946,11 +1946,10 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                         }
                     }
                 } else if asset.assetSubType == .gif {
-                    asset.requestImageData { imageData, info, _, _ in
-                        let sendableInfo = SendableObject(info)
-                        DispatchQueue.global(qos: .default).async {
+                    DispatchQueue.global(qos: .default).async {
+                        asset.requestImageData(synchronous: true) { imageData, info, _, _ in
                             let resultImage = UIImage.fw.image(data: imageData, scale: 1)
-                            completionHandler(asset, resultImage, sendableInfo.object)
+                            completionHandler(asset, resultImage, info)
                         }
                     }
                 } else if useOriginImage {
