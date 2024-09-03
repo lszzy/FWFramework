@@ -141,13 +141,15 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /// Asset 的预览图，输出与当前设备屏幕大小相同尺寸的图片，如果图片原图小于当前设备屏幕的尺寸，则只输出原图大小的图片
-    @MainActor public var previewImage: UIImage? {
+    /// - Parameter size: 图片尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
+    /// - Returns: 预览图
+    public func previewImage(size: CGSize) -> UIImage? {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.isSynchronous = true
 
         var resultImage: UIImage?
-        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
+        AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: size, contentMode: .aspectFill, options: imageRequestOptions) { result, _ in
             resultImage = result
         }
         return resultImage
@@ -210,6 +212,7 @@ public class Asset: NSObject, @unchecked Sendable {
      默认异步请求 Asset 的预览图，可能会有网络请求
 
      - Parameters:
+       - size: 尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
        - synchronous: 是否同步，默认false
        - completion: 请求完成后调用的闭包，包含请求的预览图和图片信息。该闭包会被多次调用，第一次调用获取到的是低清图，然后不断调用直到获取到高清图。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
@@ -217,13 +220,13 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    @MainActor public func requestPreviewImage(synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestPreviewImage(size: CGSize, synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         imageRequestOptions.isSynchronous = synchronous
 
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: size, contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -235,18 +238,19 @@ public class Asset: NSObject, @unchecked Sendable {
      异步请求 Live Photo，可能会有网络请求
 
      - Parameters:
+       - size: 尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
        - completion: 请求完成后调用的闭包，包含请求的 Live Photo 和相关信息。如果 assetType 不是 AssetTypeLivePhoto，则为 nil。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
 
      - Returns: 返回请求 Live Photo 的请求 id
      */
     @discardableResult
-    @MainActor public func requestLivePhoto(completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestLivePhoto(size: CGSize, completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let livePhotoRequestOptions = PHLivePhotoRequestOptions()
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
 
-        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
+        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: size, contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
             let downloadSucceed = (livePhoto != nil && info == nil) || (!Asset.isValueTrue(info, key: PHLivePhotoInfoCancelledKey) && info?[PHLivePhotoInfoErrorKey] == nil && !Asset.isValueTrue(info, key: PHLivePhotoInfoIsDegradedKey) && !Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHLivePhotoInfoErrorKey] != nil || info?[PHImageErrorKey] != nil
             completion?(livePhoto, info, downloadSucceed || downloadFailed)
