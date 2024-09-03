@@ -154,19 +154,21 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /**
-     异步请求 Asset 的原图，包含了系统照片“编辑”功能处理后的效果（剪裁，旋转和滤镜等），可能会有网络请求
+     默认异步请求 Asset 的原图，包含了系统照片“编辑”功能处理后的效果（剪裁，旋转和滤镜等），可能会有网络请求
 
      - Parameters:
+       - synchronous: 是否同步，默认false
        - completion: 请求完成后调用的闭包，包含请求的原图和图片信息。该闭包会被多次调用，第一次调用获取到的是低清图，然后不断调用直到获取到高清图。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
 
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestOriginImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestOriginImage(synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
+        imageRequestOptions.isSynchronous = synchronous
 
         let imageRequestId = AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, _, _, info in
             var image: UIImage?
@@ -179,19 +181,21 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /**
-     异步请求 Asset 的缩略图，不会产生网络请求
+     默认异步请求 Asset 的缩略图，不会产生网络请求
 
      - Parameters:
        - size: 指定返回的缩略图的大小
+       - synchronous: 是否同步，默认false
        - completion: 请求完成后调用的闭包，包含请求的缩略图和图片信息。该闭包会被多次调用，第一次调用获取到的是低清图，然后不断调用直到获取到高清图，此时闭包中的第二个参数（图片信息）为 nil。
 
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestThumbnailImage(size: CGSize, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?) -> Int {
+    public func requestThumbnailImage(size: CGSize, synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.resizeMode = .fast
+        imageRequestOptions.isSynchronous = synchronous
 
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
         let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
@@ -203,19 +207,21 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /**
-     异步请求 Asset 的预览图，可能会有网络请求
+     默认异步请求 Asset 的预览图，可能会有网络请求
 
      - Parameters:
+       - synchronous: 是否同步，默认false
        - completion: 请求完成后调用的闭包，包含请求的预览图和图片信息。该闭包会被多次调用，第一次调用获取到的是低清图，然后不断调用直到获取到高清图。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
 
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    @MainActor public func requestPreviewImage(completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    @MainActor public func requestPreviewImage(synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
+        imageRequestOptions.isSynchronous = synchronous
 
         let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
@@ -329,11 +335,12 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /**
-     异步请求图片的 Data
+     默认异步请求图片的 Data
 
+     - Parameter synchronous: 是否同步，默认false
      - Parameter completion: 完成请求后调用的 block，参数中包含了请求的图片 Data（若 assetType 不是 AssetTypeImage 或 AssetTypeLivePhoto 则为 nil），该图片是否为 GIF 的判断值，以及该图片的文件格式是否为 HEIC
      */
-    public func requestImageData(completion: ((_ imageData: Data?, _ info: [AnyHashable: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?) {
+    public func requestImageData(synchronous: Bool = false, completion: ((_ imageData: Data?, _ info: [AnyHashable: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?) {
         guard assetType == .image else {
             completion?(nil, nil, false, false)
             return
@@ -347,7 +354,7 @@ public class Asset: NSObject, @unchecked Sendable {
             let isHEIC = dataUTI == "public.heic"
             completion?(imageData, originInfo, isGIF, isHEIC)
         } else {
-            requestPhAssetInfo { [weak self] phAssetInfo in
+            requestPhAssetInfo(synchronous: synchronous) { [weak self] phAssetInfo in
                 self?.phAssetInfo = phAssetInfo
 
                 let imageData = phAssetInfo[Asset.kAssetInfoImageData] as? Data
@@ -360,7 +367,7 @@ public class Asset: NSObject, @unchecked Sendable {
         }
     }
 
-    private func requestPhAssetInfo(completion: (([AnyHashable: Any]) -> Void)?) {
+    private func requestPhAssetInfo(synchronous: Bool = false, completion: (([AnyHashable: Any]) -> Void)?) {
         if assetType == .video {
             let videoRequestOptions = PHVideoRequestOptions()
             videoRequestOptions.isNetworkAccessAllowed = true
@@ -378,7 +385,7 @@ public class Asset: NSObject, @unchecked Sendable {
                 completion?(phAssetInfo)
             }
         } else {
-            requestImagePhAssetInfo(synchronous: false, completion: completion)
+            requestImagePhAssetInfo(synchronous: synchronous, completion: completion)
         }
     }
 
@@ -429,20 +436,16 @@ public class Asset: NSObject, @unchecked Sendable {
         downloadStatus = succeed ? .succeed : .failed
     }
 
-    /// 获取 Asset 的体积（数据大小）
-    public func assetSize(completion: (@MainActor @Sendable (Int64) -> Void)?) {
+    /// 获取 Asset 的体积（数据大小），图片支持同步
+    public func assetSize(synchronous: Bool = false, completion: ((Int64) -> Void)?) {
         if let phAssetInfo {
             let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
-            DispatchQueue.fw.mainAsync {
-                completion?(number?.int64Value ?? 0)
-            }
+            completion?(number?.int64Value ?? 0)
         } else {
-            requestPhAssetInfo { [weak self] phAssetInfo in
+            requestPhAssetInfo(synchronous: synchronous) { [weak self] phAssetInfo in
                 self?.phAssetInfo = phAssetInfo
                 let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
-                DispatchQueue.main.async {
-                    completion?(number?.int64Value ?? 0)
-                }
+                completion?(number?.int64Value ?? 0)
             }
         }
     }
@@ -651,7 +654,7 @@ public class AssetManager: @unchecked Sendable {
                 completion?(self.authorizationStatus)
             }
         } else {
-            PHPhotoLibrary.requestAuthorization { phStatus in
+            PHPhotoLibrary.requestAuthorization { _ in
                 completion?(self.authorizationStatus)
             }
         }
