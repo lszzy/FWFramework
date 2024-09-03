@@ -214,9 +214,9 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
 public class AuthorizePhotoLibrary: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizePhotoLibrary()
     public static let addOnly = AuthorizePhotoLibrary(addOnly: true)
-    
+
     private var addOnly = false
-    
+
     public init(addOnly: Bool = false) {
         super.init()
         self.addOnly = addOnly
