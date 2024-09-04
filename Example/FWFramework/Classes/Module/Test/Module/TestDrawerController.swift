@@ -102,6 +102,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             guard let drawerView = self?.bottomView.app.drawerView else { return }
             drawerView.scrollViewFilter = { _ in true }
             drawerView.scrollViewPositions = nil
+            drawerView.draggingAreaBlock = nil
             self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = UIButton.app.highlightedAlpha
@@ -120,6 +121,13 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
                     drawerView.middlePosition
                 ]
             }
+            drawerView.draggingAreaBlock = { position in
+                if position == drawerView.openPosition ||
+                    position == drawerView.middlePosition {
+                    return CGRect(x: 0, y: 0, width: APP.screenWidth, height: 50)
+                }
+                return .zero
+            }
             self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = UIButton.app.highlightedAlpha
@@ -133,6 +141,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             guard let drawerView = self?.bottomView.app.drawerView else { return }
             drawerView.scrollViewFilter = { _ in false }
             drawerView.scrollViewPositions = nil
+            drawerView.draggingAreaBlock = nil
             self?.toggleMenu()
         } customize: { gesture in
             gesture.highlightedAlpha = UIButton.app.highlightedAlpha
@@ -163,7 +172,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
             .right,
             positions: [-APP.screenWidth / 2.0, 0],
             kickbackHeight: 25
-        )
+        ).springAnimation = false
     }
     
     func toggleMenu() {
