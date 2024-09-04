@@ -165,6 +165,9 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     /// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
     open var positionChanged: ((_ position: CGFloat, _ finished: Bool) -> Void)?
+    
+    /// 是否使用物理弹簧动画，默认true
+    open var springAnimation = true
 
     /// 自定义动画句柄，动画必须调用animations和completion句柄
     open var animationBlock: ((_ animations: () -> Void, _ completion: (Bool) -> Void) -> Void)?
@@ -174,6 +177,9 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     /// 自定义滚动视图允许滚动的位置，默认nil时仅openPosition可滚动
     open var scrollViewPositions: ((UIScrollView) -> [CGFloat])?
+    
+    /// 自定义拖动区域句柄，参数为开始拖动位置，默认nil
+    open var draggingAreaBlock: ((CGFloat) -> CGRect)?
 
     /// 自定义滚动视图在各个位置的contentInset(从小到大，数量同positions)，默认nil时不处理。UITableView时也可使用tableFooterView等实现
     open var scrollViewInsets: ((UIScrollView) -> [UIEdgeInsets])?
@@ -186,6 +192,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     private var isOriginScrollable = false
     private var isOriginScrollView = false
     private var isOriginDirection = false
+    private var isOriginDraggingArea = false
 
     private var isVertical: Bool {
         direction == .up || direction == .down
@@ -256,12 +263,18 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             }, { [weak self] _ in
                 self?.animateComplete(position)
             })
-        } else {
+        } else if springAnimation {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
                 self.togglePosition(position)
             }, completion: { _ in
                 self.animateComplete(position)
             })
+        } else {
+            UIView.animate(withDuration: 0.25, delay: 0, options: .beginFromCurrentState) {
+                self.togglePosition(position)
+            } completion: { _ in
+                self.animateComplete(position)
+            }
         }
     }
 
@@ -445,6 +458,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
             isOriginDraggable = isOriginDirection && (scrollView?.fw.isScroll(to: scrollEdge) ?? false)
             let positions = scrollView != nil ? scrollViewPositions?(scrollView!) : nil
             isOriginScrollable = originPosition == openPosition || positions?.contains(originPosition) == true
+            isOriginDraggingArea = draggingAreaBlock?(position).contains(gestureRecognizer.location(in: view)) ?? false
         // 拖动改变时更新视图位置
         case .changed:
             // 记录并清空相对父视图的移动距离
@@ -480,7 +494,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     private func gestureRecognizerDidScroll() {
         guard let scrollView, gestureRecognizer.isEnabled else { return }
-        guard canScroll(scrollView) else { return }
+        guard canScroll(scrollView), !isOriginDraggingArea else { return }
 
         let positions = scrollViewPositions?(scrollView)
         if positions?.count ?? 0 > 0 {
