@@ -340,12 +340,12 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 视频AVAsset 的请求 id
      */
     @discardableResult
-    public func requestAVAsset(completion: ((_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestAVAsset(completion: (@Sendable (_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
 
-        let videoRequestId = AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, audioMix, info in
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { @Sendable asset, audioMix, info in
             completion?(asset, audioMix, info)
         }
         return Int(videoRequestId)
