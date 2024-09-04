@@ -102,9 +102,15 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         onQueue { [weak self] in
             guard let self = self else { return }
             
+            objc_sync_enter(self)
             var value = self.app.boundInt(forKey: key)
+            objc_sync_exit(self)
+            
             value += 1
+            
+            objc_sync_enter(self)
             self.app.bindInt(value, forKey: key)
+            objc_sync_exit(self)
         } completion: { [weak self] in
             guard let self = self else { return }
             
@@ -162,8 +168,13 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             
             array.enumerateObjects { arg, idx, stop in
                 guard let obj = arg as? NSObject else { return }
+                objc_sync_enter(obj)
                 let value = obj.app.boundInt(forKey: key)
+                objc_sync_exit(obj)
+                
+                objc_sync_enter(obj)
                 obj.app.bindInt(value + 1, forKey: key)
+                objc_sync_exit(obj)
             }
         } completion: { [weak self] in
             
@@ -228,8 +239,13 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             
             dict.enumerateKeysAndObjects { _, arg, stop in
                 guard let obj = arg as? NSObject else { return }
+                objc_sync_enter(obj)
                 let value = obj.app.boundInt(forKey: key)
+                objc_sync_exit(obj)
+                
+                objc_sync_enter(obj)
                 obj.app.bindInt(value + 1, forKey: key)
+                objc_sync_exit(obj)
             }
         } completion: { [weak self] in
             
