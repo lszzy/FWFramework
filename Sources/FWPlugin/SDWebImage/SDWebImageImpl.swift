@@ -123,6 +123,18 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             }
         }
 
+        let progressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
+            guard expectedSize > 0 else { return }
+            DispatchQueue.fw.mainAsync {
+                progress?(Double(receivedSize) / Double(expectedSize))
+            }
+        }
+        let completionBlock: SDInternalCompletionBlock = { @Sendable image, _, error, _, _, _ in
+            DispatchQueue.fw.mainAsync {
+                completion?(image, error)
+            }
+        }
+        
         view.sd_internalSetImage(
             with: imageURL,
             placeholderImage: placeholder,
@@ -131,15 +143,8 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             setImageBlock: setImageBlock != nil ? { image, _, _, _ in
                 setImageBlock?(image)
             } : nil,
-            progress: progress != nil ? { receivedSize, expectedSize, _ in
-                guard expectedSize > 0 else { return }
-                DispatchQueue.fw.mainAsync {
-                    progress?(Double(receivedSize) / Double(expectedSize))
-                }
-            } : nil,
-            completed: completion != nil ? { image, _, error, _, _, _ in
-                completion?(image, error)
-            } : nil
+            progress: progress != nil ? progressBlock : nil,
+            completed: completion != nil ? completionBlock : nil
         )
     }
 
@@ -192,18 +197,20 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
                 }
             }
         }
+        
+        let progressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
+            guard expectedSize > 0 else { return }
+            DispatchQueue.fw.mainAsync {
+                progress?(Double(receivedSize) / Double(expectedSize))
+            }
+        }
 
         return SDWebImageManager.shared.loadImage(
             with: imageURL,
             options: targetOptions.union(.retryFailed),
             context: targetContext,
-            progress: progress != nil ? { receivedSize, expectedSize, _ in
-                guard expectedSize > 0 else { return }
-                DispatchQueue.fw.mainAsync {
-                    progress?(Double(receivedSize) / Double(expectedSize))
-                }
-            } : nil,
-            completed: { [weak self] image, data, error, _, _, _ in
+            progress: progress != nil ? progressBlock : nil,
+            completed: { @Sendable [weak self] image, data, error, _, _, _ in
                 if options.contains(.queryMemoryData), data == nil, let image {
                     DispatchQueue.global().async { [weak self] in
                         let imageData = self?.imageEncode(image)
