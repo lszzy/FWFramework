@@ -6,8 +6,8 @@
 //
 
 import ActivityKit
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 struct ExampleWidgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
@@ -65,15 +65,15 @@ extension ExampleWidgetAttributes {
 extension ExampleWidgetAttributes.ContentState {
     fileprivate static var smiley: ExampleWidgetAttributes.ContentState {
         ExampleWidgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: ExampleWidgetAttributes.ContentState {
-         ExampleWidgetAttributes.ContentState(emoji: "🤩")
-     }
+    }
+
+    fileprivate static var starEyes: ExampleWidgetAttributes.ContentState {
+        ExampleWidgetAttributes.ContentState(emoji: "🤩")
+    }
 }
 
 #Preview("Notification", as: .content, using: ExampleWidgetAttributes.preview) {
-   ExampleWidgetLiveActivity()
+    ExampleWidgetLiveActivity()
 } contentStates: {
     ExampleWidgetAttributes.ContentState.smiley
     ExampleWidgetAttributes.ContentState.starEyes
