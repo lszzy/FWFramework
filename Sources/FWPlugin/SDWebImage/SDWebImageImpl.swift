@@ -123,13 +123,16 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             }
         }
 
-        let progressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
+        let sdImageBlock: SDSetImageBlock = { @MainActor @Sendable image, _, _, _ in
+            setImageBlock?(image)
+        }
+        let sdProgressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
             guard expectedSize > 0 else { return }
             DispatchQueue.fw.mainAsync {
                 progress?(Double(receivedSize) / Double(expectedSize))
             }
         }
-        let completionBlock: SDInternalCompletionBlock = { @Sendable image, _, error, _, _, _ in
+        let sdCompletionBlock: SDInternalCompletionBlock = { @Sendable image, _, error, _, _, _ in
             DispatchQueue.fw.mainAsync {
                 completion?(image, error)
             }
@@ -140,11 +143,9 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             placeholderImage: placeholder,
             options: targetOptions.union(.retryFailed),
             context: !targetContext.isEmpty ? targetContext : nil,
-            setImageBlock: setImageBlock != nil ? { image, _, _, _ in
-                setImageBlock?(image)
-            } : nil,
-            progress: progress != nil ? progressBlock : nil,
-            completed: completion != nil ? completionBlock : nil
+            setImageBlock: setImageBlock != nil ? sdImageBlock : nil,
+            progress: progress != nil ? sdProgressBlock : nil,
+            completed: completion != nil ? sdCompletionBlock : nil
         )
     }
 
@@ -198,7 +199,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             }
         }
         
-        let progressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
+        let sdProgressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
             guard expectedSize > 0 else { return }
             DispatchQueue.fw.mainAsync {
                 progress?(Double(receivedSize) / Double(expectedSize))
@@ -209,7 +210,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             with: imageURL,
             options: targetOptions.union(.retryFailed),
             context: targetContext,
-            progress: progress != nil ? progressBlock : nil,
+            progress: progress != nil ? sdProgressBlock : nil,
             completed: { @Sendable [weak self] image, data, error, _, _, _ in
                 if options.contains(.queryMemoryData), data == nil, let image {
                     DispatchQueue.global().async { [weak self] in
