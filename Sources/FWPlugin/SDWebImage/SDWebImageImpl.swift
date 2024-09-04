@@ -137,7 +137,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
                 completion?(image, error)
             }
         }
-        
+
         view.sd_internalSetImage(
             with: imageURL,
             placeholderImage: placeholder,
@@ -198,7 +198,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
                 }
             }
         }
-        
+
         let sdProgressBlock: SDImageLoaderProgressBlock = { @Sendable receivedSize, expectedSize, _ in
             guard expectedSize > 0 else { return }
             DispatchQueue.fw.mainAsync {

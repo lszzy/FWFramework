@@ -858,9 +858,13 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
             return
         }
         if action.style == .cancel {
+            #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must not be a action with AlertActionStyleCancel style'")
+            #endif
         } else if !otherActions.contains(action) {
+            #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "*** warning in -[AlertController setCustomSpacing:afterAction:]: 'the -action must be contained in the -actions array, not a action with AlertActionStyleCancel style'")
+            #endif
         } else {
             if let index = otherActions.firstIndex(of: action) {
                 actionSequenceView.setCustomSpacing(spacing, afterActionIndex: index)

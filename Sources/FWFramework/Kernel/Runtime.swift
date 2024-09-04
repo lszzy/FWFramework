@@ -231,13 +231,13 @@ extension Wrapper where Base: WrapperObject {
         get {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             return property(forName: #function)
         }
         set {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             setProperty(newValue, forName: #function)
         }
     }
@@ -473,13 +473,13 @@ extension Wrapper where Base: WrapperObject {
         get {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             return property(forName: #function) as? [String: Any] ?? [:]
         }
         set {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             setProperty(newValue, forName: #function)
         }
     }

@@ -165,7 +165,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     /// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
     open var positionChanged: ((_ position: CGFloat, _ finished: Bool) -> Void)?
-    
+
     /// 是否使用物理弹簧动画，默认true
     open var springAnimation = true
 
@@ -177,7 +177,7 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     /// 自定义滚动视图允许滚动的位置，默认nil时仅openPosition可滚动
     open var scrollViewPositions: ((UIScrollView) -> [CGFloat])?
-    
+
     /// 自定义拖动区域句柄，参数为开始拖动位置，默认nil
     open var draggingAreaBlock: ((CGFloat) -> CGRect)?
 

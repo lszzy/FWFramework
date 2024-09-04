@@ -73,7 +73,7 @@ public class Asset: NSObject, @unchecked Sendable {
     private static let kAssetInfoDataUTI = "dataUTI"
     private static let kAssetInfoOrientation = "orientation"
     private static let kAssetInfoSize = "size"
-    
+
     /// 推荐预览图片尺寸，可自定义，默认屏幕宽高x2
     @MainActor public static var previewImageSize: CGSize {
         get {
@@ -84,7 +84,7 @@ public class Asset: NSObject, @unchecked Sendable {
             _previewImageSize = newValue
         }
     }
-    
+
     @MainActor private static var _previewImageSize: CGSize?
 
     /// 根据唯一标志初始化
@@ -182,7 +182,7 @@ public class Asset: NSObject, @unchecked Sendable {
     public func requestOriginImage(
         synchronous: Bool = false,
         completion: (@Sendable (_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
@@ -245,7 +245,7 @@ public class Asset: NSObject, @unchecked Sendable {
         size: CGSize,
         synchronous: Bool = false,
         completion: (@Sendable (_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
@@ -274,7 +274,7 @@ public class Asset: NSObject, @unchecked Sendable {
     public func requestLivePhoto(
         size: CGSize,
         completion: (@Sendable (_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let livePhotoRequestOptions = PHLivePhotoRequestOptions()
         livePhotoRequestOptions.isNetworkAccessAllowed = true
@@ -300,7 +300,7 @@ public class Asset: NSObject, @unchecked Sendable {
     @discardableResult
     public func requestPlayerItem(
         completion: (@Sendable (_ playerItem: AVPlayerItem?, _ info: [AnyHashable: Any]?) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
@@ -328,7 +328,7 @@ public class Asset: NSObject, @unchecked Sendable {
         outputURL: URL,
         exportPreset: String,
         completion: (@Sendable (_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
@@ -367,7 +367,7 @@ public class Asset: NSObject, @unchecked Sendable {
     @discardableResult
     public func requestAVAsset(
         completion: (@Sendable (_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?,
-        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void)? = nil
     ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true

@@ -943,7 +943,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         // 系统相册本质上也是这么处理的，因此无论是系统相册，还是这个系列组件，由始至终都没有显示照片原图，
         // 这也是系统相册能加载这么快的原因。
         // 另外这里采用异步请求获取图片，避免获取图片时 UI 卡顿
-        let progressHandler: @Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void = { @Sendable [weak self] progress, error, _, _ in
+        let progressHandler: @Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void = { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
             DispatchQueue.main.async {
                 if self?.downloadStatus != .downloading {
