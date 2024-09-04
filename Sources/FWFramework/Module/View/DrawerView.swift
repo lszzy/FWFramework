@@ -494,7 +494,8 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
 
     private func gestureRecognizerDidScroll() {
         guard let scrollView, gestureRecognizer.isEnabled else { return }
-        guard canScroll(scrollView), !isOriginDraggingArea else { return }
+        guard canScroll(scrollView) else { return }
+        if isOriginDraggingArea, !scrollView.isDecelerating { return }
 
         let positions = scrollViewPositions?(scrollView)
         if positions?.count ?? 0 > 0 {
