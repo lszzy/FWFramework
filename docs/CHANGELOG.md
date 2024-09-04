@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.10.6] - 2024-09-04
+
+### Added
+* DrawerView adds draggingAreaBlock configuration and springAnimation configuration
+
 ## [5.10.5] - 2024-09-02
 
 ### Changed
