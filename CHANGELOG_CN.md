@@ -1,5 +1,10 @@
 # 更新日志
 
+## [5.10.6] - 2024-09-04
+
+### Added
+* DrawerView新增draggingAreaBlock配置和springAnimation配置
+
 ## [5.10.5] - 2024-09-02
 
 ### Changed
