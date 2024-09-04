@@ -73,6 +73,19 @@ public class Asset: NSObject, @unchecked Sendable {
     private static let kAssetInfoDataUTI = "dataUTI"
     private static let kAssetInfoOrientation = "orientation"
     private static let kAssetInfoSize = "size"
+    
+    /// 推荐预览图片尺寸，可自定义，默认屏幕宽高x2
+    @MainActor public static var previewImageSize: CGSize {
+        get {
+            if let size = _previewImageSize { return size }
+            return CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
+        }
+        set {
+            _previewImageSize = newValue
+        }
+    }
+    
+    @MainActor private static var _previewImageSize: CGSize?
 
     /// 根据唯一标志初始化
     public static func asset(identifier: String) -> Asset? {
@@ -141,7 +154,7 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /// Asset 的预览图，输出与当前设备屏幕大小相同尺寸的图片，如果图片原图小于当前设备屏幕的尺寸，则只输出原图大小的图片
-    /// - Parameter size: 图片尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
+    /// - Parameter size: 图片尺寸，示例：Asset.previewImageSize
     /// - Returns: 预览图
     public func previewImage(size: CGSize) -> UIImage? {
         let imageRequestOptions = PHImageRequestOptions()
@@ -212,7 +225,7 @@ public class Asset: NSObject, @unchecked Sendable {
      默认异步请求 Asset 的预览图，可能会有网络请求
 
      - Parameters:
-       - size: 尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
+       - size: 尺寸，示例：Asset.previewImageSize
        - synchronous: 是否同步，默认false
        - completion: 请求完成后调用的闭包，包含请求的预览图和图片信息。该闭包会被多次调用，第一次调用获取到的是低清图，然后不断调用直到获取到高清图。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
@@ -238,7 +251,7 @@ public class Asset: NSObject, @unchecked Sendable {
      异步请求 Live Photo，可能会有网络请求
 
      - Parameters:
-       - size: 尺寸，示例：CGSize(width: UIScreen.fw.screenWidth * 2, height: UIScreen.fw.screenHeight * 2)
+       - size: 尺寸，示例：Asset.previewImageSize
        - completion: 请求完成后调用的闭包，包含请求的 Live Photo 和相关信息。如果 assetType 不是 AssetTypeLivePhoto，则为 nil。
        - progressHandler: 处理请求进度的处理程序，在闭包中修改 UI 时需要手动放到主线程处理。
 
