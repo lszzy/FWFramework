@@ -943,7 +943,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         // 系统相册本质上也是这么处理的，因此无论是系统相册，还是这个系列组件，由始至终都没有显示照片原图，
         // 这也是系统相册能加载这么快的原因。
         // 另外这里采用异步请求获取图片，避免获取图片时 UI 卡顿
-        let progressHandler: PHAssetImageProgressHandler = { @Sendable [weak self] progress, error, _, _ in
+        let progressHandler: @Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void = { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
             DispatchQueue.main.async {
                 if self?.downloadStatus != .downloading {
@@ -969,9 +969,10 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             imageAsset.requestID = imageAsset.requestPlayerItem(completion: { playerItem, info in
                 // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
                 // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                let sendableInfo = SendableObject(info)
                 DispatchQueue.main.async {
                     let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
-                    let loadICloudImageFault = playerItem == nil || info?[PHImageErrorKey] != nil
+                    let loadICloudImageFault = playerItem == nil || sendableInfo.object?[PHImageErrorKey] != nil
                     if isCurrentRequest && !loadICloudImageFault {
                         zoomImageView.videoPlayerItem = playerItem
                     } else if isCurrentRequest {
@@ -995,18 +996,20 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                 imageAsset.requestID = imageAsset.requestLivePhoto(size: Asset.previewImageSize, completion: { [weak self] livePhoto, info, finished in
                     // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
                     // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                    let sendableLivePhoto = SendableObject(livePhoto)
+                    let sendableInfo = SendableObject(info)
                     DispatchQueue.main.async {
                         let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
-                        let loadICloudImageFault = livePhoto == nil || info?[PHImageErrorKey] != nil
+                        let loadICloudImageFault = sendableLivePhoto.object == nil || sendableInfo.object?[PHImageErrorKey] != nil
                         if isCurrentRequest && !loadICloudImageFault {
                             // 如果是走 PhotoKit 的逻辑，那么这个 block 会被多次调用，并且第一次调用时返回的图片是一张小图，
                             // 这时需要把图片放大到跟屏幕一样大，避免后面加载大图后图片的显示会有跳动
-                            zoomImageView.livePhoto = livePhoto
+                            zoomImageView.livePhoto = sendableLivePhoto.object
                         } else if isCurrentRequest {
                             zoomImageView.image = nil
                             zoomImageView.livePhoto = nil
                         }
-                        if finished && livePhoto != nil {
+                        if finished && sendableLivePhoto.object != nil {
                             imageAsset.updateDownloadStatus(downloadResult: true)
                             self?.downloadStatus = .succeed
                             zoomImageView.progress = 1
@@ -1040,9 +1043,10 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                 imageAsset.requestID = imageAsset.requestOriginImage(completion: { [weak self] result, info, finished in
                     // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
                     // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
+                    let sendableInfo = SendableObject(info)
                     DispatchQueue.main.async {
                         let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
-                        let loadICloudImageFault = result == nil || info?[PHImageErrorKey] != nil
+                        let loadICloudImageFault = result == nil || sendableInfo.object?[PHImageErrorKey] != nil
                         if isCurrentRequest && !loadICloudImageFault {
                             zoomImageView.image = result
                         } else if isCurrentRequest {
@@ -1482,8 +1486,10 @@ open class ImagePickerPreviewCollectionCell: UICollectionViewCell {
             imageView.image = asset.editedImage
         } else {
             asset.requestThumbnailImage(size: referenceSize) { [weak self] result, _, _ in
-                if self?.assetIdentifier == asset.identifier {
-                    self?.imageView.image = result
+                DispatchQueue.fw.mainAsync { [weak self] in
+                    if self?.assetIdentifier == asset.identifier {
+                        self?.imageView.image = result
+                    }
                 }
             }
         }
@@ -2261,12 +2267,14 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         let imageAsset = imagesAssetArray[indexPath.item]
         let cell = collectionView.cellForItem(at: indexPath) as? ImagePickerCollectionCell
         imageAsset.requestID = imageAsset.requestOriginImage(completion: { result, _, finished in
-            if finished && result != nil {
-                imageAsset.updateDownloadStatus(downloadResult: true)
-                cell?.downloadStatus = .succeed
-            } else if finished {
-                imageAsset.updateDownloadStatus(downloadResult: false)
-                cell?.downloadStatus = .failed
+            DispatchQueue.fw.mainAsync {
+                if finished && result != nil {
+                    imageAsset.updateDownloadStatus(downloadResult: true)
+                    cell?.downloadStatus = .succeed
+                } else if finished {
+                    imageAsset.updateDownloadStatus(downloadResult: false)
+                    cell?.downloadStatus = .failed
+                }
             }
         }, progressHandler: { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
@@ -2770,8 +2778,10 @@ open class ImagePickerCollectionCell: UICollectionViewCell {
             contentImageView.image = asset.editedImage
         } else {
             asset.requestThumbnailImage(size: referenceSize) { [weak self] result, _, _ in
-                if self?.assetIdentifier == asset.identifier {
-                    self?.contentImageView.image = result
+                DispatchQueue.fw.mainAsync { [weak self] in
+                    if self?.assetIdentifier == asset.identifier {
+                        self?.contentImageView.image = result
+                    }
                 }
             }
         }

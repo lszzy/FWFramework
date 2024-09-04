@@ -179,13 +179,17 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestOriginImage(synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestOriginImage(
+        synchronous: Bool = false,
+        completion: (@Sendable (_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         imageRequestOptions.isSynchronous = synchronous
 
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, _, _, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { @Sendable imageData, _, _, info in
             var image: UIImage?
             if let imageData {
                 image = UIImage(data: imageData)
@@ -206,14 +210,18 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestThumbnailImage(size: CGSize, synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?) -> Int {
+    public func requestThumbnailImage(
+        size: CGSize,
+        synchronous: Bool = false,
+        completion: (@Sendable (_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?
+    ) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.resizeMode = .fast
         imageRequestOptions.isSynchronous = synchronous
 
         // 在 PHImageManager 中，targetSize 等 size 都是使用 px 作为单位，因此需要对targetSize 中对传入的 Size 进行处理，宽高各自乘以 ScreenScale，从而得到正确的图片
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: CGSize(width: size.width * UIScreen.fw.screenScale, height: size.height * UIScreen.fw.screenScale), contentMode: .aspectFill, options: imageRequestOptions) { @Sendable result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -233,13 +241,18 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求图片的请求 id
      */
     @discardableResult
-    public func requestPreviewImage(size: CGSize, synchronous: Bool = false, completion: ((_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestPreviewImage(
+        size: CGSize,
+        synchronous: Bool = false,
+        completion: (@Sendable (_ result: UIImage?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isNetworkAccessAllowed = true
         imageRequestOptions.progressHandler = progressHandler
         imageRequestOptions.isSynchronous = synchronous
 
-        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: size, contentMode: .aspectFill, options: imageRequestOptions) { result, info in
+        let imageRequestId = AssetManager.shared.phCachingImageManager.requestImage(for: phAsset, targetSize: size, contentMode: .aspectFill, options: imageRequestOptions) { @Sendable result, info in
             let downloadSucceed = (result != nil && info == nil) || (!Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHImageErrorKey] != nil
             completion?(result, info, downloadSucceed || downloadFailed)
@@ -258,12 +271,16 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 Live Photo 的请求 id
      */
     @discardableResult
-    public func requestLivePhoto(size: CGSize, completion: ((_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?, progressHandler: PHAssetImageProgressHandler? = nil) -> Int {
+    public func requestLivePhoto(
+        size: CGSize,
+        completion: (@Sendable (_ livePhoto: PHLivePhoto?, _ info: [AnyHashable: Any]?, _ finished: Bool) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let livePhotoRequestOptions = PHLivePhotoRequestOptions()
         livePhotoRequestOptions.isNetworkAccessAllowed = true
         livePhotoRequestOptions.progressHandler = progressHandler
 
-        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: size, contentMode: .aspectFill, options: livePhotoRequestOptions) { livePhoto, info in
+        let livePhotoRequestId = AssetManager.shared.phCachingImageManager.requestLivePhoto(for: phAsset, targetSize: size, contentMode: .aspectFill, options: livePhotoRequestOptions) { @Sendable livePhoto, info in
             let downloadSucceed = (livePhoto != nil && info == nil) || (!Asset.isValueTrue(info, key: PHLivePhotoInfoCancelledKey) && info?[PHLivePhotoInfoErrorKey] == nil && !Asset.isValueTrue(info, key: PHLivePhotoInfoIsDegradedKey) && !Asset.isValueTrue(info, key: PHImageCancelledKey) && info?[PHImageErrorKey] == nil && !Asset.isValueTrue(info, key: PHImageResultIsDegradedKey))
             let downloadFailed = info?[PHLivePhotoInfoErrorKey] != nil || info?[PHImageErrorKey] != nil
             completion?(livePhoto, info, downloadSucceed || downloadFailed)
@@ -281,12 +298,15 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 AVPlayerItem 的请求 id
      */
     @discardableResult
-    public func requestPlayerItem(completion: ((_ playerItem: AVPlayerItem?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestPlayerItem(
+        completion: (@Sendable (_ playerItem: AVPlayerItem?, _ info: [AnyHashable: Any]?) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
 
-        let videoRequestId = AssetManager.shared.phCachingImageManager.requestPlayerItem(forVideo: phAsset, options: videoRequestOptions) { playerItem, info in
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestPlayerItem(forVideo: phAsset, options: videoRequestOptions) { @Sendable playerItem, info in
             completion?(playerItem, info)
         }
         return Int(videoRequestId)
@@ -304,12 +324,17 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 视频文件URL 的请求 id
      */
     @discardableResult
-    public func requestVideoURL(outputURL: URL, exportPreset: String, completion: (@Sendable (_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestVideoURL(
+        outputURL: URL,
+        exportPreset: String,
+        completion: (@Sendable (_ videoURL: URL?, _ info: [AnyHashable: Any]?) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
 
-        let videoRequestId = AssetManager.shared.phCachingImageManager.requestExportSession(forVideo: phAsset, options: videoRequestOptions, exportPreset: exportPreset) { exportSession, info in
+        let videoRequestId = AssetManager.shared.phCachingImageManager.requestExportSession(forVideo: phAsset, options: videoRequestOptions, exportPreset: exportPreset) { @Sendable exportSession, info in
             guard let exportSession else {
                 completion?(nil, info)
                 return
@@ -340,7 +365,10 @@ public class Asset: NSObject, @unchecked Sendable {
      - Returns: 返回请求 视频AVAsset 的请求 id
      */
     @discardableResult
-    public func requestAVAsset(completion: (@Sendable (_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?, progressHandler: PHAssetVideoProgressHandler? = nil) -> Int {
+    public func requestAVAsset(
+        completion: (@Sendable (_ asset: AVAsset?, _ audioMix: AVAudioMix?, _ info: [AnyHashable: Any]?) -> Void)?,
+        progressHandler: (@Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable : Any]?) -> Void)? = nil
+    ) -> Int {
         let videoRequestOptions = PHVideoRequestOptions()
         videoRequestOptions.isNetworkAccessAllowed = true
         videoRequestOptions.progressHandler = progressHandler
@@ -357,7 +385,10 @@ public class Asset: NSObject, @unchecked Sendable {
      - Parameter synchronous: 是否同步，默认false
      - Parameter completion: 完成请求后调用的 block，参数中包含了请求的图片 Data（若 assetType 不是 AssetTypeImage 或 AssetTypeLivePhoto 则为 nil），该图片是否为 GIF 的判断值，以及该图片的文件格式是否为 HEIC
      */
-    public func requestImageData(synchronous: Bool = false, completion: ((_ imageData: Data?, _ info: [AnyHashable: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?) {
+    public func requestImageData(
+        synchronous: Bool = false,
+        completion: (@Sendable (_ imageData: Data?, _ info: [AnyHashable: Any]?, _ isGIF: Bool, _ isHEIC: Bool) -> Void)?
+    ) {
         guard assetType == .image else {
             completion?(nil, nil, false, false)
             return
@@ -384,12 +415,15 @@ public class Asset: NSObject, @unchecked Sendable {
         }
     }
 
-    private func requestPhAssetInfo(synchronous: Bool = false, completion: (([AnyHashable: Any]) -> Void)?) {
+    private func requestPhAssetInfo(
+        synchronous: Bool = false,
+        completion: (@Sendable ([AnyHashable: Any]) -> Void)?
+    ) {
         if assetType == .video {
             let videoRequestOptions = PHVideoRequestOptions()
             videoRequestOptions.isNetworkAccessAllowed = true
 
-            AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { asset, _, info in
+            AssetManager.shared.phCachingImageManager.requestAVAsset(forVideo: phAsset, options: videoRequestOptions) { @Sendable asset, _, info in
                 var phAssetInfo: [AnyHashable: Any] = [:]
                 if let info {
                     phAssetInfo[Asset.kAssetInfoOriginInfo] = info
@@ -406,12 +440,15 @@ public class Asset: NSObject, @unchecked Sendable {
         }
     }
 
-    private func requestImagePhAssetInfo(synchronous: Bool, completion: (([AnyHashable: Any]) -> Void)?) {
+    private func requestImagePhAssetInfo(
+        synchronous: Bool,
+        completion: (@Sendable ([AnyHashable: Any]) -> Void)?
+    ) {
         let imageRequestOptions = PHImageRequestOptions()
         imageRequestOptions.isSynchronous = synchronous
         imageRequestOptions.isNetworkAccessAllowed = true
 
-        AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { imageData, dataUTI, exifOrientation, info in
+        AssetManager.shared.phCachingImageManager.requestImageDataAndOrientation(for: phAsset, options: imageRequestOptions) { @Sendable imageData, dataUTI, exifOrientation, info in
             var phAssetInfo: [AnyHashable: Any] = [:]
             if let imageData {
                 phAssetInfo[Asset.kAssetInfoImageData] = imageData
@@ -454,7 +491,10 @@ public class Asset: NSObject, @unchecked Sendable {
     }
 
     /// 获取 Asset 的体积（数据大小），图片支持同步
-    public func assetSize(synchronous: Bool = false, completion: ((Int64) -> Void)?) {
+    public func assetSize(
+        synchronous: Bool = false,
+        completion: (@Sendable (Int64) -> Void)?
+    ) {
         if let phAssetInfo {
             let number = phAssetInfo[Asset.kAssetInfoSize] as? NSNumber
             completion?(number?.int64Value ?? 0)
