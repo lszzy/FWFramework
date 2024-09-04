@@ -638,12 +638,18 @@ extension Wrapper where Base: NSObject {
     // MARK: - Property
     /// 读取关联对象，key为字符串，一般可使用#function
     public static func getAssociatedObject(_ object: Any, key: String) -> Any? {
+        objc_sync_enter(object)
+        defer { objc_sync_exit(object) }
+        
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         return objc_getAssociatedObject(object, pointer)
     }
 
     /// 设置关联对象，key为字符串，一般可使用#function
     public static func setAssociatedObject(_ object: Any, key: String, value: Any?, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        objc_sync_enter(object)
+        defer { objc_sync_exit(object) }
+        
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         objc_setAssociatedObject(object, pointer, value, policy)
     }
