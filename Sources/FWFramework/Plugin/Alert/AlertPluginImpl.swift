@@ -25,23 +25,23 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
     open var customAlertClasses: [AnyClass]?
 
     /// 弹窗自定义句柄，show方法自动调用
-    open var customBlock: ((UIAlertController) -> Void)?
+    open var customBlock: (@MainActor @Sendable (UIAlertController) -> Void)?
 
     /// 默认close按钮文本句柄，alert单按钮或sheet单取消生效。未设置时为关闭
-    open var defaultCloseButton: ((UIAlertController.Style) -> AttributedStringParameter?)?
+    open var defaultCloseButton: (@MainActor @Sendable (UIAlertController.Style) -> AttributedStringParameter?)?
     /// 默认cancel按钮文本句柄，alert多按钮或sheet生效。未设置时为取消
-    open var defaultCancelButton: ((UIAlertController.Style) -> AttributedStringParameter?)?
+    open var defaultCancelButton: (@MainActor @Sendable (UIAlertController.Style) -> AttributedStringParameter?)?
     /// 默认confirm按钮文本句柄，alert多按钮生效。未设置时为确定
-    open var defaultConfirmButton: (() -> AttributedStringParameter?)?
+    open var defaultConfirmButton: (@MainActor @Sendable () -> AttributedStringParameter?)?
 
     /// 错误标题格式化句柄，error生效，默认nil
-    open var errorTitleFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorTitleFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
     /// 错误消息格式化句柄，error生效，默认nil
-    open var errorMessageFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorMessageFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
     /// 错误样式格式化句柄，error生效，默认nil
-    open var errorStyleFormatter: ((Error?) -> AlertStyle)?
+    open var errorStyleFormatter: (@MainActor @Sendable (Error?) -> AlertStyle)?
     /// 错误按钮格式化句柄，error生效，默认nil
-    open var errorButtonFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorButtonFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
 
     // MARK: - AlertPlugin
     open func showAlert(
@@ -51,10 +51,10 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?,
         actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
         in viewController: UIViewController
     ) {
         // 初始化Alert
@@ -114,7 +114,7 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
         currentIndex: Int,
         actionBlock: (@MainActor @Sendable (Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
         in viewController: UIViewController
     ) {
         // 初始化Alert
@@ -224,7 +224,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
     open var hidesSheetCancel: Bool = false
 
     /// 弹窗自定义句柄，show方法自动调用
-    open var customBlock: ((AlertController) -> Void)?
+    open var customBlock: (@MainActor @Sendable (AlertController) -> Void)?
 
     // MARK: - AlertPlugin
     open func showAlert(
@@ -234,10 +234,10 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?,
         actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
         in viewController: UIViewController
     ) {
         // 初始化Alert
@@ -302,7 +302,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
         currentIndex: Int,
         actionBlock: (@MainActor @Sendable (Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
         in viewController: UIViewController
     ) {
         // 初始化Alert
@@ -355,7 +355,7 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
         actions: [AttributedStringParameter]?,
         actionBlock: (@MainActor @Sendable (Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
         in viewController: UIViewController
     ) {
         // 初始化Alert

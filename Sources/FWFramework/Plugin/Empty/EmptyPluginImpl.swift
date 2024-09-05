@@ -17,30 +17,30 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
     /// 显示空界面时是否执行淡入动画，默认YES
     open var fadeAnimated: Bool = true
     /// 空界面自定义句柄，show方法自动调用
-    open var customBlock: ((PlaceholderView) -> Void)?
+    open var customBlock: (@MainActor @Sendable (PlaceholderView) -> Void)?
 
     /// 默认空界面文本句柄，非loading时才触发
-    open var defaultText: (() -> AttributedStringParameter?)?
+    open var defaultText: (@MainActor @Sendable () -> AttributedStringParameter?)?
     /// 默认空界面详细文本句柄，非loading时才触发
-    open var defaultDetail: (() -> AttributedStringParameter?)?
+    open var defaultDetail: (@MainActor @Sendable () -> AttributedStringParameter?)?
     /// 默认空界面图片句柄，非loading时才触发
-    open var defaultImage: (() -> UIImage?)?
+    open var defaultImage: (@MainActor @Sendable () -> UIImage?)?
     /// 默认空界面动作按钮句柄，非loading时才触发
-    open var defaultAction: (() -> AttributedStringParameter?)?
+    open var defaultAction: (@MainActor @Sendable () -> AttributedStringParameter?)?
 
     /// 错误空界面文本格式化句柄，error生效，默认nil
-    open var errorTextFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorTextFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
     /// 错误空界面详细文本格式化句柄，error生效，默认nil
-    open var errorDetailFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorDetailFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
     /// 错误空界面图片格式化句柄，error生效，默认nil
-    open var errorImageFormatter: ((Error?) -> UIImage?)?
+    open var errorImageFormatter: (@MainActor @Sendable (Error?) -> UIImage?)?
     /// 错误空界面动作按钮格式化句柄，error生效，默认nil
-    open var errorActionFormatter: ((Error?) -> AttributedStringParameter?)?
+    open var errorActionFormatter: (@MainActor @Sendable (Error?) -> AttributedStringParameter?)?
 
     private var emptyViewTag: Int = 2021
 
     // MARK: - EmptyPlugin
-    open func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)?, in view: UIView) {
+    open func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
         var emptyText = text
         if !loading, emptyText == nil, defaultText != nil {
             emptyText = defaultText?()?.attributedStringValue
