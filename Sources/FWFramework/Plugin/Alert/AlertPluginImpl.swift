@@ -44,7 +44,19 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
     open var errorButtonFormatter: ((Error?) -> AttributedStringParameter?)?
 
     // MARK: - AlertPlugin
-    open func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
+    open func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        promptCount: Int,
+        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         // 初始化Alert
         let customAppearance = customAlertAppearance
         let alertController = UIAlertController.fw.alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
@@ -94,7 +106,17 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
         viewController.present(alertController, animated: true)
     }
 
-    open func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
+    open func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int,
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         // 初始化Alert
         let customAppearance = customSheetAppearance
         let alertController = UIAlertController.fw.alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
@@ -140,7 +162,11 @@ open class AlertPluginImpl: NSObject, AlertPlugin, @unchecked Sendable {
         viewController.present(alertController, animated: true)
     }
 
-    open func hideAlert(animated: Bool, completion: (() -> Void)? = nil, in viewController: UIViewController) {
+    open func hideAlert(
+        animated: Bool,
+        completion: (@MainActor @Sendable () -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         let alertController = showingAlertController(viewController)
         if let alertController {
             alertController.presentingViewController?.dismiss(animated: animated, completion: completion)
@@ -201,7 +227,19 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
     open var customBlock: ((AlertController) -> Void)?
 
     // MARK: - AlertPlugin
-    open func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((UITextField, Int) -> Void)?, actionBlock: (([String], Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
+    open func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        promptCount: Int,
+        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         // 初始化Alert
         let customAppearance = customAlertAppearance
         let alertController = alertController(title: title, message: message, preferredStyle: .alert, appearance: customAppearance)
@@ -256,7 +294,17 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
         viewController.present(alertController, animated: true)
     }
 
-    open func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
+    open func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int,
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         // 初始化Alert
         let customAppearance = customSheetAppearance
         let alertController = alertController(title: title, message: message, preferredStyle: .actionSheet, appearance: customAppearance)
@@ -300,7 +348,16 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
 
     // MARK: - Public
     /// 显示自定义视图弹窗，无默认按钮
-    open func showAlert(style: UIAlertController.Style, headerView: UIView, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, actionBlock: ((Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((Any) -> Void)? = nil, in viewController: UIViewController) {
+    open func showAlert(
+        style: UIAlertController.Style,
+        headerView: UIView,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)? = nil,
+        in viewController: UIViewController
+    ) {
         // 初始化Alert
         let customAppearance = style == .actionSheet ? customSheetAppearance : customAlertAppearance
         let alertController = alertController(headerView: headerView, preferredStyle: style == .actionSheet ? .actionSheet : .alert, appearance: customAppearance)
@@ -341,7 +398,12 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
     }
 
     // MARK: - Private
-    private func alertController(title titleObject: AttributedStringParameter?, message messageObject: AttributedStringParameter?, preferredStyle: AlertControllerStyle, appearance: AlertControllerAppearance?) -> AlertController {
+    private func alertController(
+        title titleObject: AttributedStringParameter?,
+        message messageObject: AttributedStringParameter?,
+        preferredStyle: AlertControllerStyle,
+        appearance: AlertControllerAppearance?
+    ) -> AlertController {
         let title = titleObject as? String
         let attributedTitle = title != nil ? nil : titleObject?.attributedStringValue
         let message = messageObject as? String
@@ -379,14 +441,23 @@ open class AlertControllerImpl: NSObject, AlertPlugin, @unchecked Sendable {
         return alertController
     }
 
-    private func alertController(headerView: UIView, preferredStyle: AlertControllerStyle, appearance: AlertControllerAppearance?) -> AlertController {
+    private func alertController(
+        headerView: UIView,
+        preferredStyle: AlertControllerStyle,
+        appearance: AlertControllerAppearance?
+    ) -> AlertController {
         let alertController = AlertController(customHeaderView: headerView, preferredStyle: preferredStyle, animationType: .default, appearance: appearance)
         alertController.tapBackgroundViewDismiss = (preferredStyle == .actionSheet)
 
         return alertController
     }
 
-    private func action(object: AttributedStringParameter?, style: AlertActionStyle, appearance: AlertControllerAppearance?, handler: ((AlertAction) -> Void)?) -> AlertAction {
+    private func action(
+        object: AttributedStringParameter?,
+        style: AlertActionStyle,
+        appearance: AlertControllerAppearance?,
+        handler: (@MainActor @Sendable (AlertAction) -> Void)?
+    ) -> AlertAction {
         let title = object as? String
         let attributedTitle = title != nil ? nil : object?.attributedStringValue
 
