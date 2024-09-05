@@ -30,7 +30,12 @@ import UIKit
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]? = nil,
+        currentIndex: Int = 0,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)? = nil
+    ) {
         showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: nil, renderBlock: nil, customBlock: nil)
     }
 
@@ -43,7 +48,15 @@ import UIKit
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         let plugin = imagePreviewPlugin ?? ImagePreviewPluginImpl.shared
         plugin.showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock, in: base)
     }
@@ -57,7 +70,12 @@ import UIKit
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]? = nil,
+        currentIndex: Int = 0,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)? = nil
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -74,7 +92,15 @@ import UIKit
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -96,12 +122,30 @@ import UIKit
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - viewController: 当前视图控制器
-    func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController)
+    func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in viewController: UIViewController
+    )
 }
 
 extension ImagePreviewPlugin {
     /// 显示图片预览方法
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in viewController: UIViewController
+    ) {
         ImagePreviewPluginImpl.shared.showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock, in: viewController)
     }
 }

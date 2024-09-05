@@ -42,7 +42,13 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
     open var customBlock: (@MainActor @Sendable (UIViewController) -> Void)?
 
     // MARK: - ImagePickerPlugin
-    open func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
+    open func showImageCamera(
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void,
+        in viewController: UIViewController
+    ) {
         var pickerController: UIImagePickerController?
         if cropControllerEnabled, filterType == .image, allowsEditing {
             pickerController = UIImagePickerController.fw.pickerController(sourceType: .camera, cropController: cropControllerBlock, completion: { image, info, cancel in
@@ -71,7 +77,14 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
         viewController.present(pickerController, animated: true)
     }
 
-    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+    open func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void,
+        in viewController: UIViewController
+    ) {
         var pickerController: UIViewController?
         var usePhotoPicker = false
         if #available(iOS 14.0, *) {
@@ -164,7 +177,14 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin, @unchecked Se
     open var customBlock: (@MainActor @Sendable (ImagePickerController) -> Void)?
 
     // MARK: - ImagePickerPlugin
-    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+    open func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void,
+        in viewController: UIViewController
+    ) {
         if showsAlbumController {
             let albumController = albumController(filterType: filterType)
             albumController.pickerControllerBlock = {
@@ -188,7 +208,13 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin, @unchecked Se
     }
 
     // MARK: - Private
-    private func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void) -> ImagePickerController {
+    private func pickerController(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void
+    ) -> ImagePickerController {
         var pickerController: ImagePickerController
         if let pickerControllerBlock {
             pickerController = pickerControllerBlock()

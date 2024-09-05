@@ -21,7 +21,11 @@ import UIKit
      @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(selectionLimit: Int, allowsEditing: Bool, completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void) -> UIViewController? {
+    public static func pickerController(
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void
+    ) -> UIViewController? {
         pickerController(filterType: .image, selectionLimit: selectionLimit, allowsEditing: allowsEditing, shouldDismiss: true) { _, objects, results, cancel in
             completion(objects as? [UIImage] ?? [], results, cancel)
         }
@@ -37,7 +41,13 @@ import UIKit
      @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组(UIImage|PHLivePhoto|NSURL)，3位结果数组，4为是否取消
      @return 照片选择器
      */
-    public static func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping @MainActor @Sendable (UIViewController?, [Any], [Any], Bool) -> Void) -> UIViewController? {
+    public static func pickerController(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        shouldDismiss: Bool,
+        completion: @escaping @MainActor @Sendable (UIViewController?, [Any], [Any], Bool) -> Void
+    ) -> UIViewController? {
         if #available(iOS 14.0, *) {
             return PHPickerViewController.fw.pickerController(filterType: filterType, selectionLimit: selectionLimit, shouldDismiss: shouldDismiss) { picker, objects, results, cancel in
                 completion(picker, objects, results, cancel)
@@ -57,7 +67,11 @@ import UIKit
      @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(selectionLimit: Int, cropController: (@MainActor @Sendable (UIImage) -> ImageCropController)?, completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void) -> UIViewController? {
+    public static func pickerController(
+        selectionLimit: Int,
+        cropController: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void
+    ) -> UIViewController? {
         if #available(iOS 14.0, *) {
             return PHPickerViewController.fw.pickerController(selectionLimit: selectionLimit, cropController: cropController, completion: completion)
         } else {
@@ -89,7 +103,10 @@ import UIKit
     /// - Parameters:
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
-    public func showImageCamera(allowsEditing: Bool, completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void) {
+    public func showImageCamera(
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void
+    ) {
         showImageCamera(filterType: .image, allowsEditing: allowsEditing, customBlock: nil) { object, _, cancel in
             completion(object as? UIImage, cancel)
         }
@@ -101,7 +118,12 @@ import UIKit
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void) {
+    public func showImageCamera(
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
+        completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void
+    ) {
         let plugin = imagePickerPlugin ?? ImagePickerPluginImpl.shared
         plugin.showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: base)
     }
@@ -110,7 +132,10 @@ import UIKit
     /// - Parameters:
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
-    public func showImagePicker(allowsEditing: Bool, completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void) {
+    public func showImagePicker(
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void
+    ) {
         showImagePicker(selectionLimit: 1, allowsEditing: allowsEditing) { images, _, cancel in
             completion(images.first, cancel)
         }
@@ -121,7 +146,11 @@ import UIKit
     ///   - selectionLimit: 最大选择数量
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
-    public func showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void) {
+    public func showImagePicker(
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void
+    ) {
         showImagePicker(filterType: .image, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: nil) { objects, results, cancel in
             completion(objects as? [UIImage] ?? [], results, cancel)
         }
@@ -134,7 +163,13 @@ import UIKit
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void) {
+    public func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void
+    ) {
         let plugin = imagePickerPlugin ?? ImagePickerPluginImpl.shared
         plugin.showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: base)
     }
@@ -146,7 +181,10 @@ import UIKit
     /// - Parameters:
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
-    public func showImageCamera(allowsEditing: Bool, completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void) {
+    public func showImageCamera(
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -160,7 +198,12 @@ import UIKit
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
-    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void) {
+    public func showImageCamera(
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
+        completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -172,7 +215,10 @@ import UIKit
     /// - Parameters:
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片，2为是否取消
-    public func showImagePicker(allowsEditing: Bool, completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void) {
+    public func showImagePicker(
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable (UIImage?, Bool) -> Void
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -185,7 +231,11 @@ import UIKit
     ///   - selectionLimit: 最大选择数量
     ///   - allowsEditing: 是否允许编辑
     ///   - completion: 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
-    public func showImagePicker(selectionLimit: Int, allowsEditing: Bool, completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void) {
+    public func showImagePicker(
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -200,7 +250,13 @@ import UIKit
     ///   - allowsEditing: 是否允许编辑
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
-    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void) {
+    public func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -219,7 +275,11 @@ import UIKit
      @param completion 完成回调。参数1为图片，2为信息字典，3为是否取消
      @return 照片选择器，不支持的返回nil
      */
-    public static func pickerController(sourceType: UIImagePickerController.SourceType, allowsEditing: Bool, completion: @escaping @MainActor @Sendable (UIImage?, [AnyHashable: Any]?, Bool) -> Void) -> UIImagePickerController? {
+    public static func pickerController(
+        sourceType: UIImagePickerController.SourceType,
+        allowsEditing: Bool,
+        completion: @escaping @MainActor @Sendable (UIImage?, [AnyHashable: Any]?, Bool) -> Void
+    ) -> UIImagePickerController? {
         pickerController(sourceType: sourceType, filterType: .image, allowsEditing: allowsEditing, shouldDismiss: true) { _, object, info, cancel in
             completion(object as? UIImage, info, cancel)
         }
@@ -235,7 +295,13 @@ import UIKit
      @param completion 完成回调。参数1为照片选择器，2为对象(UIImage|PHLivePhoto|NSURL)，3为信息字典，4为是否取消
      @return 照片选择器，不支持的返回nil
      */
-    public static func pickerController(sourceType: UIImagePickerController.SourceType, filterType: ImagePickerFilterType, allowsEditing: Bool, shouldDismiss: Bool, completion: @escaping @MainActor @Sendable (UIImagePickerController?, Any?, [AnyHashable: Any]?, Bool) -> Void) -> UIImagePickerController? {
+    public static func pickerController(
+        sourceType: UIImagePickerController.SourceType,
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        shouldDismiss: Bool,
+        completion: @escaping @MainActor @Sendable (UIImagePickerController?, Any?, [AnyHashable: Any]?, Bool) -> Void
+    ) -> UIImagePickerController? {
         if !UIImagePickerController.isSourceTypeAvailable(sourceType) {
             return nil
         }
@@ -279,7 +345,11 @@ import UIKit
      @param completion 完成回调。参数1为图片，2为信息字典，3为是否取消
      @return 照片选择器，不支持的返回nil
      */
-    public static func pickerController(sourceType: UIImagePickerController.SourceType, cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?, completion: @escaping @MainActor @Sendable (UIImage?, [AnyHashable: Any]?, Bool) -> Void) -> UIImagePickerController? {
+    public static func pickerController(
+        sourceType: UIImagePickerController.SourceType,
+        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        completion: @escaping @MainActor @Sendable (UIImage?, [AnyHashable: Any]?, Bool) -> Void
+    ) -> UIImagePickerController? {
         let pickerController = UIImagePickerController.fw.pickerController(sourceType: sourceType, filterType: .image, allowsEditing: false, shouldDismiss: false) { picker, object, info, cancel in
             let originalImage = cancel ? nil : (object as? UIImage)
             if let originalImage {
@@ -328,7 +398,10 @@ import UIKit
      @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(selectionLimit: Int, completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+    public static func pickerController(
+        selectionLimit: Int,
+        completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void
+    ) -> PHPickerViewController {
         pickerController(filterType: .image, selectionLimit: selectionLimit, shouldDismiss: true) { _, objects, results, cancel in
             completion(objects as? [UIImage] ?? [], results, cancel)
         }
@@ -344,7 +417,12 @@ import UIKit
      @param completion 完成回调，主线程。参数1为照片选择器，2为对象数组(UIImage|PHLivePhoto|NSURL)，3为结果数组，4为是否取消
      @return 照片选择器
      */
-    public static func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, shouldDismiss: Bool, completion: @escaping @MainActor @Sendable (PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+    public static func pickerController(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        shouldDismiss: Bool,
+        completion: @escaping @MainActor @Sendable (PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void
+    ) -> PHPickerViewController {
         var subFilters: [PHPickerFilter] = []
         if filterType.contains(.image) {
             subFilters.append(PHPickerFilter.images)
@@ -382,7 +460,11 @@ import UIKit
      @param completion 完成回调，主线程。参数1为图片数组，2为结果数组，3为是否取消
      @return 照片选择器
      */
-    public static func pickerController(selectionLimit: Int, cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?, completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void) -> PHPickerViewController {
+    public static func pickerController(
+        selectionLimit: Int,
+        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void
+    ) -> PHPickerViewController {
         let pickerController = PHPickerViewController.fw.pickerController(filterType: .image, selectionLimit: selectionLimit, shouldDismiss: false) { picker, objects, results, cancel in
             if objects.count == 1, let originalImage = objects.first as? UIImage {
                 var cropController: ImageCropController
@@ -464,7 +546,13 @@ public struct ImagePickerFilterType: OptionSet, Sendable {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象(UIImage|PHLivePhoto|NSURL)，2为结果信息，3为是否取消
     ///   - viewController: 当前视图控制器
-    func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void, in viewController: UIViewController)
+    func showImageCamera(
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void,
+        in viewController: UIViewController
+    )
 
     /// 从图片库选取多张图片插件方法
     /// - Parameters:
@@ -474,17 +562,37 @@ public struct ImagePickerFilterType: OptionSet, Sendable {
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - completion: 完成回调，主线程。参数1为对象数组(UIImage|PHLivePhoto|NSURL)，2位结果数组，3为是否取消
     ///   - viewController: 当前视图控制器
-    func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController)
+    func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void,
+        in viewController: UIViewController
+    )
 }
 
 extension ImagePickerPlugin {
     /// 从Camera选取单张图片插件方法
-    public func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
+    public func showImageCamera(
+        filterType: ImagePickerFilterType,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void,
+        in viewController: UIViewController
+    ) {
         ImagePickerPluginImpl.shared.showImageCamera(filterType: filterType, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: viewController)
     }
 
     /// 从图片库选取多张图片插件方法
-    public func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+    public func showImagePicker(
+        filterType: ImagePickerFilterType,
+        selectionLimit: Int,
+        allowsEditing: Bool,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void,
+        in viewController: UIViewController
+    ) {
         ImagePickerPluginImpl.shared.showImagePicker(filterType: filterType, selectionLimit: selectionLimit, allowsEditing: allowsEditing, customBlock: customBlock, completion: completion, in: viewController)
     }
 }
@@ -567,7 +675,12 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
         }
     }
 
-    static func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult], filterType: ImagePickerFilterType, completion: (@MainActor @Sendable (PHPickerViewController, [Any], [PHPickerResult], Bool) -> Void)?) {
+    static func picker(
+        _ picker: PHPickerViewController,
+        didFinishPicking results: [PHPickerResult],
+        filterType: ImagePickerFilterType,
+        completion: (@MainActor @Sendable (PHPickerViewController, [Any], [PHPickerResult], Bool) -> Void)?
+    ) {
         if results.count < 1 {
             completion?(picker, [], results, true)
             return
