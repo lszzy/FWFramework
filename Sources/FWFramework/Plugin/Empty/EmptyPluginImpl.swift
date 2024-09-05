@@ -40,7 +40,16 @@ open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {
     private var emptyViewTag: Int = 2021
 
     // MARK: - EmptyPlugin
-    open func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    open func showEmptyView(
+        text: NSAttributedString?,
+        detail: NSAttributedString?,
+        image: UIImage?,
+        loading: Bool,
+        actions: [NSAttributedString]?,
+        block: (@MainActor @Sendable (Int, Any) -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         var emptyText = text
         if !loading, emptyText == nil, defaultText != nil {
             emptyText = defaultText?()?.attributedStringValue

@@ -667,12 +667,21 @@ import UIKit
     }
 
     /// 快速创建弹出动作，title仅支持NSString
-    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: (@MainActor @Sendable (UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(
+        object: AttributedStringParameter?,
+        style: UIAlertAction.Style,
+        handler: (@MainActor @Sendable (UIAlertAction) -> Void)?
+    ) -> UIAlertAction {
         action(object: object, style: style, appearance: nil, handler: handler)
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
-    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: (@MainActor @Sendable (UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(
+        object: AttributedStringParameter?,
+        style: UIAlertAction.Style,
+        appearance: AlertAppearance?,
+        handler: (@MainActor @Sendable (UIAlertAction) -> Void)?
+    ) -> UIAlertAction {
         let title = object as? String
         let attributedTitle = title != nil ? nil : object?.attributedStringValue
 
@@ -735,12 +744,21 @@ import UIKit
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString
-    public static func alertController(title: AttributedStringParameter?, message: AttributedStringParameter?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+    public static func alertController(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        preferredStyle: UIAlertController.Style
+    ) -> UIAlertController {
         alertController(title: title, message: message, preferredStyle: preferredStyle, appearance: nil)
     }
 
     /// 快速创建弹出控制器，title和message仅支持NSString，支持自定义样式
-    public static func alertController(title titleObject: AttributedStringParameter?, message messageObject: AttributedStringParameter?, preferredStyle: UIAlertController.Style, appearance: AlertAppearance?) -> UIAlertController {
+    public static func alertController(
+        title titleObject: AttributedStringParameter?,
+        message messageObject: AttributedStringParameter?,
+        preferredStyle: UIAlertController.Style,
+        appearance: AlertAppearance?
+    ) -> UIAlertController {
         let title = titleObject as? String
         let attributedTitle = title != nil ? nil : titleObject?.attributedStringValue
         let message = messageObject as? String

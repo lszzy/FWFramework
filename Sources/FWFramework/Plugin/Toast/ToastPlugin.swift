@@ -38,7 +38,12 @@ import UIKit
     }
 
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showLoading(
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         let attributedText = text?.attributedStringValue
         let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
@@ -63,7 +68,13 @@ import UIKit
     }
 
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showProgress(
+        _ progress: CGFloat,
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         let attributedText = text?.attributedStringValue
         let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
@@ -88,7 +99,10 @@ import UIKit
     }
 
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
-    public func showMessage(error: Error?, completion: (@MainActor @Sendable () -> Void)? = nil) {
+    public func showMessage(
+        error: Error?,
+        completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         showMessage(
             text: ToastPluginImpl.shared.errorTextFormatter?(error) ?? error?.localizedDescription,
             detail: ToastPluginImpl.shared.errorDetailFormatter?(error),
@@ -98,7 +112,15 @@ import UIKit
     }
 
     /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        autoHide: Bool = true,
+        interactive: Bool? = nil,
+        completion: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         let attributedText = text?.attributedStringValue
         let attributedDetail = detail?.attributedStringValue
         let plugin = toastPlugin ?? ToastPluginImpl.shared
@@ -165,7 +187,12 @@ import UIKit
     }
 
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showLoading(
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         toastContainer.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -185,7 +212,13 @@ import UIKit
     }
 
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showProgress(
+        _ progress: CGFloat,
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         toastContainer.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -205,12 +238,23 @@ import UIKit
     }
 
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
-    public func showMessage(error: Error?, completion: (@MainActor @Sendable () -> Void)? = nil) {
+    public func showMessage(
+        error: Error?,
+        completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         toastContainer.fw.showMessage(error: error, completion: completion)
     }
 
     /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        autoHide: Bool = true,
+        interactive: Bool? = nil,
+        completion: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         toastContainer.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -245,7 +289,12 @@ import UIKit
     }
 
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showLoading(text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public static func showLoading(
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         UIWindow.fw.main?.fw.showLoading(text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -265,7 +314,13 @@ import UIKit
     }
 
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之，支持String和AttributedString
-    public static func showProgress(_ progress: CGFloat, text: AttributedStringParameter? = nil, detail: AttributedStringParameter? = nil, cancelBlock: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public static func showProgress(
+        _ progress: CGFloat,
+        text: AttributedStringParameter? = nil,
+        detail: AttributedStringParameter? = nil,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         UIWindow.fw.main?.fw.showProgress(progress, text: text, detail: detail, cancelBlock: cancelBlock, customBlock: customBlock)
     }
 
@@ -285,12 +340,23 @@ import UIKit
     }
 
     /// 显示错误消息吐司，自动隐藏，自动隐藏完成后回调
-    public static func showMessage(error: Error?, completion: (@MainActor @Sendable () -> Void)? = nil) {
+    public static func showMessage(
+        error: Error?,
+        completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         UIWindow.fw.main?.fw.showMessage(error: error, completion: completion)
     }
 
     /// 显示指定样式消息吐司，默认自动隐藏，自动隐藏完成后回调，支持String和AttributedString
-    public static func showMessage(text: AttributedStringParameter?, detail: AttributedStringParameter? = nil, style: ToastStyle = .default, autoHide: Bool = true, interactive: Bool? = nil, completion: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
+    public static func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        autoHide: Bool = true,
+        interactive: Bool? = nil,
+        completion: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock)
     }
 
@@ -342,7 +408,13 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
 /// 吐司插件协议，应用可自定义吐司插件实现
 @MainActor public protocol ToastPlugin: AnyObject {
     /// 显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView)
+    func showLoading(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    )
 
     /// 隐藏加载吐司，可指定延迟隐藏从而实现连续的加载效果
     func hideLoading(delayed: Bool, in view: UIView)
@@ -351,7 +423,14 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
     func showingLoadingView(in view: UIView) -> UIView?
 
     /// 显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView)
+    func showProgress(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        progress: CGFloat,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    )
 
     /// 隐藏进度条吐司
     func hideProgress(in view: UIView)
@@ -360,7 +439,16 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
     func showingProgressView(in view: UIView) -> UIView?
 
     /// 显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
-    func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView)
+    func showMessage(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        style: ToastStyle,
+        autoHide: Bool,
+        interactive: Bool,
+        completion: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    )
 
     /// 隐藏消息吐司
     func hideMessage(in view: UIView)
@@ -371,7 +459,13 @@ public struct ToastStyle: RawRepresentable, Equatable, Hashable, Sendable {
 
 extension ToastPlugin {
     /// 默认实现，显示加载吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    public func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    public func showLoading(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         ToastPluginImpl.shared.showLoading(attributedText: attributedText, attributedDetail: attributedDetail, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
     }
 
@@ -386,7 +480,14 @@ extension ToastPlugin {
     }
 
     /// 默认实现，显示进度条吐司，默认需手工隐藏，指定cancelBlock时点击会自动隐藏并调用之
-    public func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    public func showProgress(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        progress: CGFloat,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         ToastPluginImpl.shared.showProgress(attributedText: attributedText, attributedDetail: attributedDetail, progress: progress, cancelBlock: cancelBlock, customBlock: customBlock, in: view)
     }
 
@@ -401,7 +502,16 @@ extension ToastPlugin {
     }
 
     /// 默认实现，显示指定样式消息吐司，可设置自动隐藏和允许交互，自动隐藏完成后回调
-    public func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    public func showMessage(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        style: ToastStyle,
+        autoHide: Bool,
+        interactive: Bool,
+        completion: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         ToastPluginImpl.shared.showMessage(attributedText: attributedText, attributedDetail: attributedDetail, style: style, autoHide: autoHide, interactive: interactive, completion: completion, customBlock: customBlock, in: view)
     }
 
