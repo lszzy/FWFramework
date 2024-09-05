@@ -16,14 +16,36 @@ struct ExampleApp: App {
 
     init() {
         print("App is starting")
+        
+        if #available(iOS 16.1, *) {
+            ActivityManager.requestAuthorization()
+        }
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .onOpenURL { url in
-                    print("Received URL: \(url)")
+            Group {
+                if #available(iOS 16.1, *) {
+                    ContentView()
+                } else {
+                    VStack {
+                        Image(systemName: "globe")
+                            .imageScale(.large)
+
+                        Text("Hello, world!")
+                    }
+                    .padding()
                 }
+            }
+            .onOpenURL { url in
+                print("Received URL: \(url)")
+            }
+            .onAppear {
+                print("View onAppear")
+            }
+            .onDisappear {
+                print("View onDisappear")
+            }
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

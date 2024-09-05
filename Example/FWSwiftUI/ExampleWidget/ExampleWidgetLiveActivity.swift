@@ -9,72 +9,112 @@ import ActivityKit
 import SwiftUI
 import WidgetKit
 
-struct ExampleWidgetAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
 struct ExampleWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ExampleWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+            VStack(alignment: .leading) {
+                HStack {
+                    VStack(alignment: .center) {
+                        Text(context.state.courierName + " is on the way!")
+                            .font(.headline)
+                        
+                        Text("You ordered \(context.attributes.numberOfGroceyItems) grocery items.")
+                            .font(.subheadline)
+                        
+                        HStack {
+                            Divider()
+                                .frame(width: 50, height: 10)
+                            .overlay(.gray)
+                            .cornerRadius(5)
+                            
+                            Image("delivery")
+                            
+                            VStack {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                                    .frame(height: 10)
+                                    .overlay(
+                                        Text(context.state.deliveryTime, style: .timer)
+                                            .font(.system(size: 8))
+                                            .multilineTextAlignment(.center)
+                                    )
+                            }
+                            
+                            Image("address")
+                        }
+                    }
+                }
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
+            .padding(15)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    VStack {
+                        Label {
+                            Text("\(context.attributes.numberOfGroceyItems)")
+                                .font(.title2)
+                        } icon: {
+                            Image("grocery")
+                                .foregroundColor(.green)
+                        }
+                        
+                        Text("items")
+                            .font(.title2)
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Label {
+                        Text(context.state.deliveryTime, style: .timer)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 50)
+                            .monospacedDigit()
+                    } icon: {
+                        Image(systemName: "timer")
+                            .foregroundColor(.green)
+                    }
+                    .font(.title2)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    let url = URL(string: "widget://?courierId=1")!
+                    
+                    Link(destination: url) {
+                        Label("Call courier", systemImage: "phone")
+                    }
+                    .foregroundColor(.green)
                 }
             } compactLeading: {
-                Text("L")
+                VStack {
+                    Label {
+                        Text("\(context.attributes.numberOfGroceyItems) items")
+                    } icon: {
+                        Image("grocery")
+                            .foregroundColor(.green)
+                    }
+                    .font(.caption2)
+                }
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text(context.state.deliveryTime, style: .timer)
+                    .multilineTextAlignment(.center)
+                    .frame(width: 40)
+                    .font(.caption2)
             } minimal: {
-                Text(context.state.emoji)
+                VStack(alignment: .center) {
+                    Image(systemName: "timer")
+                    
+                    Text(context.state.deliveryTime, style: .timer)
+                        .multilineTextAlignment(.center)
+                        .monospacedDigit()
+                        .font(.caption2)
+                }
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .keylineTint(.cyan)
         }
     }
 }
 
-extension ExampleWidgetAttributes {
-    fileprivate static var preview: ExampleWidgetAttributes {
-        ExampleWidgetAttributes(name: "World")
-    }
-}
-
-extension ExampleWidgetAttributes.ContentState {
-    fileprivate static var smiley: ExampleWidgetAttributes.ContentState {
-        ExampleWidgetAttributes.ContentState(emoji: "😀")
-    }
-
-    fileprivate static var starEyes: ExampleWidgetAttributes.ContentState {
-        ExampleWidgetAttributes.ContentState(emoji: "🤩")
-    }
-}
-
-#Preview("Notification", as: .content, using: ExampleWidgetAttributes.preview) {
+@available(iOS 17.0, *)
+#Preview("Notification", as: .content, using: ExampleWidgetAttributes(numberOfGroceyItems: 12)) {
     ExampleWidgetLiveActivity()
 } contentStates: {
-    ExampleWidgetAttributes.ContentState.smiley
-    ExampleWidgetAttributes.ContentState.starEyes
+    ExampleWidgetAttributes.ContentState(courierName: "Mike", deliveryTime: .now + 120)
 }
