@@ -17,18 +17,18 @@ struct ExampleWidgetLiveActivity: Widget {
                     VStack(alignment: .center) {
                         Text(context.state.courierName + " is on the way!")
                             .font(.headline)
-                        
+
                         Text("You ordered \(context.attributes.numberOfGroceyItems) grocery items.")
                             .font(.subheadline)
-                        
+
                         HStack {
                             Divider()
                                 .frame(width: 50, height: 10)
-                            .overlay(.gray)
-                            .cornerRadius(5)
-                            
+                                .overlay(.gray)
+                                .cornerRadius(5)
+
                             Image("delivery")
-                            
+
                             VStack {
                                 RoundedRectangle(cornerRadius: 5)
                                     .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
@@ -39,7 +39,7 @@ struct ExampleWidgetLiveActivity: Widget {
                                             .multilineTextAlignment(.center)
                                     )
                             }
-                            
+
                             Image("address")
                         }
                     }
@@ -58,7 +58,7 @@ struct ExampleWidgetLiveActivity: Widget {
                             Image("grocery")
                                 .foregroundColor(.green)
                         }
-                        
+
                         Text("items")
                             .font(.title2)
                     }
@@ -77,7 +77,7 @@ struct ExampleWidgetLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     let url = URL(string: "widget://call?courierId=1")!
-                    
+
                     Link(destination: url) {
                         Label("Call courier", systemImage: "phone")
                     }
@@ -101,7 +101,7 @@ struct ExampleWidgetLiveActivity: Widget {
             } minimal: {
                 VStack(alignment: .center) {
                     Image(systemName: "timer")
-                    
+
                     Text(context.state.deliveryTime, style: .timer)
                         .multilineTextAlignment(.center)
                         .monospacedDigit()

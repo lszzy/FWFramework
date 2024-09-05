@@ -16,7 +16,7 @@ struct ExampleApp: App {
 
     init() {
         print("App is starting")
-        
+
         if #available(iOS 16.1, *) {
             ActivityManager.requestAuthorization()
         }

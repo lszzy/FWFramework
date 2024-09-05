@@ -54,7 +54,13 @@ open class ToastPluginImpl: NSObject, ToastPlugin, @unchecked Sendable {
     private var messageViewTag: Int = 2013
 
     // MARK: - ToastPlugin
-    open func showLoading(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    open func showLoading(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         var loadingText = attributedText
         if loadingText == nil, defaultLoadingText != nil {
             loadingText = defaultLoadingText?()
@@ -107,7 +113,14 @@ open class ToastPluginImpl: NSObject, ToastPlugin, @unchecked Sendable {
         return toastView
     }
 
-    open func showProgress(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, progress: CGFloat, cancelBlock: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    open func showProgress(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        progress: CGFloat,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         var progressText = attributedText
         if progressText == nil, defaultProgressText != nil {
             progressText = defaultProgressText?()
@@ -157,7 +170,16 @@ open class ToastPluginImpl: NSObject, ToastPlugin, @unchecked Sendable {
         return toastView
     }
 
-    open func showMessage(attributedText: NSAttributedString?, attributedDetail: NSAttributedString?, style: ToastStyle, autoHide: Bool, interactive: Bool, completion: (@MainActor @Sendable () -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
+    open func showMessage(
+        attributedText: NSAttributedString?,
+        attributedDetail: NSAttributedString?,
+        style: ToastStyle,
+        autoHide: Bool,
+        interactive: Bool,
+        completion: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in view: UIView
+    ) {
         var messageText = attributedText
         if messageText == nil, defaultMessageText != nil {
             messageText = defaultMessageText?(style)

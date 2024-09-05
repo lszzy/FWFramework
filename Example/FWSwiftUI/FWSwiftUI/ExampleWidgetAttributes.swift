@@ -5,8 +5,8 @@
 //  Created by wuyong on 2024/9/5.
 //
 
-import SwiftUI
 import ActivityKit
+import SwiftUI
 
 struct ExampleWidgetAttributes: ActivityAttributes, Identifiable {
     public struct ContentState: Codable, Hashable {

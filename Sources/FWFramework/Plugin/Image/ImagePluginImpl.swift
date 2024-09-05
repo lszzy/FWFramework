@@ -44,11 +44,18 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         UIImageView()
     }
 
-    open func imageDecode(_ data: Data, scale: CGFloat, options: [ImageCoderOptions: Any]? = nil) -> UIImage? {
+    open func imageDecode(
+        _ data: Data,
+        scale: CGFloat,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> UIImage? {
         ImageCoder.shared.decodedImage(data: data, scale: scale, options: options)
     }
 
-    open func imageEncode(_ image: UIImage, options: [ImageCoderOptions: Any]? = nil) -> Data? {
+    open func imageEncode(
+        _ image: UIImage,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> Data? {
         let imageFormat = image.fw.imageFormat
         let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
         if imageData != nil || imageFormat == .undefined {
