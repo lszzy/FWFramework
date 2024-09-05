@@ -30,19 +30,19 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
     open var presentationFullScreen: Bool = false
 
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
-    open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    open var cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?
 
     /// 自定义视频质量，默认nil时不生效
     open var videoQuality: UIImagePickerController.QualityType?
 
     /// 自定义PHPicker导出进度句柄，主线程回调，默认nil
-    open var exportProgressBlock: ((_ controller: UIViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)?
+    open var exportProgressBlock: (@MainActor @Sendable (_ controller: UIViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)?
 
     /// 图片选取全局自定义句柄，show方法自动调用
-    open var customBlock: ((UIViewController) -> Void)?
+    open var customBlock: (@MainActor @Sendable (UIViewController) -> Void)?
 
     // MARK: - ImagePickerPlugin
-    open func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
+    open func showImageCamera(filterType: ImagePickerFilterType, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable (Any?, Any?, Bool) -> Void, in viewController: UIViewController) {
         var pickerController: UIImagePickerController?
         if cropControllerEnabled, filterType == .image, allowsEditing {
             pickerController = UIImagePickerController.fw.pickerController(sourceType: .camera, cropController: cropControllerBlock, completion: { image, info, cancel in
@@ -71,7 +71,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
         viewController.present(pickerController, animated: true)
     }
 
-    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
         var pickerController: UIViewController?
         var usePhotoPicker = false
         if #available(iOS 14.0, *) {
@@ -146,25 +146,25 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin, @unchecked Se
     open var showsAlbumController: Bool = false
 
     /// 自定义相册列表控制器句柄，默认nil时使用自带控制器
-    open var albumControllerBlock: (() -> ImageAlbumController)?
+    open var albumControllerBlock: (@MainActor @Sendable () -> ImageAlbumController)?
 
     /// 自定义图片预览控制器句柄，默认nil时使用自带控制器
-    open var previewControllerBlock: (() -> ImagePickerPreviewController)?
+    open var previewControllerBlock: (@MainActor @Sendable () -> ImagePickerPreviewController)?
 
     /// 自定义图片选取控制器句柄，默认nil时使用自带控制器
-    open var pickerControllerBlock: (() -> ImagePickerController)?
+    open var pickerControllerBlock: (@MainActor @Sendable () -> ImagePickerController)?
 
     /// 自定义图片裁剪控制器句柄，预览控制器未自定义时生效，默认nil时使用自带控制器
-    open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    open var cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?
 
     /// 自定义视频导出质量，默认nil时不处理
     open var videoExportPreset: String?
 
     /// 图片选取全局自定义句柄，show方法自动调用
-    open var customBlock: ((ImagePickerController) -> Void)?
+    open var customBlock: (@MainActor @Sendable (ImagePickerController) -> Void)?
 
     // MARK: - ImagePickerPlugin
-    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
+    open func showImagePicker(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void, in viewController: UIViewController) {
         if showsAlbumController {
             let albumController = albumController(filterType: filterType)
             albumController.pickerControllerBlock = {
@@ -188,7 +188,7 @@ open class ImagePickerControllerImpl: NSObject, ImagePickerPlugin, @unchecked Se
     }
 
     // MARK: - Private
-    private func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: ((Any) -> Void)?, completion: @escaping ([Any], [Any], Bool) -> Void) -> ImagePickerController {
+    private func pickerController(filterType: ImagePickerFilterType, selectionLimit: Int, allowsEditing: Bool, customBlock: (@MainActor @Sendable (Any) -> Void)?, completion: @escaping @MainActor @Sendable ([Any], [Any], Bool) -> Void) -> ImagePickerController {
         var pickerController: ImagePickerController
         if let pickerControllerBlock {
             pickerController = pickerControllerBlock()

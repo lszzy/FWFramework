@@ -131,7 +131,7 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter? = nil,
         confirm: AttributedStringParameter? = nil,
-        promptBlock: (@MainActor (UITextField) -> Void)? = nil,
+        promptBlock: (@MainActor @Sendable (UITextField) -> Void)? = nil,
         confirmBlock: (@MainActor @Sendable (String) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
@@ -154,7 +154,7 @@ import UIKit
         cancel: AttributedStringParameter? = nil,
         confirm: AttributedStringParameter? = nil,
         promptCount: Int,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?,
         confirmBlock: (@MainActor @Sendable ([String]) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
@@ -182,10 +182,10 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)? = nil,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)? = nil,
         actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)?
+        customBlock: (@MainActor @Sendable (Any) -> Void)?
     ) {
         // 处理取消按钮，Alert多按钮时默认取消，单按钮时默认关闭
         var targetCancel = cancel
@@ -272,7 +272,7 @@ import UIKit
         currentIndex: Int = -1,
         actionBlock: (@MainActor @Sendable (Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)?
+        customBlock: (@MainActor @Sendable (Any) -> Void)?
     ) {
         // 处理取消按钮，Sheet多按钮时默认取消，单按钮时默认关闭
         var targetCancel = cancel
@@ -428,7 +428,7 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
-        promptBlock: (@MainActor (UITextField) -> Void)? = nil,
+        promptBlock: (@MainActor @Sendable (UITextField) -> Void)? = nil,
         confirmBlock: (@MainActor @Sendable (String) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
@@ -455,7 +455,7 @@ import UIKit
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
         promptCount: Int,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?,
         confirmBlock: (@MainActor @Sendable ([String]) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
@@ -485,10 +485,10 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
-        promptBlock: (@MainActor (UITextField, Int) -> Void)? = nil,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)? = nil,
         actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)?
+        customBlock: (@MainActor @Sendable (Any) -> Void)?
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -580,7 +580,7 @@ import UIKit
         currentIndex: Int = -1,
         actionBlock: (@MainActor @Sendable (Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (Any) -> Void)?
+        customBlock: (@MainActor @Sendable (Any) -> Void)?
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -837,10 +837,10 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int,
-        promptBlock: (@MainActor (_ textField: UITextField, _ index: Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (_ textField: UITextField, _ index: Int) -> Void)?,
         actionBlock: (@MainActor @Sendable (_ values: [String], _ index: Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        customBlock: (@MainActor @Sendable (_ alertController: Any) -> Void)?,
         in viewController: UIViewController
     )
 
@@ -853,7 +853,7 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
         currentIndex: Int,
         actionBlock: (@MainActor @Sendable (_ index: Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        customBlock: (@MainActor @Sendable (_ alertController: Any) -> Void)?,
         in viewController: UIViewController
     )
 
@@ -877,10 +877,10 @@ extension AlertPlugin {
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int,
-        promptBlock: (@MainActor (_ textField: UITextField, _ index: Int) -> Void)?,
+        promptBlock: (@MainActor @Sendable (_ textField: UITextField, _ index: Int) -> Void)?,
         actionBlock: (@MainActor @Sendable (_ values: [String], _ index: Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        customBlock: (@MainActor @Sendable (_ alertController: Any) -> Void)?,
         in viewController: UIViewController
     ) {
         AlertPluginImpl.shared.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
@@ -895,7 +895,7 @@ extension AlertPlugin {
         currentIndex: Int,
         actionBlock: (@MainActor @Sendable (_ index: Int) -> Void)?,
         cancelBlock: (@MainActor @Sendable () -> Void)?,
-        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        customBlock: (@MainActor @Sendable (_ alertController: Any) -> Void)?,
         in viewController: UIViewController
     ) {
         AlertPluginImpl.shared.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
@@ -925,7 +925,7 @@ public class AlertAppearance: NSObject, @unchecked Sendable {
     public static let appearance = AlertAppearance()
 
     /// 自定义首选动作句柄，默认nil，跟随系统
-    public var preferredActionBlock: ((_ alertController: UIAlertController) -> UIAlertAction?)?
+    public var preferredActionBlock: (@MainActor @Sendable (_ alertController: UIAlertController) -> UIAlertAction?)?
 
     /// 标题颜色，仅全局生效，默认nil
     public var titleColor: UIColor?

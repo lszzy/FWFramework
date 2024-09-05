@@ -85,12 +85,12 @@ import UIKit
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: (@MainActor @Sendable (Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: (@MainActor @Sendable (Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: action != nil ? [action!] : nil, block: block != nil ? { @MainActor @Sendable _, sender in block?(sender) } : nil, customBlock: customBlock)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = emptyPlugin ?? EmptyPluginImpl.shared
         if let scrollView = base as? UIScrollView {
             scrollView.fw.showOverlayView()
@@ -152,12 +152,12 @@ import UIKit
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和动作按钮
-    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: (@MainActor @Sendable (Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, action: AttributedStringParameter?, block: (@MainActor @Sendable (Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         base.view.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, action: action, block: block, customBlock: customBlock)
     }
 
     /// 显示空界面，指定文本、详细文本、图片、是否显示加载视图和最多两个动作按钮
-    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)? = nil) {
+    public func showEmptyView(text: AttributedStringParameter?, detail: AttributedStringParameter?, image: UIImage?, loading: Bool, actions: [AttributedStringParameter]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         base.view.fw.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock)
     }
 
@@ -308,7 +308,7 @@ import UIKit
 /// 空界面插件协议，应用可自定义空界面插件实现
 @MainActor public protocol EmptyPlugin: AnyObject {
     /// 显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-    func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)?, in view: UIView)
+    func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView)
 
     /// 隐藏空界面
     func hideEmptyView(in view: UIView)
@@ -319,7 +319,7 @@ import UIKit
 
 extension EmptyPlugin {
     /// 默认实现，显示空界面，指定文本、详细文本、图片、加载视图和最多两个动作按钮
-    public func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor (Any) -> Void)?, in view: UIView) {
+    public func showEmptyView(text: NSAttributedString?, detail: NSAttributedString?, image: UIImage?, loading: Bool, actions: [NSAttributedString]?, block: (@MainActor @Sendable (Int, Any) -> Void)?, customBlock: (@MainActor @Sendable (Any) -> Void)?, in view: UIView) {
         EmptyPluginImpl.shared.showEmptyView(text: text, detail: detail, image: image, loading: loading, actions: actions, block: block, customBlock: customBlock, in: view)
     }
 

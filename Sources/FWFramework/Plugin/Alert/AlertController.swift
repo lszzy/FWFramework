@@ -44,7 +44,7 @@ public class AlertControllerAppearance: NSObject, @unchecked Sendable {
     public static let appearance = AlertControllerAppearance()
 
     /// 自定义首选动作句柄，默认nil，跟随系统
-    public var preferredActionBlock: ((_ alertController: AlertController) -> AlertAction?)?
+    public var preferredActionBlock: (@MainActor @Sendable (_ alertController: AlertController) -> AlertAction?)?
 
     /// 标题颜色，仅全局生效，默认nil
     public var titleColor: UIColor?
@@ -91,7 +91,7 @@ public class AlertControllerAppearance: NSObject, @unchecked Sendable {
     public var alertRedColor: UIColor? = UIColor.systemRed
     public var grayColor: UIColor? = UIColor.gray
     public var textFieldCornerRadius: CGFloat = 6.0
-    public var textFieldCustomBlock: ((UITextField) -> Void)?
+    public var textFieldCustomBlock: (@MainActor @Sendable (UITextField) -> Void)?
 
     public var alertCornerRadius: CGFloat = 6.0
     public var alertEdgeDistance: CGFloat = 50
