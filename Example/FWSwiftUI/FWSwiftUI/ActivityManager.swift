@@ -21,18 +21,16 @@ struct ActivityManager {
         })
     }
     
-    static func createActivity<T: ActivityAttributes>(attributes: T, contentState: T.ContentState, completion: ((String?, Error?) -> Void)? = nil) {
-        do {
-            let activity = try Activity<T>.request(attributes: attributes, contentState: contentState, pushType: .token)
-            Task {
-                for await tokenData in activity.pushTokenUpdates {
-                    let token = tokenData.map { String(format: "%02x", $0) }.joined()
-                    completion?(token, nil)
-                }
+    @discardableResult
+    static func createActivity<T: ActivityAttributes>(attributes: T, contentState: T.ContentState, tokenHandler: ((String) -> Void)? = nil) throws -> Activity<T> {
+        let activity = try Activity<T>.request(attributes: attributes, contentState: contentState, pushType: .token)
+        Task {
+            for await tokenData in activity.pushTokenUpdates {
+                let token = tokenData.map { String(format: "%02x", $0) }.joined()
+                tokenHandler?(token)
             }
-        } catch {
-            completion?(nil, error)
         }
+        return activity
     }
     
     static func updateActivity<T: ActivityAttributes>(_ activity: Activity<T>, using contentState: T.ContentState) {

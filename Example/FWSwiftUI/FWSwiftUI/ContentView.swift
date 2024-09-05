@@ -22,14 +22,14 @@ struct ContentView: View {
                         let attributes = ExampleWidgetAttributes(numberOfGroceyItems: 12)
                         let contentState = ExampleWidgetAttributes.ContentState(courierName: "Mike", deliveryTime: .now + 120)
                         
-                        ActivityManager.createActivity(attributes: attributes, contentState: contentState) { token, error in
-                            if let error {
-                                print("error: \(error.localizedDescription)")
-                            } else {
-                                print("token: \(token ?? "")")
+                        do {
+                            try ActivityManager.createActivity(attributes: attributes, contentState: contentState) { token in
+                                print("token: \(token)")
                             }
+                            activities = ActivityManager.getAllActivities(of: ExampleWidgetAttributes.self)
+                        } catch {
+                            print("error: \(error.localizedDescription)")
                         }
-                        activities = ActivityManager.getAllActivities(of: ExampleWidgetAttributes.self)
                     } label: {
                         Text("Create Activity")
                             .font(.headline)

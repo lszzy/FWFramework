@@ -46,6 +46,7 @@ struct ExampleWidgetLiveActivity: Widget {
                 }
             }
             .padding(15)
+            .widgetURL(URL(string: "widget://apns"))
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -75,7 +76,7 @@ struct ExampleWidgetLiveActivity: Widget {
                     .font(.title2)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    let url = URL(string: "widget://?courierId=1")!
+                    let url = URL(string: "widget://call?courierId=1")!
                     
                     Link(destination: url) {
                         Label("Call courier", systemImage: "phone")
@@ -107,6 +108,7 @@ struct ExampleWidgetLiveActivity: Widget {
                         .font(.caption2)
                 }
             }
+            .widgetURL(URL(string: "widget://live"))
             .keylineTint(.cyan)
         }
     }

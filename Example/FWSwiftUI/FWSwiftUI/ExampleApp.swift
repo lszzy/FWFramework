@@ -39,6 +39,7 @@ struct ExampleApp: App {
             }
             .onOpenURL { url in
                 print("Received URL: \(url)")
+                UIWindow.wrapperExtension.showMessage(text: url.absoluteString)
             }
             .onAppear {
                 print("View onAppear")
