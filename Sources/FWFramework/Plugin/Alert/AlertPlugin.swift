@@ -32,7 +32,7 @@ import UIKit
     public func showAlert(
         error: Error?,
         cancel: AttributedStringParameter? = nil,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showAlert(
             title: AlertPluginImpl.shared.errorTitleFormatter?(error),
@@ -55,7 +55,7 @@ import UIKit
         message: AttributedStringParameter?,
         style: AlertStyle = .default,
         cancel: AttributedStringParameter? = nil,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showAlert(title: title, message: message, style: style, cancel: cancel, actions: nil, actionBlock: nil, cancelBlock: cancelBlock)
     }
@@ -75,8 +75,8 @@ import UIKit
         style: AlertStyle = .default,
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: 0, promptBlock: nil, actionBlock: { _, index in actionBlock?(index) }, cancelBlock: cancelBlock, customBlock: nil)
     }
@@ -90,8 +90,8 @@ import UIKit
     public func showConfirm(
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
-        confirmBlock: (() -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        confirmBlock: (@MainActor @Sendable () -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showConfirm(title: title, message: message, cancel: nil, confirm: nil, confirmBlock: confirmBlock, cancelBlock: cancelBlock)
     }
@@ -109,8 +109,8 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
-        confirmBlock: (() -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        confirmBlock: (@MainActor @Sendable () -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? FrameworkBundle.confirmButton)
 
@@ -131,9 +131,9 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter? = nil,
         confirm: AttributedStringParameter? = nil,
-        promptBlock: ((UITextField) -> Void)? = nil,
-        confirmBlock: ((String) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        promptBlock: (@MainActor (UITextField) -> Void)? = nil,
+        confirmBlock: (@MainActor @Sendable (String) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: 1, promptBlock: { textField, _ in promptBlock?(textField) }, confirmBlock: { values in confirmBlock?(values.first ?? "") }, cancelBlock: cancelBlock)
     }
@@ -154,9 +154,9 @@ import UIKit
         cancel: AttributedStringParameter? = nil,
         confirm: AttributedStringParameter? = nil,
         promptCount: Int,
-        promptBlock: ((UITextField, Int) -> Void)?,
-        confirmBlock: (([String]) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        confirmBlock: (@MainActor @Sendable ([String]) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         let targetConfirm = confirm ?? (AlertPluginImpl.shared.defaultConfirmButton?() ?? FrameworkBundle.confirmButton)
 
@@ -182,10 +182,10 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
-        promptBlock: ((UITextField, Int) -> Void)? = nil,
-        actionBlock: (([String], Int) -> Void)?,
-        cancelBlock: (() -> Void)?,
-        customBlock: ((Any) -> Void)?
+        promptBlock: (@MainActor (UITextField, Int) -> Void)? = nil,
+        actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)?
     ) {
         // 处理取消按钮，Alert多按钮时默认取消，单按钮时默认关闭
         var targetCancel = cancel
@@ -211,7 +211,7 @@ import UIKit
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showSheet(title: title, message: message, cancel: cancel, actions: nil, currentIndex: -1, actionBlock: nil, cancelBlock: cancelBlock)
     }
@@ -227,8 +227,8 @@ import UIKit
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showSheet(title: title, message: message, cancel: nil, actions: actions, currentIndex: -1, actionBlock: actionBlock, cancelBlock: cancelBlock)
     }
@@ -248,8 +248,8 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: nil)
     }
@@ -270,9 +270,9 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)?,
-        customBlock: ((Any) -> Void)?
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)?
     ) {
         // 处理取消按钮，Sheet多按钮时默认取消，单按钮时默认关闭
         var targetCancel = cancel
@@ -294,7 +294,7 @@ import UIKit
     ///   - completion: 完成异步回调
     public func hideAlert(
         animated: Bool,
-        completion: (() -> Void)? = nil
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         let plugin = alertPlugin ?? AlertPluginImpl.shared
         plugin.hideAlert(animated: animated, completion: completion, in: base)
@@ -317,7 +317,7 @@ import UIKit
     public func showAlert(
         error: Error?,
         cancel: AttributedStringParameter? = nil,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -338,7 +338,7 @@ import UIKit
         message: AttributedStringParameter?,
         style: AlertStyle = .default,
         cancel: AttributedStringParameter? = nil,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -362,8 +362,8 @@ import UIKit
         style: AlertStyle = .default,
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -381,8 +381,8 @@ import UIKit
     public func showConfirm(
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
-        confirmBlock: (() -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        confirmBlock: (@MainActor @Sendable () -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -404,8 +404,8 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
-        confirmBlock: (() -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        confirmBlock: (@MainActor @Sendable () -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -428,9 +428,9 @@ import UIKit
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
-        promptBlock: ((UITextField) -> Void)? = nil,
-        confirmBlock: ((String) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        promptBlock: (@MainActor (UITextField) -> Void)? = nil,
+        confirmBlock: (@MainActor @Sendable (String) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -455,9 +455,9 @@ import UIKit
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?,
         promptCount: Int,
-        promptBlock: ((UITextField, Int) -> Void)?,
-        confirmBlock: (([String]) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        promptBlock: (@MainActor (UITextField, Int) -> Void)?,
+        confirmBlock: (@MainActor @Sendable ([String]) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -485,10 +485,10 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         promptCount: Int = 0,
-        promptBlock: ((UITextField, Int) -> Void)? = nil,
-        actionBlock: (([String], Int) -> Void)?,
-        cancelBlock: (() -> Void)?,
-        customBlock: ((Any) -> Void)?
+        promptBlock: (@MainActor (UITextField, Int) -> Void)? = nil,
+        actionBlock: (@MainActor @Sendable ([String], Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)?
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -507,7 +507,7 @@ import UIKit
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?,
-        cancelBlock: (() -> Void)? = nil
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -527,8 +527,8 @@ import UIKit
         title: AttributedStringParameter?,
         message: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -552,8 +552,8 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)? = nil
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -578,9 +578,9 @@ import UIKit
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?,
         currentIndex: Int = -1,
-        actionBlock: ((Int) -> Void)?,
-        cancelBlock: (() -> Void)?,
-        customBlock: ((Any) -> Void)?
+        actionBlock: (@MainActor @Sendable (Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (Any) -> Void)?
     ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
@@ -595,7 +595,7 @@ import UIKit
     ///   - completion: 完成回调
     public func hideAlert(
         animated: Bool,
-        completion: (() -> Void)? = nil
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         var ctrl = viewController
         if ctrl == nil {
@@ -667,12 +667,12 @@ import UIKit
     }
 
     /// 快速创建弹出动作，title仅支持NSString
-    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, handler: (@MainActor @Sendable (UIAlertAction) -> Void)?) -> UIAlertAction {
         action(object: object, style: style, appearance: nil, handler: handler)
     }
 
     /// 快速创建弹出动作，title仅支持NSString，支持appearance
-    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+    public static func action(object: AttributedStringParameter?, style: UIAlertAction.Style, appearance: AlertAppearance?, handler: (@MainActor @Sendable (UIAlertAction) -> Void)?) -> UIAlertAction {
         let title = object as? String
         let attributedTitle = title != nil ? nil : object?.attributedStringValue
 
@@ -830,13 +830,39 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
 /// 弹窗插件协议，应用可自定义弹窗实现
 @MainActor public protocol AlertPlugin: AnyObject {
     /// 显示弹出框插件方法，默认使用系统UIAlertController
-    func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        promptCount: Int,
+        promptBlock: (@MainActor (_ textField: UITextField, _ index: Int) -> Void)?,
+        actionBlock: (@MainActor @Sendable (_ values: [String], _ index: Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        in viewController: UIViewController
+    )
 
     /// 显示操作表插件方法，默认使用系统UIAlertController
-    func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController)
+    func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int,
+        actionBlock: (@MainActor @Sendable (_ index: Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        in viewController: UIViewController
+    )
 
     /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
-    func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController)
+    func hideAlert(
+        animated: Bool,
+        completion: (@MainActor @Sendable () -> Void)?,
+        in viewController: UIViewController
+    )
 
     /// 判断是否正在显示弹出框插件方法，默认查找UIAlertController|AlertController
     func isShowingAlert(in viewController: UIViewController) -> Bool
@@ -844,17 +870,43 @@ public struct AlertStyle: RawRepresentable, Equatable, Hashable, Sendable {
 
 extension AlertPlugin {
     /// 显示弹出框插件方法，默认使用系统UIAlertController
-    public func showAlert(title: AttributedStringParameter?, message: AttributedStringParameter?, style: AlertStyle, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, promptCount: Int, promptBlock: ((_ textField: UITextField, _ index: Int) -> Void)?, actionBlock: ((_ values: [String], _ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+    public func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        promptCount: Int,
+        promptBlock: (@MainActor (_ textField: UITextField, _ index: Int) -> Void)?,
+        actionBlock: (@MainActor @Sendable (_ values: [String], _ index: Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        in viewController: UIViewController
+    ) {
         AlertPluginImpl.shared.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions, promptCount: promptCount, promptBlock: promptBlock, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
 
     /// 显示操作表插件方法，默认使用系统UIAlertController
-    public func showSheet(title: AttributedStringParameter?, message: AttributedStringParameter?, cancel: AttributedStringParameter?, actions: [AttributedStringParameter]?, currentIndex: Int, actionBlock: ((_ index: Int) -> Void)?, cancelBlock: (() -> Void)?, customBlock: ((_ alertController: Any) -> Void)?, in viewController: UIViewController) {
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int,
+        actionBlock: (@MainActor @Sendable (_ index: Int) -> Void)?,
+        cancelBlock: (@MainActor @Sendable () -> Void)?,
+        customBlock: (@MainActor (_ alertController: Any) -> Void)?,
+        in viewController: UIViewController
+    ) {
         AlertPluginImpl.shared.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: actionBlock, cancelBlock: cancelBlock, customBlock: customBlock, in: viewController)
     }
 
     /// 手工隐藏弹出框插件方法，默认查找UIAlertController|AlertController
-    public func hideAlert(animated: Bool, completion: (() -> Void)?, in viewController: UIViewController) {
+    public func hideAlert(
+        animated: Bool,
+        completion: (@MainActor @Sendable () -> Void)?,
+        in viewController: UIViewController
+    ) {
         AlertPluginImpl.shared.hideAlert(animated: animated, completion: completion, in: viewController)
     }
 
