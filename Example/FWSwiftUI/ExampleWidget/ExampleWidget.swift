@@ -49,6 +49,7 @@ struct ExampleWidgetEntryView: View {
             Text("Emoji:")
             Text(entry.emoji)
         }
+        .widgetURL(URL(string: "widget://widget"))
     }
 }
 
