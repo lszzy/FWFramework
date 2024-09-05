@@ -107,22 +107,22 @@ public struct ProgressPluginView: UIViewRepresentable {
 // MARK: - EmptyPluginView
 /// 空界面插件视图包装器。如果需要显示空界面时可滚动，放到滚动视图内部即可
 public struct EmptyPluginView: UIViewRepresentable {
-    var text: String? = nil
-    var detail: String? = nil
+    var text: AttributedStringParameter? = nil
+    var detail: AttributedStringParameter? = nil
     var image: UIImage? = nil
     var loading: Bool = false
-    var actions: [String]? = nil
+    var actions: [AttributedStringParameter]? = nil
     var block: (@MainActor @Sendable (Int, Any) -> Void)? = nil
 
     public init() {}
 
-    public func text(_ text: String?) -> Self {
+    public func text(_ text: AttributedStringParameter?) -> Self {
         var result = self
         result.text = text
         return result
     }
 
-    public func detail(_ detail: String?) -> Self {
+    public func detail(_ detail: AttributedStringParameter?) -> Self {
         var result = self
         result.detail = detail
         return result
@@ -140,7 +140,7 @@ public struct EmptyPluginView: UIViewRepresentable {
         return result
     }
 
-    public func action(_ action: String?, block: (@MainActor @Sendable (Any) -> Void)?) -> Self {
+    public func action(_ action: AttributedStringParameter?, block: (@MainActor @Sendable (Any) -> Void)?) -> Self {
         var result = self
         if let action {
             result.actions = [action]
@@ -157,7 +157,7 @@ public struct EmptyPluginView: UIViewRepresentable {
         return result
     }
 
-    public func actions(_ actions: [String]?, block: (@MainActor @Sendable (Int, Any) -> Void)?) -> Self {
+    public func actions(_ actions: [AttributedStringParameter]?, block: (@MainActor @Sendable (Int, Any) -> Void)?) -> Self {
         var result = self
         result.actions = actions
         result.block = block
