@@ -112,7 +112,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     var image: UIImage? = nil
     var loading: Bool = false
     var actions: [String]? = nil
-    var block: ((Int, Any) -> Void)? = nil
+    var block: (@MainActor @Sendable (Int, Any) -> Void)? = nil
 
     public init() {}
 
@@ -140,7 +140,7 @@ public struct EmptyPluginView: UIViewRepresentable {
         return result
     }
 
-    public func action(_ action: String?, block: ((Any) -> Void)?) -> Self {
+    public func action(_ action: String?, block: (@MainActor @Sendable (Any) -> Void)?) -> Self {
         var result = self
         if let action {
             result.actions = [action]
@@ -157,7 +157,7 @@ public struct EmptyPluginView: UIViewRepresentable {
         return result
     }
 
-    public func actions(_ actions: [String]?, block: ((Int, Any) -> Void)?) -> Self {
+    public func actions(_ actions: [String]?, block: (@MainActor @Sendable (Int, Any) -> Void)?) -> Self {
         var result = self
         result.actions = actions
         result.block = block
