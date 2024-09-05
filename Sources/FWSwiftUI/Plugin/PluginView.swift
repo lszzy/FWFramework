@@ -15,7 +15,7 @@ import SwiftUI
 /// 加载插件视图包装器
 public struct LoadingPluginView: UIViewRepresentable {
     var text: AttributedStringParameter?
-    var cancelBlock: (() -> Void)?
+    var cancelBlock: (@MainActor @Sendable () -> Void)?
 
     public init(text: AttributedStringParameter? = nil) {
         self.text = text
@@ -27,7 +27,7 @@ public struct LoadingPluginView: UIViewRepresentable {
         return result
     }
 
-    public func onCancel(_ action: (() -> Void)?) -> Self {
+    public func onCancel(_ action: (@MainActor @Sendable () -> Void)?) -> Self {
         var result = self
         result.cancelBlock = action
         return result
@@ -56,7 +56,7 @@ public struct LoadingPluginView: UIViewRepresentable {
 public struct ProgressPluginView: UIViewRepresentable {
     var progress: CGFloat?
     var text: AttributedStringParameter?
-    var cancelBlock: (() -> Void)?
+    var cancelBlock: (@MainActor @Sendable () -> Void)?
 
     public init(_ progress: CGFloat? = nil) {
         self.progress = progress
@@ -74,7 +74,7 @@ public struct ProgressPluginView: UIViewRepresentable {
         return result
     }
 
-    public func onCancel(_ action: (() -> Void)?) -> Self {
+    public func onCancel(_ action: (@MainActor @Sendable () -> Void)?) -> Self {
         var result = self
         result.cancelBlock = action
         return result

@@ -18,10 +18,10 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
     open var showsFinishedView = true
 
     /// 下拉刷新自定义句柄，开启时自动调用
-    open var pullRefreshBlock: ((PullRefreshView) -> Void)?
+    open var pullRefreshBlock: (@MainActor @Sendable (PullRefreshView) -> Void)?
 
     /// 上拉追加自定义句柄，开启时自动调用
-    open var infiniteScrollBlock: ((InfiniteScrollView) -> Void)?
+    open var infiniteScrollBlock: (@MainActor @Sendable (InfiniteScrollView) -> Void)?
 
     // MARK: - RefreshPlugin
     open func isRefreshing(in scrollView: UIScrollView) -> Bool {
@@ -36,7 +36,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
         scrollView.fw.showPullRefresh = shouldRefreshing
     }
 
-    open func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    open func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw.addPullRefresh(block: block)
 
         if let pullRefreshView = scrollView.fw.pullRefreshView {
@@ -45,7 +45,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
         }
     }
 
-    open func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    open func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw.addPullRefresh(target: target, action: action)
 
         if let pullRefreshView = scrollView.fw.pullRefreshView {
@@ -82,7 +82,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
         scrollView.fw.infiniteScrollFinished = loadingFinished
     }
 
-    open func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    open func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw.addInfiniteScroll(block: block)
 
         if let infiniteScrollView = scrollView.fw.infiniteScrollView {
@@ -92,7 +92,7 @@ open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {
         }
     }
 
-    open func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    open func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         scrollView.fw.addInfiniteScroll(target: target, action: action)
 
         if let infiniteScrollView = scrollView.fw.infiniteScrollView {
