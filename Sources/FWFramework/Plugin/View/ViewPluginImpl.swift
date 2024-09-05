@@ -15,10 +15,10 @@ open class ViewPluginImpl: NSObject, ViewPlugin, @unchecked Sendable {
     public static let shared = ViewPluginImpl()
 
     /// 自定义进度视图生产句柄，默认nil时ProgressView
-    open var customProgressView: ((ProgressViewStyle) -> (UIView & ProgressViewPlugin)?)?
+    open var customProgressView: (@MainActor @Sendable (ProgressViewStyle) -> (UIView & ProgressViewPlugin)?)?
 
     /// 自定义指示器视图生产句柄，默认nil时UIActivityIndicatorView
-    open var customIndicatorView: ((IndicatorViewStyle) -> (UIView & IndicatorViewPlugin)?)?
+    open var customIndicatorView: (@MainActor @Sendable (IndicatorViewStyle) -> (UIView & IndicatorViewPlugin)?)?
 
     // MARK: - ViewPlugin
     open func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {

@@ -44,13 +44,13 @@ import UIKit
     }
 
     /// 配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+    public func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setRefreshing(block: block, customBlock: customBlock, in: base)
     }
 
     /// 配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+    public func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setRefreshing(target: target, action: action, customBlock: customBlock, in: base)
     }
@@ -105,13 +105,13 @@ import UIKit
     }
 
     /// 配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+    public func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setLoading(block: block, customBlock: customBlock, in: base)
     }
 
     /// 配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+    public func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setLoading(target: target, action: action, customBlock: customBlock, in: base)
     }
@@ -137,7 +137,7 @@ import UIKit
 
 // MARK: - Wrapper+UIScrollView
 @MainActor extension Wrapper where Base: UIScrollView {
-    public func addPullRefresh(block: @escaping () -> Void) {
+    public func addPullRefresh(block: @escaping @MainActor @Sendable () -> Void) {
         addPullRefresh(block: block, target: nil, action: nil)
     }
 
@@ -145,7 +145,7 @@ import UIKit
         addPullRefresh(block: nil, target: target, action: action)
     }
 
-    private func addPullRefresh(block: (() -> Void)?, target: Any?, action: Selector?) {
+    private func addPullRefresh(block: (@MainActor @Sendable () -> Void)?, target: Any?, action: Selector?) {
         pullRefreshView?.removeFromSuperview()
 
         let view = PullRefreshView()
@@ -214,7 +214,7 @@ import UIKit
         }
     }
 
-    public func addInfiniteScroll(block: @escaping () -> Void) {
+    public func addInfiniteScroll(block: @escaping @MainActor @Sendable () -> Void) {
         addInfiniteScroll(block: block, target: nil, action: nil)
     }
 
@@ -222,7 +222,7 @@ import UIKit
         addInfiniteScroll(block: nil, target: target, action: action)
     }
 
-    private func addInfiniteScroll(block: (() -> Void)?, target: Any?, action: Selector?) {
+    private func addInfiniteScroll(block: (@MainActor @Sendable () -> Void)?, target: Any?, action: Selector?) {
         infiniteScrollView?.removeFromSuperview()
 
         let view = InfiniteScrollView()
@@ -315,10 +315,10 @@ import UIKit
     func setShouldRefreshing(_ shouldRefreshing: Bool, in scrollView: UIScrollView)
 
     /// 配置下拉刷新句柄
-    func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置下拉刷新事件
-    func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始下拉刷新
     func beginRefreshing(in scrollView: UIScrollView)
@@ -343,10 +343,10 @@ import UIKit
     func setLoadingFinished(_ loadingFinished: Bool, in scrollView: UIScrollView)
 
     /// 配置上拉追加句柄
-    func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置上拉追加事件
-    func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始上拉追加
     func beginLoading(in scrollView: UIScrollView)
@@ -373,12 +373,12 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setRefreshing(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setRefreshing(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
@@ -419,12 +419,12 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setLoading(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setLoading(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
