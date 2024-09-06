@@ -235,3 +235,9 @@ extension TestController: UISearchBarDelegate {
         tableView.reloadData()
     }
 }
+
+extension TestController: TabControllerDelegate {
+    func tabBarItemClicked() {
+        tableView.app.scroll(to: .top)
+    }
+}
