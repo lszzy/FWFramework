@@ -11,23 +11,24 @@ import FWFramework
 class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollViewDelegate {
     private lazy var tagCollectionView: TextTagCollectionView = {
         let result = TextTagCollectionView()
-        result.verticalSpacing = 5
-        result.horizontalSpacing = 5
+        result.verticalSpacing = 8
+        result.horizontalSpacing = 8
         return result
     }()
 
     private var textTagConfig: TextTagConfig {
         let result = TextTagConfig()
-        result.textFont = UIFont.systemFont(ofSize: 10)
-        result.textColor = AppTheme.textColor
-        result.selectedTextColor = AppTheme.textColor
+        result.textFont = UIFont.systemFont(ofSize: 15)
+        result.textColor = UIColor.app.randomColor
+        result.selectedTextColor = result.textColor
         result.backgroundColor = AppTheme.cellColor
-        result.selectedBackgroundColor = AppTheme.cellColor
+        result.selectedBackgroundColor = result.backgroundColor
         result.cornerRadius = 2
-        result.selectedCornerRadius = 2
+        result.selectedCornerRadius = result.cornerRadius
         result.borderWidth = 1
-        result.selectedBorderWidth = 1
-        result.borderColor = UIColor.app.color(hex: 0xF3B2AF)
+        result.selectedBorderWidth = result.borderWidth
+        result.borderColor = result.textColor
+        result.selectedBorderColor = result.borderColor
         result.extraSpace = CGSize(width: 10, height: 6)
         result.enableGradientBackground = false
         return result
@@ -53,11 +54,11 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.selectionIndicatorLocation = .none
         result.selectionIndicatorCornerRadius = 2.5
         result.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.app.font(ofSize: 13),
+            NSAttributedString.Key.font: UIFont.app.font(ofSize: 15),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor
         ]
         result.selectedTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.app.font(ofSize: 15, weight: .bold),
+            NSAttributedString.Key.font: UIFont.app.font(ofSize: 16, weight: .bold),
             NSAttributedString.Key.foregroundColor: AppTheme.textColor
         ]
         result.useSelectedTitleTextAttributesSize = true
@@ -220,7 +221,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .top(toViewBottom: label, offset: 10)
 
         tagCollectionView.removeAllTags()
-        let testTags = ["80减12", "首单减15", "在线支付", "支持自提", "26减3", "80减12", "首单减15", "在线支付", "支持自提", "26减3"]
+        let testTags = ["标签1", "😄标签2", "我是长的标签3", "标签4", "标签5", "标签6", "标签7", "标签8", "标签9"]
         for tagName in testTags {
             tagCollectionView.addTag(tagName, config: textTagConfig)
         }
