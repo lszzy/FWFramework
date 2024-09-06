@@ -10,18 +10,45 @@ import Foundation
 // 调试环境开启，正式环境关闭
 #if DEBUG
 
+// MARK: - TestSuite
+/// 可扩展测试套件，默认default
+public struct TestSuite: RawRepresentable, Equatable, Hashable, Sendable {
+    public typealias RawValue = String
+
+    /// 默认测试套件，启动时自动调用
+    public static let `default`: TestSuite = .init("default")
+
+    public var rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public init(_ rawValue: String) {
+        self.rawValue = rawValue
+    }
+}
+
 // MARK: - TestCase
 /// 单元测试用例基类，所有单元测试用例必须继承。注意测试方法需标记objc，让OC可以访问
 ///
 /// 调试模式下自动执行，按模块单元测试命名格式：TestCase_module_name
 open class TestCase: NSObject {
+    // MARK: - Accessor
     fileprivate var assertError: NSError?
     fileprivate var isAssertAsync = false
     private var assertSemaphore: DispatchSemaphore?
 
+    // MARK: - Lifecycle
     /// 初始化方法
     override public required init() {
         super.init()
+    }
+
+    // MARK: - Public
+    /// 所属测试套件，默认default
+    open class func testSuite() -> TestSuite {
+        .default
     }
 
     /// 测试初始化，每次执行测试方法开始都会调用
@@ -72,31 +99,41 @@ open class TestCase: NSObject {
 
 // MARK: - UnitTest
 /// 单元测试启动器
-fileprivate class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
-    private static let shared = UnitTest()
-
-    private var testCases: [AnyClass] = []
+public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
+    // MARK: - Accessor
+    private let testSuite: TestSuite
     private var testLogs: String = ""
 
-    static func runTests() {
-        DispatchQueue.main.async {
-            let unitTest = UnitTest.shared
-            unitTest.testCases.append(contentsOf: unitTest.testSuite())
-            guard unitTest.testCases.count > 0 else { return }
+    // MARK: - Lifecycle
+    /// 指定测试套件初始化
+    public init(testSuite: TestSuite) {
+        self.testSuite = testSuite
+    }
 
-            let queue = DispatchQueue(label: "site.wuyong.queue.test.async")
-            queue.async {
-                unitTest.run()
-                Logger.debug(group: Logger.fw.moduleName, "%@", unitTest.debugDescription)
-            }
+    // MARK: - Public
+    /// 执行单元测试，完成时回调是否成功
+    public func runTests(completion: (@Sendable (Bool) -> Void)? = nil) {
+        let testCases = testCases()
+        guard !testCases.isEmpty else {
+            completion?(true)
+            return
+        }
+
+        let queue = DispatchQueue(label: "site.wuyong.queue.test.\(testSuite.rawValue)")
+        queue.async {
+            let result = self.runTestCases(testCases)
+            completion?(result)
         }
     }
 
-    private func testSuite() -> [AnyClass] {
+    /// 测试结果调试信息
+    public var debugDescription: String { testLogs }
+
+    // MARK: - Private
+    private func testCases() -> [AnyClass] {
         let testCases = NSObject.fw.allSubclasses(TestCase.self)
-            .sorted { obj1, obj2 in
-                NSStringFromClass(obj1) < NSStringFromClass(obj2)
-            }
+            .filter { ($0 as? TestCase.Type)?.testSuite() == testSuite }
+            .sorted { NSStringFromClass($0) < NSStringFromClass($1) }
         return testCases
     }
 
@@ -111,13 +148,11 @@ fileprivate class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
         return methodNames
     }
 
-    private func run() {
-        let testCases = testCases
+    private func runTestCases(_ testCases: [AnyClass]) -> Bool {
         var failedCount: UInt = 0
         var succeedCount: UInt = 0
         var testLog = ""
         let beginTime = Date().timeIntervalSince1970
-        self.testCases.removeAll()
 
         for classType in testCases {
             let classTime = Date().timeIntervalSince1970
@@ -174,19 +209,23 @@ fileprivate class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
         let totalTime = Date().timeIntervalSince1970 - beginTime
         let totalCount = succeedCount + failedCount
         let passRate: Float = totalCount > 0 ? (Float(succeedCount) / Float(totalCount) * 100.0) : 100.0
-        let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✔️" : "❌", succeedCount, totalCount, passRate, totalTime)
-        testLogs = String(format: "\n========== TEST  ==========\n%@%@========== TEST  ==========", testLog, totalCount > 0 ? totalLog : "")
-    }
-
-    var debugDescription: String {
-        testLogs
+        let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✅" : "❌", succeedCount, totalCount, passRate, totalTime)
+        let suiteName = testSuite != .default ? "." + testSuite.rawValue : ""
+        testLogs = String(format: "\n========== TEST%@ ==========\n%@%@========== TEST%@ ==========", suiteName, testLog, totalCount > 0 ? totalLog : "", suiteName)
+        return failedCount < 1
     }
 }
 
 // MARK: - FrameworkAutoloader+Test
 extension FrameworkAutoloader {
     @objc static func loadKernel_Test() {
-        UnitTest.runTests()
+        DispatchQueue.main.async {
+            let unitTest = UnitTest(testSuite: .default)
+            unitTest.runTests { _ in
+                guard !unitTest.debugDescription.isEmpty else { return }
+                Logger.debug(group: Logger.fw.moduleName, "%@", unitTest.debugDescription)
+            }
+        }
     }
 }
 
