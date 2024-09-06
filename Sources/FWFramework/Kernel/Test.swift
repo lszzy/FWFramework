@@ -32,12 +32,13 @@ public struct TestSuite: RawRepresentable, Equatable, Hashable, Sendable {
 // MARK: - TestCase
 /// 单元测试用例基类，所有单元测试用例必须继承。注意测试方法需标记objc，让OC可以访问
 ///
-/// 调试模式下自动执行，按模块单元测试命名格式：TestCase_module_name
-open class TestCase: NSObject {
+/// 测试类命名建议模块+单元格式：TestCase_module_name，测试方法命名规则如下：
+/// 同步测试：test开头无参方法，无需调用assertFinished
+/// 异步测试：testAsync开头无参方法，必须调用assertFinished
+open class TestCase: NSObject, @unchecked Sendable {
     // MARK: - Accessor
     fileprivate var assertError: NSError?
-    fileprivate var isAssertAsync = false
-    private var assertSemaphore: DispatchSemaphore?
+    fileprivate var assertCompletion: (@Sendable () -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化方法
@@ -57,48 +58,33 @@ open class TestCase: NSObject {
     /// 测试收尾，每次执行测试方法结束都会调用
     open func tearDown() {}
 
-    /// 执行同步断言
+    /// 执行断言，异步断言完成时必须调用assertFinished
     ///
     /// - Parameters:
-    ///   - value: 断言表达式
+    ///   - value: 断言值
+    ///   - expression: 断言表达式
     ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
-    open func assertTrue(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
-        guard !value else { return }
+    @discardableResult
+    open func assertTrue(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) -> Bool {
+        guard !value else { return true }
 
         assertError = NSError(domain: "FWTest", code: 0, userInfo: [
             "expression": expression,
             "file": !file.isEmpty ? (file as NSString).lastPathComponent : "",
             "line": "\(line)"
         ])
-        isAssertAsync = false
+        return false
     }
 
-    /// 异步断言开始
-    open func assertBegin() {
-        assertSemaphore = DispatchSemaphore(value: 0)
-    }
-
-    /// 执行异步断言并退出，一个异步周期仅支持一次异步断言
-    ///
-    /// - Parameters:
-    ///   - value: 断言表达式
-    ///   - file: 文件名，默认传参
-    ///   - line: 行数，默认传参
-    open func assertAsync(_ value: Bool, _ expression: String = "", file: String = #file, line: Int = #line) {
-        assertTrue(value, expression, file: file, line: line)
-        isAssertAsync = true
-        assertSemaphore?.signal()
-    }
-
-    /// 异步断言结束
-    open func assertEnd() {
-        assertSemaphore?.wait()
+    /// 异步断言结束，异步断言完成时必须调用assertFinished
+    open func assertFinished() {
+        assertCompletion?()
     }
 }
 
 // MARK: - UnitTest
-/// 单元测试启动器
+/// 单元测试启动器，调试模式启动时自动执行default测试套件
 public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     // MARK: - Accessor
     private let testSuite: TestSuite
@@ -167,7 +153,6 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
             let totalTestCount = UInt(selectorNames.count)
             var currentTestCount: UInt = 0
             var assertError: NSError?
-            var assertAsync = false
 
             if let testClass = classType as? TestCase.Type, selectorNames.count > 0 {
                 let testCase = testClass.init()
@@ -177,11 +162,20 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
                     let selector = NSSelectorFromString(selectorName)
                     if testCase.responds(to: selector) {
                         testCase.setUp()
-                        testCase.perform(selector)
+                        if selectorName.hasPrefix("testAsync") {
+                            let testSemaphore = DispatchSemaphore(value: 0)
+                            testCase.assertCompletion = {
+                                testSemaphore.signal()
+                            }
+                            testCase.perform(selector)
+                            testSemaphore.wait()
+                        } else {
+                            testCase.assertCompletion = nil
+                            testCase.perform(selector)
+                        }
                         testCase.tearDown()
 
                         assertError = testCase.assertError
-                        assertAsync = testCase.isAssertAsync
                         if assertError != nil { break }
                     }
                 }
@@ -189,7 +183,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
 
             if let assertError {
                 let expression = assertError.userInfo["expression"] as? String ?? ""
-                formatMessage = String(format: "- assert%@(%@); (%@ - %@ #%@)", assertAsync ? "Async" : "True", !expression.isEmpty ? expression : "false", formatMethod, assertError.userInfo["file"] as? String ?? "", assertError.userInfo["line"] as? String ?? "")
+                formatMessage = String(format: "- assertTrue(%@); (%@ - %@ #%@)", !expression.isEmpty ? expression : "false", formatMethod, assertError.userInfo["file"] as? String ?? "", assertError.userInfo["line"] as? String ?? "")
                 testCasePassed = false
             }
 
@@ -209,7 +203,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
         let totalTime = Date().timeIntervalSince1970 - beginTime
         let totalCount = succeedCount + failedCount
         let passRate: Float = totalCount > 0 ? (Float(succeedCount) / Float(totalCount) * 100.0) : 100.0
-        let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✅" : "❌", succeedCount, totalCount, passRate, totalTime)
+        let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✅" : "⚠️", succeedCount, totalCount, passRate, totalTime)
         let suiteName = testSuite != .default ? "." + testSuite.rawValue : ""
         testLogs = String(format: "\n========== TEST%@ ==========\n%@%@========== TEST%@ ==========", suiteName, testLog, totalCount > 0 ? totalLog : "", suiteName)
         return failedCount < 1

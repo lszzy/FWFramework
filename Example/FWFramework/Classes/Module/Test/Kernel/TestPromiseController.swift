@@ -52,6 +52,23 @@ class TestPromiseController: UIViewController, TableViewControllerProtocol {
             ["+progress", "onProgress2"]
         ])
     }
+
+    func setupNavbar() {
+        #if DEBUG
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            self?.app.showSheet(title: nil, message: nil, actions: ["执行单元测试"], actionBlock: { _ in
+                let unitTest = UnitTest(testSuite: .promise)
+                unitTest.runTests { success in
+                    Logger.debug("%@", unitTest.debugDescription)
+
+                    DispatchQueue.app.mainAsync {
+                        self?.app.showAlert(title: success ? "测试成功" : "测试失败", message: unitTest.debugDescription)
+                    }
+                }
+            })
+        }
+        #endif
+    }
 }
 
 extension TestPromiseController {
@@ -438,3 +455,34 @@ extension TestPromiseController {
         })
     }
 }
+
+#if DEBUG
+extension TestSuite {
+    static let promise: TestSuite = .init("promise")
+}
+
+class TestCase_App_Promise: TestCase, @unchecked Sendable {
+    override class func testSuite() -> TestSuite {
+        .promise
+    }
+
+    @objc func testPromise() {
+        assertTrue(1 != 0)
+    }
+
+    @objc func testAsyncPromise() {
+        DispatchQueue.app.mainAsync {
+            UIWindow.app.showLoading()
+            Promise(value: 1).delay(0.5).done { result in
+                self.assertTrue(result as? Int == 1)
+
+                Promise(value: 2).delay(0.5).done { result in
+                    UIWindow.app.hideLoading()
+                    self.assertTrue(result as? Int != 1)
+                    self.assertFinished()
+                }
+            }
+        }
+    }
+}
+#endif
