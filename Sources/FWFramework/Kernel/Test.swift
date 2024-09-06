@@ -138,6 +138,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
         var failedCount: UInt = 0
         var succeedCount: UInt = 0
         var testLog = ""
+        let testSemaphore = DispatchSemaphore(value: 0)
         let beginTime = Date().timeIntervalSince1970
 
         for classType in testCases {
@@ -163,7 +164,6 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
                     if testCase.responds(to: selector) {
                         testCase.setUp()
                         if selectorName.hasPrefix("testAsync") {
-                            let testSemaphore = DispatchSemaphore(value: 0)
                             testCase.assertCompletion = {
                                 testSemaphore.signal()
                             }
