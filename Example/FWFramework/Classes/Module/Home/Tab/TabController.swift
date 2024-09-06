@@ -8,6 +8,10 @@
 
 import FWFramework
 
+protocol TabControllerDelegate {
+    func tabBarItemClicked()
+}
+
 class TabController: TabBarController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -31,6 +35,15 @@ extension TabController {
         }
         tabBar.app.shadowColor = nil
         tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
+        
+        shouldHijackHandler = { tabVC, navVC, index in
+            if tabVC.selectedIndex == index,
+               let delegate = (navVC as? UINavigationController)?.viewControllers.first as? TabControllerDelegate {
+                delegate.tabBarItemClicked()
+            }
+            
+            return false
+        }
     }
 
     func setupController() {
@@ -61,12 +74,6 @@ extension TabController {
         settingsNav.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
         settingsNav.tabBarItem.title = APP.localized("settingTitle")
         viewControllers = [homeNav, testNav, settingsNav]
-
-        app.safeObserveNotification(.LanguageChanged) { _ in
-            homeNav.tabBarItem.title = APP.localized("homeTitle")
-            testNav.tabBarItem.title = APP.localized("testTitle")
-            settingsNav.tabBarItem.title = APP.localized("settingTitle")
-        }
     }
 }
 
