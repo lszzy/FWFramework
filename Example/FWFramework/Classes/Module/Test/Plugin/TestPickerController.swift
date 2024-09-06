@@ -62,7 +62,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
                 } else if index == 1 {
                     if #available(iOS 14.0, *) {
                         if PHPickerViewController.app.pickerConfigurationBlock == nil {
-                            PHPickerViewController.app.pickerConfigurationBlock = {
+                            PHPickerViewController.app.pickerConfigurationBlock = { @MainActor @Sendable in
                                 var configuration = PHPickerConfiguration()
                                 configuration.preferredAssetRepresentationMode = .current
                                 return configuration

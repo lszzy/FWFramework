@@ -8,7 +8,7 @@
 
 import FWFramework
 
-protocol TabControllerDelegate {
+@MainActor protocol TabControllerDelegate {
     func tabBarItemClicked()
 }
 
