@@ -11,12 +11,14 @@ import Foundation
 #if DEBUG
 
 // MARK: - TestSuite
-/// 可扩展测试套件，默认default
+/// 可扩展测试套件，默认automatic
 public struct TestSuite: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = String
 
-    /// 默认测试套件，启动时自动调用
-    public static let `default`: TestSuite = .init("default")
+    /// 自动测试套件，启动时自动调用
+    public static let automatic: TestSuite = .init("automatic")
+    /// 手动测试套件，需手动调用执行
+    public static let manual: TestSuite = .init("manual")
 
     public var rawValue: String
 
@@ -47,9 +49,9 @@ open class TestCase: NSObject, @unchecked Sendable {
     }
 
     // MARK: - Public
-    /// 所属测试套件，默认default
+    /// 所属测试套件，默认automatic
     open class func testSuite() -> TestSuite {
-        .default
+        .automatic
     }
 
     /// 测试初始化，每次执行测试方法开始都会调用
@@ -84,10 +86,10 @@ open class TestCase: NSObject, @unchecked Sendable {
 }
 
 // MARK: - UnitTest
-/// 单元测试启动器，调试模式启动时自动执行default测试套件
+/// 单元测试启动器，调试模式启动时自动执行automatic测试套件
 public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     // MARK: - Accessor
-    private var testSuite: TestSuite = .default
+    private var testSuite: TestSuite = .manual
     private var testCases: [AnyClass]?
     private var testLogs: String = ""
 
@@ -210,7 +212,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
         let totalCount = succeedCount + failedCount
         let passRate: Float = totalCount > 0 ? (Float(succeedCount) / Float(totalCount) * 100.0) : 100.0
         let totalLog = String(format: "   %@: (%lu/%lu) (%.0f%%) (%.003fs)\n", failedCount < 1 ? "✅" : "⚠️", succeedCount, totalCount, passRate, totalTime)
-        let suiteName = testSuite != .default ? "." + testSuite.rawValue : ""
+        let suiteName = testSuite != .automatic ? "." + testSuite.rawValue : ""
         testLogs = String(format: "\n========== TEST%@ ==========\n%@%@========== TEST%@ ==========", suiteName, testLog, totalCount > 0 ? totalLog : "", suiteName)
         return failedCount < 1
     }
@@ -220,7 +222,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
 extension FrameworkAutoloader {
     @objc static func loadKernel_Test() {
         DispatchQueue.main.async {
-            let unitTest = UnitTest(testSuite: .default)
+            let unitTest = UnitTest(testSuite: .automatic)
             unitTest.runTests { _ in
                 guard !unitTest.debugDescription.isEmpty else { return }
                 Logger.debug(group: Logger.fw.moduleName, "%@", unitTest.debugDescription)
