@@ -87,7 +87,8 @@ open class TestCase: NSObject, @unchecked Sendable {
 /// 单元测试启动器，调试模式启动时自动执行default测试套件
 public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     // MARK: - Accessor
-    private let testSuite: TestSuite
+    private var testSuite: TestSuite = .default
+    private var testCases: [AnyClass]?
     private var testLogs: String = ""
 
     // MARK: - Lifecycle
@@ -95,11 +96,16 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     public init(testSuite: TestSuite) {
         self.testSuite = testSuite
     }
+    
+    /// 指定测试用例初始化
+    public init(testCases: [TestCase.Type]) {
+        self.testCases = testCases
+    }
 
     // MARK: - Public
     /// 执行单元测试，完成时回调是否成功
     public func runTests(completion: (@Sendable (Bool) -> Void)? = nil) {
-        let testCases = testCases()
+        let testCases = testCases ?? testCases(of: testSuite)
         guard !testCases.isEmpty else {
             completion?(true)
             return
@@ -116,14 +122,14 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     public var debugDescription: String { testLogs }
 
     // MARK: - Private
-    private func testCases() -> [AnyClass] {
+    private func testCases(of testSuite: TestSuite) -> [AnyClass] {
         let testCases = NSObject.fw.allSubclasses(TestCase.self)
             .filter { ($0 as? TestCase.Type)?.testSuite() == testSuite }
             .sorted { NSStringFromClass($0) < NSStringFromClass($1) }
         return testCases
     }
 
-    private func testMethods(_ clazz: AnyClass) -> [String] {
+    private func testMethods(of clazz: AnyClass) -> [String] {
         var methodNames: [String] = []
         let selectorNames = NSObject.fw.classMethods(clazz)
         for selectorName in selectorNames {
@@ -149,7 +155,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
                 .replacingOccurrences(of: "_", with: ".")
             var formatMethod = ""
             var formatMessage = ""
-            let selectorNames = testMethods(classType)
+            let selectorNames = testMethods(of: classType)
             var testCasePassed = true
             let totalTestCount = UInt(selectorNames.count)
             var currentTestCount: UInt = 0
