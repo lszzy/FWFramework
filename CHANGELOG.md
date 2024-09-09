@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.0] - 2024-09-09
+
+### Changed
+* Refactor Test to support custom testSuite and manual call
+* PluginView parameter optimized to AttributedStringParameter
+* Thread-safe processing of tempObject and allBoundObject
+
 ## [5.10.6] - 2024-09-04
 
 ### Added
