@@ -974,6 +974,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Kernel/Test.swift",
+      "line": 29,
+      "symbol": "TestSuite.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/App/AppDelegate.swift",
       "line": 81,
       "symbol": "AppResponder.application(_:willFinishLaunchingWithOptions:)",
