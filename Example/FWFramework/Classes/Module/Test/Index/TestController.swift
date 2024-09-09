@@ -243,3 +243,9 @@ extension TestController: UISearchBarDelegate {
     }
     
 }
+
+extension TestController: TabControllerDelegate {
+    func tabBarItemClicked() {
+        tableView.app.scroll(to: .top)
+    }
+}
