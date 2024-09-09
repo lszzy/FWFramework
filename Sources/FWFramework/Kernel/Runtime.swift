@@ -228,8 +228,18 @@ extension Wrapper where Base: WrapperObject {
     // MARK: - Property
     /// 临时对象，强引用，支持KVO
     public var tempObject: Any? {
-        get { return property(forName: #function) }
-        set { setProperty(newValue, forName: #function) }
+        get {
+            objc_sync_enter(base)
+            defer { objc_sync_exit(base) }
+            
+            return property(forName: #function)
+        }
+        set {
+            objc_sync_enter(base)
+            defer { objc_sync_exit(base) }
+            
+            setProperty(newValue, forName: #function)
+        }
     }
     
     /// 读取关联属性
@@ -460,8 +470,18 @@ extension Wrapper where Base: WrapperObject {
     }
     
     private var allBoundObjects: [String: Any] {
-        get { return property(forName: #function) as? [String: Any] ?? [:] }
-        set { setProperty(newValue, forName: #function) }
+        get {
+            objc_sync_enter(base)
+            defer { objc_sync_exit(base) }
+            
+            return property(forName: #function) as? [String: Any] ?? [:]
+        }
+        set {
+            objc_sync_enter(base)
+            defer { objc_sync_exit(base) }
+            
+            setProperty(newValue, forName: #function)
+        }
     }
     
     // MARK: - Hash
