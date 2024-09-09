@@ -3,7 +3,7 @@
 ## [5.11.0] - 2024-09-09
 
 ### Changed
-* 重构Test，支持自定义testSuite并手动调用
+* 重构Test异步测试，支持自定义testSuite并手动调用，需迁移升级
 * PluginView参数优化为AttributedStringParameter
 * tempObject和allBoundObject线程安全处理
 

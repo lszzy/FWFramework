@@ -3,7 +3,7 @@
 ## [5.11.0] - 2024-09-09
 
 ### Changed
-* Refactor Test to support custom testSuite and manual call
+* Refactor Test asynchronous test, support custom testSuite and manual call, migration and upgrade required
 * PluginView parameter optimized to AttributedStringParameter
 * Thread-safe processing of tempObject and allBoundObject
 
