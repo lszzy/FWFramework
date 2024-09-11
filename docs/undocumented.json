@@ -14485,14 +14485,14 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/BarStyle.swift",
-      "line": 298,
+      "line": 299,
       "symbol": "NavigationBarStyle.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/BarStyle.swift",
-      "line": 345,
+      "line": 346,
       "symbol": "NavigationBarAppearance.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

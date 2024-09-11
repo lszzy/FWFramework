@@ -26,7 +26,6 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     func setupNavbar() {
         app.statusBarStyle = .default
         app.statusBarHidden = false
-        app.tabBarHidden = true
         app.observeNotification(UIDevice.orientationDidChangeNotification, target: self, action: #selector(refreshBarFrame))
         
         if !hideToast {
@@ -175,6 +174,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onTabBar() {
+        hidesBottomBarWhenPushed = !app.tabBarHidden
         app.tabBarHidden = !app.tabBarHidden
         refreshBarFrame()
     }
