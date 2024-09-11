@@ -173,6 +173,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
 
     @objc func onTabBar() {
+        hidesBottomBarWhenPushed = !app.tabBarHidden
         app.tabBarHidden = !app.tabBarHidden
         refreshBarFrame()
     }

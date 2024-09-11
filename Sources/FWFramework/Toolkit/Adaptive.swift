@@ -448,7 +448,8 @@ extension Wrapper where Base: UIDevice {
             if let height = UIScreen.innerNavigationBarHeights[orientation] { return height }
             
             // 1. 获取根导航控制器高度并缓存
-            if let navController = firstRootController(of: UINavigationController.self) {
+            if let navController = firstRootController(of: UINavigationController.self),
+               !navController.navigationBar.prefersLargeTitles {
                 let height = navController.navigationBar.frame.height
                 UIScreen.innerNavigationBarHeights[orientation] = height
                 return height
@@ -528,10 +529,11 @@ extension Wrapper where Base: UIDevice {
     
     private static func firstRootController<T>(of type: T.Type) -> T? {
         let rootController = UIWindow.fw.main?.rootViewController
-        if let targetController = rootController as? T {
-            return targetController
+        if let result = rootController as? T {
+            return result
         }
         if let tabBarController = rootController as? UITabBarController {
+            if let result = tabBarController.selectedViewController as? T { return result }
             return tabBarController.viewControllers?.first(where: { $0 is T }) as? T
         }
         if let navigationController = rootController as? UINavigationController {
