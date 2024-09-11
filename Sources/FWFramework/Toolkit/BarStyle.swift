@@ -79,6 +79,7 @@ extension Wrapper where Base: UIViewController {
         }
         set {
             setPropertyNumber(NSNumber(value: newValue), forName: "statusBarHidden")
+            FrameworkAutoloader.swizzleBarStyleClass(object_getClass(base))
             base.setNeedsStatusBarAppearanceUpdate()
         }
     }
@@ -353,9 +354,12 @@ extension FrameworkAutoloader {
         swizzleBarStyle()
     }
     
-    private static func swizzleBarStyle() {
+    fileprivate static func swizzleBarStyleClass(_ clazz: AnyClass?) {
+        guard let clazz, NSObject.fw.getAssociatedObject(clazz, key: "swizzleBarStyleClass") == nil else { return }
+        NSObject.fw.setAssociatedObject(clazz, key: "swizzleBarStyleClass", value: NSNumber(value: true))
+        
         NSObject.fw.swizzleInstanceMethod(
-            UIViewController.self,
+            clazz,
             selector: #selector(getter: UIViewController.prefersStatusBarHidden),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Bool).self,
             swizzleSignature: (@convention(block) (UIViewController) -> Bool).self
@@ -366,7 +370,9 @@ extension FrameworkAutoloader {
                 return store.original(selfObject, store.selector)
             }
         }}
-        
+    }
+
+    private static func swizzleBarStyle() {
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(getter: UIViewController.preferredStatusBarStyle),
