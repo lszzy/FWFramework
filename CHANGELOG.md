@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.11.1] - 2024-09-11
+
+### Fixed
+* Fixed the issue that setting statusBarHidden did not take effect
+
 ## [5.11.0] - 2024-09-09
 
 ### Changed
