@@ -54,8 +54,6 @@ extension WrapperGlobal {
     @MainActor public static var screenHeight: CGFloat { UIScreen.fw.screenHeight }
     /// 屏幕像素比例
     public static var screenScale: CGFloat { UIScreen.fw.screenScale }
-    /// 判断屏幕英寸
-    @MainActor public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
     /// 是否是全面屏屏幕
     @MainActor public static var isNotchedScreen: Bool { UIScreen.fw.isNotchedScreen }
     /// 是否是灵动岛屏幕
@@ -370,34 +368,6 @@ extension Wrapper where Base: UIDevice {
         return UIScreen.innerScreenScale ?? 0
     }
 
-    /// 判断屏幕英寸
-    public static func isScreenInch(_ inch: ScreenInch) -> Bool {
-        switch inch {
-        case .inch35:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 320, height: 480))
-        case .inch40:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 320, height: 568))
-        case .inch47:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 667))
-        case .inch54:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 360, height: 780))
-        case .inch55:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 736))
-        case .inch58:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 812))
-        case .inch61:
-            return (UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1")) ||
-                UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844))
-        case .inch65:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && !isScreenInch(.inch61)
-        case .inch67:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 428, height: 926)) ||
-                UIDevice.fw.deviceSize.equalTo(CGSize(width: 430, height: 932))
-        default:
-            return false
-        }
-    }
-
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool {
         safeAreaInsets.bottom > 0
@@ -435,38 +405,66 @@ extension Wrapper where Base: UIDevice {
         return mainWindow?.safeAreaInsets ?? .zero
     }
 
-    /// 状态栏高度，与是否隐藏无关
+    /// 状态栏高度，与是否隐藏无关，可自定义
     public static var statusBarHeight: CGFloat {
-        if let statusBarManager = UIWindow.fw.mainScene?.statusBarManager,
-           !statusBarManager.isStatusBarHidden {
-            return statusBarManager.statusBarFrame.height
+        get {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            if let height = UIScreen.innerStatusBarHeights[orientation] { return height }
+            
+            // 1. 获取statusBarManager状态栏高度并缓存
+            let statusBarManager = UIWindow.fw.mainScene?.statusBarManager
+            if let statusBarManager, !statusBarManager.isStatusBarHidden {
+                let height = statusBarManager.statusBarFrame.height
+                UIScreen.innerStatusBarHeights[orientation] = height
+                return height
+            }
+            
+            // 2. 调用statusBarManager默认高度方法并缓存
+            let heightSelector = NSSelectorFromString("defaultStatusBarHeightInOrientation:")
+            if let statusBarManager, statusBarManager.responds(to: heightSelector),
+               let height = statusBarManager.fw.invokeMethod(heightSelector, objects: [orientation.rawValue]).takeUnretainedValue() as? CGFloat {
+                UIScreen.innerStatusBarHeights[orientation] = height
+                return height
+            }
+            
+            // 3. 简单兜底算法，部分机型可能并不准确
+            if UIDevice.fw.isIpad {
+                return isNotchedScreen ? 24 : 20
+            } else {
+                if UIDevice.fw.isLandscape { return 0 }
+                return isNotchedScreen ? (isDynamicIsland ? 54 : 44) : 20
+            }
         }
-
-        if UIDevice.fw.isIpad {
-            return isNotchedScreen ? 24 : 20
+        set {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            UIScreen.innerStatusBarHeights[orientation] = newValue
         }
-
-        if UIDevice.fw.isLandscape { return 0 }
-        if !isNotchedScreen { return 20 }
-        if isDynamicIsland { return 54 }
-        if UIDevice.fw.deviceModel == "iPhone12,1" { return 48 }
-        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844)) { return 47 }
-        if isScreenInch(.inch67) { return 47 }
-        if isScreenInch(.inch54) && UIDevice.fw.iosVersion >= 15.0 { return 50 }
-        return 44
     }
 
-    /// 导航栏高度，与是否隐藏无关
+    /// 导航栏高度，与是否隐藏无关，可自定义
     public static var navigationBarHeight: CGFloat {
-        if UIDevice.fw.isIpad {
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
+        get {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            if let height = UIScreen.innerNavigationBarHeights[orientation] { return height }
+            
+            // 1. 获取根导航控制器高度并缓存
+            if let navController = firstRootController(of: UINavigationController.self) {
+                let height = navController.navigationBar.frame.height
+                UIScreen.innerNavigationBarHeights[orientation] = height
+                return height
+            }
+            
+            // 2. 简单兜底算法，部分机型可能并不准确
+            if UIDevice.fw.isIpad {
+                return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
+            } else {
+                return UIDevice.fw.isLandscape ? 32 : 44
+            }
         }
-
-        var height: CGFloat = 44
-        if UIDevice.fw.isLandscape {
-            height = isRegularScreen ? 44 : 32
+        set {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            UIScreen.innerNavigationBarHeights[orientation] = newValue
         }
-        return height
     }
 
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
@@ -474,52 +472,72 @@ extension Wrapper where Base: UIDevice {
         statusBarHeight + navigationBarHeight
     }
 
-    /// 标签栏高度，与是否隐藏无关
+    /// 标签栏高度，与是否隐藏无关，可自定义
     public static var tabBarHeight: CGFloat {
-        if UIDevice.fw.isIpad {
-            if isNotchedScreen { return 65 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
-        }
-
-        var height: CGFloat = 49
-        if UIDevice.fw.isLandscape {
-            height = isRegularScreen ? 49 : 32
-        }
-        return height + safeAreaInsets.bottom
-    }
-
-    /// 工具栏高度，与是否隐藏无关
-    public static var toolBarHeight: CGFloat {
-        if UIDevice.fw.isIpad {
-            if isNotchedScreen { return 70 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
-        }
-
-        var height: CGFloat = 44
-        if UIDevice.fw.isLandscape {
-            height = isRegularScreen ? 44 : 32
-        }
-        return height + safeAreaInsets.bottom
-    }
-
-    private static var isRegularScreen: Bool {
-        // https://github.com/Tencent/QMUI_iOS
-        if UIDevice.fw.isIpad { return true }
-
-        var isZoomedMode = false
-        if UIDevice.fw.isIphone {
-            let nativeScale = UIScreen.main.nativeScale
-            var scale = UIScreen.main.scale
-            if CGSize(width: 1080, height: 1920).equalTo(UIScreen.main.nativeBounds.size) {
-                scale /= 1.15
+        get {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            if let height = UIScreen.innerTabBarHeights[orientation] { return height }
+            
+            // 1. 获取根标签控制器高度并缓存
+            if let tabController = firstRootController(of: UITabBarController.self) {
+                let height = tabController.tabBar.frame.height
+                UIScreen.innerTabBarHeights[orientation] = height
+                return height
             }
-            isZoomedMode = nativeScale > scale
+            
+            // 2. 简单兜底算法，部分机型可能并不准确
+            if UIDevice.fw.isIpad {
+                if isNotchedScreen { return 65 }
+                return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
+            } else {
+                return (UIDevice.fw.isLandscape ? 32 : 49) + safeAreaInsets.bottom
+            }
         }
-        if isZoomedMode { return false }
+        set {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            UIScreen.innerTabBarHeights[orientation] = newValue
+        }
+    }
 
-        if isScreenInch(.inch67) || isScreenInch(.inch65) || isScreenInch(.inch55) { return true }
-        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1") { return true }
-        return false
+    /// 工具栏高度，与是否隐藏无关，可自定义
+    public static var toolBarHeight: CGFloat {
+        get {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            if let height = UIScreen.innerToolBarHeights[orientation] { return height }
+            
+            // 1. 获取根导航控制器工具栏高度并缓存
+            if let navController = firstRootController(of: UINavigationController.self) {
+                let height = navController.toolbar.frame.height + safeAreaInsets.bottom
+                UIScreen.innerToolBarHeights[orientation] = height
+                return height
+            }
+            
+            // 2. 简单兜底算法，部分机型可能并不准确
+            if UIDevice.fw.isIpad {
+                if isNotchedScreen { return 70 }
+                return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
+            } else {
+                return (UIDevice.fw.isLandscape ? 32 : 49) + safeAreaInsets.bottom
+            }
+        }
+        set {
+            let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
+            UIScreen.innerToolBarHeights[orientation] = newValue
+        }
+    }
+    
+    private static func firstRootController<T>(of type: T.Type) -> T? {
+        let rootController = UIWindow.fw.main?.rootViewController
+        if let targetController = rootController as? T {
+            return targetController
+        }
+        if let tabBarController = rootController as? UITabBarController {
+            return tabBarController.viewControllers?.first(where: { $0 is T }) as? T
+        }
+        if let navigationController = rootController as? UINavigationController {
+            return navigationController.viewControllers.first(where: { $0 is T }) as? T
+        }
+        return nil
     }
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
@@ -789,32 +807,10 @@ extension UIScreen {
     fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (() -> CGFloat)?
     fileprivate nonisolated(unsafe) static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
     fileprivate nonisolated(unsafe) static var innerMainWindow: UIWindow?
-}
-
-// MARK: - ScreenInch
-/// 可扩展屏幕尺寸
-public struct ScreenInch: RawRepresentable, Equatable, Hashable, Sendable {
-    public typealias RawValue = Int
-
-    public static let inch35: ScreenInch = .init(35)
-    public static let inch40: ScreenInch = .init(40)
-    public static let inch47: ScreenInch = .init(47)
-    public static let inch54: ScreenInch = .init(54)
-    public static let inch55: ScreenInch = .init(55)
-    public static let inch58: ScreenInch = .init(58)
-    public static let inch61: ScreenInch = .init(61)
-    public static let inch65: ScreenInch = .init(65)
-    public static let inch67: ScreenInch = .init(67)
-
-    public var rawValue: Int
-
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-
-    public init(_ rawValue: Int) {
-        self.rawValue = rawValue
-    }
+    fileprivate nonisolated(unsafe) static var innerStatusBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
+    fileprivate nonisolated(unsafe) static var innerNavigationBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
+    fileprivate nonisolated(unsafe) static var innerTabBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
+    fileprivate nonisolated(unsafe) static var innerToolBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
 }
 
 // MARK: - FrameworkAutoloader+Adaptive
