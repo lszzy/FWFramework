@@ -110,10 +110,10 @@ import UIKit
 
 // MARK: - Wrapper+UIView
 @MainActor extension Wrapper where Base: UIView {
-    /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。VC.tabBarController.view > VC.navigationController.view > VC.view
+    /// 转场添加到指定控制器(pinEdges占满父视图)，返回父容器视图。默认inAncestorView开启时查找顺序：VC.tabBarController.view > VC.navigationController.view > VC.view
     @discardableResult
-    public func transition(to viewController: UIViewController, pinEdges aPinEdges: Bool = true) -> UIView {
-        let ancestorView = viewController.fw.ancestorView
+    public func transition(to viewController: UIViewController, inAncestorView: Bool = true, pinEdges aPinEdges: Bool = true) -> UIView {
+        let ancestorView: UIView = inAncestorView ? viewController.fw.ancestorView : viewController.view
         ancestorView.addSubview(base)
         if aPinEdges {
             pinEdges(autoScale: false)
