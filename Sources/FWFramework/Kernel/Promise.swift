@@ -29,7 +29,7 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 }
 
 /// 约定类
-@MainActor public class Promise: @unchecked Sendable {
+public class Promise: @unchecked Sendable {
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
     public nonisolated(unsafe) static var failedError: Error = PromiseError.failed
@@ -154,7 +154,7 @@ extension Promise {
     }
 
     /// 约定重试，block需返回新创建的约定，该约定失败时延迟指定时间后重新创建并执行，直至成功或达到最大重试次数(总次数retry+1)
-    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
+    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @Sendable () -> Promise) -> Promise {
         retry(block(), times: times, delay: delay, block: block)
     }
 
@@ -305,13 +305,15 @@ extension Promise {
 extension Promise {
     /// 约定内部执行方法
     private func execute(progress: Bool, completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) {
-        operation { result in
-            if !self.finished {
-                if result is ProgressValue {
-                    if progress { completion(result) }
-                } else {
-                    self.finished = true
-                    completion(result)
+        DispatchQueue.fw.mainAsync {
+            self.operation { result in
+                if !self.finished {
+                    if result is ProgressValue {
+                        if progress { completion(result) }
+                    } else {
+                        self.finished = true
+                        completion(result)
+                    }
                 }
             }
         }
