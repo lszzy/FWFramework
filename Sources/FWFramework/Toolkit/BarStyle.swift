@@ -119,7 +119,9 @@ extension Wrapper where Base: UIViewController {
             if let hidden = propertyNumber(forName: "navigationBarHidden") {
                 return hidden.boolValue
             }
-            return base.navigationController?.isNavigationBarHidden ?? true
+            
+            guard let navController = base.navigationController else { return true }
+            return navController.isNavigationBarHidden || navController.navigationBar.isHidden
         }
         set {
             setNavigationBarHidden(newValue, animated: false)
@@ -207,13 +209,15 @@ extension Wrapper where Base: UIViewController {
     /// 标签栏是否隐藏，默认为true，立即生效。如果tabBar一直存在，则用tabBar包裹navBar；如果tabBar只存在主界面，则用navBar包裹tabBar
     public var tabBarHidden: Bool {
         get {
+            guard let tabBarController = base.tabBarController else { return true }
+                        
             #if compiler(>=6.0)
             if #available(iOS 18.0, *) {
-                return base.tabBarController?.isTabBarHidden ?? true
+                return tabBarController.isTabBarHidden || tabBarController.tabBar.isHidden
             }
             #endif
-            
-            return base.tabBarController?.tabBar.isHidden ?? true
+
+            return tabBarController.tabBar.isHidden
         }
         set {
             #if compiler(>=6.0)
@@ -242,7 +246,8 @@ extension Wrapper where Base: UIViewController {
     /// 工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效
     public var toolBarHidden: Bool {
         get {
-            return base.navigationController?.isToolbarHidden ?? true
+            guard let navController = base.navigationController else { return true }
+            return navController.isToolbarHidden || navController.toolbar.isHidden
         }
         set {
             base.navigationController?.isToolbarHidden = newValue
