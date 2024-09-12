@@ -701,7 +701,8 @@ extension Wrapper where Base: UIDevice {
     public var tabBarHeight: CGFloat {
         guard let tabController = base.tabBarController else { return 0 }
         guard !tabBarHidden else { return 0 }
-        if base.hidesBottomBarWhenPushed && !isHead { return 0 }
+        // 兼容hidesBottomBarWhenPushed开启且控制器转场时，标签栏高度应为0的场景
+        if base.hidesBottomBarWhenPushed && !isHead && base.transitionCoordinator != nil { return 0 }
         return tabController.tabBar.frame.height
     }
 
@@ -711,9 +712,7 @@ extension Wrapper where Base: UIDevice {
               !navController.isToolbarHidden else { return 0 }
         // 如果未同时显示标签栏，高度需要加上安全区域高度
         var height = navController.toolbar.frame.height
-        if base.tabBarController != nil, !tabBarHidden,
-           !(base.hidesBottomBarWhenPushed && !isHead) {
-        } else {
+        if tabBarHeight <= 0 {
             height += UIScreen.fw.safeAreaInsets.bottom
         }
         return height
