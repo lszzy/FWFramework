@@ -119,7 +119,7 @@ import UIKit
             if let hidden = propertyNumber(forName: "navigationBarHidden") {
                 return hidden.boolValue
             }
-            
+
             guard let navController = base.navigationController else { return true }
             return navController.isNavigationBarHidden || navController.navigationBar.isHidden
         }
@@ -210,7 +210,7 @@ import UIKit
     public var tabBarHidden: Bool {
         get {
             guard let tabBarController = base.tabBarController else { return true }
-            
+
             #if compiler(>=6.0)
             if #available(iOS 18.0, *) {
                 return tabBarController.isTabBarHidden || tabBarController.tabBar.isHidden
@@ -353,11 +353,11 @@ extension FrameworkAutoloader {
     @objc static func loadToolkit_BarStyle() {
         swizzleBarStyle()
     }
-    
+
     fileprivate static func swizzleBarStyleClass(_ clazz: AnyClass?) {
         guard let clazz, NSObject.fw.getAssociatedObject(clazz, key: "swizzleBarStyleClass") == nil else { return }
         NSObject.fw.setAssociatedObject(clazz, key: "swizzleBarStyleClass", value: NSNumber(value: true))
-        
+
         NSObject.fw.swizzleInstanceMethod(
             clazz,
             selector: #selector(getter: UIViewController.prefersStatusBarHidden),

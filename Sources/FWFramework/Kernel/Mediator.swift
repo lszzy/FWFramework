@@ -39,19 +39,19 @@ public protocol ModuleProtocol: UIApplicationDelegate {
     /// 单例对象
     nonisolated static var shared: Self { get }
 
-    /// 模块初始化方法，setupAllModules自动主线程调用
-    func setup()
-
     /// 模块优先级，0最低。默认为default优先级
     nonisolated static func priority() -> ModulePriority
+
+    /// 模块初始化方法，setupAllModules自动主线程调用
+    func setup()
 }
 
 extension ModuleProtocol {
-    /// 默认初始化不处理
-    public func setup() {}
-
     /// 默认优先级default
     public nonisolated static func priority() -> ModulePriority { .default }
+
+    /// 默认初始化不处理
+    public func setup() {}
 }
 
 extension ModuleProtocol where Self: NSObject {
@@ -86,23 +86,6 @@ public class Mediator {
     public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
     /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
     public nonisolated(unsafe) static var delegateModeEnabled = false
-
-    /// 插件调试描述
-    public class func debugDescription() -> String {
-        let sortedModules = modulePool.sorted { module1, module2 in
-            let priority1 = module1.value.priority().rawValue
-            let priority2 = module2.value.priority().rawValue
-            return priority1 > priority2
-        }
-
-        var debugDescription = ""
-        var debugCount = 0
-        for (moduleId, moduleType) in sortedModules {
-            debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleId, NSStringFromClass(moduleType)))
-        }
-        return String(format: "\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription)
-    }
 
     /// 注册指定模块服务，返回注册结果
     @discardableResult
@@ -145,16 +128,6 @@ public class Mediator {
         guard let moduleType else { return nil }
 
         return moduleType.shared as? T
-    }
-
-    /// 获取所有已注册模块类数组，按照优先级排序
-    public static func allRegisteredModules() -> [ModuleProtocol.Type] {
-        let sortedModules = modulePool.values.sorted { module1, module2 in
-            let priority1 = module1.priority().rawValue
-            let priority2 = module2.priority().rawValue
-            return priority1 > priority2
-        }
-        return sortedModules
     }
 
     /// 初始化所有模块，推荐在willFinishLaunchingWithOptions中调用
@@ -213,5 +186,32 @@ public class Mediator {
             }
         }
         return result
+    }
+
+    /// 获取所有已注册模块类数组，按照优先级排序
+    public static func allRegisteredModules() -> [ModuleProtocol.Type] {
+        let sortedModules = modulePool.values.sorted { module1, module2 in
+            let priority1 = module1.priority().rawValue
+            let priority2 = module2.priority().rawValue
+            return priority1 > priority2
+        }
+        return sortedModules
+    }
+
+    /// 插件调试描述
+    public class func debugDescription() -> String {
+        let sortedModules = modulePool.sorted { module1, module2 in
+            let priority1 = module1.value.priority().rawValue
+            let priority2 = module2.value.priority().rawValue
+            return priority1 > priority2
+        }
+
+        var debugDescription = ""
+        var debugCount = 0
+        for (moduleId, moduleType) in sortedModules {
+            debugCount += 1
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), moduleId, NSStringFromClass(moduleType)))
+        }
+        return String(format: "\n========== MEDIATOR ==========\n%@========== MEDIATOR ==========", debugDescription)
     }
 }
