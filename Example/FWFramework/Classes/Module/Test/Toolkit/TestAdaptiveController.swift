@@ -174,8 +174,12 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
     
     @objc func onTabBar() {
-        hidesBottomBarWhenPushed = !app.tabBarHidden
-        app.tabBarHidden = !app.tabBarHidden
+        // iOS18如果hidesBottomBarWhenPushed为true时，需调用tabBar.isHidden才能生效
+        let hidden = !app.tabBarHidden
+        if hidesBottomBarWhenPushed {
+            tabBarController?.tabBar.isHidden = hidden
+        }
+        app.tabBarHidden = hidden
         refreshBarFrame()
     }
     

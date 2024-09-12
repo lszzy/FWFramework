@@ -1,5 +1,12 @@
 # 更新日志
 
+## [5.11.2] - 2024-09-12
+
+### Changed
+* BarStyle隐藏判断兼容视图isHidden
+* 优化hidesBottomBarWhenPushed开启且控制器转场时tabBarHeight的计算方式
+* 视图转场方法新增inAncestorView参数
+
 ## [5.11.1] - 2024-09-11
 
 ### Fixed
