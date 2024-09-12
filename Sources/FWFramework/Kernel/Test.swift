@@ -98,7 +98,7 @@ public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     public init(testSuite: TestSuite) {
         self.testSuite = testSuite
     }
-    
+
     /// 指定测试用例初始化
     public init(testCases: [TestCase.Type]) {
         self.testCases = testCases

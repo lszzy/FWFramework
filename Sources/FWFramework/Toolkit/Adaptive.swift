@@ -410,7 +410,7 @@ extension Wrapper where Base: UIDevice {
         // 1. 读取自定义状态栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
         if let height = UIScreen.innerCustomStatusBarHeights[orientation] { return height }
-        
+
         // 2. 获取实时statusBarManager状态栏高度并缓存
         let statusBarManager = UIWindow.fw.mainScene?.statusBarManager
         if let statusBarManager, !statusBarManager.isStatusBarHidden {
@@ -418,12 +418,12 @@ extension Wrapper where Base: UIDevice {
             UIScreen.innerCachedStatusBarHeights[orientation] = height
             return height
         }
-        
+
         // 3. 当获取不到实时状态栏高度时读取缓存
         if let height = UIScreen.innerCachedStatusBarHeights[orientation] {
             return height
         }
-        
+
         // 4. 调用statusBarManager默认高度方法并缓存
         let heightSelector = NSSelectorFromString("defaultStatusBarHeightInOrientation:")
         if let statusBarManager, statusBarManager.responds(to: heightSelector),
@@ -431,7 +431,7 @@ extension Wrapper where Base: UIDevice {
             UIScreen.innerCachedStatusBarHeights[orientation] = height
             return height
         }
-        
+
         // 5. 简单兜底算法，部分机型可能并不准确
         if UIDevice.fw.isIpad {
             return isNotchedScreen ? 24 : 20
@@ -446,7 +446,7 @@ extension Wrapper where Base: UIDevice {
         // 1. 读取自定义导航栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
         if let height = UIScreen.innerCustomNavigationBarHeights[orientation] { return height }
-        
+
         // 2. 获取实时根导航控制器高度并缓存
         if let navController = firstRootController(of: UINavigationController.self),
            !navController.navigationBar.prefersLargeTitles {
@@ -454,12 +454,12 @@ extension Wrapper where Base: UIDevice {
             UIScreen.innerCachedNavigationBarHeights[orientation] = height
             return height
         }
-        
+
         // 3. 当获取不到实时导航栏高度时读取缓存
         if let height = UIScreen.innerCachedNavigationBarHeights[orientation] {
             return height
         }
-        
+
         // 4. 简单兜底算法，部分机型可能并不准确
         if UIDevice.fw.isIpad {
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
@@ -478,19 +478,19 @@ extension Wrapper where Base: UIDevice {
         // 1. 读取自定义标签栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
         if let height = UIScreen.innerCustomTabBarHeights[orientation] { return height }
-        
+
         // 2. 获取实时根标签控制器高度并缓存
         if let tabController = firstRootController(of: UITabBarController.self) {
             let height = tabController.tabBar.frame.height
             UIScreen.innerCachedTabBarHeights[orientation] = height
             return height
         }
-        
+
         // 3. 当获取不到实时标签栏高度时读取缓存
         if let height = UIScreen.innerCachedTabBarHeights[orientation] {
             return height
         }
-        
+
         // 4. 简单兜底算法，部分机型可能并不准确
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 65 }
@@ -505,19 +505,19 @@ extension Wrapper where Base: UIDevice {
         // 1. 读取自定义工具栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
         if let height = UIScreen.innerCustomToolBarHeights[orientation] { return height }
-        
+
         // 2. 获取实时根导航控制器工具栏高度并缓存
         if let navController = firstRootController(of: UINavigationController.self) {
             let height = navController.toolbar.frame.height + safeAreaInsets.bottom
             UIScreen.innerCachedToolBarHeights[orientation] = height
             return height
         }
-        
+
         // 3. 当获取不到实时工具栏高度时读取缓存
         if let height = UIScreen.innerCachedToolBarHeights[orientation] {
             return height
         }
-        
+
         // 4. 简单兜底算法，部分机型可能并不准确
         if UIDevice.fw.isIpad {
             if isNotchedScreen { return 70 }
@@ -526,27 +526,27 @@ extension Wrapper where Base: UIDevice {
             return (UIDevice.fw.isLandscape ? 32 : 49) + safeAreaInsets.bottom
         }
     }
-    
+
     /// 自定义指定界面方向状态栏高度，小于等于0时清空
     public static func setStatusBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
         UIScreen.innerCustomStatusBarHeights[orientation] = height > 0 ? height : nil
     }
-    
+
     /// 自定义指定界面方向导航栏高度，小于等于0时清空
     public static func setNavigationBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
         UIScreen.innerCustomNavigationBarHeights[orientation] = height > 0 ? height : nil
     }
-    
+
     /// 自定义指定界面方向标签栏高度，小于等于0时清空
     public static func setTabBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
         UIScreen.innerCustomTabBarHeights[orientation] = height > 0 ? height : nil
     }
-    
+
     /// 自定义指定界面方向工具栏高度，小于等于0时清空
     public static func setToolBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
         UIScreen.innerCustomToolBarHeights[orientation] = height > 0 ? height : nil
     }
-    
+
     private static func firstRootController<T>(of type: T.Type) -> T? {
         let rootController = UIWindow.fw.main?.rootViewController
         if let result = rootController as? T {
