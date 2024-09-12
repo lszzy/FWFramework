@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.2] - 2024-09-12
+
+### Changed
+* BarStyle hidden judgment compatible view isHidden
+* Optimize the calculation method of tabBarHeight when hidesBottomBarWhenPushed is turned on and the controller transitions
+* Add inAncestorView parameter to the view transition method
+
 ## [5.11.1] - 2024-09-11
 
 ### Fixed
