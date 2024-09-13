@@ -10,7 +10,7 @@ import FWFramework
 import WebKit
 
 class TestJavascriptBridge: NSObject {
-    @objc static func testObjcCallbackDefaultBridge(_ context: WebViewJSBridge.Context) {
+    @MainActor @objc static func testObjcCallbackDefaultBridge(_ context: WebViewJSBridge.Context) {
         print("TestJavascriptBridge.testObjcCallback called: \(context.parameters)")
         context.completion?("Response from TestJavascriptBridge.testObjcCallback")
     }
@@ -26,10 +26,8 @@ class TestBridgeController: WebController {
         bridge.isLogEnabled = true
 
         bridge.setErrorHandler { context in
-            DispatchQueue.app.mainAsync {
-                UIWindow.app.showMessage(text: "handler \(context.handlerName) undefined: \(context.parameters)", style: .default) {
-                    context.completion?("Response from errorHandler")
-                }
+            UIWindow.app.showMessage(text: "handler \(context.handlerName) undefined: \(context.parameters)", style: .default) {
+                context.completion?("Response from errorHandler")
             }
         }
 
