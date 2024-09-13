@@ -473,10 +473,14 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 开始后台任务，task必须调用completionHandler
-    @MainActor public static func beginBackgroundTask(_ task: (@escaping @Sendable () -> Void) -> Void, expirationHandler: (@Sendable () -> Void)? = nil) {
+    @MainActor public static func beginBackgroundTask(
+        _ task: (@escaping @Sendable () -> Void) -> Void,
+        name: String? = nil,
+        expirationHandler: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         let bgTask = SendableObject<UIBackgroundTaskIdentifier>(.invalid)
         let application = UIApplication.shared
-        bgTask.object = application.beginBackgroundTask(expirationHandler: { @Sendable in
+        bgTask.object = application.beginBackgroundTask(withName: name, expirationHandler: {
             expirationHandler?()
             application.endBackgroundTask(bgTask.object)
             bgTask.object = .invalid
