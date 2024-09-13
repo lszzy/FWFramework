@@ -495,7 +495,7 @@ extension Binding {
     }
 
     public func onChange(toggle value: Binding<Bool>) -> Self where Value: Equatable, Value: Sendable {
-        return onChange { _ in
+        onChange { _ in
             value.wrappedValue.toggle()
         }
     }
