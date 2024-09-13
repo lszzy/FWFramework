@@ -115,12 +115,16 @@ public class Mediator {
         modulePool.removeValue(forKey: moduleId)
     }
 
-    /// 通过服务协议获取指定模块实例
+    /// 通过服务协议获取指定模块实例。未注册时自动查找当前模块类：DemoModuleProtocol => DemoModule
     public static func loadModule<T>(_ type: T.Type) -> T? {
         let moduleId = String(describing: type as AnyObject)
         var moduleType = modulePool[moduleId]
         if moduleType == nil {
-            guard let module = sharedLoader.load(type) else { return nil }
+            var module = sharedLoader.load(type)
+            if module == nil, moduleId.hasSuffix("Protocol") {
+                module = NSClassFromString(moduleId.replacingOccurrences(of: "Protocol", with: "")) as? ModuleProtocol.Type
+            }
+            guard let module else { return nil }
 
             registerService(type, module: module)
             moduleType = modulePool[moduleId]
