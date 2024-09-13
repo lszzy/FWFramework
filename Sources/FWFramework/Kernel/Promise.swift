@@ -154,8 +154,9 @@ extension Promise {
     }
 
     /// 约定重试，block需返回新创建的约定，该约定失败时延迟指定时间后重新创建并执行，直至成功或达到最大重试次数(总次数retry+1)
-    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @Sendable () -> Promise) -> Promise {
-        retry(block(), times: times, delay: delay, block: block)
+    public static func retry(_ times: Int = 1, delay: TimeInterval = 0, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
+        let promise = Promise.delay(0).then { (_: Sendable) in block() }
+        return retry(promise, times: times, delay: delay, block: block)
     }
 
     /// 执行约定并回调完成句柄
@@ -303,7 +304,6 @@ extension Promise {
 
 // MARK: - Private
 extension Promise {
-    /// 约定内部执行方法
     private func execute(progress: Bool, completion: @escaping @MainActor @Sendable (_ result: Sendable) -> Void) {
         DispatchQueue.fw.mainAsync {
             self.operation { result in
@@ -319,12 +319,14 @@ extension Promise {
         }
     }
 
-    /// 约定内部延时方法
     private static func delay(_ time: TimeInterval, block: @escaping @MainActor @Sendable () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: block)
+        if time > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: block)
+        } else {
+            DispatchQueue.fw.mainAsync(execute: block)
+        }
     }
 
-    /// 约定内部重试方法
     private static func retry(_ initialPromise: Promise?, times: Int, delay: TimeInterval, block: @escaping @MainActor @Sendable () -> Promise) -> Promise {
         let promise = initialPromise ?? Promise.delay(delay).then { (_: Sendable) in block() }
         if times < 1 { return promise }

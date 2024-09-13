@@ -11,7 +11,7 @@ import FWFramework
 @main
 class AppDelegate: AppResponder {
     var backgroundTask: ((@escaping @Sendable () -> Void) -> Void)?
-    var expirationHandler: (@Sendable () -> Void)?
+    var expirationHandler: (@MainActor @Sendable () -> Void)?
 
     private nonisolated(unsafe) var latestCrashLog: String? {
         get {
