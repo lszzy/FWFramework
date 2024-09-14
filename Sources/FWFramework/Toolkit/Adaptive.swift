@@ -338,6 +338,60 @@ extension Wrapper where Base: UIDevice {
         UIDevice.current.setValue(orientation.rawValue, forKey: "orientation")
         return true
     }
+    
+    /// 全局自定义设备纵向界面缩放比例句柄，默认nil
+    public static var relativePortraitScaleBlock: (@Sendable () -> CGFloat)? {
+        get { UIDevice.innerRelativePortraitScaleBlock }
+        set { UIDevice.innerRelativePortraitScaleBlock = newValue }
+    }
+
+    /// 全局自定义设备横向界面缩放比例句柄，默认nil
+    public static var relativeLandscapeScaleBlock: (@Sendable () -> CGFloat)? {
+        get { UIDevice.innerRelativeLandscapeScaleBlock }
+        set { UIDevice.innerRelativeLandscapeScaleBlock = newValue }
+    }
+
+    /// 获取当前设备纵向界面缩放比例，宽度常用
+    public static var relativePortraitScale: CGFloat {
+        if let block = relativePortraitScaleBlock {
+            return block()
+        }
+
+        return deviceWidth / UIScreen.fw.referenceSize.width
+    }
+
+    /// 获取当前设备横向界面缩放比例，高度不常用
+    public static var relativeLandscapeScale: CGFloat {
+        if let block = relativeLandscapeScaleBlock {
+            return block()
+        }
+
+        return deviceHeight / UIScreen.fw.referenceSize.height
+    }
+
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public static func relativePortrait(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = value * relativePortraitScale
+        return flat ? UIScreen.fw.flatValue(result) : result
+    }
+
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public static func relativeLandscape(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = value * relativeLandscapeScale
+        return flat ? UIScreen.fw.flatValue(result) : result
+    }
+
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定宽度值
+    public static func fixedPortrait(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = value / relativePortraitScale
+        return flat ? UIScreen.fw.flatValue(result) : result
+    }
+
+    /// 获取相对设计图设备横向界面等比例缩放时的固定高度值
+    public static func fixedLandscape(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        let result = value / relativeLandscapeScale
+        return flat ? UIScreen.fw.flatValue(result) : result
+    }
 }
 
 // MARK: - Wrapper+UIScreen
@@ -563,19 +617,19 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
-    public static var referenceSize: CGSize {
+    public nonisolated static var referenceSize: CGSize {
         get { UIScreen.innerReferenceSize }
         set { UIScreen.innerReferenceSize = newValue }
     }
 
     /// 全局自定义屏幕宽度缩放比例句柄，默认nil
-    public static var relativeScaleBlock: (() -> CGFloat)? {
+    public static var relativeScaleBlock: (@MainActor @Sendable () -> CGFloat)? {
         get { UIScreen.innerRelativeScaleBlock }
         set { UIScreen.innerRelativeScaleBlock = newValue }
     }
 
     /// 全局自定义屏幕高度缩放比例句柄，默认nil
-    public static var relativeHeightScaleBlock: (() -> CGFloat)? {
+    public static var relativeHeightScaleBlock: (@MainActor @Sendable () -> CGFloat)? {
         get { UIScreen.innerRelativeHeightScaleBlock }
         set { UIScreen.innerRelativeHeightScaleBlock = newValue }
     }
@@ -818,14 +872,16 @@ extension UIDevice {
     fileprivate nonisolated(unsafe) static var innerDeviceWidth: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceHeight: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
+    fileprivate nonisolated(unsafe) static var innerRelativePortraitScaleBlock: (@Sendable () -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerRelativeLandscapeScaleBlock: (@Sendable () -> CGFloat)?
 }
 
 // MARK: - UIScreen+Adaptive
 extension UIScreen {
     fileprivate nonisolated(unsafe) static var innerScreenScale: CGFloat?
     fileprivate nonisolated(unsafe) static var innerReferenceSize: CGSize = .init(width: 375, height: 812)
-    fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (() -> CGFloat)?
-    fileprivate nonisolated(unsafe) static var innerRelativeHeightScaleBlock: (() -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (@MainActor @Sendable () -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerRelativeHeightScaleBlock: (@MainActor @Sendable () -> CGFloat)?
     fileprivate nonisolated(unsafe) static var innerMainWindow: UIWindow?
     fileprivate nonisolated(unsafe) static var innerCustomStatusBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate nonisolated(unsafe) static var innerCustomNavigationBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
