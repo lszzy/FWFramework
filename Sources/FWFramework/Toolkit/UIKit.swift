@@ -3201,6 +3201,7 @@ public struct ViewStyle: RawRepresentable, Equatable, Hashable, Sendable {
 
 // MARK: - UIDevice+UIKit
 extension UIDevice {
+    nonisolated(unsafe) static var innerDeviceIDFV: String?
     fileprivate nonisolated(unsafe) static var innerDeviceUUID: String?
     fileprivate nonisolated(unsafe) static var innerNetworkInfo = CTTelephonyNetworkInfo()
 }
