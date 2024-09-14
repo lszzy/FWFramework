@@ -1126,8 +1126,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 快捷设置安全模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    open func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        responseModel(of: type, designatedPath: designatedPath, success: success != nil ? { responseModel in
+    open func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: (@MainActor @Sendable (T) -> Void)?) -> Self {
+        responseModel(of: type, designatedPath: designatedPath, success: success != nil ? { @MainActor @Sendable responseModel in
             success?(responseModel ?? .init())
         } : nil)
     }
@@ -1140,9 +1140,9 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         return self
     }
 
-    /// 解析指定缓存响应模型句柄，必须主线程且在start之前调用生效
+    /// 解析指定缓存响应模型句柄，必须在start之前调用生效
     @discardableResult
-    open func responseCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func responseCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: (@MainActor @Sendable (T?) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { request in
             if (request._cacheResponseModel as? T) == nil {
                 request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -1156,10 +1156,10 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         return self
     }
 
-    /// 解析指定缓存安全响应模型句柄，必须主线程且在start之前调用生效
+    /// 解析指定缓存安全响应模型句柄，必须在start之前调用生效
     @discardableResult
-    open func responseSafeCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T) -> Void)?) -> Self {
-        responseCacheModel(of: type, designatedPath: designatedPath, success: success != nil ? { cacheModel in
+    open func responseSafeCacheModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: (@MainActor @Sendable (T) -> Void)?) -> Self {
+        responseCacheModel(of: type, designatedPath: designatedPath, success: success != nil ? { @MainActor @Sendable cacheModel in
             success?(cacheModel ?? .init())
         } : nil)
     }
@@ -1234,7 +1234,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     fileprivate func loadCacheResponse(completion: Completion?, processor: (@Sendable (HTTPRequest) -> Void)? = nil) throws {
-        guard !isStarted, Thread.isMainThread else { return }
+        guard !isStarted else { return }
 
         try loadCache()
 
@@ -1247,9 +1247,11 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         _responseModelBlock = processor
 
         isDataFromCache = true
-        requestCompletePreprocessor()
-        requestCompleteFilter()
-        completion?(self)
+        DispatchQueue.fw.mainAsync {
+            self.requestCompletePreprocessor()
+            self.requestCompleteFilter()
+            completion?(self)
+        }
     }
 
     private func startWithoutCache() {
@@ -1348,9 +1350,9 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
         return self
     }
 
-    /// 解析缓存响应句柄，必须主线程且在start之前调用生效
+    /// 解析缓存响应句柄，必须在start之前调用生效
     @discardableResult
-    public func responseCache(_ block: ((Self) -> Void)?) -> Self {
+    public func responseCache(_ block: (@MainActor @Sendable (Self) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { block?($0 as! Self) })
         return self
     }
@@ -1422,9 +1424,9 @@ extension ResponseModelRequest where Self: HTTPRequest {
         return self
     }
 
-    /// 解析缓存响应模型句柄，必须主线程且在start之前调用生效
+    /// 解析缓存响应模型句柄，必须在start之前调用生效
     @discardableResult
-    public func responseCacheModel(_ success: ((ResponseModel?) -> Void)?) -> Self {
+    public func responseCacheModel(_ success: (@MainActor @Sendable (ResponseModel?) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { request in
             success?((request as! Self).responseModel)
         })
@@ -1458,9 +1460,9 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel 
         return self
     }
 
-    /// 解析缓存安全响应模型句柄，必须主线程且在start之前调用生效
+    /// 解析缓存安全响应模型句柄，必须在start之前调用生效
     @discardableResult
-    public func responseSafeCacheModel(_ success: ((ResponseModel) -> Void)?) -> Self {
+    public func responseSafeCacheModel(_ success: (@MainActor @Sendable (ResponseModel) -> Void)?) -> Self {
         try? loadCacheResponse(completion: { request in
             success?((request as! Self).safeResponseModel)
         })
