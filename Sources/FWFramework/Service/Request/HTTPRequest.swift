@@ -43,7 +43,7 @@ public enum RequestPriority: Int, Sendable {
 }
 
 /// 请求代理
-public protocol RequestDelegate: AnyObject {
+@MainActor public protocol RequestDelegate: AnyObject {
     /// 请求完成
     func requestFinished(_ request: HTTPRequest)
     /// 请求失败
@@ -80,7 +80,7 @@ public protocol HTTPRequestProtocol: AnyObject {
 /// [YTKNetwork](https://github.com/yuantiku/YTKNetwork)
 open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible, @unchecked Sendable {
     /// 请求完成句柄
-    public typealias Completion = (HTTPRequest) -> Void
+    public typealias Completion = @MainActor @Sendable (HTTPRequest) -> Void
 
     /// 请求构建器，可继承
     ///
@@ -132,9 +132,9 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var requestRetryTimeout: TimeInterval?
         public private(set) var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
         public private(set) var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
-        public private(set) var requestCompletePreprocessor: Completion?
+        public private(set) var requestCompletePreprocessor: (@Sendable (HTTPRequest) -> Void)?
         public private(set) var requestCompleteFilter: Completion?
-        public private(set) var requestFailedPreprocessor: Completion?
+        public private(set) var requestFailedPreprocessor: (@Sendable (HTTPRequest) -> Void)?
         public private(set) var requestFailedFilter: Completion?
         public private(set) var cacheTimeInSeconds: Int?
         public private(set) var cacheVersion: Int?
@@ -372,7 +372,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求完成预处理器，后台线程调用
         @discardableResult
-        public func requestCompletePreprocessor(_ block: Completion?) -> Self {
+        public func requestCompletePreprocessor(_ block: (@Sendable (HTTPRequest) -> Void)?) -> Self {
             requestCompletePreprocessor = block
             return self
         }
@@ -386,7 +386,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求失败预处理器，后台线程调用
         @discardableResult
-        public func requestFailedPreprocessor(_ block: Completion?) -> Self {
+        public func requestFailedPreprocessor(_ block: (@Sendable (HTTPRequest) -> Void)?) -> Self {
             requestFailedPreprocessor = block
             return self
         }
@@ -490,7 +490,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     /// 自定义失败主线程回调句柄
     open var failureCompletionBlock: Completion?
     /// 自定义取消回调句柄，不一定主线程调用
-    open var requestCancelledBlock: Completion?
+    open var requestCancelledBlock: (@Sendable (HTTPRequest) -> Void)?
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
     /// 自定义POST请求HTTP body数据
@@ -666,7 +666,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     private var _contextAccessory: RequestContextAccessory?
 
     fileprivate var _cacheResponseModel: Any?
-    private var _responseModelBlock: Completion?
+    private var _responseModelBlock: (@Sendable (HTTPRequest) -> Void)?
     private var _preloadResponseModel: Bool?
     private var _isCancelled = false
     private var _cacheData: Data?
@@ -847,7 +847,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求完成过滤器，主线程调用，默认不处理
-    open func requestCompleteFilter() {
+    @MainActor open func requestCompleteFilter() {
         builder?.requestCompleteFilter?(self)
     }
 
@@ -857,7 +857,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求失败过滤器，主线程调用，默认不处理
-    open func requestFailedFilter() {
+    @MainActor open func requestFailedFilter() {
         builder?.requestFailedFilter?(self)
     }
 
@@ -1092,7 +1092,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     // MARK: - Response
     /// 快捷设置响应失败句柄
     @discardableResult
-    open func responseError(_ block: ((Error) -> Void)?) -> Self {
+    open func responseError(_ block: (@MainActor @Sendable (Error) -> Void)?) -> Self {
         failureCompletionBlock = { request in
             block?(request.error ?? RequestError.unknown)
         }
@@ -1108,7 +1108,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 快捷设置模型响应成功句柄，解析成功时自动缓存，支持后台预加载
     @discardableResult
-    open func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: ((T?) -> Void)?) -> Self {
+    open func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil, success: (@MainActor @Sendable (T?) -> Void)?) -> Self {
         _responseModelBlock = { request in
             if (request._cacheResponseModel as? T) == nil {
                 request._cacheResponseModel = T.decodeModel(from: request.responseJSONObject, designatedPath: designatedPath)
@@ -1233,7 +1233,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         return requestInfo.fw.md5Encode
     }
 
-    fileprivate func loadCacheResponse(completion: Completion?, processor: Completion? = nil) throws {
+    fileprivate func loadCacheResponse(completion: Completion?, processor: (@Sendable (HTTPRequest) -> Void)? = nil) throws {
         guard !isStarted, Thread.isMainThread else { return }
 
         try loadCache()
@@ -1309,42 +1309,42 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 extension HTTPRequestProtocol where Self: HTTPRequest {
     /// 开始请求并指定成功、失败句柄
     @discardableResult
-    public func start(success: ((Self) -> Void)?, failure: ((Self) -> Void)?) -> Self {
-        successCompletionBlock = success != nil ? { success?($0 as! Self) } : nil
-        failureCompletionBlock = failure != nil ? { failure?($0 as! Self) } : nil
+    public func start(success: (@MainActor @Sendable (Self) -> Void)?, failure: (@MainActor @Sendable (Self) -> Void)?) -> Self {
+        successCompletionBlock = success != nil ? { @MainActor @Sendable in success?($0 as! Self) } : nil
+        failureCompletionBlock = failure != nil ? { @MainActor @Sendable in failure?($0 as! Self) } : nil
         return start()
     }
 
     /// 开始请求并指定完成句柄
     @discardableResult
-    public func start(completion: ((Self) -> Void)?) -> Self {
+    public func start(completion: (@MainActor @Sendable (Self) -> Void)?) -> Self {
         start(success: completion, failure: completion)
     }
 
     /// 请求取消句柄，不一定主线程调用
     @discardableResult
-    public func requestCancelledBlock(_ block: ((Self) -> Void)?) -> Self {
-        requestCancelledBlock = block != nil ? { block?($0 as! Self) } : nil
+    public func requestCancelledBlock(_ block: (@Sendable (Self) -> Void)?) -> Self {
+        requestCancelledBlock = block != nil ? { @Sendable in block?($0 as! Self) } : nil
         return self
     }
 
     /// 自定义响应完成句柄
     @discardableResult
-    public func response(_ completion: ((Self) -> Void)?) -> Self {
+    public func response(_ completion: (@MainActor @Sendable (Self) -> Void)?) -> Self {
         responseSuccess(completion).responseFailure(completion)
     }
 
     /// 自定义响应成功句柄
     @discardableResult
-    public func responseSuccess(_ block: ((Self) -> Void)?) -> Self {
-        successCompletionBlock = block != nil ? { block?($0 as! Self) } : nil
+    public func responseSuccess(_ block: (@MainActor @Sendable (Self) -> Void)?) -> Self {
+        successCompletionBlock = block != nil ? { @MainActor @Sendable in block?($0 as! Self) } : nil
         return self
     }
 
     /// 自定义响应失败句柄
     @discardableResult
-    public func responseFailure(_ block: ((Self) -> Void)?) -> Self {
-        failureCompletionBlock = block != nil ? { block?($0 as! Self) } : nil
+    public func responseFailure(_ block: (@MainActor @Sendable (Self) -> Void)?) -> Self {
+        failureCompletionBlock = block != nil ? { @MainActor @Sendable in block?($0 as! Self) } : nil
         return self
     }
 
@@ -1415,7 +1415,7 @@ extension ResponseModelRequest where Self: HTTPRequest {
 
     /// 快捷设置模型响应成功句柄
     @discardableResult
-    public func responseModel(_ success: ((ResponseModel?) -> Void)?) -> Self {
+    public func responseModel(_ success: (@MainActor @Sendable (ResponseModel?) -> Void)?) -> Self {
         successCompletionBlock = { request in
             success?((request as! Self).responseModel)
         }
@@ -1451,7 +1451,7 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel 
 
     /// 快捷设置安全模型响应成功句柄
     @discardableResult
-    public func safeResponseModel(_ success: ((ResponseModel) -> Void)?) -> Self {
+    public func safeResponseModel(_ success: (@MainActor @Sendable (ResponseModel) -> Void)?) -> Self {
         successCompletionBlock = { request in
             success?((request as! Self).safeResponseModel)
         }
