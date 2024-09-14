@@ -24,11 +24,6 @@ extension WrapperGlobal {
     /// 是否是Mac设备
     public static var isMac: Bool { UIDevice.fw.isMac }
 
-    /// 界面是否横屏
-    @MainActor public static var isLandscape: Bool { UIDevice.fw.isLandscape }
-    /// 设备是否横屏，无论支不支持横屏
-    @MainActor public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
-
     /// iOS系统版本
     public static var iosVersion: Double { UIDevice.fw.iosVersion }
     /// 是否是指定iOS主版本
@@ -37,13 +32,18 @@ extension WrapperGlobal {
     public static func isIosLater(_ version: Int) -> Bool { UIDevice.fw.isIosLater(version) }
 
     /// 设备尺寸，跟横竖屏无关
-    @MainActor public static var deviceSize: CGSize { UIDevice.fw.deviceSize }
+    public static var deviceSize: CGSize { UIDevice.fw.deviceSize }
     /// 设备宽度，跟横竖屏无关
-    @MainActor public static var deviceWidth: CGFloat { UIDevice.fw.deviceWidth }
+    public static var deviceWidth: CGFloat { UIDevice.fw.deviceWidth }
     /// 设备高度，跟横竖屏无关
-    @MainActor public static var deviceHeight: CGFloat { UIDevice.fw.deviceHeight }
+    public static var deviceHeight: CGFloat { UIDevice.fw.deviceHeight }
     /// 设备分辨率，跟横竖屏无关
-    @MainActor public static var deviceResolution: CGSize { UIDevice.fw.deviceResolution }
+    public static var deviceResolution: CGSize { UIDevice.fw.deviceResolution }
+    
+    /// 界面是否横屏
+    @MainActor public static var isLandscape: Bool { UIDevice.fw.isLandscape }
+    /// 设备是否横屏，无论支不支持横屏
+    @MainActor public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
 
     // MARK: - UIScreen
     /// 屏幕尺寸
@@ -211,6 +211,93 @@ extension Wrapper where Base: UIDevice {
         return false
     }
 
+    /// iOS系统版本字符串
+    public static var iosVersionString: String {
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        var versionString = "\(version.majorVersion).\(version.minorVersion)"
+        if version.patchVersion != 0 {
+            versionString += ".\(version.patchVersion)"
+        }
+        return versionString
+    }
+
+    /// iOS系统版本浮点数
+    public static var iosVersion: Double {
+        (iosVersionString as NSString).doubleValue
+    }
+
+    /// 是否是指定iOS版本
+    public static func isIos(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        var result = version.majorVersion == major
+        if result, let minor {
+            result = result && version.minorVersion == minor
+        }
+        if result, let patch {
+            result = result && version.patchVersion == patch
+        }
+        return result
+    }
+
+    /// 是否是大于等于指定iOS版本
+    public static func isIosLater(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+        let version = OperatingSystemVersion(majorVersion: major, minorVersion: minor ?? 0, patchVersion: patch ?? 0)
+        return ProcessInfo.processInfo.isOperatingSystemAtLeast(version)
+    }
+
+    /// 设备尺寸，跟横竖屏无关
+    public static var deviceSize: CGSize {
+        CGSize(width: deviceWidth, height: deviceHeight)
+    }
+
+    /// 设备宽度，跟横竖屏无关
+    public static var deviceWidth: CGFloat {
+        if UIDevice.innerDeviceWidth == nil {
+            DispatchQueue.fw.mainSync {
+                UIDevice.innerDeviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            }
+        }
+
+        return UIDevice.innerDeviceWidth ?? 0
+    }
+
+    /// 设备高度，跟横竖屏无关
+    public static var deviceHeight: CGFloat {
+        if UIDevice.innerDeviceHeight == nil {
+            DispatchQueue.fw.mainSync {
+                UIDevice.innerDeviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            }
+        }
+
+        return UIDevice.innerDeviceHeight ?? 0
+    }
+
+    /// 设备分辨率，跟横竖屏无关
+    public static var deviceResolution: CGSize {
+        CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
+    }
+
+    /// 获取设备模型，格式："iPhone15,1"
+    public static var deviceModel: String {
+        if let deviceModel = UIDevice.innerDeviceModel {
+            return deviceModel
+        }
+
+        #if targetEnvironment(simulator)
+        let deviceModel = String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
+        #else
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let deviceModel = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        #endif
+        UIDevice.innerDeviceModel = deviceModel
+        return deviceModel
+    }
+    
     /// 界面是否横屏
     @MainActor public static var isLandscape: Bool {
         UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
@@ -250,81 +337,6 @@ extension Wrapper where Base: UIDevice {
 
         UIDevice.current.setValue(orientation.rawValue, forKey: "orientation")
         return true
-    }
-
-    /// iOS系统版本字符串
-    public static var iosVersionString: String {
-        let version = ProcessInfo.processInfo.operatingSystemVersion
-        var versionString = "\(version.majorVersion).\(version.minorVersion)"
-        if version.patchVersion != 0 {
-            versionString += ".\(version.patchVersion)"
-        }
-        return versionString
-    }
-
-    /// iOS系统版本浮点数
-    public static var iosVersion: Double {
-        (iosVersionString as NSString).doubleValue
-    }
-
-    /// 是否是指定iOS版本
-    public static func isIos(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
-        let version = ProcessInfo.processInfo.operatingSystemVersion
-        var result = version.majorVersion == major
-        if result, let minor {
-            result = result && version.minorVersion == minor
-        }
-        if result, let patch {
-            result = result && version.patchVersion == patch
-        }
-        return result
-    }
-
-    /// 是否是大于等于指定iOS版本
-    public static func isIosLater(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
-        let version = OperatingSystemVersion(majorVersion: major, minorVersion: minor ?? 0, patchVersion: patch ?? 0)
-        return ProcessInfo.processInfo.isOperatingSystemAtLeast(version)
-    }
-
-    /// 设备尺寸，跟横竖屏无关
-    @MainActor public static var deviceSize: CGSize {
-        CGSize(width: deviceWidth, height: deviceHeight)
-    }
-
-    /// 设备宽度，跟横竖屏无关
-    @MainActor public static var deviceWidth: CGFloat {
-        min(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
-    }
-
-    /// 设备高度，跟横竖屏无关
-    @MainActor public static var deviceHeight: CGFloat {
-        max(UIScreen.fw.screenWidth, UIScreen.fw.screenHeight)
-    }
-
-    /// 设备分辨率，跟横竖屏无关
-    @MainActor public static var deviceResolution: CGSize {
-        CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
-    }
-
-    /// 获取设备模型，格式："iPhone15,1"
-    public static var deviceModel: String {
-        if let deviceModel = UIDevice.innerDeviceModel {
-            return deviceModel
-        }
-
-        #if targetEnvironment(simulator)
-        let deviceModel = String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
-        #else
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let deviceModel = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        #endif
-        UIDevice.innerDeviceModel = deviceModel
-        return deviceModel
     }
 }
 
@@ -803,6 +815,8 @@ extension UIEdgeInsets {
 
 // MARK: - UIDevice+Adaptive
 extension UIDevice {
+    fileprivate nonisolated(unsafe) static var innerDeviceWidth: CGFloat?
+    fileprivate nonisolated(unsafe) static var innerDeviceHeight: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
 }
 
@@ -828,6 +842,8 @@ extension FrameworkAutoloader {
     @objc static func loadToolkit_Adaptive() {
         DispatchQueue.fw.mainAsync {
             UIScreen.innerScreenScale = UIScreen.main.scale
+            UIDevice.innerDeviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            UIDevice.innerDeviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
             UIDevice.innerDeviceIDFV = UIDevice.current.identifierForVendor?.uuidString ?? ""
         }
     }
