@@ -38,7 +38,7 @@ extension WrapperGlobal {
         UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
     }
 
-    /// 快速创建系统字体
+    /// 快速创建系统字体，自动等比例缩放
     ///
     /// - Parameters:
     ///   - size: 字体字号
@@ -47,6 +47,28 @@ extension WrapperGlobal {
     /// - Returns: UIFont
     @MainActor public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         UIFont.fw.font(ofSize: size, weight: weight, autoScale: autoScale)
+    }
+    
+    /// 快速创建设备纵向界面系统字体，自动等比例缩放
+    ///
+    /// - Parameters:
+    ///   - size: 字体字号
+    ///   - weight: 字重可选，默认Regular
+    ///   - autoScale: 是否自动等比例缩放，默认全局配置
+    /// - Returns: UIFont
+    public static func portraitFont(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        UIFont.fw.portraitFont(ofSize: size, weight: weight, autoScale: autoScale)
+    }
+    
+    /// 快速创建设备横向界面系统字体，自动等比例缩放
+    ///
+    /// - Parameters:
+    ///   - size: 字体字号
+    ///   - weight: 字重可选，默认Regular
+    ///   - autoScale: 是否自动等比例缩放，默认全局配置
+    /// - Returns: UIFont
+    public static func landscapeFont(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        UIFont.fw.landscapeFont(ofSize: size, weight: weight, autoScale: autoScale)
     }
 }
 
@@ -814,6 +836,26 @@ extension Wrapper where Base: UIFont {
         var fontSize = size
         if (autoScale == nil && autoScaleFont) || autoScale == true {
             fontSize = autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: autoFlatFont)
+        }
+
+        return nonScaleFont(ofSize: fontSize, weight: weight)
+    }
+    
+    /// 创建指定尺寸和weight的设备纵向界面系统字体，自动等比例缩放
+    public static func portraitFont(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        var fontSize = size
+        if (autoScale == nil && autoScaleFont) || autoScale == true {
+            fontSize = UIDevice.fw.relativePortrait(size, flat: autoFlatFont)
+        }
+
+        return nonScaleFont(ofSize: fontSize, weight: weight)
+    }
+    
+    /// 创建指定尺寸和weight的设备横向界面系统字体，自动等比例缩放
+    public static func landscapeFont(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+        var fontSize = size
+        if (autoScale == nil && autoScaleFont) || autoScale == true {
+            fontSize = UIDevice.fw.relativeLandscape(size, flat: autoFlatFont)
         }
 
         return nonScaleFont(ofSize: fontSize, weight: weight)
