@@ -194,24 +194,12 @@ extension Wrapper where Base: UIDevice {
 
     /// 是否是iPhone
     public static var isIphone: Bool {
-        if UIDevice.innerIsIphone == nil {
-            DispatchQueue.fw.mainSync {
-                UIDevice.innerIsIphone = UIDevice.current.userInterfaceIdiom == .phone
-            }
-        }
-
-        return UIDevice.innerIsIphone ?? false
+        return deviceModel.hasPrefix("iPhone")
     }
 
     /// 是否是iPad
     public static var isIpad: Bool {
-        if UIDevice.innerIsIpad == nil {
-            DispatchQueue.fw.mainSync {
-                UIDevice.innerIsIpad = UIDevice.current.userInterfaceIdiom == .pad
-            }
-        }
-
-        return UIDevice.innerIsIpad ?? false
+        return deviceModel.hasPrefix("iPad")
     }
 
     /// 是否是Mac
@@ -375,7 +363,7 @@ extension Wrapper where Base: UIDevice {
 
     /// 是否是灵动岛屏幕
     public static var isDynamicIsland: Bool {
-        guard UIDevice.fw.isIphone else { return false }
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return false }
         if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             return safeAreaInsets.top >= 59.0
         } else {
@@ -433,7 +421,7 @@ extension Wrapper where Base: UIDevice {
         }
 
         // 5. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.fw.isIpad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             return isNotchedScreen ? 24 : 20
         } else {
             if UIDevice.fw.isLandscape { return 0 }
@@ -461,7 +449,7 @@ extension Wrapper where Base: UIDevice {
         }
 
         // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.fw.isIpad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
         } else {
             return UIDevice.fw.isLandscape ? 32 : 44
@@ -492,7 +480,7 @@ extension Wrapper where Base: UIDevice {
         }
 
         // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.fw.isIpad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             if isNotchedScreen { return 65 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
         } else {
@@ -519,7 +507,7 @@ extension Wrapper where Base: UIDevice {
         }
 
         // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.fw.isIpad {
+        if UIDevice.current.userInterfaceIdiom == .pad {
             if isNotchedScreen { return 70 }
             return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
         } else {
@@ -815,8 +803,6 @@ extension UIEdgeInsets {
 
 // MARK: - UIDevice+Adaptive
 extension UIDevice {
-    fileprivate nonisolated(unsafe) static var innerIsIphone: Bool?
-    fileprivate nonisolated(unsafe) static var innerIsIpad: Bool?
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
     nonisolated(unsafe) static var innerDeviceIDFV: String?
 }
@@ -842,8 +828,6 @@ extension UIScreen {
 extension FrameworkAutoloader {
     @objc static func loadToolkit_Adaptive() {
         DispatchQueue.fw.mainAsync {
-            UIDevice.innerIsIphone = UIDevice.current.userInterfaceIdiom == .phone
-            UIDevice.innerIsIpad = UIDevice.current.userInterfaceIdiom == .pad
             UIScreen.innerScreenScale = UIScreen.main.scale
             UIDevice.innerDeviceIDFV = UIDevice.current.identifierForVendor?.uuidString ?? ""
         }
