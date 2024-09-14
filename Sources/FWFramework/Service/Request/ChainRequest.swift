@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - ChainRequest
 /// 队列请求代理
-public protocol ChainRequestDelegate: AnyObject {
+@MainActor public protocol ChainRequestDelegate: AnyObject {
     /// 队列请求完成
     func chainRequestFinished(_ chainRequest: ChainRequest)
     /// 队列请求失败
@@ -26,7 +26,7 @@ extension ChainRequestDelegate {
 /// 队列请求类
 open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendable {
     /// 队列请求完成句柄
-    public typealias Completion = (ChainRequest) -> Void
+    public typealias Completion = @MainActor @Sendable (ChainRequest) -> Void
     /// 回调处理句柄声明
     public typealias CallbackHandler = (ChainRequest, HTTPRequest) -> Void
 
@@ -224,7 +224,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         }
     }
 
-    private func requestCompleted() {
+    @MainActor private func requestCompleted() {
         toggleAccessoriesWillStopCallBack()
 
         if failedRequest == nil {

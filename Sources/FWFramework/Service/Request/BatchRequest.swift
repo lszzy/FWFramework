@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - BatchRequest
 /// 批量请求代理
-public protocol BatchRequestDelegate: AnyObject {
+@MainActor public protocol BatchRequestDelegate: AnyObject {
     /// 批量请求完成
     func batchRequestFinished(_ batchRequest: BatchRequest)
     /// 批量请求失败
@@ -26,7 +26,7 @@ extension BatchRequestDelegate {
 /// 批量请求类
 open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendable {
     /// 批量请求完成句柄
-    public typealias Completion = (BatchRequest) -> Void
+    public typealias Completion = @MainActor @Sendable (BatchRequest) -> Void
 
     // MARK: - Accessor
     /// 当前请求数组
@@ -203,7 +203,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         }
     }
 
-    private func requestCompleted() {
+    @MainActor private func requestCompleted() {
         toggleAccessoriesWillStopCallBack()
 
         if failedRequestArray.count < 1 {
