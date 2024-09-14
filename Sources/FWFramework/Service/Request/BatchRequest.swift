@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - BatchRequest
 /// 批量请求代理
-@MainActor public protocol BatchRequestDelegate: AnyObject {
+public protocol BatchRequestDelegate: AnyObject {
     /// 批量请求完成
-    func batchRequestFinished(_ batchRequest: BatchRequest)
+    @MainActor func batchRequestFinished(_ batchRequest: BatchRequest)
     /// 批量请求失败
-    func batchRequestFailed(_ batchRequest: BatchRequest)
+    @MainActor func batchRequestFailed(_ batchRequest: BatchRequest)
 }
 
 extension BatchRequestDelegate {

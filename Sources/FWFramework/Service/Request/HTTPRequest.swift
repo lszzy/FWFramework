@@ -43,11 +43,11 @@ public enum RequestPriority: Int, Sendable {
 }
 
 /// 请求代理
-@MainActor public protocol RequestDelegate: AnyObject {
+public protocol RequestDelegate: AnyObject {
     /// 请求完成
-    func requestFinished(_ request: HTTPRequest)
+    @MainActor func requestFinished(_ request: HTTPRequest)
     /// 请求失败
-    func requestFailed(_ request: HTTPRequest)
+    @MainActor func requestFailed(_ request: HTTPRequest)
 }
 
 extension RequestDelegate {
