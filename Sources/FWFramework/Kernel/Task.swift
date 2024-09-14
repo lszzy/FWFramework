@@ -11,11 +11,7 @@ import Foundation
 extension Wrapper where Base: DispatchQueue {
     /// 主线程安全异步执行句柄
     public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
-        if Thread.isMainThread {
-            MainActor.assumeIsolated(block)
-        } else {
-            DispatchQueue.main.async(execute: block)
-        }
+        MainActor.runAsync(execute: block)
     }
 
     /// 主线程安全同步执行句柄
@@ -36,9 +32,7 @@ extension MainActor {
         if Thread.isMainThread {
             MainActor.assumeIsolated(block)
         } else {
-            Task {
-                await MainActor.run(body: block)
-            }
+            DispatchQueue.main.async(execute: block)
         }
     }
 
