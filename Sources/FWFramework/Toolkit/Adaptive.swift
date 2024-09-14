@@ -44,6 +44,31 @@ extension WrapperGlobal {
     @MainActor public static var isLandscape: Bool { UIDevice.fw.isLandscape }
     /// 设备是否横屏，无论支不支持横屏
     @MainActor public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
+    
+    /// 当前设备纵向界面缩放比例
+    public static var relativePortraitScale: CGFloat { UIDevice.fw.relativePortraitScale }
+    /// 当前设备横向界面缩放比例
+    public static var relativeLandscapeScale: CGFloat { UIDevice.fw.relativeLandscapeScale }
+    
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public static func relativePortrait(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        UIDevice.fw.relativePortrait(value, flat: flat)
+    }
+
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定高度值
+    public static func fixedPortrait(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        UIDevice.fw.fixedPortrait(value, flat: flat)
+    }
+    
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public static func relativeLandscape(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        UIDevice.fw.relativeLandscape(value, flat: flat)
+    }
+
+    /// 获取相对设计图设备横向界面等比例缩放时的固定高度值
+    public static func fixedLandscape(_ value: CGFloat, flat: Bool = false) -> CGFloat {
+        UIDevice.fw.fixedLandscape(value, flat: flat)
+    }
 
     // MARK: - UIScreen
     /// 屏幕尺寸
@@ -784,6 +809,14 @@ extension CGFloat {
     @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(self) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(self) }
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public var relativePortrait: CGFloat { UIDevice.fw.relativePortrait(self) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定宽度值
+    public var fixedPortrait: CGFloat { UIDevice.fw.fixedPortrait(self) }
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public var relativeLandscape: CGFloat { UIDevice.fw.relativeLandscape(self) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定宽度值
+    public var fixedLandscape: CGFloat { UIDevice.fw.fixedLandscape(self) }
     /// 获取基于当前设备的倍数像素取整值
     public var flatValue: CGFloat { UIScreen.fw.flatValue(self) }
     /// 获取向上取整值
@@ -795,6 +828,14 @@ extension Double {
     @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public var relativePortrait: CGFloat { UIDevice.fw.relativePortrait(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定宽度值
+    public var fixedPortrait: CGFloat { UIDevice.fw.fixedPortrait(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public var relativeLandscape: CGFloat { UIDevice.fw.relativeLandscape(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定宽度值
+    public var fixedLandscape: CGFloat { UIDevice.fw.fixedLandscape(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -806,6 +847,14 @@ extension Float {
     @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public var relativePortrait: CGFloat { UIDevice.fw.relativePortrait(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定宽度值
+    public var fixedPortrait: CGFloat { UIDevice.fw.fixedPortrait(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public var relativeLandscape: CGFloat { UIDevice.fw.relativeLandscape(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定宽度值
+    public var fixedLandscape: CGFloat { UIDevice.fw.fixedLandscape(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -817,6 +866,14 @@ extension Int {
     @MainActor public var relativeValue: CGFloat { UIScreen.fw.relativeValue(CGFloat(self)) }
     /// 获取相对设计图宽度等比例缩放时的固定宽度值
     @MainActor public var fixedValue: CGFloat { UIScreen.fw.fixedValue(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放值
+    public var relativePortrait: CGFloat { UIDevice.fw.relativePortrait(CGFloat(self)) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定宽度值
+    public var fixedPortrait: CGFloat { UIDevice.fw.fixedPortrait(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放值
+    public var relativeLandscape: CGFloat { UIDevice.fw.relativeLandscape(CGFloat(self)) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定宽度值
+    public var fixedLandscape: CGFloat { UIDevice.fw.fixedLandscape(CGFloat(self)) }
     /// 获取基于当前设备的倍数像素取整值
     public var flatValue: CGFloat { UIScreen.fw.flatValue(CGFloat(self)) }
     /// 获取向上取整值
@@ -828,6 +885,14 @@ extension CGSize {
     @MainActor public var relativeValue: CGSize { CGSize(width: width.relativeValue, height: height.relativeValue) }
     /// 获取相对设计图宽度等比例缩放时的固定size
     @MainActor public var fixedValue: CGSize { CGSize(width: width.fixedValue, height: height.fixedValue) }
+    /// 获取相对设计图设备纵向界面等比例缩放size
+    public var relativePortrait: CGSize { CGSize(width: width.relativePortrait, height: height.relativePortrait) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定size
+    public var fixedPortrait: CGSize { CGSize(width: width.fixedPortrait, height: height.fixedPortrait) }
+    /// 获取相对设计图设备横向界面等比例缩放size
+    public var relativeLandscape: CGSize { CGSize(width: width.relativeLandscape, height: height.relativeLandscape) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定size
+    public var fixedLandscape: CGSize { CGSize(width: width.fixedLandscape, height: height.fixedLandscape) }
     /// 获取基于当前设备的倍数像素取整size
     public var flatValue: CGSize { CGSize(width: width.flatValue, height: height.flatValue) }
     /// 获取向上取整size
@@ -839,6 +904,14 @@ extension CGPoint {
     @MainActor public var relativeValue: CGPoint { CGPoint(x: x.relativeValue, y: y.relativeValue) }
     /// 获取相对设计图宽度等比例缩放时的固定point
     @MainActor public var fixedValue: CGPoint { CGPoint(x: x.fixedValue, y: y.fixedValue) }
+    /// 获取相对设计图设备纵向界面等比例缩放point
+    public var relativePortrait: CGPoint { CGPoint(x: x.relativePortrait, y: y.relativePortrait) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定point
+    public var fixedPortrait: CGPoint { CGPoint(x: x.fixedPortrait, y: y.fixedPortrait) }
+    /// 获取相对设计图设备横向界面等比例缩放point
+    public var relativeLandscape: CGPoint { CGPoint(x: x.relativeLandscape, y: y.relativeLandscape) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定point
+    public var fixedLandscape: CGPoint { CGPoint(x: x.fixedLandscape, y: y.fixedLandscape) }
     /// 获取基于当前设备的倍数像素取整point
     public var flatValue: CGPoint { CGPoint(x: x.flatValue, y: y.flatValue) }
     /// 获取向上取整point
@@ -850,6 +923,14 @@ extension CGRect {
     @MainActor public var relativeValue: CGRect { CGRect(origin: origin.relativeValue, size: size.relativeValue) }
     /// 获取相对设计图宽度等比例缩放时的固定rect
     @MainActor public var fixedValue: CGRect { CGRect(origin: origin.fixedValue, size: size.fixedValue) }
+    /// 获取相对设计图设备纵向界面等比例缩放rect
+    public var relativePortrait: CGRect { CGRect(origin: origin.relativePortrait, size: size.relativePortrait) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定rect
+    public var fixedPortrait: CGRect { CGRect(origin: origin.fixedPortrait, size: size.fixedPortrait) }
+    /// 获取相对设计图设备横向界面等比例缩放rect
+    public var relativeLandscape: CGRect { CGRect(origin: origin.relativeLandscape, size: size.relativeLandscape) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定rect
+    public var fixedLandscape: CGRect { CGRect(origin: origin.fixedLandscape, size: size.fixedLandscape) }
     /// 获取基于当前设备的倍数像素取整rect
     public var flatValue: CGRect { CGRect(origin: origin.flatValue, size: size.flatValue) }
     /// 获取向上取整rect
@@ -861,6 +942,14 @@ extension UIEdgeInsets {
     @MainActor public var relativeValue: UIEdgeInsets { UIEdgeInsets(top: top.relativeValue, left: left.relativeValue, bottom: bottom.relativeValue, right: right.relativeValue) }
     /// 获取相对设计图宽度等比例缩放时的固定insets
     @MainActor public var fixedValue: UIEdgeInsets { UIEdgeInsets(top: top.fixedValue, left: left.fixedValue, bottom: bottom.fixedValue, right: right.fixedValue) }
+    /// 获取相对设计图设备纵向界面等比例缩放insets
+    public var relativePortrait: UIEdgeInsets { UIEdgeInsets(top: top.relativePortrait, left: left.relativePortrait, bottom: bottom.relativePortrait, right: right.relativePortrait) }
+    /// 获取相对设计图设备纵向界面等比例缩放时的固定insets
+    public var fixedPortrait: UIEdgeInsets { UIEdgeInsets(top: top.fixedPortrait, left: left.fixedPortrait, bottom: bottom.fixedPortrait, right: right.fixedPortrait) }
+    /// 获取相对设计图设备横向界面等比例缩放insets
+    public var relativeLandscape: UIEdgeInsets { UIEdgeInsets(top: top.relativeLandscape, left: left.relativeLandscape, bottom: bottom.relativeLandscape, right: right.relativeLandscape) }
+    /// 获取相对设计图设备横向界面等比例缩放时的固定insets
+    public var fixedLandscape: UIEdgeInsets { UIEdgeInsets(top: top.fixedLandscape, left: left.fixedLandscape, bottom: bottom.fixedLandscape, right: right.fixedLandscape) }
     /// 获取基于当前设备的倍数像素取整insets
     public var flatValue: UIEdgeInsets { UIEdgeInsets(top: top.flatValue, left: left.flatValue, bottom: bottom.flatValue, right: right.flatValue) }
     /// 获取向上取整insets
