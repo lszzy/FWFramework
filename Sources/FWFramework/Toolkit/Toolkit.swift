@@ -251,7 +251,7 @@ extension Wrapper where Base: UIApplication {
         activityController.completionWithItemsHandler = completionHandler
         // 兼容iPad，默认居中显示
         let viewController = Navigator.topPresentedController
-        if UIDevice.fw.isIpad, let viewController,
+        if UIDevice.current.userInterfaceIdiom == .pad, let viewController,
            let popoverController = activityController.popoverPresentationController {
             let ancestorView = viewController.fw.ancestorView
             popoverController.sourceView = ancestorView
