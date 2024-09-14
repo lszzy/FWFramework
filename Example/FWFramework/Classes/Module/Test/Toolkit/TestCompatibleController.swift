@@ -21,10 +21,6 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         designValue(15)
     }
 
-    private var designSize: CGFloat {
-        designValue(100)
-    }
-
     private func designValue(_ value: CGFloat) -> CGFloat {
         mode == .relative ? APP.relative(value) : value
     }
@@ -46,13 +42,6 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         return result
     }()
 
-    private lazy var imageView: UIImageView = {
-        let result = UIImageView()
-        result.contentMode = .scaleAspectFill
-        result.image = UIImage.app.appIconImage()
-        return result
-    }()
-
     private lazy var textLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
@@ -61,13 +50,22 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.textAlignment = .center
         result.font = APP.font(designValue(16))
         result.app.setBorderColor(AppTheme.borderColor, width: 0.5)
-        result.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(UIScreen.app.referenceSize.width)x\(UIScreen.app.referenceSize.height)，当前屏幕大小为\(APP.screenWidth)x\(APP.screenHeight)，宽度缩放比例为\(APP.relativeScale)\n示例设计图间距为15，图片大小为100x100，观察不同兼容模式下不同屏幕的显示效果"
+        return result
+    }()
+    
+    private lazy var horizontalView: UIImageView = {
+        let result = UIImageView()
+        result.contentMode = .scaleAspectFill
+        result.image = ModuleBundle.imageNamed("Loading.gif")
+        result.clipsToBounds = true
         return result
     }()
 
-    private lazy var bottomView: UIView = {
-        let result = UIView()
-        result.backgroundColor = .brown
+    private lazy var verticalView: UIImageView = {
+        let result = UIImageView()
+        result.contentMode = .scaleAspectFill
+        result.image = UIImage.app.appIconImage()
+        result.clipsToBounds = true
         return result
     }()
 
@@ -80,6 +78,14 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         }
         return result
     }()
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.setupData()
+        }, completion: nil)
+    }
 
     func setupNavbar() {
         app.extendedLayoutEdge = .bottom
@@ -96,11 +102,11 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         if mode == .transform {
             view.app.autoScaleTransform = true
         }
-
+        
         view.addSubview(bannerView)
-        view.addSubview(imageView)
         view.addSubview(textLabel)
-        view.addSubview(bottomView)
+        view.addSubview(horizontalView)
+        view.addSubview(verticalView)
         view.addSubview(confirmButton)
     }
 
@@ -108,26 +114,34 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         bannerView.app.layoutChain
             .top(designMargin)
             .horizontal(designMargin)
-            .height(designSize)
-
-        imageView.app.layoutChain
-            .centerX()
-            .top(toViewBottom: bannerView, offset: designMargin)
-            .size(CGSizeMake(designSize, designSize))
+            .height(designValue(100))
 
         textLabel.app.layoutChain
             .horizontal(designMargin)
-            .top(toViewBottom: imageView, offset: designMargin)
-
-        bottomView.app.layoutChain
-            .centerX()
-            .width(designSize)
+            .top(toViewBottom: bannerView, offset: designMargin)
+        
+        horizontalView.app.layoutChain
+            .horizontal(designMargin)
             .top(toViewBottom: textLabel, offset: designMargin)
-            .bottom(toViewTop: confirmButton, offset: -designMargin)
+            .height(designValue(100))
 
+        verticalView.app.layoutChain
+            .centerX()
+            .width(designValue(100))
+            .top(toViewBottom: horizontalView, offset: designMargin)
+            .height(designValue(100))
+        
         confirmButton.app.layoutChain
             .horizontal(designMargin)
             .bottom(designMargin + APP.safeAreaInsets.bottom)
             .height(designValue(50))
+        
+        setupData()
+    }
+    
+    func setupData() {
+        let referenceWidth = UIDevice.app.isLandscape ? UIScreen.app.referenceSize.height : UIScreen.app.referenceSize.width
+        let referenceHeight = UIDevice.app.isLandscape ? UIScreen.app.referenceSize.width : UIScreen.app.referenceSize.height
+        textLabel.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(referenceWidth)x\(referenceHeight)\n当前屏幕大小为\(APP.screenWidth)x\(APP.screenHeight)\n宽度缩放比例为\(APP.relativeScale)\n示例设计图间距为15，图片大小为100x100\n观察不同兼容模式下不同屏幕的显示效果"
     }
 }
