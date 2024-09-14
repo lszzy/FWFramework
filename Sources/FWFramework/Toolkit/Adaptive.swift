@@ -804,7 +804,6 @@ extension UIEdgeInsets {
 // MARK: - UIDevice+Adaptive
 extension UIDevice {
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
-    nonisolated(unsafe) static var innerDeviceIDFV: String?
 }
 
 // MARK: - UIScreen+Adaptive
