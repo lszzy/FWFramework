@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - ChainRequest
 /// 队列请求代理
-@MainActor public protocol ChainRequestDelegate: AnyObject {
+public protocol ChainRequestDelegate: AnyObject {
     /// 队列请求完成
-    func chainRequestFinished(_ chainRequest: ChainRequest)
+    @MainActor func chainRequestFinished(_ chainRequest: ChainRequest)
     /// 队列请求失败
-    func chainRequestFailed(_ chainRequest: ChainRequest)
+    @MainActor func chainRequestFailed(_ chainRequest: ChainRequest)
 }
 
 extension ChainRequestDelegate {

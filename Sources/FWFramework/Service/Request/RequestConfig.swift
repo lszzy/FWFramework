@@ -244,7 +244,9 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         guard !request.isCancelled, let error = request.error else { return }
 
         if let block = showErrorBlock {
-            block(request)
+            DispatchQueue.fw.mainAsync {
+                block(request)
+            }
             return
         }
 
@@ -258,7 +260,9 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         guard !request.isCancelled else { return }
 
         if let block = showLoadingBlock {
-            block(request)
+            DispatchQueue.fw.mainAsync {
+                block(request)
+            }
             return
         }
 
@@ -271,7 +275,9 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
     /// 隐藏请求加载条，优先调用config
     open func hideLoading(for request: HTTPRequest) {
         if let block = hideLoadingBlock {
-            block(request)
+            DispatchQueue.fw.mainAsync {
+                block(request)
+            }
             return
         }
 
