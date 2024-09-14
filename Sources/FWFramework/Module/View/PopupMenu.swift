@@ -615,7 +615,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         orientationManager.deviceOrientationDidChangeHandler = { [weak self] orientation in
             if orientation == .portrait || orientation == .landscapeLeft || orientation == .landscapeRight {
                 if self?.relyView != nil {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
                         self?.calculateRealPointIfNeed()
                         self?.updateUI()
                     }

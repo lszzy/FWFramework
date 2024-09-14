@@ -166,7 +166,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         let authorizationStatus = AssetManager.authorizationStatus
         if authorizationStatus == .notDetermined {
             AssetManager.requestAuthorization { [weak self] status in
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
                     if status == .notAuthorized {
                         self?.showDeniedView()
                     } else {
@@ -945,7 +945,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         // 另外这里采用异步请求获取图片，避免获取图片时 UI 卡顿
         let progressHandler: @Sendable (Double, (any Error)?, UnsafeMutablePointer<ObjCBool>, [AnyHashable: Any]?) -> Void = { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 if self?.downloadStatus != .downloading {
                     self?.downloadStatus = .downloading
                     zoomImageView.progress = 0
@@ -998,7 +998,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                     // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
                     let sendableLivePhoto = SendableObject(livePhoto)
                     let sendableInfo = SendableObject(info)
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
                         let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
                         let loadICloudImageFault = sendableLivePhoto.object == nil || sendableInfo.object?[PHImageErrorKey] != nil
                         if isCurrentRequest && !loadICloudImageFault {
@@ -1044,7 +1044,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
                     // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
                     // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
                     let sendableInfo = SendableObject(info)
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
                         let isCurrentRequest = (zoomImageView.tag == -1 && imageAsset.requestID == 0) || zoomImageView.tag == imageAsset.requestID
                         let loadICloudImageFault = result == nil || sendableInfo.object?[PHImageErrorKey] != nil
                         if isCurrentRequest && !loadICloudImageFault {
@@ -1129,7 +1129,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
         let zoomImageView = imagePreviewView.currentZoomImageView
         let imageAsset = imagesAssetArray[imagePreviewView.currentImageIndex]
         imageAsset.requestOriginImage { [weak self] result, _, finished in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 if finished, let result {
                     imageAsset.updateDownloadStatus(downloadResult: true)
                     self?.downloadStatus = .succeed
@@ -1144,7 +1144,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             }
         } progressHandler: { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 if self?.downloadStatus != .downloading {
                     self?.downloadStatus = .downloading
                     zoomImageView?.progress = 0
@@ -2278,7 +2278,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
             }
         }, progressHandler: { @Sendable [weak self] progress, error, _, _ in
             imageAsset.downloadProgress = progress
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 let visibleIndexPaths = self?.collectionView.indexPathsForVisibleItems ?? []
                 var itemVisible = false
                 for visibleIndexPath in visibleIndexPaths {
