@@ -993,7 +993,7 @@ open class ImagePickerPreviewController: ImagePreviewController, UICollectionVie
             if imageAsset.assetSubType == .livePhoto && checkLivePhoto {
                 isLivePhoto = true
                 zoomImageView.tag = -1
-                imageAsset.requestID = imageAsset.requestLivePhoto(size: Asset.previewImageSize, completion: { [weak self] livePhoto, info, finished in
+                imageAsset.requestID = imageAsset.requestLivePhoto(completion: { [weak self] livePhoto, info, finished in
                     // 这里可能因为 imageView 复用，导致前面的请求得到的结果显示到别的 imageView 上，
                     // 因此判断如果是新请求（无复用问题）或者是当前的请求才把获得的图片结果展示出来
                     let sendableLivePhoto = SendableObject(livePhoto)
@@ -1946,7 +1946,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 if asset.editedImage != nil {
                     completionHandler(asset, asset.editedImage, nil)
                 } else if checkLivePhoto && asset.assetSubType == .livePhoto {
-                    asset.requestLivePhoto(size: Asset.previewImageSize) { livePhoto, info, finished in
+                    asset.requestLivePhoto { livePhoto, info, finished in
                         if finished {
                             completionHandler(asset, livePhoto, info)
                         }
@@ -1965,7 +1965,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                         }
                     }
                 } else {
-                    asset.requestPreviewImage(size: Asset.previewImageSize) { result, info, finished in
+                    asset.requestPreviewImage { result, info, finished in
                         if finished {
                             completionHandler(asset, result, info)
                         }

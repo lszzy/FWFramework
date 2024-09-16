@@ -73,12 +73,12 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        homeButton.contentEdgeInsets = UIEdgeInsets(top: APP.isLandscape ? 2 : 8, left: 8, bottom: APP.isLandscape ? 2 : 8, right: 8)
-        homeButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
+        homeButton.contentEdgeInsets = UIEdgeInsets(top: APP.isInterfaceLandscape ? 2 : 8, left: 8, bottom: APP.isInterfaceLandscape ? 2 : 8, right: 8)
+        homeButton.app.setImageEdge(APP.isInterfaceLandscape ? .left : .top, spacing: APP.isInterfaceLandscape ? 4 : 2)
         testButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        testButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
+        testButton.app.setImageEdge(APP.isInterfaceLandscape ? .left : .top, spacing: APP.isInterfaceLandscape ? 4 : 2)
         settingsButton.contentEdgeInsets = homeButton.contentEdgeInsets
-        settingsButton.app.setImageEdge(APP.isLandscape ? .left : .top, spacing: APP.isLandscape ? 4 : 2)
+        settingsButton.app.setImageEdge(APP.isInterfaceLandscape ? .left : .top, spacing: APP.isInterfaceLandscape ? 4 : 2)
     }
 
     func setupSubviews() {

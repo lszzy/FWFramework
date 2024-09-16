@@ -45,30 +45,8 @@ extension WrapperGlobal {
     ///   - weight: 字重可选，默认Regular
     ///   - autoScale: 是否自动等比例缩放，默认全局配置
     /// - Returns: UIFont
-    @MainActor public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+    public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         UIFont.fw.font(ofSize: size, weight: weight, autoScale: autoScale)
-    }
-    
-    /// 快速创建设备纵向界面系统字体，自动等比例缩放
-    ///
-    /// - Parameters:
-    ///   - size: 字体字号
-    ///   - weight: 字重可选，默认Regular
-    ///   - autoScale: 是否自动等比例缩放，默认全局配置
-    /// - Returns: UIFont
-    public static func portraitFont(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        UIFont.fw.portraitFont(ofSize: size, weight: weight, autoScale: autoScale)
-    }
-    
-    /// 快速创建设备横向界面系统字体，自动等比例缩放
-    ///
-    /// - Parameters:
-    ///   - size: 字体字号
-    ///   - weight: 字重可选，默认Regular
-    ///   - autoScale: 是否自动等比例缩放，默认全局配置
-    /// - Returns: UIFont
-    public static func landscapeFont(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        UIFont.fw.landscapeFont(ofSize: size, weight: weight, autoScale: autoScale)
     }
 }
 
@@ -778,7 +756,7 @@ extension Wrapper where Base: UIColor {
 // MARK: - Wrapper+UIFont
 extension Wrapper where Base: UIFont {
     /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
-    public static var autoScaleBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)? {
+    public static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)? {
         get { Base.innerAutoScaleBlock }
         set { Base.innerAutoScaleBlock = newValue }
     }
@@ -790,7 +768,7 @@ extension Wrapper where Base: UIFont {
         }
         set {
             guard newValue != autoScaleFont else { return }
-            Base.innerAutoScaleBlock = newValue ? { @MainActor @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
+            Base.innerAutoScaleBlock = newValue ? { @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
         }
     }
 
@@ -807,55 +785,35 @@ extension Wrapper where Base: UIFont {
     }
 
     /// 返回系统Thin字体，自动等比例缩放
-    @MainActor public static func thinFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+    public static func thinFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
         font(ofSize: ofSize, weight: .thin, autoScale: autoScale)
     }
 
     /// 返回系统Light字体，自动等比例缩放
-    @MainActor public static func lightFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+    public static func lightFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
         font(ofSize: ofSize, weight: .light, autoScale: autoScale)
     }
 
     /// 返回系统Medium字体，自动等比例缩放
-    @MainActor public static func mediumFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+    public static func mediumFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
         font(ofSize: ofSize, weight: .medium, autoScale: autoScale)
     }
 
     /// 返回系统Semibold字体，自动等比例缩放
-    @MainActor public static func semiboldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+    public static func semiboldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
         font(ofSize: ofSize, weight: .semibold, autoScale: autoScale)
     }
 
     /// 返回系统Bold字体，自动等比例缩放
-    @MainActor public static func boldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
+    public static func boldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
         font(ofSize: ofSize, weight: .bold, autoScale: autoScale)
     }
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
-    @MainActor public static func font(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
+    public static func font(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
         var fontSize = size
         if (autoScale == nil && autoScaleFont) || autoScale == true {
             fontSize = autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: autoFlatFont)
-        }
-
-        return nonScaleFont(ofSize: fontSize, weight: weight)
-    }
-    
-    /// 创建指定尺寸和weight的设备纵向界面系统字体，自动等比例缩放
-    public static func portraitFont(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        var fontSize = size
-        if (autoScale == nil && autoScaleFont) || autoScale == true {
-            fontSize = UIDevice.fw.relativePortrait(size, flat: autoFlatFont)
-        }
-
-        return nonScaleFont(ofSize: fontSize, weight: weight)
-    }
-    
-    /// 创建指定尺寸和weight的设备横向界面系统字体，自动等比例缩放
-    public static func landscapeFont(ofSize size: CGFloat, weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        var fontSize = size
-        if (autoScale == nil && autoScaleFont) || autoScale == true {
-            fontSize = UIDevice.fw.relativeLandscape(size, flat: autoFlatFont)
         }
 
         return nonScaleFont(ofSize: fontSize, weight: weight)
@@ -2051,7 +2009,7 @@ extension UIColor {
 
 // MARK: - UIFont+Toolkit
 extension UIFont {
-    fileprivate nonisolated(unsafe) static var innerAutoScaleBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerAutoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
     fileprivate nonisolated(unsafe) static var innerAutoFlatFont = false
     fileprivate nonisolated(unsafe) static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
     fileprivate static let innerWeightSuffixes: [UIFont.Weight: String] = [

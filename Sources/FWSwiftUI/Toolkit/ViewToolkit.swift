@@ -284,7 +284,7 @@ extension Color {
 }
 
 // MARK: - Font+Toolkit
-@MainActor extension Font {
+extension Font {
     /// 全局自定义字体句柄，优先调用
     public nonisolated(unsafe) static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
 
@@ -322,35 +322,15 @@ extension Color {
 
         return nonScaleFont(size: fontSize, weight: weight)
     }
-    
-    /// 创建指定尺寸和weight的设备纵向界面系统字体，自动等比例缩放
-    public nonisolated static func portraitFont(size: CGFloat, weight: Font.Weight = .regular, autoScale: Bool? = nil) -> Font {
-        var fontSize = size
-        if (autoScale == nil && UIFont.fw.autoScaleFont) || autoScale == true {
-            fontSize = UIDevice.fw.relativePortrait(size, flat: UIFont.fw.autoFlatFont)
-        }
-
-        return nonScaleFont(size: fontSize, weight: weight)
-    }
-    
-    /// 创建指定尺寸和weight的设备横向界面系统字体，自动等比例缩放
-    public nonisolated static func landscapeFont(size: CGFloat, weight: Font.Weight = .regular, autoScale: Bool? = nil) -> Font {
-        var fontSize = size
-        if (autoScale == nil && UIFont.fw.autoScaleFont) || autoScale == true {
-            fontSize = UIDevice.fw.relativeLandscape(size, flat: UIFont.fw.autoFlatFont)
-        }
-
-        return nonScaleFont(size: fontSize, weight: weight)
-    }
 
     /// 创建指定尺寸和weight的不缩放系统字体
-    public nonisolated static func nonScaleFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+    public static func nonScaleFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         if let font = fontBlock?(size, weight) { return font }
         return .system(size: size, weight: weight)
     }
 
     /// 获取指定名称、字重、斜体字体的完整规范名称
-    public nonisolated static func fontName(_ name: String, weight: Font.Weight, italic: Bool = false) -> String {
+    public static func fontName(_ name: String, weight: Font.Weight, italic: Bool = false) -> String {
         var fontName = name
         if let weightSuffix = weightSuffixes[weight] {
             fontName += weightSuffix + (italic ? "Italic" : "")
@@ -358,7 +338,7 @@ extension Color {
         return fontName
     }
 
-    private nonisolated static let weightSuffixes: [Font.Weight: String] = [
+    private static let weightSuffixes: [Font.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
         .light: "-Light",
