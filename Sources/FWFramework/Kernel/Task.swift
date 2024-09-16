@@ -23,6 +23,11 @@ extension Wrapper where Base: DispatchQueue {
     public static func mainSyncIf(execute block: @MainActor () -> Void) {
         MainActor.runSyncIf(execute: block)
     }
+    
+    /// 当主线程时执行句柄，非主线程执行另一个句柄
+    public static func mainSyncIf(execute block: @MainActor () -> Void, otherwise: () -> Void) {
+        MainActor.runSyncIf(execute: block, otherwise: otherwise)
+    }
 }
 
 // MARK: - MainActor+Task
@@ -49,6 +54,15 @@ extension MainActor {
     public static func runSyncIf(execute block: @MainActor () -> Void) {
         if Thread.isMainThread {
             MainActor.assumeIsolated(block)
+        }
+    }
+    
+    /// 当主线程时执行句柄，非主线程另一个句柄
+    public static func runSyncIf(execute block: @MainActor () -> Void, otherwise: () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated(block)
+        } else {
+            otherwise()
         }
     }
 }
