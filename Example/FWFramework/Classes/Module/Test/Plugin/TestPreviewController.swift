@@ -123,7 +123,7 @@ extension TestPreviewController: ViewControllerProtocol {
 
         let margins = UIEdgeInsets(top: 24 + app.topBarHeight, left: 24 + view.safeAreaInsets.left, bottom: 24, right: 24 + view.safeAreaInsets.right)
         let contentWidth = view.app.width - (margins.left + margins.right)
-        let column = APP.isIpad || APP.isLandscape ? images.count : 3
+        let column = APP.isIpad || APP.isInterfaceLandscape ? images.count : 3
         let imageWidth = contentWidth / CGFloat(column) - CGFloat(column - 1) * (floatView.itemMargins.left + floatView.itemMargins.right)
         floatView.minimumItemSize = CGSize(width: imageWidth, height: imageWidth)
         floatView.maximumItemSize = floatView.minimumItemSize

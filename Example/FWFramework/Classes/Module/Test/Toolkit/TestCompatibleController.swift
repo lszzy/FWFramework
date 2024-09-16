@@ -140,8 +140,8 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     }
     
     func setupData() {
-        let referenceWidth = UIDevice.app.isLandscape ? UIScreen.app.referenceSize.height : UIScreen.app.referenceSize.width
-        let referenceHeight = UIDevice.app.isLandscape ? UIScreen.app.referenceSize.width : UIScreen.app.referenceSize.height
+        let referenceWidth = UIScreen.app.isInterfaceLandscape ? UIScreen.app.referenceSize.height : UIScreen.app.referenceSize.width
+        let referenceHeight = UIScreen.app.isInterfaceLandscape ? UIScreen.app.referenceSize.width : UIScreen.app.referenceSize.height
         textLabel.text = "当前适配模式：\(mode == .default ? "默认适配" : (mode == .relative ? "等比例适配" : "等比例缩放"))\n示例设计图大小为\(referenceWidth)x\(referenceHeight)\n当前屏幕大小为\(APP.screenWidth)x\(APP.screenHeight)\n宽度缩放比例为\(APP.relativeScale)\n示例设计图间距为15，图片大小为100x100\n观察不同兼容模式下不同屏幕的显示效果"
     }
 }
