@@ -252,22 +252,16 @@ extension Wrapper where Base: UIDevice {
     /// 设备宽度，跟横竖屏无关
     public static var deviceWidth: CGFloat {
         if UIDevice.innerDeviceWidth == nil {
-            DispatchQueue.fw.mainSync {
-                UIDevice.innerDeviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-            }
+            DispatchQueue.fw.mainSync { UIDevice.innerDeviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) }
         }
-
         return UIDevice.innerDeviceWidth ?? 0
     }
 
     /// 设备高度，跟横竖屏无关
     public static var deviceHeight: CGFloat {
         if UIDevice.innerDeviceHeight == nil {
-            DispatchQueue.fw.mainSync {
-                UIDevice.innerDeviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-            }
+            DispatchQueue.fw.mainSync { UIDevice.innerDeviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height) }
         }
-
         return UIDevice.innerDeviceHeight ?? 0
     }
 
@@ -368,11 +362,8 @@ extension Wrapper where Base: UIDevice {
     /// 屏幕像素比例
     public nonisolated static var screenScale: CGFloat {
         if UIScreen.innerScreenScale == nil {
-            DispatchQueue.fw.mainSync {
-                UIScreen.innerScreenScale = UIScreen.main.scale
-            }
+            DispatchQueue.fw.mainSync { UIScreen.innerScreenScale = UIScreen.main.scale }
         }
-
         return UIScreen.innerScreenScale ?? 0
     }
     
