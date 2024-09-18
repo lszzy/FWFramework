@@ -834,7 +834,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         queue(message: message)
     }
 
-    private func flush(messageQueueString: String) {
+    @MainActor private func flush(messageQueueString: String) {
         guard let messages = deserialize(messageJSON: messageQueueString) else {
             if isLogEnabled {
                 log("WARNING: " + messageQueueString)
