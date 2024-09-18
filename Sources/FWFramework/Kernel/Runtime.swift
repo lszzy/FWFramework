@@ -477,7 +477,7 @@ extension Wrapper where Base: NSObject {
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         objc_setAssociatedObject(object, pointer, value, policy)
     }
-    
+
     // MARK: - Method
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
     ///
@@ -500,7 +500,7 @@ extension Wrapper where Base: NSObject {
         guard let selector = setterSelector(name) else { return }
         _ = base.perform(selector, with: object)
     }
-    
+
     private func getterSelector(_ name: String) -> Selector? {
         let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
         guard !name.isEmpty else { return nil }
@@ -520,7 +520,7 @@ extension Wrapper where Base: NSObject {
         }
         return nil
     }
-    
+
     private func setterSelector(_ name: String) -> Selector? {
         let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
         guard !name.isEmpty else { return nil }
@@ -538,7 +538,7 @@ extension Wrapper where Base: NSObject {
         }
         return nil
     }
-    
+
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
@@ -548,7 +548,7 @@ extension Wrapper where Base: NSObject {
     public func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         NSObject.fw.invokeMethod(base, selector: selector, objects: objects)
     }
-    
+
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - target: 调用的目标
@@ -675,7 +675,7 @@ extension Wrapper where Base: NSObject {
         }
         return value != nil ? Unmanaged.passRetained(value as AnyObject) : nil
     }
-    
+
     // MARK: - Value
     /// 安全获取当前对象的指定属性值(非keyPath)
     public func value(forKey key: String) -> Any? {

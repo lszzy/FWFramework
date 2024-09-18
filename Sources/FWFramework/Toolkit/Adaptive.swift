@@ -193,12 +193,12 @@ extension Wrapper where Base: UIDevice {
 
     /// 是否是iPhone
     public static var isIphone: Bool {
-        return deviceModel.hasPrefix("iPhone")
+        deviceModel.hasPrefix("iPhone")
     }
 
     /// 是否是iPad
     public static var isIpad: Bool {
-        return deviceModel.hasPrefix("iPad")
+        deviceModel.hasPrefix("iPad")
     }
 
     /// 是否是Mac
@@ -251,18 +251,28 @@ extension Wrapper where Base: UIDevice {
 
     /// 设备宽度，跟横竖屏无关
     public static var deviceWidth: CGFloat {
-        if UIDevice.innerDeviceWidth == nil {
-            DispatchQueue.fw.mainSync { UIDevice.innerDeviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) }
+        if let deviceWidth = UIDevice.innerDeviceWidth { return deviceWidth }
+        
+        let deviceWidth = DispatchQueue.fw.mainSyncIf {
+            min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        } otherwise: {
+            min(UIScreen.fw.screenSize.width, UIScreen.fw.screenSize.height)
         }
-        return UIDevice.innerDeviceWidth ?? 0
+        UIDevice.innerDeviceWidth = deviceWidth
+        return deviceWidth
     }
 
     /// 设备高度，跟横竖屏无关
     public static var deviceHeight: CGFloat {
-        if UIDevice.innerDeviceHeight == nil {
-            DispatchQueue.fw.mainSync { UIDevice.innerDeviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height) }
+        if let deviceHeight = UIDevice.innerDeviceHeight { return deviceHeight }
+        
+        let deviceHeight = DispatchQueue.fw.mainSyncIf {
+            max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        } otherwise: {
+            max(UIScreen.fw.screenSize.width, UIScreen.fw.screenSize.height)
         }
-        return UIDevice.innerDeviceHeight ?? 0
+        UIDevice.innerDeviceHeight = deviceHeight
+        return deviceHeight
     }
 
     /// 设备分辨率，跟横竖屏无关
@@ -293,14 +303,14 @@ extension Wrapper where Base: UIDevice {
 
     /// 设备是否横屏，无论支不支持横屏
     public static var isDeviceLandscape: Bool {
-        var isLandscape = false
-        DispatchQueue.fw.mainSyncIf {
-            isLandscape = UIDevice.current.orientation.isLandscape
+        let isLandscape = DispatchQueue.fw.mainSyncIf {
+            UIDevice.current.orientation.isLandscape
         } otherwise: {
             if let orientationValue = UIDevice.innerCurrentDevice?.fw.value(forKey: "orientation") as? Int,
                let orientation = UIDeviceOrientation(rawValue: orientationValue) {
-                isLandscape = orientation.isLandscape
+                return orientation.isLandscape
             }
+            return false
         }
         return isLandscape
     }
@@ -341,14 +351,12 @@ extension Wrapper where Base: UIDevice {
 @MainActor extension Wrapper where Base: UIScreen {
     /// 屏幕尺寸
     public nonisolated static var screenSize: CGSize {
-        var size: CGSize = .zero
-        DispatchQueue.fw.mainSyncIf {
-            size = UIScreen.main.bounds.size
+        let screenBounds = DispatchQueue.fw.mainSyncIf {
+            UIScreen.main.bounds
         } otherwise: {
-            let bounds = UIScreen.innerMainScreen?.fw.value(forKey: "bounds") as? CGRect
-            size = bounds?.size ?? .zero
+            UIScreen.innerMainScreen?.fw.value(forKey: "bounds") as? CGRect ?? .zero
         }
-        return size
+        return screenBounds.size
     }
 
     /// 屏幕宽度
@@ -363,19 +371,23 @@ extension Wrapper where Base: UIDevice {
 
     /// 屏幕像素比例
     public nonisolated static var screenScale: CGFloat {
-        if UIScreen.innerScreenScale == nil {
-            DispatchQueue.fw.mainSync { UIScreen.innerScreenScale = UIScreen.main.scale }
+        if let screenScale = UIScreen.innerScreenScale { return screenScale }
+
+        let screenScale = DispatchQueue.fw.mainSyncIf {
+            UIScreen.main.scale
+        } otherwise: {
+            UIScreen.innerMainScreen?.fw.value(forKey: "scale") as? CGFloat ?? 0
         }
-        return UIScreen.innerScreenScale ?? 0
+        UIScreen.innerScreenScale = screenScale
+        return screenScale
     }
-    
+
     /// 界面是否横屏
     public nonisolated static var isInterfaceLandscape: Bool {
-        var isLandscape = false
-        DispatchQueue.fw.mainSyncIf {
-            isLandscape = UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
+        let isLandscape = DispatchQueue.fw.mainSyncIf {
+            UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
         } otherwise: {
-            isLandscape = screenHeight <= screenWidth
+            screenHeight <= screenWidth
         }
         return isLandscape
     }
@@ -830,16 +842,21 @@ extension UIDevice {
     private nonisolated(unsafe) static var innerCachedCurrentDevice: UIDevice?
     nonisolated static var innerCurrentDevice: UIDevice? {
         get {
-            if innerCachedCurrentDevice == nil {
-                DispatchQueue.fw.mainSync { innerCachedCurrentDevice = UIDevice.current }
+            if let currentDevice = innerCachedCurrentDevice { return currentDevice }
+            
+            let currentDevice = DispatchQueue.fw.mainSyncIf {
+                UIDevice.current
+            } otherwise: {
+                UIDevice.perform(#selector(getter: UIDevice.current))?.takeUnretainedValue() as? UIDevice
             }
-            return innerCachedCurrentDevice
+            innerCachedCurrentDevice = currentDevice
+            return currentDevice
         }
         set {
             innerCachedCurrentDevice = newValue
         }
     }
-    
+
     fileprivate nonisolated(unsafe) static var innerDeviceWidth: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceHeight: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
@@ -852,16 +869,21 @@ extension UIScreen {
     private nonisolated(unsafe) static var innerCachedMainScreen: UIScreen?
     fileprivate nonisolated static var innerMainScreen: UIScreen? {
         get {
-            if innerCachedMainScreen == nil {
-                DispatchQueue.fw.mainSync { innerCachedMainScreen = UIScreen.main }
+            if let mainScreen = innerCachedMainScreen { return mainScreen }
+            
+            let mainScreen = DispatchQueue.fw.mainSyncIf {
+                UIScreen.main
+            } otherwise: {
+                UIScreen.perform(#selector(getter: UIScreen.main))?.takeUnretainedValue() as? UIScreen
             }
-            return innerCachedMainScreen
+            innerCachedMainScreen = mainScreen
+            return mainScreen
         }
         set {
             innerCachedMainScreen = newValue
         }
     }
-    
+
     fileprivate nonisolated(unsafe) static var innerScreenScale: CGFloat?
     fileprivate nonisolated(unsafe) static var innerReferenceSize: CGSize = .init(width: 375, height: 812)
     fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (@Sendable () -> CGFloat)?

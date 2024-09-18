@@ -52,7 +52,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         result.app.setBorderColor(AppTheme.borderColor, width: 0.5)
         return result
     }()
-    
+
     private lazy var horizontalView: UIImageView = {
         let result = UIImageView()
         result.contentMode = .scaleAspectFill
@@ -78,10 +78,10 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         }
         return result
     }()
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
+
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.setupData()
         }, completion: nil)
@@ -102,7 +102,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         if mode == .transform {
             view.app.autoScaleTransform = true
         }
-        
+
         view.addSubview(bannerView)
         view.addSubview(textLabel)
         view.addSubview(horizontalView)
@@ -119,7 +119,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         textLabel.app.layoutChain
             .horizontal(designMargin)
             .top(toViewBottom: bannerView, offset: designMargin)
-        
+
         horizontalView.app.layoutChain
             .horizontal(designMargin)
             .top(toViewBottom: textLabel, offset: designMargin)
@@ -130,15 +130,15 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
             .width(designValue(100))
             .top(toViewBottom: horizontalView, offset: designMargin)
             .height(designValue(100))
-        
+
         confirmButton.app.layoutChain
             .horizontal(designMargin)
             .bottom(designMargin + APP.safeAreaInsets.bottom)
             .height(designValue(50))
-        
+
         setupData()
     }
-    
+
     func setupData() {
         let referenceWidth = UIScreen.app.isInterfaceLandscape ? UIScreen.app.referenceSize.height : UIScreen.app.referenceSize.width
         let referenceHeight = UIScreen.app.isInterfaceLandscape ? UIScreen.app.referenceSize.width : UIScreen.app.referenceSize.height

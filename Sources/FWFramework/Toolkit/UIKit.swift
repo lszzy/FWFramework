@@ -165,14 +165,14 @@ extension Wrapper where Base: UIDevice {
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        if UIDevice.innerDeviceIDFV == nil {
-            DispatchQueue.fw.mainSyncIf {
-                UIDevice.innerDeviceIDFV = UIDevice.current.identifierForVendor?.uuidString
-            } otherwise: {
-                let identifier = UIDevice.innerCurrentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
-                UIDevice.innerDeviceIDFV = identifier?.uuidString
-            }
+        if let deviceIDFV = UIDevice.innerDeviceIDFV { return deviceIDFV }
+
+        let identifier = DispatchQueue.fw.mainSyncIf {
+            UIDevice.current.identifierForVendor
+        } otherwise: {
+            UIDevice.innerCurrentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
         }
+        UIDevice.innerDeviceIDFV = identifier?.uuidString
         return UIDevice.innerDeviceIDFV
     }
 
