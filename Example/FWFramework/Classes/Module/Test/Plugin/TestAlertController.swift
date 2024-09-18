@@ -265,7 +265,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         let multicastBlock = MulticastBlock(invokeOnce: true, onMainThread: true)
 
         multicastBlock.append({ [weak self] completionHandler in
-            MainActor.runSync { [weak self] in
+            MainActor.runSyncIf { [weak self] in
                 self?.app.showAlert(title: "低优先级", message: "警告框消息", cancel: nil, cancelBlock: {
                     completionHandler()
                 })
@@ -273,7 +273,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         }, priority: .low)
 
         multicastBlock.append({ [weak self] completionHandler in
-            MainActor.runSync { [weak self] in
+            MainActor.runSyncIf { [weak self] in
                 self?.app.showAlert(title: "普通优先级", message: "警告框消息", cancel: nil, cancelBlock: {
                     completionHandler()
                 })
@@ -281,7 +281,7 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         }, priority: .normal)
 
         multicastBlock.append({ [weak self] completionHandler in
-            MainActor.runSync { [weak self] in
+            MainActor.runSyncIf { [weak self] in
                 self?.app.showAlert(title: "高优先级", message: "警告框消息", cancel: nil, cancelBlock: {
                     completionHandler()
                 })
