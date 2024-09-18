@@ -297,8 +297,10 @@ extension Wrapper where Base: UIDevice {
         DispatchQueue.fw.mainSyncIf {
             isLandscape = UIDevice.current.orientation.isLandscape
         } otherwise: {
-            let orientation = UIDevice.innerCurrentDevice?.perform(#selector(getter: UIDevice.orientation))?.takeUnretainedValue() as? UIDeviceOrientation
-            isLandscape = orientation?.isLandscape ?? false
+            if let orientationValue = UIDevice.innerCurrentDevice?.fw.value(forKey: "orientation") as? Int,
+               let orientation = UIDeviceOrientation(rawValue: orientationValue) {
+                isLandscape = orientation.isLandscape
+            }
         }
         return isLandscape
     }
@@ -343,7 +345,7 @@ extension Wrapper where Base: UIDevice {
         DispatchQueue.fw.mainSyncIf {
             size = UIScreen.main.bounds.size
         } otherwise: {
-            let bounds = UIScreen.innerMainScreen?.perform(#selector(getter: UIScreen.bounds))?.takeUnretainedValue() as? CGRect
+            let bounds = UIScreen.innerMainScreen?.fw.value(forKey: "bounds") as? CGRect
             size = bounds?.size ?? .zero
         }
         return size

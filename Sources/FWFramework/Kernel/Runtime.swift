@@ -667,6 +667,20 @@ extension Wrapper where Base: NSObject {
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         objc_setAssociatedObject(object, pointer, value, policy)
     }
+    
+    // MARK: - Value
+    /// 安全获取当前对象的指定属性值(非keyPath)
+    public func value(forKey key: String) -> Any? {
+        guard base.responds(to: NSSelectorFromString(key)) else { return nil }
+        return base.value(forKey: key)
+    }
+
+    /// 安全设置当前对象的指定属性值(非keyPath)
+    public func setValue(_ value: Any?, forKey key: String) {
+        let ucfirstKey = String(key.prefix(1).uppercased() + key.dropFirst())
+        guard base.responds(to: NSSelectorFromString("set\(ucfirstKey):")) else { return }
+        base.setValue(value, forKey: key)
+    }
 
     // MARK: - Mirror
     /// 执行任意对象的反射属性句柄(含父类)

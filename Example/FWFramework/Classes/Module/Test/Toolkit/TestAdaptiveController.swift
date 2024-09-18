@@ -153,9 +153,9 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         } else {
             DispatchQueue.global().async { [weak self] in
                 let barText = String(
-                    format: "设备尺寸：(%.0f, %.0f) 屏幕尺寸：(%.0f, %.0f)\n是否是iPad：%@ 屏幕缩放比：%.0f\n设计图尺寸：(%.0f, %.0f)\n宽度缩放比：%.3f 高度缩放比：%.3f\n设备横屏：%@ 界面横屏：%@\n设备IDFV: %@\n设备IDFA: %@\n设备UUID: %@",
+                    format: "设备尺寸：(%.0f, %.0f) 屏幕尺寸：(%.0f, %.0f)\n是否是iPad：%@ 屏幕缩放比：%.0f\n设计图尺寸：(%.0f, %.0f)\n宽度缩放比：%.3f 高度缩放比：%.3f\n设备横屏：%@ 界面横屏：%@\nIDFV: %@\nIDFA: %@\nUUID: %@",
                     UIDevice.app.deviceWidth, UIDevice.app.deviceHeight, UIScreen.app.screenWidth, UIScreen.app.screenHeight,
-                    UIDevice.app.isIpad, UIScreen.app.screenScale,
+                    String(describing: UIDevice.app.isIpad), UIScreen.app.screenScale,
                     UIScreen.app.referenceSize.width, UIScreen.app.referenceSize.height,
                     UIScreen.app.relativeScale, UIScreen.app.relativeHeightScale,
                     String(describing: UIDevice.app.isDeviceLandscape), String(describing: UIScreen.app.isInterfaceLandscape),
