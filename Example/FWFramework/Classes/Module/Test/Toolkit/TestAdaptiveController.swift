@@ -12,6 +12,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = [String]
 
     var hideToast = false
+    var globalThread = false
 
     private lazy var frameLabel: UILabel = {
         let result = UILabel()
@@ -29,8 +30,13 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
 
         if !hideToast {
             app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-                self?.app.showSheet(title: nil, message: nil, actions: ["启用导航栏转场优化"], actionBlock: { _ in
-                    UINavigationController.app.enableBarTransition()
+                self?.app.showSheet(title: nil, message: nil, actions: [self?.globalThread == true ? "切换主线程调用" : "切换后台线程调用", "启用导航栏转场优化"], actionBlock: { [weak self] index in
+                    if index == 0 {
+                        self?.globalThread.toggle()
+                        self?.refreshBarFrame()
+                    } else {
+                        UINavigationController.app.enableBarTransition()
+                    }
                 })
             }
         } else {
@@ -49,7 +55,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         frameLabel.app.layoutChain
             .left(10)
             .right(10)
-            .bottom(APP.tabBarHeight + 10)
+            .bottom(APP.safeAreaInsets.bottom + 10)
 
         tableView.backgroundColor = AppTheme.tableColor
         tableView.app.layoutChain
@@ -131,7 +137,37 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
 
     @objc func refreshBarFrame() {
-        frameLabel.text = String(format: "全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：{%.0f, %.0f, %.0f, %.0f}", UIScreen.app.statusBarHeight, app.statusBarHeight, UIScreen.app.navigationBarHeight, app.navigationBarHeight, UIScreen.app.topBarHeight, app.topBarHeight, UIScreen.app.tabBarHeight, app.tabBarHeight, UIScreen.app.toolBarHeight, app.toolBarHeight, UIScreen.app.safeAreaInsets.top, UIScreen.app.safeAreaInsets.left, UIScreen.app.safeAreaInsets.bottom, UIScreen.app.safeAreaInsets.right)
+        if !globalThread {
+            let barText = String(
+                format: "全局状态栏：%.0f 当前状态栏：%.0f\n全局导航栏：%.0f 当前导航栏：%.0f\n全局顶部栏：%.0f 当前顶部栏：%.0f\n全局标签栏：%.0f 当前标签栏：%.0f\n全局工具栏：%.0f 当前工具栏：%.0f\n全局安全区域：{%.0f, %.0f, %.0f, %.0f}\n设备横屏：%@ 界面横屏：%@\n全面屏：%@ 灵动岛：%@",
+                UIScreen.app.statusBarHeight, app.statusBarHeight,
+                UIScreen.app.navigationBarHeight, app.navigationBarHeight,
+                UIScreen.app.topBarHeight, app.topBarHeight,
+                UIScreen.app.tabBarHeight, app.tabBarHeight,
+                UIScreen.app.toolBarHeight, app.toolBarHeight,
+                UIScreen.app.safeAreaInsets.top, UIScreen.app.safeAreaInsets.left, UIScreen.app.safeAreaInsets.bottom, UIScreen.app.safeAreaInsets.right,
+                String(describing: UIDevice.app.isDeviceLandscape), String(describing: UIScreen.app.isInterfaceLandscape),
+                String(describing: UIScreen.app.isNotchedScreen), String(describing: UIScreen.app.isDynamicIsland)
+            )
+            frameLabel.text = barText
+        } else {
+            DispatchQueue.global().async { [weak self] in
+                let barText = String(
+                    format: "设备尺寸：(%.0f, %.0f) 屏幕尺寸：(%.0f, %.0f)\n是否是iPad：%@ 屏幕缩放比：%.0f\n设计图尺寸：(%.0f, %.0f)\n宽度缩放比：%.3f 高度缩放比：%.3f\n设备横屏：%@ 界面横屏：%@\n设备IDFV: %@\n设备IDFA: %@\n设备UUID: %@",
+                    UIDevice.app.deviceWidth, UIDevice.app.deviceHeight, UIScreen.app.screenWidth, UIScreen.app.screenHeight,
+                    UIDevice.app.isIpad, UIScreen.app.screenScale,
+                    UIScreen.app.referenceSize.width, UIScreen.app.referenceSize.height,
+                    UIScreen.app.relativeScale, UIScreen.app.relativeHeightScale,
+                    String(describing: UIDevice.app.isDeviceLandscape), String(describing: UIScreen.app.isInterfaceLandscape),
+                    UIDevice.app.deviceIDFV ?? "",
+                    UIDevice.app.deviceIDFA,
+                    UIDevice.app.deviceUUID
+                )
+                DispatchQueue.main.async { [weak self] in
+                    self?.frameLabel.text = barText
+                }
+            }
+        }
     }
 
     @objc func onStatusBar() {
