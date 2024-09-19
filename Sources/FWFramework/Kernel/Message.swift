@@ -61,6 +61,20 @@ extension Wrapper where Base: WrapperObject {
         messageTargets.append(messageTarget)
         return messageTarget
     }
+    
+    /// 主线程安全监听某个指定对象点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - name: 消息名称
+    ///   - object: 消息对象，值为nil时表示所有
+    ///   - target: 消息目标
+    ///   - action: 目标动作，参数为通知对象
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveMessage(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+        let messageTarget = observeMessage(name, object: object, target: target, action: action) as! NotificationTarget
+        messageTarget.onMainThread = true
+        return messageTarget
+    }
 
     /// 手工移除某个点对点消息指定监听，可指定对象
     /// - Parameters:
@@ -203,6 +217,20 @@ extension Wrapper where Base: WrapperObject {
         notificationTarget.action = action
         notificationTargets.append(notificationTarget)
         NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
+        return notificationTarget
+    }
+    
+    /// 主线程安全监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 通知对象，值为nil时表示所有
+    ///   - target: 通知目标
+    ///   - action: 目标动作，参数为通知对象
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveNotification(_ name: Notification.Name, object: AnyObject? = nil, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+        let notificationTarget = observeNotification(name, object: object, target: target, action: action) as! NotificationTarget
+        notificationTarget.onMainThread = true
         return notificationTarget
     }
 
@@ -377,6 +405,28 @@ extension Wrapper where Base: NSObject {
         }
         return addObservation(observation, keyPath: keyPath, target: target, action: action)
     }
+    
+    /// 主线程安全监听对象某个属性KeyPath，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - keyPath: 属性KeyPath
+    ///   - options: 监听选项
+    ///   - target: 目标对象
+    ///   - action: 目标动作，action参数依次为object、change对象
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
+        let weakObject = WeakObject(target)
+        let observation = base.observe(keyPath, options: options) { object, change in
+            let sendableObject = SendableObject(object)
+            let sendableChange = SendableObject(change)
+            DispatchQueue.fw.mainAsync {
+                if let weakTarget = weakObject.object, weakTarget.responds(to: action) {
+                    _ = weakTarget.perform(action, with: sendableObject.object, with: sendableChange.object)
+                }
+            }
+        }
+        return addObservation(observation, keyPath: keyPath, target: target, action: action)
+    }
 
     /// 监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
@@ -428,6 +478,19 @@ extension Wrapper where Base: NSObject {
         target.action = action
         propertyTargets.append(target)
         target.addObserver()
+        return target
+    }
+    
+    /// 主线程安全监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
+    /// - Parameters:
+    ///   - property: 属性名称
+    ///   - target: 目标对象
+    ///   - action: 目标动作，action参数依次为object、优化的change字典(不含NSNull)
+    /// - Returns: 监听者
+    @discardableResult
+    public func safeObserveProperty(_ property: String, target: AnyObject?, action: Selector) -> NSObjectProtocol {
+        let target = observeProperty(property, target: target, action: action) as! PropertyTarget
+        target.onMainThread = true
         return target
     }
 
@@ -542,8 +605,9 @@ extension Wrapper where Base: NSObject {
 }
 
 // MARK: - NotificationTarget
-private class NotificationTarget: NSObject {
+private class NotificationTarget: NSObject, @unchecked Sendable {
     var broadcast: Bool = false
+    var onMainThread: Bool = false
     var name: Notification.Name?
     weak var object: AnyObject?
     weak var target: AnyObject?
@@ -557,6 +621,17 @@ private class NotificationTarget: NSObject {
     }
 
     @objc func handle(_ notification: Notification) {
+        if onMainThread {
+            let sendableNotification = SendableObject(notification)
+            DispatchQueue.fw.mainAsync { [weak self] in
+                self?.handleNotification(sendableNotification.object)
+            }
+        } else {
+            handleNotification(notification)
+        }
+    }
+    
+    private func handleNotification(_ notification: Notification) {
         if block != nil {
             block?(notification)
             return
@@ -569,13 +644,14 @@ private class NotificationTarget: NSObject {
 }
 
 // MARK: - PropertyTarget
-private class PropertyTarget: NSObject {
+private class PropertyTarget: NSObject, @unchecked Sendable {
     var observation: NSKeyValueObservation?
     var keyPath: AnyHashable?
     weak var target: AnyObject?
     var action: Selector?
 
     var isKvo: Bool = false
+    var onMainThread: Bool = false
     unowned(unsafe) var object: AnyObject?
     var block: (@Sendable (Any, [NSKeyValueChangeKey: Any]) -> Void)?
     private var isObserving = false
@@ -614,14 +690,26 @@ private class PropertyTarget: NSObject {
         if newChange[.newKey] is NSNull {
             newChange.removeValue(forKey: .newKey)
         }
-
+        
+        if onMainThread {
+            let sendableObject = SendableObject(object)
+            let sendableChange = SendableObject(newChange)
+            DispatchQueue.fw.mainAsync { [weak self] in
+                self?.handleObservation(sendableObject.object, with: sendableChange.object)
+            }
+        } else {
+            handleObservation(object, with: newChange)
+        }
+    }
+    
+    private func handleObservation(_ object: Any, with change: [NSKeyValueChangeKey: Any]) {
         if block != nil {
-            block?(object, newChange)
+            block?(object, change)
             return
         }
 
         if let target, let action, target.responds(to: action) {
-            _ = target.perform(action, with: object, with: newChange)
+            _ = target.perform(action, with: object, with: change)
         }
     }
 }
