@@ -41,23 +41,6 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	  # 引入指定子模块，子模块列表详见podspec文件
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
-	
-如需处理宏跨模块调用问题，或者开启Swift 6编译模式，Podfile示例：
-	
-	post_install do |installer|
-	  installer.pods_project.targets.each do |target|
-	    target.build_configurations.each do |config|
-	      # 处理FWPlugin/Macros跨模块调用问题
-	      # config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
-	      # config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
-	      
-	      # 选择性开启框架Swift6编译模式
-	      # if ['FWFramework'].include? target.name
-	        # config.build_settings['SWIFT_VERSION'] = '6'
-	      # end
-	    end
-	  end
-	end
 
 ### Swift Package Manager
 本框架支持Swift Package Manager，添加并勾选所需模块即可，Package示例：
