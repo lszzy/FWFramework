@@ -1870,7 +1870,7 @@ extension Wrapper where Base: UIDevice {
     public func beginFoldingView(
         _ view: UIView,
         duration: TimeInterval = 0.25,
-        animations: @escaping (UIView) -> Void
+        animations: @escaping @MainActor @Sendable (UIView) -> Void
     ) {
         // 手动实现时可使用：NSObject.cancelPreviousPerformRequests(withTarget:selector:object:)
         if let timer = view.fw.property(forName: "foldingViewTimer") as? Timer, timer.isValid {
@@ -1898,7 +1898,7 @@ extension Wrapper where Base: UIDevice {
         willDecelerate decelerate: Bool? = nil,
         afterDelay delay: TimeInterval = 1.0,
         duration: TimeInterval = 0.25,
-        animations: @escaping (UIView) -> Void
+        animations: @escaping @MainActor @Sendable (UIView) -> Void
     ) {
         if let decelerate, decelerate { return }
 
@@ -1911,8 +1911,10 @@ extension Wrapper where Base: UIDevice {
             guard let view, view.fw.propertyBool(forName: "isViewFolding") else { return }
             view.fw.setProperty(nil, forName: "isViewFolding")
 
-            UIView.animate(withDuration: duration) { [weak view] in
-                if let view, view.superview != nil { animations(view) }
+            DispatchQueue.fw.mainAsync {
+                UIView.animate(withDuration: duration) { [weak view] in
+                    if let view, view.superview != nil { animations(view) }
+                }
             }
         }, repeats: false)
         view.fw.setProperty(timer, forName: "foldingViewTimer")
