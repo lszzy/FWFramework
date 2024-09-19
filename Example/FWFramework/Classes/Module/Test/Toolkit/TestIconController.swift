@@ -39,7 +39,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
         searchBar.app.layoutChain
             .top(toSafeArea: .zero)
             .horizontal()
-            .height(APP.navigationBarHeight)
+            .height(44)
         collectionView.app.layoutChain
             .edges(excludingEdge: .top)
             .top(toViewBottom: searchBar)
