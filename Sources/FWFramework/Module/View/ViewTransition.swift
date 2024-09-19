@@ -76,9 +76,9 @@ import UIKit
     }
 
     /// 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发，手工dismiss不会触发。会自动设置presentationController.delegate
-    public var presentationDidDismiss: (() -> Void)? {
+    public var presentationDidDismiss: (@MainActor @Sendable () -> Void)? {
         get {
-            property(forName: "presentationDidDismiss") as? () -> Void
+            property(forName: "presentationDidDismiss") as? @MainActor @Sendable () -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "presentationDidDismiss")

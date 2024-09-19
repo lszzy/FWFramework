@@ -608,18 +608,19 @@ extension Wrapper where Base: UIDevice {
 
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
     @discardableResult
-    public func startCountDown(_ seconds: Int, block: @escaping (Int) -> Void) -> DispatchSourceTimer {
+    public func startCountDown(_ seconds: Int, block: @escaping @MainActor @Sendable (Int) -> Void) -> DispatchSourceTimer {
         let queue = DispatchQueue.global()
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
 
         let startTime = Date.fw.currentTime
         var hasWindow = false
-        timer.setEventHandler { [weak base] in
+        let sendableTimer = SendableObject(timer)
+        timer.setEventHandler { @Sendable [weak base] in
             DispatchQueue.main.async {
                 var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
                 if countDown <= 0 {
-                    timer.cancel()
+                    sendableTimer.object.cancel()
                 }
 
                 // 按钮从window移除时自动cancel倒计时
@@ -628,7 +629,7 @@ extension Wrapper where Base: UIDevice {
                 } else if hasWindow && base?.window == nil {
                     hasWindow = false
                     countDown = 0
-                    timer.cancel()
+                    sendableTimer.object.cancel()
                 }
 
                 block(countDown <= 0 ? 0 : countDown)

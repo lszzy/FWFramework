@@ -47,9 +47,9 @@ import UIKit
     }
 
     /// 当item内的view生成后就会调用一次这个block，仅对UIBarButtonItem、UITabBarItem有效
-    public var viewLoadedBlock: ((Base, UIView) -> Void)? {
+    public var viewLoadedBlock: (@MainActor @Sendable (Base, UIView) -> Void)? {
         get {
-            property(forName: "viewLoadedBlock") as? (Base, UIView) -> Void
+            property(forName: "viewLoadedBlock") as? @MainActor @Sendable (Base, UIView) -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "viewLoadedBlock")

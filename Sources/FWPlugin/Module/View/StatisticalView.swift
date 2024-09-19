@@ -26,8 +26,8 @@ import UIKit
     }
 
     /// 设置统计点击事件触发时自定义监听器，默认nil
-    public var statisticalClickListener: ((StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalClickListener") as? (StatisticalEvent) -> Void }
+    public var statisticalClickListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalClickListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalClickListener") }
     }
 
@@ -66,8 +66,8 @@ import UIKit
     }
 
     /// 设置统计曝光事件触发时自定义监听器，默认nil
-    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalExposureListener") as? (StatisticalEvent) -> Void }
+    public var statisticalExposureListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalExposureListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalExposureListener") }
     }
 
@@ -377,8 +377,8 @@ import UIKit
     }
 
     /// 设置统计曝光事件触发时自定义监听器，默认nil
-    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalExposureListener") as? (StatisticalEvent) -> Void }
+    public var statisticalExposureListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalExposureListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalExposureListener") }
     }
 
