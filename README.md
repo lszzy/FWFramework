@@ -42,23 +42,6 @@ This framework supports CocoaPods, Podfile example:
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
 
-If you need to handle cross-module macro calling issues or enable Swift 6 compilation mode, here is an example of a Podfile:
-    
-    post_install do |installer|
-      installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-          # Handle FWPlugin/Macros cross-module call issues
-          # config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
-          # config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
-          
-          # Selectively enable framework Swift6 compilation mode
-          # if ['FWFramework'].include? target.name
-            # config.build_settings['SWIFT_VERSION'] = '6'
-          # end
-        end
-      end
-    end
-
 ### Swift Package Manager
 This framework supports Swift Package Manager, just add and check the required modules, Package example:
 
