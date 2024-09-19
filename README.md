@@ -42,7 +42,7 @@ This framework supports CocoaPods, Podfile example:
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
 
-Example of Podfile processing macro cross-module calls and enabling Swift 6 compilation mode:
+If you need to handle cross-module macro calling issues or enable Swift 6 compilation mode, here is an example of a Podfile:
     
     post_install do |installer|
       installer.pods_project.targets.each do |target|

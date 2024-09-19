@@ -90,7 +90,11 @@ import WebKit
         let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
         let sinceDate = Date(timeIntervalSince1970: 0)
         WKWebsiteDataStore.default().removeData(ofTypes: dataTypes, modifiedSince: sinceDate) {
-            completion?()
+            if completion != nil {
+                DispatchQueue.fw.mainAsync {
+                    completion?()
+                }
+            }
         }
     }
 
