@@ -263,11 +263,11 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    @MainActor public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil) {
+    @MainActor public static func openSafariController(_ url: URLParameter?, completionHandler: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil) {
         guard let url = url?.urlValue, isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
-            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
+            safariController.fw.setPropertyCopy(completionHandler, forName: "safariViewControllerDidFinish")
             safariController.delegate = SafariViewControllerDelegate.shared
         }
         customBlock?(safariController)
@@ -275,35 +275,35 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开短信控制器，完成时回调
-    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if !MFMessageComposeViewController.canSendText() {
             completionHandler?(false)
             return
         }
 
         if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
+            controller.fw.setPropertyCopy(completionHandler, forName: "messageComposeViewController")
         }
         controller.messageComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
     }
 
     /// 打开邮件控制器，完成时回调
-    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if !MFMailComposeViewController.canSendMail() {
             completionHandler?(false)
             return
         }
 
         if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
+            controller.fw.setPropertyCopy(completionHandler, forName: "mailComposeController")
         }
         controller.mailComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
     }
 
     /// 打开Store控制器，完成时回调
-    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: (@Sendable (Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
+    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil, customBlock: (@MainActor @Sendable (SKStoreProductViewController) -> Void)? = nil) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -312,7 +312,7 @@ extension Wrapper where Base: UIApplication {
                 return
             }
 
-            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
+            controller.fw.setPropertyCopy(completionHandler, forName: "productViewControllerDidFinish")
             customBlock?(controller)
             Navigator.present(controller, animated: true)
         }
@@ -2239,12 +2239,14 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
     static let shared = SafariViewControllerDelegate()
 
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
-        completion?()
+        let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? @MainActor @Sendable () -> Void
+        DispatchQueue.fw.mainAsync {
+            completion?()
+        }
     }
 
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        let completion = controller.fw.property(forName: "messageComposeViewController") as? @Sendable (Bool) -> Void
+        let completion = controller.fw.property(forName: "messageComposeViewController") as? @MainActor @Sendable (Bool) -> Void
         DispatchQueue.fw.mainAsync {
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
@@ -2253,7 +2255,7 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
     }
 
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        let completion = controller.fw.property(forName: "mailComposeController") as? @Sendable (Bool) -> Void
+        let completion = controller.fw.property(forName: "mailComposeController") as? @MainActor @Sendable (Bool) -> Void
         DispatchQueue.fw.mainAsync {
             controller.dismiss(animated: true) {
                 completion?(result == .sent)
@@ -2262,7 +2264,7 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
     }
 
     func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? @Sendable (Bool) -> Void
+        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? @MainActor @Sendable (Bool) -> Void
         DispatchQueue.fw.mainAsync {
             controller.dismiss(animated: true) {
                 completion?(true)

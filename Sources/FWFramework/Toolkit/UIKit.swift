@@ -1279,7 +1279,7 @@ extension Wrapper where Base: UIDevice {
 
     /// 添加点击手势并自动识别NSLinkAttributeName|URL属性，点击高亮时回调链接，点击其它区域回调nil
     @discardableResult
-    public func addLinkGesture(block: @escaping (Any?) -> Void) -> UITapGestureRecognizer {
+    public func addLinkGesture(block: @escaping @MainActor @Sendable (Any?) -> Void) -> UITapGestureRecognizer {
         base.isUserInteractionEnabled = true
         return addTapGesture { gesture in
             guard let label = gesture.view as? UILabel else { return }
@@ -2153,7 +2153,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var textChangedBlock: ((String) -> Void)? {
+    public var textChangedBlock: (@MainActor @Sendable (String) -> Void)? {
         get { inputTarget(false)?.textChangedBlock }
         set { inputTarget(true)?.textChangedBlock = newValue }
     }
@@ -2178,7 +2178,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
-    public var autoCompleteBlock: ((String) -> Void)? {
+    public var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)? {
         get { inputTarget(false)?.autoCompleteBlock }
         set { inputTarget(true)?.autoCompleteBlock = newValue }
     }
@@ -2270,7 +2270,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var textChangedBlock: ((String) -> Void)? {
+    public var textChangedBlock: (@MainActor @Sendable (String) -> Void)? {
         get { inputTarget(false)?.textChangedBlock }
         set { inputTarget(true)?.textChangedBlock = newValue }
     }
@@ -2295,7 +2295,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-    public var autoCompleteBlock: ((String) -> Void)? {
+    public var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)? {
         get { inputTarget(false)?.autoCompleteBlock }
         set { inputTarget(true)?.autoCompleteBlock = newValue }
     }
@@ -2564,13 +2564,13 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 配置全局resetTableStyle钩子句柄，默认nil
-    public static var resetTableConfiguration: ((UITableView) -> Void)? {
+    public static var resetTableConfiguration: (@MainActor @Sendable (UITableView) -> Void)? {
         get { UITableView.innerResetTableConfiguration }
         set { UITableView.innerResetTableConfiguration = newValue }
     }
 
     /// reloadData完成回调
-    public func reloadData(completion: (() -> Void)?) {
+    public func reloadData(completion: (@MainActor @Sendable () -> Void)?) {
         let strongBase = base
         UIView.animate(withDuration: 0) {
             strongBase.reloadData()
@@ -2775,7 +2775,7 @@ extension Wrapper where Base: UIDevice {
 // MARK: - Wrapper+UICollectionView
 @MainActor extension Wrapper where Base: UICollectionView {
     /// reloadData完成回调
-    public func reloadData(completion: (() -> Void)?) {
+    public func reloadData(completion: (@MainActor @Sendable () -> Void)?) {
         let strongBase = base
         UIView.animate(withDuration: 0) {
             strongBase.reloadData()
@@ -3343,7 +3343,7 @@ extension UISwitch {
 
 // MARK: - UITableView+UIKit
 extension UITableView {
-    fileprivate static var innerResetTableConfiguration: ((UITableView) -> Void)?
+    fileprivate static var innerResetTableConfiguration: (@MainActor @Sendable (UITableView) -> Void)?
 
     @objc fileprivate func innerWillDisplay(_ cell: UITableViewCell) {
         let block = cell.fw.property(forName: "willDisplay") as? @MainActor @Sendable (UITableViewCell) -> Void
@@ -3389,10 +3389,10 @@ private class SaturationGrayView: UIView {
     weak var textInput: (UIView & UITextInput)?
     var maxLength: Int = 0
     var maxUnicodeLength: Int = 0
-    var textChangedBlock: ((String) -> Void)?
+    var textChangedBlock: (@MainActor @Sendable (String) -> Void)?
     var autoCompleteInterval: TimeInterval = 0.5
     var autoCompleteTimestamp: TimeInterval = 0
-    var autoCompleteBlock: ((String) -> Void)?
+    var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)?
 
     private var shouldCheckLength: Bool {
         if let markedTextRange = textInput?.markedTextRange,
