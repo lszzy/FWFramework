@@ -13,7 +13,7 @@ extension Wrapper where Base: Timer {
     /// - Parameters:
     ///   - timeInterval: 时间
     ///   - target: 目标
-    ///   - selector: 方法
+    ///   - selector: 方法，主线程方法需标记nonisolated
     ///   - userInfo: 参数
     ///   - repeats: 是否重复
     /// - Returns: 定时器

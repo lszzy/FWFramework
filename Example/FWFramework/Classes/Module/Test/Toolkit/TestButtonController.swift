@@ -13,7 +13,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
 
     private nonisolated(unsafe) var timer: Timer?
 
-    @objc func timerAction() {
+    @objc nonisolated func timerAction() {
         print("timerAction \(Date().app.string(format: "HH:mm:ss"))")
     }
 
