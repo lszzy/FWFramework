@@ -988,20 +988,20 @@ extension Wrapper where Base: CAGradientLayer {
     }
 
     /// 开始拖动回调
-    public var dragStartedBlock: ((UIView) -> Void)? {
-        get { property(forName: "dragStartedBlock") as? (UIView) -> Void }
+    public var dragStartedBlock: (@MainActor @Sendable (UIView) -> Void)? {
+        get { property(forName: "dragStartedBlock") as? @MainActor @Sendable (UIView) -> Void }
         set { setPropertyCopy(newValue, forName: "dragStartedBlock") }
     }
 
     /// 拖动移动回调
-    public var dragMovedBlock: ((UIView) -> Void)? {
-        get { property(forName: "dragMovedBlock") as? (UIView) -> Void }
+    public var dragMovedBlock: (@MainActor @Sendable (UIView) -> Void)? {
+        get { property(forName: "dragMovedBlock") as? @MainActor @Sendable (UIView) -> Void }
         set { setPropertyCopy(newValue, forName: "dragMovedBlock") }
     }
 
     /// 结束拖动回调
-    public var dragEndedBlock: ((UIView) -> Void)? {
-        get { property(forName: "dragEndedBlock") as? (UIView) -> Void }
+    public var dragEndedBlock: (@MainActor @Sendable (UIView) -> Void)? {
+        get { property(forName: "dragEndedBlock") as? @MainActor @Sendable (UIView) -> Void }
         set { setPropertyCopy(newValue, forName: "dragEndedBlock") }
     }
 }
