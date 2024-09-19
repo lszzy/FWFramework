@@ -42,7 +42,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
 	  # pod 'FWFramework', :subspecs => ['FWFramework', 'FWSwiftUI']
 	end
 	
-Podfile处理宏跨模块调用以及开启Swift 6编译模式示例：
+如需处理宏跨模块调用问题，或者开启Swift 6编译模式，Podfile示例：
 	
 	post_install do |installer|
 	  installer.pods_project.targets.each do |target|
