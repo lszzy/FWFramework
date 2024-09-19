@@ -1913,13 +1913,13 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    public var allowsPopGesture: (() -> Bool)? {
+    @MainActor public var allowsPopGesture: (() -> Bool)? {
         get { property(forName: "allowsPopGesture") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-    public var shouldPopController: (() -> Bool)? {
+    @MainActor public var shouldPopController: (() -> Bool)? {
         get { property(forName: "shouldPopController") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "shouldPopController") }
     }

@@ -822,8 +822,8 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 定义类通用样式实现句柄，默认样式default
-    public static func defineStyle(_ style: ViewStyle = .default, block: @escaping (Base) -> Void) {
-        let styleBlock: (UIView) -> Void = { view in
+    public static func defineStyle(_ style: ViewStyle = .default, block: @escaping @MainActor @Sendable (Base) -> Void) {
+        let styleBlock: @MainActor @Sendable (UIView) -> Void = { view in
             if let target = view as? Base { block(target) }
         }
         let styleKey = "viewStyleBlock_\(style.rawValue)"
@@ -833,10 +833,10 @@ extension Wrapper where Base: UIDevice {
     /// 应用类通用样式，默认样式default
     public func addStyle(_ style: ViewStyle = .default) {
         let styleKey = "viewStyleBlock_\(style.rawValue)"
-        var styleBlock: ((UIView) -> Void)?
+        var styleBlock: (@MainActor @Sendable (UIView) -> Void)?
         var styleClass: AnyClass? = type(of: base)
         while let targetClass = styleClass, targetClass != UIResponder.self {
-            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? (UIView) -> Void
+            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? @MainActor @Sendable (UIView) -> Void
             if styleBlock != nil {
                 break
             }
@@ -1528,9 +1528,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义按钮禁用状态改变时的句柄，默认nil
-    public var disabledChanged: ((UIButton, Bool) -> Void)? {
+    public var disabledChanged: (@MainActor @Sendable (UIButton, Bool) -> Void)? {
         get {
-            property(forName: "disabledChanged") as? (UIButton, Bool) -> Void
+            property(forName: "disabledChanged") as? @MainActor @Sendable (UIButton, Bool) -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "disabledChanged")
@@ -1550,9 +1550,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义按钮高亮状态改变时的句柄，默认nil
-    public var highlightedChanged: ((UIButton, Bool) -> Void)? {
+    public var highlightedChanged: (@MainActor @Sendable (UIButton, Bool) -> Void)? {
         get {
-            property(forName: "highlightedChanged") as? (UIButton, Bool) -> Void
+            property(forName: "highlightedChanged") as? @MainActor @Sendable (UIButton, Bool) -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "highlightedChanged")
@@ -1922,9 +1922,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否开始识别pan手势
-    public var shouldBegin: ((UIGestureRecognizer) -> Bool)? {
+    public var shouldBegin: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldBegin") as? (UIGestureRecognizer) -> Bool
+            property(forName: "shouldBegin") as? @MainActor @Sendable (UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldBegin")
@@ -1933,9 +1933,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否允许同时识别多个手势
-    public var shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldRecognizeSimultaneously: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldRecognizeSimultaneously") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldRecognizeSimultaneously")
@@ -1944,9 +1944,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否另一个手势识别失败后，才能识别pan手势
-    public var shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldRequireFailure: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldRequireFailure") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldRequireFailure")
@@ -1955,9 +1955,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否pan手势识别失败后，才能识别另一个手势
-    public var shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldBeRequiredToFail: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldBeRequiredToFail") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldBeRequiredToFail")
@@ -2658,9 +2658,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+    public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping @MainActor @Sendable () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: (UITableViewCell) -> Void = { [weak base] cell in
+        let block: @MainActor @Sendable (UITableViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
             guard base?.visibleCells.contains(cell) ?? false,
                   base?.indexPath(for: cell) != nil,
@@ -2832,7 +2832,7 @@ extension Wrapper where Base: UIDevice {
 
     /// 添加拖动排序手势，需结合canMove、moveItem、targetIndexPath使用
     @discardableResult
-    public func addMovementGesture(customBlock: ((UILongPressGestureRecognizer) -> Bool)? = nil) -> UILongPressGestureRecognizer {
+    public func addMovementGesture(customBlock: (@MainActor @Sendable (UILongPressGestureRecognizer) -> Bool)? = nil) -> UILongPressGestureRecognizer {
         movementGestureBlock = customBlock
 
         let movementGesture = UILongPressGestureRecognizer(target: base, action: #selector(UICollectionView.innerMovementGestureAction(_:)))
@@ -2840,15 +2840,15 @@ extension Wrapper where Base: UIDevice {
         return movementGesture
     }
 
-    fileprivate var movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
-        get { property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
+    fileprivate var movementGestureBlock: (@MainActor @Sendable (UILongPressGestureRecognizer) -> Bool)? {
+        get { property(forName: #function) as? @MainActor @Sendable (UILongPressGestureRecognizer) -> Bool }
         set { setPropertyCopy(newValue, forName: #function) }
     }
 
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping () -> Void) {
+    public func willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping @MainActor @Sendable () -> Void) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: (UICollectionViewCell) -> Void = { [weak base] cell in
+        let block: @MainActor @Sendable (UICollectionViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
             guard base?.visibleCells.contains(cell) ?? false,
                   base?.indexPath(for: cell) != nil,
@@ -3346,7 +3346,7 @@ extension UITableView {
     fileprivate static var innerResetTableConfiguration: ((UITableView) -> Void)?
 
     @objc fileprivate func innerWillDisplay(_ cell: UITableViewCell) {
-        let block = cell.fw.property(forName: "willDisplay") as? (UITableViewCell) -> Void
+        let block = cell.fw.property(forName: "willDisplay") as? @MainActor @Sendable (UITableViewCell) -> Void
         block?(cell)
     }
 }
@@ -3372,7 +3372,7 @@ extension UICollectionView {
     }
 
     @objc fileprivate func innerWillDisplay(_ cell: UICollectionViewCell) {
-        let block = cell.fw.property(forName: "willDisplay") as? (UICollectionViewCell) -> Void
+        let block = cell.fw.property(forName: "willDisplay") as? @MainActor @Sendable (UICollectionViewCell) -> Void
         block?(cell)
     }
 }
