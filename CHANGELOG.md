@@ -1,5 +1,27 @@
 # Changelog
 
+## [6.0.0] - 2024-09-20
+
+### Added
+* Compatible with Swift 6, code marks MainActor, Sendable, etc., easy to write safer code
+* Compatible with iOS 18, ViewIntrospect adds iOS 18 related variables
+* Remove ScreenInch related enumerations, proportional scaling related adaptation methods support non-main thread calls
+* Add SendableObject object to solve the problem of passing parameters of any object Sendable
+* Add safe-starting Message related observe method for main thread call listener handle
+* Router, JSBridge component related methods mark MainActor main thread call, need to migrate and adapt
+* Remove the method marked as obsolete in version 5.x, please use the new API to replace the implementation, need to migrate and adapt
+* Reconstruct the height acquisition method of the global status bar, navigation bar, tab bar, etc., give priority to dynamic acquisition and caching
+
+### Migrate
+1. Adapt to Swift 6. Need to fix the compilation error of related code after marking MainActor and Sendable, need to migrate and adapt
+2. Adapt to iOS 18, if you use ViewIntrospect components, you need to adapt v18 related variables, need to migrate and adapt
+3. Adapt Plugin, when implementing custom Plugin, you need to synchronously mark MainActor, Sendable, etc., need to migrate and adapt
+4. If the main thread needs to call Message related observe listener handle, please migrate to use the corresponding method starting with safe
+5. If the main project opens Swift 6 compilation, HTTPRequest request subclasses, etc. need to be synchronously marked as `@unchecked Sendable`
+6. The obsolete methods of version 5.x have been removed, please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), need to migrate and adapt
+7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor related functions, etc.)
+8. For more usage examples, please refer to the Example project
+
 ## [5.11.2] - 2024-09-12
 
 ### Changed
