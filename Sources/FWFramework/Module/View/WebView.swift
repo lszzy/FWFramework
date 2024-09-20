@@ -661,12 +661,11 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     public init(webView: WKWebView) {
         super.init()
         self.webView = webView
+        removeScriptMessageHandlers()
         addScriptMessageHandlers()
     }
 
     deinit {
-        // removeScriptMessageHandlers()
-
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
