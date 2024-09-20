@@ -75,6 +75,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         view.backgroundColor = AppTheme.tableColor
         webView.allowsUniversalLinks = true
         webView.allowsArbitraryLoads = true
+        webView.injectWindowClose = true
         webView.allowsRouterSchemes = ["app"]
         let allowsDownloadUrl = allowsDownloadUrl
         self.allowsDownloadUrl = allowsDownloadUrl
