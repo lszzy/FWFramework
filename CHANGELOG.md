@@ -1,11 +1,11 @@
 # Changelog
 
-## [6.0.0] - 2024-09-20
+## [6.0.0] - 2024-09-30
 
 ### Added
 * Compatible with Swift 6, code marks MainActor, Sendable, etc., easy to write safer code
 * Compatible with iOS 18, ViewIntrospect adds iOS 18 related variables
-* Remove ScreenInch related enumerations, proportional scaling related adaptation methods support non-main thread calls
+* Refactored the proportional scaling implementation, and related methods support non-main thread calls
 * Add SendableObject object to solve the problem of passing parameters of any object Sendable
 * Add safe-starting Message related observe method for main thread call listener handle
 * Router, JSBridge component related methods mark MainActor main thread call, need to migrate and adapt
