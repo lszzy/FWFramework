@@ -214,7 +214,7 @@ open class ToolbarView: UIView {
     open override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         
-        let isLandscape = UIDevice.fw.isLandscape
+        let isLandscape = UIScreen.fw.isInterfaceLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             updateHeight(false)
@@ -1373,7 +1373,7 @@ open class ToolbarButton: UIButton {
         super.layoutSubviews()
         
         // 横竖屏方向改变时才修改默认contentEdgeInsets，方便项目使用
-        let isLandscape = UIDevice.fw.isLandscape
+        let isLandscape = UIScreen.fw.isInterfaceLandscape
         if isLandscape != self.isLandscape {
             self.isLandscape = isLandscape
             var edgeInsets = self.contentEdgeInsets
