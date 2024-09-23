@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.12.0] - 2024-09-23
+
+### Added
+* Adaptive global static bar is highly compatible with iPhone15, iPhone16 and other series models
+* DispatchQueue adds runSyncIf related methods
+* AssetManager preview method adds size parameter, default nil to get screen size
+* Mark UIDevice.isLandscape as obsolete, please migrate to UIScreen.isInterfaceLandscape
+* Runtime adds safe access value and setValue methods
+* Mediator and Plugin support default search for current module to remove Protocol implementation class
+* WebView adds injectWindowClose property to intercept window.close event
+
 ## [5.11.2] - 2024-09-12
 
 ### Changed
