@@ -1,5 +1,16 @@
 # 更新日志
 
+## [5.12.0] - 2024-09-23
+
+### Added
+* Adaptive全局静态栏高度兼容iPhone15、iPhone16等系列机型
+* DispatchQueue新增runSyncIf相关方法
+* AssetManager预览图方法新增size参数，默认nil获取屏幕大小
+* 标记UIDevice.isLandscape为废弃，请迁移至UIScreen.isInterfaceLandscape
+* Runtime新增安全获取value和setValue方法
+* Mediator和Plugin支持默认查找当前模块去掉Protocol实现类
+* WebView新增injectWindowClose属性拦截window.close事件
+
 ## [5.11.2] - 2024-09-12
 
 ### Changed
