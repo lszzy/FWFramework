@@ -11,12 +11,46 @@ import UIKit
 extension Wrapper where Base: DispatchQueue {
     /// 主线程安全异步执行句柄
     public static func mainAsync(execute block: @escaping () -> Void) {
+        MainActor.runAsync(execute: block)
+    }
+    
+    /// 当主线程时执行句柄，非主线程不执行
+    public static func mainSyncIf(execute block: () -> Void) {
+        MainActor.runSyncIf(execute: block)
+    }
+
+    /// 当主线程时执行句柄，非主线程执行另一个句柄
+    public static func mainSyncIf<T>(execute block: () -> T, otherwise: () -> T) -> T {
+        MainActor.runSyncIf(execute: block, otherwise: otherwise)
+    }
+}
+
+// MARK: - MainActor+Block
+extension MainActor {
+    /// 主Actor安全异步执行句柄
+    public static func runAsync(execute block: @escaping () -> Void) {
         if Thread.isMainThread {
             block()
         } else {
             DispatchQueue.main.async {
                 block()
             }
+        }
+    }
+
+    /// 当主线程时执行句柄，非主线程不执行
+    public static func runSyncIf(execute block: () -> Void) {
+        if Thread.isMainThread {
+            block()
+        }
+    }
+
+    /// 当主线程时执行句柄，非主线程执行另一个句柄
+    public static func runSyncIf<T>(execute block: () -> T, otherwise: () -> T) -> T {
+        if Thread.isMainThread {
+            block()
+        } else {
+            otherwise()
         }
     }
 }
