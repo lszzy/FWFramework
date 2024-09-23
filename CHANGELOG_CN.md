@@ -1,11 +1,11 @@
 # 更新日志
 
-## [6.0.0] - 2024-09-20
+## [6.0.0] - 2024-09-30
 
 ### Added
 * 兼容Swift 6，代码标记MainActor、Sendable等，轻松编写更安全的代码
 * 兼容iOS 18，ViewIntrospect新增iOS 18相关变量
-* 移除ScreenInch相关枚举，等比例缩放相关适配方法支持非主线程调用
+* 重构等比例缩放实现方案，相关方法支持非主线程调用
 * 新增SendableObject对象，用于解决任意对象Sendable传参问题
 * 新增safe开头Message相关observe方法，用于主线程调用监听句柄
 * Router、JSBridge组件相关方法标记MainActor主线程调用，需迁移适配
