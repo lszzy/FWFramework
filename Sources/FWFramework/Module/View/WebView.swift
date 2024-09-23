@@ -322,8 +322,11 @@ open class WebView: WKWebView {
     /// 是否允许window.close关闭当前控制器，默认true
     ///
     /// 如果WebView新开了界面，触发了createWebView回调后，则不会触发。
-    /// 解决方案示例：使用JSBridge桥接或URL拦截等方式关闭界面
+    /// 解决方案示例：使用injectWindowClose或JSBridge桥接或URL拦截等方式关闭界面
     open var allowsWindowClose = true
+    
+    /// 是否注入window.close方法，触发JSBridge桥接方法
+    open var injectWindowClose = false
 
     /// 网页请求，设置后会自动加载，支持NSString|NSURL|NSURLRequest。默认nil
     open var webRequest: Any? {
@@ -407,6 +410,7 @@ open class WebView: WKWebView {
         allowsDownloadUrl = nil
         allowsArbitraryLoads = false
         allowsWindowClose = true
+        injectWindowClose = false
         webRequest = nil
         isFirstLoad = false
         
@@ -881,6 +885,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
                 
                 if let handler = messageHandlers[handlerName] {
                     handler(context)
+                } else if handlerName == "window.close", let webView = webView as? WebView, webView.injectWindowClose {
+                    webView.fw.viewController?.fw.close()
                 } else {
                     if isLogEnabled {
                         log("WARNING: NoHandlerException, No handler for message from JS: \(message)")
@@ -976,137 +982,153 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         })
     }
     
-    private let javascriptBridgeJS = """
-;(function() {
-    if (window.WKWebViewJavascriptBridge) {
-        return;
-    }
-
-    if (!window.onerror) {
-        window.onerror = function(msg, url, line) {
-            console.log("WKWebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+    private var windowCloseJS: String {
+        guard let webView = webView as? WebView,
+              webView.injectWindowClose else {
+            return ""
         }
-    }
-    window.WKWebViewJavascriptBridge = {
-        registerHandler: registerHandler,
-        removeHandler: removeHandler,
-        getRegisteredHandlers: getRegisteredHandlers,
-        setErrorHandler: setErrorHandler,
-        setFilterHandler: setFilterHandler,
-        callHandler: callHandler,
-        _fetchQueue: _fetchQueue,
-        _handleMessageFromiOS: _handleMessageFromiOS
-    };
-
-    var sendMessageQueue = [];
-    var messageHandlers = {};
-    var errorHandler = null;
-    var filterHandler = null;
-
-    var responseCallbacks = {};
-    var uniqueId = 1;
-
-    function registerHandler(handlerName, handler) {
-        messageHandlers[handlerName] = handler;
+        
+        return """
+        var _windowClose = window.close;
+        window.close = function() {
+            _doSend({ handlerName:'window.close' });
+            _windowClose();
+        };
+    """
     }
 
-    function removeHandler(handlerName) {
-        delete messageHandlers[handlerName];
-    }
+    private var javascriptBridgeJS: String { """
+    ;(function() {
+        if (window.WKWebViewJavascriptBridge) {
+            return;
+        }
     
-    function getRegisteredHandlers() {
-        var registeredHandlers = [];
-        for (handlerName in messageHandlers) {
-            registeredHandlers.push(handlerName);
+        if (!window.onerror) {
+            window.onerror = function(msg, url, line) {
+                console.log("WKWebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+            }
         }
-        return registeredHandlers;
-    }
+        \(windowCloseJS)
+        window.WKWebViewJavascriptBridge = {
+            registerHandler: registerHandler,
+            removeHandler: removeHandler,
+            getRegisteredHandlers: getRegisteredHandlers,
+            setErrorHandler: setErrorHandler,
+            setFilterHandler: setFilterHandler,
+            callHandler: callHandler,
+            _fetchQueue: _fetchQueue,
+            _handleMessageFromiOS: _handleMessageFromiOS
+        };
     
-    function setErrorHandler(handler) {
-        errorHandler = handler;
-    }
+        var sendMessageQueue = [];
+        var messageHandlers = {};
+        var errorHandler = null;
+        var filterHandler = null;
     
-    function setFilterHandler(handler) {
-        filterHandler = handler;
-    }
-
-    function callHandler(handlerName, data, responseCallback) {
-        if (arguments.length == 2 && typeof data == 'function') {
-            responseCallback = data;
-            data = null;
+        var responseCallbacks = {};
+        var uniqueId = 1;
+    
+        function registerHandler(handlerName, handler) {
+            messageHandlers[handlerName] = handler;
         }
-        _doSend({ handlerName:handlerName, data:data }, responseCallback);
-    }
-
-    function _doSend(message, responseCallback) {
-        if (responseCallback) {
-            var callbackID = 'cb_'+(uniqueId++)+'_'+new Date().getTime();
-            responseCallbacks[callbackID] = responseCallback;
-            message['callbackID'] = callbackID;
+    
+        function removeHandler(handlerName) {
+            delete messageHandlers[handlerName];
         }
-        sendMessageQueue.push(message);
-        window.webkit.messageHandlers.iOS_Native_FlushMessageQueue.postMessage(null)
-    }
-
-    function _fetchQueue() {
-        var messageQueueString = JSON.stringify(sendMessageQueue);
-        sendMessageQueue = [];
-        return messageQueueString;
-    }
-
-    function _dispatchMessageFromiOS(messageJSON) {
-        var message = JSON.parse(messageJSON);
-        var responseCallback;
-
-        if (message.responseID) {
-            responseCallback = responseCallbacks[message.responseID];
-            if (!responseCallback) {
-                return;
+    
+        function getRegisteredHandlers() {
+            var registeredHandlers = [];
+            for (handlerName in messageHandlers) {
+                registeredHandlers.push(handlerName);
             }
-            responseCallback(message.responseData);
-            delete responseCallbacks[message.responseID];
-        } else {
-            if (message.callbackID) {
-                var callbackResponseId = message.callbackID;
-                responseCallback = function(responseData) {
-                    _doSend({ handlerName:message.handlerName, responseID:callbackResponseId, responseData:responseData });
-                };
-            } else {
-                responseCallback = function(ignoreResponseData) {};
+            return registeredHandlers;
+        }
+    
+        function setErrorHandler(handler) {
+            errorHandler = handler;
+        }
+    
+        function setFilterHandler(handler) {
+            filterHandler = handler;
+        }
+    
+        function callHandler(handlerName, data, responseCallback) {
+            if (arguments.length == 2 && typeof data == 'function') {
+                responseCallback = data;
+                data = null;
             }
-
-            if (filterHandler) {
-                var filterResult = filterHandler(message.handlerName, message.data, responseCallback);
-                if (!filterResult) { return; }
+            _doSend({ handlerName:handlerName, data:data }, responseCallback);
+        }
+    
+        function _doSend(message, responseCallback) {
+            if (responseCallback) {
+                var callbackID = 'cb_'+(uniqueId++)+'_'+new Date().getTime();
+                responseCallbacks[callbackID] = responseCallback;
+                message['callbackID'] = callbackID;
             }
-
-            var handler = messageHandlers[message.handlerName];
-            if (!handler) {
-                console.log("WKWebViewJavascriptBridge: WARNING: no handler for message from iOS:", message);
-                if (errorHandler) {
-                    errorHandler(message.handlerName, message.data, responseCallback);
+            sendMessageQueue.push(message);
+            window.webkit.messageHandlers.iOS_Native_FlushMessageQueue.postMessage(null)
+        }
+    
+        function _fetchQueue() {
+            var messageQueueString = JSON.stringify(sendMessageQueue);
+            sendMessageQueue = [];
+            return messageQueueString;
+        }
+    
+        function _dispatchMessageFromiOS(messageJSON) {
+            var message = JSON.parse(messageJSON);
+            var responseCallback;
+    
+            if (message.responseID) {
+                responseCallback = responseCallbacks[message.responseID];
+                if (!responseCallback) {
+                    return;
                 }
+                responseCallback(message.responseData);
+                delete responseCallbacks[message.responseID];
             } else {
-                handler(message.data, responseCallback);
+                if (message.callbackID) {
+                    var callbackResponseId = message.callbackID;
+                    responseCallback = function(responseData) {
+                        _doSend({ handlerName:message.handlerName, responseID:callbackResponseId, responseData:responseData });
+                    };
+                } else {
+                    responseCallback = function(ignoreResponseData) {};
+                }
+    
+                if (filterHandler) {
+                    var filterResult = filterHandler(message.handlerName, message.data, responseCallback);
+                    if (!filterResult) { return; }
+                }
+    
+                var handler = messageHandlers[message.handlerName];
+                if (!handler) {
+                    console.log("WKWebViewJavascriptBridge: WARNING: no handler for message from iOS:", message);
+                    if (errorHandler) {
+                        errorHandler(message.handlerName, message.data, responseCallback);
+                    }
+                } else {
+                    handler(message.data, responseCallback);
+                }
             }
         }
-    }
-
-    function _handleMessageFromiOS(messageJSON) {
-        _dispatchMessageFromiOS(messageJSON);
-    }
-
-    setTimeout(_callWVJBCallbacks, 0);
-    function _callWVJBCallbacks() {
-        var callbacks = window.WKWVJBCallbacks;
-        delete window.WKWVJBCallbacks;
-        for (var i = 0; i < callbacks.length; i++) {
-            callbacks[i](WKWebViewJavascriptBridge);
-        }
-    }
-})();
-"""
     
+        function _handleMessageFromiOS(messageJSON) {
+            _dispatchMessageFromiOS(messageJSON);
+        }
+    
+        setTimeout(_callWVJBCallbacks, 0);
+        function _callWVJBCallbacks() {
+            var callbacks = window.WKWVJBCallbacks;
+            delete window.WKWVJBCallbacks;
+            for (var i = 0; i < callbacks.length; i++) {
+                callbacks[i](WKWebViewJavascriptBridge);
+            }
+        }
+    })();
+    """
+    }
 }
 
 // MARK: - WKWebView+WebView
@@ -1396,7 +1418,9 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
             return
         }
         
-        if let webView = webView as? WebView, webView.allowsWindowClose {
+        if let webView = webView as? WebView,
+           webView.allowsWindowClose,
+           !webView.injectWindowClose {
             webView.fw.viewController?.fw.close()
         }
     }
