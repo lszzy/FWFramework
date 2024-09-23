@@ -51,6 +51,8 @@ extension WrapperGlobal {
     public static var screenHeight: CGFloat { UIScreen.fw.screenHeight }
     /// 屏幕像素比例
     public static var screenScale: CGFloat { UIScreen.fw.screenScale }
+    /// 判断屏幕英寸，需同步适配新机型
+    public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
     /// 界面是否横屏
     public static var isInterfaceLandscape: Bool { UIScreen.fw.isInterfaceLandscape }
     /// 是否是全面屏屏幕
@@ -207,7 +209,7 @@ extension Wrapper where Base: UIDevice {
             return ProcessInfo.processInfo.isiOSAppOnMac ||
                 ProcessInfo.processInfo.isMacCatalystApp
         }
-        return false
+        return ProcessInfo.processInfo.isMacCatalystApp
     }
 
     /// iOS系统版本字符串
@@ -252,7 +254,7 @@ extension Wrapper where Base: UIDevice {
     /// 设备宽度，跟横竖屏无关
     public static var deviceWidth: CGFloat {
         if let deviceWidth = UIDevice.innerDeviceWidth { return deviceWidth }
-        
+
         let deviceWidth = DispatchQueue.fw.mainSyncIf {
             min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         } otherwise: {
@@ -265,7 +267,7 @@ extension Wrapper where Base: UIDevice {
     /// 设备高度，跟横竖屏无关
     public static var deviceHeight: CGFloat {
         if let deviceHeight = UIDevice.innerDeviceHeight { return deviceHeight }
-        
+
         let deviceHeight = DispatchQueue.fw.mainSyncIf {
             max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         } otherwise: {
@@ -382,6 +384,39 @@ extension Wrapper where Base: UIDevice {
         return screenScale
     }
 
+    /// 判断屏幕英寸，需同步适配新机型
+    public nonisolated static func isScreenInch(_ inch: ScreenInch) -> Bool {
+        switch inch {
+        case .inch35:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 320, height: 480))
+        case .inch40:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 320, height: 568))
+        case .inch47:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 667))
+        case .inch54:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 812))
+        case .inch55:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 736))
+        case .inch58:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 812))
+        case .inch61:
+            return (UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1")) ||
+                UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844)) ||
+                UIDevice.fw.deviceSize.equalTo(CGSize(width: 393, height: 852))
+        case .inch63:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 402, height: 874))
+        case .inch65:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && !isScreenInch(.inch61)
+        case .inch67:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 428, height: 926)) ||
+                UIDevice.fw.deviceSize.equalTo(CGSize(width: 430, height: 932))
+        case .inch69:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 440, height: 956))
+        default:
+            return false
+        }
+    }
+
     /// 界面是否横屏
     public nonisolated static var isInterfaceLandscape: Bool {
         let isLandscape = DispatchQueue.fw.mainSyncIf {
@@ -456,13 +491,16 @@ extension Wrapper where Base: UIDevice {
             return height
         }
 
-        // 5. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return isNotchedScreen ? 24 : 20
-        } else {
-            if isInterfaceLandscape { return 0 }
-            return isNotchedScreen ? (isDynamicIsland ? 54 : 44) : 20
-        }
+        // 5. 兜底算法，需同步适配新机型
+        if UIDevice.fw.isIpad { return isNotchedScreen ? 24 : 20 }
+        if isInterfaceLandscape { return 0 }
+        if !isNotchedScreen { return 20 }
+        if isDynamicIsland { return 54 }
+        if UIDevice.fw.deviceModel == "iPhone12,1" { return 48 }
+        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844)) { return 47 }
+        if isScreenInch(.inch67) { return 47 }
+        if isScreenInch(.inch54) && UIDevice.fw.iosVersion >= 15.0 { return 50 }
+        return 44
     }
 
     /// 导航栏高度，与是否隐藏无关，可自定义
@@ -484,12 +522,10 @@ extension Wrapper where Base: UIDevice {
             return height
         }
 
-        // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
-        } else {
-            return isInterfaceLandscape ? 32 : 44
-        }
+        // 4. 兜底算法，需同步适配新机型
+        if UIDevice.fw.isIpad { return 50 }
+        if isInterfaceLandscape { return isRegularScreen ? 44 : 32 }
+        return 44
     }
 
     /// 顶部栏高度，包含状态栏、导航栏，与是否隐藏无关
@@ -515,13 +551,10 @@ extension Wrapper where Base: UIDevice {
             return height
         }
 
-        // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            if isNotchedScreen { return 65 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
-        } else {
-            return (isInterfaceLandscape ? 32 : 49) + safeAreaInsets.bottom
-        }
+        // 4. 兜底算法，需同步适配新机型
+        if UIDevice.fw.isIpad { return isNotchedScreen ? 65 : 50 }
+        if isInterfaceLandscape { return (isRegularScreen ? 49 : 32) + safeAreaInsets.bottom }
+        return 49 + safeAreaInsets.bottom
     }
 
     /// 工具栏高度，与是否隐藏无关，可自定义
@@ -542,13 +575,10 @@ extension Wrapper where Base: UIDevice {
             return height
         }
 
-        // 4. 简单兜底算法，部分机型可能并不准确
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            if isNotchedScreen { return 70 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
-        } else {
-            return (isInterfaceLandscape ? 32 : 49) + safeAreaInsets.bottom
-        }
+        // 4. 兜底算法，需同步适配新机型
+        if UIDevice.fw.isIpad { return isNotchedScreen ? 70 : 50 }
+        if isInterfaceLandscape { return (isRegularScreen ? 44 : 32) + safeAreaInsets.bottom }
+        return 44 + safeAreaInsets.bottom
     }
 
     /// 自定义指定界面方向状态栏高度，小于等于0时清空
@@ -584,6 +614,27 @@ extension Wrapper where Base: UIDevice {
             return navigationController.viewControllers.first(where: { $0 is T }) as? T
         }
         return nil
+    }
+
+    private static var isRegularScreen: Bool {
+        // https://github.com/Tencent/QMUI_iOS
+        if UIDevice.fw.isIpad { return true }
+        if isDynamicIsland { return true }
+
+        var isZoomedMode = false
+        if UIDevice.fw.isIphone {
+            let nativeScale = UIScreen.main.nativeScale
+            var scale = UIScreen.main.scale
+            if CGSize(width: 1080, height: 1920).equalTo(UIScreen.main.nativeBounds.size) {
+                scale /= 1.15
+            }
+            isZoomedMode = nativeScale > scale
+        }
+        if isZoomedMode { return false }
+
+        if isScreenInch(.inch67) || isScreenInch(.inch65) || isScreenInch(.inch55) { return true }
+        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1") { return true }
+        return false
     }
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
@@ -748,6 +799,34 @@ extension Wrapper where Base: UIDevice {
     }
 }
 
+// MARK: - ScreenInch
+/// 可扩展屏幕尺寸
+public struct ScreenInch: RawRepresentable, Equatable, Hashable, Sendable {
+    public typealias RawValue = Int
+
+    public static let inch35: ScreenInch = .init(35)
+    public static let inch40: ScreenInch = .init(40)
+    public static let inch47: ScreenInch = .init(47)
+    public static let inch54: ScreenInch = .init(54)
+    public static let inch55: ScreenInch = .init(55)
+    public static let inch58: ScreenInch = .init(58)
+    public static let inch61: ScreenInch = .init(61)
+    public static let inch63: ScreenInch = .init(63)
+    public static let inch65: ScreenInch = .init(65)
+    public static let inch67: ScreenInch = .init(67)
+    public static let inch69: ScreenInch = .init(69)
+
+    public var rawValue: Int
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
 // MARK: - Adaptive+Shortcut
 extension CGFloat {
     /// 获取相对设计图宽度等比例缩放值
@@ -843,7 +922,7 @@ extension UIDevice {
     nonisolated static var innerCurrentDevice: UIDevice? {
         get {
             if let currentDevice = innerCachedCurrentDevice { return currentDevice }
-            
+
             let currentDevice = DispatchQueue.fw.mainSyncIf {
                 UIDevice.current
             } otherwise: {
@@ -870,7 +949,7 @@ extension UIScreen {
     fileprivate nonisolated static var innerMainScreen: UIScreen? {
         get {
             if let mainScreen = innerCachedMainScreen { return mainScreen }
-            
+
             let mainScreen = DispatchQueue.fw.mainSyncIf {
                 UIScreen.main
             } otherwise: {
