@@ -234,7 +234,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
         // ViewController
         app.statisticalExposure = StatisticalEvent(name: "exposure_viewController", object: "viewController")
-        app.statisticalExposureListener = { event in
+        app.statisticalExposureListener = { @MainActor @Sendable event in
             if event.isFinished {
                 UIWindow.app.showMessage(text: "\(event.name)曝光结束: \(String(format: "%.1f", event.triggerDuration))s - \(String(format: "%.1f", event.totalDuration))s")
             } else {
@@ -252,17 +252,17 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
         // Exposure
         testView.app.statisticalExposure = StatisticalEvent(name: "exposure_view", object: "view")
-        testView.app.statisticalExposureListener = { [weak self] event in
+        testView.app.statisticalExposureListener = { @MainActor @Sendable [weak self] event in
             self?.testView.backgroundColor = event.isFinished ? .white : UIColor.app.randomColor
         }
         configShieldView(testView.app.statisticalExposure)
         testButton.app.statisticalExposure = StatisticalEvent(name: "exposure_button", object: "button")
-        testButton.app.statisticalExposureListener = { [weak self] event in
+        testButton.app.statisticalExposureListener = { @MainActor @Sendable [weak self] event in
             self?.testButton.app.setBackgroundColor(event.isFinished ? .white : UIColor.app.randomColor, for: .normal)
         }
         configShieldView(testButton.app.statisticalExposure)
         testSwitch.app.statisticalExposure = StatisticalEvent(name: "exposure_switch", object: "switch")
-        testSwitch.app.statisticalExposureListener = { [weak self] event in
+        testSwitch.app.statisticalExposureListener = { @MainActor @Sendable [weak self] event in
             self?.testSwitch.thumbTintColor = event.isFinished ? .white : UIColor.app.randomColor
         }
         configShieldView(testSwitch.app.statisticalExposure)
@@ -274,12 +274,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             ]
             return event
         }
-        segmentedControl.app.statisticalExposureListener = { /* [weak self] */ _ in
+        segmentedControl.app.statisticalExposureListener = { /* [weak self] */ @MainActor @Sendable _ in
             // self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(segmentedControl.app.statisticalExposure)
         tagCollectionView.app.statisticalExposure = StatisticalEvent(name: "exposure_tag", object: "tag")
-        tagCollectionView.app.statisticalExposureListener = { [weak self] event in
+        tagCollectionView.app.statisticalExposureListener = { @MainActor @Sendable [weak self] event in
             self?.tagCollectionView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(tagCollectionView.app.statisticalExposure)
@@ -321,7 +321,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         cell.textLabel?.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_tableView", object: tableObject)
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: tableObject)
-        cell.app.statisticalExposureListener = { event in
+        cell.app.statisticalExposureListener = { @MainActor @Sendable event in
             cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
@@ -342,7 +342,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         cell.textLabel.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
-        cell.app.statisticalExposureListener = { event in
+        cell.app.statisticalExposureListener = { @MainActor @Sendable event in
             cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
@@ -355,7 +355,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     func bannerView(_ bannerView: BannerView, customCell cell: UICollectionViewCell, for index: Int) {
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_banner", object: "banner")
-        cell.app.statisticalExposureListener = { [weak self] event in
+        cell.app.statisticalExposureListener = { @MainActor @Sendable [weak self] event in
             let index = "\(event.indexPath?.row ?? -1)"
             self?.bannerView.titlesGroup = [index, index, index, index, index, index]
         }

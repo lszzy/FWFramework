@@ -68,7 +68,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.app.maxLength = 200
         result.app.placeholder = "问题\n最多200个字符"
         result.app.lineHeight = 25
-        result.app.textChangedBlock = { [weak self] text in
+        result.app.textChangedBlock = { @MainActor @Sendable [weak self] text in
             self?.countLabel.text = "\(self?.textView.app.actualNumberOfLines ?? 0)行 \(text.count)/\(self?.textView.app.maxLength ?? 0)字"
         }
         // result.returnKeyType = .next
@@ -168,7 +168,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     }
 
     func setupLayout() {
-        mobileField.app.autoCompleteBlock = { [weak self] text in
+        mobileField.app.autoCompleteBlock = { @MainActor @Sendable [weak self] text in
             guard let self else { return }
             if text.isEmpty {
                 popupMenu?.dismiss()
@@ -180,7 +180,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             }
         }
 
-        descView.app.autoCompleteBlock = { [weak self] text in
+        descView.app.autoCompleteBlock = { @MainActor @Sendable [weak self] text in
             guard let self else { return }
             if text.isEmpty {
                 popupMenu?.dismiss()

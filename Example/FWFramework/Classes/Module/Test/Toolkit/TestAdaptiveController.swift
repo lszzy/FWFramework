@@ -232,7 +232,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
 
     @objc func onPresent() {
         let vc = TestAdaptiveController()
-        vc.app.presentationDidDismiss = {
+        vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
         vc.app.completionHandler = { _ in
@@ -251,7 +251,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
 
     @objc func onPresent3() {
         let vc = TestAdaptiveController()
-        vc.app.presentationDidDismiss = {
+        vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
         vc.app.completionHandler = { _ in
@@ -266,7 +266,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         let vc = TestAdaptiveController()
         vc.hideToast = true
         let nav = UINavigationController(rootViewController: vc)
-        nav.app.presentationDidDismiss = {
+        nav.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
         nav.app.completionHandler = { _ in
@@ -290,7 +290,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             let cell = self?.tableView.cellForRow(at: indexPath)
             controller.passthroughViews = cell != nil ? [cell!] : []
         }, shouldDismiss: Bool.random())
-        vc.app.presentationDidDismiss = {
+        vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
         vc.app.completionHandler = { _ in
