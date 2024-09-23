@@ -117,12 +117,16 @@ public class PluginManager {
         pluginPool.removeValue(forKey: pluginId)
     }
     
-    /// 延迟加载插件对象，调用后不可再注册该插件
+    /// 延迟加载插件对象，调用后不可再注册该插件。未注册时自动查找当前模块类：DemoPluginProtocol => DemoPlugin
     public static func loadPlugin<T>(_ type: T.Type) -> T? {
         let pluginId = String(describing: type as AnyObject)
         var target = pluginPool[pluginId]
         if target == nil {
-            guard let object = sharedLoader.load(type) else { return nil }
+            var object = sharedLoader.load(type)
+            if object == nil, pluginId.hasSuffix("Protocol") {
+                object = NSClassFromString(pluginId.replacingOccurrences(of: "Protocol", with: ""))
+            }
+            guard let object else { return nil }
             
             registerPlugin(type, object: object)
             target = pluginPool[pluginId]
