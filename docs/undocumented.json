@@ -5546,42 +5546,42 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 346,
+      "line": 349,
       "symbol": "WebView.init(frame:configuration:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 351,
+      "line": 354,
       "symbol": "WebView.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 356,
+      "line": 359,
       "symbol": "WebView.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 385,
+      "line": 388,
       "symbol": "WebView.load(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 665,
+      "line": 669,
       "symbol": "WebViewJSBridge.init(webView:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/WebView.swift",
-      "line": 760,
+      "line": 764,
       "symbol": "WebViewJSBridge.userContentController(_:didReceive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -12875,49 +12875,49 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1006,
+      "line": 1010,
       "symbol": "AssetLivePhoto.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1302,
+      "line": 1306,
       "symbol": "AssetSessionExporterError.setupFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1303,
+      "line": 1307,
       "symbol": "AssetSessionExporterError.readingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1304,
+      "line": 1308,
       "symbol": "AssetSessionExporterError.writingFailure",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1305,
+      "line": 1309,
       "symbol": "AssetSessionExporterError.cancelled",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1467,
+      "line": 1471,
       "symbol": "AssetSessionExporter.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AssetManager.swift",
-      "line": 1484,
+      "line": 1488,
       "symbol": "AssetSessionExporter.validateVideoOutputConfiguration()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -13701,70 +13701,84 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 667,
+      "line": 680,
       "symbol": "ScreenInch.inch35",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 668,
+      "line": 681,
       "symbol": "ScreenInch.inch40",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 669,
+      "line": 682,
       "symbol": "ScreenInch.inch47",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 670,
+      "line": 683,
       "symbol": "ScreenInch.inch54",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 671,
+      "line": 684,
       "symbol": "ScreenInch.inch55",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 672,
+      "line": 685,
       "symbol": "ScreenInch.inch58",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 673,
+      "line": 686,
       "symbol": "ScreenInch.inch61",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 674,
+      "line": 687,
+      "symbol": "ScreenInch.inch63",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
+      "line": 688,
       "symbol": "ScreenInch.inch65",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 675,
+      "line": 689,
       "symbol": "ScreenInch.inch67",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
-      "line": 683,
+      "line": 690,
+      "symbol": "ScreenInch.inch69",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Adaptive.swift",
+      "line": 698,
       "symbol": "ScreenInch.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -14499,84 +14513,84 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 595,
+      "line": 629,
       "symbol": "MulticastBlock.Priority.veryLow",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 596,
+      "line": 630,
       "symbol": "MulticastBlock.Priority.low",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 597,
+      "line": 631,
       "symbol": "MulticastBlock.Priority.normal",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 598,
+      "line": 632,
       "symbol": "MulticastBlock.Priority.high",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 599,
+      "line": 633,
       "symbol": "MulticastBlock.Priority.veryHigh",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 607,
+      "line": 641,
       "symbol": "MulticastBlock.Priority.init(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 768,
+      "line": 802,
       "symbol": "TapGestureRecognizer.isEnabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 779,
+      "line": 813,
       "symbol": "TapGestureRecognizer.state",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 789,
+      "line": 823,
       "symbol": "TapGestureRecognizer.touchesBegan(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 794,
+      "line": 828,
       "symbol": "TapGestureRecognizer.touchesEnded(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 799,
+      "line": 833,
       "symbol": "TapGestureRecognizer.touchesCancelled(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Block.swift",
-      "line": 804,
+      "line": 838,
       "symbol": "TapGestureRecognizer.reset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.11.2 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -1352,6 +1352,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/List.html">List</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/MainActor.html">MainActor</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
@@ -5524,269 +5527,6 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Runtime"></a>
-                <a name="//apple_ref/swift/Section/Runtime" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Runtime"></a>
-                  <h3 class="section-name"><span>Runtime</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeMethod_7objectss9UnmanagedVyyXlGSg10ObjectiveC8SelectorV_SayypGSgtF"></a>
-                    <a name="//apple_ref/swift/Method/invokeMethod(_:objects:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeMethod_7objectss9UnmanagedVyyXlGSg10ObjectiveC8SelectorV_SayypGSgtF">invokeMethod(_:<wbr>objects:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>安全调用方法，支持多个参数</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">selector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">objects</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unmanaged</span><span class="o">&lt;</span><span class="kt">AnyObject</span><span class="o">&gt;!</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>selector</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>要执行的方法</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>objects</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>传递的参数数组，默认空</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>方法返回值</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeGetteryypSgSSF"></a>
-                    <a name="//apple_ref/swift/Method/invokeGetter(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeGetteryypSgSSF">invokeGetter(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>安全调用内部属性获取方法，如果属性不存在，则忽略之</p>
-
-<p>如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeGetter</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>内部属性名称</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>属性值</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeSetter_6objectySS_ypSgtF"></a>
-                    <a name="//apple_ref/swift/Method/invokeSetter(_:object:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeSetter_6objectySS_ypSgtF">invokeSetter(_:<wbr>object:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>安全调用内部属性设置方法，如果属性不存在，则忽略之</p>
-
-<p>如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeSetter</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>内部属性名称</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>object</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>传递的方法参数</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeMethod_8selector7objectss9UnmanagedVyyXlGSgyXl_10ObjectiveC8SelectorVSayypGSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/invokeMethod(_:selector:objects:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAARlzCAA0B10CompatibleRzlE12invokeMethod_8selector7objectss9UnmanagedVyyXlGSgyXl_10ObjectiveC8SelectorVSayypGSgtFZ">invokeMethod(_:<wbr>selector:<wbr>objects:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>安全调用类方法，支持多个参数</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">invokeMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span> <span class="nv">selector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">objects</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unmanaged</span><span class="o">&lt;</span><span class="kt">AnyObject</span><span class="o">&gt;!</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>target</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>调用的目标</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>selector</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>要执行的方法</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>objects</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>传递的参数数组，默认空</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>方法返回值</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/Property"></a>
                 <a name="//apple_ref/swift/Section/Property" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -7633,6 +7373,336 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">setAssociatedObject</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="nv">policy</span><span class="p">:</span> <span class="n">objc_AssociationPolicy</span> <span class="o">=</span> <span class="o">.</span><span class="kt">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Method"></a>
+                <a name="//apple_ref/swift/Section/Method" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Method"></a>
+                  <h3 class="section-name"><span>Method</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeGetteryypSgSSF"></a>
+                    <a name="//apple_ref/swift/Method/invokeGetter(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeGetteryypSgSSF">invokeGetter(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全调用内部属性获取方法，如果属性不存在，则忽略之</p>
+
+<p>如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeGetter</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>内部属性名称</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>属性值</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeSetter_6objectySS_ypSgtF"></a>
+                    <a name="//apple_ref/swift/Method/invokeSetter(_:object:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeSetter_6objectySS_ypSgtF">invokeSetter(_:<wbr>object:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全调用内部属性设置方法，如果属性不存在，则忽略之</p>
+
+<p>如果iOS13系统UIView调用部分valueForKey:方法闪退，且没有好的替代方案，可尝试调用此方法</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeSetter</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>内部属性名称</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>object</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>传递的方法参数</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeMethod_7objectss9UnmanagedVyyXlGSg10ObjectiveC8SelectorV_SayypGSgtF"></a>
+                    <a name="//apple_ref/swift/Method/invokeMethod(_:objects:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeMethod_7objectss9UnmanagedVyyXlGSg10ObjectiveC8SelectorV_SayypGSgtF">invokeMethod(_:<wbr>objects:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全调用方法，支持多个参数</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">invokeMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">selector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">objects</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unmanaged</span><span class="o">&lt;</span><span class="kt">AnyObject</span><span class="o">&gt;!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selector</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>要执行的方法</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>objects</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>传递的参数数组，默认空</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>方法返回值</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeMethod_8selector7objectss9UnmanagedVyyXlGSgyXl_10ObjectiveC8SelectorVSayypGSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/invokeMethod(_:selector:objects:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE12invokeMethod_8selector7objectss9UnmanagedVyyXlGSgyXl_10ObjectiveC8SelectorVSayypGSgtFZ">invokeMethod(_:<wbr>selector:<wbr>objects:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全调用类方法，支持多个参数</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">invokeMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">target</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span> <span class="nv">selector</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="nv">objects</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Unmanaged</span><span class="o">&lt;</span><span class="kt">AnyObject</span><span class="o">&gt;!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>target</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>调用的目标</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selector</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>要执行的方法</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>objects</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>传递的参数数组，默认空</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>方法返回值</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Value"></a>
+                <a name="//apple_ref/swift/Section/Value" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Value"></a>
+                  <h3 class="section-name"><span>Value</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE5value6forKeyypSgSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/value(forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE5value6forKeyypSgSS_tF">value(forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全获取当前对象的指定属性值(非keyPath)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">value</span><span class="p">(</span><span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE8setValue_6forKeyyypSg_SStF"></a>
+                    <a name="//apple_ref/swift/Method/setValue(_:forKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8NSObjectCRbzlE8setValue_6forKeyyypSg_SStF">setValue(_:<wbr>forKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>安全设置当前对象的指定属性值(非keyPath)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span> <span class="n">forKey</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -21619,14 +21689,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>界面是否横屏</p>
+                        <p>已废弃，界面是否横屏</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">isLandscape</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Use UIScreen.fw.isInterfaceLandscape instead"</span><span class="p">)</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">isLandscape</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -21907,9 +21978,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11deviceModelSSSgvpZ"></a>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11deviceModelSSvpZ"></a>
                     <a name="//apple_ref/swift/Variable/deviceModel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11deviceModelSSSgvpZ">deviceModel</a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE11deviceModelSSvpZ">deviceModel</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -21924,7 +21995,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">deviceModel</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">deviceModel</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -22073,6 +22144,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isScreenInch</span><span class="p">(</span><span class="n">_</span> <span class="nv">inch</span><span class="p">:</span> <span class="kt"><a href="../Structs/ScreenInch.html">ScreenInch</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE20isInterfaceLandscapeSbvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/isInterfaceLandscape" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE20isInterfaceLandscapeSbvpZ">isInterfaceLandscape</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>界面是否横屏</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">isInterfaceLandscape</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -28528,6 +28626,60 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">mainAsync</span><span class="p">(</span><span class="n">execute</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo17OS_dispatch_queueCRbzlE10mainSyncIf7executeyyyXE_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/mainSyncIf(execute:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo17OS_dispatch_queueCRbzlE10mainSyncIf7executeyyyXE_tFZ">mainSyncIf(execute:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>当主线程时执行句柄，非主线程不执行</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">mainSyncIf</span><span class="p">(</span><span class="n">execute</span> <span class="nv">block</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo17OS_dispatch_queueCRbzlE10mainSyncIf7execute9otherwiseqd__qd__yXE_qd__yXEtlFZ"></a>
+                    <a name="//apple_ref/swift/Method/mainSyncIf(execute:otherwise:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo17OS_dispatch_queueCRbzlE10mainSyncIf7execute9otherwiseqd__qd__yXE_qd__yXEtlFZ">mainSyncIf(execute:<wbr>otherwise:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>当主线程时执行句柄，非主线程执行另一个句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">mainSyncIf</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">execute</span> <span class="nv">block</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">,</span> <span class="nv">otherwise</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
 
                         </div>
                       </div>
@@ -52628,7 +52780,7 @@ contentEdgeInsets: 内容边距，setImageEdge时不影响，sizeThatFits包含<
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-12)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

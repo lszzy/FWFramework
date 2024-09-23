@@ -19,9 +19,17 @@ class TestJavascriptBridge: NSObject {
 }
 
 class TestBridgeController: WebController {
+    private lazy var actionView: UIView = {
+        let result = UIView()
+        return result
+    }()
     
     override func setupWebView() {
         super.setupWebView()
+        
+        webView.app.observeProperty(\.canGoBack) { [weak self] webView, _ in
+            self?.actionView.isHidden = webView.canGoBack
+        }
         webView.app.jsBridgeEnabled = true
     }
     
@@ -55,47 +63,48 @@ class TestBridgeController: WebController {
     
     override func setupSubviews() {
         let font = UIFont.systemFont(ofSize: 12)
-        let y = APP.screenHeight - APP.toolBarHeight - 45
-        
         let callbackButton = UIButton(type: .roundedRect)
         callbackButton.setTitle("Call", for: .normal)
         callbackButton.addTarget(self, action: #selector(callHandler(_:)), for: .touchUpInside)
-        view.insertSubview(callbackButton, aboveSubview: webView)
-        callbackButton.frame = CGRect(x: 10, y: y, width: 60, height: 35)
         callbackButton.titleLabel?.font = font
-        
+        actionView.addSubview(callbackButton)
+        callbackButton.layoutChain.size(width: 60, height: 35).left(10).bottom(10)
+
         let errorButton = UIButton(type: .roundedRect)
         errorButton.setTitle("Error", for: .normal)
         errorButton.addTarget(self, action: #selector(errorHandler(_:)), for: .touchUpInside)
-        view.insertSubview(errorButton, aboveSubview: webView)
-        errorButton.frame = CGRect(x: 70, y: y, width: 60, height: 35)
         errorButton.titleLabel?.font = font
-        
+        actionView.addSubview(errorButton)
+        errorButton.layoutChain.left(70).size(toView: callbackButton).bottom(toView: callbackButton)
+
         let filterButton = UIButton(type: .roundedRect)
         filterButton.setTitle("Filter", for: .normal)
         filterButton.addTarget(self, action: #selector(filterHandler(_:)), for: .touchUpInside)
-        view.insertSubview(filterButton, aboveSubview: webView)
-        filterButton.frame = CGRect(x: 130, y: y, width: 60, height: 35)
         filterButton.titleLabel?.font = font
-        
+        actionView.addSubview(filterButton)
+        filterButton.layoutChain.left(130).size(toView: callbackButton).bottom(toView: callbackButton)
+
         let reloadButton = UIButton(type: .roundedRect)
         reloadButton.setTitle("Reload", for: .normal)
         reloadButton.addTarget(webView, action: #selector(WKWebView.reload), for: .touchUpInside)
-        view.insertSubview(reloadButton, aboveSubview: webView)
-        reloadButton.frame = CGRect(x: 190, y: y, width: 60, height: 35)
         reloadButton.titleLabel?.font = font
-        
+        actionView.addSubview(reloadButton)
+        reloadButton.layoutChain.left(190).size(toView: callbackButton).bottom(toView: callbackButton)
+
         let jumpButton = UIButton(type: .roundedRect)
         jumpButton.setTitle("Jump", for: .normal)
         jumpButton.app.addTouch { [weak self] _ in
             self?.webRequest = "http://kvm.wuyong.site/jssdk.html"
         }
-        view.insertSubview(jumpButton, aboveSubview: webView)
-        jumpButton.frame = CGRect(x: 250, y: y, width: 60, height: 35)
         jumpButton.titleLabel?.font = font
+        actionView.addSubview(jumpButton)
+        jumpButton.layoutChain.left(250).size(toView: callbackButton).bottom(toView: callbackButton)
     }
     
     override func setupLayout() {
+        view.addSubview(actionView)
+        actionView.layoutChain.horizontal(toSafeArea: .zero).bottom(toSafeArea: .zero).height(45)
+        
         requestUrl = ModuleBundle.resourceURL("Bridge.html")?.absoluteString
     }
     

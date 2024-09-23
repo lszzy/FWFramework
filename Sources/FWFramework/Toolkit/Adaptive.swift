@@ -24,8 +24,9 @@ extension WrapperGlobal {
     /// 是否是Mac设备
     public static var isMac: Bool { UIDevice.fw.isMac }
 
-    /// 界面是否横屏
-    public static var isLandscape: Bool { UIDevice.fw.isLandscape }
+    /// 已废弃，界面是否横屏
+    @available(*, deprecated, message: "Use UIScreen.fw.isInterfaceLandscape instead")
+    public static var isLandscape: Bool { UIScreen.fw.isInterfaceLandscape }
     /// 设备是否横屏，无论支不支持横屏
     public static var isDeviceLandscape: Bool { UIDevice.fw.isDeviceLandscape }
 
@@ -56,6 +57,8 @@ extension WrapperGlobal {
     public static var screenScale: CGFloat { UIScreen.fw.screenScale }
     /// 判断屏幕英寸
     public static func isScreenInch(_ inch: ScreenInch) -> Bool { UIScreen.fw.isScreenInch(inch) }
+    /// 界面是否横屏
+    public static var isInterfaceLandscape: Bool { UIScreen.fw.isInterfaceLandscape }
     /// 是否是全面屏屏幕
     public static var isNotchedScreen: Bool { UIScreen.fw.isNotchedScreen }
     /// 是否是灵动岛屏幕
@@ -200,9 +203,10 @@ extension Wrapper where Base: UIDevice {
         return false
     }
 
-    /// 界面是否横屏
+    /// 已废弃，界面是否横屏
+    @available(*, deprecated, message: "Use UIScreen.fw.isInterfaceLandscape instead")
     public static var isLandscape: Bool {
-        return UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
+        return UIScreen.fw.isInterfaceLandscape
     }
     
     /// 设备是否横屏，无论支不支持横屏
@@ -296,7 +300,7 @@ extension Wrapper where Base: UIDevice {
     }
     
     /// 获取设备模型，格式："iPhone6,1"
-    public static var deviceModel: String? {
+    public static var deviceModel: String {
         #if targetEnvironment(simulator)
         return String(format: "%s", getenv("SIMULATOR_MODEL_IDENTIFIER"))
         #else
@@ -344,22 +348,32 @@ extension Wrapper where Base: UIScreen {
         case .inch47:
             return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 667))
         case .inch54:
-            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 360, height: 780))
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 812))
         case .inch55:
             return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 736))
         case .inch58:
             return UIDevice.fw.deviceSize.equalTo(CGSize(width: 375, height: 812))
         case .inch61:
             return (UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1")) ||
-            UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844))
+            UIDevice.fw.deviceSize.equalTo(CGSize(width: 390, height: 844)) ||
+            UIDevice.fw.deviceSize.equalTo(CGSize(width: 393, height: 852))
+        case .inch63:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 402, height: 874))
         case .inch65:
             return UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && !isScreenInch(.inch61)
         case .inch67:
             return UIDevice.fw.deviceSize.equalTo(CGSize(width: 428, height: 926)) ||
             UIDevice.fw.deviceSize.equalTo(CGSize(width: 430, height: 932))
+        case .inch69:
+            return UIDevice.fw.deviceSize.equalTo(CGSize(width: 440, height: 956))
         default:
             return false
         }
+    }
+    
+    /// 界面是否横屏
+    public static var isInterfaceLandscape: Bool {
+        return UIWindow.fw.mainScene?.interfaceOrientation.isLandscape ?? false
     }
     
     /// 是否是全面屏屏幕
@@ -410,7 +424,7 @@ extension Wrapper where Base: UIScreen {
             return isNotchedScreen ? 24 : 20
         }
         
-        if UIDevice.fw.isLandscape { return 0 }
+        if isInterfaceLandscape { return 0 }
         if !isNotchedScreen { return 20 }
         if isDynamicIsland { return 54 }
         if UIDevice.fw.deviceModel == "iPhone12,1" { return 48 }
@@ -422,12 +436,10 @@ extension Wrapper where Base: UIScreen {
     
     /// 导航栏高度，与是否隐藏无关
     public static var navigationBarHeight: CGFloat {
-        if UIDevice.fw.isIpad {
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
-        }
+        if UIDevice.fw.isIpad { return 50 }
         
         var height: CGFloat = 44
-        if UIDevice.fw.isLandscape {
+        if isInterfaceLandscape {
             height = isRegularScreen ? 44 : 32
         }
         return height
@@ -441,12 +453,11 @@ extension Wrapper where Base: UIScreen {
     /// 标签栏高度，与是否隐藏无关
     public static var tabBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
-            if isNotchedScreen { return 65 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 49
+            return isNotchedScreen ? 65 : 50
         }
         
         var height: CGFloat = 49
-        if UIDevice.fw.isLandscape {
+        if isInterfaceLandscape {
             height = isRegularScreen ? 49 : 32
         }
         return height + safeAreaInsets.bottom
@@ -455,12 +466,11 @@ extension Wrapper where Base: UIScreen {
     /// 工具栏高度，与是否隐藏无关
     public static var toolBarHeight: CGFloat {
         if UIDevice.fw.isIpad {
-            if isNotchedScreen { return 70 }
-            return UIDevice.fw.iosVersion >= 12.0 ? 50 : 44
+            return isNotchedScreen ? 70 : 50
         }
         
         var height: CGFloat = 44
-        if UIDevice.fw.isLandscape {
+        if isInterfaceLandscape {
             height = isRegularScreen ? 44 : 32
         }
         return height + safeAreaInsets.bottom
@@ -469,6 +479,9 @@ extension Wrapper where Base: UIScreen {
     private static var isRegularScreen: Bool {
         // https://github.com/Tencent/QMUI_iOS
         if UIDevice.fw.isIpad { return true }
+        
+        let deviceModel = UIDevice.fw.deviceModel
+        if deviceModel.hasPrefix("iPhone15,") || deviceModel.hasPrefix("iPhone16,") || deviceModel.hasPrefix("iPhone17,") { return true }
         
         var isZoomedMode = false
         if UIDevice.fw.isIphone {
@@ -482,7 +495,7 @@ extension Wrapper where Base: UIScreen {
         if isZoomedMode { return false }
         
         if isScreenInch(.inch67) || isScreenInch(.inch65) || isScreenInch(.inch55) { return true }
-        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (UIDevice.fw.deviceModel == "iPhone11,8" || UIDevice.fw.deviceModel == "iPhone12,1") { return true }
+        if UIDevice.fw.deviceSize.equalTo(CGSize(width: 414, height: 896)) && (deviceModel == "iPhone11,8" || deviceModel == "iPhone12,1") { return true }
         return false
     }
 
@@ -592,7 +605,7 @@ extension Wrapper where Base: UIViewController {
         guard !navigationBarHidden else { return 0 }
         
         // 2. 竖屏且为iOS13+弹出pageSheet样式时布局高度为0
-        let isPortrait = !UIDevice.fw.isLandscape
+        let isPortrait = !UIScreen.fw.isInterfaceLandscape
         if isPortrait && isPageSheet { return 0 }
         
         // 3. 竖屏且异形屏，导航栏显示时布局高度固定
@@ -671,8 +684,10 @@ public struct ScreenInch: RawRepresentable, Equatable, Hashable {
     public static let inch55: ScreenInch = .init(55)
     public static let inch58: ScreenInch = .init(58)
     public static let inch61: ScreenInch = .init(61)
+    public static let inch63: ScreenInch = .init(63)
     public static let inch65: ScreenInch = .init(65)
     public static let inch67: ScreenInch = .init(67)
+    public static let inch69: ScreenInch = .init(69)
     
     public var rawValue: Int
     
