@@ -21,10 +21,10 @@ class TestBridgeController: WebController {
         let result = UIView()
         return result
     }()
-    
+
     override func setupWebView() {
         super.setupWebView()
-        
+
         webView.app.safeObserveProperty(\.canGoBack) { [weak self] webView, _ in
             self?.actionView.isHidden = webView.canGoBack
         }
@@ -102,7 +102,7 @@ class TestBridgeController: WebController {
     override func setupLayout() {
         view.addSubview(actionView)
         actionView.layoutChain.horizontal(toSafeArea: .zero).bottom(toSafeArea: .zero).height(45)
-        
+
         requestUrl = ModuleBundle.resourceURL("Bridge.html")?.absoluteString
     }
 

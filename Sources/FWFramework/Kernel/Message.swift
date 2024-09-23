@@ -61,7 +61,7 @@ extension Wrapper where Base: WrapperObject {
         messageTargets.append(messageTarget)
         return messageTarget
     }
-    
+
     /// 主线程安全监听某个指定对象点对点消息，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 消息名称
@@ -219,7 +219,7 @@ extension Wrapper where Base: WrapperObject {
         NotificationCenter.default.addObserver(notificationTarget, selector: #selector(NotificationTarget.handle(_:)), name: name, object: object)
         return notificationTarget
     }
-    
+
     /// 主线程安全监听某个广播通知，可指定对象，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - name: 通知名称
@@ -405,7 +405,7 @@ extension Wrapper where Base: NSObject {
         }
         return addObservation(observation, keyPath: keyPath, target: target, action: action)
     }
-    
+
     /// 主线程安全监听对象某个属性KeyPath，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - keyPath: 属性KeyPath
@@ -480,7 +480,7 @@ extension Wrapper where Base: NSObject {
         target.addObserver()
         return target
     }
-    
+
     /// 主线程安全监听对象某个属性，对象释放时自动移除监听，添加多次执行多次
     /// - Parameters:
     ///   - property: 属性名称
@@ -630,7 +630,7 @@ private class NotificationTarget: NSObject, @unchecked Sendable {
             handleNotification(notification)
         }
     }
-    
+
     private func handleNotification(_ notification: Notification) {
         if block != nil {
             block?(notification)
@@ -690,7 +690,7 @@ private class PropertyTarget: NSObject, @unchecked Sendable {
         if newChange[.newKey] is NSNull {
             newChange.removeValue(forKey: .newKey)
         }
-        
+
         if onMainThread {
             let sendableObject = SendableObject(object)
             let sendableChange = SendableObject(newChange)
@@ -701,7 +701,7 @@ private class PropertyTarget: NSObject, @unchecked Sendable {
             handleObservation(object, with: newChange)
         }
     }
-    
+
     private func handleObservation(_ object: Any, with change: [NSKeyValueChangeKey: Any]) {
         if block != nil {
             block?(object, change)
