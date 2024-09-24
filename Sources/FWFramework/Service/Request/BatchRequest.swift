@@ -37,6 +37,8 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open var successCompletionBlock: Completion?
     /// 失败完成回调
     open var failureCompletionBlock: Completion?
+    /// 自定义取消回调句柄，不一定主线程调用
+    open var requestCancelledBlock: (@Sendable (BatchRequest) -> Void)?
     /// 请求标签，默认0
     open var tag: Int = 0
     /// 自定义请求配件数组
@@ -91,8 +93,10 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
 
     // MARK: - Public
     /// 添加单个请求，start之前调用
-    open func addRequest(_ request: HTTPRequest) {
+    @discardableResult
+    open func addRequest(_ request: HTTPRequest) -> Self {
         requestArray.append(request)
+        return self
     }
 
     /// 开始请求，仅能调用一次
@@ -120,6 +124,8 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         delegate = nil
         clearRequest()
         isCancelled = true
+        requestCancelledBlock?(self)
+        requestCancelledBlock = nil
         toggleAccessoriesDidStopCallBack()
         BatchRequestManager.shared.removeBatchRequest(self)
     }
@@ -136,6 +142,42 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     @discardableResult
     open func start(completion: Completion?) -> Self {
         start(success: completion, failure: completion)
+    }
+    
+    /// 请求取消句柄，不一定主线程调用
+    @discardableResult
+    open func requestCancelledBlock(_ block: (@Sendable (BatchRequest) -> Void)?) -> Self {
+        requestCancelledBlock = block
+        return self
+    }
+    
+    /// 自定义响应完成句柄
+    @discardableResult
+    open func response(_ completion: Completion?) -> Self {
+        responseSuccess(completion).responseFailure(completion)
+    }
+
+    /// 自定义响应成功句柄
+    @discardableResult
+    open func responseSuccess(_ block: Completion?) -> Self {
+        successCompletionBlock = block
+        return self
+    }
+
+    /// 自定义响应失败句柄
+    @discardableResult
+    open func responseFailure(_ block: Completion?) -> Self {
+        failureCompletionBlock = block
+        return self
+    }
+    
+    /// 快捷设置响应失败句柄
+    @discardableResult
+    open func responseError(_ block: (@MainActor @Sendable (Error) -> Void)?) -> Self {
+        failureCompletionBlock = { request in
+            block?(request.error ?? RequestError.unknown)
+        }
+        return self
     }
 
     /// 清理完成句柄
@@ -251,3 +293,49 @@ open class BatchRequestManager: @unchecked Sendable {
         batchRequestArray.removeAll(where: { $0 === batchRequest })
     }
 }
+
+// MARK: - Concurrency+BatchRequest
+#if canImport(_Concurrency)
+extension BatchRequest {
+    /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
+    public func response() async -> BatchRequest {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                requestCancelledBlock { request in
+                    if !Task.isCancelled {
+                        continuation.resume(returning: request)
+                    }
+                }
+                .response { request in
+                    continuation.resume(returning: request)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+
+    /// 异步获取成功响应，注意非Task取消也会触发(Continuation流程)
+    public func responseSuccess() async throws -> BatchRequest {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .responseSuccess { request in
+                    continuation.resume(returning: request)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+}
+#endif
