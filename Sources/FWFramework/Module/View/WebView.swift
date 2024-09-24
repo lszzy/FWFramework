@@ -526,7 +526,9 @@ public class WebViewCookieManager: NSObject {
         for (index, cookie) in cookies.enumerated() {
             cookieStore.setCookie(cookie) {
                 if index == cookies.count - 1 {
-                    completion?()
+                    DispatchQueue.fw.mainAsync {
+                        completion?()
+                    }
                 }
             }
         }
