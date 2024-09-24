@@ -50,10 +50,11 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         tableData.append(contentsOf: [
             ["Associated不加锁", "onLock1"],
             ["Associated加锁", "onLock2"],
-            ["Array串行", "onArray"],
-            ["NSMutableArray", "onArray1"],
-            ["NSMutableArray串行", "onArray2"],
-            ["NSMutableArray加锁", "onArray3"],
+            ["Array", "onArray1"],
+            ["Array串行", "onArray2"],
+            ["NSMutableArray", "onMutableArray1"],
+            ["NSMutableArray串行", "onMutableArray2"],
+            ["NSMutableArray加锁", "onMutableArray3"],
             ["NSMutableDictionary", "onDictionary1"],
             ["NSMutableDictionary并行加锁", "onDictionary2"],
             ["NSMutableDictionary加锁", "onDictionary3"],
@@ -131,10 +132,21 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             onResult(value)
         }
     }
-
-    @objc func onArray() {
+    
+    @objc func onArray1() {
         let array = SendableObject([Int]())
-        let queue = DispatchQueue(label: "onArray")
+
+        onQueue {
+            let last = array.object.last ?? 0
+            array.object.append(last + 1)
+        } completion: { [weak self] in
+            self?.onResult(array.object.last ?? 0)
+        }
+    }
+
+    @objc func onArray2() {
+        let array = SendableObject([Int]())
+        let queue = DispatchQueue(label: "onArray2")
         let count = SendableObject<Int>(0)
 
         DispatchQueue.concurrentPerform(iterations: queueCount) { _ in
@@ -152,8 +164,8 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         }
     }
 
-    @objc func onArray1() {
-        let key = "onArray1"
+    @objc func onMutableArray1() {
+        let key = "onMutableArray1"
         let array = SendableObject(NSMutableArray())
         array.object.add(NSObject())
 
@@ -171,8 +183,8 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         }
     }
 
-    @objc func onArray2() {
-        let key = "onArray2"
+    @objc func onMutableArray2() {
+        let key = "onMutableArray2"
         let array = SendableObject(NSMutableArray())
         array.object.add(NSObject())
         let queue = DispatchQueue(label: "testArray")
@@ -194,8 +206,8 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         }
     }
 
-    @objc func onArray3() {
-        let key = "onArray3"
+    @objc func onMutableArray3() {
+        let key = "onMutableArray3"
         let array = SendableObject(NSMutableArray())
         array.object.add(NSObject())
 
