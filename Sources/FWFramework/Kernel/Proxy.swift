@@ -109,10 +109,24 @@ public class WeakObject: @unchecked Sendable {
 // MARK: - SendableObject
 /// Sendable容器类，用于解决任意对象Sendable传参问题
 public class SendableObject<T>: @unchecked Sendable {
-    public var object: T
+    public var object: T {
+        get {
+            objc_sync_enter(self)
+            defer { objc_sync_exit(self) }
+            
+            return _object
+        }
+        set {
+            objc_sync_enter(self)
+            defer { objc_sync_exit(self) }
+            
+            _object = newValue
+        }
+    }
+    private var _object: T
 
     public init(_ object: T) {
-        self.object = object
+        self._object = object
     }
 }
 
