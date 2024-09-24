@@ -16,9 +16,10 @@ extension WrapperGlobal {
     // MARK: - UIDevice
     /// 是否是模拟器
     public static var isSimulator: Bool { UIDevice.fw.isSimulator }
-
     /// 是否是iPhone设备
     public static var isIphone: Bool { UIDevice.fw.isIphone }
+    /// 是否是iPod设备
+    public static var isIpod: Bool { UIDevice.fw.isIpod }
     /// 是否是iPad设备
     public static var isIpad: Bool { UIDevice.fw.isIpad }
     /// 是否是Mac设备
@@ -61,6 +62,8 @@ extension WrapperGlobal {
     @MainActor public static var isDynamicIsland: Bool { UIScreen.fw.isDynamicIsland }
     /// 屏幕一像素的大小
     public static var pixelOne: CGFloat { UIScreen.fw.pixelOne }
+    /// 屏幕半个点的大小，区别于pixelOne，2x屏为1像素，3x屏为2像素
+    public static var pointHalf: CGFloat { UIScreen.fw.pointHalf }
     /// 屏幕安全区域距离
     @MainActor public static var safeAreaInsets: UIEdgeInsets { UIScreen.fw.safeAreaInsets }
 
@@ -196,6 +199,11 @@ extension Wrapper where Base: UIDevice {
     /// 是否是iPhone
     public static var isIphone: Bool {
         deviceModel.hasPrefix("iPhone")
+    }
+    
+    /// 是否是iPod
+    public static var isIpod: Bool {
+        deviceModel.hasPrefix("iPod")
     }
 
     /// 是否是iPad
@@ -445,6 +453,11 @@ extension Wrapper where Base: UIDevice {
     /// 屏幕一像素的大小
     public nonisolated static var pixelOne: CGFloat {
         1.0 / screenScale
+    }
+    
+    /// 屏幕半个点的大小，区别于pixelOne，2x屏为1像素，3x屏为2像素
+    public nonisolated static var pointHalf: CGFloat {
+        round(0.5 * screenScale) / screenScale
     }
 
     /// 检查是否含有安全区域，可用来判断iPhoneX
