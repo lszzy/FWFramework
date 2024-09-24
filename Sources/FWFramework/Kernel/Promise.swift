@@ -337,7 +337,6 @@ extension Promise {
 }
 
 // MARK: - Concurrency+Promise
-#if canImport(_Concurrency)
 extension Promise {
     /// 异步获取结果值
     public var value: Sendable {
@@ -360,4 +359,3 @@ extension Promise {
         return value
     }
 }
-#endif

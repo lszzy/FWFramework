@@ -425,7 +425,6 @@ extension ImagePlugin {
 }
 
 // MARK: - Concurrency+ImagePlugin
-#if canImport(_Concurrency)
 extension Wrapper where Base: UIImage {
     /// 异步下载网络图片
     public static func downloadImage(
@@ -451,7 +450,6 @@ extension Wrapper where Base: UIImage {
         }
     }
 }
-#endif
 
 // MARK: - FrameworkAutoloader+ImagePlugin
 extension FrameworkAutoloader {
