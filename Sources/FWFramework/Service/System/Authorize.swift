@@ -361,7 +361,6 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol, @unchecked Sen
 }
 
 // MARK: - Concurrency+Authorize
-#if canImport(_Concurrency)
 extension AuthorizeProtocol {
     /// 异步查询权限状态
     public func authorizeStatus() async -> (status: AuthorizeStatus, error: Error?) {
@@ -381,4 +380,3 @@ extension AuthorizeProtocol {
         }
     }
 }
-#endif

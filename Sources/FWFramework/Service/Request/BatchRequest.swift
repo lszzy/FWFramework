@@ -295,7 +295,6 @@ open class BatchRequestManager: @unchecked Sendable {
 }
 
 // MARK: - Concurrency+BatchRequest
-#if canImport(_Concurrency)
 extension BatchRequest {
     /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
     public func response() async -> BatchRequest {
@@ -338,4 +337,3 @@ extension BatchRequest {
         }
     }
 }
-#endif

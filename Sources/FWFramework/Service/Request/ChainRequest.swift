@@ -323,7 +323,6 @@ open class ChainRequestManager: @unchecked Sendable {
 }
 
 // MARK: - Concurrency+ChainRequest
-#if canImport(_Concurrency)
 extension ChainRequest {
     /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
     public func response() async -> ChainRequest {
@@ -366,4 +365,3 @@ extension ChainRequest {
         }
     }
 }
-#endif

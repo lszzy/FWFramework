@@ -2539,7 +2539,6 @@ extension FrameworkAutoloader {
 }
 
 // MARK: - Concurrency+Toolkit
-#if canImport(_Concurrency)
 @MainActor extension Wrapper where Base: UIApplication {
     /// 异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     public static func openURL(_ url: URLParameter?) async -> Bool {
@@ -2622,4 +2621,3 @@ extension FrameworkAutoloader {
         }
     }
 }
-#endif

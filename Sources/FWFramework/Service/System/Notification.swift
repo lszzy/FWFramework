@@ -156,7 +156,6 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
 }
 
 // MARK: - Concurrency+Notification
-#if canImport(_Concurrency)
 extension NotificationManager {
     /// 异步查询通知权限状态
     public func authorizeStatus() async -> AuthorizeStatus {
@@ -176,4 +175,3 @@ extension NotificationManager {
         }
     }
 }
-#endif
