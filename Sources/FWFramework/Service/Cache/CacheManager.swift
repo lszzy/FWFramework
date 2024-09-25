@@ -9,10 +9,9 @@ import Foundation
 
 // MARK: - CacheType
 /// 缓存类型枚举
-public struct CacheType: RawRepresentable, Equatable, Hashable {
-    
+public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = Int
-    
+
     /// 默认缓存，同文件
     public static let `default`: CacheType = .init(0)
     /// 内存缓存
@@ -25,32 +24,30 @@ public struct CacheType: RawRepresentable, Equatable, Hashable {
     public static let file: CacheType = .init(4)
     /// Sqlite数据库缓存
     public static let sqlite: CacheType = .init(5)
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 // MARK: - CacheManager
 /// 缓存管理器
 public class CacheManager: NSObject {
-    
     /// 自定义缓存创建句柄，默认nil
-    public static var factoryBlock: ((CacheType) -> CacheProtocol?)?
-    
+    public nonisolated(unsafe) static var factoryBlock: ((CacheType) -> CacheProtocol?)?
+
     /// 获取指定类型的缓存单例对象
     public static func manager(type: CacheType) -> CacheProtocol? {
         if let cache = factoryBlock?(type) {
             return cache
         }
-        
+
         switch type {
         case .default:
             return CacheFile.shared
@@ -68,7 +65,6 @@ public class CacheManager: NSObject {
             return nil
         }
     }
-    
 }
 
 // MARK: - CachedValue
@@ -82,7 +78,7 @@ public struct CachedValue<Value> {
     private let key: String
     private let defaultValue: Value
     private let type: CacheType
-    
+
     public init(
         wrappedValue: Value,
         _ key: String,
@@ -93,7 +89,7 @@ public struct CachedValue<Value> {
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
     }
-    
+
     public init<WrappedValue>(
         wrappedValue: WrappedValue? = nil,
         _ key: String,
@@ -104,7 +100,7 @@ public struct CachedValue<Value> {
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
     }
-    
+
     public var wrappedValue: Value {
         get {
             let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value

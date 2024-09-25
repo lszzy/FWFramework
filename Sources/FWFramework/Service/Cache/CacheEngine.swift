@@ -10,7 +10,6 @@ import Foundation
 // MARK: - CacheProtocol
 /// 缓存调用协议。复杂对象需遵循NSCoding|AnyArchivable协议
 public protocol CacheProtocol {
-    
     /// 读取某个缓存
     func object(forKey key: String) -> Any?
     /// 设置某个缓存
@@ -21,13 +20,11 @@ public protocol CacheProtocol {
     func removeObject(forKey key: String)
     /// 清空所有缓存
     func removeAllObjects()
-    
 }
 
 // MARK: - CacheEngineProtocol
 /// 缓存引擎内部协议。复杂对象需遵循NSCoding|AnyArchivable协议
 public protocol CacheEngineProtocol {
-    
     /// 从引擎读取某个缓存，内部方法，必须实现
     func readCache(forKey key: String) -> Any?
     /// 从引擎写入某个缓存，内部方法，必须实现
@@ -36,34 +33,32 @@ public protocol CacheEngineProtocol {
     func clearCache(forKey key: String)
     /// 从引擎清空所有缓存，内部方法，必须实现
     func clearAllCaches()
-    
 }
 
 // MARK: - CacheEngine
 /// 缓存引擎基类，自动管理缓存有效期，线程安全。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
-    
     private var semaphore = DispatchSemaphore(value: 1)
-    
+
     override public init() {
         super.init()
     }
-    
+
     private func expireKey(_ key: String) -> String {
-        return key + ".__EXPIRE__"
+        key + ".__EXPIRE__"
     }
-    
+
     // MARK: - Public
     open func object(forKey key: String) -> Any? {
         if key.isEmpty { return nil }
-        
+
         semaphore.wait()
         let object = readCache(forKey: key)
         if object == nil {
             semaphore.signal()
             return nil
         }
-        
+
         // 检查缓存有效期
         if let expire = readCache(forKey: expireKey(key)) as? NSNumber {
             // 检查是否过期，大于0为过期
@@ -74,22 +69,22 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
                 return nil
             }
         }
-        
+
         semaphore.signal()
         return object
     }
-    
+
     open func setObject(_ object: Any?, forKey key: String) {
         setObject(object, forKey: key, withExpire: 0)
     }
-    
+
     open func setObject(_ object: Any?, forKey key: String, withExpire expire: TimeInterval) {
         if key.isEmpty { return }
-        
+
         semaphore.wait()
-        if let object = object {
+        if let object {
             writeCache(object, forKey: key)
-            
+
             // 小于等于0为永久有效
             if expire <= 0 {
                 clearCache(forKey: expireKey(key))
@@ -102,38 +97,37 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         }
         semaphore.signal()
     }
-    
+
     open func removeObject(forKey key: String) {
         if key.isEmpty { return }
-        
+
         semaphore.wait()
         clearCache(forKey: key)
         clearCache(forKey: expireKey(key))
         semaphore.signal()
     }
-    
+
     open func removeAllObjects() {
         semaphore.wait()
         clearAllCaches()
         semaphore.signal()
     }
-    
+
     // MARK: - CacheEngineProtocol
     open func readCache(forKey key: String) -> Any? {
         // 子类重写
-        return nil
+        nil
     }
-    
+
     open func writeCache(_ object: Any, forKey key: String) {
         // 子类重写
     }
-    
+
     open func clearCache(forKey key: String) {
         // 子类重写
     }
-    
+
     open func clearAllCaches() {
         // 子类重写
     }
-    
 }

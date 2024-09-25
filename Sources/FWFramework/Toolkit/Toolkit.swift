@@ -5,14 +5,14 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import UIKit
-import AVFoundation
+import Accelerate
 import AudioToolbox
+import AVFoundation
 import AVKit
 import MessageUI
 import SafariServices
-import Accelerate
 import StoreKit
+import UIKit
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
@@ -23,7 +23,7 @@ extension WrapperGlobal {
     ///   - alpha: 透明度可选，默认1.0
     /// - Returns: UIColor
     public static func color(_ hex: Int, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor.fw.color(hex: hex, alpha: alpha)
+        UIColor.fw.color(hex: hex, alpha: alpha)
     }
 
     /// 从RGB创建UIColor
@@ -35,10 +35,10 @@ extension WrapperGlobal {
     ///   - alpha: 透明度可选，默认1.0
     /// - Returns: UIColor
     public static func color(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
+        UIColor(red: red / 255.0, green: green / 255.0, blue: blue / 255.0, alpha: alpha)
     }
 
-    /// 快速创建系统字体
+    /// 快速创建系统字体，自动等比例缩放
     ///
     /// - Parameters:
     ///   - size: 字体字号
@@ -46,7 +46,7 @@ extension WrapperGlobal {
     ///   - autoScale: 是否自动等比例缩放，默认全局配置
     /// - Returns: UIFont
     public static func font(_ size: CGFloat, _ weight: UIFont.Weight = .regular, autoScale: Bool? = nil) -> UIFont {
-        return UIFont.fw.font(ofSize: size, weight: weight, autoScale: autoScale)
+        UIFont.fw.font(ofSize: size, weight: weight, autoScale: autoScale)
     }
 }
 
@@ -91,20 +91,20 @@ extension Wrapper where Base: UIApplication {
         let appIdentifier = Bundle.main.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
         return appIdentifier ?? ""
     }
-    
+
     /// 读取应用可执行程序名称
     public static var appExecutable: String {
         let appExecutable = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
         return appExecutable ?? appIdentifier
     }
-    
+
     /// 读取应用信息字典
     public static func appInfo(_ key: String) -> Any? {
-        return Bundle.main.object(forInfoDictionaryKey: key)
+        Bundle.main.object(forInfoDictionaryKey: key)
     }
-    
+
     /// 读取应用启动URL
-    public static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey : Any]?) -> URL? {
+    public static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey: Any]?) -> URL? {
         if let url = options?[.url] as? URL {
             return url
         } else if let dict = options?[.userActivityDictionary] as? [AnyHashable: Any],
@@ -114,15 +114,15 @@ extension Wrapper where Base: UIApplication {
         }
         return nil
     }
-    
+
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func canOpenURL(_ url: URLParameter?) -> Bool {
+    @MainActor public static func canOpenURL(_ url: URLParameter?) -> Bool {
         guard let url = url?.urlValue else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func openURL(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openURL(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -131,7 +131,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func openUniversalLinks(_ url: URLParameter?, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openUniversalLinks(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -163,13 +163,13 @@ extension Wrapper where Base: UIApplication {
         }
         return false
     }
-    
+
     /// 判断URL是否在指定Scheme链接数组中，不区分大小写
     public static func isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
         guard let url = url?.urlValue,
               let urlScheme = url.scheme?.lowercased(),
               !urlScheme.isEmpty else { return false }
-        
+
         return schemes.contains { $0.lowercased() == urlScheme }
     }
 
@@ -185,7 +185,7 @@ extension Wrapper where Base: UIApplication {
         // itms-apps等
         if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
             return true
-        // https://apps.apple.com/等
+            // https://apps.apple.com/等
         } else if let host = url.host?.lowercased(), ["itunes.apple.com", "apps.apple.com"].contains(host) {
             return true
         }
@@ -193,13 +193,13 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开AppStore下载页
-    public static func openAppStore(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStore(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         // SKStoreProductViewController可以内部打开
         openURL("https://apps.apple.com/app/id\(appId)", completionHandler: completionHandler)
     }
 
     /// 打开AppStore评价页
-    public static func openAppStoreReview(_ appId: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStoreReview(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("https://apps.apple.com/app/id\(appId)?action=write-review", completionHandler: completionHandler)
     }
 
@@ -209,12 +209,12 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统应用设置页
-    public static func openAppSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
     }
-    
+
     /// 打开系统应用通知设置页
-    public static func openAppNotificationSettings(_ completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openAppNotificationSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if #available(iOS 16.0, *) {
             openURL(UIApplication.openNotificationSettingsURLString, completionHandler: completionHandler)
         } else if #available(iOS 15.4, *) {
@@ -225,33 +225,33 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开系统邮件App
-    public static func openMailApp(_ email: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMailApp(_ email: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("mailto:" + email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
-    public static func openMessageApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("sms:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
-    public static func openPhoneApp(_ phone: String, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openPhoneApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("tel:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
-    public static func openActivityItems(
+    @MainActor public static func openActivityItems(
         _ activityItems: [Any],
         excludedTypes: [UIActivity.ActivityType]? = nil,
         completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil,
-        customBlock: ((UIActivityViewController) -> Void)? = nil
+        customBlock: (@MainActor (UIActivityViewController) -> Void)? = nil
     ) {
         let activityController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         activityController.excludedActivityTypes = excludedTypes
         activityController.completionWithItemsHandler = completionHandler
         // 兼容iPad，默认居中显示
         let viewController = Navigator.topPresentedController
-        if UIDevice.fw.isIpad, let viewController = viewController,
+        if UIDevice.current.userInterfaceIdiom == .pad, let viewController,
            let popoverController = activityController.popoverPresentationController {
             let ancestorView = viewController.fw.ancestorView
             popoverController.sourceView = ancestorView
@@ -263,11 +263,11 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func openSafariController(_ url: URLParameter?, completionHandler: (() -> Void)? = nil, customBlock: ((SFSafariViewController) -> Void)? = nil) {
+    @MainActor public static func openSafariController(_ url: URLParameter?, completionHandler: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil) {
         guard let url = url?.urlValue, isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
-            safariController.fw.setProperty(completionHandler, forName: "safariViewControllerDidFinish")
+            safariController.fw.setPropertyCopy(completionHandler, forName: "safariViewControllerDidFinish")
             safariController.delegate = SafariViewControllerDelegate.shared
         }
         customBlock?(safariController)
@@ -275,35 +275,35 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开短信控制器，完成时回调
-    public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if !MFMessageComposeViewController.canSendText() {
             completionHandler?(false)
             return
         }
-        
+
         if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "messageComposeViewController")
+            controller.fw.setPropertyCopy(completionHandler, forName: "messageComposeViewController")
         }
         controller.messageComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
     }
 
     /// 打开邮件控制器，完成时回调
-    public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: ((Bool) -> Void)? = nil) {
+    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if !MFMailComposeViewController.canSendMail() {
             completionHandler?(false)
             return
         }
-        
+
         if completionHandler != nil {
-            controller.fw.setProperty(completionHandler, forName: "mailComposeController")
+            controller.fw.setPropertyCopy(completionHandler, forName: "mailComposeController")
         }
         controller.mailComposeDelegate = SafariViewControllerDelegate.shared
         Navigator.present(controller, animated: true)
     }
 
     /// 打开Store控制器，完成时回调
-    public static func openStoreController(_ parameters: [String: Any], completionHandler: ((Bool) -> Void)? = nil, customBlock: ((SKStoreProductViewController) -> Void)? = nil) {
+    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil, customBlock: (@MainActor @Sendable (SKStoreProductViewController) -> Void)? = nil) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -311,15 +311,15 @@ extension Wrapper where Base: UIApplication {
                 completionHandler?(false)
                 return
             }
-            
-            controller.fw.setProperty(completionHandler, forName: "productViewControllerDidFinish")
+
+            controller.fw.setPropertyCopy(completionHandler, forName: "productViewControllerDidFinish")
             customBlock?(controller)
             Navigator.present(controller, animated: true)
         }
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-    public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
+    @MainActor public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
         var player: AVPlayer?
         if let playerItem = url as? AVPlayerItem {
             player = AVPlayer(playerItem: playerItem)
@@ -329,7 +329,7 @@ extension Wrapper where Base: UIApplication {
             player = AVPlayer(url: videoUrl)
         }
         guard player != nil else { return nil }
-        
+
         let viewController = AVPlayerViewController()
         viewController.player = player
         return viewController
@@ -340,7 +340,7 @@ extension Wrapper where Base: UIApplication {
         // 设置播放模式示例: ambient不支持后台，playback支持后台和混音(需配置后台audio模式)
         // try? AVAudioSession.sharedInstance().setCategory(.ambient)
         // try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
-        
+
         var audioUrl: URL?
         if let url = url as? URL {
             audioUrl = url
@@ -351,20 +351,20 @@ extension Wrapper where Base: UIApplication {
                 audioUrl = Bundle.main.url(forResource: urlString, withExtension: nil)
             }
         }
-        guard let audioUrl = audioUrl else { return nil }
-        
+        guard let audioUrl else { return nil }
+
         guard let audioPlayer = try? AVAudioPlayer(contentsOf: audioUrl) else { return nil }
         if !audioPlayer.prepareToPlay() { return nil }
-        
+
         audioPlayer.play()
         return audioPlayer
     }
-    
+
     /// 播放内置声音文件，完成后回调
     @discardableResult
     public static func playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
         guard !file.isEmpty else { return 0 }
-        
+
         var soundFile = file
         if !(file as NSString).isAbsolutePath {
             guard let resourceFile = Bundle.main.path(forResource: file, ofType: nil) else { return 0 }
@@ -373,7 +373,7 @@ extension Wrapper where Base: UIApplication {
         if !FileManager.default.fileExists(atPath: soundFile) {
             return 0
         }
-        
+
         let soundUrl = URL(fileURLWithPath: soundFile)
         var soundId: SystemSoundID = 0
         AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundId)
@@ -384,7 +384,7 @@ extension Wrapper where Base: UIApplication {
     /// 停止播放内置声音文件
     public static func stopSystemSound(_ soundId: SystemSoundID) {
         if soundId == 0 { return }
-        
+
         AudioServicesRemoveSystemSoundCompletion(soundId)
         AudioServicesDisposeSystemSoundID(soundId)
     }
@@ -393,9 +393,9 @@ extension Wrapper where Base: UIApplication {
     public static func playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
         AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
-    
+
     /// 播放触控反馈
-    public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
         feedbackGenerator.impactOccurred()
     }
@@ -408,7 +408,7 @@ extension Wrapper where Base: UIApplication {
         let speechSynthesizer = AVSpeechSynthesizer()
         speechSynthesizer.speak(speechUtterance)
     }
-    
+
     /// 是否是盗版(不是从AppStore安装)
     public static var isPirated: Bool {
         #if targetEnvironment(simulator)
@@ -432,21 +432,21 @@ extension Wrapper where Base: UIApplication {
         if !FileManager.default.fileExists(atPath: path) {
             return true
         }
-        
+
         return false
         #endif
     }
-    
+
     /// 是否是Testflight版本(非AppStore)
     public static var isTestflight: Bool {
-        return inferredEnvironment == 1
+        inferredEnvironment == 1
     }
-    
+
     /// 是否是AppStore版本
     public static var isAppStore: Bool {
-        return inferredEnvironment == 2
+        inferredEnvironment == 2
     }
-    
+
     /// 推测的运行环境，0=>Debug, 1=>Testflight, 2=>AppStore
     private static var inferredEnvironment: Int {
         #if DEBUG
@@ -471,20 +471,25 @@ extension Wrapper where Base: UIApplication {
         return 2
         #endif
     }
-    
+
     /// 开始后台任务，task必须调用completionHandler
-    public static func beginBackgroundTask(_ task: (@escaping () -> Void) -> Void, expirationHandler: (() -> Void)? = nil) {
-        var bgTask: UIBackgroundTaskIdentifier = .invalid
-        bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+    @MainActor public static func beginBackgroundTask(
+        _ task: (@escaping @Sendable () -> Void) -> Void,
+        name: String? = nil,
+        expirationHandler: (@MainActor @Sendable () -> Void)? = nil
+    ) {
+        let bgTask = SendableObject<UIBackgroundTaskIdentifier>(.invalid)
+        let application = UIApplication.shared
+        bgTask.object = application.beginBackgroundTask(withName: name, expirationHandler: {
             expirationHandler?()
-            UIApplication.shared.endBackgroundTask(bgTask)
-            bgTask = .invalid
+            application.endBackgroundTask(bgTask.object)
+            bgTask.object = .invalid
         })
-        
-        task({
-            UIApplication.shared.endBackgroundTask(bgTask)
-            bgTask = .invalid
-        })
+
+        task { @Sendable in
+            application.endBackgroundTask(bgTask.object)
+            bgTask.object = .invalid
+        }
     }
 }
 
@@ -492,7 +497,7 @@ extension Wrapper where Base: UIApplication {
 extension Wrapper where Base: UIColor {
     /// 获取当前颜色指定透明度的新颜色
     public func color(alpha: CGFloat) -> UIColor {
-        return base.withAlphaComponent(alpha)
+        base.withAlphaComponent(alpha)
     }
 
     /// 读取颜色的十六进制值RGB，不含透明度
@@ -507,7 +512,7 @@ extension Wrapper where Base: UIColor {
                 b = r
             }
         }
-        
+
         let red = Int(r * 255)
         let green = Int(g * 255)
         let blue = Int(b * 255)
@@ -516,7 +521,7 @@ extension Wrapper where Base: UIColor {
 
     /// 读取颜色的透明度值，范围0~1
     public var alphaValue: CGFloat {
-        return base.cgColor.alpha
+        base.cgColor.alpha
     }
 
     /// 读取颜色的十六进制字符串RGB，不含透明度
@@ -531,7 +536,7 @@ extension Wrapper where Base: UIColor {
                 b = r
             }
         }
-        
+
         return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
     }
 
@@ -547,7 +552,7 @@ extension Wrapper where Base: UIColor {
                 b = r
             }
         }
-        
+
         if a >= 1.0 {
             return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
         } else if UIColor.innerColorStandardARGB {
@@ -556,10 +561,10 @@ extension Wrapper where Base: UIColor {
             return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255), lround(a * 255))
         }
     }
-    
+
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
     public static var colorStandardARGB: Bool {
-        get { return Base.innerColorStandardARGB }
+        get { Base.innerColorStandardARGB }
         set { Base.innerColorStandardARGB = newValue }
     }
 
@@ -573,7 +578,7 @@ extension Wrapper where Base: UIColor {
 
     /// 从十六进制值初始化，格式：0x20B2AA，透明度默认1.0
     public static func color(hex: Int, alpha: CGFloat = 1.0) -> UIColor {
-        return UIColor(red: CGFloat((hex & 0xFF0000) >> 16) / 255.0, green: CGFloat((hex & 0xFF00) >> 8) / 255.0, blue: CGFloat(hex & 0xFF) / 255.0, alpha: alpha)
+        UIColor(red: CGFloat((hex & 0xFF0000) >> 16) / 255.0, green: CGFloat((hex & 0xFF00) >> 8) / 255.0, blue: CGFloat(hex & 0xFF) / 255.0, alpha: alpha)
     }
 
     /// 从十六进制字符串初始化，支持RGB、RGBA|ARGB，格式：@"20B2AA", @"#FFFFFF"，透明度默认1.0，失败时返回clear
@@ -586,13 +591,13 @@ extension Wrapper where Base: UIColor {
         if string.hasPrefix("#") {
             string = string.fw.substring(from: 1)
         }
-        
+
         // 检查长度
         let length = string.count
         if length != 3 && length != 4 && length != 6 && length != 8 {
             return UIColor.clear
         }
-        
+
         // 解析颜色
         var strR = ""
         var strG = ""
@@ -627,7 +632,7 @@ extension Wrapper where Base: UIColor {
                 strA = string.fw.substring(with: NSMakeRange(6, 2))
             }
         }
-        
+
         // 解析颜色
         var r: UInt64 = 0
         var g: UInt64 = 0
@@ -635,10 +640,10 @@ extension Wrapper where Base: UIColor {
         Scanner(string: strR).scanHexInt64(&r)
         Scanner(string: strG).scanHexInt64(&g)
         Scanner(string: strB).scanHexInt64(&b)
-        let fr: CGFloat = CGFloat(r) / 255.0
-        let fg: CGFloat = CGFloat(g) / 255.0
-        let fb: CGFloat = CGFloat(b) / 255.0
-        
+        let fr = CGFloat(r) / 255.0
+        let fg = CGFloat(g) / 255.0
+        let fb = CGFloat(b) / 255.0
+
         // 解析透明度，字符串的透明度优先级高于alpha参数
         var fa: CGFloat = alpha
         if !strA.isEmpty {
@@ -646,10 +651,10 @@ extension Wrapper where Base: UIColor {
             Scanner(string: strA).scanHexInt64(&a)
             fa = CGFloat(a) / 255.0
         }
-        
+
         return UIColor(red: fr, green: fg, blue: fb, alpha: fa)
     }
-    
+
     /// 以指定模式添加混合颜色，默认normal模式
     public func addColor(_ color: UIColor, blendMode: CGBlendMode = .normal) -> UIColor {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -663,7 +668,7 @@ extension Wrapper where Base: UIColor {
         context?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
         return UIColor(red: CGFloat(pixel[0]) / 255.0, green: CGFloat(pixel[1]) / 255.0, blue: CGFloat(pixel[2]) / 255.0, alpha: CGFloat(pixel[3]) / 255.0)
     }
-    
+
     /// 当前颜色修改亮度比率的颜色
     public func brightnessColor(_ ratio: CGFloat) -> UIColor {
         var h: CGFloat = 0
@@ -673,7 +678,7 @@ extension Wrapper where Base: UIColor {
         base.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
         return UIColor(hue: h, saturation: s, brightness: b * ratio, alpha: a)
     }
-    
+
     /// 判断当前颜色是否为深色
     public var isDarkColor: Bool {
         var r: CGFloat = 0
@@ -686,15 +691,15 @@ extension Wrapper where Base: UIColor {
                 b = r
             }
         }
-        
+
         let referenceValue: CGFloat = 0.411
         let colorDelta = r * 0.299 + g * 0.587 + b * 0.114
         return 1.0 - colorDelta > referenceValue
     }
-    
+
     /**
      创建渐变颜色，支持四个方向，默认向下Down
-     
+
      @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
      @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
@@ -715,7 +720,7 @@ extension Wrapper where Base: UIColor {
 
     /**
      创建渐变颜色
-     
+
      @param size 渐变尺寸，非渐变边可以设置为1。如CGSizeMake(1, 50)
      @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
@@ -733,15 +738,15 @@ extension Wrapper where Base: UIColor {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        
+
         let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations)
-        if let context = context, let gradient = gradient {
+        if let context, let gradient {
             context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
         }
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
-        if let image = image {
+
+        if let image {
             return UIColor(patternImage: image)
         }
         return UIColor.clear
@@ -751,11 +756,11 @@ extension Wrapper where Base: UIColor {
 // MARK: - Wrapper+UIFont
 extension Wrapper where Base: UIFont {
     /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
-    public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
-        get { return Base.innerAutoScaleBlock }
+    public static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)? {
+        get { Base.innerAutoScaleBlock }
         set { Base.innerAutoScaleBlock = newValue }
     }
-    
+
     /// 快捷启用全局自动等比例缩放适配，自动设置默认autoScaleBlock
     public static var autoScaleFont: Bool {
         get {
@@ -763,45 +768,45 @@ extension Wrapper where Base: UIFont {
         }
         set {
             guard newValue != autoScaleFont else { return }
-            Base.innerAutoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
+            Base.innerAutoScaleBlock = newValue ? { @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
         }
     }
-    
+
     /// 是否启用全局自动像素取整字体，默认false
     public static var autoFlatFont: Bool {
         get { Base.innerAutoFlatFont }
         set { Base.innerAutoFlatFont = newValue }
     }
-    
+
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
-        get { return Base.innerFontBlock }
+        get { Base.innerFontBlock }
         set { Base.innerFontBlock = newValue }
     }
 
     /// 返回系统Thin字体，自动等比例缩放
     public static func thinFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
-        return font(ofSize: ofSize, weight: .thin, autoScale: autoScale)
+        font(ofSize: ofSize, weight: .thin, autoScale: autoScale)
     }
-    
+
     /// 返回系统Light字体，自动等比例缩放
     public static func lightFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
-        return font(ofSize: ofSize, weight: .light, autoScale: autoScale)
+        font(ofSize: ofSize, weight: .light, autoScale: autoScale)
     }
-    
+
     /// 返回系统Medium字体，自动等比例缩放
     public static func mediumFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
-        return font(ofSize: ofSize, weight: .medium, autoScale: autoScale)
+        font(ofSize: ofSize, weight: .medium, autoScale: autoScale)
     }
-    
+
     /// 返回系统Semibold字体，自动等比例缩放
     public static func semiboldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
-        return font(ofSize: ofSize, weight: .semibold, autoScale: autoScale)
+        font(ofSize: ofSize, weight: .semibold, autoScale: autoScale)
     }
-    
+
     /// 返回系统Bold字体，自动等比例缩放
     public static func boldFont(ofSize: CGFloat, autoScale: Bool? = nil) -> UIFont {
-        return font(ofSize: ofSize, weight: .bold, autoScale: autoScale)
+        font(ofSize: ofSize, weight: .bold, autoScale: autoScale)
     }
 
     /// 创建指定尺寸和weight的系统字体，自动等比例缩放
@@ -810,11 +815,16 @@ extension Wrapper where Base: UIFont {
         if (autoScale == nil && autoScaleFont) || autoScale == true {
             fontSize = autoScaleBlock?(size) ?? UIScreen.fw.relativeValue(size, flat: autoFlatFont)
         }
-        
-        if let font = fontBlock?(fontSize, weight) { return font }
-        return UIFont.systemFont(ofSize: fontSize, weight: weight)
+
+        return nonScaleFont(ofSize: fontSize, weight: weight)
     }
-    
+
+    /// 创建指定尺寸和weight的不缩放系统字体
+    public static func nonScaleFont(ofSize size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
+        if let font = fontBlock?(size, weight) { return font }
+        return UIFont.systemFont(ofSize: size, weight: weight)
+    }
+
     /// 获取指定名称、字重、斜体字体的完整规范名称
     public static func fontName(_ name: String, weight: UIFont.Weight, italic: Bool = false) -> String {
         var fontName = name
@@ -823,15 +833,15 @@ extension Wrapper where Base: UIFont {
         }
         return fontName
     }
-    
+
     /// 是否是粗体
     public var isBold: Bool {
-        return base.fontDescriptor.symbolicTraits.contains(.traitBold)
+        base.fontDescriptor.symbolicTraits.contains(.traitBold)
     }
 
     /// 是否是斜体
     public var isItalic: Bool {
-        return base.fontDescriptor.symbolicTraits.contains(.traitItalic)
+        base.fontDescriptor.symbolicTraits.contains(.traitItalic)
     }
 
     /// 当前字体的粗体字体
@@ -839,55 +849,55 @@ extension Wrapper where Base: UIFont {
         let symbolicTraits = base.fontDescriptor.symbolicTraits.union(.traitBold)
         return UIFont(descriptor: base.fontDescriptor.withSymbolicTraits(symbolicTraits) ?? base.fontDescriptor, size: base.pointSize)
     }
-    
+
     /// 当前字体的非粗体字体
     public var nonBoldFont: UIFont {
         var symbolicTraits = base.fontDescriptor.symbolicTraits
         symbolicTraits.remove(.traitBold)
         return UIFont(descriptor: base.fontDescriptor.withSymbolicTraits(symbolicTraits) ?? base.fontDescriptor, size: base.pointSize)
     }
-    
+
     /// 当前字体的斜体字体
     public var italicFont: UIFont {
         let symbolicTraits = base.fontDescriptor.symbolicTraits.union(.traitItalic)
         return UIFont(descriptor: base.fontDescriptor.withSymbolicTraits(symbolicTraits) ?? base.fontDescriptor, size: base.pointSize)
     }
-    
+
     /// 当前字体的非斜体字体
     public var nonItalicFont: UIFont {
         var symbolicTraits = base.fontDescriptor.symbolicTraits
         symbolicTraits.remove(.traitItalic)
         return UIFont(descriptor: base.fontDescriptor.withSymbolicTraits(symbolicTraits) ?? base.fontDescriptor, size: base.pointSize)
     }
-    
+
     /// 字体空白高度(上下之和)
     public var spaceHeight: CGFloat {
-        return base.lineHeight - base.pointSize
+        base.lineHeight - base.pointSize
     }
 
     /// 根据字体计算指定倍数行间距的实际行距值(减去空白高度)，示例：行间距为0.5倍实际高度
     public func lineSpacing(multiplier: CGFloat) -> CGFloat {
-        return base.pointSize * multiplier - (base.lineHeight - base.pointSize)
+        base.pointSize * multiplier - (base.lineHeight - base.pointSize)
     }
 
     /// 根据字体计算指定倍数行高的实际行高值(减去空白高度)，示例：行高为1.5倍实际高度
     public func lineHeight(multiplier: CGFloat) -> CGFloat {
-        return base.pointSize * multiplier
+        base.pointSize * multiplier
     }
-    
+
     /// 计算指定期望高度下字体的实际行高值，取期望值和行高值的较大值
     public func lineHeight(expected: CGFloat) -> CGFloat {
-        return max(base.lineHeight, expected)
+        max(base.lineHeight, expected)
     }
 
     /// 计算当前字体与指定字体居中对齐的偏移值
     public func baselineOffset(_ font: UIFont) -> CGFloat {
-        return (base.lineHeight - font.lineHeight) / 2.0 + (base.descender - font.descender)
+        (base.lineHeight - font.lineHeight) / 2.0 + (base.descender - font.descender)
     }
-    
+
     /// 计算当前字体与指定行高居中对齐的偏移值
     public func baselineOffset(lineHeight: CGFloat) -> CGFloat {
-        return (lineHeight - base.lineHeight) / 4.0
+        (lineHeight - base.lineHeight) / 4.0
     }
 }
 
@@ -950,12 +960,12 @@ extension Wrapper where Base: UIImage {
             base.draw(in: drawRect)
         }
     }
-    
+
     private func drawRect(contentMode: UIView.ContentMode, rect: CGRect, size: CGSize) -> CGRect {
         var rect = CGRectStandardize(rect)
         var size = CGSize(width: size.width < 0 ? -size.width : size.width, height: size.height < 0 ? -size.height : size.height)
         let center = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect))
-        
+
         switch contentMode {
         case .scaleAspectFit, .scaleAspectFill:
             if rect.size.width < 0.01 || rect.size.height < 0.01 ||
@@ -1027,7 +1037,7 @@ extension Wrapper where Base: UIImage {
         rect.size.width *= base.scale
         rect.size.height *= base.scale
         guard rect.width > 0, rect.height > 0 else { return nil }
-        
+
         guard let imageRef = base.cgImage?.cropping(to: rect) else { return nil }
         let image = UIImage(cgImage: imageRef, scale: base.scale, orientation: base.imageOrientation)
         return image
@@ -1036,14 +1046,14 @@ extension Wrapper where Base: UIImage {
     /// 指定颜色填充图片边缘
     public func image(insets: UIEdgeInsets, color: UIColor? = nil) -> UIImage? {
         guard insets != .zero else { return base }
-        
+
         var size = base.size
         size.width -= insets.left + insets.right
         size.height -= insets.top + insets.bottom
         if size.width <= 0 || size.height <= 0 { return nil }
         let rect = CGRect(x: -insets.left, y: -insets.top, width: base.size.width, height: base.size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        if let color = color, let context = UIGraphicsGetCurrentContext() {
+        if let color, let context = UIGraphicsGetCurrentContext() {
             context.setFillColor(color.cgColor)
             let path = CGMutablePath()
             path.addRect(CGRect(x: 0, y: 0, width: size.width, height: size.height))
@@ -1059,12 +1069,12 @@ extension Wrapper where Base: UIImage {
 
     /// 拉伸图片(平铺模式)，指定端盖区域（不拉伸区域）
     public func image(capInsets: UIEdgeInsets) -> UIImage {
-        return base.resizableImage(withCapInsets: capInsets)
+        base.resizableImage(withCapInsets: capInsets)
     }
 
     /// 拉伸图片(指定模式)，指定端盖区域（不拉伸区域）。Tile为平铺模式，Stretch为拉伸模式
     public func image(capInsets: UIEdgeInsets, resizingMode: UIImage.ResizingMode) -> UIImage {
-        return base.resizableImage(withCapInsets: capInsets, resizingMode: resizingMode)
+        base.resizableImage(withCapInsets: capInsets, resizingMode: resizingMode)
     }
 
     /// 生成圆角图片
@@ -1084,7 +1094,7 @@ extension Wrapper where Base: UIImage {
         let width = base.cgImage?.width ?? .zero
         let height = base.cgImage?.height ?? .zero
         let newRect = CGRectApplyAffineTransform(CGRect(x: 0, y: 0, width: width, height: height), fitSize ? CGAffineTransformMakeRotation(radians) : .identity)
-        
+
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         guard let context = CGContext(
             data: nil,
@@ -1095,13 +1105,13 @@ extension Wrapper where Base: UIImage {
             space: colorSpace,
             bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
         ) else { return nil }
-        
+
         context.setShouldAntialias(true)
         context.setAllowsAntialiasing(true)
         context.interpolationQuality = .high
         context.translateBy(x: newRect.size.width * 0.5, y: newRect.size.height * 0.5)
         context.rotate(by: radians)
-        
+
         guard let cgImage = base.cgImage else { return nil }
         context.draw(cgImage, in: CGRect(x: -(CGFloat(width) * 0.5), y: -(CGFloat(height) * 0.5), width: CGFloat(width), height: CGFloat(height)))
         guard let imageRef = context.makeImage() else { return nil }
@@ -1140,27 +1150,27 @@ extension Wrapper where Base: UIImage {
             guard let imageRef = base.cgImage else { return nil }
             inputImage = CIImage(cgImage: imageRef)
         }
-        guard let inputImage = inputImage else { return nil }
-        
+        guard let inputImage else { return nil }
+
         let context = CIContext()
         filter.setValue(inputImage, forKey: kCIInputImageKey)
         guard let outputImage = filter.outputImage else { return nil }
-        
+
         guard let imageRef = context.createCGImage(outputImage, from: outputImage.extent) else { return nil }
         let image = UIImage(cgImage: imageRef, scale: base.scale, orientation: base.imageOrientation)
         return image
     }
-    
+
     /// 图片应用高斯模糊滤镜处理
     public func gaussianBlurImage(fuzzyValue: CGFloat = 10) -> UIImage? {
-        return filteredImage(fuzzyValue: fuzzyValue, filterName: "CIGaussianBlur")
+        filteredImage(fuzzyValue: fuzzyValue, filterName: "CIGaussianBlur")
     }
-    
+
     /// 图片应用像素化滤镜处理
     public func pixellateImage(fuzzyValue: CGFloat = 10) -> UIImage? {
-        return filteredImage(fuzzyValue: fuzzyValue, filterName: "CIPixellate")
+        filteredImage(fuzzyValue: fuzzyValue, filterName: "CIPixellate")
     }
-    
+
     private func filteredImage(fuzzyValue: CGFloat, filterName: String) -> UIImage? {
         guard let ciImage = CIImage(image: base) else { return nil }
         guard let blurFilter = CIFilter(name: filterName) else { return nil }
@@ -1194,7 +1204,7 @@ extension Wrapper where Base: UIImage {
     public func compressImage(maxWidth: CGFloat) -> UIImage? {
         let newSize = scaleSize(maxWidth: maxWidth)
         if newSize.equalTo(base.size) { return base }
-        
+
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         base.draw(in: CGRect(origin: .zero, size: newSize))
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -1205,7 +1215,7 @@ extension Wrapper where Base: UIImage {
     /// 通过指定图片最长边，获取等比例的图片size
     public func scaleSize(maxWidth: CGFloat) -> CGSize {
         if maxWidth <= 0 { return base.size }
-        
+
         let width = base.size.width
         let height = base.size.height
         if width > maxWidth || height > maxWidth {
@@ -1226,19 +1236,16 @@ extension Wrapper where Base: UIImage {
             return CGSize(width: width, height: height)
         }
     }
-    
+
     /// 后台线程压缩图片，完成后主线程回调
-    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([UIImage]) -> Void) {
+    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([UIImage]) -> Void) {
         DispatchQueue.global().async {
-            var compressImages: [UIImage] = []
-            for image in images {
-                if let compressImage = image
+            let compressImages = images.compactMap { image in
+                image
                     .fw.compressImage(maxWidth: maxWidth)?
-                    .fw.compressImage(maxLength: maxLength, compressRatio: compressRatio) {
-                    compressImages.append(compressImage)
-                }
+                    .fw.compressImage(maxLength: maxLength, compressRatio: compressRatio)
             }
-            
+
             DispatchQueue.main.async {
                 completion(compressImages)
             }
@@ -1246,17 +1253,14 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 后台线程压缩图片数据，完成后主线程回调
-    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping ([Data]) -> Void) {
+    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([Data]) -> Void) {
         DispatchQueue.global().async {
-            var compressDatas: [Data] = []
-            for image in images {
-                if let compressData = image
+            let compressDatas = images.compactMap { image in
+                image
                     .fw.compressImage(maxWidth: maxWidth)?
-                    .fw.compressData(maxLength: maxLength, compressRatio: compressRatio) {
-                    compressDatas.append(compressData)
-                }
+                    .fw.compressData(maxLength: maxLength, compressRatio: compressRatio)
             }
-            
+
             DispatchQueue.main.async {
                 completion(compressDatas)
             }
@@ -1265,12 +1269,12 @@ extension Wrapper where Base: UIImage {
 
     /// 获取原始渲染模式图片，始终显示原色，不显示tintColor。默认自动根据上下文
     public var originalImage: UIImage {
-        return base.withRenderingMode(.alwaysOriginal)
+        base.withRenderingMode(.alwaysOriginal)
     }
 
     /// 获取模板渲染模式图片，始终显示tintColor，不显示原色。默认自动根据上下文
     public var templateImage: UIImage {
-        return base.withRenderingMode(.alwaysTemplate)
+        base.withRenderingMode(.alwaysTemplate)
     }
 
     /// 判断图片是否有透明通道
@@ -1283,11 +1287,11 @@ extension Wrapper where Base: UIImage {
 
     /// 获取当前图片的像素大小，多倍图会放大到一倍
     public var pixelSize: CGSize {
-        return CGSize(width: base.size.width * base.scale, height: base.size.height * base.scale)
+        CGSize(width: base.size.width * base.scale, height: base.size.height * base.scale)
     }
-    
+
     /// 从视图创建UIImage，生成截图，主线程调用
-    public static func image(view: UIView) -> UIImage? {
+    @MainActor public static func image(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0)
         if view.window != nil {
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
@@ -1298,16 +1302,16 @@ extension Wrapper where Base: UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    
+
     /// 从颜色创建UIImage，尺寸默认1x1
     public static func image(color: UIColor?) -> UIImage? {
-        return image(color: color, size: CGSize(width: 1.0, height: 1.0))
+        image(color: color, size: CGSize(width: 1.0, height: 1.0))
     }
-    
+
     /// 从颜色创建UIImage，可指定尺寸和圆角，默认圆角0
     public static func image(color: UIColor?, size: CGSize, cornerRadius: CGFloat = 0) -> UIImage? {
-        guard let color = color, size.width > 0, size.height > 0 else { return nil }
-        
+        guard let color, size.width > 0, size.height > 0 else { return nil }
+
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
@@ -1333,13 +1337,13 @@ extension Wrapper where Base: UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    
+
     /// 保存图片到相册，保存成功时error为nil
     public func saveImage(completion: ((Error?) -> Void)? = nil) {
         setPropertyCopy(completion, forName: "saveImage")
         UIImageWriteToSavedPhotosAlbum(base, base, #selector(UIImage.innerSaveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
-    
+
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
     public static func saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
@@ -1347,15 +1351,15 @@ extension Wrapper where Base: UIImage {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, UIImage.self, #selector(UIImage.innerSaveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
         }
     }
-    
+
     /// 获取灰度图
     public var grayImage: UIImage? {
-        let width: Int = Int(base.size.width)
-        let height: Int = Int(base.size.height)
+        let width = Int(base.size.width)
+        let height = Int(base.size.height)
         let colorSpace = CGColorSpaceCreateDeviceGray()
         guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGImageAlphaInfo.none.rawValue),
               let cgImage = base.cgImage else { return nil }
-        
+
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         guard let imageRef = context.makeImage() else { return nil }
         return UIImage(cgImage: imageRef)
@@ -1401,19 +1405,19 @@ extension Wrapper where Base: UIImage {
             sharedMask = gradientContext.makeImage()
             UIGraphicsEndImageContext()
         }
-        
+
         let height = ceil(base.size.height * reflectScale)
         let size = CGSize(width: base.size.width, height: height)
         let bounds = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
-        if let sharedMask = sharedMask {
+        if let sharedMask {
             context?.clip(to: bounds, mask: sharedMask)
         }
         context?.scaleBy(x: 1.0, y: -1.0)
         context?.translateBy(x: 0, y: -base.size.height)
         base.draw(in: CGRect(x: 0, y: 0, width: base.size.width, height: base.size.height))
-        
+
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
@@ -1449,7 +1453,7 @@ extension Wrapper where Base: UIImage {
         guard let cgImage = base.cgImage else {
             return base
         }
-        
+
         let s = max(radius, 2.0)
         let pi2 = 2 * CGFloat.pi
         let sqrtPi2 = sqrt(pi2)
@@ -1464,20 +1468,20 @@ extension Wrapper where Base: UIImage {
         } else {
             iterations = 3
         }
-        
+
         let size = base.size
         let w = Int(size.width)
         let h = Int(size.height)
-        
+
         func createEffectBuffer(_ context: CGContext) -> vImage_Buffer {
             let data = context.data
             let width = vImagePixelCount(context.width)
             let height = vImagePixelCount(context.height)
             let rowBytes = context.bytesPerRow
-            
+
             return vImage_Buffer(data: data, height: height, width: width, rowBytes: rowBytes)
         }
-        
+
         UIGraphicsBeginImageContextWithOptions(size, false, base.scale)
         guard let context = UIGraphicsGetCurrentContext() else {
             return base
@@ -1487,7 +1491,7 @@ extension Wrapper where Base: UIImage {
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: w, height: h))
         UIGraphicsEndImageContext()
         var inBuffer = createEffectBuffer(context)
-        
+
         UIGraphicsBeginImageContextWithOptions(size, false, base.scale)
         guard let outContext = UIGraphicsGetCurrentContext() else {
             return base
@@ -1496,14 +1500,15 @@ extension Wrapper where Base: UIImage {
         outContext.translateBy(x: 0, y: -size.height)
         defer { UIGraphicsEndImageContext() }
         var outBuffer = createEffectBuffer(outContext)
-        
-        for _ in 0 ..< iterations {
+
+        for _ in 0..<iterations {
             let flag = vImage_Flags(kvImageEdgeExtend)
             vImageBoxConvolve_ARGB8888(
-                &inBuffer, &outBuffer, nil, 0, 0, UInt32(targetRadius), UInt32(targetRadius), nil, flag)
+                &inBuffer, &outBuffer, nil, 0, 0, UInt32(targetRadius), UInt32(targetRadius), nil, flag
+            )
             (inBuffer, outBuffer) = (outBuffer, inBuffer)
         }
-        
+
         let result = outContext.makeImage().flatMap {
             UIImage(cgImage: $0, scale: base.scale, orientation: base.imageOrientation)
         }
@@ -1512,17 +1517,17 @@ extension Wrapper where Base: UIImage {
         }
         return blurredImage
     }
-    
+
     /// 图片裁剪，可指定frame、角度、圆形等
-    public func croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
+    @MainActor public func croppedImage(frame: CGRect, angle: Int, circular: Bool) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, !hasAlpha && !circular, base.scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        
+
         if circular {
             context.addEllipse(in: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
             context.clip()
         }
-        
+
         if angle != 0 {
             let imageView = UIImageView(image: base)
             imageView.layer.minificationFilter = .nearest
@@ -1538,10 +1543,10 @@ extension Wrapper where Base: UIImage {
             context.translateBy(x: -frame.origin.x, y: -frame.origin.y)
             base.draw(at: .zero)
         }
-        
+
         let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
+
         guard let cgImage = croppedImage?.cgImage else { return nil }
         return UIImage(cgImage: cgImage, scale: base.scale, orientation: .up)
     }
@@ -1551,7 +1556,7 @@ extension Wrapper where Base: UIImage {
         guard !hasAlpha,
               let imageRef = base.cgImage,
               let colorSpace = imageRef.colorSpace else { return base }
-        
+
         let width = imageRef.width
         let height = imageRef.height
         let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
@@ -1562,7 +1567,7 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 截取View所有视图，包括旋转缩放效果
-    public static func image(view: UIView, limitWidth: CGFloat) -> UIImage? {
+    @MainActor public static func image(view: UIView, limitWidth: CGFloat) -> UIImage? {
         let oldTransform = view.transform
         var scaleTransform = CGAffineTransform.identity
         if !limitWidth.isNaN && limitWidth > 0 && CGRectGetWidth(view.frame) > 0 {
@@ -1573,7 +1578,7 @@ extension Wrapper where Base: UIImage {
         if scaleTransform != .identity {
             view.transform = scaleTransform
         }
-        
+
         let actureFrame = view.frame
         let actureBounds = view.bounds
         UIGraphicsBeginImageContextWithOptions(actureFrame.size, false, 0)
@@ -1590,7 +1595,7 @@ extension Wrapper where Base: UIImage {
             // iOS6+：截取当前状态，未添加到界面时也可截图，效率偏低
             view.layer.render(in: context)
         }
-        
+
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         view.transform = oldTransform
@@ -1621,27 +1626,27 @@ extension Wrapper where Base: UIImage {
         } else if let path = path as? String {
             pdf = CGPDFDocument(URL(fileURLWithPath: path) as CFURL)
         }
-        guard let pdf = pdf else { return nil }
+        guard let pdf else { return nil }
         guard let page = pdf.page(at: 1) else { return nil }
-        
+
         let pdfRect = page.getBoxRect(.cropBox)
         let pdfSize = size.equalTo(.zero) ? pdfRect.size : size
-        let scale = UIScreen.main.scale
+        let scale = UIScreen.fw.screenScale
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         guard let context = CGContext(data: nil, width: Int(pdfSize.width * scale), height: Int(pdfSize.height * scale), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrderDefault.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue) else { return nil }
-        
+
         context.scaleBy(x: scale, y: scale)
         context.translateBy(x: -pdfRect.origin.x, y: -pdfRect.origin.y)
         context.drawPDFPage(page)
-        
+
         guard let imageRef = context.makeImage() else { return nil }
         let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
         return image
     }
-    
+
     /**
      创建渐变颜色UIImage，支持四个方向，默认向下Down
-     
+
      @param size 图片大小
      @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
@@ -1662,7 +1667,7 @@ extension Wrapper where Base: UIImage {
 
     /**
      创建渐变颜色UIImage
-     
+
      @param size 图片大小
      @param colors 渐变颜色，CGColor数组，如：@[(__bridge id)[UIColor redColor].CGColor, (__bridge id)[UIColor blueColor].CGColor]
      @param locations 渐变位置，传NULL时均分，如：CGFloat locations[] = {0.0, 1.0};
@@ -1679,7 +1684,7 @@ extension Wrapper where Base: UIImage {
     ) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        
+
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         context.addRect(rect)
         context.clip()
@@ -1687,7 +1692,7 @@ extension Wrapper where Base: UIImage {
         if let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: locations) {
             context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
         }
-        
+
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
@@ -1695,11 +1700,11 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 顶部纵坐标，frame.origin.y
     public var top: CGFloat {
         get {
-            return base.frame.origin.y
+            base.frame.origin.y
         }
         set {
             var frame = base.frame
@@ -1710,14 +1715,14 @@ extension Wrapper where Base: UIView {
 
     /// 底部纵坐标，frame.origin.y + frame.size.height
     public var bottom: CGFloat {
-        get { return top + height }
+        get { top + height }
         set { top = newValue - height }
     }
 
     /// 左边横坐标，frame.origin.x
     public var left: CGFloat {
         get {
-            return base.frame.origin.x
+            base.frame.origin.x
         }
         set {
             var frame = base.frame
@@ -1728,14 +1733,14 @@ extension Wrapper where Base: UIView {
 
     /// 右边横坐标，frame.origin.x + frame.size.width
     public var right: CGFloat {
-        get { return left + width }
+        get { left + width }
         set { left = newValue - width }
     }
 
     /// 宽度，frame.size.width
     public var width: CGFloat {
         get {
-            return base.frame.size.width
+            base.frame.size.width
         }
         set {
             var frame = base.frame
@@ -1747,7 +1752,7 @@ extension Wrapper where Base: UIView {
     /// 高度，frame.size.height
     public var height: CGFloat {
         get {
-            return base.frame.size.height
+            base.frame.size.height
         }
         set {
             var frame = base.frame
@@ -1758,20 +1763,20 @@ extension Wrapper where Base: UIView {
 
     /// 中心横坐标，center.x
     public var centerX: CGFloat {
-        get { return base.center.x }
+        get { base.center.x }
         set { base.center = CGPoint(x: newValue, y: base.center.y) }
     }
 
     /// 中心纵坐标，center.y
     public var centerY: CGFloat {
-        get { return base.center.y }
+        get { base.center.y }
         set { base.center = CGPoint(x: base.center.x, y: newValue) }
     }
 
     /// 起始横坐标，frame.origin.x
     public var x: CGFloat {
         get {
-            return base.frame.origin.x
+            base.frame.origin.x
         }
         set {
             var frame = base.frame
@@ -1783,7 +1788,7 @@ extension Wrapper where Base: UIView {
     /// 起始纵坐标，frame.origin.y
     public var y: CGFloat {
         get {
-            return base.frame.origin.y
+            base.frame.origin.y
         }
         set {
             var frame = base.frame
@@ -1795,7 +1800,7 @@ extension Wrapper where Base: UIView {
     /// 起始坐标，frame.origin
     public var origin: CGPoint {
         get {
-            return base.frame.origin
+            base.frame.origin
         }
         set {
             var frame = base.frame
@@ -1807,7 +1812,7 @@ extension Wrapper where Base: UIView {
     /// 大小，frame.size
     public var size: CGSize {
         get {
-            return base.frame.size
+            base.frame.size
         }
         set {
             var frame = base.frame
@@ -1826,11 +1831,11 @@ extension Wrapper where Base: UIViewController {
             return lifecycleStateTarget.state
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue else { return }
             lifecycleStateTarget.state = newValue
         }
     }
-    
+
     /// 添加生命周期变化监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
@@ -1842,7 +1847,7 @@ extension Wrapper where Base: UIViewController {
         lifecycleStateTarget.handlers.append(target)
         return target
     }
-    
+
     /// 添加生命周期变化监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
     public func observeLifecycleState<T>(object: T, block: @escaping (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol {
@@ -1854,12 +1859,12 @@ extension Wrapper where Base: UIViewController {
         lifecycleStateTarget.handlers.append(target)
         return target
     }
-    
+
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
     public func unobserveLifecycleState(observer: Any? = nil) -> Bool {
         guard issetLifecycleStateTarget else { return false }
-        
+
         if let observer = observer as? LifecycleStateHandler {
             let result = lifecycleStateTarget.handlers.contains(observer)
             lifecycleStateTarget.handlers.removeAll { $0 == observer }
@@ -1891,16 +1896,16 @@ extension Wrapper where Base: UIViewController {
             lifecycleStateTarget.completionHandler = newValue
         }
     }
-    
+
     private var issetLifecycleStateTarget: Bool {
-        return property(forName: "lifecycleStateTarget") != nil
+        property(forName: "lifecycleStateTarget") != nil
     }
-    
+
     private var lifecycleStateTarget: LifecycleStateTarget {
         if let target = property(forName: "lifecycleStateTarget") as? LifecycleStateTarget {
             return target
         }
-        
+
         let target = LifecycleStateTarget()
         target.viewController = base
         setProperty(target, forName: "lifecycleStateTarget")
@@ -1908,13 +1913,13 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    public var allowsPopGesture: (() -> Bool)? {
+    @MainActor public var allowsPopGesture: (() -> Bool)? {
         get { property(forName: "allowsPopGesture") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-    public var shouldPopController: (() -> Bool)? {
+    @MainActor public var shouldPopController: (() -> Bool)? {
         get { property(forName: "shouldPopController") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "shouldPopController") }
     }
@@ -1922,36 +1927,36 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - Wrapper+UINavigationController
 /// 当自定义left按钮或隐藏导航栏之后，系统返回手势默认失效，可调用此方法全局开启返回代理。开启后自动将开关代理给顶部VC的shouldPopController、popGestureEnabled属性控制。interactivePop手势禁用时不生效
-extension Wrapper where Base: UINavigationController {
+@MainActor extension Wrapper where Base: UINavigationController {
     /// 单独启用返回代理拦截，优先级高于+enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public func enablePopProxy() {
         base.interactivePopGestureRecognizer?.delegate = popProxyTarget
         setPropertyBool(true, forName: "popProxyEnabled")
         FrameworkAutoloader.swizzleToolkitNavigationController()
     }
-    
+
     /// 全局启用返回代理拦截，优先级低于-enablePopProxy，启用后支持shouldPopController、allowsPopGesture功能，默认NO未启用
     public static func enablePopProxy() {
         UINavigationController.innerPopProxyEnabled = true
         UINavigationController.innerChildProxyEnabled = true
         FrameworkAutoloader.swizzleToolkitNavigationController()
     }
-    
+
     /// 是否全局启用child状态栏样式代理，enablePopProxy时自动启用，默认false
     public static var childProxyEnabled: Bool {
         get {
-            return UINavigationController.innerChildProxyEnabled
+            UINavigationController.innerChildProxyEnabled
         }
         set {
             UINavigationController.innerChildProxyEnabled = newValue
             FrameworkAutoloader.swizzleToolkitNavigationController()
         }
     }
-    
+
     fileprivate var popProxyEnabled: Bool {
-        return propertyBool(forName: "popProxyEnabled")
+        propertyBool(forName: "popProxyEnabled")
     }
-    
+
     private var popProxyTarget: PopProxyTarget {
         if let proxy = property(forName: "popProxyTarget") as? PopProxyTarget {
             return proxy
@@ -1961,7 +1966,7 @@ extension Wrapper where Base: UINavigationController {
             return proxy
         }
     }
-    
+
     fileprivate var delegateProxy: GestureRecognizerDelegateProxy {
         if let proxy = property(forName: "delegateProxy") as? GestureRecognizerDelegateProxy {
             return proxy
@@ -1975,7 +1980,6 @@ extension Wrapper where Base: UINavigationController {
 
 // MARK: - UIViewController+Toolkit
 @objc extension UIViewController {
-    
     /// 自定义侧滑返回手势VC开关，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，自动调用fw.allowsPopGesture，默认true
     open var allowsPopGesture: Bool {
         if let block = fw.allowsPopGesture {
@@ -1983,7 +1987,7 @@ extension Wrapper where Base: UINavigationController {
         }
         return true
     }
-    
+
     /// 自定义控制器返回VC开关，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，自动调用fw.shouldPopController，默认true
     open var shouldPopController: Bool {
         if let block = fw.shouldPopController {
@@ -1991,29 +1995,23 @@ extension Wrapper where Base: UINavigationController {
         }
         return true
     }
-    
 }
 
 // MARK: - UIApplication+Toolkit
 extension UIApplication {
-    
-    fileprivate static var innerAppVersion: String?
-    
+    fileprivate nonisolated(unsafe) static var innerAppVersion: String?
 }
 
 // MARK: - UIColor+Toolkit
 extension UIColor {
-    
-    fileprivate static var innerColorStandardARGB = false
-    
+    fileprivate nonisolated(unsafe) static var innerColorStandardARGB = false
 }
 
 // MARK: - UIFont+Toolkit
 extension UIFont {
-    
-    fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
-    fileprivate static var innerAutoFlatFont = false
-    fileprivate static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
+    fileprivate nonisolated(unsafe) static var innerAutoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerAutoFlatFont = false
+    fileprivate nonisolated(unsafe) static var innerFontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
     fileprivate static let innerWeightSuffixes: [UIFont.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
@@ -2023,76 +2021,69 @@ extension UIFont {
         .semibold: "-Semibold",
         .bold: "-Bold",
         .heavy: "-Heavy",
-        .black: "-Black",
+        .black: "-Black"
     ]
-    
 }
 
 // MARK: - UIImage+Toolkit
 extension UIImage {
-    
     @objc fileprivate func innerSaveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = fw.property(forName: "saveImage") as? (Error?) -> Void
         fw.setPropertyCopy(nil, forName: "saveImage")
         block?(error)
     }
-    
+
     @objc fileprivate static func innerSaveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
         let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "saveVideo") as? (Error?) -> Void
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         block?(error)
     }
-    
 }
 
 // MARK: - UINavigationController+Toolkit
 extension UINavigationController {
-    
     fileprivate static var innerPopProxyEnabled = false
     fileprivate static var innerChildProxyEnabled = false
-    
 }
 
 // MARK: - ViewState
 /// 视图状态枚举，兼容UIKit和SwiftUI
 public enum ViewState: Equatable {
-    
     case ready
     case loading
     case success(Any? = nil)
     case failure(Error? = nil)
-    
+
     /// 获取成功状态的对象，其他状态返回nil
     public var object: Any? {
-        if case .success(let object) = self {
+        if case let .success(object) = self {
             return object
         }
         return nil
     }
-    
+
     /// 获取失败状态的错误，其他状态返回nil
     public var error: Error? {
-        if case .failure(let error) = self {
+        if case let .failure(error) = self {
             return error
         }
         return nil
     }
-    
+
     /// 实现Equatable协议方法，仅比较状态，不比较值
-    public static func == (lhs: ViewState, rhs: ViewState) -> Bool {
+    public static func ==(lhs: ViewState, rhs: ViewState) -> Bool {
         switch lhs {
         case .ready:
             if case .ready = rhs { return true }
         case .loading:
             if case .loading = rhs { return true }
-        case .success(_):
-            if case .success(_) = rhs { return true }
-        case .failure(_):
-            if case .failure(_) = rhs { return true }
+        case .success:
+            if case .success = rhs { return true }
+        case .failure:
+            if case .failure = rhs { return true }
         }
         return false
     }
-    
 }
 
 // MARK: - ViewControllerLifecycleObservable
@@ -2103,7 +2094,7 @@ public protocol ViewControllerLifecycleObservable {}
 /// 视图控制器常用生命周期状态枚举
 ///
 /// 注意：didDeinit时请勿使用runtime关联属性(可能已被释放)，请使用object参数
-public enum ViewControllerLifecycleState: Int {
+public enum ViewControllerLifecycleState: Int, Sendable {
     case didInit = 0
     case didLoad = 1
     case willAppear = 2
@@ -2117,13 +2108,13 @@ public enum ViewControllerLifecycleState: Int {
 
 // MARK: - TitleViewProtocol
 /// 自定义titleView协议
-@objc public protocol TitleViewProtocol {
+@MainActor @objc public protocol TitleViewProtocol {
     /// 当前标题文字，自动兼容VC.title和navigationItem.title调用
     var title: String? { get set }
 }
 
 // MARK: - LifecycleStateTarget
-fileprivate class LifecycleStateTarget {
+private class LifecycleStateTarget {
     unowned(unsafe) var viewController: UIViewController?
     var handlers: [LifecycleStateHandler] = []
     var completionResult: Any?
@@ -2131,26 +2122,26 @@ fileprivate class LifecycleStateTarget {
     var state: ViewControllerLifecycleState = .didInit {
         didSet { stateChanged(from: oldValue, to: state) }
     }
-    
+
     deinit {
         // 注意deinit不会触发属性的didSet，需手工调用stateChanged
         let oldState = state
         state = .didDeinit
         stateChanged(from: oldState, to: state)
-        
+
         if completionHandler != nil {
             completionHandler?(completionResult)
         }
-        
+
         #if DEBUG
-        if let viewController = viewController {
+        if let viewController {
             Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: viewController)))
         }
         #endif
     }
-    
+
     private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
-        if let viewController = viewController, newState != oldState {
+        if let viewController, newState != oldState {
             handlers.forEach { $0.block?(viewController, newState, $0.object) }
         }
         if newState == .didDeinit {
@@ -2160,59 +2151,54 @@ fileprivate class LifecycleStateTarget {
 }
 
 // MARK: - LifecycleStateHandler
-fileprivate class LifecycleStateHandler: NSObject {
+private class LifecycleStateHandler: NSObject {
     var object: Any?
     var block: ((UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
 }
 
 // MARK: - PopProxyTarget
-fileprivate class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
-    
+private class PopProxyTarget: NSObject, UIGestureRecognizerDelegate {
     private weak var navigationController: UINavigationController?
-    
+
     init(navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
-    
+
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let topController = navigationController?.topViewController else { return false }
         return topController.shouldPopController && topController.allowsPopGesture
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        true
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer is UIScreenEdgePanGestureRecognizer
+        gestureRecognizer is UIScreenEdgePanGestureRecognizer
     }
-    
 }
 
 // MARK: - GestureRecognizerDelegateProxy
-@objc fileprivate protocol GestureRecognizerDelegateCompatible {
-    
+@MainActor @objc private protocol GestureRecognizerDelegateCompatible {
     @objc optional func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool
-    
 }
 
-fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
-    
+private class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecognizerDelegate>, UIGestureRecognizerDelegate, GestureRecognizerDelegateCompatible {
     weak var navigationController: UINavigationController?
-    
+
     func shouldForceReceive() -> Bool {
         if navigationController?.presentedViewController != nil { return false }
         if (navigationController?.viewControllers.count ?? 0) <= 1 { return false }
         if !(navigationController?.interactivePopGestureRecognizer?.isEnabled ?? false) { return false }
         return navigationController?.topViewController?.allowsPopGesture ?? false
     }
-    
+
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
             // 调用钩子。如果返回NO，则不开始手势；如果返回YES，则使用系统方式
             let shouldPop = navigationController?.topViewController?.shouldPopController ?? false
             if shouldPop {
-                if let shouldBegin = self.delegate?.gestureRecognizerShouldBegin?(gestureRecognizer) {
+                if let shouldBegin = delegate?.gestureRecognizerShouldBegin?(gestureRecognizer) {
                     return shouldBegin
                 }
             }
@@ -2220,10 +2206,10 @@ fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecogni
         }
         return true
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
-            if let shouldReceive = self.delegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
+            if let shouldReceive = delegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) {
                 if !shouldReceive && shouldForceReceive() {
                     return true
                 }
@@ -2232,12 +2218,12 @@ fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecogni
         }
         return true
     }
-    
+
     @objc func _gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveEvent event: UIEvent) -> Bool {
         // 修复iOS13.4拦截返回失效问题，返回YES才会走后续流程
-        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
-            if self.delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
-               let shouldReceive = self.target?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            if delegate?.responds(to: #selector(_gestureRecognizer(_:shouldReceiveEvent:))) ?? false,
+               let shouldReceive = target?._gestureRecognizer?(gestureRecognizer, shouldReceiveEvent: event) {
                 if !shouldReceive && shouldForceReceive() {
                     return true
                 }
@@ -2246,50 +2232,54 @@ fileprivate class GestureRecognizerDelegateProxy: DelegateProxy<UIGestureRecogni
         }
         return true
     }
-    
 }
 
 // MARK: - SafariViewControllerDelegate
-fileprivate class SafariViewControllerDelegate: NSObject, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
-    
+private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSafariViewControllerDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate {
     static let shared = SafariViewControllerDelegate()
-    
+
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? () -> Void
-        completion?()
+        let completion = controller.fw.property(forName: "safariViewControllerDidFinish") as? @MainActor @Sendable () -> Void
+        DispatchQueue.fw.mainAsync {
+            completion?()
+        }
     }
-    
+
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        let completion = controller.fw.property(forName: "messageComposeViewController") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(result == .sent)
+        let completion = controller.fw.property(forName: "messageComposeViewController") as? @MainActor @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(result == .sent)
+            }
         }
     }
-    
+
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        let completion = controller.fw.property(forName: "mailComposeController") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(result == .sent)
+        let completion = controller.fw.property(forName: "mailComposeController") as? @MainActor @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(result == .sent)
+            }
         }
     }
-    
+
     func productViewControllerDidFinish(_ controller: SKStoreProductViewController) {
-        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? (Bool) -> Void
-        controller.dismiss(animated: true) {
-            completion?(true)
+        let completion = controller.fw.property(forName: "productViewControllerDidFinish") as? @MainActor @Sendable (Bool) -> Void
+        DispatchQueue.fw.mainAsync {
+            controller.dismiss(animated: true) {
+                completion?(true)
+            }
         }
     }
-    
 }
 
 // MARK: - FrameworkAutoloader+Toolkit
 extension FrameworkAutoloader {
-    
     @objc static func loadToolkit_Toolkit() {
         swizzleToolkitViewController()
         swizzleToolkitTitleView()
     }
-    
+
     private static func swizzleToolkitViewController() {
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
@@ -2298,14 +2288,14 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
-            
+
             if viewController is ViewControllerLifecycleObservable ||
                 viewController.fw.lifecycleState != nil {
                 viewController.fw.lifecycleState = .didInit
             }
             return viewController
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
@@ -2313,14 +2303,14 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
-            
+
             if viewController is ViewControllerLifecycleObservable ||
                 viewController.fw.lifecycleState != nil {
                 viewController.fw.lifecycleState = .didInit
             }
             return viewController
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
@@ -2328,13 +2318,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .didLoad
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
@@ -2342,13 +2332,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .willAppear
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
@@ -2356,13 +2346,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .isAppearing
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
@@ -2370,13 +2360,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .didAppear
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
@@ -2384,13 +2374,13 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .willDisappear
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
@@ -2398,78 +2388,78 @@ extension FrameworkAutoloader {
             swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
-            
+
             if selfObject is ViewControllerLifecycleObservable ||
                 selfObject.fw.lifecycleState != nil {
                 selfObject.fw.lifecycleState = .didDisappear
             }
         }}
     }
-    
+
     private static func swizzleToolkitTitleView() {
         NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
             selector: #selector(UINavigationBar.layoutSubviews),
             methodSignature: (@convention(c) (UINavigationBar, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationBar) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationBar) -> Void).self
         ) { store in { selfObject in
             guard let titleView = selfObject.topItem?.titleView as? UIView & TitleViewProtocol else {
                 store.original(selfObject, store.selector)
                 return
             }
-            
+
             let titleMaximumWidth = titleView.bounds.width
             var titleViewSize = titleView.sizeThatFits(CGSize(width: titleMaximumWidth, height: CGFloat.greatestFiniteMagnitude))
             titleViewSize.height = ceil(titleViewSize.height)
-            
+
             if titleView.bounds.height != titleViewSize.height {
                 let titleViewMinY: CGFloat = UIScreen.fw.flatValue(titleView.frame.minY - ((titleViewSize.height - titleView.bounds.height) / 2.0))
                 titleView.frame = CGRect(x: titleView.frame.minX, y: titleViewMinY, width: min(titleMaximumWidth, titleViewSize.width), height: titleViewSize.height)
             }
-            
+
             if titleView.bounds.width != titleViewSize.width {
                 var titleFrame = titleView.frame
                 titleFrame.size.width = titleViewSize.width
                 titleView.frame = titleFrame
             }
-            
+
             store.original(selfObject, store.selector)
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(setter: UIViewController.title),
             methodSignature: (@convention(c) (UIViewController, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, String?) -> Void).self
         ) { store in { selfObject, title in
             store.original(selfObject, store.selector, title)
-            
+
             if let titleView = selfObject.navigationItem.titleView as? TitleViewProtocol {
                 titleView.title = title
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.title),
             methodSignature: (@convention(c) (UINavigationItem, Selector, String?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, String?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationItem, String?) -> Void).self
         ) { store in { selfObject, title in
             store.original(selfObject, store.selector, title)
-            
+
             if let titleView = selfObject.titleView as? TitleViewProtocol {
                 titleView.title = title
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationItem.self,
             selector: #selector(setter: UINavigationItem.titleView),
             methodSignature: (@convention(c) (UINavigationItem, Selector, UIView?) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationItem, UIView?) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationItem, UIView?) -> Void).self
         ) { store in { selfObject, titleView in
             store.original(selfObject, store.selector, titleView)
-            
+
             if let titleView = titleView as? TitleViewProtocol {
                 if (titleView.title?.count ?? 0) <= 0 {
                     titleView.title = selfObject.title
@@ -2477,18 +2467,18 @@ extension FrameworkAutoloader {
             }
         }}
     }
-    
-    private static var swizzleToolkitNavigationControllerFinished = false
-    
+
+    private nonisolated(unsafe) static var swizzleToolkitNavigationControllerFinished = false
+
     fileprivate static func swizzleToolkitNavigationController() {
         guard !swizzleToolkitNavigationControllerFinished else { return }
         swizzleToolkitNavigationControllerFinished = true
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UINavigationBarDelegate.navigationBar(_:shouldPop:)),
             methodSignature: (@convention(c) (UINavigationController, Selector, UINavigationBar, UINavigationItem) -> Bool).self,
-            swizzleSignature: (@convention(block) (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController, UINavigationBar, UINavigationItem) -> Bool).self
         ) { store in { selfObject, navigationBar, item in
             if UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled {
                 // 检查并调用返回按钮钩子。如果返回NO，则不pop当前页面；如果返回YES，则使用默认方式
@@ -2497,19 +2487,19 @@ extension FrameworkAutoloader {
                     return false
                 }
             }
-            
+
             return store.original(selfObject, store.selector, navigationBar, item)
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
             if !UINavigationController.innerPopProxyEnabled || selfObject.fw.popProxyEnabled { return }
-            
+
             // 拦截系统返回手势事件代理，加载自定义代理方法
             if !(selfObject.interactivePopGestureRecognizer?.delegate is GestureRecognizerDelegateProxy) {
                 selfObject.fw.delegateProxy.delegate = selfObject.interactivePopGestureRecognizer?.delegate
@@ -2517,12 +2507,12 @@ extension FrameworkAutoloader {
                 selfObject.interactivePopGestureRecognizer?.delegate = selfObject.fw.delegateProxy
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarHidden),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
             if UINavigationController.innerChildProxyEnabled, child == nil {
@@ -2531,12 +2521,12 @@ extension FrameworkAutoloader {
             }
             return child
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
             selector: #selector(getter: UINavigationController.childForStatusBarStyle),
             methodSignature: (@convention(c) (UINavigationController, Selector) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UINavigationController) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UINavigationController) -> UIViewController?).self
         ) { store in { selfObject in
             var child = store.original(selfObject, store.selector)
             if UINavigationController.innerChildProxyEnabled, child == nil {
@@ -2546,13 +2536,10 @@ extension FrameworkAutoloader {
             return child
         }}
     }
-    
 }
 
 // MARK: - Concurrency+Toolkit
-#if canImport(_Concurrency)
-extension Wrapper where Base: UIApplication {
-    
+@MainActor extension Wrapper where Base: UIApplication {
     /// 异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
     public static func openURL(_ url: URLParameter?) async -> Bool {
         await withCheckedContinuation { continuation in
@@ -2570,7 +2557,7 @@ extension Wrapper where Base: UIApplication {
             }
         }
     }
-    
+
     /// 异步打开AppStore下载页
     public static func openAppStore(_ appId: String) async -> Bool {
         await withCheckedContinuation { continuation in
@@ -2597,7 +2584,7 @@ extension Wrapper where Base: UIApplication {
             }
         }
     }
-    
+
     /// 异步打开系统应用通知设置页
     public static func openAppNotificationSettings() async -> Bool {
         await withCheckedContinuation { continuation in
@@ -2633,6 +2620,4 @@ extension Wrapper where Base: UIApplication {
             }
         }
     }
-    
 }
-#endif

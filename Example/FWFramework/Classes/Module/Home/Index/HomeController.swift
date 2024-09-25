@@ -9,7 +9,6 @@
 import FWFramework
 
 class HomeController: UIViewController {
-    
     // MARK: - Accessor
     private lazy var mediatorButton: UIButton = {
         let button = UIButton(type: .system)
@@ -20,14 +19,12 @@ class HomeController: UIViewController {
     // MARK: - Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         renderData()
     }
-
 }
 
 extension HomeController: ViewControllerProtocol {
-    
     func setupNavbar() {
         #if RELEASE
         let envTitle = APP.localized("envProduction")
@@ -40,33 +37,31 @@ extension HomeController: ViewControllerProtocol {
         #endif
         navigationItem.title = "\(APP.localized("homeTitle")) - \(envTitle)"
     }
-   
+
     func setupSubviews() {
         view.addSubview(mediatorButton)
     }
-    
+
     func setupLayout() {
         mediatorButton.app.layoutChain
             .horizontal()
             .top(toSafeArea: 20)
             .height(30)
     }
-    
+
     private func renderData() {
         setupNavbar()
-        
+
         if UserService.shared.isLogin() {
             mediatorButton.setTitle(String(format: APP.localized("backTitle"), UserService.shared.getUserModel()?.userName ?? ""), for: .normal)
         } else {
             mediatorButton.setTitle(APP.localized("welcomeTitle"), for: .normal)
         }
     }
-    
 }
 
 // MARK: - Action
 extension HomeController {
-    
     @objc func onMediator() {
         if UserService.shared.isLogin() {
             UserService.shared.logout { [weak self] in
@@ -78,5 +73,4 @@ extension HomeController {
             }
         }
     }
-    
 }

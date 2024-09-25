@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
+@MainActor extension Wrapper where Base: UIScrollView {
     /// 自定义刷新插件，未设置时自动从插件池加载
     public var refreshPlugin: RefreshPlugin! {
         get {
@@ -44,13 +44,13 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+    public func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setRefreshing(block: block, customBlock: customBlock, in: base)
     }
 
     /// 配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+    public func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setRefreshing(target: target, action: action, customBlock: customBlock, in: base)
     }
@@ -66,7 +66,7 @@ extension Wrapper where Base: UIScrollView {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.endRefreshing(in: base)
     }
-    
+
     /// 结束下拉刷新并标记是否加载完成，需在reloadData之后调用
     public func endRefreshing(finished: Bool) {
         endRefreshing()
@@ -91,7 +91,7 @@ extension Wrapper where Base: UIScrollView {
             plugin.setShouldLoading(newValue, in: base)
         }
     }
-    
+
     /// 是否已加载完成，不能继续追加，需在reloadData之后调用
     public var loadingFinished: Bool {
         get {
@@ -105,13 +105,13 @@ extension Wrapper where Base: UIScrollView {
     }
 
     /// 配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)? = nil) {
+    public func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setLoading(block: block, customBlock: customBlock, in: base)
     }
 
     /// 配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)? = nil) {
+    public func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)? = nil) {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.setLoading(target: target, action: action, customBlock: customBlock, in: base)
     }
@@ -127,7 +127,7 @@ extension Wrapper where Base: UIScrollView {
         let plugin = refreshPlugin ?? RefreshPluginImpl.shared
         plugin.endLoading(in: base)
     }
-    
+
     /// 结束上拉追加并标记是否加载完成，需在reloadData之后调用
     public func endLoading(finished: Bool) {
         endLoading()
@@ -136,18 +136,18 @@ extension Wrapper where Base: UIScrollView {
 }
 
 // MARK: - Wrapper+UIScrollView
-extension Wrapper where Base: UIScrollView {
-    public func addPullRefresh(block: @escaping () -> Void) {
+@MainActor extension Wrapper where Base: UIScrollView {
+    public func addPullRefresh(block: @escaping @MainActor @Sendable () -> Void) {
         addPullRefresh(block: block, target: nil, action: nil)
     }
-    
+
     public func addPullRefresh(target: Any, action: Selector) {
         addPullRefresh(block: nil, target: target, action: action)
     }
-    
-    private func addPullRefresh(block: (() -> Void)?, target: Any?, action: Selector?) {
+
+    private func addPullRefresh(block: (@MainActor @Sendable () -> Void)?, target: Any?, action: Selector?) {
         pullRefreshView?.removeFromSuperview()
-        
+
         let view = PullRefreshView()
         view.frame = CGRect(x: 0, y: -view.height, width: base.bounds.size.width, height: view.height)
         view.pullRefreshBlock = block
@@ -155,15 +155,15 @@ extension Wrapper where Base: UIScrollView {
         view.action = action
         view.scrollView = base
         base.addSubview(view)
-        
+
         view.originalInset = base.contentInset
         pullRefreshView = view
         showPullRefresh = true
     }
-    
+
     public func triggerPullRefresh() {
         if pullRefreshView?.isAnimating ?? false { return }
-        
+
         pullRefreshView?.state = .triggered
         pullRefreshView?.userTriggered = false
         pullRefreshView?.startAnimating()
@@ -171,23 +171,23 @@ extension Wrapper where Base: UIScrollView {
 
     public var pullRefreshView: PullRefreshView? {
         get {
-            return property(forName: "pullRefreshView") as? PullRefreshView
+            property(forName: "pullRefreshView") as? PullRefreshView
         }
         set {
             setProperty(newValue, forName: "pullRefreshView")
         }
     }
-    
+
     public var showPullRefresh: Bool {
         get {
-            if let pullRefreshView = pullRefreshView {
+            if let pullRefreshView {
                 return !pullRefreshView.isHidden
             }
             return false
         }
         set {
-            guard let pullRefreshView = pullRefreshView else { return }
-            
+            guard let pullRefreshView else { return }
+
             pullRefreshView.isHidden = !newValue
             if !newValue {
                 if pullRefreshView.isObserving {
@@ -205,7 +205,7 @@ extension Wrapper where Base: UIScrollView {
                     base.addObserver(pullRefreshView, forKeyPath: "frame", options: .new, context: nil)
                     base.panGestureRecognizer.fw.observeProperty(\.state, target: pullRefreshView, action: #selector(pullRefreshView.gestureRecognizerStateChanged(_:)))
                     pullRefreshView.isObserving = true
-                    
+
                     pullRefreshView.setNeedsLayout()
                     pullRefreshView.layoutIfNeeded()
                     pullRefreshView.frame = CGRect(x: 0, y: -pullRefreshView.height, width: base.bounds.size.width, height: pullRefreshView.height)
@@ -213,18 +213,18 @@ extension Wrapper where Base: UIScrollView {
             }
         }
     }
-    
-    public func addInfiniteScroll(block: @escaping () -> Void) {
+
+    public func addInfiniteScroll(block: @escaping @MainActor @Sendable () -> Void) {
         addInfiniteScroll(block: block, target: nil, action: nil)
     }
-    
+
     public func addInfiniteScroll(target: Any, action: Selector) {
         addInfiniteScroll(block: nil, target: target, action: action)
     }
-    
-    private func addInfiniteScroll(block: (() -> Void)?, target: Any?, action: Selector?) {
+
+    private func addInfiniteScroll(block: (@MainActor @Sendable () -> Void)?, target: Any?, action: Selector?) {
         infiniteScrollView?.removeFromSuperview()
-        
+
         let view = InfiniteScrollView()
         view.frame = CGRect(x: 0, y: base.contentSize.height, width: base.bounds.size.width, height: view.height)
         view.infiniteScrollBlock = block
@@ -232,16 +232,16 @@ extension Wrapper where Base: UIScrollView {
         view.action = action
         view.scrollView = base
         base.addSubview(view)
-        
+
         view.originalInset = base.contentInset
         infiniteScrollView = view
         showInfiniteScroll = true
     }
-    
+
     public func triggerInfiniteScroll() {
         if infiniteScrollView?.isAnimating ?? false { return }
         if infiniteScrollView?.finished ?? false { return }
-        
+
         infiniteScrollView?.state = .triggered
         infiniteScrollView?.userTriggered = false
         infiniteScrollView?.startAnimating()
@@ -249,23 +249,23 @@ extension Wrapper where Base: UIScrollView {
 
     public var infiniteScrollView: InfiniteScrollView? {
         get {
-            return property(forName: "infiniteScrollView") as? InfiniteScrollView
+            property(forName: "infiniteScrollView") as? InfiniteScrollView
         }
         set {
             setProperty(newValue, forName: "infiniteScrollView")
         }
     }
-    
+
     public var showInfiniteScroll: Bool {
         get {
-            if let infiniteScrollView = infiniteScrollView {
+            if let infiniteScrollView {
                 return !infiniteScrollView.isHidden
             }
             return false
         }
         set {
-            guard let infiniteScrollView = infiniteScrollView else { return }
-            
+            guard let infiniteScrollView else { return }
+
             infiniteScrollView.isHidden = !newValue
             if !newValue {
                 if infiniteScrollView.isObserving {
@@ -282,7 +282,7 @@ extension Wrapper where Base: UIScrollView {
                     base.panGestureRecognizer.fw.observeProperty(\.state, target: infiniteScrollView, action: #selector(InfiniteScrollView.gestureRecognizerStateChanged(_:)))
                     infiniteScrollView.setScrollViewContentInsetForInfiniteScrolling(animated: false)
                     infiniteScrollView.isObserving = true
-                    
+
                     infiniteScrollView.setNeedsLayout()
                     infiniteScrollView.layoutIfNeeded()
                     infiniteScrollView.frame = CGRect(x: 0, y: base.contentSize.height, width: infiniteScrollView.bounds.size.width, height: infiniteScrollView.height)
@@ -290,10 +290,10 @@ extension Wrapper where Base: UIScrollView {
             }
         }
     }
-    
+
     public var infiniteScrollFinished: Bool {
         get {
-            return infiniteScrollView?.finished ?? false
+            infiniteScrollView?.finished ?? false
         }
         set {
             infiniteScrollView?.finished = newValue
@@ -303,8 +303,7 @@ extension Wrapper where Base: UIScrollView {
 
 // MARK: - RefreshPlugin
 /// 刷新插件协议，应用可自定义刷新插件实现
-public protocol RefreshPlugin: AnyObject {
-
+@MainActor public protocol RefreshPlugin: AnyObject {
     // MARK: - Refreshing
     /// 是否正在刷新中
     func isRefreshing(in scrollView: UIScrollView) -> Bool
@@ -316,10 +315,10 @@ public protocol RefreshPlugin: AnyObject {
     func setShouldRefreshing(_ shouldRefreshing: Bool, in scrollView: UIScrollView)
 
     /// 配置下拉刷新句柄
-    func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置下拉刷新事件
-    func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始下拉刷新
     func beginRefreshing(in scrollView: UIScrollView)
@@ -344,30 +343,28 @@ public protocol RefreshPlugin: AnyObject {
     func setLoadingFinished(_ loadingFinished: Bool, in scrollView: UIScrollView)
 
     /// 配置上拉追加句柄
-    func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 配置上拉追加事件
-    func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView)
+    func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView)
 
     /// 开始上拉追加
     func beginLoading(in scrollView: UIScrollView)
 
     /// 结束上拉追加
     func endLoading(in scrollView: UIScrollView)
-    
 }
 
 extension RefreshPlugin {
-    
     // MARK: - Refreshing
     /// 默认实现，是否正在刷新中
     public func isRefreshing(in scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.isRefreshing(in: scrollView)
+        RefreshPluginImpl.shared.isRefreshing(in: scrollView)
     }
 
     /// 默认实现，是否显示刷新组件
     public func shouldRefreshing(in scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.shouldRefreshing(in: scrollView)
+        RefreshPluginImpl.shared.shouldRefreshing(in: scrollView)
     }
 
     /// 默认实现，设置是否显示刷新组件
@@ -376,12 +373,12 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置下拉刷新句柄
-    public func setRefreshing(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setRefreshing(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setRefreshing(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置下拉刷新事件
-    public func setRefreshing(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setRefreshing(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setRefreshing(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
@@ -398,12 +395,12 @@ extension RefreshPlugin {
     // MARK: - Loading
     /// 默认实现，是否正在追加中
     public func isLoading(in scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.isLoading(in: scrollView)
+        RefreshPluginImpl.shared.isLoading(in: scrollView)
     }
 
     /// 默认实现，是否显示追加组件
     public func shouldLoading(in scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.shouldLoading(in: scrollView)
+        RefreshPluginImpl.shared.shouldLoading(in: scrollView)
     }
 
     /// 默认实现，设置是否显示追加组件
@@ -413,7 +410,7 @@ extension RefreshPlugin {
 
     /// 默认实现，是否已追加完成，不能继续追加
     public func loadingFinished(in scrollView: UIScrollView) -> Bool {
-        return RefreshPluginImpl.shared.loadingFinished(in: scrollView)
+        RefreshPluginImpl.shared.loadingFinished(in: scrollView)
     }
 
     /// 默认实现，设置是否已追加完成，不能继续追加
@@ -422,12 +419,12 @@ extension RefreshPlugin {
     }
 
     /// 默认实现，配置上拉追加句柄
-    public func setLoading(block: @escaping () -> Void, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setLoading(block: @escaping @MainActor @Sendable () -> Void, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setLoading(block: block, customBlock: customBlock, in: scrollView)
     }
 
     /// 默认实现，配置上拉追加事件
-    public func setLoading(target: Any, action: Selector, customBlock: ((Any) -> Void)?, in scrollView: UIScrollView) {
+    public func setLoading(target: Any, action: Selector, customBlock: (@MainActor @Sendable (Any) -> Void)?, in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.setLoading(target: target, action: action, customBlock: customBlock, in: scrollView)
     }
 
@@ -440,5 +437,4 @@ extension RefreshPlugin {
     public func endLoading(in scrollView: UIScrollView) {
         RefreshPluginImpl.shared.endLoading(in: scrollView)
     }
-    
 }

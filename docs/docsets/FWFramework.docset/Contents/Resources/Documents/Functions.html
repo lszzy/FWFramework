@@ -17,7 +17,7 @@
     <a title="Functions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -694,6 +694,9 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1053,6 +1056,12 @@
                 <a href="Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1215,6 +1224,9 @@
                 <a href="Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1248,6 +1260,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Binding.html">Binding</a>
@@ -1379,6 +1394,9 @@
                 <a href="Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1389,6 +1407,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/ScrollView.html">ScrollView</a>
@@ -1968,9 +1992,6 @@
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2154,12 +2175,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/LineShape.html">LineShape</a>
@@ -2420,9 +2435,6 @@
                 <a href="Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2486,9 +2498,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -2880,7 +2889,8 @@
     <span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">UnsafePointer</span><span class="o">&lt;</span><span class="kt">UInt8</span><span class="o">&gt;</span><span class="p">,</span>
     <span class="n">_</span> <span class="nv">nameLength</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span>
     <span class="nv">genericContext</span><span class="p">:</span> <span class="kt">UnsafeRawPointer</span><span class="p">?,</span>
-    <span class="nv">genericArguments</span><span class="p">:</span> <span class="kt">UnsafeRawPointer</span><span class="p">?)</span>
+    <span class="nv">genericArguments</span><span class="p">:</span> <span class="kt">UnsafeRawPointer</span><span class="p">?</span>
+<span class="p">)</span>
     <span class="o">-&gt;</span> <span class="kt">Any</span><span class="o">.</span><span class="k">Type</span><span class="p">?</span></code></pre>
 
                         </div>
@@ -3040,11 +3050,11 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Framer"></a>
-                <a name="//apple_ref/swift/Section/Framer" class="dashAnchor"></a>
+                <a name="/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                <a name="//apple_ref/swift/Section/functions for simpler array buffer reading and writing" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Framer"></a>
-                  <h3 class="section-name"><span>Framer</span>
+                  <a class="section-name-link" href="#/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                  <h3 class="section-name"><span>functions for simpler array buffer reading and writing</span>
 </h3>
                 </div>
               </div>
@@ -3228,7 +3238,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -9,26 +9,20 @@
 import FWFramework
 
 class AppConfig: Configuration {
-    
     var appId = ""
-    
 }
 
 extension AppConfig {
-    
     class Network {
-        static var apiUrl = ""
+        nonisolated(unsafe) static var apiUrl = ""
     }
-    
+
     var network: Network.Type { Network.self }
-    
 }
 
 class AppConfigTemplate: ConfigurationTemplate {
-    
     override func applyConfiguration() {
         AppConfig.shared.appId = "appId"
         AppConfig.shared.network.apiUrl = "apiUrl"
     }
-    
 }

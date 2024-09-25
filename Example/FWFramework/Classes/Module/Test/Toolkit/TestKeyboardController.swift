@@ -9,21 +9,20 @@
 import FWFramework
 
 class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UITextFieldDelegate, UITextViewDelegate {
-    
     private var canScroll = false {
         didSet {
             view.endEditing(true)
             renderData()
         }
     }
-    
+
     private var dismissOnDrag = false {
         didSet {
             view.endEditing(true)
             scrollView.keyboardDismissMode = dismissOnDrag ? .onDrag : .none
         }
     }
-    
+
     private var useScrollView = false {
         didSet {
             view.endEditing(true)
@@ -34,10 +33,10 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             descView.app.keyboardScrollView = useScrollView ? scrollView : nil
         }
     }
-    
+
     private var appendString = ""
     private var popupMenu: PopupMenu?
-    
+
     private lazy var mobileField: UITextField = {
         let result = createTextField()
         result.tag = 1
@@ -49,7 +48,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.textContentType = .telephoneNumber
         return result
     }()
-    
+
     private lazy var passwordField: UITextField = {
         let result = createTextField()
         result.tag = 2
@@ -61,7 +60,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.textContentType = .password
         return result
     }()
-    
+
     private lazy var textView: UITextView = {
         let result = createTextView()
         result.tag = 3
@@ -69,13 +68,13 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.app.maxLength = 200
         result.app.placeholder = "问题\n最多200个字符"
         result.app.lineHeight = 25
-        result.app.textChangedBlock = { [weak self] text in
+        result.app.textChangedBlock = { @MainActor @Sendable [weak self] text in
             self?.countLabel.text = "\(self?.textView.app.actualNumberOfLines ?? 0)行 \(text.count)/\(self?.textView.app.maxLength ?? 0)字"
         }
         // result.returnKeyType = .next
         return result
     }()
-    
+
     private lazy var countLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 13)
@@ -84,7 +83,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.text = "0行 0/\(textView.app.maxLength)字"
         return result
     }()
-    
+
     private lazy var descView: UITextView = {
         let result = createTextView()
         result.tag = 4
@@ -98,17 +97,17 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.app.delegate = self
         return result
     }()
-    
+
     private lazy var submitButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("提交", for: .normal)
         result.app.addTouch(target: self, action: #selector(onSubmit))
         return result
     }()
-    
+
     func setupSubviews() {
         scrollView.backgroundColor = AppTheme.tableColor
-        
+
         let textFieldAppearance = UITextField.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])
         let textViewAppearance = UITextView.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])
         textFieldAppearance.app.keyboardManager = true
@@ -119,18 +118,18 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         textViewAppearance.app.touchResign = true
         textViewAppearance.app.keyboardResign = true
         textViewAppearance.app.reboundDistance = 200
-        
+
         contentView.addSubview(mobileField)
         mobileField.app.layoutChain
             .left(15)
             .right(15)
             .centerX()
         mobileField.app.returnNext = true
-        mobileField.app.nextResponder = { [weak self] textField in
+        mobileField.app.nextResponder = { @MainActor @Sendable [weak self] _ in
             return self?.passwordField
         }
         mobileField.app.addToolbar(title: NSAttributedString.app.attributedString(mobileField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
-        
+
         contentView.addSubview(passwordField)
         passwordField.app.layoutChain
             .centerX()
@@ -139,7 +138,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         passwordField.app.previousResponderTag = 1
         passwordField.app.nextResponderTag = 3
         passwordField.app.addToolbar(title: NSAttributedString.app.attributedString(passwordField.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
-        
+
         contentView.addSubview(textView)
         textView.app.layoutChain
             .centerX()
@@ -148,54 +147,54 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         textView.app.previousResponderTag = 2
         textView.app.nextResponderTag = 4
         textView.app.addToolbar(title: NSAttributedString.app.attributedString(textView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
-        
+
         contentView.addSubview(countLabel)
         countLabel.app.layoutChain
             .top(toViewBottom: textView, offset: 15)
             .right(15)
-        
+
         contentView.addSubview(descView)
         descView.app.previousResponderTag = 3
         descView.app.addToolbar(title: NSAttributedString.app.attributedString(descView.app.placeholder ?? "", font: UIFont.systemFont(ofSize: 13)), doneBlock: nil)
         descView.app.layoutChain
             .centerX()
             .top(toViewBottom: countLabel, offset: 15)
-        
+
         contentView.addSubview(submitButton)
         submitButton.app.layoutChain
             .centerX()
             .bottom(15)
             .top(toViewBottom: descView, offset: 15)
     }
-    
+
     func setupLayout() {
-        mobileField.app.autoCompleteBlock = { [weak self] text in
-            guard let self = self else { return }
+        mobileField.app.autoCompleteBlock = { @MainActor @Sendable [weak self] text in
+            guard let self else { return }
             if text.isEmpty {
-                self.popupMenu?.dismiss()
+                popupMenu?.dismiss()
             } else {
-                self.popupMenu?.dismiss()
-                self.popupMenu = PopupMenu.show(relyOn: self.mobileField, titles: [text], icons: nil, menuWidth: self.mobileField.app.width, customize: { popupMenu in
+                popupMenu?.dismiss()
+                popupMenu = PopupMenu.show(relyOn: mobileField, titles: [text], icons: nil, menuWidth: mobileField.app.width, customize: { popupMenu in
                     popupMenu.maskViewColor = .clear
                 })
             }
         }
-        
-        descView.app.autoCompleteBlock = { [weak self] text in
-            guard let self = self else { return }
+
+        descView.app.autoCompleteBlock = { @MainActor @Sendable [weak self] text in
+            guard let self else { return }
             if text.isEmpty {
-                self.popupMenu?.dismiss()
+                popupMenu?.dismiss()
             } else {
-                self.popupMenu?.dismiss()
-                self.popupMenu = PopupMenu.show(relyOn: self.descView, titles: [text], icons: nil, menuWidth: self.descView.app.width, customize: { popupMenu in
+                popupMenu?.dismiss()
+                popupMenu = PopupMenu.show(relyOn: descView, titles: [text], icons: nil, menuWidth: descView.app.width, customize: { popupMenu in
                     popupMenu.maskViewColor = .clear
                 })
             }
         }
-        
+
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, cancel: "取消", actions: ["切换滚动", "切换滚动时收起键盘", "切换滚动视图", "自动添加-"], currentIndex: -1, actionBlock: { index in
-                guard let self = self else { return }
+                guard let self else { return }
                 if index == 0 {
                     self.canScroll = !self.canScroll
                 } else if index == 1 {
@@ -207,16 +206,16 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
                 }
             })
         }
-        
+
         renderData()
     }
-    
+
     private func renderData() {
         let marginTop = APP.screenHeight - (390 + 15 + APP.topBarHeight + UIScreen.app.safeAreaInsets.bottom)
         let topInset = canScroll ? APP.screenHeight : marginTop
         mobileField.layoutChain.top(topInset)
     }
-    
+
     private func createTextField() -> UITextField {
         let result = UITextField()
         result.font = UIFont.app.font(ofSize: 15)
@@ -228,7 +227,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.layoutChain.width(APP.screenWidth - 30).height(50)
         return result
     }
-    
+
     private func createTextView() -> UITextView {
         let result = UITextView()
         result.font = UIFont.app.font(ofSize: 15)
@@ -239,19 +238,19 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
         result.layoutChain.width(APP.screenWidth - 30).height(100)
         return result
     }
-    
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string == "\n" {
             return true
         }
-        
+
         let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
         let characterSet = CharacterSet(charactersIn: allowedChars).inverted
         let filterString = string.components(separatedBy: characterSet).joined(separator: "")
         if string != filterString {
             return false
         }
-        
+
         if !string.isEmpty {
             var replaceString = string.uppercased()
             if !appendString.isEmpty {
@@ -260,7 +259,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             let curText = (textField.text ?? "") as NSString
             let filterText = curText.replacingCharacters(in: range, with: replaceString)
             textField.text = textField.app.filterText(filterText)
-            
+
             var offset = range.location + replaceString.count
             if offset > textField.app.maxLength {
                 offset = textField.app.maxLength
@@ -268,27 +267,27 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             textField.app.moveCursor(offset)
             return false
         }
-        
+
         return true
     }
-    
+
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         print("textViewShouldBeginEditing")
         return true
     }
-    
+
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool {
         if string == "\n" {
             return true
         }
-        
+
         let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
         let characterSet = CharacterSet(charactersIn: allowedChars).inverted
         let filterString = string.components(separatedBy: characterSet).joined(separator: "")
         if string != filterString {
             return false
         }
-        
+
         if !string.isEmpty {
             var replaceString = string.uppercased()
             if !appendString.isEmpty {
@@ -297,7 +296,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             let curText = (textView.text ?? "") as NSString
             let filterText = curText.replacingCharacters(in: range, with: replaceString)
             textView.text = textView.app.filterText(filterText)
-            
+
             var offset = range.location + replaceString.count
             if offset > textView.app.maxLength {
                 offset = textView.app.maxLength
@@ -305,13 +304,12 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
             textView.app.moveCursor(offset)
             return false
         }
-        
+
         return true
     }
-    
+
     @objc func onSubmit() {
         view.endEditing(true)
         app.showMessage(text: "点击了提交")
     }
-    
 }

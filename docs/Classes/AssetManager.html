@@ -17,7 +17,7 @@
     <a title="AssetManager Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -696,6 +696,9 @@
                 <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1055,6 +1058,12 @@
                 <a href="../Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1217,6 +1226,9 @@
                 <a href="../Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1250,6 +1262,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Binding.html">Binding</a>
@@ -1381,6 +1396,9 @@
                 <a href="../Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1391,6 +1409,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/ScrollView.html">ScrollView</a>
@@ -1970,9 +1994,6 @@
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2156,12 +2177,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/LineShape.html">LineShape</a>
@@ -2422,9 +2437,6 @@
                 <a href="../Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2490,9 +2502,6 @@
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2509,7 +2518,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetManager</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                 </div>
               </div>
@@ -2840,9 +2849,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveImage5image16albumAssetsGroup10completionySo7UIImageCSg_AA0bI0CyAA0B0CSg_s5Error_pSgtctFZ"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveImage5image16albumAssetsGroup10completionySo7UIImageCSg_AA0bI0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ"></a>
                     <a name="//apple_ref/swift/Method/saveImage(image:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage5image16albumAssetsGroup10completionySo7UIImageCSg_AA0bI0CyAA0B0CSg_s5Error_pSgtctFZ">saveImage(image:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage5image16albumAssetsGroup10completionySo7UIImageCSg_AA0bI0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ">saveImage(image:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2857,7 +2866,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2867,9 +2876,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveImage9imagePath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtctFZ"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveImage9imagePath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ"></a>
                     <a name="//apple_ref/swift/Method/saveImage(imagePath:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage9imagePath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtctFZ">saveImage(imagePath:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage9imagePath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ">saveImage(imagePath:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2884,7 +2893,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imagePath</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imagePath</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2894,9 +2903,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveVideo9videoPath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtctFZ"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveVideo9videoPath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ"></a>
                     <a name="//apple_ref/swift/Method/saveVideo(videoPath:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveVideo9videoPath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtctFZ">saveVideo(videoPath:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveVideo9videoPath16albumAssetsGroup10completionySS_AA0bJ0CyAA0B0CSg_s5Error_pSgtYbScMYcctFZ">saveVideo(videoPath:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2911,7 +2920,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveVideo</span><span class="p">(</span><span class="nv">videoPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">saveVideo</span><span class="p">(</span><span class="nv">videoPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3070,9 +3079,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveImage8imageRef11orientation12photoLibrary16albumAssetsGroup10completionySo07CGImageG0a_So18UIImageOrientationVSo07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveImage8imageRef11orientation12photoLibrary16albumAssetsGroup10completionySo07CGImageG0a_So18UIImageOrientationVSo07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF"></a>
                     <a name="//apple_ref/swift/Method/saveImage(imageRef:orientation:photoLibrary:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage8imageRef11orientation12photoLibrary16albumAssetsGroup10completionySo07CGImageG0a_So18UIImageOrientationVSo07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF">saveImage(imageRef:<wbr>orientation:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage8imageRef11orientation12photoLibrary16albumAssetsGroup10completionySo07CGImageG0a_So18UIImageOrientationVSo07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF">saveImage(imageRef:<wbr>orientation:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3094,7 +3103,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imageRef</span><span class="p">:</span> <span class="kt">CGImage</span><span class="p">,</span> <span class="nv">orientation</span><span class="p">:</span> <span class="kt">UIImage</span><span class="o">.</span><span class="kt">Orientation</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imageRef</span><span class="p">:</span> <span class="kt">CGImage</span><span class="p">,</span> <span class="nv">orientation</span><span class="p">:</span> <span class="kt">UIImage</span><span class="o">.</span><span class="kt">Orientation</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3104,9 +3113,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveImage12imagePathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveImage12imagePathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF"></a>
                     <a name="//apple_ref/swift/Method/saveImage(imagePathURL:photoLibrary:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage12imagePathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF">saveImage(imagePathURL:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveImage12imagePathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF">saveImage(imagePathURL:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3128,7 +3137,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imagePathURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveImage</span><span class="p">(</span><span class="nv">imagePathURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3138,9 +3147,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12AssetManagerC9saveVideo12videoPathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF"></a>
+                    <a name="/s:11FWFramework12AssetManagerC9saveVideo12videoPathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF"></a>
                     <a name="//apple_ref/swift/Method/saveVideo(videoPathURL:photoLibrary:albumAssetsGroup:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveVideo12videoPathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtctF">saveVideo(videoPathURL:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12AssetManagerC9saveVideo12videoPathURL12photoLibrary16albumAssetsGroup10completiony10Foundation0H0V_So07PHPhotoJ0CSgAA0bM0CyAA0B0CSg_s5Error_pSgtYbScMYcctF">saveVideo(videoPathURL:<wbr>photoLibrary:<wbr>albumAssetsGroup:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3162,7 +3171,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveVideo</span><span class="p">(</span><span class="nv">videoPathURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveVideo</span><span class="p">(</span><span class="nv">videoPathURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">photoLibrary</span><span class="p">:</span> <span class="kt">PHPhotoLibrary</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">albumAssetsGroup</span><span class="p">:</span> <span class="kt"><a href="../Classes/AssetGroup.html">AssetGroup</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/Asset.html">Asset</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3174,7 +3183,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

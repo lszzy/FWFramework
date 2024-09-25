@@ -11,10 +11,9 @@ import SystemConfiguration
 /// 网络可达性管理器
 ///
 /// [Alamofire](https://github.com/Alamofire/Alamofire)
-open class NetworkReachabilityManager {
-    
+open class NetworkReachabilityManager: @unchecked Sendable {
     /// 网络可达性状态枚举
-    public enum NetworkReachabilityStatus: Equatable {
+    public enum NetworkReachabilityStatus: Equatable, Sendable {
         /// 未知状态
         case unknown
         /// 不可达
@@ -33,7 +32,7 @@ open class NetworkReachabilityManager {
         }
 
         /// 网络连接类型枚举
-        public enum ConnectionType {
+        public enum ConnectionType: Sendable {
             /// 以太网或WiFi
             case ethernetOrWiFi
             /// 蜂窝网络
@@ -42,7 +41,7 @@ open class NetworkReachabilityManager {
     }
 
     /// 网络可达性监听句柄
-    public typealias Listener = (NetworkReachabilityStatus) -> Void
+    public typealias Listener = @Sendable (NetworkReachabilityStatus) -> Void
 
     /// 默认网络可达性管理器
     public static let shared = NetworkReachabilityManager()
@@ -62,8 +61,8 @@ open class NetworkReachabilityManager {
 
     /// 当前可访问类型标记
     open var flags: SCNetworkReachabilityFlags? {
-        guard let reachability = reachability else { return nil }
-        
+        guard let reachability else { return nil }
+
         var flags = SCNetworkReachabilityFlags()
         return SCNetworkReachabilityGetFlags(reachability, &flags) ? flags : nil
     }
@@ -82,7 +81,7 @@ open class NetworkReachabilityManager {
     private let reachability: SCNetworkReachability?
 
     private var mutableState = MutableState()
-    
+
     private let stateLock = NSLock()
 
     // MARK: - Lifecycle
@@ -119,7 +118,7 @@ open class NetworkReachabilityManager {
         stateLock.unlock()
         return listening
     }
-    
+
     /// 开始监听网络状态，自动停止之前已有的监听
     ///
     /// - Parameters:
@@ -161,7 +160,7 @@ open class NetworkReachabilityManager {
             }
         )
         let callback: SCNetworkReachabilityCallBack = { _, flags, info in
-            guard let info = info else { return }
+            guard let info else { return }
 
             let weakManager = Unmanaged<WeakManager>.fromOpaque(info).takeUnretainedValue()
             weakManager.manager?.notifyListener(flags)
@@ -169,7 +168,7 @@ open class NetworkReachabilityManager {
 
         var queueAdded = false
         var callbackAdded = false
-        if let reachability = reachability {
+        if let reachability {
             queueAdded = SCNetworkReachabilitySetDispatchQueue(reachability, reachabilityQueue)
             callbackAdded = SCNetworkReachabilitySetCallback(reachability, callback, &context)
         }
@@ -185,11 +184,11 @@ open class NetworkReachabilityManager {
 
     /// 停止监听
     open func stopListening() {
-        if let reachability = reachability {
+        if let reachability {
             SCNetworkReachabilitySetCallback(reachability, nil, nil)
             SCNetworkReachabilitySetDispatchQueue(reachability, nil)
         }
-        
+
         stateLock.lock()
         mutableState.listener = nil
         mutableState.listenerQueue = nil
@@ -204,7 +203,7 @@ open class NetworkReachabilityManager {
         stateLock.lock()
         if newStatus != mutableState.previousStatus {
             mutableState.previousStatus = newStatus
-            
+
             let listener = mutableState.listener
             mutableState.listenerQueue?.async { listener?(newStatus) }
         }
@@ -227,7 +226,7 @@ extension SCNetworkReachabilityFlags {
     var canConnectWithoutUserInteraction: Bool { canConnectAutomatically && !contains(.interventionRequired) }
     var isActuallyReachable: Bool { isReachable && (!isConnectionRequired || canConnectWithoutUserInteraction) }
     var isCellular: Bool { contains(.isWWAN) }
-    
+
     var readableDescription: String {
         let W = isCellular ? "W" : "-"
         let R = isReachable ? "R" : "-"

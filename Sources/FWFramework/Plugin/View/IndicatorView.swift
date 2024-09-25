@@ -12,7 +12,6 @@ import UIKit
 ///
 /// [DGActivityIndicatorView](https://github.com/gontovnik/DGActivityIndicatorView)
 open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
-
     // MARK: - Accessor
     /// 当前动画类型
     open var type: IndicatorViewAnimationType = .lineSpin {
@@ -43,55 +42,50 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
         get { _progress }
         set { setProgress(newValue, animated: false) }
     }
+
     private var _progress: CGFloat = 0
-    
+
     /// 停止动画时是否自动隐藏，默认YES
     open var hidesWhenStopped: Bool = true
 
     /// 是否正在动画
     open private(set) var isAnimating: Bool = false
-    
+
     private lazy var animationLayer: CALayer = {
         let result = CALayer()
         return result
     }()
-    
+
     // MARK: - Lifecycle
     /// 指定动画类型初始化
     public init(type: IndicatorViewAnimationType) {
         super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
-        
+
         self.type = type
         setupLayer()
     }
-    
-    public init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
-        
+
+    override public init(frame: CGRect) {
+        super.init(frame: frame.size.equalTo(.zero) ? CGRect(origin: frame.origin, size: CGSize(width: 37, height: 37)) : frame)
+
         setupLayer()
     }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        setupLayer()
-    }
-    
+
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        
+
         setupLayer()
     }
-    
+
     private func setupLayer() {
         isUserInteractionEnabled = false
         isHidden = true
-        
+
         layer.addSublayer(animationLayer)
         setContentHuggingPriority(.required, for: .horizontal)
         setContentHuggingPriority(.required, for: .vertical)
     }
-    
+
     private func setupAnimation() {
         animationLayer.sublayers = nil
 
@@ -99,11 +93,11 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
         animation.setupAnimation(animationLayer, size: bounds.size, color: indicatorColor ?? .white)
         animationLayer.speed = 0.0
     }
-    
-    open override func layoutSubviews() {
+
+    override open func layoutSubviews() {
         super.layoutSubviews()
         animationLayer.frame = bounds
-        let isAnimating = self.isAnimating
+        let isAnimating = isAnimating
         if isAnimating {
             stopAnimating()
         }
@@ -112,21 +106,21 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
             startAnimating()
         }
     }
-    
-    open override var frame: CGRect {
+
+    override open var frame: CGRect {
         didSet { invalidateIntrinsicContentSize() }
     }
-    
-    open override var bounds: CGRect {
+
+    override open var bounds: CGRect {
         didSet { invalidateIntrinsicContentSize() }
     }
-    
-    open override var intrinsicContentSize: CGSize {
-        return bounds.size
+
+    override open var intrinsicContentSize: CGSize {
+        bounds.size
     }
-    
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return bounds.size
+
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
+        bounds.size
     }
 
     // MARK: - Public
@@ -134,7 +128,7 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
     open func startAnimating() {
         if isAnimating { return }
         if animationLayer.sublayers == nil {
-            self.setupAnimation()
+            setupAnimation()
         }
         isHidden = false
         animationLayer.speed = 1.0
@@ -183,23 +177,19 @@ open class IndicatorView: UIView, IndicatorViewPlugin, ProgressViewPlugin {
             }
         }
     }
-    
 }
 
 // MARK: - IndicatorViewAnimation
 /// 自定义指示器视图动画协议
-public protocol IndicatorViewAnimationProtocol: AnyObject {
-    
+@MainActor public protocol IndicatorViewAnimationProtocol: AnyObject {
     /// 初始化layer动画效果
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor)
-    
 }
 
 /// 自定义指示器视图动画类型枚举，可扩展
-public struct IndicatorViewAnimationType: RawRepresentable, Equatable, Hashable {
-    
+public struct IndicatorViewAnimationType: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = Int
-    
+
     /// 八线条渐变旋转，类似系统，默认
     public static let lineSpin: IndicatorViewAnimationType = .init(0)
     /// 五线条跳动，类似音符
@@ -214,21 +204,19 @@ public struct IndicatorViewAnimationType: RawRepresentable, Equatable, Hashable 
     public static let circleSpin: IndicatorViewAnimationType = .init(5)
     /// 圆形向外扩散，类似水波纹
     public static let triplePulse: IndicatorViewAnimationType = .init(6)
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 class IndicatorViewAnimationLineSpin: NSObject, IndicatorViewAnimationProtocol {
-
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor) {
         let lineSpacing: CGFloat = 2
         let lineSize = CGSize(width: (size.width - lineSpacing * 4) / 5, height: (size.height - lineSpacing * 2) / 3)
@@ -247,7 +235,7 @@ class IndicatorViewAnimationLineSpin: NSObject, IndicatorViewAnimationProtocol {
         animation.repeatCount = .greatestFiniteMagnitude
         animation.isRemovedOnCompletion = false
 
-        for i in 0 ..< 8 {
+        for i in 0..<8 {
             let containerLayer = createLayer(.pi / 4 * Double(i), size: lineSize, origin: CGPoint(x: x, y: y), containerSize: size, color: color)
             animation.beginTime = beginTime + beginTimes[i]
             containerLayer.add(animation, forKey: "animation")
@@ -272,11 +260,9 @@ class IndicatorViewAnimationLineSpin: NSObject, IndicatorViewAnimationProtocol {
         layer.sublayerTransform = CATransform3DMakeRotation(.pi / 2 + angle, 0, 0, 1)
         return layer
     }
-    
 }
 
 class IndicatorViewAnimationLinePulse: NSObject, IndicatorViewAnimationProtocol {
-
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor) {
         let duration: CFTimeInterval = 1.0
         let beginTimes: [CFTimeInterval] = [0.4, 0.2, 0.0, 0.2, 0.4]
@@ -293,7 +279,7 @@ class IndicatorViewAnimationLinePulse: NSObject, IndicatorViewAnimationProtocol 
         animation.repeatCount = .greatestFiniteMagnitude
         animation.duration = duration
 
-        for i in 0 ..< 5 {
+        for i in 0..<5 {
             let line = CAShapeLayer()
             let linePath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: lineSize, height: size.height), cornerRadius: lineSize / 2)
             animation.beginTime = beginTimes[i]
@@ -304,7 +290,6 @@ class IndicatorViewAnimationLinePulse: NSObject, IndicatorViewAnimationProtocol 
             layer.addSublayer(line)
         }
     }
-
 }
 
 class IndicatorViewAnimationBallSpin: NSObject, IndicatorViewAnimationProtocol {
@@ -336,8 +321,8 @@ class IndicatorViewAnimationBallSpin: NSObject, IndicatorViewAnimationProtocol {
         animationGroup.duration = duration
         animationGroup.repeatCount = .greatestFiniteMagnitude
 
-        for i in 0 ..< 8 {
-            let circle = self.circleLayer(CGFloat.pi / 4 * CGFloat(i), size: circleSize, origin: CGPoint(x: x, y: y), containerSize: size, color: color)
+        for i in 0..<8 {
+            let circle = circleLayer(CGFloat.pi / 4 * CGFloat(i), size: circleSize, origin: CGPoint(x: x, y: y), containerSize: size, color: color)
             animationGroup.beginTime = beginTime + beginTimes[i]
             layer.addSublayer(circle)
             circle.add(animationGroup, forKey: "animation")
@@ -355,13 +340,12 @@ class IndicatorViewAnimationBallSpin: NSObject, IndicatorViewAnimationProtocol {
     private func createLayer(_ size: CGSize, color: UIColor) -> CALayer {
         let layer = CAShapeLayer()
         let path = UIBezierPath()
-        path.addArc(withCenter: CGPoint(x: size.width / 2, y: size.height / 2), radius: (size.width / 2), startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false)
+        path.addArc(withCenter: CGPoint(x: size.width / 2, y: size.height / 2), radius: size.width / 2, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false)
         layer.fillColor = color.cgColor
         layer.backgroundColor = nil
         layer.path = path.cgPath
         return layer
     }
-    
 }
 
 class IndicatorViewAnimationCircleSpin: NSObject, IndicatorViewAnimationProtocol {
@@ -409,11 +393,9 @@ class IndicatorViewAnimationCircleSpin: NSObject, IndicatorViewAnimationProtocol
         animation.fillMode = .forwards
         layer.add(animation, forKey: "animation")
     }
-    
 }
 
 class IndicatorViewAnimationBallPulse: NSObject, IndicatorViewAnimationProtocol {
-
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor) {
         let circlePadding: CGFloat = 5.0
         let circleSize = (size.width - 2 * circlePadding) / 3
@@ -435,7 +417,7 @@ class IndicatorViewAnimationBallPulse: NSObject, IndicatorViewAnimationProtocol 
         animation.duration = duration
         animation.repeatCount = .greatestFiniteMagnitude
 
-        for i in 0 ..< 3 {
+        for i in 0..<3 {
             let circle = CALayer()
             circle.frame = CGRect(x: x + CGFloat(i) * circleSize + CGFloat(i) * circlePadding, y: y, width: circleSize, height: circleSize)
             circle.backgroundColor = color.cgColor
@@ -445,11 +427,9 @@ class IndicatorViewAnimationBallPulse: NSObject, IndicatorViewAnimationProtocol 
             layer.addSublayer(circle)
         }
     }
-    
 }
 
 class IndicatorViewAnimationBallTriangle: NSObject, IndicatorViewAnimationProtocol {
-    
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor) {
         let duration: CFTimeInterval = 2.0
         let circleSize = size.width / 5
@@ -458,33 +438,33 @@ class IndicatorViewAnimationBallTriangle: NSObject, IndicatorViewAnimationProtoc
         let x = (layer.bounds.size.width - size.width) / 2
         let y = (layer.bounds.size.height - size.height) / 2
         let timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        
+
         let animation = CAKeyframeAnimation(keyPath: "transform")
         animation.isRemovedOnCompletion = false
         animation.keyTimes = [0.0, 0.33, 0.66, 1.0]
         animation.duration = duration
         animation.timingFunctions = [timingFunction, timingFunction, timingFunction]
         animation.repeatCount = .greatestFiniteMagnitude
-        
+
         let topCenterCircle = createCircle(size: circleSize, color: color)
         changeAnimation(animation, values: ["{0,0}", "{hx,fy}", "{-hx,fy}", "{0,0}"], deltaX: deltaX, deltaY: deltaY)
         topCenterCircle.frame = CGRect(x: x + size.width / 2 - circleSize / 2, y: y, width: circleSize, height: circleSize)
         topCenterCircle.add(animation, forKey: "animation")
         layer.addSublayer(topCenterCircle)
-        
+
         let bottomLeftCircle = createCircle(size: circleSize, color: color)
         changeAnimation(animation, values: ["{0,0}", "{hx,-fy}", "{fx,0}", "{0,0}"], deltaX: deltaX, deltaY: deltaY)
         bottomLeftCircle.frame = CGRect(x: x, y: y + size.height - circleSize, width: circleSize, height: circleSize)
         bottomLeftCircle.add(animation, forKey: "animation")
         layer.addSublayer(bottomLeftCircle)
-        
+
         let bottomRightCircle = createCircle(size: circleSize, color: color)
         changeAnimation(animation, values: ["{0,0}", "{-fx,0}", "{-hx,-fy}", "{0,0}"], deltaX: deltaX, deltaY: deltaY)
         bottomRightCircle.frame = CGRect(x: x + size.width - circleSize, y: y + size.height - circleSize, width: circleSize, height: circleSize)
         bottomRightCircle.add(animation, forKey: "animation")
         layer.addSublayer(bottomRightCircle)
     }
-    
+
     private func createCircle(size: CGFloat, color: UIColor) -> CALayer {
         let circle = CAShapeLayer()
         let circlePath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: size, height: size), cornerRadius: size / 2)
@@ -494,7 +474,7 @@ class IndicatorViewAnimationBallTriangle: NSObject, IndicatorViewAnimationProtoc
         circle.path = circlePath.cgPath
         return circle
     }
-    
+
     private func changeAnimation(_ animation: CAKeyframeAnimation, values rawValues: [String], deltaX: CGFloat, deltaY: CGFloat) {
         var values = [NSValue]()
         for rawValue in rawValues {
@@ -503,7 +483,7 @@ class IndicatorViewAnimationBallTriangle: NSObject, IndicatorViewAnimationProtoc
         }
         animation.values = values
     }
-    
+
     private func translate(_ valueString: String, deltaX: CGFloat, deltaY: CGFloat) -> String {
         let valueMutableString = NSMutableString(string: valueString)
         let fullDeltaX = 2 * deltaX
@@ -519,11 +499,9 @@ class IndicatorViewAnimationBallTriangle: NSObject, IndicatorViewAnimationProtoc
         valueMutableString.replaceOccurrences(of: "fy", with: "\(fullDeltaY)", options: .caseInsensitive, range: range)
         return valueMutableString as String
     }
-    
 }
 
 class IndicatorViewAnimationTriplePulse: NSObject, IndicatorViewAnimationProtocol {
-
     func setupAnimation(_ layer: CALayer, size: CGSize, color: UIColor) {
         let duration: CFTimeInterval = 1
         let beginTime = CACurrentMediaTime()
@@ -546,7 +524,7 @@ class IndicatorViewAnimationTriplePulse: NSObject, IndicatorViewAnimationProtoco
         animationGroup.duration = duration
         animationGroup.repeatCount = .greatestFiniteMagnitude
 
-        for i in 0 ..< 3 {
+        for i in 0..<3 {
             let circle = CAShapeLayer()
             let circlePath = UIBezierPath()
             circlePath.addArc(withCenter: CGPoint(x: size.width / 2, y: size.height / 2), radius: size.width / 2, startAngle: 0, endAngle: 2 * .pi, clockwise: false)
@@ -560,5 +538,4 @@ class IndicatorViewAnimationTriplePulse: NSObject, IndicatorViewAnimationProtoco
             layer.addSublayer(circle)
         }
     }
-    
 }

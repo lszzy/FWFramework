@@ -17,7 +17,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -694,6 +694,9 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1053,6 +1056,12 @@
                 <a href="Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1215,6 +1224,9 @@
                 <a href="Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1248,6 +1260,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Binding.html">Binding</a>
@@ -1379,6 +1394,9 @@
                 <a href="Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1389,6 +1407,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/ScrollView.html">ScrollView</a>
@@ -1968,9 +1992,6 @@
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2154,12 +2175,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/LineShape.html">LineShape</a>
@@ -2420,9 +2435,6 @@
                 <a href="Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2486,9 +2498,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -2593,7 +2602,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span><span class="p">(</span><span class="kt">ObjCAutoloader</span><span class="p">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Autoloader</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AutoloadProtocol.html">AutoloadProtocol</a></span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Autoloader</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AutoloadProtocol.html">AutoloadProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2798,7 +2807,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Loader</span><span class="o">&lt;</span><span class="kt">Input</span><span class="p">,</span> <span class="kt">Output</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Loader</span><span class="o">&lt;</span><span class="kt">Input</span><span class="p">,</span> <span class="kt">Output</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2881,7 +2890,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginNSLog</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginNSLog</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2909,7 +2918,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginOSLog</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginOSLog</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2950,7 +2959,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LoggerPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/LoggerPlugin.html">LoggerPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3079,7 +3088,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Navigator</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Navigator</span></code></pre>
 
                         </div>
                       </div>
@@ -3165,7 +3175,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Promise</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3281,7 +3291,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>弱引用对象容器类，用于解决关联对象weak引用等</p>
+                        <p>弱引用对象容器类，用于解决关联对象weak引用问题</p>
 
                         <a href="Classes/WeakObject.html" class="slightly-smaller">See more</a>
                       </div>
@@ -3289,7 +3299,48 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WeakObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WeakObject</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/SendableObject"></a>
+                <a name="//apple_ref/swift/Section/SendableObject" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/SendableObject"></a>
+                  <h3 class="section-name"><span>SendableObject</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework14SendableObjectC"></a>
+                    <a name="//apple_ref/swift/Class/SendableObject" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework14SendableObjectC">SendableObject</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sendable容器类，用于解决任意对象Sendable传参问题</p>
+
+                        <a href="Classes/SendableObject.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SendableObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3417,7 +3468,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateObject</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3458,7 +3509,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateEvent</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateEvent</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3499,7 +3550,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateTransition</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateTransition</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3542,7 +3593,7 @@ Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateMachine</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StateMachine</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3586,13 +3637,26 @@ SwizzleSignature示例：(@convention(block) (NSObject) -&gt; Void).self</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SwizzleStore</span><span class="o">&lt;</span><span class="kt">MethodSignature</span><span class="p">,</span> <span class="kt">SwizzleSignature</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SwizzleStore</span><span class="o">&lt;</span><span class="kt">MethodSignature</span><span class="p">,</span> <span class="kt">SwizzleSignature</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TaskOperation"></a>
+                <a name="//apple_ref/swift/Section/TaskOperation" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TaskOperation"></a>
+                  <h3 class="section-name"><span>TaskOperation</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -3614,13 +3678,26 @@ SwizzleSignature示例：(@convention(block) (NSObject) -&gt; Void).self</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TaskOperation</span> <span class="p">:</span> <span class="kt">Operation</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TaskOperation</span> <span class="p">:</span> <span class="kt">Operation</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TaskManager"></a>
+                <a name="//apple_ref/swift/Section/TaskManager" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/TaskManager"></a>
+                  <h3 class="section-name"><span>TaskManager</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -3642,7 +3719,7 @@ SwizzleSignature示例：(@convention(block) (NSObject) -&gt; Void).self</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TaskManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TaskManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3687,7 +3764,7 @@ SwizzleSignature示例：(@convention(block) (NSObject) -&gt; Void).self</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TestCase</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">TestCase</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3728,7 +3805,7 @@ SwizzleSignature示例：(@convention(block) (NSObject) -&gt; Void).self</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnitTest</span> <span class="p">:</span> <span class="kt">CustomDebugStringConvertible</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnitTest</span> <span class="p">:</span> <span class="kt">CustomDebugStringConvertible</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -4177,7 +4254,7 @@ MARK: UITabBarItem properties
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ViewControllerManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ViewControllerManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -4301,7 +4378,7 @@ MARK: UITabBarItem properties
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AttributedLabelURLDetector</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AttributedLabelURLDetectorProtocol.html">AttributedLabelURLDetectorProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AttributedLabelURLDetector</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AttributedLabelURLDetectorProtocol.html">AttributedLabelURLDetectorProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -4342,7 +4419,8 @@ MARK: UITabBarItem properties
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AttributedLabelAttachment</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">AttributedLabelAttachment</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5313,7 +5391,8 @@ textAlignment 暂不支持 NSTextAlignmentJustified 和 NSTextAlignmentNatural�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">PopupMenuDeviceOrientationManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">PopupMenuDeviceOrientationManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5341,7 +5420,9 @@ textAlignment 暂不支持 NSTextAlignmentJustified 和 NSTextAlignmentNatural�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">PopupMenuAnimationManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">CAAnimationDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">PopupMenuAnimationManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">PopupMenuAnimationManager</span><span class="p">:</span> <span class="kt">CAAnimationDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -5469,7 +5550,7 @@ textAlignment 暂不支持 NSTextAlignmentJustified 和 NSTextAlignmentNatural�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ScanCode</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">AVCaptureMetadataOutputObjectsDelegate</span><span class="p">,</span> <span class="kt">AVCaptureVideoDataOutputSampleBufferDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ScanCode</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">AVCaptureMetadataOutputObjectsDelegate</span><span class="p">,</span> <span class="kt">AVCaptureVideoDataOutputSampleBufferDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6136,9 +6217,9 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">open</span> <span class="kd">class</span> <span class="kt">AnimatedTransition</span><span class="p">:</span> <span class="kt">UIPercentDrivenInteractiveTransition</span><span class="p">,</span>
-                               <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">,</span>
-                               <span class="kt">UIViewControllerTransitioningDelegate</span><span class="p">,</span>
-                               <span class="kt">UINavigationControllerDelegate</span></code></pre>
+    <span class="kt">UIViewControllerAnimatedTransitioning</span><span class="p">,</span>
+    <span class="kt">UIViewControllerTransitioningDelegate</span><span class="p">,</span>
+    <span class="kt">UINavigationControllerDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -6521,7 +6602,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AlertControllerAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AlertControllerAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6694,7 +6775,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AlertAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AlertAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6735,7 +6816,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlertPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AlertPlugin.html">AlertPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlertPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AlertPlugin.html">AlertPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6776,7 +6858,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlertControllerImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AlertPlugin.html">AlertPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlertControllerImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AlertPlugin.html">AlertPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6804,7 +6887,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">EmptyPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/EmptyPlugin.html">EmptyPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">EmptyPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/EmptyPlugin.html">EmptyPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6931,7 +7015,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageDownloadReceipt</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageDownloadReceipt</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -6961,7 +7045,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageDownloader</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageDownloader</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7002,7 +7086,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AutoPurgingImageCache</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImageRequestCache.html">ImageRequestCache</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AutoPurgingImageCache</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImageRequestCache.html">ImageRequestCache</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7043,7 +7127,7 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePlugin.html">ImagePlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePlugin.html">ImagePlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7493,7 +7577,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePickerPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePickerPlugin.html">ImagePickerPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePickerPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePickerPlugin.html">ImagePickerPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7534,7 +7619,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePickerControllerImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePickerPlugin.html">ImagePickerPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePickerControllerImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePickerPlugin.html">ImagePickerPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7753,7 +7839,8 @@ iOS15-：系统titleView左右最小间距为8，组件默认处理为16
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePreviewPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePreviewPlugin.html">ImagePreviewPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImagePreviewPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePreviewPlugin.html">ImagePreviewPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7874,7 +7961,8 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RefreshPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RefreshPlugin.html">RefreshPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">RefreshPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RefreshPlugin.html">RefreshPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -7990,7 +8078,8 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ToastPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ToastPlugin.html">ToastPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">ToastPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ToastPlugin.html">ToastPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8120,7 +8209,8 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ViewPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ViewPlugin.html">ViewPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">ViewPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ViewPlugin.html">ViewPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8189,7 +8279,7 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheFile</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheFile</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8217,7 +8307,7 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheKeychain</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheKeychain</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8286,7 +8376,7 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheMemory</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheMemory</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8314,7 +8404,7 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheSqlite</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheSqlite</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8342,7 +8432,7 @@ ZoomImageView 提供最基础的图片预览和缩放功能，其他功能请通
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheUserDefaults</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CacheUserDefaults</span> <span class="p">:</span> <span class="kt"><a href="Classes/CacheEngine.html">CacheEngine</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8988,7 +9078,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPSessionManager</span> <span class="p">:</span> <span class="kt"><a href="Classes/URLSessionManager.html">URLSessionManager</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPSessionManager</span> <span class="p">:</span> <span class="kt"><a href="Classes/URLSessionManager.html">URLSessionManager</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9051,7 +9141,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">NetworkReachabilityManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">NetworkReachabilityManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9375,7 +9465,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">URLSessionManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">URLSessionDelegate</span><span class="p">,</span> <span class="kt">URLSessionTaskDelegate</span><span class="p">,</span> <span class="kt">URLSessionDataDelegate</span><span class="p">,</span> <span class="kt">URLSessionDownloadDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">URLSessionManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">URLSessionDelegate</span><span class="p">,</span> <span class="kt">URLSessionTaskDelegate</span><span class="p">,</span> <span class="kt">URLSessionDataDelegate</span><span class="p">,</span> <span class="kt">URLSessionDownloadDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9416,7 +9506,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestDelegate.html">RequestDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestDelegate.html">RequestDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9457,7 +9547,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequestManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequestManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9498,7 +9588,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ChainRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestDelegate.html">RequestDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ChainRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestDelegate.html">RequestDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9539,7 +9629,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ChainRequestManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ChainRequestManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9586,7 +9676,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">HTTPRequest</span> <span class="p">:</span> <span class="kt"><a href="Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9627,7 +9717,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestConfig</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestConfig</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9696,7 +9786,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestContextAccessory</span> <span class="p">:</span> <span class="kt"><a href="Classes/RequestAccessory.html">RequestAccessory</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestContextAccessory</span> <span class="p">:</span> <span class="kt"><a href="Classes/RequestAccessory.html">RequestAccessory</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9737,7 +9827,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestRetrier</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestRetrierProtocol.html">RequestRetrierProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestRetrier</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestRetrierProtocol.html">RequestRetrierProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9778,7 +9868,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestValidator</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestValidatorProtocol.html">RequestValidatorProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestValidator</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestValidatorProtocol.html">RequestValidatorProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9819,7 +9909,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestCache</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestCacheProtocol.html">RequestCacheProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestCache</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RequestCacheProtocol.html">RequestCacheProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9888,7 +9978,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9929,7 +10019,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestPlugin.html">RequestPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">RequestPluginImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestPlugin.html">RequestPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -9957,7 +10047,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Analyzer</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Analyzer</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10041,7 +10131,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageCoder</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">ImageCoder</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10085,7 +10175,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span><span class="p">(</span><span class="kt">ObjCAsset</span><span class="p">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Asset</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Asset</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10127,7 +10217,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span><span class="p">(</span><span class="kt">ObjCAssetGroup</span><span class="p">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetGroup</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetGroup</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10178,7 +10268,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10219,7 +10309,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetLivePhoto</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AssetLivePhoto</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10262,7 +10352,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AssetSessionExporter</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AssetSessionExporter</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10292,7 +10382,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AudioPlayer</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AudioPlayer</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10381,7 +10471,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeLocation</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kt">CLLocationManagerDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeLocation</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kt">CLLocationManagerDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10422,7 +10512,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizePhotoLibrary</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizePhotoLibrary</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10463,7 +10553,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeCamera</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeCamera</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10504,7 +10594,7 @@ var email: String = &ldquo;&rdquo;</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeNotifications</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeNotifications</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10549,7 +10639,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">LocationManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">CLLocationManagerDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">LocationManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">CLLocationManagerDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10590,7 +10680,7 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NotificationManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">UNUserNotificationCenterDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NotificationManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">UNUserNotificationCenterDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -10804,7 +10894,8 @@ iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指�
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">LayoutChain</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">LayoutChain</span></code></pre>
 
                         </div>
                       </div>
@@ -11115,7 +11206,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">KeychainManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">KeychainManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11156,7 +11247,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeStyle</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">RawRepresentable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeStyle</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11187,7 +11278,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11215,7 +11306,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ThemeObject</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11256,7 +11347,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlamofireImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestPlugin.html">RequestPlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">AlamofireImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/RequestPlugin.html">RequestPlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11297,7 +11388,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeBiometry</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeBiometry</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11338,7 +11429,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeCalendar</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeCalendar</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11379,7 +11470,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeContacts</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeContacts</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11449,7 +11540,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeMicrophone</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeMicrophone</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11606,7 +11697,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheDownloaderStatus</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheDownloaderStatus</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11798,7 +11889,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheConfiguration</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSSecureCoding</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheConfiguration</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt">NSSecureCoding</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11839,7 +11930,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11880,7 +11971,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheSessionManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">PlayerCacheSessionManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -11990,7 +12081,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">VersionManager</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">VersionManager</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12033,7 +12124,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">WebSocket</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketClient.html">WebSocketClient</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketEngineDelegate.html">WebSocketEngineDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">WebSocket</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketClient.html">WebSocketClient</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketEngineDelegate.html">WebSocketEngineDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12074,7 +12165,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketServer</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketServerProtocol.html">WebSocketServerProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketConnectionDelegate.html">WebSocketConnectionDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketServer</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketServerProtocol.html">WebSocketServerProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketConnectionDelegate.html">WebSocketConnectionDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12102,7 +12193,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketServerConnection</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketConnection.html">WebSocketConnection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketHTTPServerDelegate.html">WebSocketHTTPServerDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketFramerEventClient.html">WebSocketFramerEventClient</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketFrameCollectorDelegate.html">WebSocketFrameCollectorDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketTransportEventClient.html">WebSocketTransportEventClient</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketServerConnection</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketConnection.html">WebSocketConnection</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketHTTPServerDelegate.html">WebSocketHTTPServerDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketFramerEventClient.html">WebSocketFramerEventClient</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketFrameCollectorDelegate.html">WebSocketFrameCollectorDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketTransportEventClient.html">WebSocketTransportEventClient</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12130,7 +12221,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketTCPTransport</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketTransport.html">WebSocketTransport</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketTCPTransport</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketTransport.html">WebSocketTransport</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12255,7 +12346,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketNativeEngine</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketEngineProtocol.html">WebSocketEngineProtocol</a></span><span class="p">,</span> <span class="kt">URLSessionDataDelegate</span><span class="p">,</span> <span class="kt">URLSessionWebSocketDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketNativeEngine</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketEngineProtocol.html">WebSocketEngineProtocol</a></span><span class="p">,</span> <span class="kt">URLSessionDataDelegate</span><span class="p">,</span> <span class="kt">URLSessionWebSocketDelegate</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12284,7 +12375,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketEngine</span><span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketEngineProtocol.html">WebSocketEngineProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketTransportEventClient.html">WebSocketTransportEventClient</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketFramerEventClient.html">WebSocketFramerEventClient</a></span><span class="p">,</span>
-<span class="kt"><a href="Protocols/WebSocketFrameCollectorDelegate.html">WebSocketFrameCollectorDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketHTTPHandlerDelegate.html">WebSocketHTTPHandlerDelegate</a></span></code></pre>
+    <span class="kt"><a href="Protocols/WebSocketFrameCollectorDelegate.html">WebSocketFrameCollectorDelegate</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebSocketHTTPHandlerDelegate.html">WebSocketHTTPHandlerDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -12325,13 +12416,26 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketFramer</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketFramerProtocol.html">WebSocketFramerProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WebSocketFramer</span> <span class="p">:</span> <span class="kt"><a href="Protocols/WebSocketFramerProtocol.html">WebSocketFramerProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                <a name="//apple_ref/swift/Section/functions for simpler array buffer reading and writing" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                  <h3 class="section-name"><span>functions for simpler array buffer reading and writing</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -12504,7 +12608,8 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BarrageManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">BarrageManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                         </div>
                       </div>
@@ -12546,7 +12651,8 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">class</span> <span class="kt">BarrageRenderView</span> <span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="kt">CAAnimationDelegate</span></code></pre>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">BarrageRenderView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">BarrageRenderView</span><span class="p">:</span> <span class="kt">CAAnimationDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -13108,7 +13214,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SkeletonAnimation</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/SkeletonAnimationProtocol.html">SkeletonAnimationProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SkeletonAnimation</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/SkeletonAnimationProtocol.html">SkeletonAnimationProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -13149,7 +13255,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SkeletonAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SkeletonAppearance</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -13405,7 +13511,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StatisticalManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">StatisticalManager</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -13487,7 +13593,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImageImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePlugin.html">ImagePlugin</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImageImpl</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/ImagePlugin.html">ImagePlugin</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -13528,7 +13634,9 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImagePluginIndicator</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">SDWebImageIndicator</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImagePluginIndicator</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">SDWebImagePluginIndicator</span><span class="p">:</span> <span class="kt">SDWebImageIndicator</span></code></pre>
 
                         </div>
                       </div>
@@ -13569,7 +13677,9 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImageProgressPluginIndicator</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">SDWebImageIndicator</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">SDWebImageProgressPluginIndicator</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">SDWebImageProgressPluginIndicator</span><span class="p">:</span> <span class="kt">SDWebImageIndicator</span></code></pre>
 
                         </div>
                       </div>
@@ -13610,7 +13720,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeTracking</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AuthorizeTracking</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -13821,7 +13931,7 @@ FWFramework本地化配置同App本地化一致即可，如zh-Hans|zh-Hant|en等
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

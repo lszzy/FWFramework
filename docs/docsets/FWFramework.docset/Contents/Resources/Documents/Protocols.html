@@ -17,7 +17,7 @@
     <a title="Protocols  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -694,6 +694,9 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1053,6 +1056,12 @@
                 <a href="Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1215,6 +1224,9 @@
                 <a href="Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1248,6 +1260,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Binding.html">Binding</a>
@@ -1379,6 +1394,9 @@
                 <a href="Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1389,6 +1407,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/ScrollView.html">ScrollView</a>
@@ -1968,9 +1992,6 @@
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2154,12 +2175,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/LineShape.html">LineShape</a>
@@ -2420,9 +2435,6 @@
                 <a href="Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2486,9 +2498,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -3143,7 +3152,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionDelegateControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt">UICollectionViewDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionDelegateControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt">UICollectionViewDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -3183,7 +3193,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionDelegateControllerProtocol.html">CollectionDelegateControllerProtocol</a></span><span class="p">,</span> <span class="kt">UICollectionViewDataSource</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionDelegateControllerProtocol.html">CollectionDelegateControllerProtocol</a></span><span class="p">,</span> <span class="kt">UICollectionViewDataSource</span></code></pre>
 
                         </div>
                       </div>
@@ -3224,7 +3235,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PopupViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PopupViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3265,7 +3277,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RequestViewControllerProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RequestViewControllerProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -3306,7 +3319,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ScrollViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ScrollViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3347,7 +3361,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableDelegateControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt">UITableViewDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableDelegateControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt">UITableViewDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -3387,7 +3402,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableDelegateControllerProtocol.html">TableDelegateControllerProtocol</a></span><span class="p">,</span> <span class="kt">UITableViewDataSource</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TableViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/TableDelegateControllerProtocol.html">TableDelegateControllerProtocol</a></span><span class="p">,</span> <span class="kt">UITableViewDataSource</span></code></pre>
 
                         </div>
                       </div>
@@ -3430,7 +3446,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework33ViewControllerLifecycleObservableP">ViewControllerLifecycleObservable</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework33ViewControllerLifecycleObservableP">ViewControllerLifecycleObservable</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3479,7 +3496,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebViewDelegate.html">WebViewDelegate</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebViewControllerProtocol</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/WebViewDelegate.html">WebViewDelegate</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3520,7 +3538,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AttributedLabelDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AttributedLabelDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -3602,7 +3621,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">BadgeViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">BadgeViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -3643,7 +3663,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">BannerViewDelegate</span></code></pre>
 
                         </div>
@@ -3685,7 +3706,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionViewDelegateFlowLayout</span> <span class="p">:</span> <span class="kt">UICollectionViewDelegateFlowLayout</span></code></pre>
 
                         </div>
@@ -3727,7 +3749,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionViewDelegateWaterfallLayout</span> <span class="p">:</span> <span class="kt">UICollectionViewDelegate</span></code></pre>
 
                         </div>
@@ -3769,7 +3792,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DrawerViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DrawerViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -3810,7 +3834,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PageControlDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PageControlDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -3851,7 +3876,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DotViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DotViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -3879,7 +3905,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PopupMenuDelegate</span></code></pre>
 
                         </div>
@@ -3921,7 +3948,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ReusableViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ReusableViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -4018,7 +4046,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TagCollectionViewDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
 
                         </div>
@@ -4047,7 +4076,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TagCollectionViewDataSource</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TagCollectionViewDataSource</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4075,7 +4105,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TextTagCollectionViewDelegate</span></code></pre>
 
                         </div>
@@ -4117,7 +4148,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ToolbarTitleViewDelegate</span></code></pre>
 
                         </div>
@@ -4174,49 +4206,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">SetupViewProtocol</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ViewProtocol"></a>
-                <a name="//apple_ref/swift/Section/ViewProtocol" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/ViewProtocol"></a>
-                  <h3 class="section-name"><span>ViewProtocol</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework12ViewProtocolP"></a>
-                    <a name="//apple_ref/swift/Protocol/ViewProtocol" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12ViewProtocolP">ViewProtocol</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>已废弃，视图规范协议，需手工调用</p>
-
-                        <a href="Protocols/ViewProtocol.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="nv">renamed</span><span class="p">:</span> <span class="s">"SetupViewProtocol"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Use SetupViewProtocol instead and related methods will be invoked automatically"</span><span class="p">)</span>
-<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">SetupViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -4257,7 +4248,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4285,7 +4277,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewProtocol</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EventViewProtocol</span></code></pre>
 
                         </div>
                       </div>
@@ -4326,7 +4319,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebViewDelegate</span> <span class="p">:</span> <span class="kt">WKNavigationDelegate</span><span class="p">,</span> <span class="kt">WKUIDelegate</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebViewDelegate</span> <span class="p">:</span> <span class="kt">WKNavigationDelegate</span><span class="p">,</span> <span class="kt">WKUIDelegate</span></code></pre>
 
                         </div>
                       </div>
@@ -4394,7 +4388,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AlertControllerDelegate</span></code></pre>
 
                         </div>
@@ -4436,7 +4431,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AlertPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AlertPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4477,7 +4473,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EmptyPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EmptyPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4518,7 +4515,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EmptyViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">EmptyViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4656,7 +4654,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImageCropControllerDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
 
                         </div>
@@ -4685,7 +4684,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImageCropViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImageCropViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4726,7 +4726,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImageAlbumControllerDelegate</span></code></pre>
 
                         </div>
@@ -4768,7 +4769,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerPreviewControllerDelegate</span></code></pre>
 
                         </div>
@@ -4810,7 +4812,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerControllerDelegate</span></code></pre>
 
                         </div>
@@ -4852,7 +4855,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerTitleViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerTitleViewDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4893,7 +4897,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePickerPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -4934,7 +4939,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePreviewViewDelegate</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ZoomImageViewDelegate.html">ZoomImageViewDelegate</a></span></code></pre>
 
                         </div>
@@ -4976,7 +4982,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePreviewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ImagePreviewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5004,7 +5011,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ZoomImageViewDelegate</span></code></pre>
 
                         </div>
@@ -5046,7 +5054,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RefreshPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RefreshPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5087,7 +5096,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ToastPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ToastPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5128,7 +5138,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IndicatorViewAnimationProtocol</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IndicatorViewAnimationProtocol</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5169,7 +5180,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ProgressViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ProgressViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5210,7 +5222,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IndicatorViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IndicatorViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -5251,7 +5264,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">ViewPlugin</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -6741,7 +6755,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AudioPlayerDelegate</span></code></pre>
 
                         </div>
@@ -6770,7 +6785,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AudioPlayerDataSource</span></code></pre>
 
                         </div>
@@ -6853,7 +6869,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">VideoPlayerDelegate</span></code></pre>
 
                         </div>
@@ -6895,7 +6912,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">VideoPlayerPlaybackDelegate</span></code></pre>
 
                         </div>
@@ -7183,7 +7201,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@_spi</span><span class="p">(</span><span class="kt"><a href="Typealiases.html#/s:11FWFramework2FWa">FW</a></span><span class="p">)</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@_spi</span><span class="p">(</span><span class="kt"><a href="Typealiases.html#/s:11FWFramework2FWa">FW</a></span><span class="p">)</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">DynamicLayoutViewProtocol</span></code></pre>
 
                         </div>
@@ -7347,7 +7366,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TitleViewProtocol</span></code></pre>
 
                         </div>
@@ -7652,7 +7672,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebSocketConnection</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">WebSocketConnection</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8032,6 +8052,19 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                <a name="//apple_ref/swift/Section/functions for simpler array buffer reading and writing" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/functions%20for%20simpler%20array%20buffer%20reading%20and%20writing"></a>
+                  <h3 class="section-name"><span>functions for simpler array buffer reading and writing</span>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -8045,7 +8078,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>MARK: - functions for simpler array buffer reading and writing</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
@@ -8234,7 +8267,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CollectionViewDelegateAlignLayout</span> <span class="p">:</span> <span class="kt"><a href="Protocols/CollectionViewDelegateFlowLayout.html">CollectionViewDelegateFlowLayout</a></span></code></pre>
 
                         </div>
@@ -8316,7 +8350,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingViewListViewDelegate</span></code></pre>
 
                         </div>
@@ -8345,7 +8380,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingListContainerViewDataSource</span></code></pre>
 
                         </div>
@@ -8387,7 +8423,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingMainTableViewGestureDelegate</span></code></pre>
 
                         </div>
@@ -8429,7 +8466,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingViewDelegate</span></code></pre>
 
                         </div>
@@ -8471,7 +8509,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingSmoothViewListViewDelegate</span></code></pre>
 
                         </div>
@@ -8500,7 +8539,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingSmoothViewDataSource</span></code></pre>
 
                         </div>
@@ -8529,7 +8569,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PagingSmoothViewDelegate</span></code></pre>
 
                         </div>
@@ -8612,7 +8653,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">SkeletonViewDataSource</span></code></pre>
 
                         </div>
@@ -8641,7 +8683,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">SkeletonViewDelegate</span></code></pre>
 
                         </div>
@@ -8683,7 +8726,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StatisticalViewProtocol</span></code></pre>
 
                         </div>
@@ -8725,7 +8769,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlatformEntity</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlatformEntity</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
 
                         </div>
                       </div>
@@ -8766,7 +8811,8 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IntrospectableViewType</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">IntrospectableViewType</span></code></pre>
 
                         </div>
                       </div>
@@ -8807,7 +8853,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlatformVersion</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">PlatformVersion</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -8819,7 +8865,7 @@ JSONModel可实现KeyMappable，并选择以下模式使用，推荐方式</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

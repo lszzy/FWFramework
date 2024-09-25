@@ -17,7 +17,7 @@
     <a title="Extensions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -694,6 +694,9 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1053,6 +1056,12 @@
                 <a href="Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1215,6 +1224,9 @@
                 <a href="Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1248,6 +1260,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Binding.html">Binding</a>
@@ -1379,6 +1394,9 @@
                 <a href="Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1389,6 +1407,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/ScrollView.html">ScrollView</a>
@@ -1968,9 +1992,6 @@
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2154,12 +2175,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/LineShape.html">LineShape</a>
@@ -2420,9 +2435,6 @@
                 <a href="Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2486,9 +2498,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -2723,9 +2732,8 @@
 <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/AnyModel.html">AnyModel</a></span></code></pre>
 <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/JSONModel.html">JSONModel</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/JSONModel.html">JSONModel</a></span></code></pre>
 <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/AnyArchivable.html">AnyArchivable</a></span></code></pre>
-<pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a></span> <span class="o">&amp;</span> <span class="kt">UnsignedInteger</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Array</span> <span class="k">where</span> <span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a></span> <span class="o">&amp;</span> <span class="kt">UnsignedInteger</span></code></pre>
 
                         </div>
                       </div>
@@ -3359,6 +3367,46 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/MainActor%2BTask"></a>
+                <a name="//apple_ref/swift/Section/MainActor+Task" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/MainActor%2BTask"></a>
+                  <h3 class="section-name"><span>MainActor+Task</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ScM"></a>
+                    <a name="//apple_ref/swift/Extension/MainActor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ScM">MainActor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Extensions/MainActor.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">MainActor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/WrapperCompatible"></a>
                 <a name="//apple_ref/swift/Section/WrapperCompatible" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -3392,6 +3440,24 @@
 <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSObject</span><span class="p">:</span> <span class="kt"><a href="Protocols/AnyChainable.html">AnyChainable</a></span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Extension/PopupMenuAnimationManager" class="dashAnchor"></a>
+                    <a class="token" href="#/">PopupMenuAnimationManager</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
                       </div>
                     </section>
                   </div>
@@ -3592,7 +3658,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">Collection</span> <span class="k">where</span> <span class="kt">Iterator</span><span class="o">.</span><span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/JSONModel.html">JSONModel</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Collection</span> <span class="k">where</span> <span class="kt">Iterator</span><span class="o">.</span><span class="kt">Element</span><span class="p">:</span> <span class="kt"><a href="Protocols/JSONModel.html">JSONModel</a></span></code></pre>
 
                         </div>
                       </div>
@@ -3603,11 +3669,51 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/UILayoutPriority%2BAutoLayout"></a>
-                <a name="//apple_ref/swift/Section/UILayoutPriority+AutoLayout" class="dashAnchor"></a>
+                <a name="/Adaptive%2BShortcut"></a>
+                <a name="//apple_ref/swift/Section/Adaptive+Shortcut" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/UILayoutPriority%2BAutoLayout"></a>
-                  <h3 class="section-name"><span>UILayoutPriority+AutoLayout</span>
+                  <a class="section-name-link" href="#/Adaptive%2BShortcut"></a>
+                  <h3 class="section-name"><span>Adaptive+Shortcut</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@S@UIEdgeInsets"></a>
+                    <a name="//apple_ref/swift/Extension/UIEdgeInsets" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@S@UIEdgeInsets">UIEdgeInsets</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Extensions/UIEdgeInsets.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">UIEdgeInsets</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UILayoutPriority%2BShortcut"></a>
+                <a name="//apple_ref/swift/Section/UILayoutPriority+Shortcut" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/UILayoutPriority%2BShortcut"></a>
+                  <h3 class="section-name"><span>UILayoutPriority+Shortcut</span>
 </h3>
                 </div>
               </div>
@@ -3763,46 +3869,6 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/MainActor%2BBlock"></a>
-                <a name="//apple_ref/swift/Section/MainActor+Block" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/MainActor%2BBlock"></a>
-                  <h3 class="section-name"><span>MainActor+Block</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:ScM"></a>
-                    <a name="//apple_ref/swift/Extension/MainActor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ScM">MainActor</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                        <a href="Extensions/MainActor.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">MainActor</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/AnyEncoder"></a>
                 <a name="//apple_ref/swift/Section/AnyEncoder" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -3897,7 +3963,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">Encodable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Encodable</span></code></pre>
 
                         </div>
                       </div>
@@ -4042,7 +4108,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">Decodable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Decodable</span></code></pre>
 
                         </div>
                       </div>
@@ -4444,46 +4510,6 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Adaptive%2BShortcut"></a>
-                <a name="//apple_ref/swift/Section/Adaptive+Shortcut" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Adaptive%2BShortcut"></a>
-                  <h3 class="section-name"><span>Adaptive+Shortcut</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@S@UIEdgeInsets"></a>
-                    <a name="//apple_ref/swift/Extension/UIEdgeInsets" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@S@UIEdgeInsets">UIEdgeInsets</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                        <a href="Extensions/UIEdgeInsets.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">UIEdgeInsets</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/UIImageView%2BTheme"></a>
                 <a name="//apple_ref/swift/Section/UIImageView+Theme" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -4675,6 +4701,37 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/BarrageRenderView"></a>
+                <a name="//apple_ref/swift/Section/BarrageRenderView" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/BarrageRenderView"></a>
+                  <h3 class="section-name"><span>BarrageRenderView</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Extension/BarrageRenderView" class="dashAnchor"></a>
+                    <a class="token" href="#/">BarrageRenderView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/UIKit%2BSkeletonView"></a>
                 <a name="//apple_ref/swift/Section/UIKit+SkeletonView" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -4800,6 +4857,68 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/SDWebImagePluginIndicator"></a>
+                <a name="//apple_ref/swift/Section/SDWebImagePluginIndicator" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/SDWebImagePluginIndicator"></a>
+                  <h3 class="section-name"><span>SDWebImagePluginIndicator</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Extension/SDWebImagePluginIndicator" class="dashAnchor"></a>
+                    <a class="token" href="#/">SDWebImagePluginIndicator</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/SDWebImageProgressPluginIndicator"></a>
+                <a name="//apple_ref/swift/Section/SDWebImageProgressPluginIndicator" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/SDWebImageProgressPluginIndicator"></a>
+                  <h3 class="section-name"><span>SDWebImageProgressPluginIndicator</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Extension/SDWebImageProgressPluginIndicator" class="dashAnchor"></a>
+                    <a class="token" href="#/">SDWebImageProgressPluginIndicator</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/View%2BHostingView"></a>
                 <a name="//apple_ref/swift/Section/View+HostingView" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -4829,7 +4948,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">View</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span> <span class="kd">extension</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -5328,7 +5447,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

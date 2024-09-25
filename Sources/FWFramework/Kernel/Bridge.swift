@@ -8,35 +8,35 @@
 import Foundation
 
 // MARK: - ObjCBridge
-@objc internal protocol ObjCObjectBridge {
+@objc protocol ObjCObjectBridge {
     @objc(instanceMethodSignatureForSelector:)
     static func objcInstanceMethodSignature(for selector: Selector) -> NSObject & ObjCMethodSignatureBridge
 }
 
-@objc internal protocol ObjCInvocationBridge {
+@objc protocol ObjCInvocationBridge {
     @objc(selector)
     var objcSelector: Selector { get set }
-    
+
     @objc(target)
     var objcTarget: AnyObject? { get set }
-    
+
     @objc(getReturnValue:)
     func objcGetReturnValue(_ retLoc: UnsafeMutableRawPointer?)
-    
+
     @objc(setArgument:atIndex:)
     func objcSetArgument(_ argumentLocation: UnsafeMutableRawPointer?, at index: Int)
-    
+
     @objc(invoke)
     func objcInvoke()
-    
+
     @objc(invocationWithMethodSignature:)
     static func objcInvocation(withMethodSignature signature: AnyObject) -> ObjCInvocationBridge
 }
 
-@objc internal protocol ObjCMethodSignatureBridge {
+@objc protocol ObjCMethodSignatureBridge {
     @objc(numberOfArguments)
     var objcNumberOfArguments: UInt { get }
-    
+
     @objc(methodReturnType)
     var objcMethodReturnType: UnsafePointer<CChar> { get }
 
@@ -47,15 +47,15 @@ import Foundation
     static func objcSignature(withObjCTypes typeEncoding: UnsafePointer<Int8>) -> AnyObject
 }
 
-internal struct ObjCClassBridge {
+enum ObjCClassBridge {
     static let invocationClass: AnyClass? = NSClassFromString("NSInvocation")
     static let methodSignatureClass: AnyClass? = NSClassFromString("NSMethodSignature")
-    
+
     static let forwardInvocationSelector = NSSelectorFromString("forwardInvocation:")
     static let methodSignatureSelector = NSSelectorFromString("methodSignatureForSelector:")
 }
 
-internal enum ObjCTypeEncodingBridge: Int8 {
+enum ObjCTypeEncodingBridge: Int8 {
     case char = 99
     case int = 105
     case short = 115

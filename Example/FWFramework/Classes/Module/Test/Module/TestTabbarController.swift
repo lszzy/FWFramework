@@ -9,45 +9,44 @@
 import FWFramework
 
 class TestTabbarController: TabBarController, UITabBarControllerDelegate {
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         hidesBottomBarWhenPushed = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         app.leftBarItem = Icon.backImage
         delegate = self
-        
+
         setupSubviews()
         setupController()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         navigationItem.title = selectedViewController?.navigationItem.title
     }
-    
+
     func setupSubviews() {
         tabBar.app.foregroundColor = AppTheme.textColor
         tabBar.app.backgroundColor = AppTheme.barColor
         tabBar.app.shadowColor = nil
         tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
     }
-    
+
     func setupController() {
         let homeController = TestTabbarChildController()
         homeController.hidesBottomBarWhenPushed = false
         homeController.navigationItem.title = APP.localized("homeTitle")
         homeController.tabBarItem.image = APP.iconImage("zmdi-var-home", 26)
         homeController.tabBarItem.title = APP.localized("homeTitle")
-        
+
         let testController = TestTabbarChildController()
         testController.hidesBottomBarWhenPushed = false
         testController.navigationItem.title = APP.localized("testTitle")
@@ -59,7 +58,7 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
         testController.tabBarItem.accessibilityIdentifier = "id.test"
-        
+
         let settingsControlelr = TestTabbarChildController()
         settingsControlelr.hidesBottomBarWhenPushed = false
         settingsControlelr.navigationItem.title = APP.localized("settingTitle")
@@ -71,16 +70,16 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         settingsControlelr.tabBarItem.title = APP.localized("settingTitle")
         viewControllers = [homeController, testController, settingsControlelr]
     }
-    
+
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         navigationItem.title = viewController.navigationItem.title
-        
+
         if viewController.tabBarItem.accessibilityIdentifier == "id.test" {
             let animation = CABasicAnimation(keyPath: "transform.rotation.z")
             animation.fromValue = NSNumber(value: 0)
             animation.toValue = NSNumber(value: CGFloat.pi)
             animation.duration = 0.3
-            
+
             var animationView = viewController.tabBarItem.app.imageView
             if let tabBarItem = viewController.tabBarItem as? TabBarItem {
                 animationView = tabBarItem.contentView.imageView
@@ -88,41 +87,37 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
             animationView?.layer.add(animation, forKey: nil)
         }
     }
-    
 }
 
 class TestTabbarContentView: TabBarItemContentView {
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.imageView.backgroundColor = AppTheme.barColor
-        self.imageView.layer.cornerRadius = 35
-        self.insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
-        self.imageInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
+
+        imageView.backgroundColor = AppTheme.barColor
+        imageView.layer.cornerRadius = 35
+        insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
+        imageInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func updateLayout() {
         super.updateLayout()
-        self.imageView.frame = CGRect(x: (bounds.size.width - 70) / 2.0, y: 0, width: 70, height: 70)
+        imageView.frame = CGRect(x: (bounds.size.width - 70) / 2.0, y: 0, width: 70, height: 70)
     }
-    
+
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let p = CGPoint(x: point.x - imageView.frame.origin.x, y: point.y - imageView.frame.origin.y)
         return sqrt(pow(imageView.bounds.size.width / 2.0 - p.x, 2) + pow(imageView.bounds.size.height / 2.0 - p.y, 2)) < imageView.bounds.size.width / 2.0
     }
-    
 }
 
 class TestTabbarChildController: UIViewController, ViewControllerProtocol {
-    
     func setupSubviews() {
         view.backgroundColor = UIColor.app.randomColor
-        view.app.addTapGesture { [weak self] sender in
+        view.app.addTapGesture { [weak self] _ in
             let viewController = TestTabbarChildController()
             var title = APP.safeString(self?.navigationItem.title)
             if let index = title.firstIndex(of: "-") {
@@ -135,5 +130,4 @@ class TestTabbarChildController: UIViewController, ViewControllerProtocol {
             Navigator.push(viewController, animated: true)
         }
     }
-    
 }

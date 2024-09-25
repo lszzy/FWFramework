@@ -1,12 +1,12 @@
 //
-//  Encrypt.swift
+//  Encryptor.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/22.
 //
 
-import Foundation
 import CommonCrypto
+import Foundation
 
 // MARK: - Wrapper+Data
 extension Wrapper where Base == Data {
@@ -17,7 +17,7 @@ extension Wrapper where Base == Data {
               let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
             return nil
         }
-        
+
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCEncrypt),
                              CCAlgorithm(kCCAlgorithmAES128),
@@ -30,12 +30,12 @@ extension Wrapper where Base == Data {
                              encryptedData.mutableBytes,
                              encryptedData.length,
                              &dataMoved)
-        
+
         if result == kCCSuccess {
             encryptedData.length = dataMoved
             return encryptedData as Data
         }
-        
+
         return nil
     }
 
@@ -45,7 +45,7 @@ extension Wrapper where Base == Data {
               let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
             return nil
         }
-        
+
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCDecrypt),
                              CCAlgorithm(kCCAlgorithmAES128),
@@ -58,12 +58,12 @@ extension Wrapper where Base == Data {
                              decryptedData.mutableBytes,
                              decryptedData.length,
                              &dataMoved)
-        
+
         if result == kCCSuccess {
             decryptedData.length = dataMoved
             return decryptedData as Data
         }
-        
+
         return nil
     }
 
@@ -74,7 +74,7 @@ extension Wrapper where Base == Data {
               let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
             return nil
         }
-        
+
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCEncrypt),
                              CCAlgorithm(kCCAlgorithm3DES),
@@ -87,12 +87,12 @@ extension Wrapper where Base == Data {
                              encryptedData.mutableBytes,
                              encryptedData.length,
                              &dataMoved)
-        
+
         if result == kCCSuccess {
             encryptedData.length = dataMoved
             return encryptedData as Data
         }
-        
+
         return nil
     }
 
@@ -102,7 +102,7 @@ extension Wrapper where Base == Data {
               let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
             return nil
         }
-        
+
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCDecrypt),
                              CCAlgorithm(kCCAlgorithm3DES),
@@ -115,84 +115,84 @@ extension Wrapper where Base == Data {
                              decryptedData.mutableBytes,
                              decryptedData.length,
                              &dataMoved)
-        
+
         if result == kCCSuccess {
             decryptedData.length = dataMoved
             return decryptedData as Data
         }
-        
+
         return nil
     }
 
     // MARK: - RSA
     /// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
     public func rsaEncrypt(publicKey: String) -> Data? {
-        return rsaEncrypt(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Encode: true)
+        rsaEncrypt(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Encode: true)
     }
 
     /// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
     public func rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
         guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey, tagName: tag) else { return nil }
-        
+
         let data = Data.fw.rsaEncryptData(data: base, withKeyRef: keyRef, isSign: false)
         return base64Encode ? data?.base64EncodedData() : data
     }
 
     /// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
     public func rsaDecrypt(privateKey: String) -> Data? {
-        return rsaDecrypt(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Decode: true)
+        rsaDecrypt(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Decode: true)
     }
 
     /// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
     public func rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
         guard let data = base64Decode ? Data(base64Encoded: base, options: .ignoreUnknownCharacters) : base else { return nil }
-        
+
         guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey, tagName: tag) else { return nil }
         return Data.fw.rsaDecryptData(data: data, withKeyRef: keyRef)
     }
 
     /// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
     public func rsaSign(privateKey: String) -> Data? {
-        return rsaSign(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Encode: true)
+        rsaSign(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Encode: true)
     }
 
     /// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
     public func rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
         guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey, tagName: tag) else { return nil }
-        
+
         let data = Data.fw.rsaEncryptData(data: base, withKeyRef: keyRef, isSign: true)
         return base64Encode ? data?.base64EncodedData() : data
     }
 
     /// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
     public func rsaVerify(publicKey: String) -> Data? {
-        return rsaVerify(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Decode: true)
+        rsaVerify(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Decode: true)
     }
 
     /// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
     public func rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
         guard let data = base64Decode ? Data(base64Encoded: base, options: .ignoreUnknownCharacters) : base else { return nil }
-        
+
         guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey, tagName: tag) else { return nil }
         return Data.fw.rsaDecryptData(data: data, withKeyRef: keyRef)
     }
-    
+
     private static func rsaEncryptData(data: Data, withKeyRef keyRef: SecKey, isSign: Bool) -> Data? {
         let srcbytes = NSData(data: data).bytes
         let srcbuf = srcbytes.bindMemory(to: UInt8.self, capacity: data.count)
         let srclen = data.count
-        
+
         let block_size = SecKeyGetBlockSize(keyRef) * MemoryLayout<UInt8>.size
         var outbuf = [UInt8](repeating: 0, count: block_size)
         let src_block_size = block_size - 11
-        
+
         var ret: Data? = Data()
         for idx in stride(from: 0, to: srclen, by: src_block_size) {
             var data_len = srclen - idx
             if data_len > src_block_size {
                 data_len = src_block_size
             }
-            
+
             var outlen = block_size
             var status: OSStatus = noErr
             if isSign {
@@ -207,26 +207,26 @@ extension Wrapper where Base == Data {
                 ret?.append(outbuf, count: outlen)
             }
         }
-        
+
         return ret
     }
-    
+
     private static func rsaDecryptData(data: Data, withKeyRef keyRef: SecKey) -> Data? {
         let srcbytes = NSData(data: data).bytes
         let srcbuf = srcbytes.bindMemory(to: UInt8.self, capacity: data.count)
         let srclen = data.count
-        
+
         let block_size = SecKeyGetBlockSize(keyRef) * MemoryLayout<UInt8>.size
         var outbuf = [UInt8](repeating: 0, count: block_size)
         let src_block_size = block_size
-        
+
         var ret: Data? = Data()
         for idx in stride(from: 0, to: srclen, by: src_block_size) {
             var data_len = srclen - idx
             if data_len > src_block_size {
                 data_len = src_block_size
             }
-            
+
             var outlen = block_size
             var status: OSStatus = noErr
             status = SecKeyDecrypt(keyRef, [], srcbuf + idx, data_len, &outbuf, &outlen)
@@ -249,10 +249,10 @@ extension Wrapper where Base == Data {
                 ret?.append(contentsOf: outbuf[idxFirstZero + 1..<idxNextZero])
             }
         }
-        
+
         return ret
     }
-    
+
     private static func rsaAddPublicKey(key: String, tagName: String) -> SecKey? {
         let key = key
             .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
@@ -265,28 +265,28 @@ extension Wrapper where Base == Data {
               let data = rsaStripPublicKeyHeader(data) else {
             return nil
         }
-        
+
         var publicKey: [CFString: Any] = [:]
         publicKey[kSecClass] = kSecClassKey
         publicKey[kSecAttrKeyType] = kSecAttrKeyTypeRSA
         publicKey[kSecAttrApplicationTag] = tagName.data(using: .utf8)
         SecItemDelete(publicKey as CFDictionary)
-        
+
         publicKey[kSecValueData] = data
         publicKey[kSecAttrKeyClass] = kSecAttrKeyClassPublic
         publicKey[kSecReturnPersistentRef] = true
-        
+
         var persistKey: CFTypeRef?
         let status = SecItemAdd(publicKey as CFDictionary, &persistKey)
         if status != noErr && status != errSecDuplicateItem {
             return nil
         }
-        
+
         publicKey.removeValue(forKey: kSecValueData)
         publicKey.removeValue(forKey: kSecReturnPersistentRef)
         publicKey[kSecReturnRef] = true
         publicKey[kSecAttrKeyType] = kSecAttrKeyTypeRSA
-        
+
         var keyRef: CFTypeRef?
         let keyStatus = SecItemCopyMatching(publicKey as CFDictionary, &keyRef)
         if keyStatus != noErr {
@@ -294,7 +294,7 @@ extension Wrapper where Base == Data {
         }
         return keyRef as! SecKey?
     }
-    
+
     private static func rsaAddPrivateKey(key: String, tagName: String) -> SecKey? {
         let key = key
             .replacingOccurrences(of: "-----BEGIN RSA PRIVATE KEY-----", with: "")
@@ -339,26 +339,10 @@ extension Wrapper where Base == Data {
         }
         return keyRef as! SecKey?
     }
-    
+
     private static func rsaStripPublicKeyHeader(_ data: Data) -> Data? {
         var idx = 0
-        if 0x30 != data[idx] {
-            return nil
-        }
-        idx += 1
-        if data[idx] > 0x80 {
-            idx += Int(data[idx]) - 0x80 + 1;
-        } else {
-            idx += 1
-        }
-        let seqOID = [ 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00 ]
-        for i in 0..<15{
-            if seqOID[i] != data[idx+i] {
-                return nil
-            }
-        }
-        idx += 15
-        if data[idx] != 0x03{
+        if data[idx] != 0x30 {
             return nil
         }
         idx += 1
@@ -367,34 +351,50 @@ extension Wrapper where Base == Data {
         } else {
             idx += 1
         }
-        if data[idx] != Character("\0").asciiValue{
+        let seqOID = [0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00]
+        for i in 0..<15 {
+            if seqOID[i] != data[idx + i] {
+                return nil
+            }
+        }
+        idx += 15
+        if data[idx] != 0x03 {
+            return nil
+        }
+        idx += 1
+        if data[idx] > 0x80 {
+            idx += Int(data[idx]) - 0x80 + 1
+        } else {
+            idx += 1
+        }
+        if data[idx] != Character("\0").asciiValue {
             return nil
         }
         idx += 1
         return data[idx..<data.count]
     }
-    
+
     private static func rsaStripPrivateKeyHeader(_ data: Data) -> Data? {
         if data.count == 0 {
             return nil
         }
-        
+
         var keyAsArray = [UInt8](repeating: 0, count: data.count / MemoryLayout<UInt8>.size)
         (data as NSData).getBytes(&keyAsArray, length: data.count)
-        
+
         var idx = 22
         if keyAsArray[idx] != 0x04 {
             return nil
         }
         idx += 1
-        
+
         var len = Int(keyAsArray[idx])
         idx += 1
         let det = len & 0x80
-        if (det == 0) {
-            len = len & 0x7f
+        if det == 0 {
+            len = len & 0x7F
         } else {
-            var byteCount = Int(len & 0x7f)
+            var byteCount = Int(len & 0x7F)
             if byteCount + idx > data.count {
                 return nil
             }
@@ -408,6 +408,6 @@ extension Wrapper where Base == Data {
             }
             len = Int(accum)
         }
-        return data.subdata(in: idx..<idx+len)
+        return data.subdata(in: idx..<idx + len)
     }
 }

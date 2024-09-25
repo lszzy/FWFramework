@@ -17,7 +17,7 @@
     <a title="BatchRequest Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -696,6 +696,9 @@
                 <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1055,6 +1058,12 @@
                 <a href="../Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1217,6 +1226,9 @@
                 <a href="../Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1250,6 +1262,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Binding.html">Binding</a>
@@ -1381,6 +1396,9 @@
                 <a href="../Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1391,6 +1409,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/ScrollView.html">ScrollView</a>
@@ -1970,9 +1994,6 @@
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2156,12 +2177,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/LineShape.html">LineShape</a>
@@ -2422,9 +2437,6 @@
                 <a href="../Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2490,9 +2502,6 @@
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2509,7 +2518,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequest</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/RequestDelegate.html">RequestDelegate</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">BatchRequest</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/RequestDelegate.html">RequestDelegate</a></span><span class="p">,</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                 </div>
               </div>
@@ -2539,7 +2548,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Completion</span> <span class="o">=</span> <span class="p">(</span><span class="kt">BatchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Completion</span> <span class="o">=</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">BatchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -2616,9 +2625,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12BatchRequestC22successCompletionBlockyACcSgvp"></a>
+                    <a name="/s:11FWFramework12BatchRequestC22successCompletionBlockyACYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/successCompletionBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12BatchRequestC22successCompletionBlockyACcSgvp">successCompletionBlock</a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC22successCompletionBlockyACYbScMYccSgvp">successCompletionBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2643,9 +2652,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12BatchRequestC22failureCompletionBlockyACcSgvp"></a>
+                    <a name="/s:11FWFramework12BatchRequestC22failureCompletionBlockyACYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/failureCompletionBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12BatchRequestC22failureCompletionBlockyACcSgvp">failureCompletionBlock</a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC22failureCompletionBlockyACYbScMYccSgvp">failureCompletionBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2661,6 +2670,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">failureCompletionBlock</span><span class="p">:</span> <span class="kt"><a href="../Classes/BatchRequest.html#/s:11FWFramework12BatchRequestC10Completiona">Completion</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC21requestCancelledBlockyACYbcSgvp"></a>
+                    <a name="//apple_ref/swift/Property/requestCancelledBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC21requestCancelledBlockyACYbcSgvp">requestCancelledBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义取消回调句柄，不一定主线程调用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">requestCancelledBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">BatchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2993,9 +3029,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12BatchRequestC03addC0yyAA11HTTPRequestCF"></a>
+                    <a name="/s:11FWFramework12BatchRequestC03addC0yACXDAA11HTTPRequestCF"></a>
                     <a name="//apple_ref/swift/Method/addRequest(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12BatchRequestC03addC0yyAA11HTTPRequestCF">addRequest(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC03addC0yACXDAA11HTTPRequestCF">addRequest(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3010,7 +3046,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">addRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">addRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -3075,9 +3112,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12BatchRequestC5start7success7failureACXDyACcSg_AGtF"></a>
+                    <a name="/s:11FWFramework12BatchRequestC5start7success7failureACXDyACYbScMYccSg_AGtF"></a>
                     <a name="//apple_ref/swift/Method/start(success:failure:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12BatchRequestC5start7success7failureACXDyACcSg_AGtF">start(success:<wbr>failure:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC5start7success7failureACXDyACYbScMYccSg_AGtF">start(success:<wbr>failure:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3103,9 +3140,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework12BatchRequestC5start10completionACXDyACcSg_tF"></a>
+                    <a name="/s:11FWFramework12BatchRequestC5start10completionACXDyACYbScMYccSg_tF"></a>
                     <a name="//apple_ref/swift/Method/start(completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework12BatchRequestC5start10completionACXDyACcSg_tF">start(completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC5start10completionACXDyACYbScMYccSg_tF">start(completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3122,6 +3159,146 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
 <span class="kd">open</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Classes/BatchRequest.html#/s:11FWFramework12BatchRequestC10Completiona">Completion</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC21requestCancelledBlockyACXDyACYbcSgF"></a>
+                    <a name="//apple_ref/swift/Method/requestCancelledBlock(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC21requestCancelledBlockyACXDyACYbcSgF">requestCancelledBlock(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>请求取消句柄，不一定主线程调用</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">requestCancelledBlock</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">BatchRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC8responseyACXDyACYbScMYccSgF"></a>
+                    <a name="//apple_ref/swift/Method/response(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC8responseyACXDyACYbScMYccSgF">response(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义响应完成句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">response</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Classes/BatchRequest.html#/s:11FWFramework12BatchRequestC10Completiona">Completion</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC15responseSuccessyACXDyACYbScMYccSgF"></a>
+                    <a name="//apple_ref/swift/Method/responseSuccess(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC15responseSuccessyACXDyACYbScMYccSgF">responseSuccess(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义响应成功句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">responseSuccess</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kt"><a href="../Classes/BatchRequest.html#/s:11FWFramework12BatchRequestC10Completiona">Completion</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC15responseFailureyACXDyACYbScMYccSgF"></a>
+                    <a name="//apple_ref/swift/Method/responseFailure(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC15responseFailureyACXDyACYbScMYccSgF">responseFailure(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>自定义响应失败句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">responseFailure</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kt"><a href="../Classes/BatchRequest.html#/s:11FWFramework12BatchRequestC10Completiona">Completion</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC13responseErroryACXDys0E0_pYbScMYccSgF"></a>
+                    <a name="//apple_ref/swift/Method/responseError(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC13responseErroryACXDys0E0_pYbScMYccSgF">responseError(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>快捷设置响应失败句柄</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">responseError</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -3230,7 +3407,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">requestFinished</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">requestFinished</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -3257,7 +3435,81 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">requestFailed</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">requestFailed</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Classes/HTTPRequest.html">HTTPRequest</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Concurrency%2BBatchRequest"></a>
+                <a name="//apple_ref/swift/Section/Concurrency+BatchRequest" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Concurrency%2BBatchRequest"></a>
+                  <h3 class="section-name"><span>Concurrency+BatchRequest</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC8responseACyYaF"></a>
+                    <a name="//apple_ref/swift/Method/response()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC8responseACyYaF">response()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步获取完成响应，注意非Task取消也会触发(Continuation流程)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">response</span><span class="p">()</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">BatchRequest</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework12BatchRequestC15responseSuccessACyYaKF"></a>
+                    <a name="//apple_ref/swift/Method/responseSuccess()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework12BatchRequestC15responseSuccessACyYaKF">responseSuccess()</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>异步获取成功响应，注意非Task取消也会触发(Continuation流程)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSuccess</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BatchRequest</span></code></pre>
 
                         </div>
                       </div>
@@ -3269,7 +3521,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

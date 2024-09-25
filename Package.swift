@@ -1,13 +1,13 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 
-import PackageDescription
 import CompilerPluginSupport
+import PackageDescription
 
 let package = Package(
     name: "FWFramework",
     platforms: [
         .macOS(.v10_15),
-        .iOS(.v13),
+        .iOS(.v13)
     ],
     products: [
         .library(
@@ -57,13 +57,13 @@ let package = Package(
         .library(
             name: "FWPluginAlamofire",
             targets: ["FWPluginAlamofire"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
         .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0"),
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0")
     ],
     targets: [
         .target(
@@ -72,7 +72,7 @@ let package = Package(
             resources: [.copy("../PrivacyInfo.xcprivacy")],
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -81,7 +81,7 @@ let package = Package(
             path: "Sources/FWSwiftUI",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -90,7 +90,7 @@ let package = Package(
             path: "Sources/FWPlugin/Module",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -99,7 +99,7 @@ let package = Package(
             path: "Sources/FWPlugin/Calendar",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -108,7 +108,7 @@ let package = Package(
             path: "Sources/FWPlugin/Contacts",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -117,7 +117,7 @@ let package = Package(
             path: "Sources/FWPlugin/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -126,7 +126,7 @@ let package = Package(
             path: "Sources/FWPlugin/Tracking",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
@@ -135,14 +135,14 @@ let package = Package(
             path: "Sources/FWPlugin/Biometry",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .macro(
             name: "FWMacroMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
             ],
             path: "Sources/FWPlugin/Macros/FWMacroMacros"
         ),
@@ -150,50 +150,50 @@ let package = Package(
             name: "FWPluginMacros",
             dependencies: [
                 "FWFramework",
-                "FWMacroMacros",
+                "FWMacroMacros"
             ],
             path: "Sources/FWPlugin/Macros/FWPluginMacros",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM"),
-                .define("FWPluginMacros"),
+                .define("FWPluginMacros")
             ]
         ),
         .target(
             name: "FWPluginSDWebImage",
             dependencies: [
                 "FWFramework",
-                .product(name: "SDWebImage", package: "SDWebImage"),
+                .product(name: "SDWebImage", package: "SDWebImage")
             ],
             path: "Sources/FWPlugin/SDWebImage",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
             name: "FWPluginLottie",
             dependencies: [
                 "FWFramework",
-                .product(name: "Lottie", package: "lottie-ios"),
+                .product(name: "Lottie", package: "lottie-ios")
             ],
             path: "Sources/FWPlugin/Lottie",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
         ),
         .target(
             name: "FWPluginAlamofire",
             dependencies: [
                 "FWFramework",
-                .product(name: "Alamofire", package: "Alamofire"),
+                .product(name: "Alamofire", package: "Alamofire")
             ],
             path: "Sources/FWPlugin/Alamofire",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM"),
+                .define("FWMacroSPM")
             ]
-        ),
+        )
     ]
 )
