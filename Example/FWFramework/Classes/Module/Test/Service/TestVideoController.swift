@@ -9,14 +9,13 @@
 import FWFramework
 
 class TestVideoController: UIViewController, ViewControllerProtocol {
-    
     // MARK: - Accessor
     fileprivate var player = VideoPlayer()
     lazy var resourceLoader = PlayerCacheLoaderManager()
-    
+
     @StoredValue("TestVideoCacheEnabled")
     private var cacheEnabled: Bool = false
-    
+
     @StoredValue("TestVideoUrl")
     private var videoUrl: String = ""
 
@@ -24,54 +23,56 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.player.playerDelegate = self
-        self.player.playbackDelegate = self
-        
-        self.player.playerView.playerBackgroundColor = AppTheme.backgroundColor
-        
-        self.addChild(self.player)
-        self.view.addSubview(self.player.view)
-        self.player.view.layoutChain.edges()
-        self.player.didMove(toParent: self)
-        
-        self.playVideo()
-        self.player.playbackLoops = true
-        
-        let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
+        player.playerDelegate = self
+        player.playbackDelegate = self
+
+        player.playerView.playerBackgroundColor = AppTheme.backgroundColor
+
+        addChild(player)
+        view.addSubview(player.view)
+        player.view.layoutChain.edges()
+        player.didMove(toParent: self)
+
+        playVideo()
+        player.playbackLoops = true
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
-        self.player.view.addGestureRecognizer(tapGestureRecognizer)
-        
+        player.view.addGestureRecognizer(tapGestureRecognizer)
+
         app.showLoading()
     }
-    
-    deinit {
-        self.player.willMove(toParent: nil)
-        self.player.view.removeFromSuperview()
-        self.player.removeFromParent()
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        player.willMove(toParent: nil)
+        player.view.removeFromSuperview()
+        player.removeFromParent()
     }
-    
+
     // MARK: - Private
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
-            guard let self = self else { return }
-            
-            self.app.showSheet(title: nil, message: nil, actions: [
-                self.cacheEnabled ? "禁用缓存" : "启用缓存",
-                "自定义视频URL",
+            guard let self else { return }
+
+            app.showSheet(title: nil, message: nil, actions: [
+                cacheEnabled ? "禁用缓存" : "启用缓存",
+                "自定义视频URL"
             ], actionBlock: { [weak self] index in
-                guard let self = self else { return }
-                
+                guard let self else { return }
+
                 if index == 0 {
-                    self.cacheEnabled = !self.cacheEnabled
-                    if !self.cacheEnabled {
+                    cacheEnabled = !cacheEnabled
+                    if !cacheEnabled {
                         FileManager.app.removeItem(atPath: PlayerCacheManager.cacheDirectory)
                     }
-                    self.playVideo()
+                    playVideo()
                 } else {
-                    self.app.showPrompt(title: "请输入视频URL", message: nil) { [weak self] textField in
-                        guard let self = self else { return }
-                        
-                        textField.text = !self.videoUrl.isEmpty ? self.videoUrl : "http://vjs.zencdn.net/v/oceans.mp4"
+                    app.showPrompt(title: "请输入视频URL", message: nil) { [weak self] textField in
+                        guard let self else { return }
+
+                        textField.text = !videoUrl.isEmpty ? videoUrl : "http://vjs.zencdn.net/v/oceans.mp4"
                     } confirmBlock: { [weak self] text in
                         self?.videoUrl = text
                         self?.playVideo()
@@ -80,7 +81,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
             })
         }
     }
-    
+
     private func playVideo() {
         var url: URL?
         if !videoUrl.isEmpty {
@@ -88,52 +89,45 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         } else {
             url = Bundle.main.url(forResource: "Video", withExtension: "mp4")
         }
-        guard let url = url else { return }
-        
+        guard let url else { return }
+
         if cacheEnabled {
-            self.player.asset = resourceLoader.urlAsset(url: url)
+            player.asset = resourceLoader.urlAsset(url: url)
         } else {
-            self.player.url = url
+            player.url = url
         }
     }
-    
+
     @objc func handleTapGestureRecognizer(_ gestureRecognizer: UITapGestureRecognizer) {
-        switch self.player.playbackState {
+        switch player.playbackState {
         case .stopped:
-            self.player.playFromBeginning()
-            break
+            player.playFromBeginning()
         case .paused:
-            self.player.playFromCurrentTime()
-            break
+            player.playFromCurrentTime()
         case .playing:
-            self.player.pause()
-            break
+            player.pause()
         case .failed:
-            self.player.pause()
-            break
+            player.pause()
         }
     }
-    
 }
 
 extension TestVideoController: VideoPlayerDelegate, VideoPlayerPlaybackDelegate {
-    
     func playerReady(_ player: VideoPlayer) {
         print("\(#function) ready")
-        
+
         app.hideLoading()
     }
-    
+
     func playerPlaybackStateDidChange(_ player: VideoPlayer) {
         print("\(#function) \(player.playbackState.rawValue)")
     }
-    
+
     func player(_ player: VideoPlayer, didFailWithError error: Error?) {
         print("\(#function) error.description")
-        
+
         app.hideLoading()
     }
-    
 }
 
 class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
@@ -145,28 +139,28 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
         result.playerView = playerView
         return result
     }
-    
+
     weak var videoPlayer: VideoPlayer? {
         didSet {
             videoPlayer?.playerDelegate = self
         }
     }
-    
+
     private lazy var closeButton: ToolbarButton = {
         let result = ToolbarButton(image: Icon.closeImage)
         result.tintColor = AppTheme.textColor
-        result.app.addTouch { sender in
+        result.app.addTouch { _ in
             Navigator.close(animated: true)
         }
         return result
     }()
-    
+
     private lazy var playButton: ToolbarButton = {
         let result = ToolbarButton(image: APP.iconImage("zdmi-var-play", 24))
         result.tintColor = AppTheme.textColor
-        result.app.addTouch { [weak self] sender in
+        result.app.addTouch { [weak self] _ in
             guard let player = self?.videoPlayer else { return }
-            
+
             if player.playbackState == .playing {
                 player.pause()
             } else if player.playbackState == .paused {
@@ -177,21 +171,21 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
         }
         return result
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = AppTheme.backgroundColor
-        
+
         addSubview(closeButton)
         addSubview(playButton)
         closeButton.app.layoutChain.left(toSafeArea: 8).top(toSafeArea: 8)
         playButton.app.layoutChain.right(toSafeArea: 8).top(toSafeArea: 8)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func playerPlaybackStateDidChange(_ player: VideoPlayer) {
         if player.playbackState == .playing {
             playButton.setImage(APP.iconImage("zdmi-var-pause", 24), for: .normal)

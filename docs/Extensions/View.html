@@ -17,7 +17,7 @@
     <a title="View Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -696,6 +696,9 @@
                 <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1055,6 +1058,12 @@
                 <a href="../Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1217,6 +1226,9 @@
                 <a href="../Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1250,6 +1262,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Binding.html">Binding</a>
@@ -1381,6 +1396,9 @@
                 <a href="../Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1391,6 +1409,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/ScrollView.html">ScrollView</a>
@@ -1970,9 +1994,6 @@
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2156,12 +2177,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/LineShape.html">LineShape</a>
@@ -2422,9 +2437,6 @@
                 <a href="../Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2490,9 +2502,6 @@
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2509,7 +2518,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">View</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span> <span class="kd">extension</span> <span class="kt">View</span></code></pre>
 
                 </div>
               </div>
@@ -3096,9 +3105,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE24viewControllerInitialize_0E7ContextQrySo06UIViewF0Cc_AD0cH0CSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE24viewControllerInitialize_0E7ContextQrySo06UIViewF0CYbScMYcc_AD0cH0CSgtF"></a>
                     <a name="//apple_ref/swift/Method/viewControllerInitialize(_:viewContext:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE24viewControllerInitialize_0E7ContextQrySo06UIViewF0Cc_AD0cH0CSgtF">viewControllerInitialize(_:<wbr>viewContext:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE24viewControllerInitialize_0E7ContextQrySo06UIViewF0CYbScMYcc_AD0cH0CSgtF">viewControllerInitialize(_:<wbr>viewContext:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3115,7 +3124,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">viewControllerInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">viewContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/ViewContext.html">ViewContext</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -3127,9 +3136,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE23viewControllerConfigure_0E7ContextQrySo06UIViewF0Cc_AD0cH0CSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE23viewControllerConfigure_0E7ContextQrySo06UIViewF0CYbScMYcc_AD0cH0CSgtF"></a>
                     <a name="//apple_ref/swift/Method/viewControllerConfigure(_:viewContext:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE23viewControllerConfigure_0E7ContextQrySo06UIViewF0Cc_AD0cH0CSgtF">viewControllerConfigure(_:<wbr>viewContext:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE23viewControllerConfigure_0E7ContextQrySo06UIViewF0CYbScMYcc_AD0cH0CSgtF">viewControllerConfigure(_:<wbr>viewContext:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3146,7 +3155,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">viewControllerConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(),</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">viewContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/ViewContext.html">ViewContext</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -3158,9 +3167,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE07hostingC10InitializeyQrySo6UIViewCcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE07hostingC10InitializeyQrySo6UIViewCYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/hostingViewInitialize(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE07hostingC10InitializeyQrySo6UIViewCcF">hostingViewInitialize(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE07hostingC10InitializeyQrySo6UIViewCYbScMYccF">hostingViewInitialize(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3177,7 +3186,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">hostingViewInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3188,9 +3197,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE07hostingC9ConfigureyQrySo6UIViewCcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE07hostingC9ConfigureyQrySo6UIViewCYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/hostingViewConfigure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE07hostingC9ConfigureyQrySo6UIViewCcF">hostingViewConfigure(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE07hostingC9ConfigureyQrySo6UIViewCYbScMYccF">hostingViewConfigure(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3207,7 +3216,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">hostingViewConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">()</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3231,9 +3240,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10InitializeyQrySo08UIScrollC0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10InitializeyQrySo08UIScrollC0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewInitialize(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10InitializeyQrySo08UIScrollC0CcF">scrollViewInitialize(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10InitializeyQrySo08UIScrollC0CYbScMYccF">scrollViewInitialize(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3250,7 +3259,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3261,9 +3270,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC9ConfigureyQrySo08UIScrollC0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC9ConfigureyQrySo08UIScrollC0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewConfigure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC9ConfigureyQrySo08UIScrollC0CcF">scrollViewConfigure(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC9ConfigureyQrySo08UIScrollC0CYbScMYccF">scrollViewConfigure(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3280,7 +3289,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3291,9 +3300,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewRefreshing(shouldBegin:loadingFinished:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF">scrollViewRefreshing(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF">scrollViewRefreshing(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3312,8 +3321,8 @@
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewRefreshing</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">loadingFinished</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">?</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
-    <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3324,9 +3333,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/scrollViewLoading(shouldBegin:loadingFinished:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF">scrollViewLoading(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE06scrollC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF">scrollViewLoading(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3345,8 +3354,8 @@
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">scrollViewLoading</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">loadingFinished</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">?</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
-    <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3357,9 +3366,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE15showScrollEmpty_9customizeQrSb_ySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE15showScrollEmpty_9customizeQrSb_ySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/showScrollEmpty(_:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE15showScrollEmpty_9customizeQrSb_ySo08UIScrollC0CcSgtF">showScrollEmpty(_:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE15showScrollEmpty_9customizeQrSb_ySo08UIScrollC0CYbScMYccSgtF">showScrollEmpty(_:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3375,7 +3384,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">showScrollEmpty</span><span class="p">(</span><span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">showScrollEmpty</span><span class="p">(</span><span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -3517,9 +3526,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10InitializeyQrySo08UIScrollC0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10InitializeyQrySo08UIScrollC0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/listViewInitialize(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10InitializeyQrySo08UIScrollC0CcF">listViewInitialize(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10InitializeyQrySo08UIScrollC0CYbScMYccF">listViewInitialize(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3538,7 +3547,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3549,9 +3558,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC9ConfigureyQrySo08UIScrollC0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC9ConfigureyQrySo08UIScrollC0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/listViewConfigure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC9ConfigureyQrySo08UIScrollC0CcF">listViewConfigure(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC9ConfigureyQrySo08UIScrollC0CYbScMYccF">listViewConfigure(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3570,7 +3579,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3581,9 +3590,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/listViewRefreshing(shouldBegin:loadingFinished:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF">listViewRefreshing(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC10Refreshing11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF">listViewRefreshing(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3602,8 +3611,8 @@
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewRefreshing</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">loadingFinished</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">?</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
-    <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3614,9 +3623,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/listViewLoading(shouldBegin:loadingFinished:action:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANccySo08UIScrollC0CcSgtF">listViewLoading(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04listC7Loading11shouldBegin15loadingFinished6action9customizeQrAA7BindingVySbGSg_AKySbSgGSgyyANYbScMYccYbScMYccySo08UIScrollC0CYbScMYccSgtF">listViewLoading(shouldBegin:<wbr>loadingFinished:<wbr>action:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3635,8 +3644,8 @@
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">listViewLoading</span><span class="p">(</span>
     <span class="nv">shouldBegin</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">loadingFinished</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="p">?</span><span class="o">&gt;</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
-    <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="nv">action</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">finished</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3647,9 +3656,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13showListEmpty_9customizeQrSb_ySo08UIScrollC0CcSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE13showListEmpty_9customizeQrSb_ySo08UIScrollC0CYbScMYccSgtF"></a>
                     <a name="//apple_ref/swift/Method/showListEmpty(_:customize:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13showListEmpty_9customizeQrSb_ySo08UIScrollC0CcSgtF">showListEmpty(_:<wbr>customize:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE13showListEmpty_9customizeQrSb_ySo08UIScrollC0CYbScMYccSgtF">showListEmpty(_:<wbr>customize:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3665,7 +3674,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">showListEmpty</span><span class="p">(</span><span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">showListEmpty</span><span class="p">(</span><span class="n">_</span> <span class="nv">isShowing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customize</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIScrollView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
                       </div>
@@ -3688,9 +3697,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE19textFieldInitialize_9autoFocusQrySo06UITextF0Cc_AD0C7ContextCSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE19textFieldInitialize_9autoFocusQrySo06UITextF0CYbScMYcc_AD0C7ContextCSgtF"></a>
                     <a name="//apple_ref/swift/Method/textFieldInitialize(_:autoFocus:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE19textFieldInitialize_9autoFocusQrySo06UITextF0Cc_AD0C7ContextCSgtF">textFieldInitialize(_:<wbr>autoFocus:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE19textFieldInitialize_9autoFocusQrySo06UITextF0CYbScMYcc_AD0C7ContextCSgtF">textFieldInitialize(_:<wbr>autoFocus:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3707,7 +3716,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">textFieldInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UITextField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UITextField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="n">autoFocus</span> <span class="nv">viewContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/ViewContext.html">ViewContext</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -3719,9 +3728,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE18textFieldConfigureyQrySo06UITextF0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE18textFieldConfigureyQrySo06UITextF0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/textFieldConfigure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE18textFieldConfigureyQrySo06UITextF0CcF">textFieldConfigure(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE18textFieldConfigureyQrySo06UITextF0CYbScMYccF">textFieldConfigure(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3738,7 +3747,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">textFieldConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UITextField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UITextField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3749,9 +3758,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04textC10Initialize_9autoFocusQrySo06UITextC0Cc_AD0C7ContextCSgtF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04textC10Initialize_9autoFocusQrySo06UITextC0CYbScMYcc_AD0C7ContextCSgtF"></a>
                     <a name="//apple_ref/swift/Method/textViewInitialize(_:autoFocus:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04textC10Initialize_9autoFocusQrySo06UITextC0Cc_AD0C7ContextCSgtF">textViewInitialize(_:<wbr>autoFocus:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04textC10Initialize_9autoFocusQrySo06UITextC0CYbScMYcc_AD0C7ContextCSgtF">textViewInitialize(_:<wbr>autoFocus:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3768,7 +3777,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">textViewInitialize</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UITextView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">initialization</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UITextView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="n">autoFocus</span> <span class="nv">viewContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/ViewContext.html">ViewContext</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
@@ -3780,9 +3789,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04textC9ConfigureyQrySo06UITextC0CcF"></a>
+                    <a name="/s:7SwiftUI4ViewP11FWFrameworkE04textC9ConfigureyQrySo06UITextC0CYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/textViewConfigure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04textC9ConfigureyQrySo06UITextC0CcF">textViewConfigure(_:<wbr>)</a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP11FWFrameworkE04textC9ConfigureyQrySo06UITextC0CYbScMYccF">textViewConfigure(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3799,7 +3808,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">textViewConfigure</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">UITextView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UITextView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -3976,7 +3985,7 @@
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="n">introspect</span><span class="o">&lt;</span><span class="kt">SwiftUIViewType</span><span class="p">:</span> <span class="kt"><a href="../Protocols/IntrospectableViewType.html">IntrospectableViewType</a></span><span class="p">,</span> <span class="kt">PlatformSpecificEntity</span><span class="p">:</span> <span class="kt"><a href="../Protocols/PlatformEntity.html">PlatformEntity</a></span><span class="o">&gt;</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">SwiftUIViewType</span><span class="p">,</span>
-    <span class="n">on</span> <span class="nv">platforms</span><span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Structs/PlatformViewVersionPredicate.html">PlatformViewVersionPredicate</a></span><span class="o">&lt;</span><span class="kt">SwiftUIViewType</span><span class="p">,</span> <span class="kt">PlatformSpecificEntity</span><span class="o">&gt;</span><span class="p">)</span><span class="o">...</span><span class="p">,</span>
+    <span class="n">on</span> <span class="nv">platforms</span><span class="p">:</span> <span class="kt"><a href="../Structs/PlatformViewVersionPredicate.html">PlatformViewVersionPredicate</a></span><span class="o">&lt;</span><span class="kt">SwiftUIViewType</span><span class="p">,</span> <span class="kt">PlatformSpecificEntity</span><span class="o">&gt;...</span><span class="p">,</span>
     <span class="nv">scope</span><span class="p">:</span> <span class="kt"><a href="../Structs/IntrospectionScope.html">IntrospectionScope</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">customize</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">PlatformSpecificEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kd">some</span> <span class="kt">View</span></code></pre>
@@ -4681,7 +4690,7 @@ GeometryReader { proxy in
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

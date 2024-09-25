@@ -17,7 +17,7 @@ import SwiftUI
 /// modifier.
 ///
 /// [SwiftUI-Introspect](https://github.com/siteline/SwiftUI-Introspect)
-public struct IntrospectionScope: OptionSet {
+public struct IntrospectionScope: OptionSet, Sendable {
     /// Look within the `receiver` of the `.introspect(...)` modifier.
     public static let receiver = Self(rawValue: 1 << 0)
     /// Look for an `ancestor` relative to the `.introspect(...)` modifier.
@@ -53,13 +53,13 @@ extension View {
     ///     }
     /// }
     /// ```
-    public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
+    @MainActor public func introspect<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>(
         _ viewType: SwiftUIViewType,
-        on platforms: (PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>)...,
+        on platforms: PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>...,
         scope: IntrospectionScope? = nil,
         customize: @escaping (PlatformSpecificEntity) -> Void
     ) -> some View {
-        self.modifier(IntrospectModifier(viewType, platforms: platforms, scope: scope, customize: customize))
+        modifier(IntrospectModifier(viewType, platforms: platforms, scope: scope, customize: customize))
     }
 }
 
@@ -69,7 +69,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
     let customize: (PlatformSpecificEntity) -> Void
 
-    init(
+    @MainActor init(
         _ viewType: SwiftUIViewType,
         platforms: [PlatformViewVersionPredicate<SwiftUIViewType, PlatformSpecificEntity>],
         scope: IntrospectionScope?,
@@ -109,7 +109,7 @@ struct IntrospectModifier<SwiftUIViewType: IntrospectableViewType, PlatformSpeci
     }
 }
 
-public protocol PlatformEntity: AnyObject {
+@MainActor public protocol PlatformEntity: AnyObject {
     associatedtype Base: PlatformEntity
 
     @_spi(FW)
@@ -155,7 +155,7 @@ extension PlatformEntity {
     }
 
     func allDescendants(between bottomEntity: Base, and topEntity: Base) -> some Sequence<Base> {
-        self.allDescendants
+        allDescendants
             .lazy
             .drop(while: { $0 !== bottomEntity })
             .prefix(while: { $0 !== topEntity })
@@ -182,7 +182,7 @@ extension PlatformEntity {
     func ancestor<PlatformSpecificEntity: PlatformEntity>(
         ofType type: PlatformSpecificEntity.Type
     ) -> PlatformSpecificEntity? {
-        self.ancestors
+        ancestors
             .lazy
             .filter { !$0.isIntrospectionPlatformEntity }
             .compactMap { $0 as? PlatformSpecificEntity }
@@ -215,7 +215,7 @@ extension PlatformViewController: PlatformEntity {
 
     @_spi(FW)
     public func isDescendant(of other: PlatformViewController) -> Bool {
-        self.ancestors.contains(other)
+        ancestors.contains(other)
     }
 }
 
@@ -224,7 +224,7 @@ extension UIPresentationController: PlatformEntity {
 }
 
 // MARK: - IntrospectableViewType
-public protocol IntrospectableViewType {
+@MainActor public protocol IntrospectableViewType {
     /// The scope of introspection for this particular view type, i.e. where introspect
     /// should look to find the desired target view relative to the applied
     /// `.introspect(...)` modifier.
@@ -244,7 +244,7 @@ extension IntrospectableViewType {
 
 // MARK: - IntrospectionSelector
 @_spi(FW)
-public struct IntrospectionSelector<Target: PlatformEntity> {
+@MainActor public struct IntrospectionSelector<Target: PlatformEntity> {
     @_spi(FW)
     public static var `default`: Self { .from(Target.self, selector: { $0 }) }
 
@@ -260,12 +260,12 @@ public struct IntrospectionSelector<Target: PlatformEntity> {
         )
     }
 
-    private var receiverSelector: (_IntrospectionPlatformViewController) -> Target?
-    private var ancestorSelector: (_IntrospectionPlatformViewController) -> Target?
+    private var receiverSelector: (IntrospectionPlatformViewController) -> Target?
+    private var ancestorSelector: (IntrospectionPlatformViewController) -> Target?
 
     private init(
-        receiverSelector: @escaping (_IntrospectionPlatformViewController) -> Target?,
-        ancestorSelector: @escaping (_IntrospectionPlatformViewController) -> Target?
+        receiverSelector: @escaping (IntrospectionPlatformViewController) -> Target?,
+        ancestorSelector: @escaping (IntrospectionPlatformViewController) -> Target?
     ) {
         self.receiverSelector = receiverSelector
         self.ancestorSelector = ancestorSelector
@@ -285,17 +285,15 @@ public struct IntrospectionSelector<Target: PlatformEntity> {
         return copy
     }
 
-    func callAsFunction(_ controller: _IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
+    func callAsFunction(_ controller: IntrospectionPlatformViewController, _ scope: IntrospectionScope) -> Target? {
         if
             scope.contains(.receiver),
-            let target = receiverSelector(controller)
-        {
+            let target = receiverSelector(controller) {
             return target
         }
         if
             scope.contains(.ancestor),
-            let target = ancestorSelector(controller)
-        {
+            let target = ancestorSelector(controller) {
             return target
         }
         return nil
@@ -316,24 +314,23 @@ extension PlatformViewController {
 // MARK: - IntrospectionView
 typealias IntrospectionViewID = UUID
 
-fileprivate enum IntrospectionStore {
+@MainActor fileprivate enum IntrospectionStore {
     static var shared: [IntrospectionViewID: Pair] = [:]
 
     struct Pair {
-        weak var controller: _IntrospectionPlatformViewController?
-        weak var anchor: _IntrospectionAnchorPlatformViewController?
+        weak var controller: IntrospectionPlatformViewController?
+        weak var anchor: IntrospectionAnchorPlatformViewController?
     }
 }
 
 extension PlatformEntity {
     var introspectionAnchorEntity: Base? {
-        if let introspectionController = self as? _IntrospectionPlatformViewController {
+        if let introspectionController = self as? IntrospectionPlatformViewController {
             return IntrospectionStore.shared[introspectionController.id]?.anchor~
         }
         if
             let view = self as? PlatformView,
-            let introspectionController = view.introspectionController
-        {
+            let introspectionController = view.introspectionController {
             return IntrospectionStore.shared[introspectionController.id]?.anchor?.view~
         }
         return nil
@@ -341,7 +338,7 @@ extension PlatformEntity {
 }
 
 struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
-    typealias UIViewControllerType = _IntrospectionAnchorPlatformViewController
+    typealias UIViewControllerType = IntrospectionAnchorPlatformViewController
 
     @Binding
     private var observed: Void // workaround for state changes not triggering view updates
@@ -349,23 +346,23 @@ struct IntrospectionAnchorView: PlatformViewControllerRepresentable {
     let id: IntrospectionViewID
 
     init(id: IntrospectionViewID) {
-        self._observed = .constant(())
+        _observed = .constant(())
         self.id = id
     }
 
-    func makePlatformViewController(context: Context) -> _IntrospectionAnchorPlatformViewController {
-        _IntrospectionAnchorPlatformViewController(id: id)
+    func makePlatformViewController(context: Context) -> IntrospectionAnchorPlatformViewController {
+        IntrospectionAnchorPlatformViewController(id: id)
     }
 
-    func updatePlatformViewController(_ controller: _IntrospectionAnchorPlatformViewController, context: Context) {}
+    func updatePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, context: Context) {}
 
-    static func dismantlePlatformViewController(_ controller: _IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
+    static func dismantlePlatformViewController(_ controller: IntrospectionAnchorPlatformViewController, coordinator: Coordinator) {}
 }
 
-final class _IntrospectionAnchorPlatformViewController: PlatformViewController {
+final class IntrospectionAnchorPlatformViewController: PlatformViewController {
     init(id: IntrospectionViewID) {
         super.init(nibName: nil, bundle: nil)
-        self.isIntrospectionPlatformEntity = true
+        isIntrospectionPlatformEntity = true
         IntrospectionStore.shared[id, default: .init()].anchor = self
     }
 
@@ -381,7 +378,7 @@ final class _IntrospectionAnchorPlatformViewController: PlatformViewController {
 }
 
 struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresentable {
-    typealias UIViewControllerType = _IntrospectionPlatformViewController
+    typealias UIViewControllerType = IntrospectionPlatformViewController
 
     final class TargetCache {
         weak var target: Target?
@@ -390,15 +387,15 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
     @Binding
     private var observed: Void // workaround for state changes not triggering view updates
     private let id: IntrospectionViewID
-    private let selector: (_IntrospectionPlatformViewController) -> Target?
+    private let selector: (IntrospectionPlatformViewController) -> Target?
     private let customize: (Target) -> Void
 
     init(
         id: IntrospectionViewID,
-        selector: @escaping (_IntrospectionPlatformViewController) -> Target?,
+        selector: @escaping (IntrospectionPlatformViewController) -> Target?,
         customize: @escaping (Target) -> Void
     ) {
-        self._observed = .constant(())
+        _observed = .constant(())
         self.id = id
         self.selector = selector
         self.customize = customize
@@ -408,8 +405,8 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
         TargetCache()
     }
 
-    func makePlatformViewController(context: Context) -> _IntrospectionPlatformViewController {
-        let controller = _IntrospectionPlatformViewController(id: id) { controller in
+    func makePlatformViewController(context: Context) -> IntrospectionPlatformViewController {
+        let controller = IntrospectionPlatformViewController(id: id) { controller in
             guard let target = selector(controller) else {
                 return
             }
@@ -429,35 +426,35 @@ struct IntrospectionView<Target: PlatformEntity>: PlatformViewControllerRepresen
         return controller
     }
 
-    func updatePlatformViewController(_ controller: _IntrospectionPlatformViewController, context: Context) {
+    func updatePlatformViewController(_ controller: IntrospectionPlatformViewController, context: Context) {
         guard let target = context.coordinator.target ?? selector(controller) else {
             return
         }
         customize(target)
     }
 
-    static func dismantlePlatformViewController(_ controller: _IntrospectionPlatformViewController, coordinator: Coordinator) {
+    static func dismantlePlatformViewController(_ controller: IntrospectionPlatformViewController, coordinator: Coordinator) {
         controller.handler = nil
     }
 }
 
-final class _IntrospectionPlatformViewController: PlatformViewController {
+final class IntrospectionPlatformViewController: PlatformViewController {
     let id: IntrospectionViewID
     var handler: (() -> Void)? = nil
 
     fileprivate init(
         id: IntrospectionViewID,
-        handler: ((_IntrospectionPlatformViewController) -> Void)?
+        handler: ((IntrospectionPlatformViewController) -> Void)?
     ) {
         self.id = id
         super.init(nibName: nil, bundle: nil)
         self.handler = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             handler?(self)
         }
-        self.isIntrospectionPlatformEntity = true
+        isIntrospectionPlatformEntity = true
         IntrospectionStore.shared[id, default: .init()].controller = self
     }
 
@@ -465,7 +462,7 @@ final class _IntrospectionPlatformViewController: PlatformViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         parent?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
     }
@@ -494,10 +491,10 @@ final class _IntrospectionPlatformViewController: PlatformViewController {
 }
 
 extension PlatformView {
-    fileprivate var introspectionController: _IntrospectionPlatformViewController? {
+    fileprivate var introspectionController: IntrospectionPlatformViewController? {
         get {
             let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
-            return objc_getAssociatedObject(self, key) as? _IntrospectionPlatformViewController
+            return objc_getAssociatedObject(self, key) as? IntrospectionPlatformViewController
         }
         set {
             let key = unsafeBitCast(Selector(#function), to: UnsafeRawPointer.self)
@@ -520,13 +517,13 @@ extension PlatformEntity {
 }
 
 // MARK: - PlatformVersion
-public enum PlatformVersionCondition {
+public enum PlatformVersionCondition: Sendable {
     case past
     case current
     case future
 }
 
-public protocol PlatformVersion {
+public protocol PlatformVersion: Sendable {
     var condition: PlatformVersionCondition? { get }
 }
 
@@ -578,7 +575,7 @@ extension iOSVersion {
         }
         return .future
     }
-    
+
     public static let v16 = iOSVersion {
         if #available(iOS 17, *) {
             return .past
@@ -588,8 +585,7 @@ extension iOSVersion {
         }
         return .future
     }
-    
-    #if compiler(>=6.0)
+
     public static let v17 = iOSVersion {
         if #available(iOS 18, *) {
             return .past
@@ -599,26 +595,18 @@ extension iOSVersion {
         }
         return .future
     }
-    
+
     public static let v18 = iOSVersion {
         if #available(iOS 18, *) {
             return .current
         }
         return .future
     }
-    #else
-    public static let v17 = iOSVersion {
-        if #available(iOS 17, *) {
-            return .current
-        }
-        return .future
-    }
-    #endif
-    
+
     public static func earlier(_ version: iOSVersion, from: iOSVersion? = nil) -> iOSVersion {
-        return iOSVersion {
+        iOSVersion {
             if version.condition == .current || version.condition == .future {
-                if let from = from {
+                if let from {
                     return from.isCurrentOrPast ? .current : .future
                 }
                 return .current
@@ -626,15 +614,15 @@ extension iOSVersion {
             return .future
         }
     }
-    
+
     public static func later(_ version: iOSVersion) -> iOSVersion {
-        return iOSVersion {
-            return version.isCurrentOrPast ? .current : .future
+        iOSVersion {
+            version.isCurrentOrPast ? .current : .future
         }
     }
-    
+
     public static let all = iOSVersion {
-        return .current
+        .current
     }
 }
 
@@ -645,7 +633,7 @@ public typealias PlatformViewController = UIViewController
 
 typealias _PlatformViewControllerRepresentable = UIViewControllerRepresentable
 
-protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
+@MainActor protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
     typealias ViewController = UIViewControllerType
 
     func makePlatformViewController(context: Context) -> ViewController
@@ -657,16 +645,18 @@ extension PlatformViewControllerRepresentable {
     func makeUIViewController(context: Context) -> ViewController {
         makePlatformViewController(context: context)
     }
+
     func updateUIViewController(_ controller: ViewController, context: Context) {
         updatePlatformViewController(controller, context: context)
     }
+
     static func dismantleUIViewController(_ controller: ViewController, coordinator: Coordinator) {
         dismantlePlatformViewController(controller, coordinator: coordinator)
     }
 }
 
 // MARK: - PlatformViewVersion
-public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+@MainActor public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
     let selector: IntrospectionSelector<PlatformSpecificEntity>?
 
     private init<Version: PlatformVersion>(
@@ -680,7 +670,7 @@ public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewTy
         }
     }
 
-    public static func iOS(_ versions: (iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>)...) -> Self {
+    public static func iOS(_ versions: iOSViewVersion<SwiftUIViewType, PlatformSpecificEntity>...) -> Self {
         Self(versions, matches: \.isCurrent)
     }
 
@@ -693,7 +683,7 @@ public struct PlatformViewVersionPredicate<SwiftUIViewType: IntrospectableViewTy
 public typealias iOSViewVersion<SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> =
     PlatformViewVersion<iOSVersion, SwiftUIViewType, PlatformSpecificEntity>
 
-public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity> {
+@MainActor public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: IntrospectableViewType, PlatformSpecificEntity: PlatformEntity>: Sendable {
     @_spi(FW) case available(Version, IntrospectionSelector<PlatformSpecificEntity>?)
     @_spi(FW) case unavailable
 
@@ -711,15 +701,15 @@ public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: Intro
     }
 
     private var version: Version? {
-        if case .available(let version, _) = self {
+        if case let .available(version, _) = self {
             return version
         } else {
             return nil
         }
     }
 
-    fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
-        if case .available(_, let selector) = self {
+    @MainActor fileprivate var selector: IntrospectionSelector<PlatformSpecificEntity>? {
+        if case let .available(_, selector) = self {
             return selector
         } else {
             return nil
@@ -736,11 +726,11 @@ public enum PlatformViewVersion<Version: PlatformVersion, SwiftUIViewType: Intro
 }
 
 extension PlatformViewVersion: Comparable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public nonisolated static func ==(lhs: Self, rhs: Self) -> Bool {
         true
     }
 
-    public static func < (lhs: Self, rhs: Self) -> Bool {
+    public nonisolated static func <(lhs: Self, rhs: Self) -> Bool {
         true
     }
 }
@@ -803,9 +793,7 @@ extension iOSViewVersion<ViewType, UIView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -838,9 +826,7 @@ extension iOSViewVersion<ColorPickerType, UIColorWell> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: "ColorPicker isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -873,9 +859,7 @@ extension iOSViewVersion<DatePickerType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -912,9 +896,7 @@ extension iOSViewVersion<DatePickerWithCompactStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: ".datePickerStyle(.compact) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -953,9 +935,7 @@ extension iOSViewVersion<DatePickerWithGraphicalStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: ".datePickerStyle(.graphical) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -993,9 +973,7 @@ extension iOSViewVersion<DatePickerWithWheelStyleType, UIDatePicker> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -1035,9 +1013,7 @@ extension iOSViewVersion<FormType, UITableView> {
 extension iOSViewVersion<FormType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".form isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1083,9 +1059,7 @@ extension iOSViewVersion<FormWithGroupedStyleType, UITableView> {
 extension iOSViewVersion<FormWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".formStyle(.grouped) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1124,9 +1098,7 @@ extension iOSViewVersion<FullScreenCoverType, UIPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let v14Later = Self(for: .later(.v14), selector: selector)
     @available(*, unavailable, message: ".fullScreenCover isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1177,9 +1149,7 @@ extension iOSViewVersion<ListType, UITableView> {
 extension iOSViewVersion<ListType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".list isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1226,9 +1196,7 @@ extension iOSViewVersion<ListWithGroupedStyleType, UITableView> {
 extension iOSViewVersion<ListWithGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".listStyle(.grouped) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1276,9 +1244,7 @@ extension iOSViewVersion<ListWithInsetGroupedStyleType, UITableView> {
 extension iOSViewVersion<ListWithInsetGroupedStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".listStyle(.insetGrouped) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1326,9 +1292,7 @@ extension iOSViewVersion<ListWithInsetStyleType, UITableView> {
 extension iOSViewVersion<ListWithInsetStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".listStyle(.inset) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1376,9 +1340,7 @@ extension iOSViewVersion<ListWithSidebarStyleType, UITableView> {
 extension iOSViewVersion<ListWithSidebarStyleType, UICollectionView> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".listStyle(.sidebar) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1422,9 +1384,7 @@ extension iOSViewVersion<ListCellType, UITableViewCell> {
 extension iOSViewVersion<ListCellType, UICollectionViewCell> {
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: ".listCell isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1463,9 +1423,7 @@ extension iOSViewVersion<NavigationSplitViewType, UISplitViewController> {
 
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let v16Later = Self(for: .later(.v16), selector: selector)
     @available(*, unavailable, message: "NavigationSplitView isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1506,9 +1464,7 @@ extension iOSViewVersion<NavigationStackType, UINavigationController> {
 
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let v16Later = Self(for: .later(.v16), selector: selector)
     @available(*, unavailable, message: "NavigationStack isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1550,9 +1506,7 @@ extension iOSViewVersion<NavigationViewWithColumnsStyleType, UISplitViewControll
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UISplitViewController> {
@@ -1592,9 +1546,7 @@ extension iOSViewVersion<NavigationViewWithStackStyleType, UINavigationControlle
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UINavigationController> {
@@ -1632,9 +1584,7 @@ extension iOSViewVersion<PageControlType, UIPageControl> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: ".tabViewStyle(.page) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1676,9 +1626,7 @@ extension iOSViewVersion<PickerWithSegmentedStyleType, UISegmentedControl> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -1718,9 +1666,7 @@ extension iOSViewVersion<PickerWithWheelStyleType, UIPickerView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -1756,9 +1702,7 @@ extension iOSViewVersion<PopoverType, UIPopoverPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIPopoverPresentationController> {
@@ -1797,9 +1741,7 @@ extension iOSViewVersion<ProgressViewWithCircularStyleType, UIActivityIndicatorV
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: ".progressViewStyle(.circular) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1836,9 +1778,7 @@ extension iOSViewVersion<ProgressViewWithLinearStyleType, UIProgressView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: ".progressViewStyle(.linear) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1871,9 +1811,7 @@ extension iOSViewVersion<ScrollViewType, UIScrollView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -1910,9 +1848,7 @@ extension iOSViewVersion<SearchFieldType, UISearchBar> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let v15Later = Self(for: .later(.v15), selector: selector)
     @available(*, unavailable, message: ".searchable isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -1951,9 +1887,7 @@ extension iOSViewVersion<SecureFieldType, UITextField> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -1989,9 +1923,7 @@ extension iOSViewVersion<SheetType, UIPresentationController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIPresentationController> {
@@ -2007,10 +1939,8 @@ extension iOSViewVersion<SheetType, UISheetPresentationController> {
     public static let v16 = Self(for: .v16, selector: selector)
     @_disfavoredOverload
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     @_disfavoredOverload
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     @_disfavoredOverload
     public static let v15Later = Self(for: .later(.v15), selector: selector)
 
@@ -2046,9 +1976,7 @@ extension iOSViewVersion<SliderType, UISlider> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -2081,9 +2009,7 @@ extension iOSViewVersion<StepperType, UIStepper> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -2134,9 +2060,7 @@ extension iOSViewVersion<TableType, UICollectionView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: "Table isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -2170,9 +2094,7 @@ extension iOSViewVersion<TabViewType, UITabBarController> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UITabBarController> {
@@ -2214,9 +2136,7 @@ extension iOSViewVersion<TabViewWithPageStyleType, UICollectionView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: "TabView {}.tabViewStyle(.page) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -2250,9 +2170,7 @@ extension iOSViewVersion<TextEditorType, UITextView> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v14Later = Self(for: .later(.v14))
     @available(*, unavailable, message: "TextEditor isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -2285,9 +2203,7 @@ extension iOSViewVersion<TextFieldType, UITextField> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -2326,9 +2242,7 @@ extension iOSViewVersion<TextFieldWithVerticalAxisType, UITextView> {
 
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let v16Later = Self(for: .later(.v16))
     @available(*, unavailable, message: "TextField(..., axis: .vertical) isn't available on all iOS")
     public static let all = Self.unavailable()
@@ -2361,9 +2275,7 @@ extension iOSViewVersion<ToggleType, UISwitch> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -2399,9 +2311,7 @@ extension iOSViewVersion<ToggleWithSwitchStyleType, UISwitch> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 
@@ -2430,9 +2340,7 @@ extension iOSViewVersion<WindowType, UIWindow> {
     public static let v15 = Self(for: .v15, selector: selector)
     public static let v16 = Self(for: .v16, selector: selector)
     public static let v17 = Self(for: .v17, selector: selector)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18, selector: selector)
-    #endif
     public static let all = Self(for: .all, selector: selector)
 
     private static var selector: IntrospectionSelector<UIWindow> {
@@ -2473,9 +2381,7 @@ extension iOSViewVersion<ViewControllerType, UIViewController> {
     public static let v15 = Self(for: .v15)
     public static let v16 = Self(for: .v16)
     public static let v17 = Self(for: .v17)
-    #if compiler(>=6.0)
     public static let v18 = Self(for: .v18)
-    #endif
     public static let all = Self(for: .all)
 }
 

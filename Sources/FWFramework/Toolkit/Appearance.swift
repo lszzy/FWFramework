@@ -13,14 +13,14 @@ extension Wrapper where Base: NSObject {
     public func applyAppearance() {
         let aClass: AnyClass = type(of: base)
         guard aClass.responds(to: NSSelectorFromString("appearance")) else { return }
-        
+
         let appearanceGuideClassSelector = NSSelectorFromString(String(format: "%@%@%@", "_a", "ppearanceG", "uideClass"))
         if !class_respondsToSelector(aClass, appearanceGuideClassSelector) {
             let typeEncoding = method_getTypeEncoding(class_getInstanceMethod(UIView.self, appearanceGuideClassSelector)!)
             let impBlock: @convention(block) () -> AnyClass? = { nil }
             class_addMethod(aClass, appearanceGuideClassSelector, imp_implementationWithBlock(impBlock), typeEncoding)
         }
-        
+
         let selector = NSSelectorFromString(String(format: "_%@:%@:", "applyInvocationsTo", "window"))
         if let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
            appearanceClass.responds(to: selector) {
@@ -36,23 +36,22 @@ extension Wrapper where Base: NSObject {
 /// 注意：Swift只有标记\@objc dynamic的属性才支持UIAppearance
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
 public class Appearance {
-    
-    private static var appearances: [String: AnyObject] = [:]
-    
+    private nonisolated(unsafe) static var appearances: [String: AnyObject] = [:]
+
     /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
     public static func appearance(for aClass: AnyClass) -> AnyObject? {
         let className = NSStringFromClass(aClass)
         if let appearance = appearances[className] {
             return appearance
         }
-        
+
         let selector = NSSelectorFromString(String(format: "_%@:%@:", "appearanceForClass", "withContainerList"))
         guard let appearanceClass = NSClassFromString(String(format: "%@%@%@", "_U", "IAppea", "rance")),
               appearanceClass.responds(to: selector),
               let appearance = (appearanceClass as AnyObject).perform(selector, with: aClass, with: nil)?.takeUnretainedValue() else {
             return nil
         }
-        
+
         appearances[className] = appearance
         return appearance
     }
@@ -63,18 +62,17 @@ public class Appearance {
         guard appearance.responds(to: selector) else {
             return type(of: appearance)
         }
-        
+
         let classInfo = appearance.perform(selector)?.takeUnretainedValue() as? AnyObject
         selector = NSSelectorFromString(String(format: "_%@%@", "customizable", "ViewClass"))
-        guard let classInfo = classInfo, classInfo.responds(to: selector) else {
+        guard let classInfo, classInfo.responds(to: selector) else {
             return type(of: appearance)
         }
-        
+
         let viewClass: AnyClass? = classInfo.perform(selector)?.takeUnretainedValue() as? AnyClass
-        if let viewClass = viewClass, object_isClass(viewClass) {
+        if let viewClass, object_isClass(viewClass) {
             return viewClass
         }
         return type(of: appearance)
     }
-    
 }

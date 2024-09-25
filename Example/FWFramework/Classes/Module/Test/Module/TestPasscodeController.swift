@@ -19,7 +19,6 @@ enum TestPasscodeType: Int {
 }
 
 class TestPasscodeController: UIViewController, ViewControllerProtocol {
-    
     var dataArray: [String] = [
         "Normal",
         "Placeholder",
@@ -27,36 +26,36 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         "Line",
         "Secret Symbol",
         "Secret Image",
-        "Secret View",
+        "Secret View"
     ]
-    
+
     var type: TestPasscodeType = .normal {
         didSet {
             updatePasscodeView()
         }
     }
-    
+
     var boxInputView: PasscodeView?
-    
+
     lazy var boxContainerView: UIView = {
         let result = UIView()
         return result
     }()
-    
+
     lazy var securityButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("Security", for: .normal)
         result.addTarget(self, action: #selector(securityButtonClicked), for: .touchUpInside)
         return result
     }()
-    
+
     lazy var clearButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("Clear", for: .normal)
         result.addTarget(self, action: #selector(clearButtonClicked), for: .touchUpInside)
         return result
     }()
-    
+
     lazy var valueLabel: UILabel = {
         let result = UILabel()
         result.textColor = AppTheme.textColor
@@ -64,7 +63,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.text = "Empty"
         return result
     }()
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: self?.dataArray, actionBlock: { index in
@@ -72,42 +71,42 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             })
         }
     }
-    
+
     func setupSubviews() {
         view.addSubview(valueLabel)
         view.addSubview(boxContainerView)
         view.addSubview(clearButton)
         view.addSubview(securityButton)
     }
-    
+
     func setupLayout() {
         valueLabel.app.layoutChain
             .centerX()
             .top(toSafeArea: 30)
-        
+
         boxContainerView.app.layoutChain
             .left(35)
             .right(35)
             .height(52)
             .top(toViewBottom: valueLabel, offset: 30)
-        
+
         clearButton.app.layoutChain
             .centerX()
             .top(toViewBottom: boxContainerView, offset: 30)
-        
+
         securityButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clearButton, offset: 30)
-        
+
         type = .normal
     }
-    
+
     private func updatePasscodeView() {
-        if let boxInputView = boxInputView {
+        if let boxInputView {
             boxInputView.removeFromSuperview()
             valueLabel.text = "Empty"
         }
-        
+
         var boxInputView: PasscodeView
         switch type {
         case .placeholder:
@@ -126,8 +125,8 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             boxInputView = generateBoxInputView_normal()
         }
         self.boxInputView = boxInputView
-        
-        boxInputView.textDidChangeBlock = { [weak self] text, isFinished in
+
+        boxInputView.textDidChangeBlock = { [weak self] text, _ in
             if !text.isEmpty {
                 self?.valueLabel.text = text
             } else {
@@ -137,7 +136,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         boxContainerView.addSubview(boxInputView)
         boxInputView.app.layoutChain.edges()
     }
-    
+
     private func generateBoxInputView_normal() -> PasscodeView {
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
@@ -148,12 +147,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.textContentType = .oneTimeCode
         return result
     }
-    
+
     private func generateBoxInputView_placeholder() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellPlaceholderTextColor = UIColor(red: 114.0 / 255.0, green: 116.0 / 255.0, blue: 124.0 / 255.0, alpha: 0.3)
         cellProperty.cellPlaceholderFont = UIFont.systemFont(ofSize: 20)
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         result.collectionView.contentOffset = CGPoint(x: -40, y: 0)
@@ -163,7 +162,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         return result
     }
-    
+
     private func generateBoxInputView_custom() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellBgColorNormal = AppTheme.cellColor
@@ -181,7 +180,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             layer.shadowOffset = CGSize(width: 0, height: 2)
             layer.shadowRadius = 4
         }
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
@@ -190,7 +189,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         return result
     }
-    
+
     private func generateBoxInputView_line() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellCursorColor = AppTheme.textColor
@@ -214,7 +213,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             }
             return lineView
         }
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
@@ -223,7 +222,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         return result
     }
-    
+
     private func generateBoxInputView_secretSymbol() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellCursorColor = AppTheme.textColor
@@ -235,7 +234,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         cellProperty.cellTextColor = AppTheme.textColor
         cellProperty.showLine = true
         cellProperty.securitySymbol = "*"
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
@@ -243,12 +242,12 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.flowLayout.itemSize = CGSize(width: 52, height: 52)
         result.cellProperty = cellProperty
         result.prepareView()
-        
+
         result.clearAllWhenEditingBegin = true
         result.reloadInputString("5678")
         return result
     }
-    
+
     private func generateBoxInputView_secretImage() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellCursorColor = AppTheme.textColor
@@ -267,7 +266,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
             view.imageHeight = 23
             return view
         }
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
@@ -277,7 +276,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         return result
     }
-    
+
     private func generateBoxInputView_secretView() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
         cellProperty.cellCursorColor = AppTheme.textColor
@@ -301,7 +300,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
                 .height(20)
             return view
         }
-        
+
         let result = PasscodeView(codeLength: 4)
         result.collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.collectionView.contentOffset = CGPoint(x: -20, y: 0)
@@ -311,14 +310,13 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
         result.prepareView()
         return result
     }
-    
+
     @objc func clearButtonClicked() {
         boxInputView?.clearAll()
     }
-    
+
     @objc func securityButtonClicked() {
-        guard let boxInputView = boxInputView else { return }
+        guard let boxInputView else { return }
         boxInputView.needSecurity = !boxInputView.needSecurity
     }
-    
 }

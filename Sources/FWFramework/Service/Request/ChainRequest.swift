@@ -11,9 +11,9 @@ import Foundation
 /// 队列请求代理
 public protocol ChainRequestDelegate: AnyObject {
     /// 队列请求完成
-    func chainRequestFinished(_ chainRequest: ChainRequest)
+    @MainActor func chainRequestFinished(_ chainRequest: ChainRequest)
     /// 队列请求失败
-    func chainRequestFailed(_ chainRequest: ChainRequest)
+    @MainActor func chainRequestFailed(_ chainRequest: ChainRequest)
 }
 
 extension ChainRequestDelegate {
@@ -24,13 +24,12 @@ extension ChainRequestDelegate {
 }
 
 /// 队列请求类
-open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
-    
+open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendable {
     /// 队列请求完成句柄
-    public typealias Completion = (ChainRequest) -> Void
+    public typealias Completion = @MainActor @Sendable (ChainRequest) -> Void
     /// 回调处理句柄声明
     public typealias CallbackHandler = (ChainRequest, HTTPRequest) -> Void
-    
+
     // MARK: - Accessor
     /// 当前请求数组
     open private(set) var requestArray: [HTTPRequest] = []
@@ -40,6 +39,8 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
     open var successCompletionBlock: Completion?
     /// 失败完成回调
     open var failureCompletionBlock: Completion?
+    /// 自定义取消回调句柄，不一定主线程调用
+    open var requestCancelledBlock: (@Sendable (ChainRequest) -> Void)?
     /// 请求标签，默认0
     open var tag: Int = 0
     /// 自定义请求配件数组
@@ -53,10 +54,12 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         get { failedRequest?.autoShowError ?? false }
         set { failedRequest?.autoShowError = newValue }
     }
+
     /// 当前网络错误
     open var error: Error? {
-        return failedRequest?.error
+        failedRequest?.error
     }
+
     /// 请求是否已取消
     open private(set) var isCancelled = false
     /// 请求间的时间间隔
@@ -67,19 +70,19 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
     open var stoppedOnSuccess = false
     /// 请求构建句柄，所有请求完成后才会主线程调用
     open var requestBuilder: ((_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
-    
+
     private var requestCallbackArray: [CallbackHandler] = []
     private var nextRequestIndex: Int = 0
     private weak var nextRequest: HTTPRequest?
     private let emptyCallback: CallbackHandler = { _, _ in }
-    
+
     // MARK: - Lifecycle
     public init() {}
-    
+
     deinit {
         clearRequest()
     }
-    
+
     // MARK: - Public
     /// 添加请求，可设置请求完成回调
     @discardableResult
@@ -88,29 +91,31 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         requestCallbackArray.append(callback ?? emptyCallback)
         return self
     }
-    
+
     /// 开始请求，仅能调用一次
     @discardableResult
     open func start() -> Self {
         guard nextRequestIndex <= 0 else { return self }
-        
+
         succeedRequest = nil
         failedRequest = nil
         ChainRequestManager.shared.addChainRequest(self)
         startNextRequest(nil)
         return self
     }
-    
+
     /// 取消请求
     open func cancel() {
         toggleAccessoriesWillStopCallBack()
         delegate = nil
         clearRequest()
         isCancelled = true
+        requestCancelledBlock?(self)
+        requestCancelledBlock = nil
         toggleAccessoriesDidStopCallBack()
         ChainRequestManager.shared.removeChainRequest(self)
     }
-    
+
     /// 开始请求并指定成功、失败句柄
     @discardableResult
     open func start(success: Completion?, failure: Completion?) -> Self {
@@ -118,24 +123,60 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         failureCompletionBlock = failure
         return start()
     }
-    
+
     /// 开始请求并指定完成句柄
     @discardableResult
     open func start(completion: Completion?) -> Self {
-        return start(success: completion, failure: completion)
+        start(success: completion, failure: completion)
     }
-    
+
+    /// 请求取消句柄，不一定主线程调用
+    @discardableResult
+    open func requestCancelledBlock(_ block: (@Sendable (ChainRequest) -> Void)?) -> Self {
+        requestCancelledBlock = block
+        return self
+    }
+
+    /// 自定义响应完成句柄
+    @discardableResult
+    open func response(_ completion: Completion?) -> Self {
+        responseSuccess(completion).responseFailure(completion)
+    }
+
+    /// 自定义响应成功句柄
+    @discardableResult
+    open func responseSuccess(_ block: Completion?) -> Self {
+        successCompletionBlock = block
+        return self
+    }
+
+    /// 自定义响应失败句柄
+    @discardableResult
+    open func responseFailure(_ block: Completion?) -> Self {
+        failureCompletionBlock = block
+        return self
+    }
+
+    /// 快捷设置响应失败句柄
+    @discardableResult
+    open func responseError(_ block: (@MainActor @Sendable (Error) -> Void)?) -> Self {
+        failureCompletionBlock = { request in
+            block?(request.error ?? RequestError.unknown)
+        }
+        return self
+    }
+
     /// 清理完成句柄
     open func clearCompletionBlock() {
         successCompletionBlock = nil
         failureCompletionBlock = nil
     }
-    
+
     /// 显示网络错误，默认显示Toast提示
     open func showError() {
         failedRequest?.showError()
     }
-    
+
     /// 添加请求配件
     @discardableResult
     open func addAccessory(_ accessory: RequestAccessoryProtocol) -> Self {
@@ -145,31 +186,31 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         requestAccessories?.append(accessory)
         return self
     }
-    
+
     /// 请求完成回调
     open func requestFinished(_ request: HTTPRequest) {
         succeedRequest = request
         failedRequest = nil
-        
+
         let currentRequestIndex = nextRequestIndex - 1
         let chainCallback = requestCallbackArray[currentRequestIndex]
         chainCallback(self, request)
-        
+
         if stoppedOnSuccess || !startNextRequest(request) {
             requestCompleted()
         }
     }
-    
+
     /// 请求失败回调
     open func requestFailed(_ request: HTTPRequest) {
         succeedRequest = nil
         failedRequest = request
-        
+
         if stoppedOnFailure || !startNextRequest(request) {
             requestCompleted()
         }
     }
-    
+
     // MARK: - Private
     @discardableResult
     private func startNextRequest(_ previousRequest: HTTPRequest?) -> Bool {
@@ -178,11 +219,11 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
                 addRequest(request, callback: nil)
             }
         }
-        
+
         if previousRequest == nil {
             toggleAccessoriesWillStartCallBack()
         }
-        
+
         if nextRequestIndex < requestArray.count {
             let request = requestArray[nextRequestIndex]
             nextRequestIndex += 1
@@ -204,28 +245,28 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
         }
         return false
     }
-    
+
     private func toggleAccessoriesWillStartCallBack() {
-        requestAccessories?.forEach({ accessory in
+        requestAccessories?.forEach { accessory in
             accessory.requestWillStart(self)
-        })
+        }
     }
-    
+
     private func toggleAccessoriesWillStopCallBack() {
-        requestAccessories?.forEach({ accessory in
+        requestAccessories?.forEach { accessory in
             accessory.requestWillStop(self)
-        })
+        }
     }
-    
+
     private func toggleAccessoriesDidStopCallBack() {
-        requestAccessories?.forEach({ accessory in
+        requestAccessories?.forEach { accessory in
             accessory.requestDidStop(self)
-        })
+        }
     }
-    
-    private func requestCompleted() {
+
+    @MainActor private func requestCompleted() {
         toggleAccessoriesWillStopCallBack()
-        
+
         if failedRequest == nil {
             delegate?.chainRequestFinished(self)
             successCompletionBlock?(self)
@@ -233,12 +274,12 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
             delegate?.chainRequestFailed(self)
             failureCompletionBlock?(self)
         }
-        
+
         clearCompletionBlock()
         toggleAccessoriesDidStopCallBack()
         ChainRequestManager.shared.removeChainRequest(self)
     }
-    
+
     private func clearRequest() {
         if nextRequestIndex > 0 {
             let currentRequestIndex = nextRequestIndex - 1
@@ -247,39 +288,80 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate {
                 request.cancel()
             }
         }
-        
+
         nextRequest = nil
         requestArray.removeAll()
         requestCallbackArray.removeAll()
         requestBuilder = nil
         clearCompletionBlock()
     }
-    
 }
 
 // MARK: - ChainRequestManager
 /// 队列请求管理器
-open class ChainRequestManager {
-    
+open class ChainRequestManager: @unchecked Sendable {
     public static let shared = ChainRequestManager()
-    
+
     private var chainRequestArray: [ChainRequest] = []
     private var lock = NSLock()
-    
+
     public init() {}
-    
+
     /// 添加队列请求
     open func addChainRequest(_ chainRequest: ChainRequest) {
         lock.lock()
         defer { lock.unlock() }
         chainRequestArray.append(chainRequest)
     }
-    
+
     /// 移除队列请求
     open func removeChainRequest(_ chainRequest: ChainRequest) {
         lock.lock()
         defer { lock.unlock() }
         chainRequestArray.removeAll(where: { $0 === chainRequest })
     }
-    
+}
+
+// MARK: - Concurrency+ChainRequest
+extension ChainRequest {
+    /// 异步获取完成响应，注意非Task取消也会触发(Continuation流程)
+    public func response() async -> ChainRequest {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                requestCancelledBlock { request in
+                    if !Task.isCancelled {
+                        continuation.resume(returning: request)
+                    }
+                }
+                .response { request in
+                    continuation.resume(returning: request)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
+
+    /// 异步获取成功响应，注意非Task取消也会触发(Continuation流程)
+    public func responseSuccess() async throws -> ChainRequest {
+        try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                requestCancelledBlock { _ in
+                    if !Task.isCancelled {
+                        continuation.resume(throwing: CancellationError())
+                    }
+                }
+                .responseSuccess { request in
+                    continuation.resume(returning: request)
+                }
+                .responseError { error in
+                    continuation.resume(throwing: error)
+                }
+                .start()
+            }
+        } onCancel: {
+            self.cancel()
+        }
+    }
 }

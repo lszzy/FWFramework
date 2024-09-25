@@ -16,7 +16,7 @@
     <a title="FWFramework  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -691,6 +691,9 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1050,6 +1053,12 @@
                 <a href="Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1212,6 +1221,9 @@
                 <a href="Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1245,6 +1257,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Binding.html">Binding</a>
@@ -1376,6 +1391,9 @@
                 <a href="Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1386,6 +1404,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/ScrollView.html">ScrollView</a>
@@ -1965,9 +1989,6 @@
                 <a href="Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2151,12 +2172,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/LineShape.html">LineShape</a>
@@ -2417,9 +2432,6 @@
                 <a href="Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2485,9 +2497,6 @@
                 <a href="Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
-                <a href="Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2516,8 +2525,9 @@
 * Easily customizable UI plug-ins, including pop-up windows, toast, empty interface, pull-down refresh, image selection and other plug-ins
 * Completely replaceable network images and network request layer, compatible with SDWebImage, Alamofire, etc. by default
 * Automatically updated AutoLayout chain layout, commonly used UI view components are all available
-* Extensible Model, View, and Controller architecture encapsulation to quickly write business code
+* Extensible Model, View, and Controller architecture encapsulation for quick writing of business codes
 * Compatible with SwiftUI, easily implement UIKit and SwiftUI hybrid interface development
+* Compatible with Swift 6, quickly write more robust, less crash-prone, and thread-safe code   
 * Any replaceable fw. code prefix, commonly used Toolkit methods, Theme, multi-language processing
 * Everything you want is available here
 </code></pre>
@@ -2574,12 +2584,12 @@ extension WrapperCompatible {
 <h2 id='a-href-https-github-com-lszzy-fwframework-blob-master-changelog-md-changelog-a' class='heading'><a href="https://github.com/lszzy/FWFramework/blob/master/CHANGELOG.md">Changelog</a></h2>
 
 <p>As this framework is constantly upgrading, optimizing and expanding new functions, the Api of each version may be slightly changed. If a compilation error is reported when the new version is upgraded, the solution is as follows:</p>
-<pre class="highlight plaintext"><code>1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '5.12.0'
+<pre class="highlight plaintext"><code>1. Just change to specify the pod version number to import, the recommended way, does not affect the project progress, upgrade to the new version only when you have time, example: pod 'FWFramework', '6.0.0-beta.1'
 2. Upgrade to the new version, please pay attention to the version update log
 </code></pre>
 <h3 id='swift' class='heading'>Swift</h3>
 
-<p>From version 5.0, only compatible with Swift, compatible with iOS 13+. The 5.x version is completely refactored using Swift and is incompatible with some APIs of the 4.x version. When migrating, old users not only use the new API to fix compilation errors, but also need to test whether the relevant functions are normal. We apologize for the inconvenience caused to you.</p>
+<p>Starting from version 6.0, it is compatible with Swift 6 and iOS 13+. Version 5.x is only compatible with Swift 5. When migrating, in addition to using the new API to fix compilation errors, you also need to test whether the relevant functions are normal. We apologize for the inconvenience caused to you.</p>
 <h3 id='objective-c' class='heading'>Objective-C</h3>
 
 <p>For OC compatibility, please use version 4.x, compatible with iOS 11+. Subsequent versions of version 4.x will only fix bugs and no new features will be added.</p>
@@ -2596,7 +2606,7 @@ If you are the author of a third-party open source library, if this library viol
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

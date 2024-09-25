@@ -5,42 +5,41 @@
 //  Created by wuyong on 2023/3/29.
 //
 
-import Foundation
 import CommonCrypto
+import Foundation
 
 /// 文件缓存。复杂对象需遵循NSCoding|AnyArchivable协议
-open class CacheFile: CacheEngine {
-    
+open class CacheFile: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheFile()
-    
+
     private var path: String = ""
-    
-    public override convenience init() {
+
+    override public convenience init() {
         self.init(path: nil)
     }
-    
+
     /// 指定路径
     public init(path: String?) {
         super.init()
         // 绝对路径: path
-        if let path = path, (path as NSString).isAbsolutePath {
+        if let path, (path as NSString).isAbsolutePath {
             self.path = path
-        // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
+            // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
         } else {
             let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheFile"])
             let fileName = path ?? ""
             self.path = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
         }
     }
-    
+
     private func filePath(_ key: String) -> String {
         let fileName = "\(key.fw.md5Encode).plist"
         return (path as NSString).appendingPathComponent(fileName)
     }
-    
+
     // MARK: - CacheEngineProtocol
-    open override func readCache(forKey key: String) -> Any? {
+    override open func readCache(forKey key: String) -> Any? {
         let filePath = filePath(key)
         if FileManager.default.fileExists(atPath: filePath) {
             guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
@@ -48,8 +47,8 @@ open class CacheFile: CacheEngine {
         }
         return nil
     }
-    
-    open override func writeCache(_ object: Any, forKey key: String) {
+
+    override open func writeCache(_ object: Any, forKey key: String) {
         let filePath = filePath(key)
         // 自动创建目录
         let fileDir = (filePath as NSString).deletingLastPathComponent
@@ -59,14 +58,13 @@ open class CacheFile: CacheEngine {
         guard let data = Data.fw.archivedData(object) else { return }
         try? data.write(to: URL(fileURLWithPath: filePath))
     }
-    
-    open override func clearCache(forKey key: String) {
+
+    override open func clearCache(forKey key: String) {
         let filePath = filePath(key)
         try? FileManager.default.removeItem(atPath: filePath)
     }
-    
-    open override func clearAllCaches() {
+
+    override open func clearAllCaches() {
         try? FileManager.default.removeItem(atPath: path)
     }
-    
 }

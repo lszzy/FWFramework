@@ -1,5 +1,5 @@
 //
-//  NavigationStyle.swift
+//  BarStyle.swift
 //  FWFramework
 //
 //  Created by wuyong on 2022/8/23.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UINavigationBar
-extension Wrapper where Base: UINavigationBar {
+@MainActor extension Wrapper where Base: UINavigationBar {
     /// 应用指定导航栏配置
     public func applyBarAppearance(_ appearance: NavigationBarAppearance) {
         if appearance.isTranslucent != isTranslucent {
@@ -44,7 +44,7 @@ extension Wrapper where Base: UINavigationBar {
             appearance.appearanceBlock?(base)
         }
     }
-    
+
     /// 应用指定导航栏样式
     public func applyBarStyle(_ style: NavigationBarStyle) {
         if let appearance = NavigationBarAppearance.appearance(for: style) {
@@ -54,7 +54,7 @@ extension Wrapper where Base: UINavigationBar {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 状态栏样式，默认preferredStatusBarStyle，设置后才会生效
     public var statusBarStyle: UIStatusBarStyle {
         get {
@@ -87,7 +87,7 @@ extension Wrapper where Base: UIViewController {
     /// 当前导航栏设置，优先级高于style，设置后会在viewWillAppear:自动应用生效
     public var navigationBarAppearance: NavigationBarAppearance? {
         get {
-            return property(forName: "navigationBarAppearance") as? NavigationBarAppearance
+            property(forName: "navigationBarAppearance") as? NavigationBarAppearance
         }
         set {
             setProperty(newValue, forName: "navigationBarAppearance")
@@ -119,7 +119,7 @@ extension Wrapper where Base: UIViewController {
             if let hidden = propertyNumber(forName: "navigationBarHidden") {
                 return hidden.boolValue
             }
-            
+
             guard let navController = base.navigationController else { return true }
             return navController.isNavigationBarHidden || navController.navigationBar.isHidden
         }
@@ -137,7 +137,7 @@ extension Wrapper where Base: UIViewController {
             updateNavigationBarStyle(false, isAppeared: true)
         }
     }
-    
+
     /// 是否允许修改导航栏样式，默认未设置时child控制器不能修改
     public var allowsBarAppearance: Bool {
         get {
@@ -150,7 +150,7 @@ extension Wrapper where Base: UIViewController {
             setPropertyNumber(NSNumber(value: newValue), forName: "allowsBarAppearance")
         }
     }
-    
+
     private var currentNavigationBarAppearance: NavigationBarAppearance? {
         // 1. 检查VC是否自定义appearance
         if let appearance = navigationBarAppearance {
@@ -170,22 +170,22 @@ extension Wrapper where Base: UIViewController {
         }
         return nil
     }
-    
+
     fileprivate func updateNavigationBarStyle(_ animated: Bool, isAppeared: Bool) {
         // 含有导航栏且不是导航栏控制器，如果是child控制器且允许修改时才处理
         guard let navigationController = base.navigationController,
               !(base is UINavigationController) else { return }
         if !allowsBarAppearance { return }
-        
+
         // navigationBarHidden设置即生效，动态切换导航栏不突兀，一般在viewWillAppear:中调用
         if let hidden = propertyNumber(forName: "navigationBarHidden"),
            navigationController.isNavigationBarHidden != hidden.boolValue {
             navigationController.setNavigationBarHidden(hidden.boolValue, animated: animated)
         }
-        
+
         // 获取当前用于显示的appearance，未设置时不处理
         guard let appearance = currentNavigationBarAppearance else { return }
-        
+
         // 配合导航栏appearance初始化返回按钮或左侧按钮
         if appearance.backImage != nil {
             base.navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
@@ -196,10 +196,10 @@ extension Wrapper where Base: UIViewController {
                 leftBarItem = appearance.leftBackImage
             }
         }
-        
+
         // 应用当前导航栏appearance
         navigationController.navigationBar.fw.applyBarAppearance(appearance)
-        
+
         // 标记转场导航栏样式需要刷新
         if isAppeared {
             NavigationBarAppearance.appearanceChanged?(base)
@@ -210,7 +210,7 @@ extension Wrapper where Base: UIViewController {
     public var tabBarHidden: Bool {
         get {
             guard let tabBarController = base.tabBarController else { return true }
-                        
+
             #if compiler(>=6.0)
             if #available(iOS 18.0, *) {
                 return tabBarController.isTabBarHidden || tabBarController.tabBar.isHidden
@@ -226,11 +226,11 @@ extension Wrapper where Base: UIViewController {
                 return
             }
             #endif
-            
+
             base.tabBarController?.tabBar.isHidden = newValue
         }
     }
-    
+
     /// 动态隐藏标签栏。仅iOS18+支持animated参数，立即生效
     public func setTabBarHidden(_ hidden: Bool, animated: Bool) {
         #if compiler(>=6.0)
@@ -239,10 +239,10 @@ extension Wrapper where Base: UIViewController {
             return
         }
         #endif
-        
+
         base.tabBarController?.tabBar.isHidden = hidden
     }
-    
+
     /// 工具栏是否隐藏，默认为true。需设置toolbarItems，立即生效
     public var toolBarHidden: Bool {
         get {
@@ -253,7 +253,7 @@ extension Wrapper where Base: UIViewController {
             base.navigationController?.isToolbarHidden = newValue
         }
     }
-    
+
     /// 动态隐藏工具栏。需设置toolbarItems，立即生效
     public func setToolBarHidden(_ hidden: Bool, animated: Bool) {
         base.navigationController?.setToolbarHidden(hidden, animated: animated)
@@ -262,14 +262,14 @@ extension Wrapper where Base: UIViewController {
     /// 设置视图布局Bar延伸类型，None为不延伸(Bar不覆盖视图)，Top|Bottom为顶部|底部延伸，All为全部延伸
     public var extendedLayoutEdge: UIRectEdge {
         get {
-            return base.edgesForExtendedLayout
+            base.edgesForExtendedLayout
         }
         set {
             base.edgesForExtendedLayout = newValue
             base.extendedLayoutIncludesOpaqueBars = true
         }
     }
-    
+
     /// 自适应Bar延伸类型，兼容顶部和底部栏safeArea布局方式，需在viewDidLoad及之后调用生效。开启兼容模式时仅在iOS14及以下生效
     public func adjustExtendedLayout(compatible: Bool = false) {
         base.extendedLayoutIncludesOpaqueBars = true
@@ -288,41 +288,38 @@ extension Wrapper where Base: UIViewController {
 
 // MARK: - NavigationStyle
 /// 导航栏可扩展全局样式
-public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable {
-    
+public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = Int
-    
+
     /// 默认样式，应用可配置并扩展
     public static let `default`: NavigationBarStyle = .init(0)
-    
+
     public var rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public init(_ rawValue: Int) {
         self.rawValue = rawValue
     }
-    
 }
 
 /// 导航栏样式配置
 open class NavigationBarAppearance {
-    
-    static var appearanceChanged: ((UIViewController) -> Void)?
-    private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
-    
+    nonisolated(unsafe) static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
+    private nonisolated(unsafe) static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+
     /// 根据style获取全局appearance对象
     public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
-        return appearances[style]
+        appearances[style]
     }
-    
+
     /// 设置style对应全局appearance对象
     public static func setAppearance(_ appearance: NavigationBarAppearance?, for style: NavigationBarStyle) {
         appearances[style] = appearance
     }
-    
+
     /// 是否半透明(磨砂)，需edgesForExtendedLayout为Top|All，默认false
     open var isTranslucent = false
     /// 前景色，包含标题和按钮，默认nil
@@ -347,22 +344,20 @@ open class NavigationBarAppearance {
     open var leftBackImage: UIImage?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
     open var appearanceBlock: ((UINavigationBar) -> Void)?
-    
+
     public init() {}
-    
 }
 
 // MARK: - FrameworkAutoloader+BarStyle
 extension FrameworkAutoloader {
-    
     @objc static func loadToolkit_BarStyle() {
         swizzleBarStyle()
     }
-    
+
     fileprivate static func swizzleBarStyleClass(_ clazz: AnyClass?) {
         guard let clazz, NSObject.fw.getAssociatedObject(clazz, key: "swizzleBarStyleClass") == nil else { return }
         NSObject.fw.setAssociatedObject(clazz, key: "swizzleBarStyleClass", value: NSNumber(value: true))
-        
+
         NSObject.fw.swizzleInstanceMethod(
             clazz,
             selector: #selector(getter: UIViewController.prefersStatusBarHidden),
@@ -390,16 +385,15 @@ extension FrameworkAutoloader {
                 return store.original(selfObject, store.selector)
             }
         }}
-        
+
         NSObject.fw.swizzleInstanceMethod(
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
             selfObject.fw.updateNavigationBarStyle(animated, isAppeared: false)
         }}
     }
-    
 }

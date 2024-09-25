@@ -5,11 +5,11 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 /// 音频播放器事件代理
-@objc public protocol AudioPlayerDelegate {
+@MainActor @objc public protocol AudioPlayerDelegate {
     @objc optional func audioPlayerWillChanged(at index: Int)
     @objc optional func audioPlayerCurrentItemChanged(_ item: AVPlayerItem)
     @objc optional func audioPlayerCurrentItemEvicted(_ item: AVPlayerItem)
@@ -24,32 +24,32 @@ import AVFoundation
 }
 
 /// 音频播放器数据源
-@objc public protocol AudioPlayerDataSource {
+@MainActor @objc public protocol AudioPlayerDataSource {
     @objc optional func audioPlayerNumberOfItems() -> Int
     /// 音频源URL，支持String|URL|AVURLAsset|AVPlayerItem等
     @objc optional func audioPlayerURLForItem(at index: Int, preBuffer: Bool) -> Any?
     @objc optional func audioPlayerLoadItem(at index: Int, preBuffer: Bool)
 }
 
-public enum AudioPlayerStatus: Int {
+public enum AudioPlayerStatus: Int, Sendable {
     case playing = 0
     case forcePause
     case buffering
     case unknown
 }
 
-public enum AudioPlayerRepeatMode: Int {
+public enum AudioPlayerRepeatMode: Int, Sendable {
     case on = 0
     case once
     case off
 }
 
-public enum AudioPlayerShuffleMode: Int {
+public enum AudioPlayerShuffleMode: Int, Sendable {
     case on = 0
     case off
 }
 
-fileprivate enum AudioPlayerPauseReason: Int {
+private enum AudioPlayerPauseReason: Int, Sendable {
     case none = 0
     case forced
     case buffering
@@ -58,10 +58,9 @@ fileprivate enum AudioPlayerPauseReason: Int {
 /// 音频播放器
 ///
 /// [HysteriaPlayer](https://github.com/StreetVoice/HysteriaPlayer)
-open class AudioPlayer: NSObject {
-    
+open class AudioPlayer: NSObject, @unchecked Sendable {
     public static let shared = AudioPlayer()
-    
+
     open weak var delegate: AudioPlayerDelegate?
     open weak var dataSource: AudioPlayerDataSource?
     open var itemsCount: Int = 0
@@ -73,15 +72,23 @@ open class AudioPlayer: NSObject {
         true
         #endif
     }()
-    open lazy var audioPlayer: AVQueuePlayer = {
-        let result = AVQueuePlayer()
-        result.automaticallyWaitsToMinimizeStalling = false
-        return result
-    }()
+
+    @MainActor open var audioPlayer: AVQueuePlayer {
+        if let player = _audioPlayer {
+            return player
+        }
+
+        let player = AVQueuePlayer()
+        player.automaticallyWaitsToMinimizeStalling = false
+        _audioPlayer = player
+        return player
+    }
+
+    private var _audioPlayer: AVQueuePlayer?
     open private(set) var playerItems: [AVPlayerItem]? = []
-    
-    open var repeatMode: AudioPlayerRepeatMode = .off
-    open var shuffleMode: AudioPlayerShuffleMode = .off {
+
+    @MainActor open var repeatMode: AudioPlayerRepeatMode = .off
+    @MainActor open var shuffleMode: AudioPlayerShuffleMode = .off {
         didSet {
             playedItems.removeAll()
             if shuffleMode == .on {
@@ -91,9 +98,10 @@ open class AudioPlayer: NSObject {
             }
         }
     }
+
     open var isMemoryCached: Bool {
         get {
-            return playerItems != nil
+            playerItems != nil
         }
         set {
             if playerItems == nil && newValue {
@@ -103,15 +111,17 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
-    open var isPlaying: Bool {
-        return audioPlayer.rate != 0
+
+    @MainActor open var isPlaying: Bool {
+        audioPlayer.rate != 0
     }
+
     open private(set) var lastItemIndex: Int = 0
-    open var currentItem: AVPlayerItem? {
-        return audioPlayer.currentItem
+    @MainActor open var currentItem: AVPlayerItem? {
+        audioPlayer.currentItem
     }
-    open var playerStatus: AudioPlayerStatus {
+
+    @MainActor open var playerStatus: AudioPlayerStatus {
         if isPlaying {
             return .playing
         } else {
@@ -125,19 +135,21 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
-    open var playingItemCurrentTime: Float {
+
+    @MainActor open var playingItemCurrentTime: Float {
         let currentTime = audioPlayer.currentItem?.currentTime()
-        guard let currentTime = currentTime, currentTime.isValid else { return 0 }
+        guard let currentTime, currentTime.isValid else { return 0 }
         let current = currentTime.seconds
         return current.isFinite ? Float(current) : 0
     }
-    open var playingItemDurationTime: Float {
+
+    @MainActor open var playingItemDurationTime: Float {
         let durationTime = playerItemDuration()
         guard durationTime.isValid else { return 0 }
         let duration = durationTime.seconds
         return duration.isFinite ? Float(duration) : 0
     }
+
     open var observePeriodicTime: Bool = false {
         didSet {
             guard observePeriodicTime != oldValue else { return }
@@ -147,28 +159,32 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
+
     private var pauseReason: AudioPlayerPauseReason = .none
     private var playedItems: Set<Int> = .init()
     private var periodicTimeToken: Any?
-    
+
     private var routeChangedWhilePlaying = false
     private var interruptedWhilePlaying = false
     private var isPreBuffered = false
     private var tookAudioFocus = false
     private var prepareingItemHash: Int = 0
     private var audioQueue = DispatchQueue(label: "site.wuyong.queue.audioplayer")
-    
-    public override init() {
+
+    override public init() {
         super.init()
     }
-    
+
     deinit {
         if tookAudioFocus {
             destroyPlayer()
         }
+
+        #if DEBUG
+        Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        #endif
     }
-    
+
     open func setupPlayerItem(url: Any, index: Int) {
         var playerItem: AVPlayerItem?
         if let item = url as? AVPlayerItem {
@@ -180,12 +196,12 @@ open class AudioPlayer: NSObject {
         } else if let urlParameter = url as? URLParameter {
             playerItem = AVPlayerItem(url: urlParameter.urlValue)
         }
-        guard let playerItem = playerItem else { return }
-        
+        guard let playerItem else { return }
+
         setupPlayerItem(playerItem: playerItem, index: index)
     }
-    
-    open func playItem(from startIndex: Int) {
+
+    @MainActor open func playItem(from startIndex: Int) {
         willPlayPlayerItem(at: startIndex)
         audioPlayer.pause()
         audioPlayer.removeAllItems()
@@ -194,81 +210,87 @@ open class AudioPlayer: NSObject {
             getSourceURL(at: startIndex, preBuffer: false)
         }
     }
-    
+
     open func removeAllItems() {
-        audioPlayer.items().forEach({ item in
+        _audioPlayer?.items().forEach { item in
             item.seek(to: .zero, completionHandler: nil)
             unobservePlayerItem(item)
-        })
-        
+        }
+
         playerItems = isMemoryCached ? [] : nil
-        audioPlayer.removeAllItems()
+        _audioPlayer?.removeAllItems()
     }
-    
+
     open func removeQueueItems() {
-        while audioPlayer.items().count > 1 {
-            audioPlayer.remove(audioPlayer.items()[1])
+        if let audioPlayer = _audioPlayer {
+            while audioPlayer.items().count > 1 {
+                audioPlayer.remove(audioPlayer.items()[1])
+            }
         }
     }
-    
+
     open func getAudioIndex(_ item: AVPlayerItem?) -> Int? {
-        guard let item = item else { return nil }
+        guard let item else { return nil }
         let number = item.fw.propertyNumber(forName: "audioIndex")
         return number?.intValue
     }
-    
+
     open func removeItem(at index: Int) {
         if isMemoryCached {
-            let items = self.playerItems ?? []
+            let items = playerItems ?? []
             for item in items {
                 let checkIndex = getAudioIndex(item)
                 if checkIndex == index {
-                    var playerItems = self.playerItems ?? []
+                    var playerItems = playerItems ?? []
                     playerItems.removeAll { $0 == item }
                     self.playerItems = playerItems
-                    
-                    if audioPlayer.items().firstIndex(of: item) != nil {
-                        audioPlayer.remove(item)
+
+                    if let audioPlayer = _audioPlayer {
+                        if audioPlayer.items().firstIndex(of: item) != nil {
+                            audioPlayer.remove(item)
+                        }
                     }
-                } else if let checkIndex = checkIndex, checkIndex > index {
+                } else if let checkIndex, checkIndex > index {
                     setAudioIndex(item, index: checkIndex - 1)
                 }
             }
         } else {
-            for item in audioPlayer.items() {
-                let checkIndex = getAudioIndex(item)
-                if checkIndex == index {
-                    audioPlayer.remove(item)
-                } else if let checkIndex = checkIndex, checkIndex > index {
-                    setAudioIndex(item, index: checkIndex - 1)
+            if let audioPlayer = _audioPlayer {
+                for item in audioPlayer.items() {
+                    let checkIndex = getAudioIndex(item)
+                    if checkIndex == index {
+                        audioPlayer.remove(item)
+                    } else if let checkIndex, checkIndex > index {
+                        setAudioIndex(item, index: checkIndex - 1)
+                    }
                 }
             }
         }
     }
-    
-    open func moveItem(from: Int, to: Int) {
-        playerItems?.forEach({ item in
+
+    @MainActor open func moveItem(from: Int, to: Int) {
+        playerItems?.forEach { item in
             resetItemIndex(item, from: from, to: to)
-        })
-        
-        audioPlayer.items().forEach({ item in
+        }
+
+        for item in audioPlayer.items() {
             if resetItemIndex(item, from: from, to: to) {
                 removeQueueItems()
             }
-        })
+        }
     }
-    
-    open func play() {
+
+    @MainActor open func play() {
         pauseReason = .none
         audioPlayer.play()
     }
-    
-    open func pause() {
+
+    @MainActor open func pause() {
         pauseReason = .forced
         audioPlayer.pause()
     }
-    
-    open func playPrevious() {
+
+    @MainActor open func playPrevious() {
         let nowIndex = getAudioIndex(audioPlayer.currentItem) ?? 0
         if nowIndex == 0 {
             if repeatMode == .on {
@@ -276,15 +298,17 @@ open class AudioPlayer: NSObject {
             } else {
                 pause()
                 audioPlayer.currentItem?.seek(to: .zero, completionHandler: { [weak self] _ in
-                    self?.play()
+                    DispatchQueue.fw.mainAsync { [weak self] in
+                        self?.play()
+                    }
                 })
             }
         } else {
             playItem(from: nowIndex - 1)
         }
     }
-    
-    open func playNext() {
+
+    @MainActor open func playNext() {
         if shuffleMode == .on {
             if let nextIndex = randomIndex() {
                 playItem(from: nextIndex)
@@ -311,29 +335,29 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
-    open func seek(to seconds: Double, completionHandler: ((Bool) -> Void)? = nil) {
-        if let completionHandler = completionHandler {
+
+    @MainActor open func seek(to seconds: Double, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
+        if let completionHandler {
             audioPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: Int32(NSEC_PER_SEC)), completionHandler: completionHandler)
         } else {
             audioPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: Int32(NSEC_PER_SEC)))
         }
     }
-    
-    open func addBoundaryTimeObserver(for times: [NSValue], queue: DispatchQueue?, using block: @escaping () -> Void) -> Any {
+
+    @MainActor open func addBoundaryTimeObserver(for times: [NSValue], queue: DispatchQueue?, using block: @escaping @Sendable () -> Void) -> Any {
         let observer = audioPlayer.addBoundaryTimeObserver(forTimes: times, queue: queue, using: block)
         return observer
     }
-    
-    open func addPeriodicTimeObserver(for interval: CMTime, queue: DispatchQueue?, using block: @escaping (CMTime) -> Void) -> Any {
+
+    @MainActor open func addPeriodicTimeObserver(for interval: CMTime, queue: DispatchQueue?, using block: @escaping @Sendable (CMTime) -> Void) -> Any {
         let observer = audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: queue, using: block)
         return observer
     }
-    
+
     open func removeTimeObserver(_ observer: Any) {
-        audioPlayer.removeTimeObserver(observer)
+        _audioPlayer?.removeTimeObserver(observer)
     }
-    
+
     open func destroyPlayer() {
         tookAudioFocus = false
         do {
@@ -343,119 +367,130 @@ open class AudioPlayer: NSObject {
                 Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
             }
         }
-        UIApplication.shared.endReceivingRemoteControlEvents()
+        DispatchQueue.fw.mainSyncIf {
+            UIApplication.shared.endReceivingRemoteControlEvents()
+        }
         NotificationCenter.default.removeObserver(self)
-        
+
         if let token = periodicTimeToken {
             removeTimeObserver(token)
             periodicTimeToken = nil
         }
-        
-        audioPlayer.removeObserver(self, forKeyPath: "status", context: nil)
-        audioPlayer.removeObserver(self, forKeyPath: "rate", context: nil)
-        audioPlayer.removeObserver(self, forKeyPath: "currentItem", context: nil)
-        
+
+        _audioPlayer?.removeObserver(self, forKeyPath: "status", context: nil)
+        _audioPlayer?.removeObserver(self, forKeyPath: "rate", context: nil)
+        _audioPlayer?.removeObserver(self, forKeyPath: "currentItem", context: nil)
+
         removeAllItems()
-        
-        audioPlayer.pause()
+
+        DispatchQueue.fw.mainSyncIf {
+            _audioPlayer?.pause()
+        }
         delegate = nil
         dataSource = nil
     }
-    
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if object as? AVPlayer == self.audioPlayer, keyPath == "status" {
-            if audioPlayer.status == .readyToPlay {
-                if observePeriodicTime && periodicTimeToken == nil {
-                    periodicTimeToken = addPeriodicTimeObserver(for: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: .main, using: { [weak self] time in
-                        self?.delegate?.audioPlayerCurrentTimeChanged?(time)
-                    })
-                }
-                delegate?.audioPlayerReadyToPlay?(nil)
-                if !isPlaying {
-                    audioPlayer.play()
-                }
-            } else if audioPlayer.status == .failed {
-                if !disableLogs {
-                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
-                }
-                
-                delegate?.audioPlayerDidFailed?(nil, error: audioPlayer.error)
-            }
-        }
-        
-        if object as? AVPlayer == self.audioPlayer, keyPath == "rate" {
-            delegate?.audioPlayerRateChanged?(isPlaying)
-        }
-        
-        if object as? AVPlayer == self.audioPlayer, keyPath == "currentItem" {
-            let newPlayerItem = change?[.newKey] as? AVPlayerItem
-            let lastPlayerItem = change?[.oldKey] as? AVPlayerItem
-            if let lastPlayerItem = lastPlayerItem {
-                unobservePlayerItem(lastPlayerItem)
-                
-                delegate?.audioPlayerCurrentItemEvicted?(lastPlayerItem)
-            }
-            if let newPlayerItem = newPlayerItem {
-                observePlayerItem(newPlayerItem)
-                
-                delegate?.audioPlayerCurrentItemChanged?(newPlayerItem)
-            }
-        }
-        
-        if object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "status" {
-            isPreBuffered = false
-            if item.status == .failed {
-                delegate?.audioPlayerDidFailed?(item, error: item.error)
-            } else if item.status == .readyToPlay {
-                delegate?.audioPlayerReadyToPlay?(item)
-                if !isPlaying && pauseReason != .forced {
-                    audioPlayer.play()
-                }
-            }
-        }
-        
-        if audioPlayer.items().count > 1, object as? AVPlayerItem == audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
-            isPreBuffered = true
-        }
-        
-        if object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
-            if item.hash != prepareingItemHash {
-                prepareNextPlayerItem()
-                prepareingItemHash = item.hash
-            }
-            
-            let timeRanges = change?[.newKey] as? [NSValue] ?? []
-            if timeRanges.count > 0 {
-                let timeRange = timeRanges[0].timeRangeValue
-                delegate?.audioPlayerCurrentItemPreloaded?(CMTimeAdd(timeRange.start, timeRange.duration))
-                
-                if audioPlayer.rate == 0 && pauseReason != .forced {
-                    pauseReason = .buffering
-                    
-                    let bufferdTime = CMTimeAdd(timeRange.start, timeRange.duration)
-                    let milestone = CMTimeAdd(audioPlayer.currentTime(), CMTimeMakeWithSeconds(5.0, preferredTimescale: timeRange.duration.timescale))
-                    
-                    if bufferdTime > milestone && audioPlayer.currentItem?.status == .readyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying {
-                        if !isPlaying {
-                            if !disableLogs {
-                                Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
+
+    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        let sendableObject = SendableObject(object)
+        let sendableChange = SendableObject(change)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            guard let self else { return }
+            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "status" {
+                if audioPlayer.status == .readyToPlay {
+                    if observePeriodicTime && periodicTimeToken == nil {
+                        periodicTimeToken = addPeriodicTimeObserver(for: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: .main, using: { [weak self] time in
+                            DispatchQueue.fw.mainAsync { [weak self] in
+                                self?.delegate?.audioPlayerCurrentTimeChanged?(time)
                             }
-                            play()
+                        })
+                    }
+                    delegate?.audioPlayerReadyToPlay?(nil)
+                    if !isPlaying {
+                        audioPlayer.play()
+                    }
+                } else if audioPlayer.status == .failed {
+                    if !disableLogs {
+                        Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: %@", audioPlayer.error?.localizedDescription ?? "")
+                    }
+
+                    delegate?.audioPlayerDidFailed?(nil, error: audioPlayer.error)
+                }
+            }
+
+            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "rate" {
+                delegate?.audioPlayerRateChanged?(isPlaying)
+            }
+
+            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "currentItem" {
+                let newPlayerItem = sendableChange.object?[.newKey] as? AVPlayerItem
+                let lastPlayerItem = sendableChange.object?[.oldKey] as? AVPlayerItem
+                if let lastPlayerItem {
+                    unobservePlayerItem(lastPlayerItem)
+
+                    delegate?.audioPlayerCurrentItemEvicted?(lastPlayerItem)
+                }
+                if let newPlayerItem {
+                    observePlayerItem(newPlayerItem)
+
+                    delegate?.audioPlayerCurrentItemChanged?(newPlayerItem)
+                }
+            }
+
+            if sendableObject.object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "status" {
+                isPreBuffered = false
+                if item.status == .failed {
+                    delegate?.audioPlayerDidFailed?(item, error: item.error)
+                } else if item.status == .readyToPlay {
+                    delegate?.audioPlayerReadyToPlay?(item)
+                    if !isPlaying && pauseReason != .forced {
+                        audioPlayer.play()
+                    }
+                }
+            }
+
+            if audioPlayer.items().count > 1, sendableObject.object as? AVPlayerItem == audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
+                isPreBuffered = true
+            }
+
+            if sendableObject.object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
+                if item.hash != prepareingItemHash {
+                    prepareNextPlayerItem()
+                    prepareingItemHash = item.hash
+                }
+
+                let timeRanges = sendableChange.object?[.newKey] as? [NSValue] ?? []
+                if timeRanges.count > 0 {
+                    let timeRange = timeRanges[0].timeRangeValue
+                    delegate?.audioPlayerCurrentItemPreloaded?(CMTimeAdd(timeRange.start, timeRange.duration))
+
+                    if audioPlayer.rate == 0 && pauseReason != .forced {
+                        pauseReason = .buffering
+
+                        let bufferdTime = CMTimeAdd(timeRange.start, timeRange.duration)
+                        let milestone = CMTimeAdd(audioPlayer.currentTime(), CMTimeMakeWithSeconds(5.0, preferredTimescale: timeRange.duration.timescale))
+
+                        if bufferdTime > milestone && audioPlayer.currentItem?.status == .readyToPlay && !interruptedWhilePlaying && !routeChangedWhilePlaying {
+                            if !isPlaying {
+                                if !disableLogs {
+                                    Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: resume from buffering..")
+                                }
+                                play()
+                            }
                         }
                     }
                 }
             }
         }
     }
-    
-    private func preAction() {
+
+    @MainActor private func preAction() {
         tookAudioFocus = true
-        
+
         backgroundPlayable()
         audioSessionNotification()
     }
-    
-    private func backgroundPlayable() {
+
+    @MainActor private func backgroundPlayable() {
         let audioSession = AVAudioSession.sharedInstance()
         UIApplication.shared.beginReceivingRemoteControlEvents()
         if audioSession.category != .playback {
@@ -467,7 +502,7 @@ open class AudioPlayer: NSObject {
                         Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set category error: %@", error.localizedDescription)
                     }
                 }
-                
+
                 do {
                     try audioSession.setActive(true)
                 } catch {
@@ -482,22 +517,22 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
+
     private func setAudioIndex(_ item: AVPlayerItem, index: Int) {
         item.fw.setPropertyNumber(NSNumber(value: index), forName: "audioIndex")
     }
-    
-    private func willPlayPlayerItem(at index: Int) {
+
+    @MainActor private func willPlayPlayerItem(at index: Int) {
         if !tookAudioFocus {
             preAction()
         }
         lastItemIndex = index
         playedItems.insert(index)
-        
+
         delegate?.audioPlayerWillChanged?(at: lastItemIndex)
     }
-    
-    private func audioPlayerItemsCount() -> Int {
+
+    @MainActor private func audioPlayerItemsCount() -> Int {
         if let count = dataSource?.audioPlayerNumberOfItems?() {
             return count
         }
@@ -506,23 +541,24 @@ open class AudioPlayer: NSObject {
         }
         return itemURLs?.count ?? 0
     }
-    
-    private func getSourceURL(at index: Int, preBuffer: Bool) {
+
+    @MainActor private func getSourceURL(at index: Int, preBuffer: Bool) {
         if let url = dataSource?.audioPlayerURLForItem?(at: index, preBuffer: preBuffer) {
+            let sendableUrl = SendableObject(url)
             audioQueue.async { [weak self] in
-                self?.setupPlayerItem(url: url, index: index)
+                self?.setupPlayerItem(url: sendableUrl.object, index: index)
             }
         } else if dataSource?.audioPlayerLoadItem?(at: index, preBuffer: preBuffer) != nil {
         } else {
-            if let itemURLs = itemURLs, index < itemURLs.count {
-                let url = itemURLs[index]
+            if let itemURLs, index < itemURLs.count {
+                let sendableUrl = SendableObject(itemURLs[index])
                 audioQueue.async { [weak self] in
-                    self?.setupPlayerItem(url: url, index: index)
+                    self?.setupPlayerItem(url: sendableUrl.object, index: index)
                 }
             }
         }
     }
-    
+
     private func setupPlayerItem(playerItem: AVPlayerItem, index: Int) {
         DispatchQueue.main.async {
             self.setAudioIndex(playerItem, index: index)
@@ -534,13 +570,15 @@ open class AudioPlayer: NSObject {
             self.insertPlayerItem(playerItem)
         }
     }
-    
-    private func findSourceInPlayerItems(_ index: Int, play: Bool = false) -> Bool {
-        for item in (playerItems ?? []) {
+
+    @MainActor private func findSourceInPlayerItems(_ index: Int, play: Bool = false) -> Bool {
+        for item in playerItems ?? [] {
             if let checkIndex = getAudioIndex(item), checkIndex == index {
                 if item.status == .readyToPlay {
                     item.seek(to: .zero) { [weak self] _ in
-                        self?.insertPlayerItem(item, play: play)
+                        DispatchQueue.fw.mainAsync { [weak self] in
+                            self?.insertPlayerItem(item, play: play)
+                        }
                     }
                     return true
                 }
@@ -548,14 +586,14 @@ open class AudioPlayer: NSObject {
         }
         return false
     }
-    
-    private func prepareNextPlayerItem() {
+
+    @MainActor private func prepareNextPlayerItem() {
         if shuffleMode == .on || repeatMode == .once { return }
-        
+
         let nowIndex = lastItemIndex
         var findInPlayerItems = false
         let itemsCount = audioPlayerItemsCount()
-        
+
         if nowIndex + 1 < itemsCount {
             findInPlayerItems = findSourceInPlayerItems(nowIndex + 1)
             if !findInPlayerItems {
@@ -563,20 +601,20 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
-    private func insertPlayerItem(_ item: AVPlayerItem, play: Bool = false) {
+
+    @MainActor private func insertPlayerItem(_ item: AVPlayerItem, play: Bool = false) {
         if audioPlayer.items().count > 1 {
             removeQueueItems()
         }
         if audioPlayer.canInsert(item, after: nil) {
             audioPlayer.insert(item, after: nil)
-            
+
             if play && item.status == .readyToPlay {
                 audioPlayer.play()
             }
         }
     }
-    
+
     @discardableResult
     private func resetItemIndex(_ item: AVPlayerItem, from sourceIndex: Int, to destinationIndex: Int) -> Bool {
         guard let checkIndex = getAudioIndex(item) else { return false }
@@ -590,8 +628,8 @@ open class AudioPlayer: NSObject {
         } else if checkIndex < destinationIndex && checkIndex > sourceIndex {
             replaceIndex = checkIndex - 1
         }
-        
-        if let replaceIndex = replaceIndex {
+
+        if let replaceIndex {
             setAudioIndex(item, index: replaceIndex)
             if lastItemIndex == checkIndex {
                 lastItemIndex = replaceIndex
@@ -600,8 +638,8 @@ open class AudioPlayer: NSObject {
         }
         return false
     }
-    
-    private func playerItemDuration() -> CMTime {
+
+    @MainActor private func playerItemDuration() -> CMTime {
         var error: NSError?
         if audioPlayer.currentItem?.asset.statusOfValue(forKey: "duration", error: &error) == .loaded {
             let playerItem = audioPlayer.currentItem
@@ -616,41 +654,41 @@ open class AudioPlayer: NSObject {
             return .invalid
         }
     }
-    
-    private func audioSessionNotification() {
+
+    @MainActor private func audioSessionNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlayEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemPlaybackStall(_:)), name: .AVPlayerItemPlaybackStalled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(interruption(_:)), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(routeChanged(_:)), name: AVAudioSession.routeChangeNotification, object: nil)
-        
+
         audioPlayer.addObserver(self, forKeyPath: "status", options: [.initial, .new], context: nil)
         audioPlayer.addObserver(self, forKeyPath: "rate", options: [], context: nil)
         audioPlayer.addObserver(self, forKeyPath: "currentItem", options: [.initial, .new, .old], context: nil)
     }
-    
+
     private func observePlayerItem(_ item: AVPlayerItem) {
         guard !item.fw.propertyBool(forName: "observePlayerItem") else { return }
         item.fw.setPropertyBool(true, forName: "observePlayerItem")
-        
+
         item.addObserver(self, forKeyPath: "loadedTimeRanges", options: .new, context: nil)
         item.addObserver(self, forKeyPath: "status", options: .new, context: nil)
     }
-    
+
     private func unobservePlayerItem(_ item: AVPlayerItem) {
         guard item.fw.propertyBool(forName: "observePlayerItem") else { return }
         item.fw.setPropertyBool(false, forName: "observePlayerItem")
-        
+
         item.removeObserver(self, forKeyPath: "loadedTimeRanges", context: nil)
         item.removeObserver(self, forKeyPath: "status", context: nil)
     }
-    
-    @objc private func interruption(_ notification: Notification) {
+
+    @MainActor @objc private func interruption(_ notification: Notification) {
         guard let interruptionValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
               let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionValue) else {
             return
         }
-        
+
         if interruptionType == .began && pauseReason != .forced {
             interruptedWhilePlaying = true
             pause()
@@ -662,13 +700,13 @@ open class AudioPlayer: NSObject {
             Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: interruption: %@", interruptionType == .began ? "began" : "ended")
         }
     }
-    
-    @objc private func routeChanged(_ notification: Notification) {
+
+    @MainActor @objc private func routeChanged(_ notification: Notification) {
         guard let routeChangeValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
               let routeChangeReason = AVAudioSession.RouteChangeReason(rawValue: routeChangeValue) else {
             return
         }
-        
+
         if routeChangeReason == .oldDeviceUnavailable && pauseReason != .forced {
             routeChangedWhilePlaying = true
             pause()
@@ -680,17 +718,17 @@ open class AudioPlayer: NSObject {
             Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: routeChanged: %@", routeChangeReason == .newDeviceAvailable ? "New Device Available" : "Old Device Unavailable")
         }
     }
-    
-    @objc private func playerItemDidReachEnd(_ notification: Notification) {
+
+    @MainActor @objc private func playerItemDidReachEnd(_ notification: Notification) {
         guard let item = notification.object as? AVPlayerItem,
               item == audioPlayer.currentItem else {
             return
         }
-        
+
         guard let currentIndex = getAudioIndex(audioPlayer.currentItem) else {
             return
         }
-        
+
         if repeatMode == .once {
             playItem(from: currentIndex)
         } else if shuffleMode == .on {
@@ -715,27 +753,27 @@ open class AudioPlayer: NSObject {
             }
         }
     }
-    
-    @objc private func playerItemFailedToPlayEndTime(_ notification: Notification) {
+
+    @MainActor @objc private func playerItemFailedToPlayEndTime(_ notification: Notification) {
         guard let item = notification.object as? AVPlayerItem,
               item == audioPlayer.currentItem else {
             return
         }
-        
+
         let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
         delegate?.audioPlayerItemFailedToPlayEndTime?(item, error: error)
     }
-    
-    @objc private func playerItemPlaybackStall(_ notification: Notification) {
+
+    @MainActor @objc private func playerItemPlaybackStall(_ notification: Notification) {
         guard let item = notification.object as? AVPlayerItem,
               item == audioPlayer.currentItem else {
             return
         }
-        
+
         delegate?.audioPlayerItemPlaybackStall?(item)
     }
-    
-    private func randomIndex() -> Int? {
+
+    @MainActor private func randomIndex() -> Int? {
         let itemsCount = audioPlayerItemsCount()
         if playedItems.count == itemsCount {
             playedItems = []
@@ -743,13 +781,12 @@ open class AudioPlayer: NSObject {
                 return nil
             }
         }
-        
-        var index: Int = 0
+
+        var index = 0
         repeat {
             index = Int(arc4random()) % itemsCount
         } while playedItems.contains(index)
-        
+
         return index
     }
-    
 }

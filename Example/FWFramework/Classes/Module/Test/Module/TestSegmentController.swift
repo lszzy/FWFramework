@@ -9,14 +9,13 @@
 import FWFramework
 
 class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollViewDelegate {
-    
     private lazy var tagCollectionView: TextTagCollectionView = {
         let result = TextTagCollectionView()
         result.verticalSpacing = 8
         result.horizontalSpacing = 8
         return result
     }()
-    
+
     private var textTagConfig: TextTagConfig {
         let result = TextTagConfig()
         result.textFont = UIFont.systemFont(ofSize: 15)
@@ -34,7 +33,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.enableGradientBackground = false
         return result
     }
-    
+
     private lazy var scrollView: UIScrollView = {
         let result = UIScrollView()
         result.isPagingEnabled = true
@@ -42,7 +41,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.delegate = self
         return result
     }()
-    
+
     private lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl(sectionTitles: [])
         result.backgroundColor = AppTheme.cellColor
@@ -75,7 +74,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         }
         return result
     }()
-    
+
     private lazy var gifImageView: UIImageView = {
         let result = UIImageView()
         result.contentMode = .scaleAspectFill
@@ -83,7 +82,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.isUserInteractionEnabled = true
         return result
     }()
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["保存图片到相册"], actionBlock: { _ in
@@ -91,30 +90,30 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             })
         }
     }
-    
+
     func setupSubviews() {
         view.addSubview(gifImageView)
         gifImageView.app.layoutChain
             .edges(toSafeArea: .zero, excludingEdge: .bottom)
             .height(100)
-        
+
         let progressView = ProgressView()
         progressView.indicatorColor = AppTheme.textColor
         gifImageView.addSubview(progressView)
         progressView.app.layoutChain.center().size(CGSize(width: 40, height: 40))
-        
+
         let gifImageUrl = "http://ww2.sinaimg.cn/bmiddle/642beb18gw1ep3629gfm0g206o050b2a.gif"
         progressView.progress = 0
         progressView.isHidden = false
-        gifImageView.app.setImage(url: gifImageUrl, placeholderImage: nil, options: .ignoreCache, context: nil) { [weak self] image, error in
+        gifImageView.app.setImage(url: gifImageUrl, placeholderImage: nil, options: .ignoreCache, context: nil) { [weak self] image, _ in
             progressView.isHidden = true
-            if let image = image {
+            if let image {
                 self?.gifImageView.image = image
             }
         } progress: { progress in
             progressView.progress = progress
         }
-        
+
         let activitySize = CGSize(width: 30, height: 30)
         let activityView = UIActivityIndicatorView(style: .large)
         activityView.indicatorColor = AppTheme.textColor
@@ -125,50 +124,50 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .centerX()
             .top(toViewBottom: gifImageView, offset: 10)
             .size(activitySize)
-        
+
         let textLabel = UILabel.app.label(font: UIFont.app.font(ofSize: 14), textColor: AppTheme.textColor)
         textLabel.numberOfLines = 0
         textLabel.textAlignment = .center
         view.addSubview(textLabel)
         textLabel.app.layoutChain.centerX()
             .top(toViewBottom: activityView, offset: 10)
-        
+
         let attrStr = NSMutableAttributedString {
             "常规14 "
-            
+
             NSAttributedString.app.attributedString("细体16 ", font: APP.font(16, .light))
-            
+
             NSAttributedString(string: "常规16 ", attributes: [
                 .font: APP.font(16, .regular),
                 .foregroundColor: AppTheme.buttonColor,
-                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                .strikethroughStyle: NSUnderlineStyle.single.rawValue
             ])
-            
+
             NSAttributedString.app.attributedString("粗体16 ", font: APP.font(16, .bold))
-            
+
             NSAttributedString.app.attributedString("斜体16 ", font: UIFont.italicSystemFont(ofSize: 16))
         }
         attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: UIFont.italicSystemFont(ofSize: 16).app.boldFont))
-        
+
         attrStr.concatenate {
             "\n常规14 "
-            
+
             NSAttributedString.app.attributedString("细体16 ", font: UIFont.app.font(ofSize: 16, weight: .light))
-            
+
             NSAttributedString(string: "常规16 ", attributes: [
                 .font: UIFont.app.font(ofSize: 16, weight: .regular),
                 .foregroundColor: AppTheme.buttonColor,
                 .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
-                .strikethroughColor: AppTheme.textColor,
+                .strikethroughColor: AppTheme.textColor
             ])
-            
+
             NSAttributedString.app.attributedString("粗体16 ", font: UIFont.app.font(ofSize: 16, weight: .bold))
-            
+
             NSAttributedString.app.attributedString("斜体16 ", font: UIFont.app.font(ofSize: 16).app.italicFont)
         }
         attrStr.append(NSAttributedString.app.attributedString("粗斜体16 ", font: UIFont.app.font(ofSize: 16, weight: .bold).app.italicFont.app.nonBoldFont.app.boldFont.app.nonItalicFont.app.italicFont))
         textLabel.attributedText = attrStr
-        
+
         let label = AttributedLabel()
         label.backgroundColor = AppTheme.cellColor
         label.font = UIFont.systemFont(ofSize: 15)
@@ -184,7 +183,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .horizontal()
             .top(toViewBottom: textLabel, offset: 10)
             .height(60)
-        
+
         label.appendText("文本 ")
         let labelView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         labelView.backgroundColor = .red
@@ -200,33 +199,33 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .font: UIFont.systemFont(ofSize: 15),
             .foregroundColor: AppTheme.textColor,
             .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .underlineColor: AppTheme.textColor,
+            .underlineColor: AppTheme.textColor
         ]))
         label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), attributes: [.foregroundColor: AppTheme.buttonColor])
         label.appendAttributedText(NSAttributedString(string: " 我是删除线", attributes: [
             .font: UIFont.systemFont(ofSize: 15),
             .foregroundColor: AppTheme.buttonColor,
-            .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
+            .strikethroughStyle: NSUnderlineStyle.thick.rawValue
         ]))
         label.appendAttributedText(NSAttributedString(string: " 我是可以换行的删除线😀，我可以换行哦", attributes: [
             .font: UIFont.systemFont(ofSize: 15),
             .foregroundColor: AppTheme.textColor,
             .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-            .strikethroughColor: AppTheme.textColor,
+            .strikethroughColor: AppTheme.textColor
         ]))
         label.appendText(" 结束")
-        
+
         view.addSubview(tagCollectionView)
         tagCollectionView.app.layoutChain
             .horizontal(10)
             .top(toViewBottom: label, offset: 10)
-        
+
         tagCollectionView.removeAllTags()
         let testTags = ["标签1", "😄标签2", "我是长的标签3", "标签4", "标签5", "标签6", "标签7", "标签8", "标签9"]
         for tagName in testTags {
             tagCollectionView.addTag(tagName, config: textTagConfig)
         }
-        
+
         let marqueeLabel = MarqueeLabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "MarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
         view.addSubview(marqueeLabel)
         marqueeLabel.app.layoutChain
@@ -235,7 +234,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .height(20)
         marqueeLabel.setNeedsLayout()
         marqueeLabel.layoutIfNeeded()
-        
+
         let sectionTitles = ["🍔菜单一", "菜单二", "😄长的菜单三", "菜单四", "菜单五", "菜单六"]
         let sectionContents = ["我是内容一", "我是内容二", "我是长的内容三", "我是内容四", "我是内容五", "我是内容六"]
         view.addSubview(segmentedControl)
@@ -248,7 +247,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         segmentedControl.indexChangedBlock = { [weak self] index in
             self?.scrollView.scrollRectToVisible(CGRect(x: APP.screenWidth * CGFloat(index), y: 0, width: APP.screenWidth, height: 100), animated: true)
         }
-        
+
         scrollView.contentSize = CGSizeMake(APP.screenWidth * CGFloat(sectionTitles.count), 100)
         scrollView.scrollRectToVisible(CGRect(x: APP.screenWidth * CGFloat(segmentedControl.selectedSegmentIndex), y: 0, width: APP.screenWidth, height: 100), animated: false)
         view.addSubview(scrollView)
@@ -256,18 +255,17 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .horizontal()
             .top(toViewBottom: segmentedControl)
             .height(100)
-        
-        for i in 0 ..< sectionContents.count {
+
+        for i in 0..<sectionContents.count {
             let label = UILabel(frame: CGRectMake(APP.screenWidth * CGFloat(i), 0, APP.screenWidth, 100))
             label.text = sectionContents[i]
             label.numberOfLines = 0
             scrollView.addSubview(label)
         }
     }
-    
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         segmentedControl.setSelectedSegmentIndex(page, animated: true)
     }
-    
 }

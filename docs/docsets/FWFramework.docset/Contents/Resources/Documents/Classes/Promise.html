@@ -17,7 +17,7 @@
     <a title="Promise Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -696,6 +696,9 @@
                 <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SendableObject.html">SendableObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
               </li>
               <li class="nav-group-task">
@@ -1055,6 +1058,12 @@
                 <a href="../Enums/JSONKey.html">JSONKey</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/JSONType.html">JSONType</a>
               </li>
               <li class="nav-group-task">
@@ -1217,6 +1226,9 @@
                 <a href="../Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
               </li>
               <li class="nav-group-task">
@@ -1250,6 +1262,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/BarrageRenderView">BarrageRenderView</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Binding.html">Binding</a>
@@ -1381,6 +1396,9 @@
                 <a href="../Extensions/PlatformViewController.html">PlatformViewController</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
               </li>
               <li class="nav-group-task">
@@ -1391,6 +1409,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/ScrollView.html">ScrollView</a>
@@ -1970,9 +1994,6 @@
                 <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/ViewProtocol.html">ViewProtocol</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
               </li>
               <li class="nav-group-task">
@@ -2156,12 +2177,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/JSON.html">JSON</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/LineShape.html">LineShape</a>
@@ -2422,9 +2437,6 @@
                 <a href="../Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
               </li>
               <li class="nav-group-task">
@@ -2490,9 +2502,6 @@
                 <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2509,7 +2518,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Promise</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Promise</span> <span class="p">:</span> <span class="kd">@unchecked</span> <span class="kt">Sendable</span></code></pre>
 
                 </div>
               </div>
@@ -2531,33 +2540,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC15completionQueueSo17OS_dispatch_queueCvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/completionQueue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC15completionQueueSo17OS_dispatch_queueCvpZ">completionQueue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>约定回调队列，默认main队列</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">completionQueue</span><span class="p">:</span> <span class="kt">DispatchQueue</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:11FWFramework7PromiseC11failedErrors0D0_pvpZ"></a>
                     <a name="//apple_ref/swift/Variable/failedError" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7PromiseC11failedErrors0D0_pvpZ">failedError</a>
@@ -2575,7 +2557,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">failedError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">failedError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
 
                         </div>
                       </div>
@@ -2602,7 +2584,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">validationError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">validationError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
 
                         </div>
                       </div>
@@ -2629,7 +2611,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">timeoutError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">timeoutError</span><span class="p">:</span> <span class="kt">Error</span></code></pre>
 
                         </div>
                       </div>
@@ -2652,9 +2634,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC10completionACyyypcc_tcfc"></a>
+                    <a name="/s:11FWFramework7PromiseC10completionACyys8Sendable_pYbScMYccYbScMYcc_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC10completionACyyypcc_tcfc">init(completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC10completionACyys8Sendable_pYbScMYccYbScMYcc_tcfc">init(completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2669,7 +2651,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Sendable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2679,9 +2661,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5blockACyyxc_ys5Error_pctc_tclufc"></a>
+                    <a name="/s:11FWFramework7PromiseC5blockACyyxYbScMYcc_ys5Error_pYbScMYcctYbScMYcc_tcs8SendableRzlufc"></a>
                     <a name="//apple_ref/swift/Method/init(block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5blockACyyxc_ys5Error_pctc_tclufc">init(block:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5blockACyyxYbScMYcc_ys5Error_pYbScMYcctYbScMYcc_tcs8SendableRzlufc">init(block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2696,7 +2678,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">resolve</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">reject</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">resolve</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">reject</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2706,9 +2688,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC8progressACyyxc_ys5Error_pcySdctc_tclufc"></a>
+                    <a name="/s:11FWFramework7PromiseC8progressACyyxYbScMYcc_ys5Error_pYbScMYccySdYbScMYcctYbScMYcc_tcs8SendableRzlufc"></a>
                     <a name="//apple_ref/swift/Method/init(progress:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC8progressACyyxc_ys5Error_pcySdctc_tclufc">init(progress:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC8progressACyyxYbScMYcc_ys5Error_pYbScMYccySdYbScMYcctYbScMYcc_tcs8SendableRzlufc">init(progress:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2723,7 +2705,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">progress</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">resolve</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">reject</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">progress</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">progress</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">resolve</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">reject</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">progress</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2733,9 +2715,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5valueACyp_tcfc"></a>
+                    <a name="/s:11FWFramework7PromiseC5valueACs8Sendable_p_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(value:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5valueACyp_tcfc">init(value:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5valueACs8Sendable_p_tcfc">init(value:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2750,7 +2732,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Sendable</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2908,9 +2890,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyctFZ"></a>
+                    <a name="/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyYbScMYcctFZ"></a>
                     <a name="//apple_ref/swift/Method/retry(_:delay:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyctFZ">retry(_:<wbr>delay:<wbr>block:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyYbScMYcctFZ">retry(_:<wbr>delay:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2925,7 +2907,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">retry</span><span class="p">(</span><span class="n">_</span> <span class="nv">times</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Promise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">retry</span><span class="p">(</span><span class="n">_</span> <span class="nv">times</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Promise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
 
                         </div>
                       </div>
@@ -2935,9 +2917,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC4doneyyyypcF"></a>
+                    <a name="/s:11FWFramework7PromiseC4doneyyys8Sendable_pYbScMYccF"></a>
                     <a name="//apple_ref/swift/Method/done(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC4doneyyyypcF">done(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC4doneyyys8Sendable_pYbScMYccF">done(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2952,7 +2934,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">done</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">done</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Sendable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2962,9 +2944,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC4done_5catch7finallyyyxc_ys5Error_pcSgyycSgtlF"></a>
+                    <a name="/s:11FWFramework7PromiseC4done_5catch7finallyyyxYbScMYcc_ys5Error_pYbScMYccSgyyYbScMYccSgts8SendableRzlF"></a>
                     <a name="//apple_ref/swift/Method/done(_:catch:finally:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC4done_5catch7finallyyyxc_ys5Error_pcSgyycSgtlF">done(_:<wbr>catch:<wbr>finally:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC4done_5catch7finallyyyxYbScMYcc_ys5Error_pYbScMYccSgyyYbScMYccSgts8SendableRzlF">done(_:<wbr>catch:<wbr>finally:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2979,7 +2961,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">done</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">done</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">catch</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">finally</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">done</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">done</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">catch</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">finally</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -2989,9 +2971,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC4done_5catch8progress7finallyyyxc_ys5Error_pcSgySdcSgyycSgtlF"></a>
+                    <a name="/s:11FWFramework7PromiseC4done_5catch8progress7finallyyyxYbScMYcc_ys5Error_pYbScMYccSgySdYbScMYccSgyyYbScMYccSgts8SendableRzlF"></a>
                     <a name="//apple_ref/swift/Method/done(_:catch:progress:finally:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC4done_5catch8progress7finallyyyxc_ys5Error_pcSgySdcSgyycSgtlF">done(_:<wbr>catch:<wbr>progress:<wbr>finally:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC4done_5catch8progress7finallyyyxYbScMYcc_ys5Error_pYbScMYccSgySdYbScMYccSgyyYbScMYccSgts8SendableRzlF">done(_:<wbr>catch:<wbr>progress:<wbr>finally:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3006,7 +2988,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">done</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">done</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">catch</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">finally</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">done</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">done</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="nv">catch</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">progress</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">finally</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3016,9 +2998,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC4thenyACypxKclF"></a>
+                    <a name="/s:11FWFramework7PromiseC4thenyACs8Sendable_pxYbKScMYccsAERzlF"></a>
                     <a name="//apple_ref/swift/Method/then(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC4thenyACypxKclF">then(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC4thenyACs8Sendable_pxYbKScMYccsAERzlF">then(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3033,7 +3015,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">then</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">then</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Sendable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3043,9 +3025,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC7recoveryACyps5Error_pKcF"></a>
+                    <a name="/s:11FWFramework7PromiseC7recoveryACs8Sendable_ps5Error_pYbKScMYccF"></a>
                     <a name="//apple_ref/swift/Method/recover(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC7recoveryACyps5Error_pKcF">recover(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC7recoveryACs8Sendable_ps5Error_pYbKScMYccF">recover(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3060,7 +3042,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">recover</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">recover</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Sendable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
 
                         </div>
                       </div>
@@ -3070,9 +3052,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC8validateyACSbxKclF"></a>
+                    <a name="/s:11FWFramework7PromiseC8validateyACSbxYbKScMYccs8SendableRzlF"></a>
                     <a name="//apple_ref/swift/Method/validate(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC8validateyACSbxKclF">validate(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC8validateyACSbxYbKScMYccs8SendableRzlF">validate(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3087,7 +3069,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">validate</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">validate</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3097,9 +3079,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC6reduce_7reducerACSayxG_ypyp_xtKctlF"></a>
+                    <a name="/s:11FWFramework7PromiseC6reduce_7reducerACSayxG_s8Sendable_psAG_p_xtYbKScMYcctsAGRzlF"></a>
                     <a name="//apple_ref/swift/Method/reduce(_:reducer:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC6reduce_7reducerACSayxG_ypyp_xtKctlF">reduce(_:<wbr>reducer:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC6reduce_7reducerACSayxG_s8Sendable_psAG_p_xtYbKScMYcctsAGRzlF">reduce(_:<wbr>reducer:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3114,7 +3096,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">reduce</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">],</span> <span class="nv">reducer</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="n">_</span> <span class="nv">item</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">reduce</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">],</span> <span class="nv">reducer</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Sendable</span><span class="p">,</span> <span class="n">_</span> <span class="nv">item</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Sendable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3178,9 +3160,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyctF"></a>
+                    <a name="/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyYbScMYcctF"></a>
                     <a name="//apple_ref/swift/Method/retry(_:delay:block:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyctF">retry(_:<wbr>delay:<wbr>block:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5retry_5delay5blockACSi_SdACyYbScMYcctF">retry(_:<wbr>delay:<wbr>block:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3195,7 +3177,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">retry</span><span class="p">(</span><span class="n">_</span> <span class="nv">times</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Promise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">retry</span><span class="p">(</span><span class="n">_</span> <span class="nv">times</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Promise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Promise</span></code></pre>
 
                         </div>
                       </div>
@@ -3218,9 +3200,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5valueypvp"></a>
+                    <a name="/s:11FWFramework7PromiseC5values8Sendable_pvp"></a>
                     <a name="//apple_ref/swift/Property/value" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5valueypvp">value</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5values8Sendable_pvp">value</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -3238,7 +3220,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Any</span> <span class="p">{</span> <span class="k">get</span> <span class="k">async</span> <span class="k">throws</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Sendable</span> <span class="p">{</span> <span class="k">get</span> <span class="k">async</span> <span class="k">throws</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -3248,9 +3230,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7PromiseC5valuexyYaKlF"></a>
+                    <a name="/s:11FWFramework7PromiseC5valuexyYaKs8SendableRzlF"></a>
                     <a name="//apple_ref/swift/Method/value()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7PromiseC5valuexyYaKlF">value()</a>
+                    <a class="token" href="#/s:11FWFramework7PromiseC5valuexyYaKs8SendableRzlF">value()</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -3268,7 +3250,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n"><a href="../Classes/Promise.html#/s:11FWFramework7PromiseC5valueypvp">value</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n"><a href="../Classes/Promise.html#/s:11FWFramework7PromiseC5values8Sendable_pvp">value</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">async</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -3280,7 +3262,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -12,7 +12,7 @@ import Foundation
 
 // MARK: - TestSuite
 /// 可扩展测试套件，默认automatic
-public struct TestSuite: RawRepresentable, Equatable, Hashable {
+public struct TestSuite: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = String
 
     /// 自动测试套件，启动时自动调用
@@ -37,10 +37,10 @@ public struct TestSuite: RawRepresentable, Equatable, Hashable {
 /// 测试类命名建议模块+单元格式：TestCase_module_name，测试方法命名规则如下：
 /// 同步测试：test开头无参方法，无需调用assertFinished
 /// 异步测试：testAsync开头无参方法，必须调用assertFinished
-open class TestCase: NSObject {
+open class TestCase: NSObject, @unchecked Sendable {
     // MARK: - Accessor
     fileprivate var assertError: NSError?
-    fileprivate var assertCompletion: (() -> Void)?
+    fileprivate var assertCompletion: (@Sendable () -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化方法
@@ -87,7 +87,7 @@ open class TestCase: NSObject {
 
 // MARK: - UnitTest
 /// 单元测试启动器，调试模式启动时自动执行automatic测试套件
-public class UnitTest: CustomDebugStringConvertible {
+public class UnitTest: CustomDebugStringConvertible, @unchecked Sendable {
     // MARK: - Accessor
     private var testSuite: TestSuite = .manual
     private var testCases: [AnyClass]?
@@ -98,7 +98,7 @@ public class UnitTest: CustomDebugStringConvertible {
     public init(testSuite: TestSuite) {
         self.testSuite = testSuite
     }
-    
+
     /// 指定测试用例初始化
     public init(testCases: [TestCase.Type]) {
         self.testCases = testCases
@@ -106,7 +106,7 @@ public class UnitTest: CustomDebugStringConvertible {
 
     // MARK: - Public
     /// 执行单元测试，完成时回调是否成功
-    public func runTests(completion: ((Bool) -> Void)? = nil) {
+    public func runTests(completion: (@Sendable (Bool) -> Void)? = nil) {
         let testCases = testCases ?? testCases(of: testSuite)
         guard !testCases.isEmpty else {
             completion?(true)

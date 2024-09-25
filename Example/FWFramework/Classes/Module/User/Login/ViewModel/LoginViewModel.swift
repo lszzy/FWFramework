@@ -11,16 +11,14 @@ import Foundation
 protocol LoginViewModelDelegate: AnyObject {}
 
 class LoginViewModel {
-    
     weak var delegate: LoginViewModelDelegate?
-    
+
     func login(nickName: String, completion: @escaping () -> Void) {
         var userModel = UserModel()
         userModel.userId = "1"
         userModel.userName = nickName
-        
+
         UserService.shared.saveUserModel(userModel)
         completion()
     }
-    
 }

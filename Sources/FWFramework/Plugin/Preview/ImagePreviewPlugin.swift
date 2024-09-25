@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 自定义图片预览插件，未设置时自动从插件池加载
     public var imagePreviewPlugin: ImagePreviewPlugin! {
         get {
@@ -23,14 +23,19 @@ extension Wrapper where Base: UIViewController {
             setProperty(newValue, forName: "imagePreviewPlugin")
         }
     }
-    
+
     /// 显示图片预览(简单版)
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]? = nil,
+        currentIndex: Int = 0,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)? = nil
+    ) {
         showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: nil, renderBlock: nil, customBlock: nil)
     }
 
@@ -43,21 +48,34 @@ extension Wrapper where Base: UIViewController {
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         let plugin = imagePreviewPlugin ?? ImagePreviewPluginImpl.shared
         plugin.showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock, in: base)
     }
 }
 
 // MARK: - Wrapper+UIView
-extension Wrapper where Base: UIView {
+@MainActor extension Wrapper where Base: UIView {
     /// 显示图片预览(简单版)
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
     ///   - imageInfos: 自定义图片信息数组
     ///   - currentIndex: 当前索引，默认0
     ///   - sourceView: 来源视图，可选，支持UIView|NSValue.CGRect，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]? = nil, currentIndex: Int = 0, sourceView: ((Int) -> Any?)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]? = nil,
+        currentIndex: Int = 0,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)? = nil
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -74,7 +92,15 @@ extension Wrapper where Base: UIView {
     ///   - placeholderImage: 占位图或缩略图句柄，默认nil
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义句柄，默认nil
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)? = nil, customBlock: ((Any) -> Void)? = nil) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) {
         var ctrl = viewController
         if ctrl == nil || ctrl?.presentedViewController != nil {
             ctrl = UIWindow.fw.main?.fw.topPresentedController
@@ -85,8 +111,7 @@ extension Wrapper where Base: UIView {
 
 // MARK: - ImagePreviewPlugin
 /// 图片预览插件协议，应用可自定义图片预览插件实现
-public protocol ImagePreviewPlugin: AnyObject {
-    
+@MainActor public protocol ImagePreviewPlugin: AnyObject {
     /// 显示图片预览方法
     /// - Parameters:
     ///   - imageURLs: 预览图片列表，支持NSString|UIImage|PHLivePhoto|AVPlayerItem类型
@@ -97,15 +122,30 @@ public protocol ImagePreviewPlugin: AnyObject {
     ///   - renderBlock: 自定义渲染句柄，默认nil
     ///   - customBlock: 自定义配置句柄，默认nil
     ///   - viewController: 当前视图控制器
-    func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController)
-    
+    func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in viewController: UIViewController
+    )
 }
 
 extension ImagePreviewPlugin {
-    
     /// 显示图片预览方法
-    public func showImagePreview(imageURLs: [Any], imageInfos: [Any]?, currentIndex: Int, sourceView: ((Int) -> Any?)?, placeholderImage: ((Int) -> UIImage?)?, renderBlock: ((UIView, Int) -> Void)?, customBlock: ((Any) -> Void)?, in viewController: UIViewController) {
+    public func showImagePreview(
+        imageURLs: [Any],
+        imageInfos: [Any]?,
+        currentIndex: Int,
+        sourceView: (@MainActor @Sendable (Int) -> Any?)?,
+        placeholderImage: (@MainActor @Sendable (Int) -> UIImage?)?,
+        renderBlock: (@MainActor @Sendable (UIView, Int) -> Void)?,
+        customBlock: (@MainActor @Sendable (Any) -> Void)?,
+        in viewController: UIViewController
+    ) {
         ImagePreviewPluginImpl.shared.showImagePreview(imageURLs: imageURLs, imageInfos: imageInfos, currentIndex: currentIndex, sourceView: sourceView, placeholderImage: placeholderImage, renderBlock: renderBlock, customBlock: customBlock, in: viewController)
     }
-    
 }

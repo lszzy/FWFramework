@@ -24,7 +24,7 @@ import UIKit
 ///     ...
 /// }
 /// ```
-public protocol SetupViewProtocol {
+@MainActor public protocol SetupViewProtocol {
     /// 初始化完成，init自动调用，默认空实现
     func didInitialize()
 
@@ -46,39 +46,9 @@ extension SetupViewProtocol where Self: UIView {
     public func setupLayout() {}
 }
 
-// MARK: - ViewProtocol
-/// 已废弃，视图规范协议，需手工调用
-@available(*, deprecated, renamed: "SetupViewProtocol", message: "Use SetupViewProtocol instead and related methods will be invoked automatically")
-public protocol ViewProtocol {
-    
-    /// 初始化完成，一般init(frame:)调用，默认空实现
-    func didInitialize()
-    
-    /// 初始化子视图，一般init(frame:)调用，默认空实现
-    func setupSubviews()
-    
-    /// 初始化布局，一般init(frame:)调用，默认空实现
-    func setupLayout()
-    
-}
-
-@available(*, deprecated, renamed: "SetupViewProtocol", message: "Use SetupViewProtocol instead and related methods will be invoked automatically")
-extension ViewProtocol where Self: UIView {
-    
-    /// 初始化完成，一般init(frame:)调用，默认空实现
-    public func didInitialize() {}
-    
-    /// 初始化子视图，一般init(frame:)调用，默认空实现
-    public func setupSubviews() {}
-    
-    /// 初始化布局，一般init(frame:)调用，默认空实现
-    public func setupLayout() {}
-    
-}
-
 // MARK: - EventViewProtocol
 /// 通用事件视图代理，可继承也可直接使用
-public protocol EventViewDelegate: AnyObject {
+@MainActor public protocol EventViewDelegate: AnyObject {
     /// 事件已触发代理方法，默认空实现
     func eventTriggered(_ view: UIView, event: Notification)
 }
@@ -89,7 +59,7 @@ extension EventViewDelegate {
 }
 
 /// 通用事件视图协议，可选使用
-public protocol EventViewProtocol {}
+@MainActor public protocol EventViewProtocol {}
 
 extension EventViewProtocol where Self: UIView {
     /// 弱引用事件代理
@@ -99,8 +69,8 @@ extension EventViewProtocol where Self: UIView {
     }
 
     /// 事件已触发句柄，同eventDelegate.eventTriggered方法，句柄方式
-    public var eventTriggered: ((Notification) -> Void)? {
-        get { fw.property(forName: "eventTriggered") as? (Notification) -> Void }
+    public var eventTriggered: (@MainActor @Sendable (Notification) -> Void)? {
+        get { fw.property(forName: "eventTriggered") as? @MainActor @Sendable (Notification) -> Void }
         set { fw.setPropertyCopy(newValue, forName: "eventTriggered") }
     }
 
@@ -127,7 +97,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(UIView.init(frame:)),
             methodSignature: (@convention(c) (UIView, Selector, CGRect) -> UIView).self,
-            swizzleSignature: (@convention(block) (UIView, CGRect) -> UIView).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, CGRect) -> UIView).self
         ) { store in { selfObject, frame in
             let view = store.original(selfObject, store.selector, frame)
 
@@ -143,7 +113,7 @@ extension FrameworkAutoloader {
             UIView.self,
             selector: #selector(UIView.init(coder:)),
             methodSignature: (@convention(c) (UIView, Selector, NSCoder) -> UIView?).self,
-            swizzleSignature: (@convention(block) (UIView, NSCoder) -> UIView?).self
+            swizzleSignature: (@convention(block) @MainActor (UIView, NSCoder) -> UIView?).self
         ) { store in { selfObject, coder in
             guard let view = store.original(selfObject, store.selector, coder) else { return nil }
 

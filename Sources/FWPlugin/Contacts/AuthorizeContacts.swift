@@ -18,9 +18,9 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeContacts
 /// 通讯录授权
-public class AuthorizeContacts: NSObject, AuthorizeProtocol {
+public class AuthorizeContacts: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeContacts()
-    
+
     public func authorizeStatus() -> AuthorizeStatus {
         let status = CNContactStore.authorizationStatus(for: .contacts)
         switch status {
@@ -34,8 +34,8 @@ public class AuthorizeContacts: NSObject, AuthorizeProtocol {
             return .notDetermined
         }
     }
-    
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         CNContactStore().requestAccess(for: .contacts) { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {

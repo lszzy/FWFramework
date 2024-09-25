@@ -8,29 +8,28 @@
 import Foundation
 
 /// 通用加载器，添加处理句柄后指定输入即可加载输出结果，如需比较请使用"==="或ObjectIdentifier即可
-public class Loader<Input, Output> {
-    
+public class Loader<Input, Output>: @unchecked Sendable {
     private class Target {
         let identifier = UUID().uuidString
         var block: ((Input) -> Output?)?
         weak var target: AnyObject?
         var action: Selector?
-        
+
         func invoke(_ input: Input) -> Output? {
             if block != nil {
                 return block?(input)
             }
-            
-            if let target = target, let action = action, target.responds(to: action) {
+
+            if let target, let action, target.responds(to: action) {
                 return target.perform(action, with: input)?.takeUnretainedValue() as? Output
             }
-            
+
             return nil
         }
     }
-    
+
     private var allLoaders: [Target] = []
-    
+
     /// 添加block加载器，返回标志id
     @discardableResult
     public func append(block: @escaping (Input) -> Output?) -> String {
@@ -39,7 +38,7 @@ public class Loader<Input, Output> {
         allLoaders.append(loader)
         return loader.identifier
     }
-    
+
     /// 添加target和action加载器，返回标志id
     @discardableResult
     public func append(target: AnyObject?, action: Selector) -> String {
@@ -49,17 +48,17 @@ public class Loader<Input, Output> {
         allLoaders.append(loader)
         return loader.identifier
     }
-    
+
     /// 指定标志id移除加载器
     public func remove(_ identifier: String) {
         allLoaders.removeAll { $0.identifier == identifier }
     }
-    
+
     /// 移除所有的加载器
     public func removeAll() {
         allLoaders.removeAll()
     }
-    
+
     /// 依次执行加载器，直到加载成功
     public func load(_ input: Input) -> Output? {
         var output: Output?
@@ -69,5 +68,4 @@ public class Loader<Input, Output> {
         }
         return output
     }
-    
 }
