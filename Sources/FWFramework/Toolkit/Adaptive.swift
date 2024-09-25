@@ -200,7 +200,7 @@ extension Wrapper where Base: UIDevice {
     public static var isIphone: Bool {
         deviceModel.hasPrefix("iPhone")
     }
-    
+
     /// 是否是iPod
     public static var isIpod: Bool {
         deviceModel.hasPrefix("iPod")
@@ -454,7 +454,7 @@ extension Wrapper where Base: UIDevice {
     public nonisolated static var pixelOne: CGFloat {
         1.0 / screenScale
     }
-    
+
     /// 屏幕半个点的大小，区别于pixelOne，2x屏为1像素，3x屏为2像素
     public nonisolated static var pointHalf: CGFloat {
         round(0.5 * screenScale) / screenScale

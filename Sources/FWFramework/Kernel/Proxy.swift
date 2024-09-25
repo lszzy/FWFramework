@@ -113,16 +113,17 @@ public class SendableObject<T>: @unchecked Sendable {
         get {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
-            
+
             return _object
         }
         set {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
-            
+
             _object = newValue
         }
     }
+
     private var _object: T
 
     public init(_ object: T) {
