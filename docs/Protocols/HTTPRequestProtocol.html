@@ -17,7 +17,7 @@
     <a title="HTTPRequestProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2673,9 +2679,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start7success7failurexyxcSg_AItF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start7success7failurexyxYbScMYccSg_AItF"></a>
                     <a name="//apple_ref/swift/Method/start(success:failure:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start7success7failurexyxcSg_AItF">start(success:<wbr>failure:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start7success7failurexyxYbScMYccSg_AItF">start(success:<wbr>failure:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2694,7 +2700,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">failure</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">failure</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2704,9 +2710,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start10completionxyxcSg_tF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start10completionxyxYbScMYccSg_tF"></a>
                     <a name="//apple_ref/swift/Method/start(completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start10completionxyxcSg_tF">start(completion:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE5start10completionxyxYbScMYccSg_tF">start(completion:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2725,7 +2731,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">start</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2735,9 +2741,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE21requestCancelledBlockyxyxcSgF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE21requestCancelledBlockyxyxYbcSgF"></a>
                     <a name="//apple_ref/swift/Method/requestCancelledBlock(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE21requestCancelledBlockyxyxcSgF">requestCancelledBlock(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE21requestCancelledBlockyxyxYbcSgF">requestCancelledBlock(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2756,7 +2762,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">requestCancelledBlock</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">requestCancelledBlock</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2766,9 +2772,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE8responseyxyxcSgF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE8responseyxyxYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/response(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE8responseyxyxcSgF">response(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE8responseyxyxYbScMYccSgF">response(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2787,7 +2793,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">response</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">response</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2797,9 +2803,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseSuccessyxyxcSgF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseSuccessyxyxYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseSuccess(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseSuccessyxyxcSgF">responseSuccess(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseSuccessyxyxYbScMYccSgF">responseSuccess(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2818,7 +2824,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSuccess</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSuccess</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2828,9 +2834,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseFailureyxyxcSgF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseFailureyxyxYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseFailure(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseFailureyxyxcSgF">responseFailure(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE15responseFailureyxyxYbScMYccSgF">responseFailure(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2849,7 +2855,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseFailure</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseFailure</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2859,9 +2865,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE13responseCacheyxyxcSgF"></a>
+                    <a name="/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE13responseCacheyxyxYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseCache(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE13responseCacheyxyxcSgF">responseCache(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19HTTPRequestProtocolPA2A0B0CRbzrlE13responseCacheyxyxYbScMYccSgF">responseCache(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2872,7 +2878,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>解析缓存响应句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存响应句柄，必须在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -2880,7 +2886,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseCache</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">((</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseCache</span><span class="p">(</span><span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="k">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -3012,7 +3018,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

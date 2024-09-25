@@ -17,7 +17,7 @@
     <a title="Font Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2512,7 +2518,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">@MainActor</span> <span class="kd">extension</span> <span class="kt">Font</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Font</span></code></pre>
 
                 </div>
               </div>
@@ -2568,8 +2574,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">thinFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">thinFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2596,8 +2601,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">lightFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">lightFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2624,8 +2628,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">mediumFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">mediumFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2652,8 +2655,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">semiboldFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">semiboldFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2680,8 +2682,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">boldFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">boldFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2708,8 +2709,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">font</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span> <span class="o">=</span> <span class="o">.</span><span class="n">regular</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">font</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span> <span class="o">=</span> <span class="o">.</span><span class="n">regular</span><span class="p">,</span> <span class="nv">autoScale</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2736,7 +2736,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">nonisolated</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">nonScaleFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span> <span class="o">=</span> <span class="o">.</span><span class="n">regular</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">nonScaleFont</span><span class="p">(</span><span class="nv">size</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span> <span class="o">=</span> <span class="o">.</span><span class="n">regular</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Font</span></code></pre>
 
                         </div>
                       </div>
@@ -2763,7 +2763,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">nonisolated</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fontName</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span><span class="p">,</span> <span class="nv">italic</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fontName</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">weight</span><span class="p">:</span> <span class="kt">Font</span><span class="o">.</span><span class="kt">Weight</span><span class="p">,</span> <span class="nv">italic</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -2775,7 +2775,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

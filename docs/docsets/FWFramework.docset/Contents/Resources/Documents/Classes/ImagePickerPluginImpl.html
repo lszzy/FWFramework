@@ -17,7 +17,7 @@
     <a title="ImagePickerPluginImpl Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2676,9 +2682,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework21ImagePickerPluginImplC19cropControllerBlockAA0b4CropG0CSo7UIImageCcSgvp"></a>
+                    <a name="/s:11FWFramework21ImagePickerPluginImplC19cropControllerBlockAA0b4CropG0CSo7UIImageCYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/cropControllerBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC19cropControllerBlockAA0b4CropG0CSo7UIImageCcSgvp">cropControllerBlock</a>
+                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC19cropControllerBlockAA0b4CropG0CSo7UIImageCYbScMYccSgvp">cropControllerBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2694,7 +2700,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">cropControllerBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ImageCropController.html">ImageCropController</a></span><span class="p">)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cropControllerBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIImage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ImageCropController.html">ImageCropController</a></span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2732,9 +2738,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework21ImagePickerPluginImplC19exportProgressBlockySo16UIViewControllerC_S2itcSgvp"></a>
+                    <a name="/s:11FWFramework21ImagePickerPluginImplC19exportProgressBlockySo16UIViewControllerC_S2itYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/exportProgressBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC19exportProgressBlockySo16UIViewControllerC_S2itcSgvp">exportProgressBlock</a>
+                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC19exportProgressBlockySo16UIViewControllerC_S2itYbScMYccSgvp">exportProgressBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2750,7 +2756,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">exportProgressBlock</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">controller</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">_</span> <span class="nv">finishedCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">_</span> <span class="nv">totalCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">exportProgressBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="n">_</span> <span class="nv">controller</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="n">_</span> <span class="nv">finishedCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">_</span> <span class="nv">totalCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2760,9 +2766,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework21ImagePickerPluginImplC11customBlockySo16UIViewControllerCcSgvp"></a>
+                    <a name="/s:11FWFramework21ImagePickerPluginImplC11customBlockySo16UIViewControllerCYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/customBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC11customBlockySo16UIViewControllerCcSgvp">customBlock</a>
+                    <a class="token" href="#/s:11FWFramework21ImagePickerPluginImplC11customBlockySo16UIViewControllerCYbScMYccSgvp">customBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2778,7 +2784,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UIViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2801,9 +2807,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework17ImagePickerPluginP04showB6Camera10filterType13allowsEditing11customBlock10completion2inyAA0bc6FilterH0V_SbyypcSgyypSg_AMSbtcSo16UIViewControllerCtF"></a>
+                    <a name="/s:11FWFramework17ImagePickerPluginP04showB6Camera10filterType13allowsEditing11customBlock10completion2inyAA0bc6FilterH0V_SbyypYbScMYccSgyypSg_AMSbtYbScMYccSo16UIViewControllerCtF"></a>
                     <a name="//apple_ref/swift/Method/showImageCamera(filterType:allowsEditing:customBlock:completion:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17ImagePickerPluginP04showB6Camera10filterType13allowsEditing11customBlock10completion2inyAA0bc6FilterH0V_SbyypcSgyypSg_AMSbtcSo16UIViewControllerCtF">showImageCamera(filterType:<wbr>allowsEditing:<wbr>customBlock:<wbr>completion:<wbr>in:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework17ImagePickerPluginP04showB6Camera10filterType13allowsEditing11customBlock10completion2inyAA0bc6FilterH0V_SbyypYbScMYccSgyypSg_AMSbtYbScMYccSo16UIViewControllerCtF">showImageCamera(filterType:<wbr>allowsEditing:<wbr>customBlock:<wbr>completion:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2818,7 +2824,13 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showImageCamera</span><span class="p">(</span><span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Structs/ImagePickerFilterType.html">ImagePickerFilterType</a></span><span class="p">,</span> <span class="nv">allowsEditing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Any</span><span class="p">?,</span> <span class="kt">Any</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showImageCamera</span><span class="p">(</span>
+    <span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Structs/ImagePickerFilterType.html">ImagePickerFilterType</a></span><span class="p">,</span>
+    <span class="nv">allowsEditing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
+    <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">?,</span> <span class="kt">Any</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2828,9 +2840,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework17ImagePickerPluginP04showbC010filterType14selectionLimit13allowsEditing11customBlock10completion2inyAA0bc6FilterG0V_SiSbyypcSgySayypG_ANSbtcSo16UIViewControllerCtF"></a>
+                    <a name="/s:11FWFramework17ImagePickerPluginP04showbC010filterType14selectionLimit13allowsEditing11customBlock10completion2inyAA0bc6FilterG0V_SiSbyypYbScMYccSgySayypG_ANSbtYbScMYccSo16UIViewControllerCtF"></a>
                     <a name="//apple_ref/swift/Method/showImagePicker(filterType:selectionLimit:allowsEditing:customBlock:completion:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework17ImagePickerPluginP04showbC010filterType14selectionLimit13allowsEditing11customBlock10completion2inyAA0bc6FilterG0V_SiSbyypcSgySayypG_ANSbtcSo16UIViewControllerCtF">showImagePicker(filterType:<wbr>selectionLimit:<wbr>allowsEditing:<wbr>customBlock:<wbr>completion:<wbr>in:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework17ImagePickerPluginP04showbC010filterType14selectionLimit13allowsEditing11customBlock10completion2inyAA0bc6FilterG0V_SiSbyypYbScMYccSgySayypG_ANSbtYbScMYccSo16UIViewControllerCtF">showImagePicker(filterType:<wbr>selectionLimit:<wbr>allowsEditing:<wbr>customBlock:<wbr>completion:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2845,7 +2857,14 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showImagePicker</span><span class="p">(</span><span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Structs/ImagePickerFilterType.html">ImagePickerFilterType</a></span><span class="p">,</span> <span class="nv">selectionLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">allowsEditing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">([</span><span class="kt">Any</span><span class="p">],</span> <span class="p">[</span><span class="kt">Any</span><span class="p">],</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showImagePicker</span><span class="p">(</span>
+    <span class="nv">filterType</span><span class="p">:</span> <span class="kt"><a href="../Structs/ImagePickerFilterType.html">ImagePickerFilterType</a></span><span class="p">,</span>
+    <span class="nv">selectionLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">allowsEditing</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
+    <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">([</span><span class="kt">Any</span><span class="p">],</span> <span class="p">[</span><span class="kt">Any</span><span class="p">],</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2857,7 +2876,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

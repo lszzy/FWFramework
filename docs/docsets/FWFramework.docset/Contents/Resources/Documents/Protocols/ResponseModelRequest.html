@@ -17,7 +17,7 @@
     <a title="ResponseModelRequest Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2687,9 +2693,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE08responseC0yxy0bC0QzSgcSgF"></a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE08responseC0yxy0bC0QzSgYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE08responseC0yxy0bC0QzSgcSgF">responseModel(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE08responseC0yxy0bC0QzSgYbScMYccSgF">responseModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2708,7 +2714,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2718,9 +2724,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgcSgF"></a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseCacheModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgcSgF">responseCacheModel(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzrlE013responseCacheC0yxy0bC0QzSgYbScMYccSgF">responseCacheModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2731,7 +2737,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>解析缓存响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存响应模型句柄，必须在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -2739,7 +2745,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2856,9 +2862,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE04safebC0yxyAHcSgF"></a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE04safebC0yxyAHYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/safeResponseModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE04safebC0yxyAHcSgF">safeResponseModel(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE04safebC0yxyAHYbScMYccSgF">safeResponseModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2877,7 +2883,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">safeResponseModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">safeResponseModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -2887,9 +2893,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE017responseSafeCacheC0yxyAHcSgF"></a>
+                    <a name="/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE017responseSafeCacheC0yxyAHYbScMYccSgF"></a>
                     <a name="//apple_ref/swift/Method/responseSafeCacheModel(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE017responseSafeCacheC0yxyAHcSgF">responseSafeCacheModel(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework20ResponseModelRequestPA2A11HTTPRequestCRbzAA03AnyC00bC0RpzrlE017responseSafeCacheC0yxyAHYbScMYccSgF">responseSafeCacheModel(_:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Extension method
@@ -2900,7 +2906,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>解析缓存安全响应模型句柄，必须主线程且在start之前调用生效</p>
+                        <p>解析缓存安全响应模型句柄，必须在start之前调用生效</p>
 
                       </div>
                       <div class="declaration">
@@ -2908,7 +2914,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSafeCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">responseSafeCacheModel</span><span class="p">(</span><span class="n">_</span> <span class="nv">success</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Protocols/ResponseModelRequest.html#/s:11FWFramework20ResponseModelRequestP0bC0Qa">ResponseModel</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
                       </div>
@@ -3006,7 +3012,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

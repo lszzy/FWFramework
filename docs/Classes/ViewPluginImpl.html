@@ -17,7 +17,7 @@
     <a title="ViewPluginImpl Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2564,9 +2570,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework14ViewPluginImplC014customProgressB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVcSgvp"></a>
+                    <a name="/s:11FWFramework14ViewPluginImplC014customProgressB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/customProgressView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework14ViewPluginImplC014customProgressB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVcSgvp">customProgressView</a>
+                    <a class="token" href="#/s:11FWFramework14ViewPluginImplC014customProgressB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVYbScMYccSgvp">customProgressView</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2582,7 +2588,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">customProgressView</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Structs/ProgressViewStyle.html">ProgressViewStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">UIView</span> <span class="o">&amp;</span> <span class="kt"><a href="../Protocols/ProgressViewPlugin.html">ProgressViewPlugin</a></span><span class="p">)?)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">customProgressView</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Structs/ProgressViewStyle.html">ProgressViewStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">UIView</span> <span class="o">&amp;</span> <span class="kt"><a href="../Protocols/ProgressViewPlugin.html">ProgressViewPlugin</a></span><span class="p">)?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2592,9 +2598,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework14ViewPluginImplC015customIndicatorB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVcSgvp"></a>
+                    <a name="/s:11FWFramework14ViewPluginImplC015customIndicatorB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/customIndicatorView" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework14ViewPluginImplC015customIndicatorB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVcSgvp">customIndicatorView</a>
+                    <a class="token" href="#/s:11FWFramework14ViewPluginImplC015customIndicatorB0AA0fbC0_So6UIViewCXcSgAA0fB5StyleVYbScMYccSgvp">customIndicatorView</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2610,7 +2616,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">customIndicatorView</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Structs/IndicatorViewStyle.html">IndicatorViewStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">UIView</span> <span class="o">&amp;</span> <span class="kt"><a href="../Protocols/IndicatorViewPlugin.html">IndicatorViewPlugin</a></span><span class="p">)?)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">customIndicatorView</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Structs/IndicatorViewStyle.html">IndicatorViewStyle</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">UIView</span> <span class="o">&amp;</span> <span class="kt"><a href="../Protocols/IndicatorViewPlugin.html">IndicatorViewPlugin</a></span><span class="p">)?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2689,7 +2695,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

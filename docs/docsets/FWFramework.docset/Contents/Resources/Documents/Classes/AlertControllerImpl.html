@@ -17,7 +17,7 @@
     <a title="AlertControllerImpl Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -832,6 +832,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
@@ -2371,6 +2374,9 @@
                 <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
               </li>
               <li class="nav-group-task">
@@ -2676,9 +2682,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19AlertControllerImplC11customBlockyAA0bC0CcSgvp"></a>
+                    <a name="/s:11FWFramework19AlertControllerImplC11customBlockyAA0bC0CYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/customBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19AlertControllerImplC11customBlockyAA0bC0CcSgvp">customBlock</a>
+                    <a class="token" href="#/s:11FWFramework19AlertControllerImplC11customBlockyAA0bC0CYbScMYccSgvp">customBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2694,7 +2700,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="k">var</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/AlertController.html">AlertController</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/AlertController.html">AlertController</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2717,9 +2723,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11AlertPluginP04showB05title7message5style6cancel7actions11promptCount0J5Block06actionL00hL006customL02inyAA25AttributedStringParameter_pSg_AqA0B5StyleVAQSayAaP_pGSgSiySo11UITextFieldC_SitcSgySaySSG_SitcSgyycSgyypcSgSo16UIViewControllerCtF"></a>
+                    <a name="/s:11FWFramework11AlertPluginP04showB05title7message5style6cancel7actions11promptCount0J5Block06actionL00hL006customL02inyAA25AttributedStringParameter_pSg_AqA0B5StyleVAQSayAaP_pGSgSiySo11UITextFieldC_SitYbScMYccSgySaySSG_SitYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo16UIViewControllerCtF"></a>
                     <a name="//apple_ref/swift/Method/showAlert(title:message:style:cancel:actions:promptCount:promptBlock:actionBlock:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11AlertPluginP04showB05title7message5style6cancel7actions11promptCount0J5Block06actionL00hL006customL02inyAA25AttributedStringParameter_pSg_AqA0B5StyleVAQSayAaP_pGSgSiySo11UITextFieldC_SitcSgySaySSG_SitcSgyycSgyypcSgSo16UIViewControllerCtF">showAlert(title:<wbr>message:<wbr>style:<wbr>cancel:<wbr>actions:<wbr>promptCount:<wbr>promptBlock:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11AlertPluginP04showB05title7message5style6cancel7actions11promptCount0J5Block06actionL00hL006customL02inyAA25AttributedStringParameter_pSg_AqA0B5StyleVAQSayAaP_pGSgSiySo11UITextFieldC_SitYbScMYccSgySaySSG_SitYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo16UIViewControllerCtF">showAlert(title:<wbr>message:<wbr>style:<wbr>cancel:<wbr>actions:<wbr>promptCount:<wbr>promptBlock:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2734,7 +2740,19 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/AlertStyle.html">AlertStyle</a></span><span class="p">,</span> <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span> <span class="nv">promptCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">promptBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">UITextField</span><span class="p">,</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">(([</span><span class="kt">String</span><span class="p">],</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span>
+    <span class="nv">title</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Structs/AlertStyle.html">AlertStyle</a></span><span class="p">,</span>
+    <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span>
+    <span class="nv">promptCount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">promptBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">UITextField</span><span class="p">,</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">([</span><span class="kt">String</span><span class="p">],</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2744,9 +2762,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework11AlertPluginP9showSheet5title7message6cancel7actions12currentIndex11actionBlock0hM006customM02inyAA25AttributedStringParameter_pSg_A2OSayAaN_pGSgSiySicSgyycSgyypcSgSo16UIViewControllerCtF"></a>
+                    <a name="/s:11FWFramework11AlertPluginP9showSheet5title7message6cancel7actions12currentIndex11actionBlock0hM006customM02inyAA25AttributedStringParameter_pSg_A2OSayAaN_pGSgSiySiYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo16UIViewControllerCtF"></a>
                     <a name="//apple_ref/swift/Method/showSheet(title:message:cancel:actions:currentIndex:actionBlock:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework11AlertPluginP9showSheet5title7message6cancel7actions12currentIndex11actionBlock0hM006customM02inyAA25AttributedStringParameter_pSg_A2OSayAaN_pGSgSiySicSgyycSgyypcSgSo16UIViewControllerCtF">showSheet(title:<wbr>message:<wbr>cancel:<wbr>actions:<wbr>currentIndex:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework11AlertPluginP9showSheet5title7message6cancel7actions12currentIndex11actionBlock0hM006customM02inyAA25AttributedStringParameter_pSg_A2OSayAaN_pGSgSiySiYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo16UIViewControllerCtF">showSheet(title:<wbr>message:<wbr>cancel:<wbr>actions:<wbr>currentIndex:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2761,7 +2779,17 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showSheet</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span> <span class="nv">currentIndex</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showSheet</span><span class="p">(</span>
+    <span class="nv">title</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span>
+    <span class="nv">currentIndex</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2784,9 +2812,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework19AlertControllerImplC04showB05style10headerView6cancel7actions11actionBlock0iL006customL02inySo07UIAlertC5StyleV_So6UIViewCAA25AttributedStringParameter_pSgSayAaQ_pGSgySicSgyycSgyypcSgSo0qC0CtF"></a>
+                    <a name="/s:11FWFramework19AlertControllerImplC04showB05style10headerView6cancel7actions11actionBlock0iL006customL02inySo07UIAlertC5StyleV_So6UIViewCAA25AttributedStringParameter_pSgSayAaQ_pGSgySiYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo0qC0CtF"></a>
                     <a name="//apple_ref/swift/Method/showAlert(style:headerView:cancel:actions:actionBlock:cancelBlock:customBlock:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework19AlertControllerImplC04showB05style10headerView6cancel7actions11actionBlock0iL006customL02inySo07UIAlertC5StyleV_So6UIViewCAA25AttributedStringParameter_pSgSayAaQ_pGSgySicSgyycSgyypcSgSo0qC0CtF">showAlert(style:<wbr>headerView:<wbr>cancel:<wbr>actions:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework19AlertControllerImplC04showB05style10headerView6cancel7actions11actionBlock0iL006customL02inySo07UIAlertC5StyleV_So6UIViewCAA25AttributedStringParameter_pSgSayAaQ_pGSgySiYbScMYccSgyyYbScMYccSgyypYbScMYccSgSo0qC0CtF">showAlert(style:<wbr>headerView:<wbr>cancel:<wbr>actions:<wbr>actionBlock:<wbr>cancelBlock:<wbr>customBlock:<wbr>in:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2802,7 +2830,16 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="kt">UIAlertController</span><span class="o">.</span><span class="kt">Style</span><span class="p">,</span> <span class="nv">headerView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span> <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span> <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="nv">customBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">showAlert</span><span class="p">(</span>
+    <span class="nv">style</span><span class="p">:</span> <span class="kt">UIAlertController</span><span class="o">.</span><span class="kt">Style</span><span class="p">,</span>
+    <span class="nv">headerView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span>
+    <span class="nv">cancel</span><span class="p">:</span> <span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">?,</span>
+    <span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a></span><span class="p">]?,</span>
+    <span class="nv">actionBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">cancelBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span>
+    <span class="nv">customBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="k">in</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -2814,7 +2851,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-08-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -1,5 +1,72 @@
 # Changelog
 
+## [6.0.0-beta.1] - 2024-09-25
+
+### Added
+* Compatible with Swift 6, code marks MainActor, Sendable, etc., easy to write safer code
+* Compatible with iOS 18, ViewIntrospect adds iOS 18 related variables
+* Refactored the proportional scaling implementation, and related methods support non-main thread calls
+* Add SendableObject object to solve the problem of passing parameters of any object Sendable
+* Add safe-starting Message related observe method for main thread call listener handle
+* Router, JSBridge component related methods mark MainActor main thread call, need to migrate and adapt
+* Remove the method marked as obsolete in version 5.x, please use the new API to replace the implementation, need to migrate and adapt
+* Reconstruct the height acquisition method of the global status bar, navigation bar, tab bar, etc., give priority to dynamic acquisition and caching
+
+### Migrate
+1. Adapt to Swift 6. Need to fix the compilation error of related code after marking MainActor and Sendable, need to migrate and adapt
+2. Adapt to iOS 18, if you use ViewIntrospect components, you need to adapt v18 related variables, need to migrate and adapt
+3. Adapt Plugin, when implementing custom Plugin, you need to synchronously mark MainActor, Sendable, etc., need to migrate and adapt
+4. If the main thread needs to call Message related observe listener handle, please migrate to use the corresponding method starting with safe
+5. If the main project opens Swift 6 compilation, HTTPRequest request subclasses, etc. need to be synchronously marked as `@unchecked Sendable`
+6. The obsolete methods of version 5.x have been removed, please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), need to migrate and adapt
+7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor related functions, etc.)
+8. For more usage examples, please refer to the Example project
+
+## [5.12.0] - 2024-09-23
+
+### Added
+* Adaptive global static bar is highly compatible with iPhone15, iPhone16 and other series models
+* DispatchQueue adds runSyncIf related methods
+* AssetManager preview method adds size parameter, default nil to get screen size
+* Mark UIDevice.isLandscape as obsolete, please migrate to UIScreen.isInterfaceLandscape
+* Runtime adds safe access value and setValue methods
+* Mediator and Plugin support default search for current module to remove Protocol implementation class
+* WebView adds injectWindowClose property to intercept window.close event
+
+## [5.11.2] - 2024-09-12
+
+### Changed
+* BarStyle hidden judgment compatible view isHidden
+* Optimize the calculation method of tabBarHeight when hidesBottomBarWhenPushed is turned on and the controller transitions
+* Add inAncestorView parameter to the view transition method
+
+## [5.11.1] - 2024-09-11
+
+### Fixed
+* Fixed the issue that setting statusBarHidden did not take effect
+
+## [5.11.0] - 2024-09-09
+
+### Changed
+* Refactor Test asynchronous test, support custom testSuite and manual call, migration and upgrade required
+* PluginView parameter optimized to AttributedStringParameter
+* Thread-safe processing of tempObject and allBoundObject
+
+## [5.10.6] - 2024-09-04
+
+### Added
+* DrawerView adds draggingAreaBlock configuration and springAnimation configuration
+
+## [5.10.5] - 2024-09-02
+
+### Changed
+* Optimize the method of folding the specified view effect when scrolling ScrollView
+
+## [5.10.4] - 2024-09-02
+
+### Added
+* Added a method to achieve the effect of folding a specified view when scrolling ScrollView
+
 ## [5.10.3] - 2024-08-30
 
 ### Changed
