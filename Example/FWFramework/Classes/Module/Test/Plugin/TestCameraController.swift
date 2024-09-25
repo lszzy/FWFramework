@@ -9,14 +9,13 @@
 import FWFramework
 
 class TestCameraController: UIViewController, TableViewControllerProtocol {
-    
     // MARK: - Accessor
     private var results: [Any] = []
     private var allowsEditing: Bool = false
-    
+
     // MARK: - Setup
     func setupNavbar() {
-        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] sender in
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             let allowsEditing = self?.allowsEditing ?? false
             self?.app.showSheet(title: nil, message: nil, cancel: nil, actions: ["浏览已选图片", allowsEditing ? "切换不可编辑" : "切换可编辑"], currentIndex: -1, actionBlock: { index in
                 if index == 0 {
@@ -27,7 +26,7 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
             })
         }
     }
-    
+
     func setupTableView() {
         tableData.append(contentsOf: [
             "照片选择器(单图)",
@@ -38,26 +37,26 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
             "照相机(图片)",
             "照相机(LivePhoto)",
             "照相机(视频)",
-            "照相机(默认)",
+            "照相机(默认)"
         ])
     }
-    
+
     private func showData(_ results: [Any]) {
         self.results = results
         if results.count < 1 {
             app.showMessage(text: "请选择照片")
             return
         }
-        
-        app.showImagePreview(imageURLs: results, imageInfos: results.map({ object in
-            var title: String = ""
+
+        app.showImagePreview(imageURLs: results, imageInfos: results.map { object in
+            var title = ""
             if let url = object as? URL, url.isFileURL {
                 title = String.app.sizeString(FileManager.app.fileSize(url.path))
             }
             return title
-        }), currentIndex: 0, sourceView: nil, placeholderImage: nil, customBlock: { controller in
+        }, currentIndex: 0, sourceView: nil, placeholderImage: nil, customBlock: { controller in
             guard let controller = controller as? ImagePreviewController else { return }
-            
+
             controller.pageLabelText = { [weak controller] index, count in
                 var text = "\(index + 1) / \(count)"
                 if let title = controller?.imagePreviewView.imageInfos?.safeElement(index) as? String, !title.isEmpty {
@@ -67,11 +66,11 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
             }
         })
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView)
         let value = tableData[indexPath.row] as? String
@@ -79,58 +78,48 @@ class TestCameraController: UIViewController, TableViewControllerProtocol {
         cell.accessoryType = .disclosureIndicator
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, _, _ in
                 self?.showData(objects)
             }
-            break
         case 1:
-            app.showImagePicker(filterType: .image, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .image, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, _, _ in
                 self?.showData(objects)
             }
-            break
         case 2:
-            app.showImagePicker(filterType: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .livePhoto, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, _, _ in
                 self?.showData(objects)
             }
-            break
         case 3:
-            app.showImagePicker(filterType: .video, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: .video, selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, _, _ in
                 self?.showData(objects)
             }
-            break
         case 4:
-            app.showImagePicker(filterType: [], selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, results, cancel in
+            app.showImagePicker(filterType: [], selectionLimit: 9, allowsEditing: allowsEditing, customBlock: nil) { [weak self] objects, _, _ in
                 self?.showData(objects)
             }
-            break
         case 5:
-            app.showImageCamera(filterType: .image, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
+            app.showImageCamera(filterType: .image, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, _, _ in
                 self?.showData(object != nil ? [object!] : [])
             }
-            break
         case 6:
-            app.showImageCamera(filterType: .livePhoto, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
+            app.showImageCamera(filterType: .livePhoto, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, _, _ in
                 self?.showData(object != nil ? [object!] : [])
             }
-            break
         case 7:
-            app.showImageCamera(filterType: .video, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
+            app.showImageCamera(filterType: .video, allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, _, _ in
                 self?.showData(object != nil ? [object!] : [])
             }
-            break
         case 8:
-            app.showImageCamera(filterType: [], allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, info, cancel in
+            app.showImageCamera(filterType: [], allowsEditing: allowsEditing, customBlock: nil) { [weak self] object, _, _ in
                 self?.showData(object != nil ? [object!] : [])
             }
-            break
         default:
             break
         }
     }
-    
 }

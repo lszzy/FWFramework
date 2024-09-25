@@ -18,26 +18,23 @@ public typealias RefreshFooter = Refresh.Footer
 
 // MARK: - Header
 extension Refresh {
-    
     public struct Header<Label> where Label: View {
-        
         let action: () -> Void
         let label: (CGFloat) -> Label
-        
+
         @Binding var refreshing: Bool
 
         public init(refreshing: Binding<Bool>, action: @escaping () -> Void, @ViewBuilder label: @escaping (CGFloat) -> Label) {
             self.action = action
             self.label = label
-            self._refreshing = refreshing
+            _refreshing = refreshing
         }
-        
+
         @Environment(\.refreshHeaderUpdate) var update
     }
 }
 
 extension Refresh.Header: View {
-    
     public var body: some View {
         if update.refresh, !refreshing, update.progress > 1.01 {
             DispatchQueue.main.async {
@@ -45,7 +42,7 @@ extension Refresh.Header: View {
                 self.action()
             }
         }
-        
+
         return Group {
             if update.enable {
                 VStack(alignment: .center, spacing: 0) {
@@ -63,7 +60,7 @@ extension Refresh.Header: View {
             [.init(bounds: $0, refreshing: self.refreshing)]
         }
     }
-    
+
     var opacity: Double {
         (!refreshing && update.refresh) || (update.progress == 0) ? 0 : 1
     }
@@ -71,7 +68,6 @@ extension Refresh.Header: View {
 
 // MARK: - HeaderKey
 extension EnvironmentValues {
-    
     var refreshHeaderUpdate: Refresh.HeaderUpdateKey.Value {
         get { self[Refresh.HeaderUpdateKey.self] }
         set { self[Refresh.HeaderUpdateKey.self] = newValue }
@@ -79,32 +75,29 @@ extension EnvironmentValues {
 }
 
 extension Refresh {
-    
-    struct HeaderAnchorKey {
-        static var defaultValue: Value = []
+    enum HeaderAnchorKey {
+        nonisolated(unsafe) static var defaultValue: Value = []
     }
-    
-    struct HeaderUpdateKey {
-        static var defaultValue: Value = .init(enable: false)
+
+    enum HeaderUpdateKey {
+        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
     }
 }
 
 extension Refresh.HeaderAnchorKey: PreferenceKey {
-    
     typealias Value = [Item]
-    
+
     struct Item {
         let bounds: Anchor<CGRect>
         let refreshing: Bool
     }
-    
+
     static func reduce(value: inout Value, nextValue: () -> Value) {
         value.append(contentsOf: nextValue())
     }
 }
 
 extension Refresh.HeaderUpdateKey: EnvironmentKey {
-    
     struct Value {
         let enable: Bool
         var progress: CGFloat = 0
@@ -114,35 +107,32 @@ extension Refresh.HeaderUpdateKey: EnvironmentKey {
 
 // MARK: - Footer
 extension Refresh {
-    
     public struct Footer<Label> where Label: View {
-        
         let action: () -> Void
         let label: () -> Label
-        
+
         @Binding var refreshing: Bool
-        
-        private var noMore: Bool = false
+
+        private var noMore = false
         private var preloadOffset: CGFloat = 0
 
         public init(refreshing: Binding<Bool>, action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
             self.action = action
             self.label = label
-            self._refreshing = refreshing
+            _refreshing = refreshing
         }
-        
+
         @Environment(\.refreshFooterUpdate) var update
     }
 }
 
 extension Refresh.Footer {
-    
     public func noMore(_ noMore: Bool) -> Self {
         var view = self
         view.noMore = noMore
         return view
     }
-    
+
     public func preload(offset: CGFloat) -> Self {
         var view = self
         view.preloadOffset = offset
@@ -151,7 +141,6 @@ extension Refresh.Footer {
 }
 
 extension Refresh.Footer: View {
-    
     public var body: some View {
         if !noMore, update.refresh, !refreshing {
             DispatchQueue.main.async {
@@ -159,7 +148,7 @@ extension Refresh.Footer: View {
                 self.action()
             }
         }
-        
+
         return Group {
             if update.enable {
                 VStack(alignment: .center, spacing: 0) {
@@ -188,7 +177,6 @@ extension Refresh.Footer: View {
 
 // MARK: - FooterKey
 extension EnvironmentValues {
-    
     var refreshFooterUpdate: Refresh.FooterUpdateKey.Value {
         get { self[Refresh.FooterUpdateKey.self] }
         set { self[Refresh.FooterUpdateKey.self] = newValue }
@@ -196,33 +184,30 @@ extension EnvironmentValues {
 }
 
 extension Refresh {
-    
-    struct FooterAnchorKey {
-        static var defaultValue: Value = []
+    enum FooterAnchorKey {
+        nonisolated(unsafe) static var defaultValue: Value = []
     }
-    
-    struct FooterUpdateKey {
-        static var defaultValue: Value = .init(enable: false)
+
+    enum FooterUpdateKey {
+        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
     }
 }
 
 extension Refresh.FooterAnchorKey: PreferenceKey {
-    
     typealias Value = [Item]
-    
+
     struct Item {
         let bounds: Anchor<CGRect>
         let preloadOffset: CGFloat
         let refreshing: Bool
     }
-    
+
     static func reduce(value: inout Value, nextValue: () -> Value) {
         value.append(contentsOf: nextValue())
     }
 }
 
 extension Refresh.FooterUpdateKey: EnvironmentKey {
-    
     struct Value: Equatable {
         let enable: Bool
         var refresh: Bool = false
@@ -231,7 +216,6 @@ extension Refresh.FooterUpdateKey: EnvironmentKey {
 
 // MARK: - List
 extension ScrollView {
-    
     // 启用刷新，添加到首尾即可
     public func enableRefresh(_ enable: Bool = true) -> some View {
         modifier(Refresh.Modifier(enable: enable))
@@ -239,7 +223,6 @@ extension ScrollView {
 }
 
 extension List {
-    
     // 启用刷新，添加到Header|Footer即可
     public func enableRefresh(_ enable: Bool = true) -> some View {
         modifier(Refresh.Modifier(enable: enable))
@@ -248,32 +231,30 @@ extension List {
 
 // MARK: - Modifier
 extension Refresh {
-    
-    public struct Modifier {
+    public struct Modifier: @unchecked Sendable {
         let isEnabled: Bool
-        
+
         @State private var id: Int = 0
         @State private var headerUpdate: HeaderUpdateKey.Value
         @State private var headerPadding: CGFloat = 0
         @State private var headerPreviousProgress: CGFloat = 0
-        
+
         @State private var footerUpdate: FooterUpdateKey.Value
         @State private var footerPreviousRefreshAt: Date?
-        
+
         public init(enable: Bool) {
-            isEnabled = enable
+            self.isEnabled = enable
             _headerUpdate = State(initialValue: .init(enable: enable))
             _footerUpdate = State(initialValue: .init(enable: enable))
         }
-        
+
         @Environment(\.defaultMinListRowHeight) var rowHeight
     }
 }
 
 extension Refresh.Modifier: ViewModifier {
-    
     public func body(content: Content) -> some View {
-        return GeometryReader { proxy in
+        GeometryReader { proxy in
             content
                 .environment(\.refreshHeaderUpdate, self.headerUpdate)
                 .environment(\.refreshFooterUpdate, self.footerUpdate)
@@ -290,19 +271,19 @@ extension Refresh.Modifier: ViewModifier {
                 .id(self.id)
         }
     }
-    
+
     func update(proxy: GeometryProxy, value: Refresh.HeaderAnchorKey.Value) {
         guard let item = value.first else { return }
         guard !footerUpdate.refresh else { return }
-        
+
         let bounds = proxy[item.bounds]
         var update = headerUpdate
-        
+
         update.progress = max(0, (bounds.maxY) / bounds.height)
-        
+
         if update.refresh != item.refreshing {
             update.refresh = item.refreshing
-            
+
             if !item.refreshing {
                 id += 1
                 DispatchQueue.main.async {
@@ -312,19 +293,19 @@ extension Refresh.Modifier: ViewModifier {
         } else {
             update.refresh = update.refresh || (headerPreviousProgress > 1 && update.progress < headerPreviousProgress && update.progress >= 1)
         }
-        
+
         headerUpdate = update
         headerPadding = headerUpdate.refresh ? 0 : -max(rowHeight, bounds.height)
         headerPreviousProgress = update.progress
     }
-    
+
     func update(proxy: GeometryProxy, value: Refresh.FooterAnchorKey.Value) {
         guard let item = value.first else { return }
         guard headerUpdate.progress == 0 else { return }
-        
+
         let bounds = proxy[item.bounds]
         var update = footerUpdate
-        
+
         if bounds.minY <= rowHeight || bounds.minY <= bounds.height {
             update.refresh = false
         } else if update.refresh && !item.refreshing {
@@ -332,14 +313,14 @@ extension Refresh.Modifier: ViewModifier {
         } else {
             update.refresh = proxy.size.height - bounds.minY + item.preloadOffset > 0
         }
-        
+
         if update.refresh, !footerUpdate.refresh {
             if let date = footerPreviousRefreshAt, Date().timeIntervalSince(date) < 0.1 {
                 update.refresh = false
             }
             footerPreviousRefreshAt = Date()
         }
-        
+
         footerUpdate = update
     }
 }

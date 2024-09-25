@@ -12,14 +12,14 @@ extension Wrapper where Base: WrapperObject {
     // MARK: - Module
     /// 获取当前类所在的模块名称，兼容主应用和framework等(可能不准确)
     public static var moduleName: String {
-        return moduleName(for: Base.self)
+        moduleName(for: Base.self)
     }
-    
+
     /// 获取指定类所在的模块名称，兼容主应用和framework等(可能不准确)
     public static func moduleName(for aClass: AnyClass) -> String {
-        return Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
+        Bundle(for: aClass).executableURL?.lastPathComponent ?? ""
     }
-    
+
     /// 获取任意对象的类型字符串，含模块名称
     public static func typeName(for object: Any) -> String {
         if let clazz = object as? AnyClass {
@@ -34,24 +34,24 @@ extension Wrapper where Base: WrapperObject {
             return String(describing: type(of: object) as AnyObject)
         }
     }
-    
+
     // MARK: - Property
-    /// 临时对象，强引用，支持KVO
+    /// 临时对象，强引用，线程安全，支持KVO
     public var tempObject: Any? {
         get {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             return property(forName: #function)
         }
         set {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             setProperty(newValue, forName: #function)
         }
     }
-    
+
     /// 读取关联属性
     /// - Parameter name: 属性名称
     /// - Returns: 属性值
@@ -62,7 +62,7 @@ extension Wrapper where Base: WrapperObject {
         }
         return value
     }
-    
+
     /// 读取Bool关联属性，默认false
     /// - Parameter name: 属性名称
     /// - Returns: 属性值
@@ -70,7 +70,7 @@ extension Wrapper where Base: WrapperObject {
         let number = propertyNumber(forName: name)
         return number?.boolValue ?? false
     }
-    
+
     /// 读取Int关联属性，默认0
     /// - Parameter name: 属性名称
     /// - Returns: 属性值
@@ -78,7 +78,7 @@ extension Wrapper where Base: WrapperObject {
         let number = propertyNumber(forName: name)
         return number?.intValue ?? .zero
     }
-    
+
     /// 读取Double关联属性，默认0
     /// - Parameter name: 属性名称
     /// - Returns: 属性值
@@ -86,7 +86,7 @@ extension Wrapper where Base: WrapperObject {
         let number = propertyNumber(forName: name)
         return number?.doubleValue ?? .zero
     }
-    
+
     /// 读取NSNumber关联属性，默认nil
     /// - Parameter name: 属性名称
     /// - Returns: 属性值
@@ -96,7 +96,7 @@ extension Wrapper where Base: WrapperObject {
         }
         return nil
     }
-    
+
     /// 设置关联属性，可指定关联策略，支持KVO
     /// - Parameters:
     ///   - value: 属性值
@@ -105,7 +105,7 @@ extension Wrapper where Base: WrapperObject {
     public func setProperty(_ value: Any?, forName name: String, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
         NSObject.fw.setAssociatedObject(base, key: name, value: value, policy: policy)
     }
-    
+
     /// 设置拷贝关联属性，支持KVO
     /// - Parameters:
     ///   - value: 属性值
@@ -113,15 +113,15 @@ extension Wrapper where Base: WrapperObject {
     public func setPropertyCopy(_ value: Any?, forName name: String) {
         NSObject.fw.setAssociatedObject(base, key: name, value: value, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
-    
+
     /// 设置弱引用关联属性，支持KVO，OC不支持weak关联属性
     /// - Parameters:
     ///   - value: 属性值
     ///   - name: 属性名称
     public func setPropertyWeak(_ value: AnyObject?, forName name: String) {
-        NSObject.fw.setAssociatedObject(base, key: name, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        NSObject.fw.setAssociatedObject(base, key: name, value: WeakObject(value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
-    
+
     /// 设置Bool关联属性
     /// - Parameters:
     ///   - value: 属性值
@@ -129,7 +129,7 @@ extension Wrapper where Base: WrapperObject {
     public func setPropertyBool(_ value: Bool, forName name: String) {
         setPropertyNumber(NSNumber(value: value), forName: name)
     }
-    
+
     /// 设置Int关联属性
     /// - Parameters:
     ///   - value: 属性值
@@ -137,7 +137,7 @@ extension Wrapper where Base: WrapperObject {
     public func setPropertyInt(_ value: Int, forName name: String) {
         setPropertyNumber(NSNumber(value: value), forName: name)
     }
-    
+
     /// 设置Double关联属性
     /// - Parameters:
     ///   - value: 属性值
@@ -145,7 +145,7 @@ extension Wrapper where Base: WrapperObject {
     public func setPropertyDouble(_ value: Double, forName name: String) {
         setPropertyNumber(NSNumber(value: value), forName: name)
     }
-    
+
     /// 设置NSNumber关联属性
     /// - Parameters:
     ///   - value: 属性值
@@ -153,32 +153,32 @@ extension Wrapper where Base: WrapperObject {
     public func setPropertyNumber(_ value: NSNumber?, forName name: String) {
         setProperty(value, forName: name)
     }
-    
+
     // MARK: - Bind
     /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
     ///   - object: 对象，会被 strong 强引用
     ///   - forKey: 键名
     public func bindObject(_ object: Any?, forKey key: String) {
-        if let object = object {
+        if let object {
             allBoundObjects[key] = object
         } else {
             allBoundObjects.removeValue(forKey: key)
         }
     }
-    
+
     /// 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
     ///   - object: 对象，不会被 strong 强引用
     ///   - forKey: 键名
     public func bindObjectWeak(_ object: AnyObject?, forKey key: String) {
-        if let object = object {
-            allBoundObjects[key] = WeakObject(object: object)
+        if let object {
+            allBoundObjects[key] = WeakObject(object)
         } else {
             allBoundObjects.removeValue(forKey: key)
         }
     }
-    
+
     /// 取出之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的对象
@@ -189,7 +189,7 @@ extension Wrapper where Base: WrapperObject {
         }
         return object
     }
-    
+
     /// 给对象绑定上一个 double 值以供后续取出使用
     /// - Parameters:
     ///   - value: double值
@@ -197,7 +197,7 @@ extension Wrapper where Base: WrapperObject {
     public func bindDouble(_ value: Double, forKey: String) {
         bindNumber(NSNumber(value: value), forKey: forKey)
     }
-    
+
     /// 取出之前用 bindDouble:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
@@ -213,7 +213,7 @@ extension Wrapper where Base: WrapperObject {
     public func bindBool(_ value: Bool, forKey: String) {
         bindNumber(NSNumber(value: value), forKey: forKey)
     }
-    
+
     /// 取出之前用 bindBool:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
@@ -229,7 +229,7 @@ extension Wrapper where Base: WrapperObject {
     public func bindInt(_ value: Int, forKey: String) {
         bindNumber(NSNumber(value: value), forKey: forKey)
     }
-    
+
     /// 取出之前用 bindInt:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
@@ -237,7 +237,7 @@ extension Wrapper where Base: WrapperObject {
         let number = boundNumber(forKey: forKey)
         return number?.intValue ?? .zero
     }
-    
+
     /// 给对象绑定上一个 NSNumber 值以供后续取出使用
     /// - Parameters:
     ///   - value: 整数值
@@ -245,7 +245,7 @@ extension Wrapper where Base: WrapperObject {
     public func bindNumber(_ value: NSNumber?, forKey: String) {
         bindObject(value, forKey: forKey)
     }
-    
+
     /// 取出之前用 bindNumber:forKey: 绑定的值
     /// - Parameter forKey: 键名
     /// - Returns: 绑定的值
@@ -255,13 +255,13 @@ extension Wrapper where Base: WrapperObject {
         }
         return nil
     }
-    
+
     /// 移除之前使用 bind 方法绑定的对象
     /// - Parameter forKey: 键名
     public func removeBinding(forKey key: String) {
         allBoundObjects.removeValue(forKey: key)
     }
-    
+
     /// 移除之前使用 bind 方法绑定的所有对象
     public func removeAllBindings() {
         allBoundObjects.removeAll()
@@ -269,41 +269,41 @@ extension Wrapper where Base: WrapperObject {
 
     /// 返回当前有绑定对象存在的所有的 key 的数组，数组中元素的顺序是随机的，如果不存在任何 key，则返回一个空数组
     public func allBindingKeys() -> [String] {
-        return Array(allBoundObjects.keys)
+        Array(allBoundObjects.keys)
     }
-    
+
     /// 返回是否设置了某个 key
     /// - Parameter key: 键名
     /// - Returns: 是否绑定
     public func hasBindingKey(_ key: String) -> Bool {
-        return allBoundObjects.index(forKey: key) != nil
+        allBoundObjects.index(forKey: key) != nil
     }
-    
+
     private var allBoundObjects: [String: Any] {
         get {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             return property(forName: #function) as? [String: Any] ?? [:]
         }
         set {
             objc_sync_enter(base)
             defer { objc_sync_exit(base) }
-            
+
             setProperty(newValue, forName: #function)
         }
     }
-    
+
     // MARK: - Hash
     /// 获取当前对象的hashValue，等同于: ObjectIdentifier(base).hashValue
     public var hashValue: Int {
-        return ObjectIdentifier(base).hashValue
+        ObjectIdentifier(base).hashValue
     }
-    
+
     // MARK: - Mirror
     /// 获取当前对象的反射字典(含父类直至NSObject)，不含nil值
     public var mirrorDictionary: [String: Any] {
-        return NSObject.fw.mirrorDictionary(base)
+        NSObject.fw.mirrorDictionary(base)
     }
 }
 
@@ -324,23 +324,23 @@ extension Wrapper where Base: NSObject {
         }
         return metaClass
     }
-    
+
     /// 获取指定类的所有子类
     public static func allSubclasses(_ clazz: AnyClass) -> [AnyClass] {
         var classesCount: UInt32 = 0
         guard let classList = objc_copyClassList(&classesCount) else {
             return []
         }
-        
+
         defer { free(UnsafeMutableRawPointer(classList)) }
         let classes = UnsafeBufferPointer(start: classList, count: Int(classesCount))
         guard classesCount > 0 else {
             return []
         }
-        
+
         return classes.filter { isSubclass($0, of: clazz) }
     }
-    
+
     private static func isSubclass(_ subclass: AnyClass, of superclass: AnyClass) -> Bool {
         var parentClass: AnyClass? = subclass
         while parentClass != nil {
@@ -349,7 +349,7 @@ extension Wrapper where Base: NSObject {
         }
         return false
     }
-    
+
     /// 获取类方法列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -359,13 +359,13 @@ extension Wrapper where Base: NSObject {
         if let cacheNames = NSObject.innerClassCaches[cacheKey] {
             return cacheNames
         }
-        
+
         var resultNames: [String] = []
         var targetClass: AnyClass? = clazz
         while targetClass != nil {
             var resultCount: UInt32 = 0
             let methodList = class_copyMethodList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
+            for i in 0..<Int(resultCount) {
                 if let method = methodList?[i],
                    let resultName = String(utf8String: sel_getName(method_getName(method))),
                    !resultName.isEmpty,
@@ -374,17 +374,17 @@ extension Wrapper where Base: NSObject {
                 }
             }
             free(methodList)
-            
+
             targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
-        
+
         NSObject.innerClassCaches[cacheKey] = resultNames
         return resultNames
     }
-    
+
     /// 获取类属性列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -394,13 +394,13 @@ extension Wrapper where Base: NSObject {
         if let cacheNames = NSObject.innerClassCaches[cacheKey] {
             return cacheNames
         }
-        
+
         var resultNames: [String] = []
         var targetClass: AnyClass? = clazz
         while targetClass != nil {
             var resultCount: UInt32 = 0
             let propertyList = class_copyPropertyList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
+            for i in 0..<Int(resultCount) {
                 if let property = propertyList?[i],
                    let resultName = String(utf8String: property_getName(property)),
                    !resultName.isEmpty,
@@ -409,17 +409,17 @@ extension Wrapper where Base: NSObject {
                 }
             }
             free(propertyList)
-            
+
             targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
-        
+
         NSObject.innerClassCaches[cacheKey] = resultNames
         return resultNames
     }
-    
+
     /// 获取类Ivar列表(含父类直至NSObject)，支持meta类(objc_getMetaClass)
     /// - Parameters:
     ///   - clazz: 指定类
@@ -429,13 +429,13 @@ extension Wrapper where Base: NSObject {
         if let cacheNames = NSObject.innerClassCaches[cacheKey] {
             return cacheNames
         }
-        
+
         var resultNames: [String] = []
         var targetClass: AnyClass? = clazz
         while targetClass != nil {
             var resultCount: UInt32 = 0
             let ivarList = class_copyIvarList(targetClass, &resultCount)
-            for i in 0 ..< Int(resultCount) {
+            for i in 0..<Int(resultCount) {
                 if let ivar = ivarList?[i],
                    let ivarName = ivar_getName(ivar),
                    let resultName = String(utf8String: ivarName),
@@ -445,17 +445,17 @@ extension Wrapper where Base: NSObject {
                 }
             }
             free(ivarList)
-            
+
             targetClass = class_getSuperclass(targetClass)
             if targetClass == nil || targetClass == NSObject.self {
                 break
             }
         }
-        
+
         NSObject.innerClassCaches[cacheKey] = resultNames
         return resultNames
     }
-    
+
     private static func classCacheKey(
         _ clazz: AnyClass,
         type: String
@@ -464,20 +464,20 @@ extension Wrapper where Base: NSObject {
             + (class_isMetaClass(clazz) ? "M" : "C") + type
         return cacheKey
     }
-    
+
     // MARK: - Property
     /// 读取关联对象，key为字符串，一般可使用#function
     public static func getAssociatedObject(_ object: Any, key: String) -> Any? {
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         return objc_getAssociatedObject(object, pointer)
     }
-    
+
     /// 设置关联对象，key为字符串，一般可使用#function
     public static func setAssociatedObject(_ object: Any, key: String, value: Any?, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
         let pointer = unsafeBitCast(Selector(key), to: UnsafeRawPointer.self)
         objc_setAssociatedObject(object, pointer, value, policy)
     }
-    
+
     // MARK: - Method
     /// 安全调用内部属性获取方法，如果属性不存在，则忽略之
     ///
@@ -500,7 +500,7 @@ extension Wrapper where Base: NSObject {
         guard let selector = setterSelector(name) else { return }
         _ = base.perform(selector, with: object)
     }
-    
+
     private func getterSelector(_ name: String) -> Selector? {
         let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
         guard !name.isEmpty else { return nil }
@@ -520,7 +520,7 @@ extension Wrapper where Base: NSObject {
         }
         return nil
     }
-    
+
     private func setterSelector(_ name: String) -> Selector? {
         let name = name.hasPrefix("_") ? String(name.dropFirst()) : name
         guard !name.isEmpty else { return nil }
@@ -538,7 +538,7 @@ extension Wrapper where Base: NSObject {
         }
         return nil
     }
-    
+
     /// 安全调用方法，支持多个参数
     /// - Parameters:
     ///   - selector: 要执行的方法
@@ -548,7 +548,7 @@ extension Wrapper where Base: NSObject {
     public func invokeMethod(_ selector: Selector, objects: [Any]? = nil) -> Unmanaged<AnyObject>! {
         NSObject.fw.invokeMethod(base, selector: selector, objects: objects)
     }
-    
+
     /// 安全调用类方法，支持多个参数
     /// - Parameters:
     ///   - target: 调用的目标
@@ -675,7 +675,7 @@ extension Wrapper where Base: NSObject {
         }
         return value != nil ? Unmanaged.passRetained(value as AnyObject) : nil
     }
-    
+
     // MARK: - Value
     /// 安全获取当前对象的指定属性值(非keyPath)
     public func value(forKey key: String) -> Any? {
@@ -688,10 +688,10 @@ extension Wrapper where Base: NSObject {
         guard setterSelector(key) != nil else { return }
         base.setValue(value, forKey: key)
     }
-    
+
     // MARK: - Mirror
     /// 执行任意对象的反射属性句柄(含父类)
-    public static func mirrorMap(_ object: Any, block: (String, Any) throws -> Void) rethrows -> Void {
+    public static func mirrorMap(_ object: Any, block: (String, Any) throws -> Void) rethrows {
         var mirror: Mirror! = Mirror(reflecting: object)
         while mirror != nil {
             for child in mirror.children where child.label != nil {
@@ -700,10 +700,10 @@ extension Wrapper where Base: NSObject {
             mirror = mirror.superclassMirror
         }
     }
-    
+
     /// 获取任意对象的反射字典(含父类直至NSObject)，不含nil值
     public static func mirrorDictionary(_ object: Any?) -> [String: Any] {
-        guard let object = object else { return [:] }
+        guard let object else { return [:] }
         var mirror = Mirror(reflecting: object)
         var children: [Mirror.Child] = []
         children += mirror.children
@@ -712,9 +712,9 @@ extension Wrapper where Base: NSObject {
             children += superclassMirror.children
             mirror = superclassMirror
         }
-        
+
         var result: [String: Any] = [:]
-        children.forEach { child in
+        for child in children {
             if let label = child.label, !label.isEmpty,
                !Optional<Any>.isNil(child.value) {
                 result[label] = child.value
@@ -726,7 +726,5 @@ extension Wrapper where Base: NSObject {
 
 // MARK: - NSObject+Runtime
 extension NSObject {
-    
-    fileprivate static var innerClassCaches: [String: [String]] = [:]
-    
+    fileprivate nonisolated(unsafe) static var innerClassCaches: [String: [String]] = [:]
 }

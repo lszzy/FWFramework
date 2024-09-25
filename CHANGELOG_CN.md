@@ -1,5 +1,27 @@
 # 更新日志
 
+## [6.0.0-beta.1] - 2024-09-25
+
+### Added
+* 兼容Swift 6，代码标记MainActor、Sendable等，轻松编写更安全的代码
+* 兼容iOS 18，ViewIntrospect新增iOS 18相关变量
+* 重构等比例缩放实现方案，相关方法支持非主线程调用
+* 新增SendableObject对象，用于解决任意对象Sendable传参问题
+* 新增safe开头Message相关observe方法，用于主线程调用监听句柄
+* Router、JSBridge组件相关方法标记MainActor主线程调用，需迁移适配
+* 移除5.x版本标记为废弃的方法，请使用新API替换实现，需迁移适配
+* 重构全局状态栏、导航栏、标签栏等高度获取方法，优先动态获取并缓存
+
+### Migrate
+1. 适配Swift 6，需修复标记MainActor、Sendable后相关代码编译错误，需迁移适配
+2. 适配iOS 18，如使用ViewIntrospect组件需适配v18相关变量，需迁移适配
+3. 适配Plugin，自定义Plugin实现时需同步标记MainActor、Sendable等，需迁移适配
+4. 如需主线程调用Message相关observe监听句柄，请迁移使用safe开头对应方法
+5. 主项目如开启Swift 6编译，HTTPRequest请求子类等需同步标记为`@unchecked Sendable`
+6. 5.x版本废弃方法已移除，请使用新Api替换实现(如chain=>layoutChain等)，需迁移适配
+7. 修复编译错误后，需同步测试相关功能是否正常(如状态栏、导航栏等高度、MainActor相关功能等)
+8. 更多使用示例，请参考Example项目
+
 ## [5.12.0] - 2024-09-23
 
 ### Added

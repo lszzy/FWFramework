@@ -22,20 +22,20 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeCalendar
 /// 日历授权
-public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
+public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeCalendar(type: .event)
     public static let writeOnly = AuthorizeCalendar(type: .event, writeOnly: true)
     public static let reminder = AuthorizeCalendar(type: .reminder)
-    
+
     private var type: EKEntityType = .event
     private var writeOnly: Bool = false
-    
+
     public init(type: EKEntityType, writeOnly: Bool = false) {
         super.init()
         self.type = type
         self.writeOnly = writeOnly
     }
-    
+
     public func authorizeStatus() -> AuthorizeStatus {
         let status = EKEventStore.authorizationStatus(for: type)
         switch status {
@@ -60,8 +60,8 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             return .notDetermined
         }
     }
-    
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         let completionHandler: EKEventStoreRequestAccessCompletionHandler = { granted, error in
             let status: AuthorizeStatus = granted ? .authorized : .denied
             if completion != nil {
@@ -70,7 +70,7 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
                 }
             }
         }
-        
+
         #if swift(>=5.9)
         if #available(iOS 17.0, *) {
             let eventStore = EKEventStore()
@@ -86,7 +86,7 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol {
             return
         }
         #endif
-        
+
         let eventStore = EKEventStore()
         eventStore.requestAccess(to: type, completion: completionHandler)
     }

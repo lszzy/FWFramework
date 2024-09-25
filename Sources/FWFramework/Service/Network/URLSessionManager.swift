@@ -11,44 +11,46 @@ import Foundation
 /// URLSession管理器
 ///
 /// [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
+open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate, @unchecked Sendable {
     public static let networkingTaskDidResumeNotification = Notification.Name("site.wuyong.networking.task.resume")
     public static let networkingTaskDidCompleteNotification = Notification.Name("site.wuyong.networking.task.complete")
     public static let networkingTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.task.suspend")
     public static let urlSessionDidInvalidateNotification = Notification.Name("site.wuyong.networking.session.invalidate")
     public static let urlSessionDownloadTaskDidMoveFileSuccessfullyNotification = Notification.Name("site.wuyong.networking.session.download.file-manager-succeed")
     public static let urlSessionDownloadTaskDidFailToMoveFileNotification = Notification.Name("site.wuyong.networking.session.download.file-manager-error")
-    
+
     public static let networkingTaskDidCompleteResponseDataKey = "site.wuyong.networking.complete.finish.responsedata"
     public static let networkingTaskDidCompleteSerializedResponseKey = "site.wuyong.networking.task.complete.serializedresponse"
     public static let networkingTaskDidCompleteResponseSerializerKey = "site.wuyong.networking.task.complete.responseserializer"
     public static let networkingTaskDidCompleteAssetPathKey = "site.wuyong.networking.task.complete.assetpath"
     public static let networkingTaskDidCompleteErrorKey = "site.wuyong.networking.task.complete.error"
     public static let networkingTaskDidCompleteSessionTaskMetrics = "site.wuyong.networking.complete.sessiontaskmetrics"
-    
-    open private(set) lazy var session: URLSession = {
-        return URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: self.operationQueue)
-    }()
+
+    open private(set) lazy var session: URLSession = .init(configuration: self.sessionConfiguration, delegate: self, delegateQueue: self.operationQueue)
+
     open private(set) var operationQueue = OperationQueue()
     open var responseSerializer: HTTPResponseSerializer = JSONResponseSerializer()
     open var securityPolicy: SecurityPolicy = .default
-    
+
     open var tasks: [URLSessionTask] {
-        return tasks(for: "tasks")
+        tasks(for: "tasks")
     }
+
     open var dataTasks: [URLSessionDataTask] {
-        return tasks(for: "dataTasks") as? [URLSessionDataTask] ?? []
+        tasks(for: "dataTasks") as? [URLSessionDataTask] ?? []
     }
+
     open var uploadTasks: [URLSessionUploadTask] {
-        return tasks(for: "uploadTasks") as? [URLSessionUploadTask] ?? []
+        tasks(for: "uploadTasks") as? [URLSessionUploadTask] ?? []
     }
+
     open var downloadTasks: [URLSessionDownloadTask] {
-        return tasks(for: "downloadTasks") as? [URLSessionDownloadTask] ?? []
+        tasks(for: "downloadTasks") as? [URLSessionDownloadTask] ?? []
     }
-    
+
     open var completionQueue: DispatchQueue?
     open var completionGroup: DispatchGroup?
-    
+
     open var sessionDidBecomeInvalid: ((_ session: URLSession, _ error: Error?) -> Void)?
     open var sessionDidReceiveAuthenticationChallenge: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ credential: inout URLCredential?) -> URLSession.AuthChallengeDisposition)?
     open var taskNeedNewBodyStream: ((_ session: URLSession, _ task: URLSessionTask) -> InputStream)?
@@ -61,63 +63,63 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open var dataTaskDidBecomeDownloadTask: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ downloadTask: URLSessionDownloadTask) -> Void)?
     open var dataTaskDidReceiveData: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ data: Data) -> Void)?
     open var dataTaskWillCacheResponse: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ proposedResponse: CachedURLResponse) -> CachedURLResponse)?
-    open var didFinishEventsForBackgroundURLSession: ((_ session: URLSession) -> Void)?
+    open var didFinishEventsForBackgroundURLSession: (@Sendable (_ session: URLSession) -> Void)?
     open var downloadTaskDidFinishDownloading: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
     open var downloadTaskDidWriteData: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?
     open var downloadTaskDidResume: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ fileOffset: Int64, _ expectedTotalBytes: Int64) -> Void)?
-    
+
     private var sessionConfiguration: URLSessionConfiguration
     private var mutableTaskDelegates: [Int: URLSessionManagerTaskDelegate] = [:]
     private var lock = NSLock()
     private var taskDescriptionForSessionTasks: String {
-        return String(format: "%p", self)
+        String(format: "%p", self)
     }
-    
+
     fileprivate static let urlSessionTaskDidResumeNotification = Notification.Name("site.wuyong.networking.nsurlsessiontask.resume")
     fileprivate static let urlSessionTaskDidSuspendNotification = Notification.Name("site.wuyong.networking.nsurlsessiontask.suspend")
     private static let urlSessionManagerLockName = "site.wuyong.networking.session.manager.lock"
-    
-    public convenience override init() {
+
+    override public convenience init() {
         self.init(sessionConfiguration: nil)
     }
-    
+
     public init(sessionConfiguration: URLSessionConfiguration?) {
         self.sessionConfiguration = sessionConfiguration ?? .default
-        self.operationQueue.maxConcurrentOperationCount = 1
-        self.lock.name = Self.urlSessionManagerLockName
+        operationQueue.maxConcurrentOperationCount = 1
+        lock.name = Self.urlSessionManagerLockName
         super.init()
-        
-        self.session.getTasksWithCompletionHandler { [weak self] dataTasks, uploadTasks, downloadTasks in
+
+        session.getTasksWithCompletionHandler { [weak self] dataTasks, uploadTasks, downloadTasks in
             for dataTask in dataTasks {
                 self?.addDelegate(for: dataTask, uploadProgress: nil, downloadProgress: nil, completionHandler: nil)
             }
-            
+
             for uploadTask in uploadTasks {
                 self?.addDelegate(for: uploadTask, progress: nil, completionHandler: nil)
             }
-            
+
             for downloadTask in downloadTasks {
                 self?.addDelegate(for: downloadTask, progress: nil, destination: nil, completionHandler: nil)
             }
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     open func invalidateSessionCancelingTasks(_ cancelPendingTasks: Bool, resetSession: Bool) {
         if cancelPendingTasks {
-            self.session.invalidateAndCancel()
+            session.invalidateAndCancel()
         } else {
-            self.session.finishTasksAndInvalidate()
+            session.finishTasksAndInvalidate()
         }
-        
+
         if resetSession {
-            self.session = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: self.operationQueue)
+            session = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: operationQueue)
         }
     }
-    
+
     open func dataTask(
         request: URLRequest,
         uploadProgress: ((Progress) -> Void)? = nil,
@@ -128,7 +130,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: dataTask, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: completionHandler)
         return dataTask
     }
-    
+
     open func uploadTask(
         request: URLRequest,
         fromFile fileURL: URL,
@@ -139,7 +141,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
         return uploadTask
     }
-    
+
     open func uploadTask(
         request: URLRequest,
         fromData bodyData: Data,
@@ -150,7 +152,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
         return uploadTask
     }
-    
+
     open func uploadTask(
         streamedRequest: URLRequest,
         progress: ((Progress) -> Void)? = nil,
@@ -160,7 +162,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
         return uploadTask
     }
-    
+
     open func downloadTask(
         request: URLRequest,
         progress: ((Progress) -> Void)? = nil,
@@ -171,7 +173,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
         return downloadTask
     }
-    
+
     open func downloadTask(
         resumeData: Data,
         progress: ((Progress) -> Void)? = nil,
@@ -182,23 +184,23 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
         return downloadTask
     }
-    
+
     open func uploadProgress(for task: URLSessionTask) -> Progress? {
-        return delegate(for: task)?.uploadProgress
+        delegate(for: task)?.uploadProgress
     }
-    
+
     open func downloadProgress(for task: URLSessionTask) -> Progress? {
-        return delegate(for: task)?.downloadProgress
+        delegate(for: task)?.downloadProgress
     }
-    
+
     open func setUserInfo(_ userInfo: [AnyHashable: Any]?, for task: URLSessionTask) {
         task.fw.setPropertyCopy(userInfo, forName: "userInfo")
     }
-    
+
     open func userInfo(for task: URLSessionTask) -> [AnyHashable: Any]? {
-        return task.fw.property(forName: "userInfo") as? [AnyHashable: Any]
+        task.fw.property(forName: "userInfo") as? [AnyHashable: Any]
     }
-    
+
     @objc private func taskDidResume(_ notification: Notification) {
         guard let task = notification.object as? URLSessionTask else { return }
         if task.taskDescription == taskDescriptionForSessionTasks {
@@ -207,7 +209,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             }
         }
     }
-    
+
     @objc private func taskDidSuspend(_ notification: Notification) {
         guard let task = notification.object as? URLSessionTask else { return }
         if task.taskDescription == taskDescriptionForSessionTasks {
@@ -216,7 +218,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             }
         }
     }
-    
+
     private func delegate(for task: URLSessionTask) -> URLSessionManagerTaskDelegate? {
         var delegate: URLSessionManagerTaskDelegate?
         lock.lock()
@@ -224,14 +226,14 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         lock.unlock()
         return delegate
     }
-    
+
     private func setDelegate(_ delegate: URLSessionManagerTaskDelegate, for task: URLSessionTask) {
         lock.lock()
         mutableTaskDelegates[task.taskIdentifier] = delegate
         addNotificationObserver(for: task)
         lock.unlock()
     }
-    
+
     private func addDelegate(
         for dataTask: URLSessionDataTask,
         uploadProgress: ((Progress) -> Void)?,
@@ -241,14 +243,14 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         let delegate = URLSessionManagerTaskDelegate(task: dataTask)
         delegate.manager = self
         delegate.completionHandler = completionHandler
-        
+
         dataTask.taskDescription = taskDescriptionForSessionTasks
-        self.setDelegate(delegate, for: dataTask)
-        
+        setDelegate(delegate, for: dataTask)
+
         delegate.uploadProgressBlock = uploadProgress
         delegate.downloadProgressBlock = downloadProgress
     }
-    
+
     private func addDelegate(
         for uploadTask: URLSessionUploadTask,
         progress: ((Progress) -> Void)?,
@@ -257,13 +259,13 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         let delegate = URLSessionManagerTaskDelegate(task: uploadTask)
         delegate.manager = self
         delegate.completionHandler = completionHandler
-        
+
         uploadTask.taskDescription = taskDescriptionForSessionTasks
-        self.setDelegate(delegate, for: uploadTask)
-        
+        setDelegate(delegate, for: uploadTask)
+
         delegate.uploadProgressBlock = progress
     }
-    
+
     private func addDelegate(
         for downloadTask: URLSessionDownloadTask,
         progress: ((Progress) -> Void)?,
@@ -275,72 +277,72 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         delegate.completionHandler = completionHandler != nil ? { response, responseObject, error in
             completionHandler?(response, responseObject as? URL, error)
         } : nil
-        
-        if let destination = destination {
-            delegate.downloadTaskDidFinishDownloading = { session, task, location in
-                return destination(location, task.response ?? HTTPURLResponse())
+
+        if let destination {
+            delegate.downloadTaskDidFinishDownloading = { _, task, location in
+                destination(location, task.response ?? HTTPURLResponse())
             }
         }
-        
+
         downloadTask.taskDescription = taskDescriptionForSessionTasks
-        self.setDelegate(delegate, for: downloadTask)
-        
+        setDelegate(delegate, for: downloadTask)
+
         delegate.downloadProgressBlock = progress
     }
-    
+
     private func removeDelegate(for task: URLSessionTask) {
         lock.lock()
         removeNotificationObserver(for: task)
         mutableTaskDelegates.removeValue(forKey: task.taskIdentifier)
         lock.unlock()
     }
-    
+
     private func tasks(for keyPath: String) -> [URLSessionTask] {
-        var tasks: [URLSessionTask] = []
+        let sendableTasks = SendableObject<[URLSessionTask]>([])
         let semaphore = DispatchSemaphore(value: 0)
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             if keyPath == "dataTasks" {
-                tasks = dataTasks
+                sendableTasks.object = dataTasks
             } else if keyPath == "uploadTasks" {
-                tasks = uploadTasks
+                sendableTasks.object = uploadTasks
             } else if keyPath == "downloadTasks" {
-                tasks = downloadTasks
+                sendableTasks.object = downloadTasks
             } else if keyPath == "tasks" {
-                tasks = dataTasks + uploadTasks + downloadTasks
+                sendableTasks.object = dataTasks + uploadTasks + downloadTasks
             }
-            
+
             semaphore.signal()
         }
         semaphore.wait()
-        
-        return tasks
+
+        return sendableTasks.object
     }
-    
+
     private func addNotificationObserver(for task: URLSessionTask) {
         NotificationCenter.default.addObserver(self, selector: #selector(taskDidResume(_:)), name: Self.urlSessionTaskDidResumeNotification, object: task)
         NotificationCenter.default.addObserver(self, selector: #selector(taskDidSuspend(_:)), name: Self.urlSessionTaskDidSuspendNotification, object: task)
     }
-    
+
     private func removeNotificationObserver(for task: URLSessionTask) {
         NotificationCenter.default.removeObserver(self, name: Self.urlSessionTaskDidSuspendNotification, object: task)
         NotificationCenter.default.removeObserver(self, name: Self.urlSessionTaskDidResumeNotification, object: task)
     }
-    
+
     // MARK: - URLSessionDelegate
     open func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         sessionDidBecomeInvalid?(session, error)
-        
+
         NotificationCenter.default.post(name: Self.urlSessionDidInvalidateNotification, object: session)
     }
-    
+
     open func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         assert(sessionDidReceiveAuthenticationChallenge != nil, "`respondsToSelector:` implementation forces `URLSession:didReceiveChallenge:completionHandler:` to be called only if `self.sessionDidReceiveAuthenticationChallenge` is not nil")
-        
+
         var credential: URLCredential?
         let disposition = sessionDidReceiveAuthenticationChallenge?(session, challenge, &credential)
         completionHandler(disposition ?? .performDefaultHandling, credential)
     }
-    
+
     // MARK: - URLSessionTaskDelegate
     open func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         var redirectRequest: URLRequest? = request
@@ -349,12 +351,12 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         }
         completionHandler(redirectRequest)
     }
-    
+
     open func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         var evaluateServerTrust = false
         var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
         var credential: URLCredential?
-        
+
         if authenticationChallengeHandler != nil {
             let result = authenticationChallengeHandler!(session, task, challenge, completionHandler)
             if result == nil {
@@ -370,12 +372,12 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
                 assert(disposition == .performDefaultHandling || disposition == .cancelAuthenticationChallenge || disposition == .rejectProtectionSpace, "")
                 evaluateServerTrust = disposition == .performDefaultHandling && challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust
             } else {
-                assert(false, "The return value from the authentication challenge handler must be nil, an Error, an URLCredential or an AuthChallengeDisposition.")
+                assertionFailure("The return value from the authentication challenge handler must be nil, an Error, an URLCredential or an AuthChallengeDisposition.")
             }
         } else {
             evaluateServerTrust = challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust
         }
-        
+
         if evaluateServerTrust {
             if let serverTrust = challenge.protectionSpace.serverTrust, securityPolicy.evaluateServerTrust(serverTrust, forDomain: challenge.protectionSpace.host) {
                 disposition = .useCredential
@@ -385,10 +387,10 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
                 disposition = .cancelAuthenticationChallenge
             }
         }
-        
+
         completionHandler(disposition, credential)
     }
-    
+
     private func serverTrustError(for serverTrust: SecTrust?, url: URL?) -> Error {
         let CFNetworkBundle = Bundle(identifier: "com.apple.CFNetwork")
         let defaultValue = "The certificate for this server is invalid. You might be connecting to a server that is pretending to be “%@” which could put your confidential information at risk."
@@ -398,63 +400,63 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             NSLocalizedDescriptionKey: localizedDescription
         ]
 
-        if let serverTrust = serverTrust {
+        if let serverTrust {
             userInfo[NSURLErrorFailingURLPeerTrustErrorKey] = serverTrust
         }
 
-        if let url = url {
+        if let url {
             userInfo[NSURLErrorFailingURLErrorKey] = url
             userInfo[NSURLErrorFailingURLStringErrorKey] = url.absoluteString
         }
 
         return NSError(domain: NSURLErrorDomain, code: NSURLErrorServerCertificateUntrusted, userInfo: userInfo)
     }
-    
+
     open func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         var inputStream: InputStream?
-        
+
         if taskNeedNewBodyStream != nil {
             inputStream = taskNeedNewBodyStream?(session, task)
         } else if let bodyStream = task.originalRequest?.httpBodyStream {
             inputStream = bodyStream.copy() as? InputStream
         }
-        
+
         completionHandler(inputStream)
     }
-    
+
     open func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         var totalUnitCount = totalBytesExpectedToSend
         if totalUnitCount == NSURLSessionTransferSizeUnknown {
             let contentLength = task.originalRequest?.value(forHTTPHeaderField: "Content-Length")
-            if let contentLength = contentLength {
+            if let contentLength {
                 totalUnitCount = Int64(contentLength) ?? .zero
             }
         }
-        
+
         let delegate = delegate(for: task)
         delegate?.urlSession(session, task: task, didSendBodyData: bytesSent, totalBytesSent: totalBytesSent, totalBytesExpectedToSend: totalBytesExpectedToSend)
-        
+
         taskDidSendBodyData?(session, task, bytesSent, totalBytesSent, totalUnitCount)
     }
-    
+
     open func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         let delegate = delegate(for: task)
         if delegate != nil {
             delegate?.urlSession(session, task: task, didCompleteWithError: error)
-            
+
             removeDelegate(for: task)
         }
-        
+
         taskDidComplete?(session, task, error)
     }
-    
+
     open func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         let delegate = delegate(for: task)
         delegate?.urlSession(session, task: task, didFinishCollecting: metrics)
-        
+
         taskDidFinishCollectingMetrics?(session, task, metrics)
     }
-    
+
     // MARK: - URLSessionDataDelegate
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         var disposition: URLSession.ResponseDisposition = .allow
@@ -463,24 +465,24 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         }
         completionHandler(disposition)
     }
-    
+
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome downloadTask: URLSessionDownloadTask) {
         let delegate = delegate(for: dataTask)
-        if let delegate = delegate {
+        if let delegate {
             removeDelegate(for: dataTask)
             setDelegate(delegate, for: downloadTask)
         }
-        
+
         dataTaskDidBecomeDownloadTask?(session, dataTask, downloadTask)
     }
-    
+
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         let delegate = delegate(for: dataTask)
         delegate?.urlSession(session, dataTask: dataTask, didReceive: data)
-        
+
         dataTaskDidReceiveData?(session, dataTask, data)
     }
-    
+
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         var cachedResponse = proposedResponse
         if dataTaskWillCacheResponse != nil {
@@ -488,7 +490,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         }
         completionHandler(cachedResponse)
     }
-    
+
     open func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         if let block = didFinishEventsForBackgroundURLSession {
             DispatchQueue.main.async {
@@ -496,49 +498,49 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
             }
         }
     }
-    
+
     // MARK: - URLSessionDownloadDelegate
     open func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         let delegate = delegate(for: downloadTask)
         if downloadTaskDidFinishDownloading != nil {
             let fileURL = downloadTaskDidFinishDownloading!(session, downloadTask, location)
-            if let fileURL = fileURL {
+            if let fileURL {
                 delegate?.downloadFileURL = fileURL
-                
+
                 do {
                     try FileManager.default.moveItem(at: location, to: fileURL)
                     NotificationCenter.default.post(name: Self.urlSessionDownloadTaskDidMoveFileSuccessfullyNotification, object: downloadTask, userInfo: nil)
                 } catch {
                     NotificationCenter.default.post(name: Self.urlSessionDownloadTaskDidFailToMoveFileNotification, object: downloadTask, userInfo: (error as NSError).userInfo)
                 }
-                
+
                 return
             }
         }
-        
+
         delegate?.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
     }
-    
+
     open func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let delegate = delegate(for: downloadTask)
         delegate?.urlSession(session, downloadTask: downloadTask, didWriteData: bytesWritten, totalBytesWritten: totalBytesWritten, totalBytesExpectedToWrite: totalBytesExpectedToWrite)
-        
+
         downloadTaskDidWriteData?(session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
     }
-    
+
     open func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
         let delegate = delegate(for: downloadTask)
         delegate?.urlSession(session, downloadTask: downloadTask, didResumeAtOffset: fileOffset, expectedTotalBytes: expectedTotalBytes)
-        
+
         downloadTaskDidResume?(session, downloadTask, fileOffset, expectedTotalBytes)
     }
-    
+
     // MARK: - NSObject
-    open override var description: String {
-        return String(format: "<%@: %p, session: %@, operationQueue: %@>", NSStringFromClass(type(of: self)), self, self.session, self.operationQueue)
+    override open var description: String {
+        String(format: "<%@: %p, session: %@, operationQueue: %@>", NSStringFromClass(type(of: self)), self, session, operationQueue)
     }
-    
-    open override func responds(to selector: Selector!) -> Bool {
+
+    override open func responds(to selector: Selector!) -> Bool {
         if selector == #selector(URLSessionDelegate.urlSession(_:didReceive:completionHandler:)) {
             return sessionDidReceiveAuthenticationChallenge != nil
         } else if selector == #selector(URLSessionTaskDelegate.urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:)) {
@@ -550,18 +552,18 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         } else if selector == #selector(URLSessionDataDelegate.urlSessionDidFinishEvents(forBackgroundURLSession:)) {
             return didFinishEventsForBackgroundURLSession != nil
         }
-        
+
         return type(of: self).instancesRespond(to: selector)
     }
 }
 
 // MARK: - URLSessionManagerTaskDelegate
-fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate {
+private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate, @unchecked Sendable {
     static let processingQueue = DispatchQueue(label: "site.wuyong.networking.session.manager.processing", attributes: .concurrent)
     static let completionGroup = DispatchGroup()
-    
+
     weak var manager: URLSessionManager?
-    private var mutableData: Data = Data()
+    private var mutableData: Data = .init()
     var uploadProgress = Progress(parent: nil, userInfo: nil)
     var downloadProgress = Progress(parent: nil, userInfo: nil)
     var downloadFileURL: URL?
@@ -570,10 +572,10 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
     var uploadProgressBlock: ((Progress) -> Void)?
     var downloadProgressBlock: ((Progress) -> Void)?
     var completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
-    
+
     init(task: URLSessionTask) {
         super.init()
-        
+
         for progress in [uploadProgress, downloadProgress] {
             progress.totalUnitCount = NSURLSessionTransferSizeUnknown
             progress.isCancellable = true
@@ -587,17 +589,17 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
             progress.resumingHandler = { [weak task] in
                 task?.resume()
             }
-            
+
             progress.addObserver(self, forKeyPath: "fractionCompleted", options: .new, context: nil)
         }
     }
-    
+
     deinit {
         downloadProgress.removeObserver(self, forKeyPath: "fractionCompleted")
         uploadProgress.removeObserver(self, forKeyPath: "fractionCompleted")
     }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if let progress = object as? Progress {
             if progress == downloadProgress {
                 downloadProgressBlock?(progress)
@@ -606,38 +608,38 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
             }
         }
     }
-    
+
     // MARK: - URLSessionTaskDelegate
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         let error = (task.fw.property(forName: "authenticationChallengeError") as? Error) ?? error
-        let manager = self.manager
-        var responseObject: Any?
-        
-        var userInfo: [AnyHashable: Any] = [:]
-        userInfo[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
-        
+        let manager = manager
+        let sendableResponseObject = SendableObject<Any?>(nil)
+
+        let sendableUserInfo = SendableObject<[AnyHashable: Any]>([:])
+        sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
+
         let data = mutableData
         mutableData = Data()
-        
-        if let sessionTaskMetrics = sessionTaskMetrics {
-            userInfo[URLSessionManager.networkingTaskDidCompleteSessionTaskMetrics] = sessionTaskMetrics
+
+        if let sessionTaskMetrics {
+            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteSessionTaskMetrics] = sessionTaskMetrics
         }
-        if let downloadFileURL = downloadFileURL {
-            userInfo[URLSessionManager.networkingTaskDidCompleteAssetPathKey] = downloadFileURL
+        if let downloadFileURL {
+            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteAssetPathKey] = downloadFileURL
         } else {
-            userInfo[URLSessionManager.networkingTaskDidCompleteResponseDataKey] = data
+            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteResponseDataKey] = data
         }
-        
-        if let error = error {
-            userInfo[URLSessionManager.networkingTaskDidCompleteErrorKey] = error
-            
+
+        if let error {
+            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteErrorKey] = error
+
             let queue = manager?.completionQueue ?? .main
             let group = manager?.completionGroup ?? Self.completionGroup
             queue.async(group: group) {
-                self.completionHandler?(task.response ?? HTTPURLResponse(), responseObject, error)
-                
+                self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, error)
+
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: userInfo)
+                    NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.object)
                 }
             }
         } else {
@@ -646,72 +648,72 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
                 if taskInfo != nil, let response = task.response {
                     manager?.responseSerializer.setUserInfo(taskInfo, for: response)
                 }
-                
+
                 var serializationError: Error?
                 do {
-                    responseObject = try manager?.responseSerializer.responseObject(for: task.response, data: data)
+                    sendableResponseObject.object = try manager?.responseSerializer.responseObject(for: task.response, data: data)
                 } catch let decodeError {
                     serializationError = decodeError
                 }
-                
+
                 if self.downloadFileURL != nil {
-                    responseObject = self.downloadFileURL
+                    sendableResponseObject.object = self.downloadFileURL
                 }
-                if responseObject != nil {
-                    userInfo[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = responseObject
+                if sendableResponseObject.object != nil {
+                    sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = sendableResponseObject.object
                 }
                 if serializationError != nil {
-                    userInfo[URLSessionManager.networkingTaskDidCompleteErrorKey] = serializationError
+                    sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteErrorKey] = serializationError
                 }
-                
+
                 let queue = manager?.completionQueue ?? .main
                 let group = manager?.completionGroup ?? Self.completionGroup
+                let responseError = serializationError
                 queue.async(group: group) {
-                    self.completionHandler?(task.response ?? HTTPURLResponse(), responseObject, serializationError)
-                    
+                    self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, responseError)
+
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: userInfo)
+                        NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.object)
                     }
                 }
             }
         }
     }
-    
+
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         sessionTaskMetrics = metrics
     }
-    
+
     // MARK: - URLSessionDataDelegate
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         downloadProgress.totalUnitCount = dataTask.countOfBytesExpectedToReceive
         downloadProgress.completedUnitCount = dataTask.countOfBytesReceived
-        
+
         mutableData.append(data)
     }
-    
+
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         uploadProgress.totalUnitCount = task.countOfBytesExpectedToSend
         uploadProgress.completedUnitCount = task.countOfBytesSent
     }
-    
+
     // MARK: - URLSessionDownloadDelegate
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         downloadProgress.totalUnitCount = totalBytesExpectedToWrite
         downloadProgress.completedUnitCount = totalBytesWritten
     }
-    
+
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
         downloadProgress.totalUnitCount = expectedTotalBytes
         downloadProgress.completedUnitCount = fileOffset
     }
-    
+
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         downloadFileURL = nil
-        
+
         if downloadTaskDidFinishDownloading != nil {
             downloadFileURL = downloadTaskDidFinishDownloading?(session, downloadTask, location)
-            if let downloadFileURL = downloadFileURL {
-                
+            if let downloadFileURL {
                 do {
                     try FileManager.default.moveItem(at: location, to: downloadFileURL)
                     NotificationCenter.default.post(name: URLSessionManager.urlSessionDownloadTaskDidMoveFileSuccessfullyNotification, object: downloadTask, userInfo: nil)
@@ -724,7 +726,7 @@ fileprivate class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegat
 }
 
 // MARK: - URLSessionTaskSwizzling
-fileprivate class URLSessionTaskSwizzling: NSObject {
+private class URLSessionTaskSwizzling: NSObject {
     static func swizzleURLSessionTask() {
         let configuration = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: configuration)
@@ -734,7 +736,7 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
             originalResumeIMP = method_getImplementation(method)
         }
         var currentClass: AnyClass? = type(of: localDataTask)
-        
+
         while let classResumeMethod = class_getInstanceMethod(currentClass, NSSelectorFromString("resume")) {
             let superClass: AnyClass? = currentClass?.superclass()
             let classResumeIMP = method_getImplementation(classResumeMethod)
@@ -745,56 +747,56 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
             }
             currentClass = superClass
         }
-        
+
         localDataTask.cancel()
         session.finishTasksAndInvalidate()
     }
-    
+
     private static func swizzleResumeAndSuspendMethod(for theClass: AnyClass?) {
         let resumeMethod = class_getInstanceMethod(self, #selector(af_resume))
         let suspendMethod = class_getInstanceMethod(self, #selector(af_suspend))
-        
-        if let resumeMethod = resumeMethod, addMethod(for: theClass, selector: #selector(af_resume), method: resumeMethod) {
+
+        if let resumeMethod, addMethod(for: theClass, selector: #selector(af_resume), method: resumeMethod) {
             swizzleSelector(for: theClass, originalSelector: NSSelectorFromString("resume"), swizzledSelector: #selector(af_resume))
         }
-        if let suspendMethod = suspendMethod, addMethod(for: theClass, selector: #selector(af_suspend), method: suspendMethod) {
+        if let suspendMethod, addMethod(for: theClass, selector: #selector(af_suspend), method: suspendMethod) {
             swizzleSelector(for: theClass, originalSelector: NSSelectorFromString("suspend"), swizzledSelector: #selector(af_suspend))
         }
     }
-    
+
     private static func swizzleSelector(for theClass: AnyClass?, originalSelector: Selector, swizzledSelector: Selector) {
         let originalMethod = class_getInstanceMethod(theClass, originalSelector)
         let swizzledMethod = class_getInstanceMethod(theClass, swizzledSelector)
-        if let originalMethod = originalMethod,
-           let swizzledMethod = swizzledMethod {
+        if let originalMethod,
+           let swizzledMethod {
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
     }
-    
+
     private static func addMethod(for theClass: AnyClass?, selector: Selector, method: Method) -> Bool {
-        return class_addMethod(theClass, selector, method_getImplementation(method), method_getTypeEncoding(method))
+        class_addMethod(theClass, selector, method_getImplementation(method), method_getTypeEncoding(method))
     }
-    
+
     @objc dynamic var state: URLSessionTask.State {
-        assert(false, "State method should never be called in the actual dummy class")
+        assertionFailure("State method should never be called in the actual dummy class")
         return .canceling
     }
-    
+
     @objc dynamic func af_resume() {
         assert(responds(to: #selector(getter: state)), "Does not respond to state")
-        let state = self.state
-        self.af_resume()
-        
+        let state = state
+        af_resume()
+
         if state != .running {
             NotificationCenter.default.post(name: URLSessionManager.urlSessionTaskDidResumeNotification, object: self)
         }
     }
-    
+
     @objc dynamic func af_suspend() {
         assert(responds(to: #selector(getter: state)), "Does not respond to state")
-        let state = self.state
-        self.af_suspend()
-        
+        let state = state
+        af_suspend()
+
         if state != .suspended {
             NotificationCenter.default.post(name: URLSessionManager.urlSessionTaskDidSuspendNotification, object: self)
         }
@@ -803,9 +805,7 @@ fileprivate class URLSessionTaskSwizzling: NSObject {
 
 // MARK: - FrameworkAutoloader+Network
 extension FrameworkAutoloader {
-    
     @objc static func loadService_Network() {
         URLSessionTaskSwizzling.swizzleURLSessionTask()
     }
-    
 }

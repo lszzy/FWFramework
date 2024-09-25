@@ -9,79 +9,78 @@ import UIKit
 
 /// AppDelegate基类
 open class AppResponder: UIResponder, UIApplicationDelegate {
-    
     /// 应用主delegate
     public class var shared: Self! {
-        return UIApplication.shared.delegate as? Self
+        UIApplication.shared.delegate as? Self
     }
-    
+
     /// 应用主window
     open var window: UIWindow?
-    
+
     // MARK: - Override
     /// 初始化应用环境，优先级1，willFinishLaunching子模块之前调用，子类重写
     open func setupEnvironment() {
         /*
-        Mediator.delegateModeEnabled = true
-        ErrorManager.startCapture()
-         */
+         Mediator.delegateModeEnabled = true
+         ErrorManager.startCapture()
+          */
     }
-    
+
     /// 初始化应用配置，优先级2，didFinishLaunching子模块之前调用，子类重写
-    open func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
+    open func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
         /*
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-         */
-        
+         window = UIWindow(frame: UIScreen.main.bounds)
+         window?.makeKeyAndVisible()
+          */
+
         /*
-        NotificationManager.shared.clearNotificationBadges()
-        if let remoteNotification = options?[.remoteNotification] {
-            NotificationManager.shared.handleRemoteNotification(remoteNotification)
-        }
-        if let localNotification = options?[.localNotification] {
-            NotificationManager.shared.handleLocalNotification(localNotification)
-        }
-         */
-        
+         NotificationManager.shared.clearNotificationBadges()
+         if let remoteNotification = options?[.remoteNotification] {
+             NotificationManager.shared.handleRemoteNotification(remoteNotification)
+         }
+         if let localNotification = options?[.localNotification] {
+             NotificationManager.shared.handleLocalNotification(localNotification)
+         }
+          */
+
         /*
-        NotificationManager.shared.registerNotificationHandler()
-        NotificationManager.shared.requestAuthorize(nil)
-         */
+         NotificationManager.shared.registerNotificationHandler()
+         NotificationManager.shared.requestAuthorize(nil)
+          */
     }
-    
+
     /// 初始化根控制器，优先级3，didFinishLaunching子模块之前调用，子类重写
     open func setupController() {
         /*
-        window?.rootViewController = TabBarController()
-         */
+         window?.rootViewController = TabBarController()
+          */
     }
-    
+
     /// 初始化应用服务，优先级4，didFinishLaunching子模块之前调用，子类重写
-    open func setupService(options: [UIApplication.LaunchOptionsKey : Any]? = nil) {
+    open func setupService(options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
         /*
-        定制应用服务、初始化三方SDK等
-         */
+         定制应用服务、初始化三方SDK等
+          */
     }
-    
+
     /// 初始化应用业务，优先级5，didFinishLaunching子模块之后调用，子类可重写
     open func setupBusiness() {
         /*
-        检查App更新、预加载启动广告等
-         */
+         检查App更新、预加载启动广告等
+          */
     }
-    
+
     /// 重新加载根控制器，优先级6，按需使用，子类可重写
     open func reloadController() {
         setupController()
     }
-    
+
     // MARK: - UIApplicationDelegate
     @discardableResult
-    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         Autoloader.autoload()
         setupEnvironment()
-        
+
         Mediator.setupAllModules()
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { _ = $0.application?(application, willFinishLaunchingWithOptions: launchOptions) }
@@ -90,23 +89,23 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         }
         return true
     }
-    
+
     @discardableResult
-    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         setupApplication(application, options: launchOptions)
         setupController()
         setupService(options: launchOptions)
-        
+
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { _ = $0.application?(application, didFinishLaunchingWithOptions: launchOptions) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         }
-        
+
         setupBusiness()
         return true
     }
-    
+
     open func applicationWillResignActive(_ application: UIApplication) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.applicationWillResignActive?(application) }
@@ -114,7 +113,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillResignActive(_:)), arguments: [application])
         }
     }
-    
+
     open func applicationDidEnterBackground(_ application: UIApplication) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.applicationDidEnterBackground?(application) }
@@ -122,19 +121,19 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)), arguments: [application])
         }
     }
-    
+
     open func applicationWillEnterForeground(_ application: UIApplication) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.applicationWillEnterForeground?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), arguments: [application])
         }
-        
+
         /*
-        NotificationManager.shared.clearNotificationBadges()
-         */
+         NotificationManager.shared.clearNotificationBadges()
+          */
     }
-    
+
     open func applicationDidBecomeActive(_ application: UIApplication) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.applicationDidBecomeActive?(application) }
@@ -142,7 +141,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationDidBecomeActive(_:)), arguments: [application])
         }
     }
-    
+
     open func applicationWillTerminate(_ application: UIApplication) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.applicationWillTerminate?(application) }
@@ -150,7 +149,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillTerminate(_:)), arguments: [application])
         }
     }
-    
+
     // MARK: - Notification
     open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         if Mediator.delegateModeEnabled {
@@ -158,45 +157,45 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)), arguments: [application, deviceToken])
         }
-        
+
         /*
-        UIDevice.fw.setDeviceTokenData(deviceToken)
-         */
+         UIDevice.fw.setDeviceTokenData(deviceToken)
+          */
     }
-    
+
     open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.application?(application, didFailToRegisterForRemoteNotificationsWithError: error) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFailToRegisterForRemoteNotificationsWithError:)), arguments: [application, error])
         }
-        
+
         /*
-        UIDevice.fw.setDeviceTokenData(nil)
-         */
+         UIDevice.fw.setDeviceTokenData(nil)
+          */
     }
-    
-    open func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+    open func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if Mediator.delegateModeEnabled {
             Mediator.checkAllModules { $0.application?(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)), arguments: [application, userInfo, completionHandler])
         }
-        
+
         /*
-        NotificationManager.shared.handleRemoteNotification(userInfo)
-        completionHandler(.newData)
-         */
+         NotificationManager.shared.handleRemoteNotification(userInfo)
+         completionHandler(.newData)
+          */
     }
-    
+
     // MARK: - URL
     @discardableResult
-    open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         if Mediator.delegateModeEnabled {
             var result = false
             Mediator.checkAllModules { delegate in
                 let returnValue = delegate.application?(app, open: url, options: options)
-                if !result, let returnValue = returnValue {
+                if !result, let returnValue {
                     result = returnValue
                 }
             }
@@ -204,20 +203,20 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             return Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:open:options:)), arguments: [app, url, options])
         }
-        
+
         /*
-        Router.openURL(url)
-        return true
-         */
+         Router.openURL(url)
+         return true
+          */
     }
-    
+
     @discardableResult
     open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if Mediator.delegateModeEnabled {
             var result = false
             Mediator.checkAllModules { delegate in
                 let returnValue = delegate.application?(application, continue: userActivity, restorationHandler: restorationHandler)
-                if !result, let returnValue = returnValue {
+                if !result, let returnValue {
                     result = returnValue
                 }
             }
@@ -225,15 +224,14 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             return Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:continue:restorationHandler:)), arguments: [application, userActivity, restorationHandler])
         }
-        
+
         /*
-        if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-           let webpageURL = userActivity.webpageURL {
-            Router.openURL(webpageURL)
-            return true
-        }
-        return false
-         */
+         if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let webpageURL = userActivity.webpageURL {
+             Router.openURL(webpageURL)
+             return true
+         }
+         return false
+          */
     }
-    
 }
