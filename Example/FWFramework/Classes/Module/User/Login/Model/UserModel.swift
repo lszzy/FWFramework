@@ -11,6 +11,6 @@ import FWFramework
 public struct UserModel: Codable, AnyArchivable {
     public var userId: String = ""
     public var userName: String = ""
-    
+
     public init() {}
 }

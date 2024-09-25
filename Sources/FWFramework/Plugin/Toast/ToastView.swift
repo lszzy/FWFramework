@@ -8,7 +8,7 @@
 import UIKit
 
 /// 吐司视图类型
-public enum ToastViewType: Int {
+public enum ToastViewType: Int, Sendable {
     /// 自定义吐司
     case custom = 0
     /// 文本吐司
@@ -22,7 +22,7 @@ public enum ToastViewType: Int {
 }
 
 /// 吐司视图位置
-public enum ToastViewPosition: Int {
+public enum ToastViewPosition: Int, Sendable {
     /// 中心
     case center = 0
     /// 顶部
@@ -33,7 +33,6 @@ public enum ToastViewPosition: Int {
 
 /// 吐司视图，默认背景色透明
 open class ToastView: UIControl {
-    
     // MARK: - Accessor
     /// 当前吐司类型，默认custom，切换时需优先设置
     open var type: ToastViewType = .custom {
@@ -44,6 +43,7 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
+
     /// 关联吐司样式，仅用于判断，默认default
     open var style: ToastStyle = .default
     /// 吐司位置，默认center
@@ -52,13 +52,13 @@ open class ToastView: UIControl {
     open var customView: UIView? {
         didSet { setNeedsLayout() }
     }
-    
+
     /// 内容背景色，默认#404040
-    open var contentBackgroundColor: UIColor = UIColor(red: 64.0 / 255.0, green: 64.0 / 255.0, blue: 64.0 / 255.0, alpha: 1.0)
+    open var contentBackgroundColor: UIColor = .init(red: 64.0 / 255.0, green: 64.0 / 255.0, blue: 64.0 / 255.0, alpha: 1.0)
     /// 内容视图最小外间距，默认{10, 10, 10, 10}
-    open var contentMarginInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    open var contentMarginInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
     /// 内容视图内间距，默认{10, 10, 10, 10}
-    open var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    open var contentInsets: UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
     /// 视图和文本之间的间距，默认5.0
     open var contentSpacing: CGFloat = 5.0
     /// 文本和消息之间的间距，默认5.0
@@ -72,13 +72,13 @@ open class ToastView: UIControl {
     /// 自定义内容垂直偏移句柄，参数为内容高度，默认nil
     open var verticalOffsetBlock: ((CGFloat) -> CGFloat)?
     /// 标题字体，默认16号
-    open var titleFont: UIFont = UIFont.systemFont(ofSize: 16)
+    open var titleFont: UIFont = .systemFont(ofSize: 16)
     /// 标题颜色，默认白色
-    open var titleColor: UIColor = UIColor.white
+    open var titleColor: UIColor = .white
     /// 消息字体，默认15号
-    open var messageFont: UIFont = UIFont.systemFont(ofSize: 15)
+    open var messageFont: UIFont = .systemFont(ofSize: 15)
     /// 消息颜色，默认白色
-    open var messageColor: UIColor = UIColor.white
+    open var messageColor: UIColor = .white
     /// 指示器图片，支持动画图片，自适应大小，仅Image生效
     open var indicatorImage: UIImage?
     /// 指示器大小，默认根据类型处理
@@ -96,7 +96,7 @@ open class ToastView: UIControl {
             }
         }
     }
-    
+
     /// 带属性标题文本，为空时不显示
     open var attributedTitle: NSAttributedString? {
         didSet {
@@ -104,6 +104,7 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
+
     /// 带属性消息文本，为空时不显示
     open var attributedMessage: NSAttributedString? {
         didSet {
@@ -111,6 +112,7 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
+
     /// 当前指示器进度值，范围0~1，仅Progress生效
     open var progress: CGFloat = 0.0 {
         didSet {
@@ -122,12 +124,13 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
+
     /// 手动点击取消时触发的句柄，默认nil不可点击取消
     open var cancelBlock: (() -> Void)? {
         didSet {
             if cancelBlock != nil, !touchEnabled {
                 touchEnabled = true
-                
+
                 if !isUserInteractionEnabled {
                     contentPenetrable = true
                 }
@@ -141,13 +144,14 @@ open class ToastView: UIControl {
             }
         }
     }
+
     /// 当吐司视图禁止交互时，是否允许contentView可穿透点击，默认false
     open var contentPenetrable = false
-    
+
     private weak var firstView: UIView?
     private var hideTimer: Timer?
     private var touchEnabled: Bool = false
-    
+
     // MARK: - Subviews
     /// 内容视图，可设置背景色(默认#404040)、圆角(默认5)，只读
     open lazy var contentView: UIView = {
@@ -156,7 +160,7 @@ open class ToastView: UIControl {
         result.layer.masksToBounds = true
         return result
     }()
-    
+
     /// 图片视图，仅Image生效
     open lazy var imageView: UIImageView = {
         let result = UIImageView()
@@ -164,7 +168,7 @@ open class ToastView: UIControl {
         result.backgroundColor = .clear
         return result
     }()
-    
+
     /// 指示器视图，可自定义，仅Indicator生效
     open lazy var indicatorView: UIView & IndicatorViewPlugin = {
         let result = UIView.fw.indicatorView(style: .toast)
@@ -176,7 +180,7 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
-    
+
     /// 进度条视图，可自定义，仅Progress生效
     open lazy var progressView: UIView & ProgressViewPlugin = {
         let result = UIView.fw.progressView(style: .toast)
@@ -188,7 +192,7 @@ open class ToastView: UIControl {
             setNeedsLayout()
         }
     }
-    
+
     /// 标题标签，都存在，有内容时才显示
     open lazy var titleLabel: UILabel = {
         let result = UILabel()
@@ -197,7 +201,7 @@ open class ToastView: UIControl {
         result.isUserInteractionEnabled = false
         return result
     }()
-    
+
     /// 消息标签，都存在，有内容时才显示
     open lazy var messageLabel: UILabel = {
         let result = UILabel()
@@ -211,35 +215,35 @@ open class ToastView: UIControl {
     /// 初始化指定类型指示器
     public init(type: ToastViewType) {
         super.init(frame: .zero)
-        
+
         self.type = type
         setupSubviews()
     }
-    
-    public override init(frame: CGRect) {
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupSubviews()
     }
-    
+
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        
+
         setupSubviews()
     }
-    
+
     private func setupSubviews() {
         if type == .progress {
             indicatorSize = CGSize(width: 37.0, height: 37.0)
         }
         backgroundColor = .clear
         isUserInteractionEnabled = true
-        
+
         addSubview(contentView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(messageLabel)
     }
-    
+
     private func updateLayout() {
         contentView.backgroundColor = contentBackgroundColor
         contentView.layer.cornerRadius = contentCornerRadius
@@ -253,7 +257,7 @@ open class ToastView: UIControl {
         switch type {
         case .custom:
             firstView = customView
-            if let customView = customView, customView.superview == nil {
+            if let customView, customView.superview == nil {
                 contentView.addSubview(customView)
             }
         case .image:
@@ -285,13 +289,13 @@ open class ToastView: UIControl {
             firstView.startAnimating()
         }
     }
-    
-    open override func layoutSubviews() {
+
+    override open func layoutSubviews() {
         super.layoutSubviews()
-        
-        let contentViewSize = self.contentViewSize
+
+        let contentViewSize = contentViewSize
         if contentViewSize.equalTo(.zero) { return }
-        
+
         // contentView默认垂直居中于toastView
         let originYOffset = verticalOffsetBlock?(contentViewSize.height) ?? verticalOffset
         var contentOriginY: CGFloat = 0
@@ -314,7 +318,7 @@ open class ToastView: UIControl {
             height: contentViewSize.height
         )
 
-        if let firstView = firstView {
+        if let firstView {
             if indicatorSize.width > 0 && indicatorSize.height > 0 {
                 firstView.frame = CGRect(x: firstView.frame.origin.x, y: firstView.frame.origin.y, width: indicatorSize.width, height: indicatorSize.height)
             } else {
@@ -324,7 +328,7 @@ open class ToastView: UIControl {
 
         if !horizontalAlignment {
             var originY = contentInsets.top
-            if let firstView = firstView {
+            if let firstView {
                 var frame = firstView.frame
                 frame.origin = CGPoint(x: (contentViewSize.width - contentInsets.left - contentInsets.right - frame.size.width) / 2.0 + contentInsets.left, y: originY)
                 firstView.frame = frame
@@ -339,7 +343,7 @@ open class ToastView: UIControl {
             messageLabel.frame = CGRect(x: (maxTitleWidth - messageLabelSize.width) / 2.0 + contentInsets.left, y: titleLabel.frame.maxY + (titleLabelSize.height > 0 && messageLabelSize.height > 0 ? textSpacing : 0), width: messageLabelSize.width, height: messageLabelSize.height)
         } else {
             var originX = contentInsets.left
-            if let firstView = firstView {
+            if let firstView {
                 var frame = firstView.frame
                 frame.origin = CGPoint(x: originX, y: (contentViewSize.height - contentInsets.top - contentInsets.bottom - frame.size.height) / 2.0 + contentInsets.top)
                 firstView.frame = frame
@@ -355,18 +359,18 @@ open class ToastView: UIControl {
             if titleLabelSize.height > 0 && messageLabelSize.height > 0 {
                 textHeight += textSpacing
             }
-            
+
             originX += (firstViewSize.width > 0 && textWidth > 0) ? contentSpacing : 0
             titleLabel.frame = CGRect(x: originX + (textWidth - titleLabelSize.width) / 2.0, y: (contentViewSize.height - contentInsets.top - contentInsets.bottom - textHeight) / 2.0 + contentInsets.top, width: titleLabelSize.width, height: titleLabelSize.height)
             messageLabel.frame = CGRect(x: originX + (textWidth - messageLabelSize.width) / 2.0, y: titleLabel.frame.maxY + (titleLabelSize.height > 0 && messageLabelSize.height > 0 ? textSpacing : 0), width: messageLabelSize.width, height: messageLabelSize.height)
         }
     }
-    
-    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+
+    override open func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard contentPenetrable else {
             return super.hitTest(point, with: event)
         }
-        
+
         if contentView.isUserInteractionEnabled,
            contentView.frame.contains(point) {
             let contentPoint = convert(point, to: contentView)
@@ -375,7 +379,7 @@ open class ToastView: UIControl {
         }
         return nil
     }
-    
+
     // MARK: - Public
     /// 获取内容视图尺寸，需bounds存在时才有值
     open var contentViewSize: CGSize {
@@ -386,7 +390,7 @@ open class ToastView: UIControl {
         let maxContentWidth = bounds.size.width - contentMarginInsets.left - contentMarginInsets.right - contentInsets.left - contentInsets.right
 
         var firstViewSize: CGSize = .zero
-        if let firstView = firstView {
+        if let firstView {
             firstViewSize = (indicatorSize.width > 0 && indicatorSize.height > 0) ? indicatorSize : firstView.sizeThatFits(CGSize(width: maxContentWidth, height: CGFloat.greatestFiniteMagnitude))
         }
 
@@ -420,7 +424,7 @@ open class ToastView: UIControl {
             return CGSize(width: contentWidth, height: contentHeight)
         }
     }
-    
+
     /// 显示吐司，不执行动画
     open func show() {
         show(animated: false)
@@ -429,7 +433,7 @@ open class ToastView: UIControl {
     /// 显示吐司，执行淡入渐变动画
     open func show(animated: Bool) {
         updateLayout()
-        
+
         if animated {
             alpha = 0
             UIView.animate(withDuration: 0.25) {
@@ -455,13 +459,15 @@ open class ToastView: UIControl {
 
     /// 隐藏吐司，延迟指定时间后执行。吐司不存在时返回NO
     @discardableResult
-    open func hide(afterDelay delay: TimeInterval, completion: (() -> Void)? = nil) -> Bool {
+    open func hide(afterDelay delay: TimeInterval, completion: (@MainActor @Sendable () -> Void)? = nil) -> Bool {
         if superview != nil {
             invalidateTimer()
             hideTimer = Timer.fw.commonTimer(timeInterval: delay, block: { [weak self] _ in
-                let hideSuccess = self?.hide() ?? false
-                if hideSuccess {
-                    completion?()
+                DispatchQueue.fw.mainAsync { [weak self] in
+                    let hideSuccess = self?.hide() ?? false
+                    if hideSuccess {
+                        completion?()
+                    }
                 }
             }, repeats: false)
         }
@@ -473,5 +479,4 @@ open class ToastView: UIControl {
         hideTimer?.invalidate()
         hideTimer = nil
     }
-    
 }

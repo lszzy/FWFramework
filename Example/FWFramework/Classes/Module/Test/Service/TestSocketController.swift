@@ -10,7 +10,6 @@ import FWFramework
 import UIKit
 
 class TestSocketController: UIViewController {
-    
     // MARK: - Accessor
     private var serverStarted: Bool = false {
         didSet {
@@ -21,6 +20,7 @@ class TestSocketController: UIViewController {
             }
         }
     }
+
     private var isConnected: Bool = false {
         didSet {
             if isConnected {
@@ -32,62 +32,62 @@ class TestSocketController: UIViewController {
             }
         }
     }
-    
+
     private let serverAddress = "http://127.0.0.1"
     private let serverPort = UInt16(8009)
-    
+
     @StoredValue("WebSocketUrl")
     private var clientURL: String = "http://127.0.0.1:8009"
     private var clientInited = false
-    
+
     private lazy var server: WebSocketServer = {
         let result = WebSocketServer()
         result.onEvent = { [weak self] event in
             switch event {
-            case .connected(let connection, let headers):
+            case let .connected(connection, headers):
                 self?.serverLabel.text = "\(String(describing: connection)) is connected"
-            case .disconnected(let connection, let reason, let code):
+            case let .disconnected(connection, reason, code):
                 self?.serverLabel.text = "\(String(describing: connection)) is disconnected"
-            case .text(let connection, let string):
+            case let .text(connection, string):
                 self?.serverLabel.text = "Received text: \(string)"
                 connection.write(data: string.replacingOccurrences(of: "request", with: "response").app.utf8Data!, opcode: .textFrame)
-            case .binary(let connection, let data):
+            case let .binary(connection, data):
                 self?.serverLabel.text = "Received data: \(data.count)"
                 connection.write(data: data, opcode: .binaryFrame)
-            case .ping(_, _):
+            case .ping:
                 break
-            case .pong(_, _):
+            case .pong:
                 break
             }
         }
         return result
     }()
-    
+
     private lazy var client: WebSocket = {
         var request = URLRequest(url: URL(string: clientURL)!)
         request.timeoutInterval = 5
         let result = WebSocket(request: request)
         result.onEvent = { [weak self] event in
             switch event {
-            case .connected(let headers):
+            case let .connected(headers):
                 self?.isConnected = true
-            case .disconnected(let reason, let code):
+            case let .disconnected(reason, code):
                 self?.isConnected = false
-            case .text(let string):
+            case let .text(string):
                 self?.clientLabel.text = "Received text: \(string)"
-            case .binary(let data):
+            case let .binary(data):
                 self?.clientLabel.text = "Received data: \(data.count)"
-            case .ping(_):
+            case .ping:
                 break
-            case .pong(_):
+            case .pong:
                 break
-            case .viabilityChanged(_):
+            case .viabilityChanged:
                 break
-            case .reconnectSuggested(_):
+            case .reconnectSuggested:
                 break
             case .cancelled:
                 self?.isConnected = false
-            case .error(let error):
+            case let .error(error):
                 self?.isConnected = false
             case .peerClosed:
                 break
@@ -95,7 +95,7 @@ class TestSocketController: UIViewController {
         }
         return result
     }()
-    
+
     // MARK: - Subviews
     private lazy var serverLabel: UILabel = {
         let result = UILabel()
@@ -105,14 +105,14 @@ class TestSocketController: UIViewController {
         result.numberOfLines = 0
         return result
     }()
-    
+
     private lazy var serverButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Start Server", for: .normal)
         button.app.addTouch(target: self, action: #selector(onServer))
         return button
     }()
-    
+
     private lazy var clientLabel: UILabel = {
         let result = UILabel()
         result.textColor = AppTheme.textColor
@@ -121,33 +121,31 @@ class TestSocketController: UIViewController {
         result.numberOfLines = 0
         return result
     }()
-    
+
     private lazy var clientButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Start Client", for: .normal)
         button.app.addTouch(target: self, action: #selector(onClient))
         return button
     }()
-    
+
     private lazy var requestButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Client Request", for: .normal)
         button.app.addTouch(target: self, action: #selector(onRequest))
         return button
     }()
-    
+
     // MARK: - Lifecycle
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         if isConnected { client.disconnect() }
         if serverStarted { server.stop() }
     }
-    
 }
 
 extension TestSocketController: ViewControllerProtocol {
-    
     func setupSubviews() {
         view.addSubview(serverLabel)
         view.addSubview(serverButton)
@@ -155,33 +153,31 @@ extension TestSocketController: ViewControllerProtocol {
         view.addSubview(clientButton)
         view.addSubview(requestButton)
     }
-    
+
     func setupLayout() {
         serverLabel.app.layoutChain
             .horizontal()
             .top(toSafeArea: 50)
-        
+
         serverButton.app.layoutChain
             .centerX()
             .top(toViewBottom: serverLabel, offset: 20)
-        
+
         clientLabel.app.layoutChain
             .horizontal()
             .top(toViewBottom: serverButton, offset: 100)
-        
+
         clientButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clientLabel, offset: 20)
-        
+
         requestButton.app.layoutChain
             .centerX()
             .top(toViewBottom: clientButton, offset: 20)
     }
-    
 }
 
 @objc extension TestSocketController {
-    
     func onServer() {
         if serverStarted {
             server.stop()
@@ -193,7 +189,7 @@ extension TestSocketController: ViewControllerProtocol {
             serverLabel.text = serverStarted ? "server started" : error?.localizedDescription
         }
     }
-    
+
     func onClient() {
         if !clientInited {
             app.showPrompt(title: nil, message: "WebSocket Server", cancel: nil, confirm: nil) { [weak self] textField in
@@ -211,9 +207,8 @@ extension TestSocketController: ViewControllerProtocol {
             }
         }
     }
-    
+
     func onRequest() {
         client.write(string: "request \(Date().app.stringValue)")
     }
-    
 }

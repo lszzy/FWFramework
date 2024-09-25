@@ -10,7 +10,7 @@ import Foundation
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 插件快速访问
-    public static var plugin = PluginManager.self
+    public nonisolated(unsafe) static var plugin = PluginManager.self
 }
 
 // MARK: - PluginProtocol
@@ -20,7 +20,7 @@ public protocol PluginProtocol {
     static func pluginInstance() -> Self?
     /// 可选插件工厂方法，优先级低，会调用多次
     static func pluginFactory() -> Self?
-    
+
     /// 插件load时钩子方法
     func pluginDidLoad()
     /// 插件unload时钩子方法
@@ -30,13 +30,14 @@ public protocol PluginProtocol {
 extension PluginProtocol {
     /// 默认实现插件单例方法，优先级高，仅调用一次
     public static func pluginInstance() -> Self? {
-        return nil
+        nil
     }
+
     /// 默认实现插件工厂方法，优先级低，会调用多次
     public static func pluginFactory() -> Self? {
-        return nil
+        nil
     }
-    
+
     /// 默认实现插件load时钩子方法
     public func pluginDidLoad() {}
     /// 默认实现插件unload时钩子方法
@@ -57,7 +58,6 @@ public protocol SingletonProtocol {
 /// Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
 /// Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
 public class PluginManager {
-    
     /// 内部Target类
     private class Target {
         var object: Any?
@@ -65,10 +65,10 @@ public class PluginManager {
         var locked: Bool = false
         var isFactory: Bool = false
     }
-    
+
     /// 内部插件池
-    private static var pluginPool: [String: Target] = [:]
-    
+    private nonisolated(unsafe) static var pluginPool: [String: Target] = [:]
+
     /// 插件调试描述
     public class func debugDescription() -> String {
         var debugDescription = ""
@@ -79,44 +79,44 @@ public class PluginManager {
         }
         return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
     }
-    
+
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
     public static let sharedLoader = Loader<Any, Any>()
-    
+
     /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
     @discardableResult
     public static func registerPlugin<T>(_ type: T.Type, object: Any) -> Bool {
-        return registerPlugin(type, object: object, isPreset: false)
+        registerPlugin(type, object: object, isPreset: false)
     }
-    
+
     /// 预置单例插件，仅当插件未注册时生效，插件类或对象必须实现protocol
     @discardableResult
     public static func presetPlugin<T>(_ type: T.Type, object: Any) -> Bool {
-        return registerPlugin(type, object: object, isPreset: true)
+        registerPlugin(type, object: object, isPreset: true)
     }
-    
+
     private static func registerPlugin<T>(_ type: T.Type, object: Any, isPreset: Bool) -> Bool {
         let pluginId = String(describing: type as AnyObject)
         if let target = pluginPool[pluginId] {
             if target.locked { return false }
             if isPreset { return false }
         }
-        
+
         let plugin = Target()
         plugin.object = object
         pluginPool[pluginId] = plugin
         return true
     }
-    
+
     /// 取消插件注册，仅当插件未使用时生效
     public static func unregisterPlugin<T>(_ type: T.Type) {
         let pluginId = String(describing: type as AnyObject)
         guard let target = pluginPool[pluginId] else { return }
         if target.locked { return }
-        
+
         pluginPool.removeValue(forKey: pluginId)
     }
-    
+
     /// 延迟加载插件对象，调用后不可再注册该插件。未注册时自动查找当前模块类：DemoPluginProtocol => DemoPlugin
     public static func loadPlugin<T>(_ type: T.Type) -> T? {
         let pluginId = String(describing: type as AnyObject)
@@ -127,7 +127,7 @@ public class PluginManager {
                 object = NSClassFromString(pluginId.replacingOccurrences(of: "Protocol", with: ""))
             }
             guard let object else { return nil }
-            
+
             registerPlugin(type, object: object)
             target = pluginPool[pluginId]
         }
@@ -135,7 +135,7 @@ public class PluginManager {
         if plugin.instance != nil && !plugin.isFactory {
             return plugin.instance as? T
         }
-        
+
         plugin.locked = true
         plugin.isFactory = false
         let pluginProtocol = plugin.object as? PluginProtocol.Type
@@ -157,20 +157,19 @@ public class PluginManager {
         } else {
             plugin.instance = plugin.object
         }
-        
+
         (plugin.instance as? PluginProtocol)?.pluginDidLoad()
         return plugin.instance as? T
     }
-    
+
     /// 释放插件对象并标记为未使用，释放后可重新注册该插件
     public static func unloadPlugin<T>(_ type: T.Type) {
         let pluginId = String(describing: type as AnyObject)
         guard let plugin = pluginPool[pluginId] else { return }
-        
+
         (plugin.instance as? PluginProtocol)?.pluginDidUnload()
         plugin.instance = nil
         plugin.isFactory = false
         plugin.locked = false
     }
-    
 }

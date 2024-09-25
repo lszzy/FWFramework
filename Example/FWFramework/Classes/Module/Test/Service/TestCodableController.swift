@@ -32,52 +32,52 @@ struct TestCodableModel: CodableModel {
     var enum1: TestCodableEnum = .unknown
     var enum2: TestCodableEnum = .unknown
     var enum3: TestCodableEnum?
-    
+
     init() {}
-    
+
     init(from decoder: any Decoder) throws {
-        id = try decoder.decode("id")
-        name = try decoder.decode("name")
+        self.id = try decoder.decode("id")
+        self.name = try decoder.decode("name")
         if let int = try? decoder.decodeIf("age", as: Int.self) {
-            age = int
+            self.age = int
         } else if let string = try? decoder.decodeIf("age", as: String.self) {
-            age = Int(string) ?? .zero
+            self.age = Int(string) ?? .zero
         }
-        amount = try decoder.decode("amount")
-        alias = try decoder.decode("alias_key")
-        camelName = try decoder.decode("camel_name")
-        any = try decoder.decodeAnyIf("any")
-        dict = try decoder.decodeAnyIf("dict")
-        array = try decoder.decodeAnyIf("array")
-        optional1 = try decoder.decodeIf("optional1") ?? ""
+        self.amount = try decoder.decode("amount")
+        self.alias = try decoder.decode("alias_key")
+        self.camelName = try decoder.decode("camel_name")
+        self.any = try decoder.decodeAnyIf("any")
+        self.dict = try decoder.decodeAnyIf("dict")
+        self.array = try decoder.decodeAnyIf("array")
+        self.optional1 = try decoder.decodeIf("optional1") ?? ""
         if let value2 = try decoder.decodeIf("optional2", as: String.self) {
-            optional2 = value2
+            self.optional2 = value2
         }
         if let value3 = try decoder.decodeIf("optional3", as: String.self) {
-            optional3 = value3
+            self.optional3 = value3
         }
         // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
         do {
             if let value4 = try decoder.decodeIf("optional4", as: Int?.self) {
-                optional4 = value4
+                self.optional4 = value4
             }
         } catch {
-            optional4 = nil
+            self.optional4 = nil
         }
-        optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
-        sub = try decoder.decodeIf("sub")
+        self.optional5 = try decoder.decodeIf("optional5", as: Int?.self) ?? nil
+        self.sub = try decoder.decodeIf("sub")
         if let val2 = try decoder.decodeIf("sub2", as: TestCodableSubModel.self) {
-            sub2 = val2
+            self.sub2 = val2
         }
-        subs = try decoder.decodeIf("subs") ?? []
-        subdict = try decoder.decodeIf("subdict") ?? [:]
-        enum1 = try decoder.decode("enum1")
+        self.subs = try decoder.decodeIf("subs") ?? []
+        self.subdict = try decoder.decodeIf("subdict") ?? [:]
+        self.enum1 = try decoder.decode("enum1")
         if let val2 = try? decoder.decodeIf("enum2", as: TestCodableEnum.self) {
-            enum2 = val2
+            self.enum2 = val2
         }
-        enum3 = try? decoder.decodeIf("enum3")
+        self.enum3 = try? decoder.decodeIf("enum3")
     }
-    
+
     func encode(to encoder: any Encoder) throws {
         try encoder.encode(id, for: "id")
         try encoder.encode(name, for: "name")
@@ -109,7 +109,7 @@ struct TestCodableSubModel: Codable {
 }
 
 enum TestCodableEnum: String, Codable {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -137,38 +137,38 @@ struct TestCustomCodableModel: CodableModel {
     var enum1: TestCustomCodableEnum = .unknown
     var enum2: TestCustomCodableEnum = .unknown
     var enum3: TestCustomCodableEnum?
-    
+
     init() {}
-    
+
     init(from decoder: any Decoder) throws {
-        id = try decoder.json("id").intValue
-        age = try decoder.jsonIf("age")?.intValue
-        name = try decoder.decodeSafe("name") ?? ""
-        amount = try decoder.decodeSafe("amount") ?? .zero
-        alias = try decoder.decodeSafe("alias_key") ?? ""
-        camelName = try decoder.decodeSafe("camel_name") ?? ""
-        any = try decoder.decodeSafeAny("any")
-        dict = try decoder.decodeSafeAny("dict")
-        array = try decoder.decodeSafeAny("array")
-        optional1 = try decoder.decodeSafe("optional1") ?? ""
-        optional2 = try decoder.decodeSafe("optional2") ?? ""
-        optional3 = try decoder.decodeSafe("optional3") ?? "default"
+        self.id = try decoder.json("id").intValue
+        self.age = try decoder.jsonIf("age")?.intValue
+        self.name = try decoder.decodeSafe("name") ?? ""
+        self.amount = try decoder.decodeSafe("amount") ?? .zero
+        self.alias = try decoder.decodeSafe("alias_key") ?? ""
+        self.camelName = try decoder.decodeSafe("camel_name") ?? ""
+        self.any = try decoder.decodeSafeAny("any")
+        self.dict = try decoder.decodeSafeAny("dict")
+        self.array = try decoder.decodeSafeAny("array")
+        self.optional1 = try decoder.decodeSafe("optional1") ?? ""
+        self.optional2 = try decoder.decodeSafe("optional2") ?? ""
+        self.optional3 = try decoder.decodeSafe("optional3") ?? "default"
         // 类型不匹配解析失败时赋值nil, key不存在时不覆盖
         do {
-            optional4 = try decoder.decodeSafe("optional4", throws: true) ?? 4
+            self.optional4 = try decoder.decodeSafe("optional4", throws: true) ?? 4
         } catch {
-            optional4 = nil
+            self.optional4 = nil
         }
-        optional5 = try decoder.decodeSafe("optional5")
-        sub = try decoder.decodeSafe("sub")
-        sub2 = try decoder.decodeSafe("sub2") ?? .init()
-        subs = try decoder.decodeSafe("subs") ?? []
-        subdict = try decoder.decodeSafe("subdict") ?? [:]
-        enum1 = try decoder.decodeSafe("enum1") ?? .unknown
-        enum2 = try decoder.decodeSafe("enum2") ?? .unknown
-        enum3 = try decoder.decodeSafe("enum3")
+        self.optional5 = try decoder.decodeSafe("optional5")
+        self.sub = try decoder.decodeSafe("sub")
+        self.sub2 = try decoder.decodeSafe("sub2") ?? .init()
+        self.subs = try decoder.decodeSafe("subs") ?? []
+        self.subdict = try decoder.decodeSafe("subdict") ?? [:]
+        self.enum1 = try decoder.decodeSafe("enum1") ?? .unknown
+        self.enum2 = try decoder.decodeSafe("enum2") ?? .unknown
+        self.enum3 = try decoder.decodeSafe("enum3")
     }
-    
+
     func encode(to encoder: any Encoder) throws {
         try encoder.encodeSafe(id, for: "id")
         try encoder.encodeSafe(name, for: "name")
@@ -200,7 +200,7 @@ struct TestCustomCodableSubModel: Codable {
 }
 
 enum TestCustomCodableEnum: String, Codable {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -238,7 +238,7 @@ struct TestMappedValueCodableSubModel: CodableModel, KeyMappable {
 }
 
 enum TestMappedValueCodableModelEnum: String, Codable {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -279,7 +279,7 @@ struct TestMappedValueMacroCodableSubModel: CodableModel, KeyMappable {
 }
 
 enum TestMappedValueMacroCodableModelEnum: String, Codable {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -307,22 +307,22 @@ struct TestJSONModel: JSONModel {
     var enum1: TestJSONModelEnum = .unknown
     var enum2: TestJSONModelEnum = .unknown
     var enum3: TestJSONModelEnum?
-    
+
     // HandyJSON模式时，会去解析属性offset，因此也能使用<<<等infix符号方法
     mutating func mapping(mapper: HelpingMapper) {
-        mapper >>> self.except
-        
+        mapper >>> except
+
         mapper <<<
-            self.alias <-- "alias_key"
-        
+            alias <-- "alias_key"
+
         mapper <<<
-            self.camelName <-- "camel_name"
+            camelName <-- "camel_name"
     }
 }
 
 class TestJSONSuperModel: JSONModel {
     var id: Int = 0
-    
+
     required init() {}
 }
 
@@ -331,7 +331,7 @@ class TestJSONSubModel: TestJSONSuperModel {
 }
 
 enum TestJSONModelEnum: String, JSONModelEnum {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -367,7 +367,7 @@ struct TestMappedValueJSONModel: JSONModel, KeyMappable {
 
 class TestMappedValueJSONSuperModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
-    
+
     required init() {}
 }
 
@@ -376,7 +376,7 @@ class TestMappedValueJSONSubModel: TestMappedValueJSONSuperModel {
 }
 
 enum TestMappedValueJSONModelEnum: String, JSONModelEnum {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -404,7 +404,7 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
     var enum1: TestCustomJSONModelEnum = .unknown
     var enum2: TestCustomJSONModelEnum = .unknown
     var enum3: TestCustomJSONModelEnum?
-    
+
     mutating func mappingValue(_ value: Any, forKey key: String) {
         switch key {
         case "id":
@@ -453,7 +453,7 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
             break
         }
     }
-    
+
     // 非HandyJSON模式时，不会去解析属性offset，因此也不能使用<<<等infix符号方法
     mutating func mapping(mapper: HelpingMapper) {
         mapper.exclude(key: "except")
@@ -464,9 +464,9 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
 
 class TestCustomJSONSuperModel: JSONModel, KeyMappable {
     var id: Int = 0
-    
+
     required init() {}
-    
+
     func mappingValue(_ value: Any, forKey key: String) {
         switch key {
         case "id":
@@ -479,7 +479,7 @@ class TestCustomJSONSuperModel: JSONModel, KeyMappable {
 
 class TestCustomJSONSubModel: TestCustomJSONSuperModel {
     var name: String?
-    
+
     override func mappingValue(_ value: Any, forKey key: String) {
         switch key {
         case "name":
@@ -491,7 +491,7 @@ class TestCustomJSONSubModel: TestCustomJSONSuperModel {
 }
 
 enum TestCustomJSONModelEnum: String, JSONModelEnum {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -532,7 +532,7 @@ struct TestMappedValueMacroJSONSubModel: JSONModel, KeyMappable {
 }
 
 enum TestMappedValueMacroJSONModelEnum: String, JSONModelEnum {
-    case test = "test"
+    case test
     case unknown = ""
 }
 
@@ -541,23 +541,22 @@ class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var block: BlockVoid?
-    
+
     required init() {}
 }
 
 // MARK: - TestCodableController
 class TestCodableController: UIViewController, TableViewControllerProtocol {
-    
     typealias TableElement = [String]
-    
+
     private var count = 0
-    
+
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableData.count
+        tableData.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -566,13 +565,13 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
         cell.textLabel?.text = rowData[0]
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let rowData = tableData[indexPath.row]
-        _ = self.perform(NSSelectorFromString(rowData[1]))
+        _ = perform(NSSelectorFromString(rowData[1]))
     }
-    
+
     func setupSubviews() {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
@@ -584,16 +583,14 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["ObjectParameter", "onObjectParameter"],
-            ["Optional.isNil", "onOptionalNil"],
+            ["Optional.isNil", "onOptionalNil"]
         ])
     }
-    
 }
 
 extension TestCodableController {
-    
     func testCodableData() -> [AnyHashable: Any] {
-        return [
+        [
             "id": 1,
             "name": "name",
             "age": "2",
@@ -609,362 +606,361 @@ extension TestCodableController {
             "optional5": 5,
             "sub": [
                 "id": 2,
-                "name": "sub",
+                "name": "sub"
             ],
             "subs": [
                 [
                     "id": 3,
-                    "name": "subs",
-                ],
+                    "name": "subs"
+                ]
             ],
             "subdict": [
                 "key": [
                     "id": 4,
-                    "name": "subdict",
-                ],
+                    "name": "subdict"
+                ]
             ],
             "enum1": "test",
             "enum2": "unknown",
-            "enum3": "unknown",
+            "enum3": "unknown"
         ]
     }
-    
+
     func showResults(_ tests: [Bool]) {
         count += 1
-        app.showMessage(text: tests.count == tests.filter({ $0 }).count ? "✅ 测试通过 (\(count)-\(tests.count))" : "❌ 测试失败 (\(count)-\(tests.filter({ !$0 }).count))")
+        app.showMessage(text: tests.count == tests.filter { $0 }.count ? "✅ 测试通过 (\(count)-\(tests.count))" : "❌ 测试失败 (\(count)-\(tests.filter { !$0 }.count))")
     }
-    
+
     @objc func onCodableModel() {
         func testModel(_ model: TestCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestCodableModel? = TestCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onCustomCodableModel() {
         func testModel(_ model: TestCustomCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestCustomCodableModel? = TestCustomCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestCustomCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueCodableModel() {
         func testModel(_ model: TestMappedValueCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestMappedValueCodableModel? = TestMappedValueCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueMacroCodableModel() {
         func testModel(_ model: TestMappedValueMacroCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestMappedValueMacroCodableModel? = TestMappedValueMacroCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onJSONModel() {
         func testModel(_ model: TestJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestJSONModel? = TestJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onCustomJSONModel() {
         func testModel(_ model: TestCustomJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == 4),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == 4,
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestCustomJSONModel? = TestCustomJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestCustomJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueJSONModel() {
         func testModel(_ model: TestMappedValueJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestMappedValueJSONModel? = TestMappedValueJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueMacroJSONModel() {
         func testModel(_ model: TestMappedValueMacroJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model != nil),
-                (model?.id == 1),
-                (model?.name == "name"),
-                (model?.age == 2),
-                (model?.amount == 100.0),
-                (model?.alias == "alias"),
-                (model?.except == ""),
-                (model?.camelName == "camelName"),
-                (String.app.safeString(model?.any) == "any"),
-                (model?.dict != nil),
-                ((model?.array as? [Int])?.first == 1),
-                (model?.optional1 == ""),
-                (model?.optional2 == ""),
-                (model?.optional3 == "default"),
-                (model?.optional4 == (encode ? 4 : nil)),
-                (model?.optional5 == 5),
-                (model?.sub?.name == "sub"),
-                (model?.sub2 != nil),
-                (model?.subs.first?.name == "subs"),
-                (model?.subdict["key"]?.name == "subdict"),
-                (model?.enum1 == .test),
-                (model?.enum2 == .unknown),
-                (model?.enum3 == nil),
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
             ]
             return results
         }
-        
+
         var model: TestMappedValueMacroJSONModel? = TestMappedValueMacroJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onObjectParameter() {
         let block: BlockVoid = {}
         let dict: [AnyHashable: Any] = [
             "id": 1,
             "name": "name",
-            "block": block,
+            "block": block
         ]
-        
+
         func testModel(_ model: TestObjectParameter, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
-                (model.id == 1),
-                (model.name == "name"),
-                (model.block != nil),
+                model.id == 1,
+                model.name == "name",
+                model.block != nil
             ]
             return results
         }
-        
+
         var model = TestObjectParameter(dictionaryValue: dict)
         var tests = testModel(model)
         model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onOptionalNil() {
         let dict: [String: Any?] = ["name": "John", "age": nil]
         let name: Any? = dict["name"] as? Any
         let age: Any? = dict["age"] as? Any
         let value: Any? = nil
-        
+
         var tests: [Bool] = []
         tests.append(!APP.isNil(name))
         tests.append(APP.isNil(age))
         tests.append(APP.isNil(value))
         showResults(tests)
     }
-    
 }

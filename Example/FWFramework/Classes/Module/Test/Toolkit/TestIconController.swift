@@ -9,9 +9,8 @@
 import FWFramework
 
 class TestIconController: UIViewController, CollectionViewControllerProtocol, UISearchBarDelegate {
-    
     private var iconClass: Icon.Type = MaterialIcons.self
-        
+
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
@@ -28,13 +27,13 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
         searchBar.app.textField.app.touchResign = true
         return searchBar
     }()
-    
+
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 60, height: 100)
         return flowLayout
     }
-    
+
     func setupCollectionLayout() {
         view.addSubview(searchBar)
         searchBar.app.layoutChain
@@ -45,13 +44,13 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
             .edges(excludingEdge: .top)
             .top(toViewBottom: searchBar)
     }
-    
+
     func setupSubviews() {
         var array = Array(iconClass.iconMapper().keys)
         let text = APP.safeString(searchBar.text?.app.trimString)
         if text.count > 0 {
             array.removeAll { icon in
-                return !icon.lowercased().contains(text.lowercased())
+                !icon.lowercased().contains(text.lowercased())
             }
         }
         collectionData = array
@@ -59,11 +58,11 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
         collectionView.keyboardDismissMode = .onDrag
         collectionView.reloadData()
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionData.count
+        collectionData.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestIconCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         let name = collectionData[indexPath.item] as? String
@@ -71,18 +70,17 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
         cell.nameLabel.text = name
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let name = collectionData[indexPath.item] as? String
         UIPasteboard.general.string = APP.safeString(name)
         app.showMessage(text: name)
     }
-    
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         setupSubviews()
     }
-    
 }
 
 class TestIconCell: UICollectionViewCell {
@@ -90,7 +88,7 @@ class TestIconCell: UICollectionViewCell {
         let result = UIImageView()
         return result
     }()
-    
+
     lazy var nameLabel: UILabel = {
         let result = UILabel()
         result.textColor = AppTheme.textColor
@@ -99,7 +97,7 @@ class TestIconCell: UICollectionViewCell {
         result.numberOfLines = 0
         return result
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = AppTheme.cellColor
@@ -109,7 +107,7 @@ class TestIconCell: UICollectionViewCell {
         nameLabel.app.layoutChain.edges(.zero, excludingEdge: .top)
             .top(toViewBottom: imageView)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

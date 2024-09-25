@@ -9,18 +9,17 @@
 import FWFramework
 
 class TestPluginController: UIViewController, TableViewControllerProtocol {
-    
     typealias TableElement = [Int]
-    
+
     @StoredValue("showLottieProgress")
     static var showLottieProgress = true
-    
+
     @StoredValue("viewPluginSection")
     static var viewPluginSection: Int = -1
-    
+
     @StoredValue("viewPluginRow")
     static var viewPluginRow: Int = 0
-    
+
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue, block: { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: [!Self.showLottieProgress ? "开启Lottie进度展示" : "关闭Lottie进度展示", "修改指示器颜色为红色"], actionBlock: { index in
@@ -33,27 +32,27 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             })
         })
     }
-    
+
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
-    
+
     func setupTableView() {
         tableData.append([0, 1])
         tableData.append([0, 1, 2, 3, 4, 5, 6])
         tableData.append([0])
         tableView.reloadData()
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
-        return tableData.count
+        tableData.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionData = tableData[section]
         return sectionData.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sectionData = tableData[indexPath.section]
         let rowData = sectionData[indexPath.row]
@@ -70,12 +69,12 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 progressView.app.layoutChain.center()
             }
             view?.annular = rowData == 0 ? true : false
-            TestController.mockProgress { progress, finished in
+            TestController.mockProgress { progress, _ in
                 view?.progress = progress
             }
             return cell
         }
-        
+
         if indexPath.section == 2 {
             let cell = UITableViewCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: "cell3")
             cell.selectionStyle = .none
@@ -93,7 +92,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             view?.startAnimating()
             return cell
         }
-        
+
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .default, reuseIdentifier: "cell2")
         cell.selectionStyle = .none
         var view = cell.viewWithTag(100) as? IndicatorView
@@ -109,11 +108,11 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         view?.startAnimating()
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         70
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         app.showAlert(title: "请选择", message: nil, style: .default, cancel: nil, actions: ["预览", "设置全局样式"]) { [weak self] index in
@@ -126,17 +125,17 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             }
         }
     }
-    
+
     func onPreview(_ indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         if indexPath.section == 0 {
             let progressView = cell?.viewWithTag(100) as? ProgressView
-            TestController.mockProgress { progress, finished in
+            TestController.mockProgress { progress, _ in
                 progressView?.progress = progress
             }
             return
         }
-        
+
         if indexPath.section == 2 {
             let toastPlugin = ToastPluginImpl()
             toastPlugin.customBlock = { toastView in
@@ -146,7 +145,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 toastView.indicatorView = lottieView
             }
             tableView.isHidden = true
-            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: self.view)
+            toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: view)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: self.view)
             }
@@ -156,7 +155,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             }
             return
         }
-        
+
         let sectionData = tableData[indexPath.section]
         let rowData = sectionData[indexPath.row]
         let type = IndicatorViewAnimationType(rawValue: rowData)
@@ -165,7 +164,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             toastView.indicatorView = IndicatorView(type: type)
         }
         tableView.isHidden = true
-        toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: self.view)
+        toastPlugin.showLoading(attributedText: NSAttributedString(string: "Loading..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: view)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             toastPlugin.showLoading(attributedText: NSAttributedString(string: "Authenticating..."), attributedDetail: nil, cancelBlock: nil, customBlock: nil, in: self.view)
         }
@@ -174,11 +173,11 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             self.tableView.isHidden = false
         }
     }
-    
+
     static func onSettings(_ indexPath: IndexPath) {
         if indexPath.section == 0 {
             let annular = indexPath.row == 0
-            ViewPluginImpl.shared.customProgressView = { style in
+            ViewPluginImpl.shared.customProgressView = { _ in
                 let progressView = ProgressView()
                 progressView.annular = annular
                 return progressView
@@ -187,16 +186,16 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             RefreshPluginImpl.shared.infiniteScrollBlock = nil
             return
         }
-        
+
         if indexPath.section == 2 {
-            ViewPluginImpl.shared.customIndicatorView = { style in
+            ViewPluginImpl.shared.customIndicatorView = { _ in
                 let lottieView = LottiePluginView()
                 lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
                 return lottieView
             }
             // FWLottieView也支持进度显示
-            ViewPluginImpl.shared.customProgressView = { style in
+            ViewPluginImpl.shared.customProgressView = { _ in
                 let lottieView = LottiePluginView()
                 lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.setAnimation(name: "Lottie")
@@ -221,13 +220,13 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             }
             return
         }
-        
+
         let type = IndicatorViewAnimationType(rawValue: indexPath.row)
-        ViewPluginImpl.shared.customIndicatorView = { style in
-            return IndicatorView(type: type)
+        ViewPluginImpl.shared.customIndicatorView = { _ in
+            IndicatorView(type: type)
         }
         // IndicatorView也支持进度显示
-        ViewPluginImpl.shared.customProgressView = { style in
+        ViewPluginImpl.shared.customProgressView = { _ in
             let indicatorView = IndicatorView(type: type)
             indicatorView.hidesWhenStopped = false
             return indicatorView
@@ -235,13 +234,14 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
         RefreshPluginImpl.shared.pullRefreshBlock = nil
         RefreshPluginImpl.shared.infiniteScrollBlock = nil
     }
-    
 }
 
 @objc extension Autoloader {
     func loadApp_ViewPlugin() {
-        if TestPluginController.viewPluginSection >= 0 {
-            TestPluginController.onSettings(IndexPath(row: TestPluginController.viewPluginRow, section: TestPluginController.viewPluginSection))
+        DispatchQueue.app.mainAsync {
+            if TestPluginController.viewPluginSection >= 0 {
+                TestPluginController.onSettings(IndexPath(row: TestPluginController.viewPluginRow, section: TestPluginController.viewPluginSection))
+            }
         }
     }
 }

@@ -5,9 +5,9 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import UIKit
 import AdSupport
 import AppTrackingTransparency
+import UIKit
 #if FWMacroSPM
 @_spi(FW) import FWFramework
 #endif
@@ -16,7 +16,7 @@ import AppTrackingTransparency
 extension Wrapper where Base: UIDevice {
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限
     public static var deviceIDFA: String {
-        return ASIdentifierManager.shared().advertisingIdentifier.uuidString
+        ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
 }
 
@@ -28,9 +28,9 @@ extension AuthorizeType {
 
 // MARK: - AuthorizeTracking
 /// IDFA授权，iOS14+使用AppTrackingTransparency，其它使用AdSupport
-public class AuthorizeTracking: NSObject, AuthorizeProtocol {
+public class AuthorizeTracking: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeTracking()
-    
+
     public func authorizeStatus() -> AuthorizeStatus {
         if #available(iOS 14.0, *) {
             let status = ATTrackingManager.trackingAuthorizationStatus
@@ -48,10 +48,10 @@ public class AuthorizeTracking: NSObject, AuthorizeProtocol {
             return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .authorized : .denied
         }
     }
-    
-    public func requestAuthorize(_ completion: ((AuthorizeStatus, Error?) -> Void)?) {
+
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
         if #available(iOS 14.0, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
+            ATTrackingManager.requestTrackingAuthorization { _ in
                 if completion != nil {
                     DispatchQueue.fw.mainAsync {
                         completion?(self.authorizeStatus(), nil)

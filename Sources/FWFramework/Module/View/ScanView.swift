@@ -5,33 +5,29 @@
 //  Created by wuyong on 2023/8/23.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 #if canImport(Vision)
 import Vision
 #endif
 
 // MARK: - ScanCode
 public protocol ScanCodeDelegate: AnyObject {
-    
     /// 扫描二维码结果函数
     ///
     /// - Parameters:
     ///   - scanCode: FWScanCode 对象
     ///   - result: 扫描二维码数据
     func scanCode(_ scanCode: ScanCode, result: String?)
-    
 }
 
 public protocol ScanCodeSampleBufferDelegate: AnyObject {
-    
     /// 扫描时捕获外界光线强弱函数
     ///
     /// - Parameters:
     ///   - scanCode: FWScanCode 对象
     ///   - brightness: 光线强弱值
     func scanCode(_ scanCode: ScanCode, brightness: CGFloat)
-    
 }
 
 /// 二维码、条形码扫描，默认仅开启二维码
@@ -41,19 +37,18 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 /// 默认条形码类型示例：[.code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5]
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
-open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
-    
+open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
-    
+    public nonisolated(unsafe) static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+
     /// 默认条形码类型，可自定义
-    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+    public nonisolated(unsafe) static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
         .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
     ]
-    
+
     /// 预览视图，必须设置（传外界控制器视图）
-    open var preview: UIView? {
+    @MainActor open var preview: UIView? {
         didSet {
             preview?.layer.insertSublayer(videoPreviewLayer, at: 0)
         }
@@ -69,17 +64,17 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     /// 视频缩放因子，默认同系统（捕获内容）
     open var videoZoomFactor: CGFloat {
         get {
-            return device?.videoZoomFactor ?? 0
+            device?.videoZoomFactor ?? 0
         }
         set {
-            guard let device = device else { return }
-            
+            guard let device else { return }
+
             let factor = min(max(device.minAvailableVideoZoomFactor, newValue), device.maxAvailableVideoZoomFactor)
             do {
                 try device.lockForConfiguration()
                 device.videoZoomFactor = factor
                 device.unlockForConfiguration()
-            } catch { }
+            } catch {}
         }
     }
 
@@ -110,22 +105,20 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
             setupVideoDataOutput()
         }
     }
-    
+
     /// 元对象类型，默认仅开启二维码
-    open lazy var metadataObjectTypes: [AVMetadataObject.ObjectType] = {
-        return ScanCode.metadataObjectTypesQRCode
-    }() {
+    open lazy var metadataObjectTypes: [AVMetadataObject.ObjectType] = ScanCode.metadataObjectTypesQRCode {
         didSet {
             setupMetadataObjectTypes()
         }
     }
-    
+
     /// 会话预制，默认自动设置
     open lazy var sessionPreset: AVCaptureSession.Preset = {
-        guard let device = device else { return .low }
+        guard let device else { return .low }
         var presets: [AVCaptureSession.Preset] = [
             .hd4K3840x2160, .hd1920x1080, .hd1280x720,
-            .vga640x480, .cif352x288, .high, .medium,
+            .vga640x480, .cif352x288, .high, .medium
         ]
         for preset in presets {
             if device.supportsSessionPreset(preset) {
@@ -138,85 +131,85 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
             session.sessionPreset = sessionPreset
         }
     }
-    
+
     private lazy var session: AVCaptureSession = {
         let result = AVCaptureSession()
         result.sessionPreset = sessionPreset
         return result
     }()
-    
+
     private lazy var device: AVCaptureDevice? = {
         let result = AVCaptureDevice.default(for: .video)
         return result
     }()
-    
+
     private lazy var deviceInput: AVCaptureDeviceInput? = {
-        guard let device = device else { return nil }
+        guard let device else { return nil }
         let result = try? AVCaptureDeviceInput(device: device)
         return result
     }()
-    
+
     private lazy var metadataOutput: AVCaptureMetadataOutput = {
         let result = AVCaptureMetadataOutput()
         result.setMetadataObjectsDelegate(self, queue: .main)
         return result
     }()
-    
+
     private lazy var videoDataOutput: AVCaptureVideoDataOutput = {
         let result = AVCaptureVideoDataOutput()
         result.setSampleBufferDelegate(self, queue: .main)
         return result
     }()
-    
-    private lazy var videoPreviewLayer: AVCaptureVideoPreviewLayer = {
+
+    @MainActor private lazy var videoPreviewLayer: AVCaptureVideoPreviewLayer = {
         let result = AVCaptureVideoPreviewLayer(session: session)
         result.videoGravity = .resizeAspectFill
         result.frame = preview?.frame ?? .zero
         return result
     }()
-    
+
     private var issetMetadataOutput = false
     private var issetVideoDataOutput = false
-    
+
     // MARK: - Lifecycle
-    public override init() {
+    override public init() {
         super.init()
-        
-        if let deviceInput = deviceInput,
+
+        if let deviceInput,
            session.canAddInput(deviceInput) {
             session.addInput(deviceInput)
         }
     }
-    
+
     #if DEBUG
     deinit {
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
     }
     #endif
-    
+
     private func setupMetadataOutput() {
         guard !issetMetadataOutput else { return }
         issetMetadataOutput = true
-        
+
         if session.canAddOutput(metadataOutput) {
             session.addOutput(metadataOutput)
         }
-        
+
         setupMetadataObjectTypes()
     }
-    
+
     private func setupVideoDataOutput() {
         guard !issetVideoDataOutput else { return }
         issetVideoDataOutput = true
-        
+
         if session.canAddOutput(videoDataOutput) {
             session.addOutput(videoDataOutput)
         }
     }
-    
+
     private func setupMetadataObjectTypes() {
         guard issetMetadataOutput else { return }
-        
+
         var objectTypes: [AVMetadataObject.ObjectType] = []
         for objectType in metadataObjectTypes {
             if metadataOutput.availableMetadataObjectTypes.contains(objectType) {
@@ -229,13 +222,13 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     // MARK: - Public
     /// 配置扫描设备，比如自动聚焦等
     open func configCaptureDevice(_ block: ((AVCaptureDevice) -> Void)?) {
-        guard let device = device else { return }
-        
+        guard let device else { return }
+
         do {
             try device.lockForConfiguration()
             block?(device)
             device.unlockForConfiguration()
-        } catch { }
+        } catch {}
     }
 
     /// 开启扫描
@@ -257,17 +250,17 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
         #endif
     }
-    
+
     // MARK: - AVCaptureMetadataOutputObjectsDelegate
     open func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         guard metadataObjects.count > 0 else { return }
         let obj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject
         let resultString = obj?.stringValue
-        
+
         delegate?.scanCode(self, result: resultString)
         scanResultBlock?(resultString)
     }
-                                  
+
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     open func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let metadataDict = CMCopyDictionaryOfAttachments(allocator: nil, target: sampleBuffer, attachmentMode: kCMAttachmentMode_ShouldPropagate) else { return }
@@ -275,7 +268,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         if let exifMetadata = metadata[kCGImagePropertyExifDictionary as String] as? NSDictionary,
            let brightnessValue = exifMetadata[kCGImagePropertyExifBrightnessValue as String] as? NSNumber {
             let brightness = brightnessValue.doubleValue
-            
+
             sampleBufferDelegate?.scanCode(self, brightness: brightness)
             scanBrightnessBlock?(brightness)
         }
@@ -292,29 +285,29 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     open class func turnOnTorch() {
         guard let device = AVCaptureDevice.default(for: .video),
               device.hasTorch else { return }
-        
+
         do {
             try device.lockForConfiguration()
             device.torchMode = .on
             device.unlockForConfiguration()
-        } catch { }
+        } catch {}
     }
 
     /// 关闭手电筒
     open class func turnOffTorch() {
         guard let device = AVCaptureDevice.default(for: .video),
               device.hasTorch else { return }
-        
+
         do {
             try device.lockForConfiguration()
             device.torchMode = .off
             device.unlockForConfiguration()
-        } catch { }
+        } catch {}
     }
 
     /// 检测后置摄像头是否可用
-    open class func isCameraRearAvailable() -> Bool {
-        return UIImagePickerController.isCameraDeviceAvailable(.rear)
+    @MainActor open class func isCameraRearAvailable() -> Bool {
+        UIImagePickerController.isCameraDeviceAvailable(.rear)
     }
 
     /// 播放音效
@@ -329,25 +322,25 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于二维码数据，否则等于 nil
-    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @escaping (String?) -> Void) {
+    open class func readQRCode(_ image: UIImage?, compress: Bool = true, completion: @escaping @MainActor @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
                 compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
                 compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
-            
+
             var ciImage = compressImage?.ciImage
             if ciImage == nil, let cgImage = compressImage?.cgImage {
                 ciImage = CIImage(cgImage: cgImage)
             }
-            guard let ciImage = ciImage else {
+            guard let ciImage else {
                 DispatchQueue.main.async {
                     completion(nil)
                 }
                 return
             }
-            
+
             let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
             let features = detector?.features(in: ciImage) ?? []
             var messageString: String?
@@ -357,35 +350,36 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
                     break
                 }
             }
-            
+
+            let resultString = messageString
             DispatchQueue.main.async {
-                completion(messageString)
+                completion(resultString)
             }
         }
     }
-    
+
     /// 读取图片中的条形码/二维码，主线程回调
     ///
     /// - Parameters:
     ///   - image: 图片
     ///   - compress: 是否按默认算法压缩图片，默认true，图片过大可能导致闪退，建议开启
     ///   - completion: 回调方法，读取成功时，回调参数 result 等于条形码/二维码数据，否则等于 nil
-    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @escaping (String?) -> Void) {
+    open class func readBarcode(_ image: UIImage?, compress: Bool = true, completion: @escaping @MainActor @Sendable (String?) -> Void) {
         DispatchQueue.global().async {
             var compressImage = image
             if compress, compressImage != nil {
                 compressImage = compressImage?.fw.compressImage(maxWidth: 1080)
                 compressImage = compressImage?.fw.compressImage(maxLength: 512 * 1024)
             }
-            
+
             guard let cgImage = compressImage?.cgImage else {
                 DispatchQueue.main.async {
                     completion(nil)
                 }
                 return
             }
-            
-            let request = VNDetectBarcodesRequest() { request, error in
+
+            let request = VNDetectBarcodesRequest { request, _ in
                 var messageString: String?
                 let results = request.results ?? []
                 for result in results {
@@ -395,12 +389,13 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
                         break
                     }
                 }
-                
+
+                let resultString = messageString
                 DispatchQueue.main.async {
-                    completion(messageString)
+                    completion(resultString)
                 }
             }
-           
+
             let handler = VNImageRequestHandler(cgImage: cgImage)
             do {
                 try handler.perform([request])
@@ -445,7 +440,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         outImage = outImage.transformed(by: .init(scaleX: scale, y: scale))
         return UIImage(ciImage: outImage)
     }
-    
+
     /// 生成带 logo 的二维码
     ///
     /// - Parameters:
@@ -467,17 +462,17 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         logoImageBorderColor: UIColor? = .white
     ) -> UIImage? {
         let image = generateQrcode(data: data, size: size, color: .black, backgroundColor: .white)
-        guard let image = image,
-              let logoImage = logoImage else { return image }
-        
+        guard let image,
+              let logoImage else { return image }
+
         let logoImageW = max(0, min(ratio, 1.0)) * size
         let logoImageH = logoImageW
         let logoImageX = 0.5 * (image.size.width - logoImageW)
         let logoImageY = 0.5 * (image.size.height - logoImageH)
         let logoImageRect = CGRect(x: logoImageX, y: logoImageY, width: logoImageW, height: logoImageH)
-        
+
         // 绘制logo
-        UIGraphicsBeginImageContextWithOptions(image.size, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(image.size, false, 0.0)
         image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
         let path = UIBezierPath(roundedRect: logoImageRect, cornerRadius: logoImageCornerRadius)
         path.lineWidth = logoImageBorderWidth
@@ -485,12 +480,12 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         path.stroke()
         path.addClip()
         logoImage.draw(in: logoImageRect)
-        
+
         let qrcodeImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return qrcodeImage
     }
-    
+
     /// 生成code128条形码，无空白区域
     ///
     /// - Parameters:
@@ -524,12 +519,11 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         outImage = outImage.transformed(by: .init(scaleX: scaleX, y: scaleY))
         return UIImage(ciImage: outImage)
     }
-    
 }
 
 // MARK: - ScanView
 /// 扫码边角位置枚举
-public enum ScanCornerLoaction: Int {
+public enum ScanCornerLoaction: Int, Sendable {
     /// 默认与边框线同中心点
     case `default` = 0
     /// 在边框线内部
@@ -556,13 +550,13 @@ open class ScanViewConfiguration: NSObject {
     open var isFromTop: Bool = false
 
     /// 背景色，默认为：[[UIColor blackColor] colorWithAlphaComponent:0.5]
-    open var color: UIColor = UIColor.black.withAlphaComponent(0.5)
+    open var color: UIColor = .black.withAlphaComponent(0.5)
 
     /// 是否需要辅助扫描框，默认为：NO
     open var isShowBorder: Bool = false
 
     /// 辅助扫描框的颜色，默认为：[UIColor whiteColor]
-    open var borderColor: UIColor = UIColor.white
+    open var borderColor: UIColor = .white
 
     /// 辅助扫描框的宽度，默认为：0.2f
     open var borderWidth: CGFloat = 0.2
@@ -571,7 +565,7 @@ open class ScanViewConfiguration: NSObject {
     open var cornerLocation: ScanCornerLoaction = .default
 
     /// 辅助扫描边角颜色，默认为：[UIColor greenColor]
-    open var cornerColor: UIColor = UIColor.green
+    open var cornerColor: UIColor = .green
 
     /// 辅助扫描边角宽度，默认为：2.0f
     open var cornerWidth: CGFloat = 2.0
@@ -582,20 +576,19 @@ open class ScanViewConfiguration: NSObject {
 
 /// 扫码视图
 open class ScanView: UIView {
-    
     private class Proxy: NSObject {
         weak var target: ScanView?
-        
+
         init(target: ScanView?) {
             super.init()
             self.target = target
         }
-        
-        @objc func updateUI() {
+
+        @MainActor @objc func updateUI() {
             target?.updateUI()
         }
     }
-    
+
     // MARK: - Accessor
     /// 当前配置
     open private(set) var configuration: ScanViewConfiguration = .init()
@@ -623,30 +616,30 @@ open class ScanView: UIView {
             tapGesture.isEnabled = doubleTapBlock != nil
         }
     }
-    
+
     /// 缩放回调方法，0表示开始
     open var pinchScaleBlock: ((CGFloat) -> Void)? {
         didSet {
             pinchGesture.isEnabled = pinchScaleBlock != nil
         }
     }
-    
+
     private lazy var contentView: UIView = {
         let result = UIView(frame: scanFrame)
         result.backgroundColor = .clear
         result.clipsToBounds = true
         return result
     }()
-    
+
     private var scanlineImgView: UIImageView {
         get {
             if let imgView = _scanlineImgView {
                 return imgView
             }
-            
+
             let imgView = UIImageView()
             _scanlineImgView = imgView
-            
+
             var image: UIImage?
             if configuration.scanlineImage != nil {
                 image = configuration.scanlineImage
@@ -654,7 +647,7 @@ open class ScanView: UIView {
                 image = UIImage(named: scanline)
             }
             imgView.image = image
-            
+
             if image != nil {
                 updateScanLineFrame()
             }
@@ -664,25 +657,26 @@ open class ScanView: UIView {
             _scanlineImgView = newValue
         }
     }
+
     private var _scanlineImgView: UIImageView?
-    
+
     private lazy var tapGesture: UITapGestureRecognizer = {
         let result = UITapGestureRecognizer(target: self, action: #selector(doubleTapAction))
         result.numberOfTapsRequired = 2
         result.isEnabled = false
         return result
     }()
-    
+
     private lazy var pinchGesture: UIPinchGestureRecognizer = {
         let result = UIPinchGestureRecognizer(target: self, action: #selector(pinchAction(_:)))
         result.isEnabled = false
         return result
     }()
-    
-    private var displayLink: CADisplayLink?
+
+    private nonisolated(unsafe) var displayLink: CADisplayLink?
     private var isTop = true
     private var isSelected = false
-    
+
     // MARK: - Lifecycle
     /// 对象方法创建 ScanView
     ///
@@ -691,36 +685,41 @@ open class ScanView: UIView {
     ///   - configuration: ScanView 的配置
     public init(frame: CGRect, configuration: ScanViewConfiguration) {
         super.init(frame: frame)
-        
+
         self.configuration = configuration
         didInitialize()
     }
-    
-    public override init(frame: CGRect) {
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         didInitialize()
     }
-    
+
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        
+
         didInitialize()
     }
-    
+
     private func didInitialize() {
         let width = 0.7 * frame.size.width
         borderFrame = CGRect(x: 0.5 * (frame.width - width), y: 0.5 * (frame.height - width), width: width, height: width)
         scanFrame = borderFrame
-        
+
         backgroundColor = .clear
         addSubview(contentView)
-        
+
         addGestureRecognizer(tapGesture)
         addGestureRecognizer(pinchGesture)
     }
-    
-    open override func draw(_ rect: CGRect) {
+
+    deinit {
+        displayLink?.invalidate()
+        displayLink = nil
+    }
+
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
         guard configuration.isShowBorder else { return }
 
@@ -765,7 +764,7 @@ open class ScanView: UIView {
     /// 开始扫描
     open func startScanning() {
         guard scanlineImgView.image != nil else { return }
-        
+
         contentView.addSubview(scanlineImgView)
         if displayLink == nil {
             displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
@@ -781,13 +780,13 @@ open class ScanView: UIView {
         else {
             return
         }
-        
+
         scanlineImgView.removeFromSuperview()
         _scanlineImgView = nil
         displayLink?.invalidate()
         displayLink = nil
     }
-    
+
     // MARK: - Private
     private func updateScanLineFrame() {
         let w = contentView.frame.width
@@ -797,7 +796,7 @@ open class ScanView: UIView {
         let y = configuration.isFromTop ? -h : 0
         scanlineImgView.frame = CGRect(x: x, y: y, width: w, height: h)
     }
-    
+
     private func updateUI() {
         var frame = scanlineImgView.frame
         let contentViewHeight = contentView.frame.height
@@ -830,7 +829,7 @@ open class ScanView: UIView {
             }
         }
     }
-    
+
     private func drawLeftTop(borderX: CGFloat, borderY: CGFloat, cornerLength: CGFloat, insideExcess: CGFloat, outsideExcess: CGFloat) {
         let leftTopPath = UIBezierPath()
         leftTopPath.lineWidth = configuration.cornerWidth
@@ -874,7 +873,7 @@ open class ScanView: UIView {
 
         rightTopPath.stroke()
     }
-    
+
     private func drawLeftBottom(borderX: CGFloat, borderY: CGFloat, borderH: CGFloat, cornerLength: CGFloat, insideExcess: CGFloat, outsideExcess: CGFloat) {
         let leftBottomPath = UIBezierPath()
         leftBottomPath.lineWidth = configuration.cornerWidth
@@ -919,12 +918,11 @@ open class ScanView: UIView {
         rightBottomPath.stroke()
     }
 
-    
     @objc private func doubleTapAction() {
         isSelected = !isSelected
         doubleTapBlock?(isSelected)
     }
-    
+
     @objc private func pinchAction(_ gesture: UIPinchGestureRecognizer) {
         if gesture.state == .began {
             pinchScaleBlock?(0)
@@ -932,5 +930,4 @@ open class ScanView: UIView {
             pinchScaleBlock?(gesture.scale)
         }
     }
-    
 }
