@@ -32,5 +32,6 @@ let package = Package(
             dependencies: ["FWMacroMacros"],
             path: "FWPluginMacros"
         )
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )
