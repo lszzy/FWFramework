@@ -195,5 +195,6 @@ let package = Package(
                 .define("FWMacroSPM")
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )
