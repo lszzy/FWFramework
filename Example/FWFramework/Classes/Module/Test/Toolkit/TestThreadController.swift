@@ -132,7 +132,7 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
             onResult(value)
         }
     }
-    
+
     @objc func onArray1() {
         let array = SendableObject([Int]())
 

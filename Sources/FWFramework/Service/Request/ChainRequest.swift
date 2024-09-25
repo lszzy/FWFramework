@@ -129,14 +129,14 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open func start(completion: Completion?) -> Self {
         start(success: completion, failure: completion)
     }
-    
+
     /// 请求取消句柄，不一定主线程调用
     @discardableResult
     open func requestCancelledBlock(_ block: (@Sendable (ChainRequest) -> Void)?) -> Self {
         requestCancelledBlock = block
         return self
     }
-    
+
     /// 自定义响应完成句柄
     @discardableResult
     open func response(_ completion: Completion?) -> Self {
@@ -156,7 +156,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         failureCompletionBlock = block
         return self
     }
-    
+
     /// 快捷设置响应失败句柄
     @discardableResult
     open func responseError(_ block: (@MainActor @Sendable (Error) -> Void)?) -> Self {
