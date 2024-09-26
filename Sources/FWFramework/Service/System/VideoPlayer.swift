@@ -51,15 +51,40 @@ public enum VideoPlayerBufferingState: Int, Sendable {
 ///
 /// @see https://github.com/piemonte/Player
 open class VideoPlayer: UIViewController {
-    // properties
+    private class MutableState: @unchecked Sendable {
+        weak var playerDelegate: VideoPlayerDelegate?
+        weak var playbackDelegate: VideoPlayerPlaybackDelegate?
+        var asset: AVAsset?
+        var playbackState: VideoPlayerPlaybackState = .stopped
+        var bufferingState: VideoPlayerBufferingState = .unknown
+        var bufferSizeInSeconds: Double = 10
+        var playbackEdgeTriggered: Bool = true
+        var player: AVPlayer?
+        var preferredPeakBitRate: Double = 0
+        
+        var playerItem: AVPlayerItem?
+        var playerObservers = [NSKeyValueObservation]()
+        var playerItemObservers = [NSKeyValueObservation]()
+        var playerLayerObserver: NSKeyValueObservation?
+        var playerTimeObserver: Any?
+
+        var seekTimeRequested: CMTime?
+        var lastBufferTime: Double = 0
+        var itemMaximumResolution: CGSize = .zero
+        var hasAutoplayActivated: Bool = true
+    }
 
     /// Player delegate.
-    open nonisolated(unsafe) weak var playerDelegate: VideoPlayerDelegate?
+    open nonisolated weak var playerDelegate: VideoPlayerDelegate? {
+        get { mutableState.playerDelegate }
+        set { mutableState.playerDelegate = newValue }
+    }
 
     /// Playback delegate.
-    open nonisolated(unsafe) weak var playbackDelegate: VideoPlayerPlaybackDelegate?
-
-    // configuration
+    open nonisolated weak var playbackDelegate: VideoPlayerPlaybackDelegate? {
+        get { mutableState.playbackDelegate }
+        set { mutableState.playbackDelegate = newValue }
+    }
 
     /// Local or remote URL for the file asset to be played.
     /// URL of the asset.
@@ -75,17 +100,15 @@ open class VideoPlayer: UIViewController {
     /// Note: This will reset the `url` property. (cannot set both)
     open var asset: AVAsset? {
         get {
-            _asset
+            mutableState.asset
         }
         set {
-            _asset = newValue
+            mutableState.asset = newValue
             if let asset = newValue {
                 setupAsset(asset)
             }
         }
     }
-
-    private nonisolated(unsafe) var _asset: AVAsset?
 
     /// Specifies how the video is displayed within a player layer’s bounds.
     /// The default value is `AVLayerVideoGravityResizeAspect`. See `PlayerFillMode`.
@@ -140,8 +163,7 @@ open class VideoPlayer: UIViewController {
     /// Resumes playback when entering foreground.
     open var playbackResumesWhenEnteringForeground: Bool = true
 
-    // state
-
+    /// Whether is playing video.
     open var isPlayingVideo: Bool {
         guard let asset else {
             return false
@@ -167,9 +189,15 @@ open class VideoPlayer: UIViewController {
     open var playbackFreezesAtEnd: Bool = false
 
     /// Current playback state of the Player.
-    open nonisolated(unsafe) var playbackState: VideoPlayerPlaybackState = .stopped {
-        didSet {
-            if playbackState != oldValue || !playbackEdgeTriggered {
+    open nonisolated var playbackState: VideoPlayerPlaybackState {
+        get {
+            mutableState.playbackState
+        }
+        set {
+            let oldValue = mutableState.playbackState
+            mutableState.playbackState = newValue
+            
+            if newValue != oldValue || !playbackEdgeTriggered {
                 DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerPlaybackStateDidChange?(self)
                 }
@@ -178,9 +206,15 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Current buffering state of the Player.
-    open nonisolated(unsafe) var bufferingState: VideoPlayerBufferingState = .unknown {
-        didSet {
-            if bufferingState != oldValue || !playbackEdgeTriggered {
+    open nonisolated var bufferingState: VideoPlayerBufferingState {
+        get {
+            mutableState.bufferingState
+        }
+        set {
+            let oldValue = mutableState.bufferingState
+            mutableState.bufferingState = newValue
+            
+            if newValue != oldValue || !playbackEdgeTriggered {
                 DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerBufferingStateDidChange?(self)
                 }
@@ -189,14 +223,20 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Playback buffering size in seconds.
-    open nonisolated(unsafe) var bufferSizeInSeconds: Double = 10
+    open nonisolated var bufferSizeInSeconds: Double {
+        get { mutableState.bufferSizeInSeconds }
+        set { mutableState.bufferSizeInSeconds = newValue }
+    }
 
     /// Playback is not automatically triggered from state changes when true.
-    open nonisolated(unsafe) var playbackEdgeTriggered: Bool = true
+    open nonisolated var playbackEdgeTriggered: Bool {
+        get { mutableState.playbackEdgeTriggered }
+        set { mutableState.playbackEdgeTriggered = newValue }
+    }
 
     /// Maximum duration of playback.
     open nonisolated var maximumDuration: TimeInterval {
-        if let playerItem {
+        if let playerItem = mutableState.playerItem {
             return CMTimeGetSeconds(playerItem.duration)
         } else {
             return CMTimeGetSeconds(CMTime.indefinite)
@@ -205,7 +245,7 @@ open class VideoPlayer: UIViewController {
 
     /// Media playback's current time interval in seconds.
     open nonisolated var currentTimeInterval: TimeInterval {
-        if let playerItem {
+        if let playerItem = mutableState.playerItem {
             return CMTimeGetSeconds(playerItem.currentTime())
         } else {
             return CMTimeGetSeconds(CMTime.indefinite)
@@ -214,7 +254,7 @@ open class VideoPlayer: UIViewController {
 
     /// Media playback's current time.
     open nonisolated var currentTime: CMTime {
-        if let playerItem {
+        if let playerItem = mutableState.playerItem {
             return playerItem.currentTime()
         } else {
             return CMTime.indefinite
@@ -223,7 +263,7 @@ open class VideoPlayer: UIViewController {
 
     /// The natural dimensions of the media.
     open var naturalSize: CGSize {
-        if let playerItem,
+        if let playerItem = mutableState.playerItem,
            let track = playerItem.asset.tracks(withMediaType: .video).first {
             let size = track.naturalSize.applying(track.preferredTransform)
             return CGSize(width: abs(size.width), height: abs(size.height))
@@ -233,18 +273,16 @@ open class VideoPlayer: UIViewController {
     }
 
     open var player: AVPlayer {
-        if let player = _player {
+        if let player = mutableState.player {
             return player
         }
 
         let player = AVPlayer()
         player.automaticallyWaitsToMinimizeStalling = false
         player.actionAtItemEnd = .pause
-        _player = player
+        mutableState.player = player
         return player
     }
-
-    private nonisolated(unsafe) var _player: AVPlayer?
 
     open lazy var playerView: VideoPlayerView = .init(frame: .zero)
 
@@ -254,37 +292,28 @@ open class VideoPlayer: UIViewController {
     }
 
     /// Indicates the desired limit of network bandwidth consumption for this item.
-    open nonisolated(unsafe) var preferredPeakBitRate: Double = 0 {
-        didSet {
-            playerItem?.preferredPeakBitRate = preferredPeakBitRate
+    open nonisolated var preferredPeakBitRate: Double {
+        get {
+            mutableState.preferredPeakBitRate
+        }
+        set {
+            mutableState.preferredPeakBitRate = newValue
+            mutableState.playerItem?.preferredPeakBitRate = newValue
         }
     }
 
     /// Indicates a preferred upper limit on the resolution of the video to be downloaded.
-    open nonisolated(unsafe) var preferredMaximumResolution: CGSize {
+    open nonisolated var preferredMaximumResolution: CGSize {
         get {
-            playerItem?.preferredMaximumResolution ?? CGSize.zero
+            mutableState.playerItem?.preferredMaximumResolution ?? CGSize.zero
         }
         set {
-            playerItem?.preferredMaximumResolution = newValue
-            itemMaximumResolution = newValue
+            mutableState.playerItem?.preferredMaximumResolution = newValue
+            mutableState.itemMaximumResolution = newValue
         }
     }
 
-    // private
-
-    nonisolated(unsafe) var playerItem: AVPlayerItem?
-    nonisolated(unsafe) var playerObservers = [NSKeyValueObservation]()
-    nonisolated(unsafe) var playerItemObservers = [NSKeyValueObservation]()
-    nonisolated(unsafe) var playerLayerObserver: NSKeyValueObservation?
-    nonisolated(unsafe) var playerTimeObserver: Any?
-
-    nonisolated(unsafe) var seekTimeRequested: CMTime?
-    nonisolated(unsafe) var lastBufferTime: Double = 0
-    nonisolated(unsafe) var itemMaximumResolution: CGSize = .zero
-
-    // Boolean that determines if the user or calling coded has trigged autoplay manually.
-    nonisolated(unsafe) var hasAutoplayActivated: Bool = true
+    private let mutableState = MutableState()
 
     // MARK: - lifecycle
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -297,14 +326,14 @@ open class VideoPlayer: UIViewController {
 
     deinit {
         self.resetPlayerItem(nil)
-        _player?.replaceCurrentItem(with: self.playerItem)
-        _player?.actionAtItemEnd = .pause
+        mutableState.player?.replaceCurrentItem(with: self.mutableState.playerItem)
+        mutableState.player?.actionAtItemEnd = .pause
 
         self.removePlayerObservers()
         self.removeApplicationObservers()
         self.removePlayerLayerObservers()
 
-        _player = nil
+        mutableState.player = nil
 
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
@@ -344,7 +373,7 @@ open class VideoPlayer: UIViewController {
     /// Total time spent playing.
     public var totalDurationWatched: TimeInterval {
         var totalDurationWatched = 0.0
-        if let accessLog = playerItem?.accessLog(), accessLog.events.isEmpty == false {
+        if let accessLog = mutableState.playerItem?.accessLog(), accessLog.events.isEmpty == false {
             for event in accessLog.events where event.durationWatched > 0 {
                 totalDurationWatched += event.durationWatched
             }
@@ -357,7 +386,7 @@ open class VideoPlayer: UIViewController {
         var timeWeightedIBR = 0.0
         let totalDurationWatched = totalDurationWatched
 
-        if let accessLog = playerItem?.accessLog(), totalDurationWatched > 0 {
+        if let accessLog = mutableState.playerItem?.accessLog(), totalDurationWatched > 0 {
             for event in accessLog.events {
                 if event.durationWatched > 0 && event.indicatedBitrate > 0 {
                     let eventTimeWeight = event.durationWatched / totalDurationWatched
@@ -373,7 +402,7 @@ open class VideoPlayer: UIViewController {
         var totalNumberOfStalls = 0
         let totalHoursWatched = totalDurationWatched / 3600
 
-        if let accessLog = playerItem?.accessLog(), totalDurationWatched > 0 {
+        if let accessLog = mutableState.playerItem?.accessLog(), totalDurationWatched > 0 {
             for event in accessLog.events {
                 totalNumberOfStalls += event.numberOfStalls
             }
@@ -394,13 +423,13 @@ open class VideoPlayer: UIViewController {
     open func playFromCurrentTime() {
         if !autoplay {
             // External call to this method with autoplay disabled. Re-activate it before calling play.
-            hasAutoplayActivated = true
+            mutableState.hasAutoplayActivated = true
         }
         play()
     }
 
     fileprivate func play() {
-        if autoplay || hasAutoplayActivated {
+        if autoplay || mutableState.hasAutoplayActivated {
             playbackState = .playing
             player.playImmediately(atRate: rate)
         }
@@ -433,10 +462,10 @@ open class VideoPlayer: UIViewController {
     ///   - time: The time to switch to move the playback.
     ///   - completionHandler: Call block handler after seeking/
     open nonisolated func seek(to time: CMTime, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
-        if let playerItem {
+        if let playerItem = mutableState.playerItem {
             return playerItem.seek(to: time, completionHandler: completionHandler)
         } else {
-            seekTimeRequested = time
+            mutableState.seekTimeRequested = time
         }
     }
 
@@ -448,7 +477,7 @@ open class VideoPlayer: UIViewController {
     ///   - toleranceAfter: The tolerance allowed after time.
     ///   - completionHandler: call block handler after seeking
     open func seekToTime(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: (@Sendable (Bool) -> Void)? = nil) {
-        if let playerItem {
+        if let playerItem = mutableState.playerItem {
             return playerItem.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
     }
@@ -457,7 +486,7 @@ open class VideoPlayer: UIViewController {
     ///
     /// - Parameter completionHandler: Returns a UIImage of the requested video frame. (Great for thumbnails!)
     open func takeSnapshot(completionHandler: (@MainActor @Sendable (_ image: UIImage?, _ error: Error?) -> Void)?) {
-        guard let asset = playerItem?.asset else {
+        guard let asset = mutableState.playerItem?.asset else {
             DispatchQueue.main.async {
                 completionHandler?(nil, nil)
             }
@@ -467,7 +496,7 @@ open class VideoPlayer: UIViewController {
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
 
-        let currentTime = playerItem?.currentTime() ?? CMTime.zero
+        let currentTime = mutableState.playerItem?.currentTime() ?? CMTime.zero
 
         imageGenerator.generateCGImagesAsynchronously(forTimes: [NSValue(time: currentTime)]) { _, image, _, result, error in
             guard let image else {
@@ -504,7 +533,7 @@ open class VideoPlayer: UIViewController {
         }
 
         // Reset autoplay flag since a new url is set.
-        hasAutoplayActivated = false
+        mutableState.hasAutoplayActivated = false
         if autoplay {
             playbackState = .playing
         } else {
@@ -528,7 +557,7 @@ open class VideoPlayer: UIViewController {
         setupPlayerItem(nil)
 
         self.asset?.loadValuesAsynchronously(forKeys: loadableKeys, completionHandler: { () in
-            guard let asset = self._asset else { return }
+            guard let asset = self.mutableState.asset else { return }
 
             for key in loadableKeys {
                 var error: NSError?
@@ -563,7 +592,7 @@ open class VideoPlayer: UIViewController {
     fileprivate func setupPlayerItem(_ playerItem: AVPlayerItem?) {
         resetPlayerItem(playerItem)
 
-        player.replaceCurrentItem(with: self.playerItem)
+        player.replaceCurrentItem(with: self.mutableState.playerItem)
         player.rate = rate
 
         // update new playerItem settings
@@ -577,23 +606,23 @@ open class VideoPlayer: UIViewController {
     fileprivate nonisolated func resetPlayerItem(_ playerItem: AVPlayerItem?) {
         removePlayerItemObservers()
 
-        if let currentPlayerItem = self.playerItem {
+        if let currentPlayerItem = self.mutableState.playerItem {
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: currentPlayerItem)
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemFailedToPlayToEndTime, object: currentPlayerItem)
         }
 
-        self.playerItem = playerItem
+        self.mutableState.playerItem = playerItem
 
-        self.playerItem?.audioTimePitchAlgorithm = .spectral
-        self.playerItem?.preferredPeakBitRate = preferredPeakBitRate
-        self.playerItem?.preferredMaximumResolution = itemMaximumResolution
+        self.mutableState.playerItem?.audioTimePitchAlgorithm = .spectral
+        self.mutableState.playerItem?.preferredPeakBitRate = preferredPeakBitRate
+        self.mutableState.playerItem?.preferredMaximumResolution = mutableState.itemMaximumResolution
 
-        if let seek = seekTimeRequested, self.playerItem != nil {
-            seekTimeRequested = nil
+        if let seek = mutableState.seekTimeRequested, self.mutableState.playerItem != nil {
+            mutableState.seekTimeRequested = nil
             self.seek(to: seek)
         }
 
-        if let updatedPlayerItem = self.playerItem {
+        if let updatedPlayerItem = self.mutableState.playerItem {
             addPlayerItemObservers()
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidPlayToEndTime(_:)), name: .AVPlayerItemDidPlayToEndTime, object: updatedPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: updatedPlayerItem)
@@ -668,11 +697,11 @@ open class VideoPlayer: UIViewController {
     // MARK: - AVPlayerItemObservers
 
     nonisolated func addPlayerItemObservers() {
-        guard let playerItem else {
+        guard let playerItem = mutableState.playerItem else {
             return
         }
 
-        playerItemObservers.append(playerItem.observe(\.isPlaybackBufferEmpty, options: [.new, .old]) { [weak self] object, _ in
+        mutableState.playerItemObservers.append(playerItem.observe(\.isPlaybackBufferEmpty, options: [.new, .old]) { [weak self] object, _ in
             if object.isPlaybackBufferEmpty {
                 self?.bufferingState = .delayed
             }
@@ -685,7 +714,7 @@ open class VideoPlayer: UIViewController {
             }
         })
 
-        playerItemObservers.append(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new, .old]) { [weak self] object, _ in
+        mutableState.playerItemObservers.append(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new, .old]) { [weak self] object, _ in
             guard let self else { return }
 
             if object.isPlaybackLikelyToKeepUp {
@@ -705,14 +734,14 @@ open class VideoPlayer: UIViewController {
             }
         })
 
-        playerItemObservers.append(playerItem.observe(\.loadedTimeRanges, options: [.new, .old]) { [weak self] object, _ in
+        mutableState.playerItemObservers.append(playerItem.observe(\.loadedTimeRanges, options: [.new, .old]) { [weak self] object, _ in
             guard let self else { return }
 
             let timeRanges = object.loadedTimeRanges
             if let timeRange = timeRanges.first?.timeRangeValue {
                 let bufferedTime = CMTimeGetSeconds(CMTimeAdd(timeRange.start, timeRange.duration))
-                if lastBufferTime != bufferedTime {
-                    lastBufferTime = bufferedTime
+                if mutableState.lastBufferTime != bufferedTime {
+                    mutableState.lastBufferTime = bufferedTime
                     DispatchQueue.fw.mainAsync {
                         self.playerDelegate?.playerBufferTimeDidChange?(bufferedTime)
                     }
@@ -720,10 +749,10 @@ open class VideoPlayer: UIViewController {
             }
 
             let currentTime = CMTimeGetSeconds(object.currentTime())
-            let passedTime = lastBufferTime <= 0 ? currentTime : (lastBufferTime - currentTime)
+            let passedTime = mutableState.lastBufferTime <= 0 ? currentTime : (mutableState.lastBufferTime - currentTime)
 
             if (passedTime >= bufferSizeInSeconds ||
-                lastBufferTime == maximumDuration ||
+                mutableState.lastBufferTime == maximumDuration ||
                 timeRanges.first == nil) &&
                 playbackState == .playing {
                 DispatchQueue.fw.mainAsync {
@@ -734,16 +763,16 @@ open class VideoPlayer: UIViewController {
     }
 
     nonisolated func removePlayerItemObservers() {
-        for observer in playerItemObservers {
+        for observer in mutableState.playerItemObservers {
             observer.invalidate()
         }
-        playerItemObservers.removeAll()
+        mutableState.playerItemObservers.removeAll()
     }
 
     // MARK: - AVPlayerLayerObservers
 
     func addPlayerLayerObservers() {
-        playerLayerObserver = playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] _, _ in
+        mutableState.playerLayerObserver = playerView.playerLayer.observe(\.isReadyForDisplay, options: [.new, .old]) { [weak self] _, _ in
             DispatchQueue.fw.mainAsync { [weak self] in
                 if let strongSelf = self {
                     strongSelf.playerDelegate?.playerReady?(strongSelf)
@@ -754,21 +783,21 @@ open class VideoPlayer: UIViewController {
 
     nonisolated func removePlayerLayerObservers() {
         playbackDelegate = nil
-        playerLayerObserver?.invalidate()
-        playerLayerObserver = nil
+        mutableState.playerLayerObserver?.invalidate()
+        mutableState.playerLayerObserver = nil
     }
 
     // MARK: - AVPlayerObservers
 
     func addPlayerObservers() {
-        playerTimeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] _ in
+        mutableState.playerTimeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] _ in
             guard let self else { return }
             DispatchQueue.fw.mainAsync {
                 self.playbackDelegate?.playerCurrentTimeDidChange?(self)
             }
         })
 
-        playerObservers.append(player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] object, _ in
+        mutableState.playerObservers.append(player.observe(\.timeControlStatus, options: [.new, .old]) { [weak self] object, _ in
             switch object.timeControlStatus {
             case .paused:
                 self?.playbackState = .paused
@@ -783,13 +812,13 @@ open class VideoPlayer: UIViewController {
     }
 
     nonisolated func removePlayerObservers() {
-        if let observer = playerTimeObserver {
-            _player?.removeTimeObserver(observer)
+        if let observer = mutableState.playerTimeObserver {
+            mutableState.player?.removeTimeObserver(observer)
         }
-        for observer in playerObservers {
+        for observer in mutableState.playerObservers {
             observer.invalidate()
         }
-        playerObservers.removeAll()
+        mutableState.playerObservers.removeAll()
         playerDelegate = nil
     }
 }
