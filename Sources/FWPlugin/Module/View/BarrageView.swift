@@ -81,7 +81,7 @@ open class BarrageRenderView: UIView {
     private let idleCellsLock = DispatchSemaphore(value: 1)
     private let trackInfoLock = DispatchSemaphore(value: 1)
     private var lastestCell: BarrageCell?
-    private nonisolated(unsafe) var autoClear = false
+    private var autoClear = false
     private nonisolated(unsafe) var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
 
     private lazy var lowPositionView: UIView = {
