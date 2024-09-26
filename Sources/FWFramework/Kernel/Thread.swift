@@ -109,6 +109,11 @@ public final class MutableState<Value> {
     public func read<U>(_ closure: (Value) throws -> U) rethrows -> U {
         try lock.around { try closure(self.value) }
     }
+    
+    /// 同步方式读取值
+    public func read() -> Value {
+        read { $0 }
+    }
 
     /// 同步闭包方式修改值
     @discardableResult
