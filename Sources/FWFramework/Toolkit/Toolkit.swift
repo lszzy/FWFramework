@@ -480,7 +480,7 @@ extension Wrapper where Base: UIApplication {
     ) {
         let bgTask = SendableObject<UIBackgroundTaskIdentifier>(.invalid)
         let application = UIApplication.shared
-        bgTask.object = application.beginBackgroundTask(withName: name, expirationHandler: {
+        bgTask.object = application.beginBackgroundTask(withName: name, expirationHandler: { @MainActor @Sendable in
             expirationHandler?()
             application.endBackgroundTask(bgTask.object)
             bgTask.object = .invalid
