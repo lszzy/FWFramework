@@ -10,7 +10,7 @@ import UIKit
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 路由快速访问
-    public nonisolated(unsafe) static var router = Router.self
+    public static let router = Router.self
 }
 
 // MARK: - Router

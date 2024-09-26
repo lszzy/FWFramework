@@ -10,7 +10,7 @@ import Foundation
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 插件快速访问
-    public nonisolated(unsafe) static var plugin = PluginManager.self
+    public static let plugin = PluginManager.self
 }
 
 // MARK: - PluginProtocol
