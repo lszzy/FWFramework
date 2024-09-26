@@ -76,11 +76,11 @@ extension EnvironmentValues {
 
 extension Refresh {
     enum HeaderAnchorKey {
-        nonisolated(unsafe) static var defaultValue: Value = []
+        static var defaultValue: Value { [] }
     }
 
     enum HeaderUpdateKey {
-        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
+        static var defaultValue: Value { .init(enable: false) }
     }
 }
 
@@ -185,11 +185,11 @@ extension EnvironmentValues {
 
 extension Refresh {
     enum FooterAnchorKey {
-        nonisolated(unsafe) static var defaultValue: Value = []
+        static var defaultValue: Value { [] }
     }
 
     enum FooterUpdateKey {
-        nonisolated(unsafe) static var defaultValue: Value = .init(enable: false)
+        static var defaultValue: Value { .init(enable: false) }
     }
 }
 
