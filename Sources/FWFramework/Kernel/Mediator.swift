@@ -78,14 +78,19 @@ extension ModuleProtocol where Self: NSObject {
 /// 模式二：Runtime模式，详见方法：checkAllModules(selector:arguments:)
 ///
 /// [Bifrost](https://github.com/youzan/Bifrost)
-public class Mediator {
-    private nonisolated(unsafe) static var modulePool: [String: ModuleProtocol.Type] = [:]
-    private nonisolated(unsafe) static var moduleInvokePool: [String: Bool] = [:]
-
+public class Mediator: @unchecked Sendable {
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
     public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
     /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
-    public nonisolated(unsafe) static var delegateModeEnabled = false
+    public static var delegateModeEnabled: Bool {
+        get { shared.delegateModeEnabled }
+        set { shared.delegateModeEnabled = newValue }
+    }
+    
+    private static let shared = Mediator()
+    private var delegateModeEnabled = false
+    private var modulePool: [String: ModuleProtocol.Type] = [:]
+    private var moduleInvokePool: [String: Bool] = [:]
 
     /// 注册指定模块服务，返回注册结果
     @discardableResult
@@ -101,24 +106,24 @@ public class Mediator {
 
     private static func registerService<T>(_ type: T.Type, module: ModuleProtocol.Type, isPreset: Bool) -> Bool {
         let moduleId = String(describing: type as AnyObject)
-        if isPreset && modulePool[moduleId] != nil {
+        if isPreset && shared.modulePool[moduleId] != nil {
             return false
         }
 
-        modulePool[moduleId] = module
+        shared.modulePool[moduleId] = module
         return true
     }
 
     /// 取消注册指定模块服务
     public static func unregisterService<T>(_ type: T.Type) {
         let moduleId = String(describing: type as AnyObject)
-        modulePool.removeValue(forKey: moduleId)
+        shared.modulePool.removeValue(forKey: moduleId)
     }
 
     /// 通过服务协议获取指定模块实例。未注册时自动查找当前模块类：DemoModuleProtocol => DemoModule
     public static func loadModule<T>(_ type: T.Type) -> T? {
         let moduleId = String(describing: type as AnyObject)
-        var moduleType = modulePool[moduleId]
+        var moduleType = shared.modulePool[moduleId]
         if moduleType == nil {
             var module = sharedLoader.load(type)
             if module == nil, moduleId.hasSuffix("Protocol") {
@@ -127,7 +132,7 @@ public class Mediator {
             guard let module else { return nil }
 
             registerService(type, module: module)
-            moduleType = modulePool[moduleId]
+            moduleType = shared.modulePool[moduleId]
         }
         guard let moduleType else { return nil }
 
@@ -169,7 +174,7 @@ public class Mediator {
             // 如果当前模块类为某个模块类的父类，则不调用当前模块类方法
             var shouldInvoke = true
             let moduleClass = NSStringFromClass(type(of: moduleInstance))
-            if moduleInvokePool[moduleClass] == nil {
+            if shared.moduleInvokePool[moduleClass] == nil {
                 for obj in modules {
                     if let objSuperclass = (obj as? NSObject.Type)?.superclass(),
                        moduleClass == NSStringFromClass(objSuperclass) {
@@ -180,8 +185,8 @@ public class Mediator {
             }
             guard shouldInvoke else { continue }
 
-            if !moduleClass.isEmpty, moduleInvokePool[moduleClass] == nil {
-                moduleInvokePool[moduleClass] = true
+            if !moduleClass.isEmpty, shared.moduleInvokePool[moduleClass] == nil {
+                shared.moduleInvokePool[moduleClass] = true
             }
 
             let returnValue = moduleInstance.fw.invokeMethod(selector, objects: arguments)?.takeUnretainedValue() as? Bool ?? false
@@ -194,7 +199,7 @@ public class Mediator {
 
     /// 获取所有已注册模块类数组，按照优先级排序
     public static func allRegisteredModules() -> [ModuleProtocol.Type] {
-        let sortedModules = modulePool.values.sorted { module1, module2 in
+        let sortedModules = shared.modulePool.values.sorted { module1, module2 in
             let priority1 = module1.priority().rawValue
             let priority2 = module2.priority().rawValue
             return priority1 > priority2
@@ -204,7 +209,7 @@ public class Mediator {
 
     /// 插件调试描述
     public class func debugDescription() -> String {
-        let sortedModules = modulePool.sorted { module1, module2 in
+        let sortedModules = shared.modulePool.sorted { module1, module2 in
             let priority1 = module1.value.priority().rawValue
             let priority2 = module2.value.priority().rawValue
             return priority1 > priority2
