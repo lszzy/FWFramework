@@ -1393,13 +1393,16 @@ extension URLSession {
     fileprivate nonisolated(unsafe) static var innerHttpProxyDisabled = false
 }
 
+// MARK: - FrameworkStorage+Foundation
+extension FrameworkStorage {
+    fileprivate static var swizzleHttpProxyFinished = false
+}
+
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
-    private nonisolated(unsafe) static var swizzleHttpProxyFinished = false
-
     fileprivate static func swizzleHttpProxy() {
-        guard !swizzleHttpProxyFinished else { return }
-        swizzleHttpProxyFinished = true
+        guard !FrameworkStorage.swizzleHttpProxyFinished else { return }
+        FrameworkStorage.swizzleHttpProxyFinished = true
 
         NSObject.fw.swizzleClassMethod(
             URLSession.self,

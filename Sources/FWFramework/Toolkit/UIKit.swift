@@ -3479,6 +3479,12 @@ private class SaturationGrayView: UIView {
     }
 }
 
+// MARK: - FrameworkStorage+UIKit
+extension FrameworkStorage {
+    fileprivate static var swizzleUIKitScrollViewFinished = false
+    fileprivate static var swizzleUIKitTableViewCellFinished = false
+}
+
 // MARK: - FrameworkAutoloader+UIKit
 extension FrameworkAutoloader {
     @objc static func loadToolkit_UIKit() {
@@ -3876,11 +3882,9 @@ extension FrameworkAutoloader {
         }}
     }
 
-    private nonisolated(unsafe) static var swizzleUIKitScrollViewFinished = false
-
     fileprivate static func swizzleUIKitScrollView() {
-        guard !swizzleUIKitScrollViewFinished else { return }
-        swizzleUIKitScrollViewFinished = true
+        guard !FrameworkStorage.swizzleUIKitScrollViewFinished else { return }
+        FrameworkStorage.swizzleUIKitScrollViewFinished = true
 
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizerShouldBegin(_:)))
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
@@ -3888,11 +3892,9 @@ extension FrameworkAutoloader {
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldBeRequiredToFailBy:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldBeRequiredToFailBy:)))
     }
 
-    private nonisolated(unsafe) static var swizzleUIKitTableViewCellFinished = false
-
     fileprivate static func swizzleUIKitTableViewCell() {
-        guard !swizzleUIKitTableViewCellFinished else { return }
-        swizzleUIKitTableViewCellFinished = true
+        guard !FrameworkStorage.swizzleUIKitTableViewCellFinished else { return }
+        FrameworkStorage.swizzleUIKitTableViewCellFinished = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,

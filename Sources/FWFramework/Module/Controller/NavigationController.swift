@@ -312,6 +312,11 @@ private class FullscreenPopGestureRecognizerDelegate: NSObject, UIGestureRecogni
     }
 }
 
+// MARK: - FrameworkStorage+NavigationController
+extension FrameworkStorage {
+    fileprivate static var swizzleBarTransitionFinished = false
+}
+
 // MARK: - FrameworkAutoloader+NavigationController
 extension FrameworkAutoloader {
     @objc static func loadModule_NavigationController() {
@@ -404,11 +409,9 @@ extension FrameworkAutoloader {
         }
     }
 
-    private nonisolated(unsafe) static var swizzleBarTransitionFinished = false
-
     fileprivate static func swizzleBarTransition() {
-        guard !swizzleBarTransitionFinished else { return }
-        swizzleBarTransitionFinished = true
+        guard !FrameworkStorage.swizzleBarTransitionFinished else { return }
+        FrameworkStorage.swizzleBarTransitionFinished = true
 
         NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
