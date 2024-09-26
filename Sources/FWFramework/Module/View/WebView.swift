@@ -552,7 +552,7 @@ public class WebViewCookieManager: NSObject {
     }
 
     /// Cookie日期格式化对象
-    public nonisolated(unsafe) static var cookieDateFormatter: DateFormatter = {
+    public static let cookieDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)

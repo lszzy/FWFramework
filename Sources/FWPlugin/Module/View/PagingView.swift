@@ -1203,7 +1203,7 @@ open class PagingSmoothView: UIView {
     let cellIdentifier = "cell"
     var currentListInitializeContentOffsetY: CGFloat = 0
     var singleScrollView: UIScrollView?
-    nonisolated(unsafe) var listScrollViewDict = [Int: UIScrollView]()
+    var listScrollViewDict = [Int: UIScrollView]()
 
     deinit {
         listScrollViewDict.values.forEach {
