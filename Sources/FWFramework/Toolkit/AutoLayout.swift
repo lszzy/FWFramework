@@ -1989,7 +1989,7 @@ extension UIView {
 
 // MARK: - FrameworkStorage+AutoLayout
 extension FrameworkStorage {
-    fileprivate static var swizzleAutoLayoutDebugFinished = false
+    fileprivate static var swizzleAutoLayoutDebug = false
 }
 
 // MARK: - FrameworkAutoloader+AutoLayout
@@ -2047,8 +2047,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleAutoLayoutDebug() {
-        guard !FrameworkStorage.swizzleAutoLayoutDebugFinished else { return }
-        FrameworkStorage.swizzleAutoLayoutDebugFinished = true
+        guard !FrameworkStorage.swizzleAutoLayoutDebug else { return }
+        FrameworkStorage.swizzleAutoLayoutDebug = true
 
         NSObject.fw.swizzleInstanceMethod(
             NSLayoutConstraint.self,

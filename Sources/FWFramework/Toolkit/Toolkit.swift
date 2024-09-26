@@ -2275,7 +2275,7 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
 
 // MARK: - FrameworkStorage+Toolkit
 extension FrameworkStorage {
-    fileprivate static var swizzleToolkitNavigationControllerFinished = false
+    fileprivate static var swizzleToolkitNavigationController = false
 }
 
 // MARK: - FrameworkAutoloader+Toolkit
@@ -2474,8 +2474,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleToolkitNavigationController() {
-        guard !FrameworkStorage.swizzleToolkitNavigationControllerFinished else { return }
-        FrameworkStorage.swizzleToolkitNavigationControllerFinished = true
+        guard !FrameworkStorage.swizzleToolkitNavigationController else { return }
+        FrameworkStorage.swizzleToolkitNavigationController = true
 
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,

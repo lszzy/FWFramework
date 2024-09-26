@@ -257,14 +257,14 @@ open class BadgeView: UIView, BadgeViewProtocol {
 
 // MARK: - FrameworkStorage+BadgeView
 extension FrameworkStorage {
-    fileprivate static var swizzleBadgeViewFinished = false
+    fileprivate static var swizzleBadgeView = false
 }
 
 // MARK: - FrameworkAutoloader+BadgeView
 extension FrameworkAutoloader {
     fileprivate static func swizzleBadgeView() {
-        guard !FrameworkStorage.swizzleBadgeViewFinished else { return }
-        FrameworkStorage.swizzleBadgeViewFinished = true
+        guard !FrameworkStorage.swizzleBadgeView else { return }
+        FrameworkStorage.swizzleBadgeView = true
 
         NSObject.fw.swizzleMethod(
             objc_getClass("UITabBarButton"),

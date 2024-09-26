@@ -452,14 +452,14 @@ extension EmptyViewDelegate {
 
 // MARK: - FrameworkStorage+EmptyPlugin
 extension FrameworkStorage {
-    fileprivate static var swizzleEmptyPluginFinished = false
+    fileprivate static var swizzleEmptyPlugin = false
 }
 
 // MARK: - FrameworkAutoloader+EmptyPlugin
 extension FrameworkAutoloader {
     fileprivate static func swizzleEmptyPlugin() {
-        guard !FrameworkStorage.swizzleEmptyPluginFinished else { return }
-        FrameworkStorage.swizzleEmptyPluginFinished = true
+        guard !FrameworkStorage.swizzleEmptyPlugin else { return }
+        FrameworkStorage.swizzleEmptyPlugin = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
