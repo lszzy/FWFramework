@@ -13,7 +13,7 @@ class AppDelegate: AppResponder {
     var backgroundTask: ((@escaping @Sendable () -> Void) -> Void)?
     var expirationHandler: (@MainActor @Sendable () -> Void)?
 
-    private nonisolated(unsafe) var latestCrashLog: String? {
+    private nonisolated var latestCrashLog: String? {
         get {
             UserDefaults.app.object(forKey: "latestCrashLog") as? String
         }
