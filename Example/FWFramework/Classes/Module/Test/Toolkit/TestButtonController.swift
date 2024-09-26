@@ -11,7 +11,7 @@ import FWFramework
 class TestButtonController: UIViewController, ViewControllerProtocol {
     var count: Int = 0
 
-    private var timer = SendableObject<Timer?>(nil)
+    private let timer = SendableObject<Timer?>(nil)
 
     @objc func timerAction() {
         Logger.debug("timerAction: %@", Date().app.string(format: "HH:mm:ss"))
