@@ -80,33 +80,33 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable, Sendable
     // MARK: - Config
     /// 自定义样式尺寸
     public static func setIndicatorSize(_ size: CGSize, for style: ProgressViewStyle) {
-        indicatorSizes[style.rawValue] = size
+        indicatorSizes.object[style.rawValue] = size
     }
 
     /// 自定义样式颜色
     public static func setIndicatorColor(_ color: UIColor?, for style: ProgressViewStyle) {
-        indicatorColors[style.rawValue] = color
+        indicatorColors.object[style.rawValue] = color
     }
 
-    private nonisolated(unsafe) static var indicatorSizes: [Int: CGSize] = [:]
-    private nonisolated(unsafe) static var indicatorColors: [Int: UIColor] = [:]
+    private static let indicatorSizes = SendableObject([Int: CGSize]())
+    private static let indicatorColors = SendableObject([Int: UIColor]())
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = Self.indicatorSizes[rawValue] {
+        if let indicatorSize = Self.indicatorSizes.object[rawValue] {
             return indicatorSize
         }
 
-        return Self.indicatorSizes[ProgressViewStyle.all.rawValue]
+        return Self.indicatorSizes.object[ProgressViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = Self.indicatorColors[rawValue] {
+        if let indicatorColor = Self.indicatorColors.object[rawValue] {
             return indicatorColor
         }
 
-        return Self.indicatorColors[ProgressViewStyle.all.rawValue]
+        return Self.indicatorColors.object[ProgressViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle
@@ -164,33 +164,33 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable, Sendabl
     // MARK: - Config
     /// 自定义样式尺寸，默认nil
     public static func setIndicatorSize(_ size: CGSize, for style: IndicatorViewStyle) {
-        indicatorSizes[style.rawValue] = size
+        indicatorSizes.object[style.rawValue] = size
     }
 
     /// 自定义样式颜色，默认nil
     public static func setIndicatorColor(_ color: UIColor?, for style: IndicatorViewStyle) {
-        indicatorColors[style.rawValue] = color
+        indicatorColors.object[style.rawValue] = color
     }
 
-    private nonisolated(unsafe) static var indicatorSizes: [Int: CGSize] = [:]
-    private nonisolated(unsafe) static var indicatorColors: [Int: UIColor] = [:]
+    private static let indicatorSizes = SendableObject([Int: CGSize]())
+    private static let indicatorColors = SendableObject([Int: UIColor]())
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = Self.indicatorSizes[rawValue] {
+        if let indicatorSize = Self.indicatorSizes.object[rawValue] {
             return indicatorSize
         }
 
-        return Self.indicatorSizes[IndicatorViewStyle.all.rawValue]
+        return Self.indicatorSizes.object[IndicatorViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = Self.indicatorColors[rawValue] {
+        if let indicatorColor = Self.indicatorColors.object[rawValue] {
             return indicatorColor
         }
 
-        return Self.indicatorColors[IndicatorViewStyle.all.rawValue]
+        return Self.indicatorColors.object[IndicatorViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle

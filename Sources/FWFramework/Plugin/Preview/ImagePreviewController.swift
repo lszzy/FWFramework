@@ -720,7 +720,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     /// sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
     /// zoomImageView 当前图片
     /// transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息
-    open nonisolated(unsafe) var animationEnteringBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
+    open var animationEnteringBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
 
     /// 转场时的实际动画内容，整个 block 会在一个 UIView animation block 里被调用，因此直接写动画内容即可，无需包裹一个 animation block
     ///
@@ -730,7 +730,7 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     /// sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
     /// zoomImageView 当前图片
     /// transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息
-    open nonisolated(unsafe) var animationBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
+    open var animationBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
 
     /// 动画结束后的事情，在执行完这个 block 后才会调用 [transitionContext completeTransition:]
     ///
@@ -740,14 +740,14 @@ open class ImagePreviewTransitionAnimator: NSObject, UIViewControllerAnimatedTra
     /// sourceImageRect 原界面上显示图片的 view 在 imagePreviewViewController.view 坐标系里的 rect，仅在 style 为 zoom 时有值，style 为 fade 时为 CGRectZero
     /// zoomImageView 当前图片
     /// transitionContext 转场动画的上下文，可通过它获取前后界面、动画容器等信息
-    open nonisolated(unsafe) var animationCompletionBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
+    open var animationCompletionBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ style: ImagePreviewTransitioningStyle, _ sourceImageRect: CGRect, _ zoomImageView: ZoomImageView, _ transitionContext: UIViewControllerContextTransitioning?) -> Void)?
 
     /// 动画回调句柄，动画开始和结束时调用
     ///
     /// animator 当前的动画器 animator
     /// isPresenting YES 表示当前正在 present，NO 表示正在 dismiss
     /// isFinished YES 表示动画结束，NO 表示动画开始
-    open nonisolated(unsafe) var animationCallbackBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ isFinished: Bool) -> Void)?
+    open var animationCallbackBlock: (@MainActor @Sendable (_ animator: ImagePreviewTransitionAnimator, _ isPresenting: Bool, _ isFinished: Bool) -> Void)?
 
     override public init() {
         super.init()
