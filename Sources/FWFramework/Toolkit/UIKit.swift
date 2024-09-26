@@ -170,7 +170,7 @@ extension Wrapper where Base: UIDevice {
         let identifier = DispatchQueue.fw.mainSyncIf {
             UIDevice.current.identifierForVendor
         } otherwise: {
-            UIDevice.innerCurrentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
+            FrameworkStorage.currentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
         }
         FrameworkStorage.deviceIDFV = identifier?.uuidString
         return FrameworkStorage.deviceIDFV
