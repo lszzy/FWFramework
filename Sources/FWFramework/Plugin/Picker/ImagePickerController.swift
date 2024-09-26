@@ -75,7 +75,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     }
 
     /// 当前相册列表，异步加载
-    open private(set) nonisolated(unsafe) var albumsArray: [AssetGroup] = []
+    open private(set) var albumsArray: [AssetGroup] = []
 
     /// 相册列表事件代理
     open weak var albumControllerDelegate: ImageAlbumControllerDelegate?
@@ -166,12 +166,10 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         let authorizationStatus = AssetManager.authorizationStatus
         if authorizationStatus == .notDetermined {
             AssetManager.requestAuthorization { [weak self] status in
-                DispatchQueue.main.async { [weak self] in
-                    if status == .notAuthorized {
-                        self?.showDeniedView()
-                    } else {
-                        self?.loadAlbumArray()
-                    }
+                if status == .notAuthorized {
+                    self?.showDeniedView()
+                } else {
+                    self?.loadAlbumArray()
                 }
             }
         } else if authorizationStatus == .notAuthorized {
@@ -257,13 +255,15 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
 
         let albumContentType = contentType
         DispatchQueue.global(qos: .default).async { [weak self] in
-            AssetManager.shared.enumerateAllAlbums(albumContentType: albumContentType) { [weak self] resultAssetsGroup in
+            AssetManager.shared.enumerateAllAlbums(albumContentType: albumContentType) { resultAssetsGroup in
                 if let resultAssetsGroup {
-                    self?.albumsArray.append(resultAssetsGroup)
+                    DispatchQueue.fw.mainAsync { [weak self] in
+                        self?.albumsArray.append(resultAssetsGroup)
+                    }
                 } else {
                     // 意味着遍历完所有的相簿了
-                    self?.sortAlbumArray()
-                    DispatchQueue.main.async { [weak self] in
+                    DispatchQueue.fw.mainAsync { [weak self] in
+                        self?.sortAlbumArray()
                         self?.refreshAlbumGroups()
                     }
                 }
@@ -271,7 +271,7 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
         }
     }
 
-    private nonisolated func sortAlbumArray() {
+    private func sortAlbumArray() {
         // 把隐藏相册排序强制放到最后
         var hiddenGroup: AssetGroup?
         for album in albumsArray {
