@@ -11,17 +11,17 @@ import FWFramework
 class TestThreadController: UIViewController, TableViewControllerProtocol {
     typealias TableElement = [String]
 
-    nonisolated(unsafe) var queueCount: Int = 10_000
+    let queueCount: Int = 10_000
 
-    @objc dynamic nonisolated(unsafe) var value: Int = 0
+    @objc dynamic var value: Int = 0
 
     func setupTableStyle() -> UITableView.Style {
         .grouped
     }
 
     func setupNavbar() {
-        let observer = observe(\.value) { [weak self] _, _ in
-            Logger.debug("KeyPath监听：%@", "\(self?.value ?? 0)")
+        let observer = observe(\.value, options: .new) { _, change in
+            Logger.debug("KeyPath监听：%@", "\(change.newValue ?? 0)")
         }
         value = 1
         value = 0
