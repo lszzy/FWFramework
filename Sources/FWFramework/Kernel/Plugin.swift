@@ -57,7 +57,7 @@ public protocol SingletonProtocol {
 /// 和Mediator对比如下：
 /// Plugin：和业务无关，侧重于工具类、基础设施、可替换，比如Toast、Loading等
 /// Mediator: 和业务相关，侧重于架构、业务功能、模块化，比如用户模块，订单模块等
-public class PluginManager {
+public class PluginManager: @unchecked Sendable {
     /// 内部Target类
     private class Target {
         var object: Any?
@@ -66,22 +66,11 @@ public class PluginManager {
         var isFactory: Bool = false
     }
 
-    /// 内部插件池
-    private nonisolated(unsafe) static var pluginPool: [String: Target] = [:]
-
-    /// 插件调试描述
-    public class func debugDescription() -> String {
-        var debugDescription = ""
-        var debugCount = 0
-        for (pluginId, target) in pluginPool {
-            debugCount += 1
-            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), pluginId, String(describing: (target.instance ?? target.object) as AnyObject)))
-        }
-        return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
-    }
-
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
     public static let sharedLoader = Loader<Any, Any>()
+    
+    private static let shared = PluginManager()
+    private var pluginPool: [String: Target] = [:]
 
     /// 注册单例插件，仅当插件未使用时生效，插件类或对象必须实现protocol
     @discardableResult
@@ -97,30 +86,30 @@ public class PluginManager {
 
     private static func registerPlugin<T>(_ type: T.Type, object: Any, isPreset: Bool) -> Bool {
         let pluginId = String(describing: type as AnyObject)
-        if let target = pluginPool[pluginId] {
+        if let target = shared.pluginPool[pluginId] {
             if target.locked { return false }
             if isPreset { return false }
         }
 
         let plugin = Target()
         plugin.object = object
-        pluginPool[pluginId] = plugin
+        shared.pluginPool[pluginId] = plugin
         return true
     }
 
     /// 取消插件注册，仅当插件未使用时生效
     public static func unregisterPlugin<T>(_ type: T.Type) {
         let pluginId = String(describing: type as AnyObject)
-        guard let target = pluginPool[pluginId] else { return }
+        guard let target = shared.pluginPool[pluginId] else { return }
         if target.locked { return }
 
-        pluginPool.removeValue(forKey: pluginId)
+        shared.pluginPool.removeValue(forKey: pluginId)
     }
 
     /// 延迟加载插件对象，调用后不可再注册该插件。未注册时自动查找当前模块类：DemoPluginProtocol => DemoPlugin
     public static func loadPlugin<T>(_ type: T.Type) -> T? {
         let pluginId = String(describing: type as AnyObject)
-        var target = pluginPool[pluginId]
+        var target = shared.pluginPool[pluginId]
         if target == nil {
             var object = sharedLoader.load(type)
             if object == nil, pluginId.hasSuffix("Protocol") {
@@ -129,7 +118,7 @@ public class PluginManager {
             guard let object else { return nil }
 
             registerPlugin(type, object: object)
-            target = pluginPool[pluginId]
+            target = shared.pluginPool[pluginId]
         }
         guard let plugin = target else { return nil }
         if plugin.instance != nil && !plugin.isFactory {
@@ -165,11 +154,22 @@ public class PluginManager {
     /// 释放插件对象并标记为未使用，释放后可重新注册该插件
     public static func unloadPlugin<T>(_ type: T.Type) {
         let pluginId = String(describing: type as AnyObject)
-        guard let plugin = pluginPool[pluginId] else { return }
+        guard let plugin = shared.pluginPool[pluginId] else { return }
 
         (plugin.instance as? PluginProtocol)?.pluginDidUnload()
         plugin.instance = nil
         plugin.isFactory = false
         plugin.locked = false
+    }
+    
+    /// 插件调试描述
+    public class func debugDescription() -> String {
+        var debugDescription = ""
+        var debugCount = 0
+        for (pluginId, target) in shared.pluginPool {
+            debugCount += 1
+            debugDescription.append(String(format: "%@. %@ : %@\n", NSNumber(value: debugCount), pluginId, String(describing: (target.instance ?? target.object) as AnyObject)))
+        }
+        return String(format: "\n========== PLUGIN ==========\n%@========== PLUGIN ==========", debugDescription)
     }
 }
