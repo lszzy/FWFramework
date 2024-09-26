@@ -92,12 +92,12 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
         }
         return nil
     }
-
+    
     /// 自动加载器调试描述
-    override public var debugDescription: String {
+    public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for methodName in debugMethods {
+        for methodName in shared.debugMethods {
             let formatName = methodName
                 .replacingOccurrences(of: "load", with: "")
                 .trimmingCharacters(in: .init(charactersIn: "_"))
@@ -119,8 +119,8 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
         shared.debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
 
         #if DEBUG
-        // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.shared.debugDescription)
-        Logger.debug(group: Logger.fw.moduleName, "%@", shared.debugDescription)
+        // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
+        Logger.debug(group: Logger.fw.moduleName, "%@", debugDescription())
         #endif
     }
 }
@@ -131,12 +131,12 @@ class FrameworkAutoloader: NSObject, @unchecked Sendable {
     static let shared = FrameworkAutoloader()
     
     fileprivate var debugMethods: [String] = []
-
+    
     /// 内部加载器调试描述
-    override var debugDescription: String {
+    override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for methodName in debugMethods {
+        for methodName in shared.debugMethods {
             let formatName = methodName
                 .replacingOccurrences(of: "load", with: "")
                 .trimmingCharacters(in: .init(charactersIn: "_"))
