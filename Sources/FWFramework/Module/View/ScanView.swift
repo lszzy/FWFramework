@@ -40,12 +40,16 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    public nonisolated(unsafe) static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] {
+        get { FrameworkStorage.metadataObjectTypesQRCode }
+        set { FrameworkStorage.metadataObjectTypesQRCode = newValue }
+    }
 
     /// 默认条形码类型，可自定义
-    public nonisolated(unsafe) static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
-        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
-    ]
+    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] {
+        get { FrameworkStorage.metadataObjectTypesBarcode }
+        set { FrameworkStorage.metadataObjectTypesBarcode = newValue }
+    }
 
     /// 预览视图，必须设置（传外界控制器视图）
     @MainActor open var preview: UIView? {
@@ -673,7 +677,7 @@ open class ScanView: UIView {
         return result
     }()
 
-    private nonisolated(unsafe) var displayLink: CADisplayLink?
+    private var displayLink = SendableObject<CADisplayLink?>(nil)
     private var isTop = true
     private var isSelected = false
 
@@ -715,8 +719,8 @@ open class ScanView: UIView {
     }
 
     deinit {
-        displayLink?.invalidate()
-        displayLink = nil
+        displayLink.object?.invalidate()
+        displayLink.object = nil
     }
 
     override open func draw(_ rect: CGRect) {
@@ -766,9 +770,9 @@ open class ScanView: UIView {
         guard scanlineImgView.image != nil else { return }
 
         contentView.addSubview(scanlineImgView)
-        if displayLink == nil {
-            displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
-            displayLink?.add(to: .main, forMode: .common)
+        if displayLink.object == nil {
+            displayLink.object = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
+            displayLink.object?.add(to: .main, forMode: .common)
         }
     }
 
@@ -776,15 +780,15 @@ open class ScanView: UIView {
     open func stopScanning() {
         guard
             scanlineImgView.image != nil,
-            displayLink != nil
+            displayLink.object != nil
         else {
             return
         }
 
         scanlineImgView.removeFromSuperview()
         _scanlineImgView = nil
-        displayLink?.invalidate()
-        displayLink = nil
+        displayLink.object?.invalidate()
+        displayLink.object = nil
     }
 
     // MARK: - Private
@@ -930,4 +934,12 @@ open class ScanView: UIView {
             pinchScaleBlock?(gesture.scale)
         }
     }
+}
+
+// MARK: - FrameworkStorage+ScanView
+extension FrameworkStorage {
+    fileprivate static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    fileprivate static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
+    ]
 }

@@ -126,7 +126,7 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
 }
 
 // MARK: - FrameworkStorage
-/// 框架内部存储器，用于扩展方式优化nonisolated(unsafe)静态变量声明问题
+/// 框架内部存储器，用于扩展方式优化nonisolated静态变量声明问题
 actor FrameworkStorage {}
 
 // MARK: - FrameworkAutoloader
