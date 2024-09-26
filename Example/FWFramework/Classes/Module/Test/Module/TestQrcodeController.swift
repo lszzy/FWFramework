@@ -9,10 +9,7 @@
 import FWFramework
 
 class TestQrcodeController: UIViewController, ViewControllerProtocol {
-    private nonisolated(unsafe) lazy var scanCode: ScanCode = {
-        let result = ScanCode()
-        return result
-    }()
+    private let scanCode = ScanCode()
 
     private lazy var scanView: ScanView = {
         let configuration = ScanViewConfiguration()
