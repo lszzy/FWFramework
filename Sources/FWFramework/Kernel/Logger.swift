@@ -194,13 +194,10 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
 @objc(ObjCLogger)
 public class Logger: NSObject {
     /// 全局日志级别，默认调试为All，正式为Off
-    public nonisolated(unsafe) static var level: LogLevel = {
-        #if DEBUG
-        .all
-        #else
-        .off
-        #endif
-    }()
+    public static var level: LogLevel {
+        get { FrameworkStorage.level }
+        set { FrameworkStorage.level = newValue }
+    }
 
     /// 记录类型日志，支持分组和用户信息
     /// - Parameters:
@@ -468,4 +465,15 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
             }
         }
     }
+}
+
+// MARK: - FrameworkStorage+Logger
+extension FrameworkStorage {
+    fileprivate static var level: LogLevel = {
+        #if DEBUG
+        .all
+        #else
+        .off
+        #endif
+    }()
 }

@@ -46,8 +46,15 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
-    @_spi(FW) public nonisolated(unsafe) static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
-    @_spi(FW) public nonisolated(unsafe) static var trackExposureBlock: (@MainActor (UIView) -> Void)?
+    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)? {
+        get { FrameworkStorage.trackClickBlock }
+        set { FrameworkStorage.trackClickBlock = newValue }
+    }
+    
+    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor (UIView) -> Void)? {
+        get { FrameworkStorage.trackExposureBlock }
+        set { FrameworkStorage.trackExposureBlock = newValue }
+    }
 
     // MARK: - Accessor
     /// 图片数组，支持String|URL|UIImage
@@ -1097,4 +1104,10 @@ open class BannerViewCell: UICollectionViewCell {
             titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
     }
+}
+
+// MARK: - FrameworkStorage+BannerView
+extension FrameworkStorage {
+    fileprivate static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
+    fileprivate static var trackExposureBlock: (@MainActor (UIView) -> Void)?
 }
