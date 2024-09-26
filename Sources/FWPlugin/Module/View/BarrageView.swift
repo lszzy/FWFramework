@@ -72,17 +72,41 @@ public enum BarrageRenderStatus: Int, Sendable {
 }
 
 open class BarrageRenderView: UIView {
+    private class Configuration: @unchecked Sendable {
+        var animatingCells: [BarrageCell] = []
+        var idleCells: [BarrageCell] = []
+        var renderStatus: BarrageRenderStatus = .stopped
+        var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
+        var autoClear = false
+    }
+    
     open var renderPositionStyle: BarrageRenderPositionStyle = .randomTracks
-    open private(set) nonisolated(unsafe) var animatingCells: [BarrageCell] = []
-    open private(set) nonisolated(unsafe) var idleCells: [BarrageCell] = []
-    open private(set) nonisolated(unsafe) var renderStatus: BarrageRenderStatus = .stopped
+    open private(set) nonisolated var animatingCells: [BarrageCell] {
+        get { configuration.animatingCells }
+        set { configuration.animatingCells = newValue }
+    }
+    open private(set) nonisolated var idleCells: [BarrageCell] {
+        get { configuration.idleCells }
+        set { configuration.idleCells = newValue }
+    }
+    open private(set) nonisolated var renderStatus: BarrageRenderStatus {
+        get { configuration.renderStatus }
+        set { configuration.renderStatus = newValue }
+    }
+    private nonisolated var trackNextAvailableTime: [String: BarrageTrackInfo] {
+        get { configuration.trackNextAvailableTime }
+        set { configuration.trackNextAvailableTime = newValue }
+    }
+    private nonisolated var autoClear: Bool {
+        get { configuration.autoClear }
+        set { configuration.autoClear = newValue }
+    }
 
+    private let configuration = Configuration()
     private let animatingCellsLock = DispatchSemaphore(value: 1)
     private let idleCellsLock = DispatchSemaphore(value: 1)
     private let trackInfoLock = DispatchSemaphore(value: 1)
     private var lastestCell: BarrageCell?
-    private var autoClear = false
-    private nonisolated(unsafe) var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
 
     private lazy var lowPositionView: UIView = {
         let result = UIView()
