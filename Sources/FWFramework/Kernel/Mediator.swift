@@ -10,7 +10,7 @@ import UIKit
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 中间件快速访问
-    public nonisolated(unsafe) static var mediator = Mediator.self
+    public static let mediator = Mediator.self
 }
 
 // MARK: - ModulePriority
