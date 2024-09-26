@@ -458,7 +458,7 @@ extension FrameworkAutoloader {
             UIImage.fw.imageNamed(name, bundle: bundle)
         }
 
-        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
+        FrameworkStorage.imageDecodeBlock = { data, scale, options in
             UIImage.fw.image(data: data, scale: scale, options: options)
         }
     }

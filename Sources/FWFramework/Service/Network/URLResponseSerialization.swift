@@ -169,9 +169,6 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
 
-    nonisolated(unsafe) static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
-    private nonisolated(unsafe) static var imageLock = NSLock()
-
     override public init() {
         super.init()
         acceptableContentTypes = ["application/octet-stream", "application/pdf", "image/tiff", "image/jpeg", "image/gif", "image/png", "image/ico", "image/x-icon", "image/bmp", "image/x-bmp", "image/x-xbitmap", "image/x-ms-bmp", "image/x-win-bitmap", "image/heic", "image/heif", "image/webp", "image/svg+xml"]
@@ -195,16 +192,16 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         }
 
         var image: UIImage?
-        imageLock.lock()
-        if imageDecodeBlock != nil {
-            image = imageDecodeBlock?(data, scale, options)
+        FrameworkStorage.imageLock.lock()
+        if FrameworkStorage.imageDecodeBlock != nil {
+            image = FrameworkStorage.imageDecodeBlock?(data, scale, options)
         } else {
             image = UIImage(data: data)
             if image?.images == nil, let cgImage = image?.cgImage {
                 image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
             }
         }
-        imageLock.unlock()
+        FrameworkStorage.imageLock.unlock()
         return image
     }
 
@@ -332,4 +329,10 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
 
         return try super.responseObject(for: response, data: data)
     }
+}
+
+// MARK: - FrameworkStorage+URLResponseSerialization
+extension FrameworkStorage {
+    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
+    fileprivate static var imageLock = NSLock()
 }
