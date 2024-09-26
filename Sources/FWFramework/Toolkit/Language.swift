@@ -112,28 +112,28 @@ extension Wrapper where Base: Bundle {
     /// 2. Locale.preferredLanguages包含语言和区域信息，可能返回App不支持的语言，示例：zh-Hans-CN；注意localizedLanguage重置为nil后无需下次启动即可获取到当前系统语言
     public static var systemLanguage: String? {
         get {
-            if let language = Bundle.innerSystemLanguage {
+            if let language = FrameworkStorage.systemLanguage {
                 return language
             }
             return Bundle.main.preferredLocalizations.first
         }
         set {
-            Bundle.innerSystemLanguage = newValue
+            FrameworkStorage.systemLanguage = newValue
         }
     }
 
     /// 读取或设置自定义本地化语言，未自定义时为空。(语言值对应本地化文件存在才会立即生效，如zh-Hans|en)，为空时清空自定义，会触发通知。默认只处理mainBundle语言，如果需要处理三方SDK和系统组件语言，详见Bundle分类
     public static var localizedLanguage: String? {
         get {
-            if let language = Bundle.innerLocalizedLanguage {
+            if let language = FrameworkStorage.localizedLanguage {
                 return !language.isEmpty ? language : nil
             }
             let language = UserDefaults.standard.string(forKey: "FWLocalizedLanguage")
-            Bundle.innerLocalizedLanguage = language ?? ""
+            FrameworkStorage.localizedLanguage = language ?? ""
             return language
         }
         set {
-            Bundle.innerLocalizedLanguage = newValue ?? ""
+            FrameworkStorage.localizedLanguage = newValue ?? ""
             Bundle.main.fw.localizedBundleEnabled = true
             if let language = newValue {
                 UserDefaults.standard.set(language, forKey: "FWLocalizedLanguage")
@@ -195,10 +195,10 @@ extension Notification.Name {
     public static let LanguageChanged = Notification.Name("FWLanguageChangedNotification")
 }
 
-// MARK: - Bundle+Language
-extension Bundle {
-    fileprivate nonisolated(unsafe) static var innerSystemLanguage: String?
-    fileprivate nonisolated(unsafe) static var innerLocalizedLanguage: String?
+// MARK: - FrameworkStorage+Language
+extension FrameworkStorage {
+    fileprivate static var systemLanguage: String?
+    fileprivate static var localizedLanguage: String?
 }
 
 // MARK: - FrameworkAutoloader+Language
