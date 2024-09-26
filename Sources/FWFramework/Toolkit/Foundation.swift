@@ -189,8 +189,8 @@ extension Wrapper where Base: NSObject {
         objc_sync_enter(NSObject.self)
         defer { objc_sync_exit(NSObject.self) }
 
-        guard !NSObject.innerOnceTokens.contains(token) else { return }
-        NSObject.innerOnceTokens.append(token)
+        guard !FrameworkStorage.onceTokens.contains(token) else { return }
+        FrameworkStorage.onceTokens.append(token)
         closure()
     }
 
@@ -302,10 +302,10 @@ extension Wrapper where Base: NSObject {
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(deadline: .now() + start, repeating: interval, leeway: .seconds(0))
 
-        NSObject.innerTaskSemaphore.wait()
-        let taskId = "\(NSObject.innerTaskPool.count)"
-        NSObject.innerTaskPool[taskId] = timer
-        NSObject.innerTaskSemaphore.signal()
+        FrameworkStorage.taskSemaphore.wait()
+        let taskId = "\(FrameworkStorage.taskPool.count)"
+        FrameworkStorage.taskPool[taskId] = timer
+        FrameworkStorage.taskSemaphore.signal()
 
         timer.setEventHandler {
             task()
@@ -320,12 +320,12 @@ extension Wrapper where Base: NSObject {
     /// 指定任务Id取消轮询任务
     public static func cancelTask(_ taskId: String?) {
         guard let taskId, !taskId.isEmpty else { return }
-        NSObject.innerTaskSemaphore.wait()
-        if let timer = NSObject.innerTaskPool[taskId] as? DispatchSourceTimer {
+        FrameworkStorage.taskSemaphore.wait()
+        if let timer = FrameworkStorage.taskPool[taskId] as? DispatchSourceTimer {
             timer.cancel()
-            NSObject.innerTaskPool.removeObject(forKey: taskId)
+            FrameworkStorage.taskPool.removeObject(forKey: taskId)
         }
-        NSObject.innerTaskSemaphore.signal()
+        FrameworkStorage.taskSemaphore.signal()
     }
 }
 
@@ -335,7 +335,7 @@ extension Wrapper where Base == Date {
     public static var currentTime: TimeInterval {
         get {
             // 没有同步过返回本地时间
-            if Date.innerCurrentBaseTime == 0 {
+            if FrameworkStorage.currentBaseTime == 0 {
                 // 是否本地有服务器时间
                 let preCurrentTime = UserDefaults.standard.object(forKey: "FWCurrentTime") as? NSNumber
                 let preLocalTime = UserDefaults.standard.object(forKey: "FWLocalTime") as? NSNumber
@@ -349,14 +349,14 @@ extension Wrapper where Base == Date {
                 }
                 // 同步过计算当前服务器时间
             } else {
-                let offsetTime = systemUptime - Date.innerLocalBaseTime
-                return Date.innerCurrentBaseTime + offsetTime
+                let offsetTime = systemUptime - FrameworkStorage.localBaseTime
+                return FrameworkStorage.currentBaseTime + offsetTime
             }
         }
         set {
-            Date.innerCurrentBaseTime = newValue
+            FrameworkStorage.currentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
-            Date.innerLocalBaseTime = systemUptime
+            FrameworkStorage.localBaseTime = systemUptime
 
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
@@ -385,13 +385,13 @@ extension Wrapper where Base == Date {
 
     /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
     public static var dateFormatter: DateFormatter {
-        get { Base.innerDateFormatter }
-        set { Base.innerDateFormatter = newValue }
+        get { FrameworkStorage.dateFormatter }
+        set { FrameworkStorage.dateFormatter = newValue }
     }
 
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
     public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
-        let formatter = Date.innerDateFormatter
+        let formatter = FrameworkStorage.dateFormatter
         formatter.dateFormat = format
         let date = formatter.date(from: string)
         return date
@@ -404,7 +404,7 @@ extension Wrapper where Base == Date {
 
     /// 转化为字符串，自定义格式
     public func string(format: String) -> String {
-        let formatter = Date.innerDateFormatter
+        let formatter = FrameworkStorage.dateFormatter
         formatter.dateFormat = format
         let string = formatter.string(from: base)
         return string
@@ -440,7 +440,7 @@ extension Wrapper where Base == Date {
 
     /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
     public static func formatServerDate(_ dateString: String) -> TimeInterval {
-        let dateFormatter = Date.innerServerDateFormatter
+        let dateFormatter = FrameworkStorage.serverDateFormatter
         let date = dateFormatter.date(from: dateString)
         return date?.timeIntervalSince1970 ?? 0
     }
@@ -1286,10 +1286,10 @@ extension Wrapper where Base: URLSession {
     /// 是否禁止网络代理抓包，不影响App请求，默认false
     public static var httpProxyDisabled: Bool {
         get {
-            Base.innerHttpProxyDisabled
+            FrameworkStorage.httpProxyDisabled
         }
         set {
-            Base.innerHttpProxyDisabled = newValue
+            FrameworkStorage.httpProxyDisabled = newValue
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
@@ -1361,40 +1361,31 @@ extension Wrapper where Base: UserDefaults {
     }
 }
 
-// MARK: - NSObject+Foundation
-extension NSObject {
-    fileprivate nonisolated(unsafe) static var innerOnceTokens = [AnyHashable]()
-    fileprivate nonisolated(unsafe) static var innerTaskPool = NSMutableDictionary()
-    fileprivate nonisolated(unsafe) static var innerTaskSemaphore = DispatchSemaphore(value: 1)
-}
-
-// MARK: - Date+Foundation
-extension Date {
-    fileprivate nonisolated(unsafe) static var innerCurrentBaseTime: TimeInterval = 0
-    fileprivate nonisolated(unsafe) static var innerLocalBaseTime: TimeInterval = 0
-    fileprivate nonisolated(unsafe) static var innerDateFormatter: DateFormatter = {
+// MARK: - FrameworkStorage+Foundation
+extension FrameworkStorage {
+    fileprivate static var onceTokens = [AnyHashable]()
+    fileprivate static var taskPool = NSMutableDictionary()
+    fileprivate static var taskSemaphore = DispatchSemaphore(value: 1)
+    
+    fileprivate static var currentBaseTime: TimeInterval = 0
+    fileprivate static var localBaseTime: TimeInterval = 0
+    fileprivate static var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
         return formatter
     }()
 
-    fileprivate nonisolated(unsafe) static var innerServerDateFormatter: DateFormatter = {
+    fileprivate static var serverDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "GMT")
         formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
         formatter.locale = Locale(identifier: "en_US")
         return formatter
     }()
-}
-
-// MARK: - UserDefaults+Foundation
-extension URLSession {
-    fileprivate nonisolated(unsafe) static var innerHttpProxyDisabled = false
-}
-
-// MARK: - FrameworkStorage+Foundation
-extension FrameworkStorage {
+    
+    fileprivate static var httpProxyDisabled = false
+    
     fileprivate static var swizzleHttpProxy = false
 }
 
@@ -1410,7 +1401,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
         ) { store in { selfObject, configuration in
-            if URLSession.innerHttpProxyDisabled {
+            if FrameworkStorage.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration)
@@ -1422,7 +1413,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
         ) { store in { selfObject, configuration, delegate, delegateQueue in
-            if URLSession.innerHttpProxyDisabled {
+            if FrameworkStorage.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
