@@ -39,22 +39,30 @@ extension WrapperGlobal {
 extension Wrapper where Base: WrapperObject {
     /// 执行加锁(支持任意对象)，等待信号量，自动创建信号量
     public func lock() {
-        lockSemaphore.wait()
+        locking.lock()
     }
 
     /// 执行解锁(支持任意对象)，发送信号量，自动创建信号量
     public func unlock() {
-        lockSemaphore.signal()
+        locking.unlock()
     }
 
-    private var lockSemaphore: DispatchSemaphore {
-        synchronized {
-            if let semaphore = property(forName: #function) as? DispatchSemaphore {
-                return semaphore
-            } else {
-                let semaphore = DispatchSemaphore(value: 1)
-                setProperty(semaphore, forName: #function)
-                return semaphore
+    /// 延迟创建锁，默认SemaphoreLock
+    public var locking: LockingProtocol {
+        get {
+            synchronized {
+                if let result = property(forName: #function) as? LockingProtocol {
+                    return result
+                } else {
+                    let result = SemaphoreLock()
+                    setProperty(result, forName: #function)
+                    return result
+                }
+            }
+        }
+        set {
+            synchronized {
+                setProperty(newValue, forName: #function)
             }
         }
     }
@@ -63,12 +71,12 @@ extension Wrapper where Base: WrapperObject {
     public var queue: DispatchQueue {
         get {
             synchronized {
-                if let queue = property(forName: #function) as? DispatchQueue {
-                    return queue
+                if let result = property(forName: #function) as? DispatchQueue {
+                    return result
                 } else {
-                    let queue = DispatchQueue(label: #function)
-                    setProperty(queue, forName: #function)
-                    return queue
+                    let result = DispatchQueue(label: #function)
+                    setProperty(result, forName: #function)
+                    return result
                 }
             }
         }
@@ -157,7 +165,7 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func performBlock(
         _ block: @escaping @Sendable (Base) -> Void,
-        on: DispatchQueue,
+        on queue: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any where Base: Sendable {
         let cancelled = SendableValue<Bool>(false)

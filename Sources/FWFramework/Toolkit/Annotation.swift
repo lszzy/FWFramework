@@ -115,16 +115,16 @@ public class ValidatedValue<Value> {
 /// static var userModule: UserModuleService
 @propertyWrapper
 public struct ModuleValue<Value> {
-    private let serviceProtocol: Value.Type
+    private let serviceType: Value.Type
     private var module: Value?
 
     public init(
-        _ serviceProtocol: Value.Type,
+        _ serviceType: Value.Type,
         module: ModuleProtocol.Type? = nil
     ) {
-        self.serviceProtocol = serviceProtocol
+        self.serviceType = serviceType
         if let module {
-            Mediator.registerService(serviceProtocol, module: module)
+            Mediator.registerService(serviceType, module: module)
         }
     }
 
@@ -133,7 +133,7 @@ public struct ModuleValue<Value> {
             if let value = module {
                 return value
             } else {
-                return Mediator.loadModule(serviceProtocol)!
+                return Mediator.loadModule(serviceType)!
             }
         }
         set {
@@ -150,16 +150,16 @@ public struct ModuleValue<Value> {
 /// static var testPlugin: TestPluginProtocol
 @propertyWrapper
 public struct PluginValue<Value> {
-    private let pluginProtocol: Value.Type
+    private let pluginType: Value.Type
     private var plugin: Value?
 
     public init(
-        _ pluginProtocol: Value.Type,
+        _ pluginType: Value.Type,
         object: Any? = nil
     ) {
-        self.pluginProtocol = pluginProtocol
+        self.pluginType = pluginType
         if let object {
-            PluginManager.registerPlugin(pluginProtocol, object: object)
+            PluginManager.registerPlugin(pluginType, object: object)
         }
     }
 
@@ -168,7 +168,7 @@ public struct PluginValue<Value> {
             if let value = plugin {
                 return value
             } else {
-                return PluginManager.loadPlugin(pluginProtocol)!
+                return PluginManager.loadPlugin(pluginType)!
             }
         }
         set {
