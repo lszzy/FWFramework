@@ -23,6 +23,11 @@
 7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor-related functions, etc.)
 8. For more usage examples, please refer to the Example project
 
+## [5.12.2] - 2024-09-27
+
+### Changed
+* Compatible with Swift 5.8 and SwiftPackageIndex
+
 ## [5.12.1] - 2024-09-27
 
 ### Fixed
