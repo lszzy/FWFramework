@@ -53,58 +53,94 @@ extension MainActor {
     }
 }
 
-// MARK: - MutableState
-/// 可写状态包装器，线程安全
+// MARK: - LockingProtocol
+/// 通用互斥锁协议
+public protocol LockingProtocol {
+    /// 加锁方法
+    func lock()
+    
+    /// 解锁方法
+    func unlock()
+}
+
+extension LockingProtocol {
+    /// 加锁方式执行闭包并返回值
+    public func around<T>(_ closure: () throws -> T) rethrows -> T {
+        lock(); defer { unlock() }
+        return try closure()
+    }
+
+    /// 加锁方式执行闭包
+    public func around(_ closure: () throws -> Void) rethrows {
+        lock(); defer { unlock() }
+        try closure()
+    }
+}
+
+// MARK: - NSLock
+extension NSLock: LockingProtocol {}
+
+// MARK: - UnfairLock
+/// os_unfair_lock包装锁
+public final class UnfairLock: LockingProtocol {
+    private let unfairLock: os_unfair_lock_t
+
+    public init() {
+        self.unfairLock = .allocate(capacity: 1)
+        unfairLock.initialize(to: os_unfair_lock())
+    }
+
+    deinit {
+        unfairLock.deinitialize(count: 1)
+        unfairLock.deallocate()
+    }
+
+    public func lock() {
+        os_unfair_lock_lock(unfairLock)
+    }
+
+    public func unlock() {
+        os_unfair_lock_unlock(unfairLock)
+    }
+}
+
+// MARK: - SemaphoreLock
+/// DispatchSemaphore包装锁
+public final class SemaphoreLock: LockingProtocol {
+    private let dispatchSemaphore: DispatchSemaphore
+
+    public init() {
+        self.dispatchSemaphore = DispatchSemaphore(value: 1)
+    }
+
+    public func lock() {
+        dispatchSemaphore.wait()
+    }
+
+    public func unlock() {
+        dispatchSemaphore.signal()
+    }
+}
+
+// MARK: - ProtectedValue
+/// 线程安全的受保护值包装器
 ///
 /// [Alamofire](https://github.com/Alamofire/Alamofire)
 @dynamicMemberLookup
-public final class MutableState<Value> {
-    // MARK: - Lock
-    /// 可写状态锁，os_unfair_lock包装器
-    public final class Lock {
-        private let unfairLock: os_unfair_lock_t
-
-        public init() {
-            self.unfairLock = .allocate(capacity: 1)
-            unfairLock.initialize(to: os_unfair_lock())
-        }
-
-        deinit {
-            unfairLock.deinitialize(count: 1)
-            unfairLock.deallocate()
-        }
-        
-        /// 加锁方式执行闭包并返回值
-        public func around<T>(_ closure: () throws -> T) rethrows -> T {
-            lock(); defer { unlock() }
-            return try closure()
-        }
-
-        /// 加锁方式执行闭包
-        public func around(_ closure: () throws -> Void) rethrows {
-            lock(); defer { unlock() }
-            try closure()
-        }
-
-        private func lock() {
-            os_unfair_lock_lock(unfairLock)
-        }
-
-        private func unlock() {
-            os_unfair_lock_unlock(unfairLock)
-        }
-    }
-    
-    // MARK: - Accessor
-    private let lock = Lock()
+public final class ProtectedValue<Value>: @unchecked Sendable {
+    private let lock = UnfairLock()
     private var value: Value
 
-    // MARK: - Lifecycle
     public init(_ value: Value) {
         self.value = value
     }
+    
+    /// 同步方式读取或设置值
+    public var protectedValue: Value {
+        get { read() }
+        set { write(newValue) }
+    }
 
-    // MARK: - Public
     /// 同步闭包方式读取或转换值
     public func read<U>(_ closure: (Value) throws -> U) rethrows -> U {
         try lock.around { try closure(self.value) }
@@ -136,13 +172,13 @@ public final class MutableState<Value> {
     }
 }
 
-extension MutableState: Equatable where Value: Equatable {
-    public static func ==(lhs: MutableState<Value>, rhs: MutableState<Value>) -> Bool {
+extension ProtectedValue: Equatable where Value: Equatable {
+    public static func ==(lhs: ProtectedValue<Value>, rhs: ProtectedValue<Value>) -> Bool {
         lhs.read { left in rhs.read { right in left == right }}
     }
 }
 
-extension MutableState: Hashable where Value: Hashable {
+extension ProtectedValue: Hashable where Value: Hashable {
     public func hash(into hasher: inout Hasher) {
         read { hasher.combine($0) }
     }
