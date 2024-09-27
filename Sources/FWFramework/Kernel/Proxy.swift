@@ -100,17 +100,29 @@ open class DelegateProxy<T>: NSObject {
     
 }
 
-// MARK: - WeakObject
-/// 弱引用对象容器类，用于解决关联对象weak引用等
-public class WeakObject {
+// MARK: - WeakValue
+/// 弱引用值容器类，用于解决关联值weak引用等
+public class WeakValue {
     
-    public private(set) weak var object: AnyObject?
+    public weak var value: AnyObject?
     
-    public init(object: AnyObject?) {
-        self.object = object
+    @available(*, deprecated, renamed: "value", message: "Use value instead")
+    public weak var object: AnyObject? { value }
+    
+    public init(_ value: AnyObject? = nil) {
+        self.value = value
     }
     
+    @available(*, deprecated, renamed: "init(_:)", message: "Use init(_:) instead")
+    public init(object: AnyObject?) {
+        self.value = object
+    }
+
 }
+
+/// 已废弃，弱引用值容器类
+@available(*, deprecated, renamed: "WeakValue", message: "Use WeakValue instead")
+public typealias WeakObject = WeakValue
 
 // MARK: - MulticastDelegate
 /// 多代理转发类

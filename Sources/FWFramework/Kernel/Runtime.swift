@@ -57,8 +57,8 @@ extension Wrapper where Base: WrapperObject {
     /// - Returns: 属性值
     public func property(forName name: String) -> Any? {
         let value = NSObject.fw.getAssociatedObject(base, key: name)
-        if let weakObject = value as? WeakObject {
-            return weakObject.object
+        if let weakValue = value as? WeakValue {
+            return weakValue.value
         }
         return value
     }
@@ -119,7 +119,7 @@ extension Wrapper where Base: WrapperObject {
     ///   - value: 属性值
     ///   - name: 属性名称
     public func setPropertyWeak(_ value: AnyObject?, forName name: String) {
-        NSObject.fw.setAssociatedObject(base, key: name, value: WeakObject(object: value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        NSObject.fw.setAssociatedObject(base, key: name, value: WeakValue(value), policy: .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     /// 设置Bool关联属性
@@ -173,7 +173,7 @@ extension Wrapper where Base: WrapperObject {
     ///   - forKey: 键名
     public func bindObjectWeak(_ object: AnyObject?, forKey key: String) {
         if let object = object {
-            allBoundObjects[key] = WeakObject(object: object)
+            allBoundObjects[key] = WeakValue(object)
         } else {
             allBoundObjects.removeValue(forKey: key)
         }
@@ -184,8 +184,8 @@ extension Wrapper where Base: WrapperObject {
     /// - Returns: 绑定的对象
     public func boundObject(forKey key: String) -> Any? {
         let object = allBoundObjects[key]
-        if let weakObject = object as? WeakObject {
-            return weakObject.object
+        if let weakValue = object as? WeakValue {
+            return weakValue.value
         }
         return object
     }
