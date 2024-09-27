@@ -16879,210 +16879,210 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 918,
+      "line": 922,
       "symbol": "PlayerCacheConfiguration.addDownloadedBytes(bytes:spent:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 939,
+      "line": 943,
       "symbol": "PlayerCacheManager",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 940,
+      "line": 944,
       "symbol": "PlayerCacheManager.playerCacheManagerDidUpdateCacheNotification",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 941,
+      "line": 945,
       "symbol": "PlayerCacheManager.playerCacheManagerDidFinishCacheNotification",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 942,
+      "line": 946,
       "symbol": "PlayerCacheManager.playerCacheConfigurationKey",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 943,
+      "line": 947,
       "symbol": "PlayerCacheManager.playerCacheFinishedErrorKey",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 945,
+      "line": 949,
       "symbol": "PlayerCacheManager.cacheDirectory",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 949,
+      "line": 953,
       "symbol": "PlayerCacheManager.cacheUpdateNotifyInterval",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 952,
+      "line": 956,
       "symbol": "PlayerCacheManager.cachedFilePath(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 962,
+      "line": 966,
       "symbol": "PlayerCacheManager.cacheConfiguration(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 967,
+      "line": 971,
       "symbol": "PlayerCacheManager.setFileNameRules(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 971,
+      "line": 975,
       "symbol": "PlayerCacheManager.calculateCachedSize()",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 984,
+      "line": 988,
       "symbol": "PlayerCacheManager.cleanAllCache()",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1005,
+      "line": 1009,
       "symbol": "PlayerCacheManager.cleanCache(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1023,
+      "line": 1027,
       "symbol": "PlayerCacheManager.addCacheFile(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1043,
+      "line": 1047,
       "symbol": "PlayerCacheSessionManager",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1044,
+      "line": 1048,
       "symbol": "PlayerCacheSessionManager.shared",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1046,
+      "line": 1050,
       "symbol": "PlayerCacheSessionManager.downloadQueue",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1052,
+      "line": 1056,
       "symbol": "PlayerCacheSessionManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1058,
+      "line": 1062,
       "symbol": "PlayerCacheWorker",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1059,
+      "line": 1063,
       "symbol": "PlayerCacheWorker.cacheConfiguration",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1060,
+      "line": 1064,
       "symbol": "PlayerCacheWorker.setupError",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1073,
+      "line": 1077,
       "symbol": "PlayerCacheWorker.init(url:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1110,
+      "line": 1114,
       "symbol": "PlayerCacheWorker.cacheData(_:for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1134,
+      "line": 1138,
       "symbol": "PlayerCacheWorker.cachedDataActions(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1210,
+      "line": 1214,
       "symbol": "PlayerCacheWorker.cachedData(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1225,
+      "line": 1229,
       "symbol": "PlayerCacheWorker.setContentInfo(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1231,
+      "line": 1235,
       "symbol": "PlayerCacheWorker.save()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1240,
+      "line": 1244,
       "symbol": "PlayerCacheWorker.startWritting()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
-      "line": 1249,
+      "line": 1253,
       "symbol": "PlayerCacheWorker.finishWritting()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
