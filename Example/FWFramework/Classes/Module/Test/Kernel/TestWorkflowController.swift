@@ -20,11 +20,11 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
 
     private static let testNotification = Notification.Name("TestWorkflowNotifiation")
     private static var notificationCount: Int = 0
-    private static var notificationTargets: [WeakObject] = []
+    private static var notificationTargets: [WeakValue] = []
 
     private static var kvoCount: Int = 0
     @objc private dynamic var kvoValue: Int = 0
-    private static var kvoTargets: [WeakObject] = []
+    private static var kvoTargets: [WeakValue] = []
 
     typealias TableElement = [String]
 
@@ -41,17 +41,17 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
 
         let notificationTarget = app.safeObserveNotification(Self.testNotification) { _ in
             TestWorkflowController.notificationCount += 1
-            let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
+            let targetCount = TestWorkflowController.notificationTargets.filter { $0.value != nil }.count
             UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.notificationTargets.append(WeakObject(notificationTarget))
+        TestWorkflowController.notificationTargets.append(WeakValue(notificationTarget))
 
         let kvoTarget = app.safeObserveProperty(\.kvoValue) { _, _ in
             TestWorkflowController.kvoCount += 1
-            let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
+            let targetCount = TestWorkflowController.kvoTargets.filter { $0.value != nil }.count
             UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.kvoTargets.append(WeakObject(kvoTarget))
+        TestWorkflowController.kvoTargets.append(WeakValue(kvoTarget))
     }
 
     func setupSubviews() {
@@ -151,30 +151,31 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
         }
 
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        appDelegate.backgroundTask = { completionHandler in
-            CacheFile.shared.setObject("后台任务开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        appDelegate.didEnterBackground = {
+            UIApplication.app.beginBackgroundTask({ completionHandler in
+                CacheFile.shared.setObject("后台任务开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-            DispatchQueue.global().async {
-                sleep(1)
-                CacheFile.shared.setObject("后台任务执行1秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                DispatchQueue.global().async {
+                    sleep(1)
+                    CacheFile.shared.setObject("后台任务执行1秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-                sleep(1)
-                CacheFile.shared.setObject("后台任务执行2秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    sleep(1)
+                    CacheFile.shared.setObject("后台任务执行2秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-                sleep(1)
-                CacheFile.shared.setObject("后台任务执行3秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    sleep(1)
+                    CacheFile.shared.setObject("后台任务执行3秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-                sleep(1)
-                CacheFile.shared.setObject("后台任务执行4秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    sleep(1)
+                    CacheFile.shared.setObject("后台任务执行4秒，未完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-                sleep(1)
-                CacheFile.shared.setObject("后台任务执行5秒，已完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    sleep(1)
+                    CacheFile.shared.setObject("后台任务执行5秒，已完成\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-                completionHandler()
-            }
-        }
-        appDelegate.expirationHandler = {
-            CacheFile.shared.setObject("后台任务已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    completionHandler()
+                }
+            }, expirationHandler: {
+                CacheFile.shared.setObject("后台任务已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            })
         }
     }
 
@@ -187,24 +188,25 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
         }
 
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        appDelegate.backgroundTask = { completionHandler in
-            CacheFile.shared.setObject("后台请求开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+        appDelegate.didEnterBackground = {
+            UIApplication.app.beginBackgroundTask({ completionHandler in
+                CacheFile.shared.setObject("后台请求开始\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
 
-            let request = TestModelRequest()
-            request.start { _ in
-                let string = "后台请求成功：\(request.safeResponseModel.name)\n时间：\(request.responseServerTime)"
-                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                let request = TestModelRequest()
+                request.start { _ in
+                    let string = "后台请求成功：\(request.safeResponseModel.name)\n时间：\(request.responseServerTime)"
+                    CacheFile.shared.setObject(string, forKey: "backgroundTask")
 
-                completionHandler()
-            } failure: { _ in
-                let string = "后台请求失败：\(request.error?.localizedDescription ?? "")\n时间：\(request.responseServerTime)"
-                CacheFile.shared.setObject(string, forKey: "backgroundTask")
+                    completionHandler()
+                } failure: { _ in
+                    let string = "后台请求失败：\(request.error?.localizedDescription ?? "")\n时间：\(request.responseServerTime)"
+                    CacheFile.shared.setObject(string, forKey: "backgroundTask")
 
-                completionHandler()
-            }
-        }
-        appDelegate.expirationHandler = {
-            CacheFile.shared.setObject("后台请求已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+                    completionHandler()
+                }
+            }, expirationHandler: {
+                CacheFile.shared.setObject("后台请求已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
+            })
         }
     }
 }

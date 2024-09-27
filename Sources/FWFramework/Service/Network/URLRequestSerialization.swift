@@ -145,28 +145,28 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
               fileURL.isFileURL,
               let outputStream = OutputStream(url: fileURL, append: false) else { return nil }
 
-        let sendableError = SendableObject<Error?>(nil)
-        let sendableInputStream = SendableObject(inputStream)
-        let sendableOutputStream = SendableObject(outputStream)
+        let sendableError = SendableValue<Error?>(nil)
+        let sendableInputStream = SendableValue(inputStream)
+        let sendableOutputStream = SendableValue(outputStream)
         DispatchQueue.global(qos: .default).async {
-            sendableInputStream.object.schedule(in: .current, forMode: .default)
-            sendableOutputStream.object.schedule(in: .current, forMode: .default)
+            sendableInputStream.value.schedule(in: .current, forMode: .default)
+            sendableOutputStream.value.schedule(in: .current, forMode: .default)
 
-            sendableInputStream.object.open()
-            sendableOutputStream.object.open()
+            sendableInputStream.value.open()
+            sendableOutputStream.value.open()
 
-            while sendableInputStream.object.hasBytesAvailable && sendableOutputStream.object.hasSpaceAvailable {
+            while sendableInputStream.value.hasBytesAvailable && sendableOutputStream.value.hasSpaceAvailable {
                 var buffer = [UInt8](repeating: 0, count: 1024)
 
-                let bytesRead = sendableInputStream.object.read(&buffer, maxLength: 1024)
-                if sendableInputStream.object.streamError != nil || bytesRead < 0 {
-                    sendableError.object = sendableInputStream.object.streamError
+                let bytesRead = sendableInputStream.value.read(&buffer, maxLength: 1024)
+                if sendableInputStream.value.streamError != nil || bytesRead < 0 {
+                    sendableError.value = sendableInputStream.value.streamError
                     break
                 }
 
-                let bytesWritten = sendableOutputStream.object.write(buffer, maxLength: bytesRead)
-                if sendableOutputStream.object.streamError != nil || bytesWritten < 0 {
-                    sendableError.object = sendableOutputStream.object.streamError
+                let bytesWritten = sendableOutputStream.value.write(buffer, maxLength: bytesRead)
+                if sendableOutputStream.value.streamError != nil || bytesWritten < 0 {
+                    sendableError.value = sendableOutputStream.value.streamError
                     break
                 }
 
@@ -175,12 +175,12 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
                 }
             }
 
-            sendableOutputStream.object.close()
-            sendableInputStream.object.close()
+            sendableOutputStream.value.close()
+            sendableInputStream.value.close()
 
             if completionHandler != nil {
                 DispatchQueue.main.async {
-                    completionHandler?(sendableError.object)
+                    completionHandler?(sendableError.value)
                 }
             }
         }

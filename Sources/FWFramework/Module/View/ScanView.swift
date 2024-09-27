@@ -38,14 +38,25 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
+    private actor Configuration {
+        static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+        static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+            .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
+        ]
+    }
+    
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    public nonisolated(unsafe) static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] {
+        get { Configuration.metadataObjectTypesQRCode }
+        set { Configuration.metadataObjectTypesQRCode = newValue }
+    }
 
     /// 默认条形码类型，可自定义
-    public nonisolated(unsafe) static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
-        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
-    ]
+    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] {
+        get { Configuration.metadataObjectTypesBarcode }
+        set { Configuration.metadataObjectTypesBarcode = newValue }
+    }
 
     /// 预览视图，必须设置（传外界控制器视图）
     @MainActor open var preview: UIView? {
@@ -673,9 +684,13 @@ open class ScanView: UIView {
         return result
     }()
 
-    private nonisolated(unsafe) var displayLink: CADisplayLink?
+    private let mutableState = MutableState()
     private var isTop = true
     private var isSelected = false
+    
+    private class MutableState: @unchecked Sendable {
+        var displayLink: CADisplayLink?
+    }
 
     // MARK: - Lifecycle
     /// 对象方法创建 ScanView
@@ -715,8 +730,8 @@ open class ScanView: UIView {
     }
 
     deinit {
-        displayLink?.invalidate()
-        displayLink = nil
+        mutableState.displayLink?.invalidate()
+        mutableState.displayLink = nil
     }
 
     override open func draw(_ rect: CGRect) {
@@ -766,9 +781,9 @@ open class ScanView: UIView {
         guard scanlineImgView.image != nil else { return }
 
         contentView.addSubview(scanlineImgView)
-        if displayLink == nil {
-            displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
-            displayLink?.add(to: .main, forMode: .common)
+        if mutableState.displayLink == nil {
+            mutableState.displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
+            mutableState.displayLink?.add(to: .main, forMode: .common)
         }
     }
 
@@ -776,15 +791,15 @@ open class ScanView: UIView {
     open func stopScanning() {
         guard
             scanlineImgView.image != nil,
-            displayLink != nil
+            mutableState.displayLink != nil
         else {
             return
         }
 
         scanlineImgView.removeFromSuperview()
         _scanlineImgView = nil
-        displayLink?.invalidate()
-        displayLink = nil
+        mutableState.displayLink?.invalidate()
+        mutableState.displayLink = nil
     }
 
     // MARK: - Private

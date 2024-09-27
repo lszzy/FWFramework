@@ -943,17 +943,27 @@ public class PlayerCacheManager: NSObject, @unchecked Sendable {
     public static let playerCacheConfigurationKey = "FWPlayerCacheConfigurationKey"
     public static let playerCacheFinishedErrorKey = "FWPlayerCacheFinishedErrorKey"
 
-    public nonisolated(unsafe) static var cacheDirectory: String = {
+    public static var cacheDirectory: String {
+        get { shared.cacheDirectory }
+        set { shared.cacheDirectory = newValue }
+    }
+
+    public static var cacheUpdateNotifyInterval: TimeInterval {
+        get { shared.cacheUpdateNotifyInterval }
+        set { shared.cacheUpdateNotifyInterval = newValue }
+    }
+    
+    private static let shared = PlayerCacheManager()
+    private var cacheDirectory: String = {
         let result = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "PlayerCache"])
         return result
     }()
-
-    public nonisolated(unsafe) static var cacheUpdateNotifyInterval: TimeInterval = 0.1
-    private nonisolated(unsafe) static var cacheFileNameRules: ((URL) -> String)?
+    private var cacheUpdateNotifyInterval: TimeInterval = 0.1
+    private var cacheFileNameRules: ((URL) -> String)?
 
     public static func cachedFilePath(for url: URL) -> String {
         var pathComponent = ""
-        if let block = cacheFileNameRules {
+        if let block = shared.cacheFileNameRules {
             pathComponent = block(url)
         } else {
             pathComponent = url.absoluteString.fw.md5Encode.fw.appendingPathExtension(url.pathExtension)
@@ -967,7 +977,7 @@ public class PlayerCacheManager: NSObject, @unchecked Sendable {
     }
 
     public static func setFileNameRules(_ block: ((URL) -> String)?) {
-        cacheFileNameRules = block
+        shared.cacheFileNameRules = block
     }
 
     public static func calculateCachedSize() throws -> UInt64 {

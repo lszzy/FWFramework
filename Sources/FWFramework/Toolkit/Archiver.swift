@@ -155,13 +155,15 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     /// 注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
     public static func registerType<T: AnyArchivable>(_ type: T.Type) {
         let key = String(describing: type as AnyObject)
-        registeredTypes[key] = type
+        Configuration.registeredTypes[key] = type
     }
 
     /// 归档类型加载器，加载未注册类型时会尝试调用并注册，block返回值为registerType方法type参数
     public static let sharedLoader = Loader<String, AnyArchivable.Type>()
 
-    private nonisolated(unsafe) static var registeredTypes: [String: AnyArchivable.Type] = [:]
+    private actor Configuration {
+        static var registeredTypes: [String: AnyArchivable.Type] = [:]
+    }
 
     // MARK: - Accessor
     /// 指定AnyArchivable对象或对象数组，自动处理归档数据
@@ -173,7 +175,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
                 archiveType = String(archiveType.dropFirst().dropLast())
                 isArray = true
             }
-            var objectType = ArchiveCoder.registeredTypes[archiveType]
+            var objectType = ArchiveCoder.Configuration.registeredTypes[archiveType]
             if objectType == nil {
                 if let loadType = ArchiveCoder.sharedLoader.load(archiveType) {
                     ArchiveCoder.registerType(loadType)

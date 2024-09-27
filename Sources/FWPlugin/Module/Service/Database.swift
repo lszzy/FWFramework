@@ -47,20 +47,30 @@ import SQLite3
 /// 备注：查询条件、排序条件、限制条件等语法和SQL语法一致，为空则无条件
 ///
 /// [WHC_ModelSqliteKit](https://github.com/netyouli/WHC_ModelSqliteKit)
-public class DatabaseManager {
+public class DatabaseManager: @unchecked Sendable {
     /// 全局数据库模型版本号，默认1.0
     ///
     /// 如果模型实现了databaseVersion且不为空，则会忽略全局版本号；
     /// 可设置为appVersion+appBuildVersion从而实现App升级时自动更新版本号
-    public nonisolated(unsafe) static var version = "1.0"
+    public static var version: String {
+        get { shared.version }
+        set { shared.version = newValue }
+    }
 
     /// 是否打印调试SQL语句，默认true
-    public nonisolated(unsafe) static var printSql = true
+    public static var printSql: Bool {
+        get { shared.printSql }
+        set { shared.printSql = newValue }
+    }
 
-    private nonisolated(unsafe) static var database: OpaquePointer!
-    private nonisolated(unsafe) static var semaphore = DispatchSemaphore(value: 1)
-    private nonisolated(unsafe) static var checkUpdate = true
-    private nonisolated(unsafe) static var isMigration = false
+    private static let shared = DatabaseManager()
+    private var version = "1.0"
+    private var printSql = true
+    private var database: OpaquePointer!
+    private var semaphore = DispatchSemaphore(value: 1)
+    private var checkUpdate = true
+    private var isMigration = false
+    private var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
 
     /// 保存模型到本地，主键存在时更新，不存在时新增
     @discardableResult
@@ -71,8 +81,8 @@ public class DatabaseManager {
     /// 新增模型数组到本地(事务方式)，模型数组对象类型要一致
     @discardableResult
     public static func inserts(_ models: [DatabaseModel]) -> Bool {
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var result = true
         if models.count > 0, openTable(type(of: models[0])) {
@@ -84,8 +94,8 @@ public class DatabaseManager {
             executeSql(result ? "COMMIT" : "ROLLBACK")
             close()
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
@@ -117,16 +127,16 @@ public class DatabaseManager {
     public static func query<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil, order: String? = nil, limit: String? = nil) -> [T] {
         guard localName(with: type) != nil else { return [] }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var models: [T] = []
         if openTable(type) {
             models = commonQuery(type, where: condition, order: order, limit: limit) as? [T] ?? []
             close()
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return models
     }
@@ -135,16 +145,16 @@ public class DatabaseManager {
     public static func query<T: DatabaseModel>(_ type: T.Type, sql: String) -> [T] {
         guard !sql.isEmpty, localName(with: type) != nil else { return [] }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var models: [T] = []
         if openTable(type) {
             models = startSqlQuery(type, sql: sql) as? [T] ?? []
             close()
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return models
     }
@@ -160,8 +170,8 @@ public class DatabaseManager {
         guard localName(with: type) != nil,
               !function.isEmpty else { return nil }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var resultArray: [[Any]] = []
         if openTable(type) {
@@ -172,7 +182,7 @@ public class DatabaseManager {
             }
 
             var ppStmt: OpaquePointer?
-            if sqlite3_prepare_v2(database, selectSql, -1, &ppStmt, nil) == SQLITE_OK {
+            if sqlite3_prepare_v2(shared.database, selectSql, -1, &ppStmt, nil) == SQLITE_OK {
                 let columnCount = sqlite3_column_count(ppStmt)
                 while sqlite3_step(ppStmt) == SQLITE_ROW {
                     var rowResultArray: [Any] = []
@@ -236,8 +246,8 @@ public class DatabaseManager {
                 }
             }
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
 
         if resultArray.count == 1 {
@@ -259,13 +269,13 @@ public class DatabaseManager {
         let primaryValue = getPrimaryValue(model)
         if primaryValue <= 0 { return false }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         let condition = String(format: "%@ = %ld", primaryKey, primaryValue)
         let result = updateModel(model, where: condition)
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
@@ -275,12 +285,12 @@ public class DatabaseManager {
     public static func update<T: DatabaseModel>(_ type: T.Type, value: T, where condition: String? = nil) -> Bool {
         guard localName(with: type) != nil else { return false }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         let result = updateModel(value, where: condition)
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
@@ -291,8 +301,8 @@ public class DatabaseManager {
         guard localName(with: type) != nil,
               !value.isEmpty else { return false }
 
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var result = false
         if openTable(type) {
@@ -304,8 +314,8 @@ public class DatabaseManager {
             result = executeSql(updateSql)
             close()
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
@@ -331,20 +341,20 @@ public class DatabaseManager {
     /// 删除本地模型对象
     @discardableResult
     public static func delete<T: DatabaseModel>(_ type: T.Type, where condition: String? = nil) -> Bool {
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         let result = commonDeleteModel(type, where: condition)
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
 
     /// 清空所有本地模型数据库
     public static func removeAllModels() {
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         let cachePath = databaseCacheDirectory(nil)
         if FileManager.default.fileExists(atPath: cachePath) {
@@ -358,23 +368,23 @@ public class DatabaseManager {
             }
         }
         removeModelFieldsCache(nil)
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
     }
 
     /// 清空指定本地模型数据库
     public static func removeModel<T: DatabaseModel>(_ type: T.Type) {
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         if let filePath = localPath(with: type) {
             try? FileManager.default.removeItem(atPath: filePath)
             log(String(format: "已经删除了数据库 -> %@", filePath))
         }
         removeModelFieldsCache(type)
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
     }
 
@@ -400,19 +410,17 @@ extension DatabaseManager {
         return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "Database"])
     }
 
-    fileprivate nonisolated(unsafe) static var modelFieldsCaches: [String: [String: DatabasePropertyInfo]] = [:]
-
     fileprivate static func removeModelFieldsCache(_ modelClass: AnyClass?) {
         guard let modelClass else {
-            modelFieldsCaches.removeAll()
+            shared.modelFieldsCaches.removeAll()
             return
         }
 
         let cachePrefix = NSStringFromClass(modelClass)
-        let cacheKeys = modelFieldsCaches.keys
+        let cacheKeys = shared.modelFieldsCaches.keys
         for cacheKey in cacheKeys {
             if cacheKey.hasPrefix(cachePrefix) {
-                modelFieldsCaches.removeValue(forKey: cacheKey)
+                shared.modelFieldsCaches.removeValue(forKey: cacheKey)
             }
         }
     }
@@ -420,12 +428,12 @@ extension DatabaseManager {
     fileprivate static func parseModelFields(_ modelClass: AnyClass, hasPrimary: Bool) -> [String: DatabasePropertyInfo] {
         let version = getModelVersion(modelClass)
         let cacheKey = NSStringFromClass(modelClass) + "_\(version)_\(hasPrimary ? 1 : 0)"
-        if let modelFields = modelFieldsCaches[cacheKey] {
+        if let modelFields = shared.modelFieldsCaches[cacheKey] {
             return modelFields
         }
 
         let modelFields = parseSubModelFields(modelClass, propertyName: nil, hasPrimary: hasPrimary, completion: nil)
-        modelFieldsCaches[cacheKey] = modelFields
+        shared.modelFieldsCaches[cacheKey] = modelFields
         return modelFields
     }
 
@@ -553,10 +561,10 @@ extension DatabaseManager {
 
     fileprivate static func getModelFieldNames(_ modelClass: AnyClass) -> [String] {
         var fieldNames: [String] = []
-        if database != nil {
+        if shared.database != nil {
             let sql = String(format: "pragma table_info ('%@')", getTableName(modelClass))
             var ppStmt: OpaquePointer?
-            if sqlite3_prepare_v2(database, sql, -1, &ppStmt, nil) == SQLITE_OK {
+            if sqlite3_prepare_v2(shared.database, sql, -1, &ppStmt, nil) == SQLITE_OK {
                 while sqlite3_step(ppStmt) == SQLITE_ROW {
                     let cols = sqlite3_column_count(ppStmt)
                     if cols > 1 {
@@ -575,7 +583,7 @@ extension DatabaseManager {
         let tableName = getTableName(modelClass)
         let cacheDirectory = databaseCacheDirectory(modelClass)
         let databaseCachePath = cacheDirectory.fw.appendingPath(localModelName)
-        if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
+        if sqlite3_open(databaseCachePath, &shared.database) == SQLITE_OK {
             let oldFieldNames = getModelFieldNames(modelClass)
             let newModelInfo = parseModelFields(modelClass, hasPrimary: false)
             var deleteFieldNames = ""
@@ -605,7 +613,7 @@ extension DatabaseManager {
                 deleteFieldNames = String(deleteFieldNames.dropLast())
                 let defaultKey = getPrimaryKey(modelClass)
                 if defaultKey != deleteFieldNames {
-                    checkUpdate = false
+                    shared.checkUpdate = false
                     var oldModelDatas: [DatabaseModel] = []
                     if let type = modelClass as? DatabaseModel.Type {
                         oldModelDatas = commonQuery(type) as? [DatabaseModel] ?? []
@@ -728,7 +736,7 @@ extension DatabaseManager {
 
     @discardableResult
     fileprivate static func executeSql(_ sql: String) -> Bool {
-        let result = sqlite3_exec(database, sql, nil, nil, nil) == SQLITE_OK
+        let result = sqlite3_exec(shared.database, sql, nil, nil, nil) == SQLITE_OK
         if !result {
             log(String(format: "执行失败 -> %@", sql), error: true)
         }
@@ -774,7 +782,7 @@ extension DatabaseManager {
     fileprivate static func openTable(_ modelClass: AnyClass) -> Bool {
         let cacheDirectory = autoHandleOldSqlite(modelClass)
         let version = getModelVersion(modelClass)
-        if checkUpdate {
+        if shared.checkUpdate {
             let localModelName = localName(with: modelClass)
             if let localModelName,
                localModelName.range(of: version) == nil {
@@ -783,15 +791,15 @@ extension DatabaseManager {
                 let oldVersion = self.version(modelName: localModelName)
                 if let oldVersion, !oldVersion.isEmpty,
                    let type = modelClass as? DatabaseModel.Type {
-                    isMigration = true
+                    shared.isMigration = true
                     type.databaseMigration?(oldVersion)
-                    isMigration = false
+                    shared.isMigration = false
                 }
             }
         }
-        checkUpdate = true
+        shared.checkUpdate = true
         let databaseCachePath = cacheDirectory.fw.appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(modelClass), version))
-        if sqlite3_open(databaseCachePath, &database) == SQLITE_OK {
+        if sqlite3_open(databaseCachePath, &shared.database) == SQLITE_OK {
             return createTable(modelClass)
         }
         return false
@@ -822,15 +830,15 @@ extension DatabaseManager {
     }
 
     fileprivate static func insert(_ model: DatabaseModel, isReplace: Bool) -> Bool {
-        if !isMigration {
-            semaphore.wait()
+        if !shared.isMigration {
+            shared.semaphore.wait()
         }
         var result = false
         if openTable(type(of: model)) {
             result = commonInsert(model, isReplace: isReplace)
             let value = result ? getPrimaryValue(model) : -1
             if result && value < 1 {
-                let rowId = Int(sqlite3_last_insert_rowid(database))
+                let rowId = Int(sqlite3_last_insert_rowid(shared.database))
                 let primaryKey = getPrimaryKey(type(of: model))
                 let primarySetter = DatabasePropertyInfo.setter(propertyName: primaryKey)
                 if let object = model as? NSObject, object.responds(to: primarySetter) {
@@ -839,8 +847,8 @@ extension DatabaseManager {
             }
             close()
         }
-        if !isMigration {
-            semaphore.signal()
+        if !shared.isMigration {
+            shared.semaphore.signal()
         }
         return result
     }
@@ -853,7 +861,7 @@ extension DatabaseManager {
         }
 
         var ppStmt: OpaquePointer?
-        if sqlite3_prepare_v2(database, sql, -1, &ppStmt, nil) == SQLITE_OK {
+        if sqlite3_prepare_v2(shared.database, sql, -1, &ppStmt, nil) == SQLITE_OK {
             let columnCount = sqlite3_column_count(ppStmt)
             while sqlite3_step(ppStmt) == SQLITE_ROW {
                 guard let model = autoNewSubmodel(modelClass) else { break }
@@ -1066,7 +1074,7 @@ extension DatabaseManager {
             log(String(format: "执行写入 -> %@", insertSql))
         }
 
-        if sqlite3_prepare_v2(database, insertSql, -1, &ppStmt, nil) == SQLITE_OK {
+        if sqlite3_prepare_v2(shared.database, insertSql, -1, &ppStmt, nil) == SQLITE_OK {
             for (idx, field) in fieldArray.enumerated() {
                 let propertyInfo = fieldDictionary[field]!
                 let value = valueArray[idx]
@@ -1144,7 +1152,7 @@ extension DatabaseManager {
         }
 
         var ppStmt: OpaquePointer?
-        if sqlite3_prepare_v2(database, updateSql, -1, &ppStmt, nil) == SQLITE_OK {
+        if sqlite3_prepare_v2(shared.database, updateSql, -1, &ppStmt, nil) == SQLITE_OK {
             for fieldName in fieldArray {
                 let propertyInfo = fieldDictionary[fieldName]!
                 var currentModel = model as? NSObject
@@ -1241,9 +1249,9 @@ extension DatabaseManager {
     }
 
     fileprivate static func close() {
-        if database != nil {
-            sqlite3_close(database)
-            database = nil
+        if shared.database != nil {
+            sqlite3_close(shared.database)
+            shared.database = nil
         }
     }
 

@@ -13,11 +13,13 @@ class AppConfig: Configuration {
 }
 
 extension AppConfig {
-    class Network {
-        nonisolated(unsafe) static var apiUrl = ""
+    class Network: @unchecked Sendable {
+        static let shared = Network()
+        
+        var apiUrl = ""
     }
 
-    var network: Network.Type { Network.self }
+    var network: Network { Network.shared }
 }
 
 class AppConfigTemplate: ConfigurationTemplate {

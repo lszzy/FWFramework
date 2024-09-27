@@ -42,7 +42,9 @@ extension WrapperGlobal {
 ///
 /// [FontAwesomeKit](https://github.com/PrideChung/FontAwesomeKit)
 open class Icon {
-    private nonisolated(unsafe) static var iconMappers: [String: Icon.Type] = [:]
+    private actor Configuration {
+        static var iconMappers: [String: Icon.Type] = [:]
+    }
 
     /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
     public static let sharedLoader = Loader<String, Icon.Type>()
@@ -50,13 +52,13 @@ open class Icon {
     /// 注册图标实现类，必须继承Icon，用于name快速查找，注意name不要重复
     open class func registerClass(_ iconClass: Icon.Type) {
         for (key, _) in iconClass.iconMapper() {
-            iconMappers[key] = iconClass
+            Configuration.iconMappers[key] = iconClass
         }
     }
 
     /// 指定名称和大小初始化图标对象
     open class func iconNamed(_ name: String, size: CGFloat) -> Icon? {
-        var iconClass = iconMappers[name]
+        var iconClass = Configuration.iconMappers[name]
         if iconClass == nil {
             iconClass = sharedLoader.load(name)
             if let iconClass {

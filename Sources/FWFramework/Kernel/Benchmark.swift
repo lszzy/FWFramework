@@ -28,23 +28,25 @@ extension WrapperGlobal {
 
 // MARK: - Benchmark
 /// 时间调试器
-public class Benchmark {
+public class Benchmark: @unchecked Sendable {
+    private static let shared = Benchmark()
+    
     // MARK: - Accessor
-    private nonisolated(unsafe) static var beginTimes: [String: TimeInterval] = [:]
-    private nonisolated(unsafe) static var endTimes: [String: TimeInterval] = [:]
+    private var beginTimes: [String: TimeInterval] = [:]
+    private var endTimes: [String: TimeInterval] = [:]
 
     // MARK: - Public
     /// 标记时间调试开始
     public static func begin(_ name: String) {
-        beginTimes[name] = Date().timeIntervalSince1970
+        shared.beginTimes[name] = Date().timeIntervalSince1970
     }
 
     /// 标记时间调试结束并打印消耗时间
     @discardableResult
     public static func end(_ name: String) -> TimeInterval {
-        let beginTime = beginTimes[name] ?? Date().timeIntervalSince1970
+        let beginTime = shared.beginTimes[name] ?? Date().timeIntervalSince1970
         let endTime = Date().timeIntervalSince1970
-        endTimes[name] = endTime
+        shared.endTimes[name] = endTime
 
         let timeInterval = endTime - beginTime
         #if DEBUG
@@ -56,8 +58,8 @@ public class Benchmark {
     /// 获取所有的消耗时间数据
     public static func benchmarks() -> [String: TimeInterval] {
         var times: [String: TimeInterval] = [:]
-        for (name, endTime) in endTimes {
-            let beginTime = beginTimes[name] ?? Date().timeIntervalSince1970
+        for (name, endTime) in shared.endTimes {
+            let beginTime = shared.beginTimes[name] ?? Date().timeIntervalSince1970
             times[name] = endTime - beginTime
         }
         return times

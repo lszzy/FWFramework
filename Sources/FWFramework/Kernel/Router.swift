@@ -10,7 +10,7 @@ import UIKit
 // MARK: - WrapperGlobal
 extension WrapperGlobal {
     /// 路由快速访问
-    public nonisolated(unsafe) static var router = Router.self
+    public static let router = Router.self
 }
 
 // MARK: - Router
@@ -20,7 +20,7 @@ extension WrapperGlobal {
 /// [MGJRouter](https://github.com/meili/MGJRouter)
 /// [FFRouter](https://github.com/imlifengfeng/FFRouter)
 @objc(ObjCRouter)
-public class Router: NSObject {
+public class Router: NSObject, @unchecked Sendable {
     // MARK: - Typealias
     /// URL路由上下文
     public class Context: NSObject, @unchecked Sendable {
@@ -116,16 +116,25 @@ public class Router: NSObject {
     public static let sharedLoader = Loader<String, Any>()
 
     /// 是否开启严格模式，开启后不会以上一层为fallback，默认false
-    public nonisolated(unsafe) static var strictMode = false
-
-    /// 路由规则，结构类似 ["beauty": [":id": [routerCoreKey: block]]]
-    private nonisolated(unsafe) static var routeRules = NSMutableDictionary()
+    public static var strictMode: Bool {
+        get { shared.strictMode }
+        set { shared.strictMode = newValue }
+    }
 
     private static let routeWildcardCharacter = "*"
     private static let routeParameterCharacter = ":"
     private static let routeSpecialCharacters = "/?&."
     private static let routeCoreKey = "FWRouterCore"
     private static let routeBlockKey = "FWRouterBlock"
+    
+    private static let shared = Router()
+    private var strictMode = false
+    private var routeRules = NSMutableDictionary()
+    private var routeFilter: (@MainActor @Sendable (Context) -> Bool)?
+    private var routeHandler: (@MainActor @Sendable (Context, Any) -> Any?)?
+    private var errorHandler: (@MainActor @Sendable (Context) -> Void)?
+    private var rewriteRules = [String: String]()
+    private var rewriteFilter: ((String) -> String)?
 
     // MARK: - Public
     /// 注册路由类或对象，批量注册路由规则
@@ -222,17 +231,26 @@ public class Router: NSObject {
 
     /// 取消注册所有 pattern
     public class func unregisterAllURLs() {
-        routeRules.removeAllObjects()
+        shared.routeRules.removeAllObjects()
     }
 
     /// 设置全局路由过滤器，URL 被访问时优先触发。如果返回true，继续解析pattern，否则停止解析
-    public nonisolated(unsafe) static var routeFilter: (@MainActor @Sendable (Context) -> Bool)?
+    public static var routeFilter: (@MainActor @Sendable (Context) -> Bool)? {
+        get { shared.routeFilter }
+        set { shared.routeFilter = newValue }
+    }
 
     /// 设置全局路由处理器，URL 被访问且有返回值时触发，可用于打开VC、附加设置等
-    public nonisolated(unsafe) static var routeHandler: (@MainActor @Sendable (Context, Any) -> Any?)?
+    public static var routeHandler: (@MainActor @Sendable (Context, Any) -> Any?)? {
+        get { shared.routeHandler }
+        set { shared.routeHandler = newValue }
+    }
 
     /// 设置全局错误句柄，URL 未注册时触发，可用于错误提示、更新提示等
-    public nonisolated(unsafe) static var errorHandler: (@MainActor @Sendable (Context) -> Void)?
+    public static var errorHandler: (@MainActor @Sendable (Context) -> Void)? {
+        get { shared.errorHandler }
+        set { shared.errorHandler = newValue }
+    }
 
     /// 预置全局默认路由处理器，仅当未设置routeHandler时生效，值为nil时默认打开VC
     /// - Parameter handler: 路由处理器
@@ -407,11 +425,11 @@ public class Router: NSObject {
                 }, isPreset: isPreset) && result
             }
         } else if let targetObject = clazz as? NSObject {
-            let sendableObject = SendableObject(targetObject)
+            let sendableObject = SendableValue(targetObject)
             for (key, obj) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(with: pattern, handler: { context in
-                    sendableObject.object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    sendableObject.value.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         }
@@ -476,17 +494,17 @@ public class Router: NSObject {
 
         // 假如 URLPattern 为 a/b/c, components 就是 @"a.b.c" 正好可以作为 KVC 的 key
         let components = pathComponents.joined(separator: ".")
-        var routeRule = routeRules.value(forKeyPath: components) as? NSMutableDictionary ?? NSMutableDictionary()
+        var routeRule = shared.routeRules.value(forKeyPath: components) as? NSMutableDictionary ?? NSMutableDictionary()
         guard routeRule.count >= 1 else { return }
 
         let lastComponent = pathComponents.last ?? ""
         pathComponents.removeLast()
 
         // 有可能是根 key，这样就是 self.routes 了
-        routeRule = routeRules
+        routeRule = shared.routeRules
         if pathComponents.count > 0 {
             let componentsWithoutLast = pathComponents.joined(separator: ".")
-            routeRule = routeRules.value(forKeyPath: componentsWithoutLast) as? NSMutableDictionary ?? NSMutableDictionary()
+            routeRule = shared.routeRules.value(forKeyPath: componentsWithoutLast) as? NSMutableDictionary ?? NSMutableDictionary()
         }
         routeRule.removeObject(forKey: lastComponent)
     }
@@ -494,7 +512,7 @@ public class Router: NSObject {
     private class func registerRoute(with pattern: String) -> NSMutableDictionary {
         let pathComponents = pathComponents(from: pattern)
 
-        var subRoutes = routeRules
+        var subRoutes = shared.routeRules
         for pathComponent in pathComponents {
             if subRoutes[pathComponent] == nil {
                 subRoutes[pathComponent] = NSMutableDictionary()
@@ -566,7 +584,7 @@ public class Router: NSObject {
 
     private class func extractParameters(from url: String) -> NSMutableDictionary {
         let parameters = NSMutableDictionary()
-        var subRoutes = routeRules
+        var subRoutes = shared.routeRules
         let pathComponents = pathComponents(from: url)
 
         var wildcardMatched = false
@@ -656,10 +674,11 @@ public class Router: NSObject {
 
 // MARK: - Router+Extension
 extension Router {
-    private nonisolated(unsafe) static var rewriteRules = [String: String]()
-
     /// 全局重写过滤器
-    public nonisolated(unsafe) static var rewriteFilter: ((String) -> String)?
+    public static var rewriteFilter: ((String) -> String)? {
+        get { shared.rewriteFilter }
+        set { shared.rewriteFilter = newValue }
+    }
 
     /// 根据重写规则，重写URL
     /// - Parameter url: 需要重写的url
@@ -669,7 +688,7 @@ extension Router {
         if let rewriteFilter {
             rewriteURL = rewriteFilter(rewriteURL)
         }
-        guard !rewriteURL.isEmpty, rewriteRules.count > 0 else { return rewriteURL }
+        guard !rewriteURL.isEmpty, shared.rewriteRules.count > 0 else { return rewriteURL }
 
         let rewriteCaptureGroups = rewriteCaptureGroups(originalURL: rewriteURL)
         rewriteURL = rewriteComponents(originalURL: rewriteURL, targetRule: rewriteCaptureGroups)
@@ -682,7 +701,7 @@ extension Router {
     ///   - targetRule: 目标规则
     public class func addRewriteRule(_ matchRule: String, targetRule: String) {
         guard !matchRule.isEmpty else { return }
-        rewriteRules[matchRule] = targetRule
+        shared.rewriteRules[matchRule] = targetRule
     }
 
     /// 批量添加重写规则
@@ -696,16 +715,16 @@ extension Router {
     /// 移除重写规则
     /// - Parameter matchRule: 匹配规则
     public class func removeRewriteRule(_ matchRule: String) {
-        rewriteRules.removeValue(forKey: matchRule)
+        shared.rewriteRules.removeValue(forKey: matchRule)
     }
 
     /// 移除所有的重写规则
     public class func removeAllRewriteRules() {
-        rewriteRules.removeAll()
+        shared.rewriteRules.removeAll()
     }
 
     private class func rewriteCaptureGroups(originalURL: String) -> String {
-        let rules = rewriteRules
+        let rules = shared.rewriteRules
         if rules.count > 0 {
             let targetURL = originalURL
             let replaceRx = try? NSRegularExpression(pattern: "[$]([$|#]?)(\\d+)", options: [])

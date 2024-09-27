@@ -432,7 +432,7 @@ extension Wrapper where Base: UIImage {
         options: WebImageOptions = [],
         context: [ImageCoderOptions: Any]? = nil
     ) async throws -> UIImage {
-        let sendableTarget = SendableObject(NSObject())
+        let sendableTarget = SendableValue(NSObject())
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 let receipt = UIImage.fw.downloadImage(url, options: options, context: context) { image, _, error in
@@ -442,10 +442,10 @@ extension Wrapper where Base: UIImage {
                         continuation.resume(throwing: error ?? RequestError.unknown)
                     }
                 }
-                sendableTarget.object.fw.setProperty(receipt, forName: #function)
+                sendableTarget.value.fw.setProperty(receipt, forName: #function)
             }
         } onCancel: {
-            let receipt = sendableTarget.object.fw.property(forName: #function)
+            let receipt = sendableTarget.value.fw.property(forName: #function)
             UIImage.fw.cancelImageDownload(receipt)
         }
     }
@@ -454,11 +454,11 @@ extension Wrapper where Base: UIImage {
 // MARK: - FrameworkAutoloader+ImagePlugin
 extension FrameworkAutoloader {
     @objc static func loadPlugin_ImagePlugin() {
-        ModuleBundle.imageNamedBlock = { name, bundle in
+        ModuleBundle.Configuration.imageNamedBlock = { name, bundle in
             UIImage.fw.imageNamed(name, bundle: bundle)
         }
 
-        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
+        ImageResponseSerializer.Configuration.imageDecodeBlock = { data, scale, options in
             UIImage.fw.image(data: data, scale: scale, options: options)
         }
     }

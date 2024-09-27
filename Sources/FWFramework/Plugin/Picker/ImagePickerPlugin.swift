@@ -695,12 +695,12 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
             }
         }
 
-        let sendableObjectDict = SendableObject<[Int: (Any, PHPickerResult)]>([:])
+        let sendableObjectDict = SendableValue<[Int: (Any, PHPickerResult)]>([:])
         let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
         let checkVideo = filterType.contains(.video) || filterType.rawValue < 1
         for (index, result) in results.enumerated() {
             // assetIdentifier为空，无法获取到PHAsset，且获取PHAsset需要用户授权
-            let sendableResult = SendableObject(result)
+            let sendableResult = SendableValue(result)
             let isVideo = checkVideo && result.itemProvider.hasItemConformingToTypeIdentifier(kUTTypeMovie as String)
             if !isVideo {
                 var objectClass: NSItemProviderReading.Type = UIImage.self
@@ -709,18 +709,18 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
                 }
 
                 result.itemProvider.loadObject(ofClass: objectClass) { object, _ in
-                    let sendableObject = SendableObject(object)
+                    let sendableObject = SendableValue(object)
                     DispatchQueue.main.async {
-                        if let image = sendableObject.object as? UIImage {
-                            sendableObjectDict.object[index] = (image, sendableResult.object)
-                        } else if let livePhoto = sendableObject.object as? PHLivePhoto {
-                            sendableObjectDict.object[index] = (livePhoto, sendableResult.object)
+                        if let image = sendableObject.value as? UIImage {
+                            sendableObjectDict.value[index] = (image, sendableResult.value)
+                        } else if let livePhoto = sendableObject.value as? PHLivePhoto {
+                            sendableObjectDict.value[index] = (livePhoto, sendableResult.value)
                         }
 
                         finishCount += 1
                         progressBlock?(picker, finishCount, totalCount)
                         if finishCount == totalCount {
-                            let objectList = sendableObjectDict.object.sorted { $0.key < $1.key }
+                            let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                             let sortedObjects = objectList.map(\.value.0)
                             let sortedResults = objectList.map(\.value.1)
                             completion?(picker, sortedObjects, sortedResults, false)
@@ -748,13 +748,13 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
                 let resultURL = videoURL
                 DispatchQueue.main.async {
                     if let resultURL {
-                        sendableObjectDict.object[index] = (resultURL, sendableResult.object)
+                        sendableObjectDict.value[index] = (resultURL, sendableResult.value)
                     }
 
                     finishCount += 1
                     progressBlock?(picker, finishCount, totalCount)
                     if finishCount == totalCount {
-                        let objectList = sendableObjectDict.object.sorted { $0.key < $1.key }
+                        let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                         let sortedObjects = objectList.map(\.value.0)
                         let sortedResults = objectList.map(\.value.1)
                         completion?(picker, sortedObjects, sortedResults, false)

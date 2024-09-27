@@ -251,12 +251,12 @@ public class ImageFrame {
 open class ImageCoder: @unchecked Sendable {
     /// 单例模式
     public static let shared = ImageCoder()
-
+    
     /// 扩展系统UTType
-    public nonisolated(unsafe) static let kUTTypeHEIC = "public.heic" as CFString
-    public nonisolated(unsafe) static let kUTTypeHEIF = "public.heif" as CFString
-    public nonisolated(unsafe) static let kUTTypeHEICS = "public.heics" as CFString
-    public nonisolated(unsafe) static let kUTTypeWEBP = "org.webmproject.webp" as CFString
+    public static var kUTTypeHEIC: CFString { "public.heic" as CFString }
+    public static var kUTTypeHEIF: CFString { "public.heif" as CFString }
+    public static var kUTTypeHEICS: CFString { "public.heics" as CFString }
+    public static var kUTTypeWEBP: CFString { "org.webmproject.webp" as CFString }
 
     /// 是否启用HEIC动图，因系统解码性能原因，默认为NO，禁用HEIC动图
     open var heicsEnabled: Bool = false

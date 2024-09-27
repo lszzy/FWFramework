@@ -38,13 +38,19 @@ public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
 
 // MARK: - CacheManager
 /// 缓存管理器
-public class CacheManager: NSObject {
+public class CacheManager: NSObject, @unchecked Sendable {
     /// 自定义缓存创建句柄，默认nil
-    public nonisolated(unsafe) static var factoryBlock: ((CacheType) -> CacheProtocol?)?
+    public static var factoryBlock: ((CacheType) -> CacheProtocol?)? {
+        get { shared.factoryBlock }
+        set { shared.factoryBlock = newValue }
+    }
+    
+    private static let shared = CacheManager()
+    private var factoryBlock: ((CacheType) -> CacheProtocol?)?
 
     /// 获取指定类型的缓存单例对象
     public static func manager(type: CacheType) -> CacheProtocol? {
-        if let cache = factoryBlock?(type) {
+        if let cache = shared.factoryBlock?(type) {
             return cache
         }
 

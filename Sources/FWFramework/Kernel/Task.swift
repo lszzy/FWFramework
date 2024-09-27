@@ -7,52 +7,6 @@
 
 import Foundation
 
-// MARK: - Wrapper+DispatchQueue
-extension Wrapper where Base: DispatchQueue {
-    /// 主线程安全异步执行句柄
-    public static func mainAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
-        MainActor.runAsync(execute: block)
-    }
-
-    /// 当主线程时执行句柄，非主线程不执行
-    public static func mainSyncIf(execute block: @MainActor () -> Void) {
-        MainActor.runSyncIf(execute: block)
-    }
-
-    /// 当主线程时执行句柄，非主线程执行另一个句柄
-    public static func mainSyncIf<T>(execute block: @MainActor () -> T, otherwise: () -> T) -> T where T: Sendable {
-        MainActor.runSyncIf(execute: block, otherwise: otherwise)
-    }
-}
-
-// MARK: - MainActor+Task
-extension MainActor {
-    /// 主Actor安全异步执行句柄
-    public static func runAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
-        if Thread.isMainThread {
-            MainActor.assumeIsolated(block)
-        } else {
-            DispatchQueue.main.async(execute: block)
-        }
-    }
-
-    /// 当主线程时执行句柄，非主线程不执行
-    public static func runSyncIf(execute block: @MainActor () -> Void) {
-        if Thread.isMainThread {
-            MainActor.assumeIsolated(block)
-        }
-    }
-
-    /// 当主线程时执行句柄，非主线程执行另一个句柄
-    public static func runSyncIf<T>(execute block: @MainActor () -> T, otherwise: () -> T) -> T where T: Sendable {
-        if Thread.isMainThread {
-            MainActor.assumeIsolated(block)
-        } else {
-            otherwise()
-        }
-    }
-}
-
 // MARK: - TaskOperation
 /// 任务操作类，可继承或直接使用
 open class TaskOperation: Operation, @unchecked Sendable {

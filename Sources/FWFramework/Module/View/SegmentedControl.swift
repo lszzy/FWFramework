@@ -205,7 +205,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         return result
     }()
 
-    @_spi(FW) public nonisolated(unsafe) var segmentWidth: CGFloat = 0
+    @_spi(FW) public var segmentWidth: CGFloat = 0
     @_spi(FW) public var segmentWidthsArray: [CGFloat] = []
     private var titleBackgroundLayers: [CALayer] = []
     private var segmentBackgroundLayers: [CALayer] = []
@@ -259,11 +259,6 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     }
 
     // MARK: - Override
-    override open func awakeFromNib() {
-        super.awakeFromNib()
-        segmentWidth = 0
-    }
-
     override open func layoutSubviews() {
         super.layoutSubviews()
         updateSegmentsRects()

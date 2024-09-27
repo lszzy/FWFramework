@@ -312,12 +312,12 @@ extension Wrapper where Base: NSObject {
             return swizzleClass(originalClass, selector: selector, block: block)
         }
 
-        objc_sync_enter(NSObject.innerSwizzleIdentifiers)
-        defer { objc_sync_exit(NSObject.innerSwizzleIdentifiers) }
+        objc_sync_enter(SwizzleConfiguration.swizzleIdentifiers)
+        defer { objc_sync_exit(SwizzleConfiguration.swizzleIdentifiers) }
 
         let swizzleIdentifier = String(format: "%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? "+" : "-", NSStringFromSelector(selector), identifier)
-        if !NSObject.innerSwizzleIdentifiers.contains(swizzleIdentifier) {
-            NSObject.innerSwizzleIdentifiers.add(swizzleIdentifier)
+        if !SwizzleConfiguration.swizzleIdentifiers.contains(swizzleIdentifier) {
+            SwizzleConfiguration.swizzleIdentifiers.add(swizzleIdentifier)
             return swizzleClass(originalClass, selector: selector, block: block)
         }
         return false
@@ -433,11 +433,6 @@ extension Wrapper where Base: NSObject {
     }
 }
 
-// MARK: - NSObject+Swizzle
-extension NSObject {
-    fileprivate nonisolated(unsafe) static var innerSwizzleIdentifiers = NSMutableSet()
-}
-
 // MARK: - SwizzleStore
 /// 方法交换存储器
 ///
@@ -457,4 +452,9 @@ public class SwizzleStore<MethodSignature, SwizzleSignature>: @unchecked Sendabl
         self.selector = selector
         self.original = original
     }
+}
+
+// MARK: - SwizzleConfiguration
+private actor SwizzleConfiguration {
+    static var swizzleIdentifiers = NSMutableSet()
 }

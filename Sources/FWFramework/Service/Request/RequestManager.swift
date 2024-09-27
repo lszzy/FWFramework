@@ -197,12 +197,12 @@ open class RequestManager: @unchecked Sendable {
             request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
 
             if let requestRetrier = request.config.requestRetrier {
-                let sendableResponseObject = SendableObject(responseObject)
+                let sendableResponseObject = SendableValue(responseObject)
                 requestRetrier.retryRequest(request, response: response, responseObject: responseObject, error: error) { [weak self] shouldRetry in
                     if shouldRetry {
                         self?.retrySessionTask(for: request, completionHandler: completionHandler)
                     } else {
-                        completionHandler?(response, sendableResponseObject.object, error)
+                        completionHandler?(response, sendableResponseObject.value, error)
                     }
                 }
             } else {

@@ -708,11 +708,11 @@ public class StatisticalManager: NSObject, @unchecked Sendable {
         return identifier
     }
 
-    private nonisolated(unsafe) static var swizzleStatisticalViewFinished = false
+    private var swizzleStatisticalViewFinished = false
 
     fileprivate static func swizzleStatisticalView() {
-        guard !swizzleStatisticalViewFinished else { return }
-        swizzleStatisticalViewFinished = true
+        guard !shared.swizzleStatisticalViewFinished else { return }
+        shared.swizzleStatisticalViewFinished = true
 
         NSObject.fw.swizzleInstanceMethod(
             UIView.self,

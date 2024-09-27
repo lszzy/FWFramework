@@ -327,15 +327,15 @@ public class Asset: NSObject, @unchecked Sendable {
                 return
             }
 
-            let sendableInfo = SendableObject(info)
-            let sendableExportSession = SendableObject(exportSession)
+            let sendableInfo = SendableValue(info)
+            let sendableExportSession = SendableValue(exportSession)
             exportSession.outputURL = outputURL
             exportSession.outputFileType = .mp4
             exportSession.exportAsynchronously {
-                if sendableExportSession.object.status == .completed {
-                    completion?(outputURL, sendableInfo.object)
+                if sendableExportSession.value.status == .completed {
+                    completion?(outputURL, sendableInfo.value)
                 } else {
-                    completion?(nil, sendableInfo.object)
+                    completion?(nil, sendableInfo.value)
                 }
             }
         }
@@ -600,22 +600,22 @@ public class AssetGroup: NSObject, @unchecked Sendable {
     /// - Parameters:
     ///   - options: 相册内资源的排序方式，可以选择日期最新的排在最前面，默认日期最新的排在最后面
     ///   - block: 枚举相册内资源时调用的 block，参数 result 表示每次枚举时对应的资源。枚举所有资源结束后，enumerationBlock 会被再调用一次，这时 result 的值为 nil。可以以此作为判断枚举结束的标记
-    public func enumerateAssets(options: AlbumSortType = .positive, using block: ((Asset?) -> Void)?) {
+    public func enumerateAssets(options: AlbumSortType = .positive, using block: (Asset?) -> Void) {
         let resultCount = phFetchResult.count
         if options == .reverse {
             for i in (0..<resultCount).reversed() {
                 let asset = Asset(phAsset: phFetchResult[i])
-                block?(asset)
+                block(asset)
             }
         } else {
             for i in 0..<resultCount {
                 let asset = Asset(phAsset: phFetchResult[i])
-                block?(asset)
+                block(asset)
             }
         }
 
         // For 循环遍历完毕，这时再调用一次 enumerationBlock，并传递 nil 作为实参，作为枚举资源结束的标记
-        block?(nil)
+        block(nil)
     }
 
     /// 重写比较方法，只要两个 AssetGroup 的 identifier 相同则认为它们是同一个 assetGroup
@@ -689,17 +689,21 @@ public class AssetManager: @unchecked Sendable {
         return status
     }
 
-    /// 调起系统询问是否授权访问“照片”的 UIAlertView
+    /// 调起系统询问是否授权访问“照片”的 界面
     ///
-    /// - Parameter completion: 授权结束后调用的 block，默认不在主线程上执行，如果需要在 block 中修改 UI，记得 dispatch 到 mainqueue
-    public static func requestAuthorization(completion: ((AssetAuthorizationStatus) -> Void)? = nil) {
+    /// - Parameter completion: 授权结束后调用的 block，主线程回调
+    public static func requestAuthorization(completion: (@MainActor @Sendable (AssetAuthorizationStatus) -> Void)? = nil) {
         if #available(iOS 14.0, *) {
             PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in
-                completion?(self.authorizationStatus)
+                DispatchQueue.fw.mainAsync {
+                    completion?(self.authorizationStatus)
+                }
             }
         } else {
             PHPhotoLibrary.requestAuthorization { _ in
-                completion?(self.authorizationStatus)
+                DispatchQueue.fw.mainAsync {
+                    completion?(self.authorizationStatus)
+                }
             }
         }
     }
@@ -851,7 +855,7 @@ public class AssetManager: @unchecked Sendable {
     ///   - showEmptyAlbum: 是否显示空相册（经过 contentType 过滤后仍为空的相册），默认false
     ///   - showSmartAlbum: 是否显示"智能相册"，默认true
     ///   - block: 参数 resultAssetsGroup 表示每次枚举时对应的相册。枚举所有相册结束后，enumerationBlock 会被再调用一次，这时 resultAssetsGroup 的值为 nil。可以以此作为判断枚举结束的标记。
-    public func enumerateAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool = false, showSmartAlbum: Bool = true, using block: ((AssetGroup?) -> Void)?) {
+    public func enumerateAllAlbums(albumContentType: AlbumContentType, showEmptyAlbum: Bool = false, showSmartAlbum: Bool = true, using block: (AssetGroup?) -> Void) {
         // 根据条件获取所有合适的相册，并保存到临时数组中
         let albumsArray = AssetManager.fetchAllAlbums(albumContentType: albumContentType, showEmptyAlbum: showEmptyAlbum, showSmartAlbum: showSmartAlbum)
         // 创建一个 PHFetchOptions，用于 AssetGroup 对资源的排序以及对内容类型进行控制
@@ -859,11 +863,11 @@ public class AssetManager: @unchecked Sendable {
         // 遍历结果，生成对应的 AssetGroup，并调用 enumerationBlock
         for i in 0..<albumsArray.count {
             let assetsGroup = AssetGroup(phAssetCollection: albumsArray[i], fetchAssetsOptions: phFetchOptions)
-            block?(assetsGroup)
+            block(assetsGroup)
         }
 
         // 所有结果遍历完毕，这时再调用一次 enumerationBlock，并传递 nil 作为实参，作为枚举相册结束的标记
-        block?(nil)
+        block(nil)
     }
 
     /// 保存图片到指定相册（传入 CGImage）
@@ -1017,9 +1021,9 @@ public class AssetLivePhoto: @unchecked Sendable {
 
     /// 导出LivePhoto资源
     public class func extractResources(from livePhoto: PHLivePhoto, completion: @escaping @MainActor @Sendable (Resources?) -> Void) {
-        let sendableLivePhoto = SendableObject(livePhoto)
+        let sendableLivePhoto = SendableValue(livePhoto)
         queue.async {
-            shared.extractResources(from: sendableLivePhoto.object, completion: completion)
+            shared.extractResources(from: sendableLivePhoto.value, completion: completion)
         }
     }
 
@@ -1072,9 +1076,9 @@ public class AssetLivePhoto: @unchecked Sendable {
                     if let isDegraded = info[PHLivePhotoInfoIsDegradedKey] as? Bool, isDegraded {
                         return
                     }
-                    let sendableLivePhoto = SendableObject(livePhoto)
+                    let sendableLivePhoto = SendableValue(livePhoto)
                     DispatchQueue.main.async {
-                        completion(sendableLivePhoto.object, (pairedImageURL, pairedVideoURL))
+                        completion(sendableLivePhoto.value, (pairedImageURL, pairedVideoURL))
                     }
                 })
             } else {
@@ -1214,11 +1218,11 @@ public class AssetLivePhoto: @unchecked Sendable {
             let _stillImagePercent: Float = 0.5
             stillImageTimeMetadataAdapter.append(AVTimedMetadataGroup(items: [metadataItemForStillImageTime()], timeRange: makeStillImageTimeRange(asset: videoAsset, percent: _stillImagePercent, inFrameCount: frameCount)))
             // For end of writing / progress
-            let writingVideoFinished = SendableObject<Bool>(false)
-            let writingAudioFinished = SendableObject<Bool>(false)
-            let currentFrameCount = SendableObject<Int>(0)
+            let writingVideoFinished = SendableValue<Bool>(false)
+            let writingAudioFinished = SendableValue<Bool>(false)
+            let currentFrameCount = SendableValue<Int>(0)
             @Sendable func didCompleteWriting() {
-                guard writingAudioFinished.object && writingVideoFinished.object else { return }
+                guard writingAudioFinished.value && writingVideoFinished.value else { return }
                 assetWriter?.finishWriting {
                     if self.assetWriter?.status == .completed {
                         completion(destinationURL)
@@ -1229,48 +1233,48 @@ public class AssetLivePhoto: @unchecked Sendable {
             }
             // Start writing video
             if videoReader?.startReading() ?? false {
-                let sendableVideoWriterInput = SendableObject(videoWriterInput)
-                let sendableVideoReaderOutput = SendableObject(videoReaderOutput)
+                let sendableVideoWriterInput = SendableValue(videoWriterInput)
+                let sendableVideoReaderOutput = SendableValue(videoReaderOutput)
                 videoWriterInput.requestMediaDataWhenReady(on: DispatchQueue(label: "videoWriterInputQueue")) {
-                    while sendableVideoWriterInput.object.isReadyForMoreMediaData {
-                        if let sampleBuffer = sendableVideoReaderOutput.object.copyNextSampleBuffer() {
-                            currentFrameCount.object += 1
-                            let percent = CGFloat(currentFrameCount.object) / CGFloat(frameCount)
+                    while sendableVideoWriterInput.value.isReadyForMoreMediaData {
+                        if let sampleBuffer = sendableVideoReaderOutput.value.copyNextSampleBuffer() {
+                            currentFrameCount.value += 1
+                            let percent = CGFloat(currentFrameCount.value) / CGFloat(frameCount)
                             DispatchQueue.main.async {
                                 progress(percent)
                             }
-                            if !sendableVideoWriterInput.object.append(sampleBuffer) {
+                            if !sendableVideoWriterInput.value.append(sampleBuffer) {
                                 print("Cannot write: \(String(describing: self.assetWriter?.error?.localizedDescription))")
                                 self.videoReader?.cancelReading()
                             }
                         } else {
-                            sendableVideoWriterInput.object.markAsFinished()
-                            writingVideoFinished.object = true
+                            sendableVideoWriterInput.value.markAsFinished()
+                            writingVideoFinished.value = true
                             didCompleteWriting()
                         }
                     }
                 }
             } else {
-                writingVideoFinished.object = true
+                writingVideoFinished.value = true
                 didCompleteWriting()
             }
             // Start writing audio
             if audioReader?.startReading() ?? false {
-                let sendableAudioWriterInput = SendableObject(audioWriterInput)
-                let sendableAudioReaderOutput = SendableObject(audioReaderOutput)
+                let sendableAudioWriterInput = SendableValue(audioWriterInput)
+                let sendableAudioReaderOutput = SendableValue(audioReaderOutput)
                 audioWriterInput?.requestMediaDataWhenReady(on: DispatchQueue(label: "audioWriterInputQueue")) {
-                    while sendableAudioWriterInput.object?.isReadyForMoreMediaData ?? false {
-                        guard let sampleBuffer = sendableAudioReaderOutput.object?.copyNextSampleBuffer() else {
-                            sendableAudioWriterInput.object?.markAsFinished()
-                            writingAudioFinished.object = true
+                    while sendableAudioWriterInput.value?.isReadyForMoreMediaData ?? false {
+                        guard let sampleBuffer = sendableAudioReaderOutput.value?.copyNextSampleBuffer() else {
+                            sendableAudioWriterInput.value?.markAsFinished()
+                            writingAudioFinished.value = true
                             didCompleteWriting()
                             return
                         }
-                        sendableAudioWriterInput.object?.append(sampleBuffer)
+                        sendableAudioWriterInput.value?.append(sampleBuffer)
                     }
                 }
             } else {
-                writingAudioFinished.object = true
+                writingAudioFinished.value = true
                 didCompleteWriting()
             }
         } catch {
@@ -1663,10 +1667,10 @@ extension AssetSessionExporter {
         if let videoInput = _videoInput,
            let videoOutput = _videoOutput,
            videoTracks.count > 0 {
-            let sendableVideoInput = SendableObject(videoInput)
-            let sendableVideoOutput = SendableObject(videoOutput)
+            let sendableVideoInput = SendableValue(videoInput)
+            let sendableVideoOutput = SendableValue(videoOutput)
             videoInput.requestMediaDataWhenReady(on: _inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: sendableVideoOutput.object, toWriterInput: sendableVideoInput.object) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableVideoOutput.value, toWriterInput: sendableVideoInput.value) == false {
                     group.leave()
                 }
             })
@@ -1676,10 +1680,10 @@ extension AssetSessionExporter {
 
         if let audioInput = _audioInput,
            let audioOutput = _audioOutput {
-            let sendableAudioInput = SendableObject(audioInput)
-            let sendableAudioOutput = SendableObject(audioOutput)
+            let sendableAudioInput = SendableValue(audioInput)
+            let sendableAudioOutput = SendableValue(audioOutput)
             audioInput.requestMediaDataWhenReady(on: _inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: sendableAudioOutput.object, toWriterInput: sendableAudioInput.object) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableAudioOutput.value, toWriterInput: sendableAudioInput.value) == false {
                     group.leave()
                 }
             })

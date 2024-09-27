@@ -391,11 +391,11 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
     }
 
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        let sendableObject = SendableObject(object)
-        let sendableChange = SendableObject(change)
+        let sendableObject = SendableValue(object)
+        let sendableChange = SendableValue(change)
         DispatchQueue.fw.mainAsync { [weak self] in
             guard let self else { return }
-            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "status" {
+            if sendableObject.value as? AVPlayer == audioPlayer, keyPath == "status" {
                 if audioPlayer.status == .readyToPlay {
                     if observePeriodicTime && periodicTimeToken == nil {
                         periodicTimeToken = addPeriodicTimeObserver(for: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: .main, using: { [weak self] time in
@@ -417,13 +417,13 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
                 }
             }
 
-            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "rate" {
+            if sendableObject.value as? AVPlayer == audioPlayer, keyPath == "rate" {
                 delegate?.audioPlayerRateChanged?(isPlaying)
             }
 
-            if sendableObject.object as? AVPlayer == audioPlayer, keyPath == "currentItem" {
-                let newPlayerItem = sendableChange.object?[.newKey] as? AVPlayerItem
-                let lastPlayerItem = sendableChange.object?[.oldKey] as? AVPlayerItem
+            if sendableObject.value as? AVPlayer == audioPlayer, keyPath == "currentItem" {
+                let newPlayerItem = sendableChange.value?[.newKey] as? AVPlayerItem
+                let lastPlayerItem = sendableChange.value?[.oldKey] as? AVPlayerItem
                 if let lastPlayerItem {
                     unobservePlayerItem(lastPlayerItem)
 
@@ -436,7 +436,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
                 }
             }
 
-            if sendableObject.object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "status" {
+            if sendableObject.value as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "status" {
                 isPreBuffered = false
                 if item.status == .failed {
                     delegate?.audioPlayerDidFailed?(item, error: item.error)
@@ -448,17 +448,17 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
                 }
             }
 
-            if audioPlayer.items().count > 1, sendableObject.object as? AVPlayerItem == audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
+            if audioPlayer.items().count > 1, sendableObject.value as? AVPlayerItem == audioPlayer.items()[1], keyPath == "loadedTimeRanges" {
                 isPreBuffered = true
             }
 
-            if sendableObject.object as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
+            if sendableObject.value as? AVPlayerItem == audioPlayer.currentItem, let item = audioPlayer.currentItem, keyPath == "loadedTimeRanges" {
                 if item.hash != prepareingItemHash {
                     prepareNextPlayerItem()
                     prepareingItemHash = item.hash
                 }
 
-                let timeRanges = sendableChange.object?[.newKey] as? [NSValue] ?? []
+                let timeRanges = sendableChange.value?[.newKey] as? [NSValue] ?? []
                 if timeRanges.count > 0 {
                     let timeRange = timeRanges[0].timeRangeValue
                     delegate?.audioPlayerCurrentItemPreloaded?(CMTimeAdd(timeRange.start, timeRange.duration))
@@ -544,16 +544,16 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
 
     @MainActor private func getSourceURL(at index: Int, preBuffer: Bool) {
         if let url = dataSource?.audioPlayerURLForItem?(at: index, preBuffer: preBuffer) {
-            let sendableUrl = SendableObject(url)
+            let sendableUrl = SendableValue(url)
             audioQueue.async { [weak self] in
-                self?.setupPlayerItem(url: sendableUrl.object, index: index)
+                self?.setupPlayerItem(url: sendableUrl.value, index: index)
             }
         } else if dataSource?.audioPlayerLoadItem?(at: index, preBuffer: preBuffer) != nil {
         } else {
             if let itemURLs, index < itemURLs.count {
-                let sendableUrl = SendableObject(itemURLs[index])
+                let sendableUrl = SendableValue(itemURLs[index])
                 audioQueue.async { [weak self] in
-                    self?.setupPlayerItem(url: sendableUrl.object, index: index)
+                    self?.setupPlayerItem(url: sendableUrl.value, index: index)
                 }
             }
         }
