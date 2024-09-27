@@ -167,7 +167,7 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 open class ImageResponseSerializer: HTTPResponseSerializer {
     actor Configuration {
         static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
-        static var imageLock = NSLock()
+        fileprivate static var imageLock = NSLock()
     }
     
     open var imageScale: CGFloat = UIScreen.fw.screenScale

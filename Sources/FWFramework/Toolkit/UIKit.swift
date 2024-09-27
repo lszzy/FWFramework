@@ -165,36 +165,36 @@ extension Wrapper where Base: UIDevice {
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public static var deviceIDFV: String? {
-        if let deviceIDFV = FrameworkStorage.deviceIDFV { return deviceIDFV }
+        if let deviceIDFV = UIKitConfiguration.deviceIDFV { return deviceIDFV }
 
         let identifier = DispatchQueue.fw.mainSyncIf {
             UIDevice.current.identifierForVendor
         } otherwise: {
-            FrameworkStorage.currentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
+            AdaptiveConfiguration.currentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
         }
-        FrameworkStorage.deviceIDFV = identifier?.uuidString
-        return FrameworkStorage.deviceIDFV
+        UIKitConfiguration.deviceIDFV = identifier?.uuidString
+        return UIKitConfiguration.deviceIDFV
     }
 
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
     public static var deviceUUID: String {
         get {
-            if let deviceUUID = FrameworkStorage.deviceUUID {
+            if let deviceUUID = UIKitConfiguration.deviceUUID {
                 return deviceUUID
             }
 
             if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
-                FrameworkStorage.deviceUUID = deviceUUID
+                UIKitConfiguration.deviceUUID = deviceUUID
                 return deviceUUID
             }
 
             let deviceUUID = deviceIDFV ?? UUID().uuidString
-            FrameworkStorage.deviceUUID = deviceUUID
+            UIKitConfiguration.deviceUUID = deviceUUID
             KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
             return deviceUUID
         }
         set {
-            FrameworkStorage.deviceUUID = newValue
+            UIKitConfiguration.deviceUUID = newValue
             KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
         }
     }
@@ -276,7 +276,7 @@ extension Wrapper where Base: UIDevice {
 
     /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
     public static var networkTypes: [String]? {
-        guard let currentRadio = FrameworkStorage.networkInfo.serviceCurrentRadioAccessTechnology else {
+        guard let currentRadio = UIKitConfiguration.networkInfo.serviceCurrentRadioAccessTechnology else {
             return nil
         }
 
@@ -872,7 +872,7 @@ extension Wrapper where Base: UIDevice {
 
             if let ciImage,
                let cgImage = image.cgImage,
-               let features = FrameworkStorage.faceDetector?.features(in: ciImage),
+               let features = UIKitConfiguration.faceDetector?.features(in: ciImage),
                !features.isEmpty {
                 DispatchQueue.main.async { [weak base] in
                     base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
@@ -1491,14 +1491,14 @@ extension Wrapper where Base: UIDevice {
 @MainActor extension Wrapper where Base: UIButton {
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
     public nonisolated static var highlightedAlpha: CGFloat {
-        get { FrameworkStorage.highlightedAlpha }
-        set { FrameworkStorage.highlightedAlpha = newValue }
+        get { UIKitConfiguration.highlightedAlpha }
+        set { UIKitConfiguration.highlightedAlpha = newValue }
     }
 
     /// 全局自定义按钮禁用时的alpha配置，默认0.3
     public nonisolated static var disabledAlpha: CGFloat {
-        get { FrameworkStorage.disabledAlpha }
-        set { FrameworkStorage.disabledAlpha = newValue }
+        get { UIKitConfiguration.disabledAlpha }
+        set { UIKitConfiguration.disabledAlpha = newValue }
     }
 
     /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
@@ -3458,19 +3458,19 @@ private class SaturationGrayView: UIView {
     }
 }
 
-// MARK: - FrameworkStorage+UIKit
-extension FrameworkStorage {
-    fileprivate static var highlightedAlpha: CGFloat = 0.5
-    fileprivate static var disabledAlpha: CGFloat = 0.3
+// MARK: - UIKitConfiguration
+private actor UIKitConfiguration {
+    static var highlightedAlpha: CGFloat = 0.5
+    static var disabledAlpha: CGFloat = 0.3
     
-    fileprivate static var deviceIDFV: String?
-    fileprivate static var deviceUUID: String?
-    fileprivate static var networkInfo = CTTelephonyNetworkInfo()
+    static var deviceIDFV: String?
+    static var deviceUUID: String?
+    static var networkInfo = CTTelephonyNetworkInfo()
     
-    fileprivate static var faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+    static var faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
     
-    fileprivate static var swizzleUIKitScrollView = false
-    fileprivate static var swizzleUIKitTableViewCell = false
+    static var swizzleUIKitScrollView = false
+    static var swizzleUIKitTableViewCell = false
 }
 
 // MARK: - FrameworkAutoloader+UIKit
@@ -3871,8 +3871,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitScrollView() {
-        guard !FrameworkStorage.swizzleUIKitScrollView else { return }
-        FrameworkStorage.swizzleUIKitScrollView = true
+        guard !UIKitConfiguration.swizzleUIKitScrollView else { return }
+        UIKitConfiguration.swizzleUIKitScrollView = true
 
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizerShouldBegin(_:)))
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
@@ -3881,8 +3881,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitTableViewCell() {
-        guard !FrameworkStorage.swizzleUIKitTableViewCell else { return }
-        FrameworkStorage.swizzleUIKitTableViewCell = true
+        guard !UIKitConfiguration.swizzleUIKitTableViewCell else { return }
+        UIKitConfiguration.swizzleUIKitTableViewCell = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,
