@@ -143,6 +143,10 @@ extension View {
 
 // MARK: - Color+Toolkit
 extension Color {
+    private actor Configuration {
+        static var colorCaches: [Color: UIColor] = [:]
+    }
+    
     /// 从16进制创建Color
     /// - Parameters:
     ///   - hex: 十六进制值，格式0xFFFFFF
@@ -189,7 +193,7 @@ extension Color {
     /// Color转换为UIColor，失败时返回clear
     /// - Returns: UIColor
     public func toUIColor() -> UIColor {
-        if let cachedResult = Self.colorCaches.object[self] {
+        if let cachedResult = Self.Configuration.colorCaches[self] {
             return cachedResult
         } else {
             var result: UIColor
@@ -198,12 +202,10 @@ extension Color {
             } else {
                 result = toUIColor1() ?? toUIColor2() ?? .clear
             }
-            Self.colorCaches.object[self] = result
+            Self.Configuration.colorCaches[self] = result
             return result
         }
     }
-
-    private static let colorCaches = SendableObject([Color: UIColor]())
 
     private func toUIColor1() -> UIColor? {
         switch self {

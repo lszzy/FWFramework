@@ -95,10 +95,10 @@ extension TestPromiseController {
     private static func progressPromise() -> Promise {
         Promise { resolve, reject, progress in
             DispatchQueue.global().async {
-                let value = SendableObject<Double>(0)
-                while value.object < 1 {
-                    value.object += 0.02
-                    let finish = value.object >= 1
+                let value = SendableValue<Double>(0)
+                while value.value < 1 {
+                    value.value += 0.02
+                    let finish = value.value >= 1
                     DispatchQueue.main.async {
                         if finish {
                             progress(1)
@@ -108,7 +108,7 @@ extension TestPromiseController {
                                 resolve(UIImage())
                             }
                         } else {
-                            progress(value.object)
+                            progress(value.value)
                         }
                     }
                     usleep(50_000)
@@ -136,26 +136,26 @@ extension TestPromiseController {
         var value = 0
         let index = [1, 2].randomElement()!
         if index == 1 {
-            let values = SendableObject<[Int]>([])
+            let values = SendableValue<[Int]>([])
             let semaphore = DispatchSemaphore(value: 1)
             DispatchQueue.concurrentPerform(iterations: 10_000) { _ in
                 semaphore.wait()
-                let last = values.object.last ?? 0
-                values.object.append(last + 1)
+                let last = values.value.last ?? 0
+                values.value.append(last + 1)
                 semaphore.signal()
             }
-            value = values.object.last.safeInt
+            value = values.value.last.safeInt
         } else {
-            let values = SendableObject<[Int]>([])
+            let values = SendableValue<[Int]>([])
             let queue = DispatchQueue(label: "serial")
             DispatchQueue.concurrentPerform(iterations: 10_000) { _ in
                 queue.async {
-                    let last = values.object.last ?? 0
-                    values.object.append(last + 1)
+                    let last = values.value.last ?? 0
+                    values.value.append(last + 1)
                 }
             }
             queue.sync {
-                value = values.object.last.safeInt
+                value = values.value.last.safeInt
             }
         }
         Self.isLoading = false

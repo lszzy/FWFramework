@@ -687,22 +687,22 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     ///   - mapper: 自定义映射，默认nil时查找规则：xxxBridge: > xxxDefaultBridge:
     public func registerClass(_ clazz: Any, package: String? = nil, context object: AnyObject? = nil, mapper: (([String]) -> [String: String])? = nil) {
         let bridges = getClassBridges(clazz, mapper: mapper)
-        let sendableObject = SendableObject(object)
+        let sendableObject = SendableValue(object)
         if let targetClass = clazz as? NSObject.Type {
             for (key, obj) in bridges {
                 let name = (package ?? "") + key
                 registerHandler(name) { context in
-                    context.object = sendableObject.object
+                    context.object = sendableObject.value
                     _ = targetClass.perform(NSSelectorFromString(obj), with: context)
                 }
             }
         } else if let targetObject = clazz as? NSObject {
-            let sendableTarget = SendableObject(targetObject)
+            let sendableTarget = SendableValue(targetObject)
             for (key, obj) in bridges {
                 let name = (package ?? "") + key
                 registerHandler(name) { context in
-                    context.object = sendableObject.object
-                    _ = sendableTarget.object.perform(NSSelectorFromString(obj), with: context)
+                    context.object = sendableObject.value
+                    _ = sendableTarget.value.perform(NSSelectorFromString(obj), with: context)
                 }
             }
         }
@@ -865,9 +865,9 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
 
                 var callback: Completion?
                 if let callbackID = message["callbackID"] {
-                    let sendableCallbackID = SendableObject(callbackID)
+                    let sendableCallbackID = SendableValue(callbackID)
                     callback = { responseData in
-                        let msg = ["responseID": sendableCallbackID.object, "responseData": responseData ?? NSNull()] as Message
+                        let msg = ["responseID": sendableCallbackID.value, "responseData": responseData ?? NSNull()] as Message
                         self.queue(message: msg)
                     }
                 } else {

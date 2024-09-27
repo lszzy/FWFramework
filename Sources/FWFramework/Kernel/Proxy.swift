@@ -96,38 +96,36 @@ open class DelegateProxy<T>: NSObject {
     }
 }
 
-// MARK: - WeakObject
-/// 弱引用对象容器类，用于解决关联对象weak引用问题
-public class WeakObject: @unchecked Sendable {
-    public weak var object: AnyObject?
+// MARK: - WeakValue
+/// 弱引用值容器类，用于解决关联值weak引用问题
+public class WeakValue: @unchecked Sendable {
+    public weak var value: AnyObject?
 
-    public init(_ object: AnyObject? = nil) {
-        self.object = object
+    public init(_ value: AnyObject? = nil) {
+        self.value = value
     }
 }
 
-// MARK: - SendableObject
-/// Sendable容器类，用于解决任意对象Sendable传参问题
-public class SendableObject<T>: @unchecked Sendable {
-    public var object: T {
+// MARK: - SendableValue
+/// Sendable值容器类，用于解决任意值Sendable传参问题
+public class SendableValue<T>: @unchecked Sendable {
+    public var value: T {
         get {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
-
-            return _object
+            return _value
         }
         set {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
-
-            _object = newValue
+            _value = newValue
         }
     }
 
-    private var _object: T
+    private var _value: T
 
-    public init(_ object: T) {
-        self._object = object
+    public init(_ value: T) {
+        self._value = value
     }
 }
 

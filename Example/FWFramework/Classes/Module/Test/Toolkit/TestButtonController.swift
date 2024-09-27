@@ -11,20 +11,20 @@ import FWFramework
 class TestButtonController: UIViewController, ViewControllerProtocol {
     var count: Int = 0
 
-    private let timer = SendableObject<Timer?>(nil)
+    private let timer = SendableValue<Timer?>(nil)
 
     @objc func timerAction() {
         Logger.debug("timerAction: %@", Date().app.string(format: "HH:mm:ss"))
     }
 
     deinit {
-        timer.object?.invalidate()
+        timer.value?.invalidate()
     }
 
     func setupNavbar() {
         app.extendedLayoutEdge = .bottom
 
-        timer.object = Timer.app.commonTimer(timeInterval: 1, target: WeakProxy(target: self), selector: #selector(timerAction), userInfo: nil, repeats: true)
+        timer.value = Timer.app.commonTimer(timeInterval: 1, target: WeakProxy(target: self), selector: #selector(timerAction), userInfo: nil, repeats: true)
     }
 
     func setupSubviews() {

@@ -677,9 +677,13 @@ open class ScanView: UIView {
         return result
     }()
 
-    private var displayLink = SendableObject<CADisplayLink?>(nil)
+    private let mutableState = MutableState()
     private var isTop = true
     private var isSelected = false
+    
+    private class MutableState: @unchecked Sendable {
+        var displayLink: CADisplayLink?
+    }
 
     // MARK: - Lifecycle
     /// 对象方法创建 ScanView
@@ -719,8 +723,8 @@ open class ScanView: UIView {
     }
 
     deinit {
-        displayLink.object?.invalidate()
-        displayLink.object = nil
+        mutableState.displayLink?.invalidate()
+        mutableState.displayLink = nil
     }
 
     override open func draw(_ rect: CGRect) {
@@ -770,9 +774,9 @@ open class ScanView: UIView {
         guard scanlineImgView.image != nil else { return }
 
         contentView.addSubview(scanlineImgView)
-        if displayLink.object == nil {
-            displayLink.object = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
-            displayLink.object?.add(to: .main, forMode: .common)
+        if mutableState.displayLink == nil {
+            mutableState.displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
+            mutableState.displayLink?.add(to: .main, forMode: .common)
         }
     }
 
@@ -780,15 +784,15 @@ open class ScanView: UIView {
     open func stopScanning() {
         guard
             scanlineImgView.image != nil,
-            displayLink.object != nil
+            mutableState.displayLink != nil
         else {
             return
         }
 
         scanlineImgView.removeFromSuperview()
         _scanlineImgView = nil
-        displayLink.object?.invalidate()
-        displayLink.object = nil
+        mutableState.displayLink?.invalidate()
+        mutableState.displayLink = nil
     }
 
     // MARK: - Private

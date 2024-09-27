@@ -20,11 +20,11 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
 
     private static let testNotification = Notification.Name("TestWorkflowNotifiation")
     private static var notificationCount: Int = 0
-    private static var notificationTargets: [WeakObject] = []
+    private static var notificationTargets: [WeakValue] = []
 
     private static var kvoCount: Int = 0
     @objc private dynamic var kvoValue: Int = 0
-    private static var kvoTargets: [WeakObject] = []
+    private static var kvoTargets: [WeakValue] = []
 
     typealias TableElement = [String]
 
@@ -44,14 +44,14 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
             let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
             UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.notificationTargets.append(WeakObject(notificationTarget))
+        TestWorkflowController.notificationTargets.append(WeakValue(notificationTarget))
 
         let kvoTarget = app.safeObserveProperty(\.kvoValue) { _, _ in
             TestWorkflowController.kvoCount += 1
             let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
             UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
-        TestWorkflowController.kvoTargets.append(WeakObject(kvoTarget))
+        TestWorkflowController.kvoTargets.append(WeakValue(kvoTarget))
     }
 
     func setupSubviews() {
