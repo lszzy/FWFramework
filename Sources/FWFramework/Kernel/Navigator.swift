@@ -103,18 +103,18 @@ import UIKit
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-    public func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func present(_ viewController: UIViewController, animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         topPresentedController?.present(viewController, animated: animated, completion: completion)
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
+    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) {
         topViewController?.fw.open(viewController, animated: animated, options: options, completion: completion)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public func close(animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) -> Bool {
+    public func close(animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) -> Bool {
         topViewController?.fw.close(animated: animated, options: options, completion: completion) ?? false
     }
 }
@@ -123,7 +123,7 @@ import UIKit
 @MainActor extension Wrapper where Base: UIViewController {
     // MARK: - Navigation
     /// 打开控制器。1.如果打开导航栏，则调用present；2.否则如果导航栏存在，则调用push；3.否则调用present
-    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
+    public func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) {
         var targetController = viewController
         var isNavigation = targetController is UINavigationController
         if options.contains(.embedInNavigation), !isNavigation {
@@ -159,7 +159,7 @@ import UIKit
 
     /// 关闭控制器，返回是否成功。1.如果导航栏不存在，则调用dismiss；2.否则如果已是导航栏底部，则调用dismiss；3.否则调用pop
     @discardableResult
-    public func close(animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) -> Bool {
+    public func close(animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) -> Bool {
         var isPop = false
         var isDismiss = false
         if options.contains(.transitionPop) {
@@ -234,7 +234,7 @@ import UIKit
 @MainActor extension Wrapper where Base: UINavigationController {
     // MARK: - Navigation
     /// push新界面，完成时回调
-    public func pushViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+    public func pushViewController(_ viewController: UIViewController, animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         if completion != nil {
             CATransaction.setCompletionBlock(completion)
             CATransaction.begin()
@@ -247,7 +247,7 @@ import UIKit
 
     /// pop当前界面，完成时回调
     @discardableResult
-    public func popViewController(animated: Bool, completion: (() -> Void)? = nil) -> UIViewController? {
+    public func popViewController(animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) -> UIViewController? {
         var viewController: UIViewController?
         if completion != nil {
             CATransaction.setCompletionBlock(completion)
@@ -262,7 +262,7 @@ import UIKit
 
     /// pop到指定界面，完成时回调
     @discardableResult
-    public func popToViewController(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+    public func popToViewController(_ viewController: UIViewController, animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) -> [UIViewController]? {
         var viewControllers: [UIViewController]?
         if completion != nil {
             CATransaction.setCompletionBlock(completion)
@@ -277,7 +277,7 @@ import UIKit
 
     /// pop到根界面，完成时回调
     @discardableResult
-    public func popToRootViewController(animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+    public func popToRootViewController(animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) -> [UIViewController]? {
         var viewControllers: [UIViewController]?
         if completion != nil {
             CATransaction.setCompletionBlock(completion)
@@ -291,7 +291,7 @@ import UIKit
     }
 
     /// 设置界面数组，完成时回调
-    public func setViewControllers(_ viewControllers: [UIViewController], animated: Bool, completion: (() -> Void)? = nil) {
+    public func setViewControllers(_ viewControllers: [UIViewController], animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         if completion != nil {
             CATransaction.setCompletionBlock(completion)
             CATransaction.begin()
@@ -303,7 +303,7 @@ import UIKit
     }
 
     /// push新界面，同时pop指定数量界面，至少保留一个根控制器，完成时回调
-    public func pushViewController(_ viewController: UIViewController, pop count: Int, animated: Bool, completion: (() -> Void)? = nil) {
+    public func pushViewController(_ viewController: UIViewController, pop count: Int, animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         if count < 1 || base.viewControllers.count < 2 {
             pushViewController(viewController, animated: animated, completion: completion)
             return
@@ -317,7 +317,7 @@ import UIKit
 
     /// pop指定数量界面，0不会pop，至少保留一个根控制器，完成时回调
     @discardableResult
-    public func popViewControllers(_ count: Int, animated: Bool, completion: (() -> Void)? = nil) -> [UIViewController]? {
+    public func popViewControllers(_ count: Int, animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) -> [UIViewController]? {
         if count < 1 || base.viewControllers.count < 2 {
             completion?()
             return nil
@@ -336,7 +336,7 @@ import UIKit
     /// push控制器，并清理最外层工作流（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）、9
-    public func push(_ viewController: UIViewController, popTopWorkflowAnimated animated: Bool, completion: (() -> Void)? = nil) {
+    public func push(_ viewController: UIViewController, popTopWorkflowAnimated animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         var workflows: [String] = []
         if let workflow = topWorkflowName {
             workflows.append(workflow)
@@ -347,14 +347,14 @@ import UIKit
     /// push控制器，并清理到指定工作流（不属于工作流则清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、9
-    public func push(_ viewController: UIViewController, popToWorkflow: String, animated: Bool, completion: (() -> Void)? = nil) {
+    public func push(_ viewController: UIViewController, popToWorkflow: String, animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         push(viewController, popWorkflows: [popToWorkflow], isMatch: false, animated: animated, completion: completion)
     }
 
     /// push控制器，并清理非根控制器（只保留根控制器）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、9
-    public func push(_ viewController: UIViewController, popToRootWorkflowAnimated animated: Bool, completion: (() -> Void)? = nil) {
+    public func push(_ viewController: UIViewController, popToRootWorkflowAnimated animated: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
         if base.viewControllers.count < 2 {
             pushViewController(viewController, animated: animated, completion: completion)
             return
@@ -371,11 +371,11 @@ import UIKit
     /// push控制器，并从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、9
-    public func push(_ viewController: UIViewController, popWorkflows workflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func push(_ viewController: UIViewController, popWorkflows workflows: [String]?, animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         push(viewController, popWorkflows: workflows ?? [], isMatch: true, animated: animated, completion: completion)
     }
 
-    private func push(_ viewController: UIViewController, popWorkflows workflows: [String], isMatch: Bool, animated: Bool, completion: (() -> Void)?) {
+    private func push(_ viewController: UIViewController, popWorkflows workflows: [String], isMatch: Bool, animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         if workflows.count < 1 {
             pushViewController(viewController, animated: animated, completion: completion)
             return
@@ -415,7 +415,7 @@ import UIKit
     /// pop方式清理最外层工作流，至少保留一个根控制器（不属于工作流则不清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4、（5、6）
-    public func popTopWorkflow(animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func popTopWorkflow(animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         var workflows: [String] = []
         if let workflow = topWorkflowName {
             workflows.append(workflow)
@@ -426,18 +426,18 @@ import UIKit
     /// pop方式清理到指定工作流，至少保留一个根控制器（不属于工作流则清理）
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）
-    public func popToWorkflow(_ workflow: String, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func popToWorkflow(_ workflow: String, animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         popWorkflows([workflow], isMatch: false, animated: animated, completion: completion)
     }
 
     /// pop方式从外到内清理指定工作流，直到遇到不属于指定工作流的控制器停止，至少保留一个根控制器
     ///
     /// 示例：1、（2、3）、4、（5、6）、（7、8），操作后为1、（2、3）、4
-    public func popWorkflows(_ workflows: [String]?, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func popWorkflows(_ workflows: [String]?, animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         popWorkflows(workflows ?? [], isMatch: true, animated: animated, completion: completion)
     }
 
-    private func popWorkflows(_ workflows: [String], isMatch: Bool, animated: Bool, completion: (() -> Void)?) {
+    private func popWorkflows(_ workflows: [String], isMatch: Bool, animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         if workflows.count < 1 {
             completion?()
             return
@@ -550,18 +550,18 @@ public struct NavigatorOptions: OptionSet, Sendable {
     }
 
     /// 使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
-    public static func present(_ viewController: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public static func present(_ viewController: UIViewController, animated: Bool = true, completion: (@MainActor @Sendable () -> Void)? = nil) {
         UIWindow.fw.main?.fw.present(viewController, animated: animated, completion: completion)
     }
 
     /// 使用最顶部的视图控制器打开控制器，自动判断push|present
-    public static func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) {
+    public static func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) {
         UIWindow.fw.main?.fw.open(viewController, animated: animated, options: options, completion: completion)
     }
 
     /// 关闭最顶部的视图控制器，自动判断pop|dismiss，返回是否成功
     @discardableResult
-    public static func close(animated: Bool = true, options: NavigatorOptions = [], completion: (() -> Void)? = nil) -> Bool {
+    public static func close(animated: Bool = true, options: NavigatorOptions = [], completion: (@MainActor @Sendable () -> Void)? = nil) -> Bool {
         UIWindow.fw.main?.fw.close(animated: animated, options: options, completion: completion) ?? false
     }
 }

@@ -359,17 +359,14 @@ extension Optional {
         return value
     }
 
-    public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: ((Wrapped) -> Wrapped)? = nil) -> Wrapped {
-        switch self {
-        case let .some(value):
-            if let block {
-                return block(value)
-            } else {
-                return value
-            }
-        case .none:
-            return defaultValue()
-        }
+    public func or(_ defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        guard let value = self else { return defaultValue() }
+        return value
+    }
+    
+    public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: (Wrapped) -> Wrapped) -> Wrapped {
+        guard let value = self else { return defaultValue() }
+        return block(value)
     }
 }
 
