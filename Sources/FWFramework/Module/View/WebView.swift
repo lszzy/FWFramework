@@ -1464,3 +1464,8 @@ fileprivate class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewD
     }
     
 }
+
+#if swift(<5.9)
+/// 适配Swift5.9以下URLAuthenticationChallenge未实现Sendable编译报错问题
+extension URLAuthenticationChallenge: @unchecked Sendable {}
+#endif

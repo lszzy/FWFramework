@@ -48,9 +48,9 @@ extension MainActor {
     /// 当主线程时执行句柄，非主线程执行另一个句柄
     public static func runSyncIf<T>(execute block: () -> T, otherwise: () -> T) -> T {
         if Thread.isMainThread {
-            block()
+            return block()
         } else {
-            otherwise()
+            return otherwise()
         }
     }
 }
