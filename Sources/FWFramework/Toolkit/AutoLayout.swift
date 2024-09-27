@@ -1985,7 +1985,7 @@ private actor AutoLayoutConfiguration {
         .sceneSizeStayPut: "sceneSizeStayPut",
         .fittingSizeLevel: "fittingSizeLevel"
     ]
-    
+
     fileprivate static var swizzleAutoLayoutDebug = false
 }
 

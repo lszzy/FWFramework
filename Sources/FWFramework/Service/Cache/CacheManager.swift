@@ -44,7 +44,7 @@ public class CacheManager: NSObject, @unchecked Sendable {
         get { shared.factoryBlock }
         set { shared.factoryBlock = newValue }
     }
-    
+
     private static let shared = CacheManager()
     private var factoryBlock: ((CacheType) -> CacheProtocol?)?
 

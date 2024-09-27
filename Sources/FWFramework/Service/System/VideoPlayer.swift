@@ -61,7 +61,7 @@ open class VideoPlayer: UIViewController {
         var playbackEdgeTriggered: Bool = true
         var player: AVPlayer?
         var preferredPeakBitRate: Double = 0
-        
+
         var playerItem: AVPlayerItem?
         var playerObservers = [NSKeyValueObservation]()
         var playerItemObservers = [NSKeyValueObservation]()
@@ -196,7 +196,7 @@ open class VideoPlayer: UIViewController {
         set {
             let oldValue = mutableState.playbackState
             mutableState.playbackState = newValue
-            
+
             if newValue != oldValue || !playbackEdgeTriggered {
                 DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerPlaybackStateDidChange?(self)
@@ -213,7 +213,7 @@ open class VideoPlayer: UIViewController {
         set {
             let oldValue = mutableState.bufferingState
             mutableState.bufferingState = newValue
-            
+
             if newValue != oldValue || !playbackEdgeTriggered {
                 DispatchQueue.fw.mainAsync {
                     self.playerDelegate?.playerBufferingStateDidChange?(self)
@@ -592,7 +592,7 @@ open class VideoPlayer: UIViewController {
     fileprivate func setupPlayerItem(_ playerItem: AVPlayerItem?) {
         resetPlayerItem(playerItem)
 
-        player.replaceCurrentItem(with: self.mutableState.playerItem)
+        player.replaceCurrentItem(with: mutableState.playerItem)
         player.rate = rate
 
         // update new playerItem settings
@@ -606,23 +606,23 @@ open class VideoPlayer: UIViewController {
     fileprivate nonisolated func resetPlayerItem(_ playerItem: AVPlayerItem?) {
         removePlayerItemObservers()
 
-        if let currentPlayerItem = self.mutableState.playerItem {
+        if let currentPlayerItem = mutableState.playerItem {
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: currentPlayerItem)
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemFailedToPlayToEndTime, object: currentPlayerItem)
         }
 
-        self.mutableState.playerItem = playerItem
+        mutableState.playerItem = playerItem
 
-        self.mutableState.playerItem?.audioTimePitchAlgorithm = .spectral
-        self.mutableState.playerItem?.preferredPeakBitRate = preferredPeakBitRate
-        self.mutableState.playerItem?.preferredMaximumResolution = mutableState.itemMaximumResolution
+        mutableState.playerItem?.audioTimePitchAlgorithm = .spectral
+        mutableState.playerItem?.preferredPeakBitRate = preferredPeakBitRate
+        mutableState.playerItem?.preferredMaximumResolution = mutableState.itemMaximumResolution
 
-        if let seek = mutableState.seekTimeRequested, self.mutableState.playerItem != nil {
+        if let seek = mutableState.seekTimeRequested, mutableState.playerItem != nil {
             mutableState.seekTimeRequested = nil
             self.seek(to: seek)
         }
 
-        if let updatedPlayerItem = self.mutableState.playerItem {
+        if let updatedPlayerItem = mutableState.playerItem {
             addPlayerItemObservers()
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidPlayToEndTime(_:)), name: .AVPlayerItemDidPlayToEndTime, object: updatedPlayerItem)
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlayToEndTime(_:)), name: .AVPlayerItemFailedToPlayToEndTime, object: updatedPlayerItem)

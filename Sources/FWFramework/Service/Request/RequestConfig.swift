@@ -97,7 +97,7 @@ open class RequestConfig: @unchecked Sendable {
     open var debugMockValidator: ((HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
-    
+
     /// 内部显示错误和加载条句柄
     var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
     var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?

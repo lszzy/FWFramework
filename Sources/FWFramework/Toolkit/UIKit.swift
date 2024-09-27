@@ -3462,13 +3462,13 @@ private class SaturationGrayView: UIView {
 private actor UIKitConfiguration {
     static var highlightedAlpha: CGFloat = 0.5
     static var disabledAlpha: CGFloat = 0.3
-    
+
     static var deviceIDFV: String?
     static var deviceUUID: String?
     static var networkInfo = CTTelephonyNetworkInfo()
-    
+
     static var faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
-    
+
     static var swizzleUIKitScrollView = false
     static var swizzleUIKitTableViewCell = false
 }

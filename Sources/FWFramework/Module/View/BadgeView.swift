@@ -187,7 +187,7 @@ open class BadgeView: UIView, BadgeViewProtocol {
     fileprivate actor Configuration {
         static var swizzleBadgeView = false
     }
-    
+
     /// 提醒灯样式，默认自定义
     open private(set) var badgeStyle: BadgeStyle = .custom
 

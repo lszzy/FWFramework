@@ -44,7 +44,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
             .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
         ]
     }
-    
+
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
     public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] {
@@ -687,7 +687,7 @@ open class ScanView: UIView {
     private let mutableState = MutableState()
     private var isTop = true
     private var isSelected = false
-    
+
     private class MutableState: @unchecked Sendable {
         var displayLink: CADisplayLink?
     }
