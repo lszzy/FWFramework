@@ -35,20 +35,20 @@ public class Promise: @unchecked Sendable {
         static var validationError: Error = PromiseError.validation
         static var timeoutError: Error = PromiseError.timeout
     }
-    
+
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
     public static var failedError: Error {
         get { Configuration.failedError }
         set { Configuration.failedError = newValue }
     }
-    
+
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
     public static var validationError: Error {
         get { Configuration.validationError }
         set { Configuration.validationError = newValue }
     }
-    
+
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
     public static var timeoutError: Error {
         get { Configuration.timeoutError }

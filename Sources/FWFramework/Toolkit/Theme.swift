@@ -445,7 +445,7 @@ public class ThemeManager: @unchecked Sendable {
     }
 
     private var _overrideWindow = false
-    
+
     fileprivate var themeColors: [String: UIColor] = [:]
     fileprivate var themeImages: [String: UIImage] = [:]
     fileprivate var themeImageColorConfiguration: (() -> UIColor)?

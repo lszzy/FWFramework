@@ -86,7 +86,7 @@ public class Mediator: @unchecked Sendable {
         get { shared.delegateModeEnabled }
         set { shared.delegateModeEnabled = newValue }
     }
-    
+
     private static let shared = Mediator()
     private var delegateModeEnabled = false
     private var modulePool: [String: ModuleProtocol.Type] = [:]

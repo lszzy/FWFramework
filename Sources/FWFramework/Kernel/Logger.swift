@@ -202,7 +202,7 @@ public class Logger: NSObject {
             #endif
         }()
     }
-    
+
     /// 全局日志级别，默认调试为All，正式为Off
     public static var level: LogLevel {
         get { Configuration.level }
