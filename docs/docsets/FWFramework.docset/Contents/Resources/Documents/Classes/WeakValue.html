@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>WeakObject Class Reference</title>
+    <title>WeakValue Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/WeakObject" class="dashAnchor"></a>
-    <a title="WeakObject Class Reference"></a>
+    <a name="//apple_ref/swift/Class/WeakValue" class="dashAnchor"></a>
+    <a title="WeakValue Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.12.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -32,7 +32,7 @@
         <img id="carat" src="../img/carat.png" alt=""/>
         <a href="../Classes.html">Classes</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        WeakObject Class Reference
+        WeakValue Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -861,10 +861,10 @@
                 <a href="../Classes/ViewPreferenceKey.html">ViewPreferenceKey</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakObject.html">WeakObject</a>
+                <a href="../Classes/WeakProxy.html">WeakProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakProxy.html">WeakProxy</a>
+                <a href="../Classes/WeakValue.html">WeakValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/WebSocket.html">WebSocket</a>
@@ -2493,6 +2493,9 @@
                 <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework10WeakObjecta">WeakObject</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
               </li>
               <li class="nav-group-task">
@@ -2505,15 +2508,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>WeakObject</h1>
+            <h1>WeakValue</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WeakObject</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WeakValue</span></code></pre>
 
                 </div>
               </div>
-            <p>弱引用对象容器类，用于解决关联对象weak引用等</p>
+            <p>弱引用值容器类，用于解决关联值weak引用等</p>
 
           </section>
           <section class="section task-group-section">
@@ -2522,9 +2525,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10WeakObjectC6objectyXlSgvp"></a>
-                    <a name="//apple_ref/swift/Property/object" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10WeakObjectC6objectyXlSgvp">object</a>
+                    <a name="/s:11FWFramework9WeakValueC5valueyXlSgvp"></a>
+                    <a name="//apple_ref/swift/Property/value" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9WeakValueC5valueyXlSgvp">value</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2539,7 +2542,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2549,9 +2552,63 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10WeakObjectC6objectACyXlSg_tcfc"></a>
+                    <a name="/s:11FWFramework9WeakValueC6objectyXlSgvp"></a>
+                    <a name="//apple_ref/swift/Property/object" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9WeakValueC6objectyXlSgvp">object</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9WeakValueCyACyXlSgcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9WeakValueCyACyXlSgcfc">init(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9WeakValueC6objectACyXlSg_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(object:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10WeakObjectC6objectACyXlSg_tcfc">init(object:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9WeakValueC6objectACyXlSg_tcfc">init(object:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2578,7 +2635,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

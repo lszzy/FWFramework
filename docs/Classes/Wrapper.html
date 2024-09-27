@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 5.12.0 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 5.12.1 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -861,10 +861,10 @@
                 <a href="../Classes/ViewPreferenceKey.html">ViewPreferenceKey</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakObject.html">WeakObject</a>
+                <a href="../Classes/WeakProxy.html">WeakProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakProxy.html">WeakProxy</a>
+                <a href="../Classes/WeakValue.html">WeakValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/WebSocket.html">WebSocket</a>
@@ -2491,6 +2491,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework9ViewModela">ViewModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework10WeakObjecta">WeakObject</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
@@ -21625,6 +21628,33 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE6isIpodSbvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/isIpod" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE6isIpodSbvpZ">isIpod</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>是否是iPod</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">isIpod</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE6isIpadSbvpZ"></a>
                     <a name="//apple_ref/swift/Variable/isIpad" class="dashAnchor"></a>
                     <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIDeviceCRbzlE6isIpadSbvpZ">isIpad</a>
@@ -22252,6 +22282,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">pixelOne</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE9pointHalf14CoreFoundation7CGFloatVvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/pointHalf" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo8UIScreenCRbzlE9pointHalf14CoreFoundation7CGFloatVvpZ">pointHalf</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>屏幕半个点的大小，区别于pixelOne，2x屏为1像素，3x屏为2像素</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">pointHalf</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -33062,7 +33119,7 @@
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performBlock</span><span class="p">(</span>
     <span class="n">_</span> <span class="nv">block</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Base</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
-    <span class="nv">on</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">,</span>
+    <span class="n">on</span> <span class="nv">queue</span><span class="p">:</span> <span class="kt">DispatchQueue</span><span class="p">,</span>
     <span class="n">afterDelay</span> <span class="nv">delay</span><span class="p">:</span> <span class="kt">TimeInterval</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span></code></pre>
 
@@ -52780,7 +52837,7 @@ contentEdgeInsets: 内容边距，setImageEdge时不影响，sizeThatFits包含<
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-23)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
