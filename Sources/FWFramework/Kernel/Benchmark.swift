@@ -29,9 +29,8 @@ extension WrapperGlobal {
 // MARK: - Benchmark
 /// 时间调试器
 public class Benchmark: @unchecked Sendable {
-    private static let shared = Benchmark()
-
     // MARK: - Accessor
+    private static let shared = Benchmark()
     private var beginTimes: [String: TimeInterval] = [:]
     private var endTimes: [String: TimeInterval] = [:]
 
