@@ -59,7 +59,7 @@ public class ErrorManager: @unchecked Sendable {
     /// ```swift
     /// ErrorManager.tryCatchHandler = { ObjCBridge.tryCatch($0, exceptionHandler: $1) }
     /// ```
-    public static var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)? {
+    public static var tryCatchHandler: (@Sendable (_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)? {
         get { shared.tryCatchHandler }
         set { shared.tryCatchHandler = newValue }
     }
@@ -75,7 +75,7 @@ public class ErrorManager: @unchecked Sendable {
         SIGTRAP: "SIGTRAP",
         SIGILL: "SIGILL"
     ]
-    private var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
+    private var tryCatchHandler: (@Sendable (_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
 
     private var isStarted = false
     private var isExceptionStarted = false
