@@ -309,7 +309,7 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendabl
 open class NavigationBarAppearance {
     actor Configuration {
         static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
-        static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+        fileprivate static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     }
     
     /// 根据style获取全局appearance对象

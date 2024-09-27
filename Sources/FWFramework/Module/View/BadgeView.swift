@@ -184,6 +184,10 @@ public enum BadgeStyle: Int, Sendable {
 
 /// 提醒灯视图，默认禁用userInteractionEnabled，使用非等比例缩放布局
 open class BadgeView: UIView, BadgeViewProtocol {
+    fileprivate actor Configuration {
+        static var swizzleBadgeView = false
+    }
+    
     /// 提醒灯样式，默认自定义
     open private(set) var badgeStyle: BadgeStyle = .custom
 
@@ -255,16 +259,11 @@ open class BadgeView: UIView, BadgeViewProtocol {
     }
 }
 
-// MARK: - FrameworkStorage+BadgeView
-extension FrameworkStorage {
-    fileprivate static var swizzleBadgeView = false
-}
-
 // MARK: - FrameworkAutoloader+BadgeView
 extension FrameworkAutoloader {
     fileprivate static func swizzleBadgeView() {
-        guard !FrameworkStorage.swizzleBadgeView else { return }
-        FrameworkStorage.swizzleBadgeView = true
+        guard !BadgeView.Configuration.swizzleBadgeView else { return }
+        BadgeView.Configuration.swizzleBadgeView = true
 
         NSObject.fw.swizzleMethod(
             objc_getClass("UITabBarButton"),
