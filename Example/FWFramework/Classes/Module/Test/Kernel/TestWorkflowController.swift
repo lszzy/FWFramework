@@ -41,14 +41,14 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
 
         let notificationTarget = app.safeObserveNotification(Self.testNotification) { _ in
             TestWorkflowController.notificationCount += 1
-            let targetCount = TestWorkflowController.notificationTargets.filter { $0.object != nil }.count
+            let targetCount = TestWorkflowController.notificationTargets.filter { $0.value != nil }.count
             UIWindow.app.showMessage(text: "收到通知总数: \(TestWorkflowController.notificationCount)次通知\n监听对象总数: \(targetCount)")
         }
         TestWorkflowController.notificationTargets.append(WeakValue(notificationTarget))
 
         let kvoTarget = app.safeObserveProperty(\.kvoValue) { _, _ in
             TestWorkflowController.kvoCount += 1
-            let targetCount = TestWorkflowController.kvoTargets.filter { $0.object != nil }.count
+            let targetCount = TestWorkflowController.kvoTargets.filter { $0.value != nil }.count
             UIWindow.app.showMessage(text: "触发监听总数: \(TestWorkflowController.kvoCount)次通知\n监听对象总数: \(targetCount)")
         }
         TestWorkflowController.kvoTargets.append(WeakValue(kvoTarget))

@@ -43,12 +43,12 @@ extension Wrapper where Base: Timer {
     public static func commonTimer(countDown: Int, block: @escaping @MainActor @Sendable (Int) -> Void) -> Timer {
         let startTime = Date.fw.currentTime
         let timer = commonTimer(timeInterval: 1, block: { timer in
-            let sendableTimer = SendableObject(timer)
+            let sendableTimer = SendableValue(timer)
             DispatchQueue.main.async {
                 let remainTime = countDown - Int(round(Date.fw.currentTime - startTime))
                 if remainTime <= 0 {
                     block(0)
-                    sendableTimer.object.invalidate()
+                    sendableTimer.value.invalidate()
                 } else {
                     block(remainTime)
                 }
