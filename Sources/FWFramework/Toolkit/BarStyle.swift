@@ -202,7 +202,7 @@ import UIKit
 
         // 标记转场导航栏样式需要刷新
         if isAppeared {
-            NavigationBarAppearance.appearanceChanged?(base)
+            NavigationBarAppearance.Configuration.appearanceChanged?(base)
         }
     }
 
@@ -307,17 +307,19 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendabl
 
 /// 导航栏样式配置
 open class NavigationBarAppearance {
-    nonisolated(unsafe) static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
-    private nonisolated(unsafe) static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
-
+    actor Configuration {
+        static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
+        fileprivate static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+    }
+    
     /// 根据style获取全局appearance对象
     public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
-        appearances[style]
+        Configuration.appearances[style]
     }
 
     /// 设置style对应全局appearance对象
     public static func setAppearance(_ appearance: NavigationBarAppearance?, for style: NavigationBarStyle) {
-        appearances[style] = appearance
+        Configuration.appearances[style] = appearance
     }
 
     /// 是否半透明(磨砂)，需edgesForExtendedLayout为Top|All，默认false

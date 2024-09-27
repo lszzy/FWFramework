@@ -30,13 +30,30 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 
 /// 约定类
 public class Promise: @unchecked Sendable {
+    private actor Configuration {
+        static var failedError: Error = PromiseError.failed
+        static var validationError: Error = PromiseError.validation
+        static var timeoutError: Error = PromiseError.timeout
+    }
+    
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
-    public nonisolated(unsafe) static var failedError: Error = PromiseError.failed
+    public static var failedError: Error {
+        get { Configuration.failedError }
+        set { Configuration.failedError = newValue }
+    }
+    
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    public nonisolated(unsafe) static var validationError: Error = PromiseError.validation
+    public static var validationError: Error {
+        get { Configuration.validationError }
+        set { Configuration.validationError = newValue }
+    }
+    
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    public nonisolated(unsafe) static var timeoutError: Error = PromiseError.timeout
+    public static var timeoutError: Error {
+        get { Configuration.timeoutError }
+        set { Configuration.timeoutError = newValue }
+    }
 
     /// 约定进度值
     private struct ProgressValue: Sendable { var value: Double }

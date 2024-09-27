@@ -10,16 +10,11 @@ import FWFramework
 
 @main
 class AppDelegate: AppResponder {
-    var backgroundTask: ((@escaping @Sendable () -> Void) -> Void)?
-    var expirationHandler: (@MainActor @Sendable () -> Void)?
+    var didEnterBackground: (@MainActor @Sendable () -> Void)?
 
-    private nonisolated(unsafe) var latestCrashLog: String? {
-        get {
-            UserDefaults.app.object(forKey: "latestCrashLog") as? String
-        }
-        set {
-            UserDefaults.app.setObject(newValue, forKey: "latestCrashLog")
-        }
+    private nonisolated var latestCrashLog: String? {
+        get { UserDefaults.app.object(forKey: "latestCrashLog") as? String }
+        set { UserDefaults.app.setObject(newValue, forKey: "latestCrashLog") }
     }
 
     // MARK: - Override
@@ -101,9 +96,7 @@ class AppDelegate: AppResponder {
 
     override func applicationDidEnterBackground(_ application: UIApplication) {
         super.applicationDidEnterBackground(application)
-
-        if let backgroundTask {
-            UIApplication.app.beginBackgroundTask(backgroundTask, expirationHandler: expirationHandler)
-        }
+        
+        didEnterBackground?()
     }
 }

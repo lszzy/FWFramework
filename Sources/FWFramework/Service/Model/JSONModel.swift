@@ -533,7 +533,7 @@ extension _ExtendCustomModelType {
         for property in properties {
             let isBridgedProperty = instanceIsNsObject && bridgedPropertyList.contains(property.key)
 
-            let address = !(instance is KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: property) : nil
+            let address = !(instance is KeyMappable) && JSONModelConfiguration.shared.memoryMode ? getPropertyAddress(&instance, property: property) : nil
             let propertyDetail = PropertyInfo(key: property.key, type: property.type, address: address, bridged: isBridgedProperty)
             if mapper.propertyExcluded(property: propertyDetail) {
                 InternalLogger.logDebug("Exclude property: \(property.key)")
@@ -551,16 +551,16 @@ extension _ExtendCustomModelType {
     }
 
     static func convertKeyIfNeeded(dict: [String: Any]) -> [String: Any] {
-        if !JSONModelConfiguration.deserializeOptions.isEmpty {
+        if !JSONModelConfiguration.shared.deserializeOptions.isEmpty {
             var newDict = [String: Any]()
             for kvPair in dict {
                 var newKey = kvPair.key
-                if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                if JSONModelConfiguration.shared.deserializeOptions.contains(.snakeToCamel) {
                     newKey = newKey.fw.camelString
-                } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                } else if JSONModelConfiguration.shared.deserializeOptions.contains(.camelToSnake) {
                     newKey = newKey.fw.underlineString
                 }
-                if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+                if JSONModelConfiguration.shared.deserializeOptions.contains(.caseInsensitive) {
                     newKey = newKey.lowercased()
                 }
                 newDict[newKey] = kvPair.value
@@ -581,7 +581,7 @@ extension _ExtendCustomModelType {
                 return nil
             }
         }
-        if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+        if JSONModelConfiguration.shared.deserializeOptions.contains(.caseInsensitive) {
             return dict[property.key.lowercased()]
         }
         return dict[property.key]
@@ -629,12 +629,12 @@ extension _ExtendCustomModelType {
         }
 
         var result = [String: (Any, PropertyInfo?)]()
-        if JSONModelConfiguration.deserializeOptions.contains(.serializeReverse) {
+        if JSONModelConfiguration.shared.deserializeOptions.contains(.serializeReverse) {
             for child in children {
                 var key = child.0
-                if JSONModelConfiguration.deserializeOptions.contains(.snakeToCamel) {
+                if JSONModelConfiguration.shared.deserializeOptions.contains(.snakeToCamel) {
                     key = key.fw.underlineString
-                } else if JSONModelConfiguration.deserializeOptions.contains(.camelToSnake) {
+                } else if JSONModelConfiguration.shared.deserializeOptions.contains(.camelToSnake) {
                     key = key.fw.camelString
                 }
                 if let value = child.1 as? JSONMappedValue {
@@ -669,7 +669,7 @@ extension _ExtendCustomModelType {
                 }
             }
         } else {
-            if JSONModelConfiguration.memoryMode {
+            if JSONModelConfiguration.shared.memoryMode {
                 return getProperties(for: type(of: instance))
             }
             return nil
@@ -683,7 +683,7 @@ extension _ExtendCustomModelType {
             if instance is KeyMappable {
                 instance.mappingValue(convertedValue, forKey: property.key)
             } else {
-                if JSONModelConfiguration.memoryMode {
+                if JSONModelConfiguration.shared.memoryMode {
                     extensions(of: property.type).write(convertedValue, to: property.address)
                 }
             }
@@ -723,7 +723,7 @@ extension _ExtendCustomModelType {
             let instanceIsNsObject = instance.isNSObjectType()
             let bridgedProperty = instance.getBridgedPropertyList()
             let propertyInfos = properties.map { desc -> PropertyInfo in
-                let address = !(instance is KeyMappable) && JSONModelConfiguration.memoryMode ? getPropertyAddress(&instance, property: desc) : nil
+                let address = !(instance is KeyMappable) && JSONModelConfiguration.shared.memoryMode ? getPropertyAddress(&instance, property: desc) : nil
                 return PropertyInfo(key: desc.key, type: desc.type, address: address, bridged: instanceIsNsObject && bridgedProperty.contains(desc.key))
             }
 
@@ -1203,7 +1203,7 @@ public class MappingPropertyHandler {
 
     public init(rawPaths: [String]?, assignmentClosure: ((Any?) -> (Any?))?, takeValueClosure: ((Any?) -> (Any?))?) {
         let mappingPaths = rawPaths?.map { rawPath -> MappingPath in
-            if JSONModelConfiguration.deserializeOptions.contains(.caseInsensitive) {
+            if JSONModelConfiguration.shared.deserializeOptions.contains(.caseInsensitive) {
                 return MappingPath.buildFrom(rawPath: rawPath.lowercased())
             }
             return MappingPath.buildFrom(rawPath: rawPath)
@@ -1284,19 +1284,19 @@ public class HelpingMapper {
 // MARK: - Logger
 enum InternalLogger {
     static func logError(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.error.rawValue {
+        if JSONModelConfiguration.shared.debugMode.rawValue <= JSONModelConfiguration.DebugMode.error.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
 
     static func logDebug(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.debug.rawValue {
+        if JSONModelConfiguration.shared.debugMode.rawValue <= JSONModelConfiguration.DebugMode.debug.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
 
     static func logVerbose(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if JSONModelConfiguration.debugMode.rawValue <= JSONModelConfiguration.DebugMode.verbose.rawValue {
+        if JSONModelConfiguration.shared.debugMode.rawValue <= JSONModelConfiguration.DebugMode.verbose.rawValue {
             print(items, separator: separator, terminator: terminator)
         }
     }
@@ -1321,7 +1321,7 @@ public struct DeserializeOptions: OptionSet, Sendable {
     }
 }
 
-public enum JSONModelConfiguration {
+public class JSONModelConfiguration: @unchecked Sendable {
     public enum DebugMode: Int {
         case verbose = 0
         case debug = 1
@@ -1329,9 +1329,11 @@ public enum JSONModelConfiguration {
         case none = 3
     }
 
-    public nonisolated(unsafe) static var memoryMode = true
-    public nonisolated(unsafe) static var debugMode: DebugMode = .error
-    public nonisolated(unsafe) static var deserializeOptions: DeserializeOptions = .defaultOptions
+    public static let shared = JSONModelConfiguration()
+    
+    public var memoryMode = true
+    public var debugMode: DebugMode = .error
+    public var deserializeOptions: DeserializeOptions = .defaultOptions
 }
 
 // MARK: - AnyExtensions

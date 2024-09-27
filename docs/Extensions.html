@@ -17,7 +17,7 @@
     <a title="Extensions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
+        <p><a href="index.html">FWFramework 6.0.0-beta.2 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="search.json">
@@ -409,6 +409,12 @@
                 <a href="Classes/JSONDeserializer.html">JSONDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/JSONRequestSerializer.html">JSONRequestSerializer</a>
               </li>
               <li class="nav-group-task">
@@ -598,6 +604,9 @@
                 <a href="Classes/PropertyListResponseSerializer.html">PropertyListResponseSerializer</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/ProtectedValue.html">ProtectedValue</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/PullRefreshView.html">PullRefreshView</a>
               </li>
               <li class="nav-group-task">
@@ -694,7 +703,10 @@
                 <a href="Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/SendableObject.html">SendableObject</a>
+                <a href="Classes/SemaphoreLock.html">SemaphoreLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/SendableValue.html">SendableValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/SkeletonAnimation.html">SkeletonAnimation</a>
@@ -832,6 +844,9 @@
                 <a href="Classes/URLTransform.html">URLTransform</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/UnfairLock.html">UnfairLock</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
@@ -862,10 +877,10 @@
                 <a href="Classes/ViewPreferenceKey.html">ViewPreferenceKey</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/WeakObject.html">WeakObject</a>
+                <a href="Classes/WeakProxy.html">WeakProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/WeakProxy.html">WeakProxy</a>
+                <a href="Classes/WeakValue.html">WeakValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/WebSocket.html">WebSocket</a>
@@ -1054,12 +1069,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Enums/JSONKey.html">JSONKey</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="Enums/JSONType.html">JSONType</a>
@@ -1371,6 +1380,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/NSAttributedString.html">NSAttributedString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/c:objc(cs)NSLock">NSLock</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/NSMutableAttributedString.html">NSMutableAttributedString</a>
@@ -1795,6 +1807,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/KeyMappable.html">KeyMappable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/LockingProtocol.html">LockingProtocol</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/LoggerPlugin.html">LoggerPlugin</a>
@@ -3397,6 +3412,45 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">MainActor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/NSLock"></a>
+                <a name="//apple_ref/swift/Section/NSLock" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/NSLock"></a>
+                  <h3 class="section-name"><span>NSLock</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)NSLock"></a>
+                    <a name="//apple_ref/swift/Extension/NSLock" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)NSLock">NSLock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSLock</span><span class="p">:</span> <span class="kt"><a href="Protocols/LockingProtocol.html">LockingProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -5447,7 +5501,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

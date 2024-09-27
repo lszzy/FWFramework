@@ -97,6 +97,11 @@ open class RequestConfig: @unchecked Sendable {
     open var debugMockValidator: ((HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: ((HTTPRequest) -> Bool)?
+    
+    /// 内部显示错误和加载条句柄
+    var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
+    var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
 
     public init() {}
 
@@ -159,9 +164,9 @@ open class RequestAccessory: RequestAccessoryProtocol {
 open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
     /// 自定义显示错误方法，主线程优先调用，默认nil
     open var showErrorBlock: HTTPRequest.Completion?
-    /// 自定义显示加载方法，主线程优先调用，默认nil
+    /// 自定义显示加载条方法，主线程优先调用，默认nil
     open var showLoadingBlock: HTTPRequest.Completion?
-    /// 自定义隐藏加载方法，主线程优先调用，默认nil
+    /// 自定义隐藏加载条方法，主线程优先调用，默认nil
     open var hideLoadingBlock: HTTPRequest.Completion?
 
     /// 请求缓存预加载成功时是否仍然显示Loading，默认false
@@ -171,10 +176,6 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
     open var autoSetupContext: Bool = false
     /// 是否自动监听当前context控制器，当释放时自动停止请求，默认false
     open var autoObserveContext: Bool = false
-
-    nonisolated(unsafe) static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
-    nonisolated(unsafe) static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-    nonisolated(unsafe) static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
 
     override public init() {
         super.init()
@@ -251,7 +252,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         }
 
         DispatchQueue.fw.mainAsync {
-            RequestContextAccessory.showErrorBlock?(request.context, error)
+            RequestConfig.shared.showErrorBlock?(request.context, error)
         }
     }
 
@@ -268,7 +269,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestContextAccessory.showLoadingBlock?(request.context)
+            RequestConfig.shared.showLoadingBlock?(request.context)
         }
     }
 
@@ -283,7 +284,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestContextAccessory.hideLoadingBlock?(request.context)
+            RequestConfig.shared.hideLoadingBlock?(request.context)
         }
     }
 }
@@ -327,10 +328,10 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             return
         }
 
-        let sendableResponseObject = SendableObject(responseObject)
+        let sendableResponseObject = SendableValue(responseObject)
         retryQueue.async { [weak self] in
             self?.retrySemaphore.wait()
-            filter(request, response, sendableResponseObject.object, error) { [weak self] filterResult in
+            filter(request, response, sendableResponseObject.value, error) { [weak self] filterResult in
                 self?.retrySemaphore.signal()
                 if request.isCancelled { return }
 
@@ -339,7 +340,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
                     return
                 }
 
-                self?.retryProcess(request, response: response, responseObject: sendableResponseObject.object, error: error, completionHandler: completionHandler)
+                self?.retryProcess(request, response: response, responseObject: sendableResponseObject.value, error: error, completionHandler: completionHandler)
             }
         }
     }

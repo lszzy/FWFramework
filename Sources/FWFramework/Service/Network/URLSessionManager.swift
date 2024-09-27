@@ -298,24 +298,24 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     }
 
     private func tasks(for keyPath: String) -> [URLSessionTask] {
-        let sendableTasks = SendableObject<[URLSessionTask]>([])
+        let sendableTasks = SendableValue<[URLSessionTask]>([])
         let semaphore = DispatchSemaphore(value: 0)
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             if keyPath == "dataTasks" {
-                sendableTasks.object = dataTasks
+                sendableTasks.value = dataTasks
             } else if keyPath == "uploadTasks" {
-                sendableTasks.object = uploadTasks
+                sendableTasks.value = uploadTasks
             } else if keyPath == "downloadTasks" {
-                sendableTasks.object = downloadTasks
+                sendableTasks.value = downloadTasks
             } else if keyPath == "tasks" {
-                sendableTasks.object = dataTasks + uploadTasks + downloadTasks
+                sendableTasks.value = dataTasks + uploadTasks + downloadTasks
             }
 
             semaphore.signal()
         }
         semaphore.wait()
 
-        return sendableTasks.object
+        return sendableTasks.value
     }
 
     private func addNotificationObserver(for task: URLSessionTask) {
@@ -613,33 +613,33 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         let error = (task.fw.property(forName: "authenticationChallengeError") as? Error) ?? error
         let manager = manager
-        let sendableResponseObject = SendableObject<Any?>(nil)
+        let sendableResponseObject = SendableValue<Any?>(nil)
 
-        let sendableUserInfo = SendableObject<[AnyHashable: Any]>([:])
-        sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
+        let sendableUserInfo = SendableValue<[AnyHashable: Any]>([:])
+        sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteResponseSerializerKey] = manager?.responseSerializer
 
         let data = mutableData
         mutableData = Data()
 
         if let sessionTaskMetrics {
-            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteSessionTaskMetrics] = sessionTaskMetrics
+            sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteSessionTaskMetrics] = sessionTaskMetrics
         }
         if let downloadFileURL {
-            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteAssetPathKey] = downloadFileURL
+            sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteAssetPathKey] = downloadFileURL
         } else {
-            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteResponseDataKey] = data
+            sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteResponseDataKey] = data
         }
 
         if let error {
-            sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteErrorKey] = error
+            sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteErrorKey] = error
 
             let queue = manager?.completionQueue ?? .main
             let group = manager?.completionGroup ?? Self.completionGroup
             queue.async(group: group) {
-                self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, error)
+                self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.value, error)
 
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.object)
+                    NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.value)
                 }
             }
         } else {
@@ -651,29 +651,29 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
 
                 var serializationError: Error?
                 do {
-                    sendableResponseObject.object = try manager?.responseSerializer.responseObject(for: task.response, data: data)
+                    sendableResponseObject.value = try manager?.responseSerializer.responseObject(for: task.response, data: data)
                 } catch let decodeError {
                     serializationError = decodeError
                 }
 
                 if self.downloadFileURL != nil {
-                    sendableResponseObject.object = self.downloadFileURL
+                    sendableResponseObject.value = self.downloadFileURL
                 }
-                if sendableResponseObject.object != nil {
-                    sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = sendableResponseObject.object
+                if sendableResponseObject.value != nil {
+                    sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteSerializedResponseKey] = sendableResponseObject.value
                 }
                 if serializationError != nil {
-                    sendableUserInfo.object[URLSessionManager.networkingTaskDidCompleteErrorKey] = serializationError
+                    sendableUserInfo.value[URLSessionManager.networkingTaskDidCompleteErrorKey] = serializationError
                 }
 
                 let queue = manager?.completionQueue ?? .main
                 let group = manager?.completionGroup ?? Self.completionGroup
                 let responseError = serializationError
                 queue.async(group: group) {
-                    self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.object, responseError)
+                    self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.value, responseError)
 
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.object)
+                        NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.value)
                     }
                 }
             }

@@ -72,17 +72,24 @@ public enum BarrageRenderStatus: Int, Sendable {
 }
 
 open class BarrageRenderView: UIView {
+    private class MutableState: @unchecked Sendable {
+        var animatingCells: [BarrageCell] = []
+        var idleCells: [BarrageCell] = []
+        var renderStatus: BarrageRenderStatus = .stopped
+        var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
+        var autoClear = false
+    }
+    
     open var renderPositionStyle: BarrageRenderPositionStyle = .randomTracks
-    open private(set) nonisolated(unsafe) var animatingCells: [BarrageCell] = []
-    open private(set) nonisolated(unsafe) var idleCells: [BarrageCell] = []
-    open private(set) nonisolated(unsafe) var renderStatus: BarrageRenderStatus = .stopped
+    open var animatingCells: [BarrageCell] { mutableState.animatingCells }
+    open var idleCells: [BarrageCell] { mutableState.idleCells }
+    open var renderStatus: BarrageRenderStatus { mutableState.renderStatus }
 
+    private let mutableState = MutableState()
     private let animatingCellsLock = DispatchSemaphore(value: 1)
     private let idleCellsLock = DispatchSemaphore(value: 1)
     private let trackInfoLock = DispatchSemaphore(value: 1)
     private var lastestCell: BarrageCell?
-    private nonisolated(unsafe) var autoClear = false
-    private nonisolated(unsafe) var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
 
     private lazy var lowPositionView: UIView = {
         let result = UIView()
@@ -123,30 +130,30 @@ open class BarrageRenderView: UIView {
     }
 
     deinit {
-        guard renderStatus != .stopped else { return }
-        renderStatus = .stopped
+        guard mutableState.renderStatus != .stopped else { return }
+        mutableState.renderStatus = .stopped
 
-        if autoClear {
+        if mutableState.autoClear {
             NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(clearIdleCells), object: nil)
         }
 
-        animatingCells.removeAll()
-        idleCells.removeAll()
-        trackNextAvailableTime.removeAll()
+        mutableState.animatingCells.removeAll()
+        mutableState.idleCells.removeAll()
+        mutableState.trackNextAvailableTime.removeAll()
     }
 
     open func dequeueReusableCell(withClass barrageCellClass: BarrageCell.Type) -> BarrageCell? {
         var barrageCell: BarrageCell?
 
         idleCellsLock.wait()
-        for cell in idleCells {
+        for cell in mutableState.idleCells {
             if type(of: cell) == barrageCellClass {
                 barrageCell = cell
                 break
             }
         }
         if let barrageCell {
-            idleCells.removeAll { $0 == barrageCell }
+            mutableState.idleCells.removeAll { $0 == barrageCell }
             barrageCell.idleTime = 0
         } else {
             barrageCell = barrageCellClass.init()
@@ -157,7 +164,7 @@ open class BarrageRenderView: UIView {
     }
 
     open func fireBarrageCell(_ barrageCell: BarrageCell) {
-        switch renderStatus {
+        switch mutableState.renderStatus {
         case .started:
             break
         case .paused:
@@ -175,8 +182,8 @@ open class BarrageRenderView: UIView {
         barrageCell.addBorderAttributes()
 
         animatingCellsLock.wait()
-        lastestCell = animatingCells.last
-        animatingCells.append(barrageCell)
+        lastestCell = mutableState.animatingCells.last
+        mutableState.animatingCells.append(barrageCell)
         barrageCell.isIdle = false
         animatingCellsLock.signal()
 
@@ -194,7 +201,7 @@ open class BarrageRenderView: UIView {
         animatingCellsLock.wait()
 
         var anyTrigger = false
-        let cells = animatingCells.reversed()
+        let cells = mutableState.animatingCells.reversed()
         for cell in cells {
             if cell.layer.presentation()?.hitTest(touchPoint) != nil {
                 if let barrageDescriptor = cell.barrageDescriptor,
@@ -212,20 +219,20 @@ open class BarrageRenderView: UIView {
     }
 
     open func start() {
-        switch renderStatus {
+        switch mutableState.renderStatus {
         case .started:
             return
         case .paused:
             resume()
         default:
-            renderStatus = .started
+            mutableState.renderStatus = .started
         }
     }
 
     open func pause() {
-        switch renderStatus {
+        switch mutableState.renderStatus {
         case .started:
-            renderStatus = .paused
+            mutableState.renderStatus = .paused
         case .paused:
             return
         default:
@@ -233,7 +240,7 @@ open class BarrageRenderView: UIView {
         }
 
         animatingCellsLock.wait()
-        let cells = animatingCells.reversed()
+        let cells = mutableState.animatingCells.reversed()
         for cell in cells {
             let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
             cell.layer.speed = 0
@@ -243,17 +250,17 @@ open class BarrageRenderView: UIView {
     }
 
     open func resume() {
-        switch renderStatus {
+        switch mutableState.renderStatus {
         case .started:
             return
         case .paused:
-            renderStatus = .started
+            mutableState.renderStatus = .started
         default:
             return
         }
 
         animatingCellsLock.wait()
-        let cells = animatingCells.reversed()
+        let cells = mutableState.animatingCells.reversed()
         for cell in cells {
             let pausedTime = cell.layer.timeOffset
             cell.layer.speed = 1.0
@@ -266,21 +273,21 @@ open class BarrageRenderView: UIView {
     }
 
     open func stop() {
-        switch renderStatus {
+        switch mutableState.renderStatus {
         case .started:
-            renderStatus = .stopped
+            mutableState.renderStatus = .stopped
         case .paused:
-            renderStatus = .stopped
+            mutableState.renderStatus = .stopped
         default:
             return
         }
 
-        if autoClear {
+        if mutableState.autoClear {
             NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(clearIdleCells), object: nil)
         }
 
         animatingCellsLock.wait()
-        let cells = animatingCells.reversed()
+        let cells = mutableState.animatingCells.reversed()
         for cell in cells {
             let pausedTime = cell.layer.convertTime(CACurrentMediaTime(), from: nil)
             cell.layer.speed = 0
@@ -288,28 +295,28 @@ open class BarrageRenderView: UIView {
             cell.layer.removeAllAnimations()
             cell.removeFromSuperview()
         }
-        animatingCells.removeAll()
+        mutableState.animatingCells.removeAll()
         animatingCellsLock.signal()
 
         idleCellsLock.wait()
-        idleCells.removeAll()
+        mutableState.idleCells.removeAll()
         idleCellsLock.signal()
 
         trackInfoLock.wait()
-        trackNextAvailableTime.removeAll()
+        mutableState.trackNextAvailableTime.removeAll()
         trackInfoLock.signal()
     }
 
     open func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if !flag { return }
-        if renderStatus == .stopped { return }
+        if mutableState.renderStatus == .stopped { return }
 
         var animatedCell: BarrageCell?
         animatingCellsLock.wait()
-        for cell in animatingCells {
+        for cell in mutableState.animatingCells {
             if cell.barrageAnimation == anim {
                 animatedCell = cell
-                animatingCells.removeAll { $0 == cell }
+                mutableState.animatingCells.removeAll { $0 == cell }
                 break
             }
         }
@@ -318,7 +325,7 @@ open class BarrageRenderView: UIView {
         guard let animatedCell else { return }
 
         trackInfoLock.wait()
-        let trackInfo = trackNextAvailableTime[nextAvailableTimeKey(animatedCell, index: animatedCell.trackIndex)]
+        let trackInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey(animatedCell, index: animatedCell.trackIndex)]
         if let trackInfo {
             trackInfo.barrageCount -= 1
         }
@@ -329,12 +336,12 @@ open class BarrageRenderView: UIView {
 
         idleCellsLock.wait()
         animatedCell.idleTime = Date().timeIntervalSince1970
-        idleCells.append(animatedCell)
+        mutableState.idleCells.append(animatedCell)
         idleCellsLock.signal()
 
-        if !autoClear {
+        if !mutableState.autoClear {
             perform(#selector(clearIdleCells), with: nil, afterDelay: 5.0)
-            autoClear = true
+            mutableState.autoClear = true
         }
     }
 
@@ -376,11 +383,11 @@ open class BarrageRenderView: UIView {
             var trackIndex = Int(arc4random_uniform(UInt32(trackCount)))
 
             trackInfoLock.wait()
-            let trackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
+            let trackInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
             // 当前行暂不可用
             if let trackInfo, trackInfo.nextAvailableTime > CACurrentMediaTime() {
                 var availableTrackInfos = [BarrageTrackInfo]()
-                for info in trackNextAvailableTime.values {
+                for info in mutableState.trackNextAvailableTime.values {
                     // 只在同类弹幕中判断是否有可用的轨道
                     if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(type(of: barrageCell))) {
                         availableTrackInfos.append(info)
@@ -391,10 +398,10 @@ open class BarrageRenderView: UIView {
                     trackIndex = randomInfo?.trackIndex ?? 0
                 } else {
                     // 刚开始不是每一条轨道都跑过弹幕, 还有空轨道
-                    if trackNextAvailableTime.count < trackCount {
+                    if mutableState.trackNextAvailableTime.count < trackCount {
                         var numberArray = [Int]()
                         for index in 0..<trackCount {
-                            let emptyTrackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
+                            let emptyTrackInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
                             if emptyTrackInfo == nil {
                                 numberArray.append(index)
                             }
@@ -430,11 +437,11 @@ open class BarrageRenderView: UIView {
                 var trackIndex = Int(arc4random_uniform(UInt32(trackCount)))
 
                 trackInfoLock.wait()
-                let trackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
+                let trackInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: trackIndex)]
                 // 当前行暂不可用
                 if let trackInfo, trackInfo.nextAvailableTime > CACurrentMediaTime() {
                     var availableTrackInfos = [BarrageTrackInfo]()
-                    for info in trackNextAvailableTime.values {
+                    for info in mutableState.trackNextAvailableTime.values {
                         // 只在同类弹幕中判断是否有可用的轨道
                         if CACurrentMediaTime() > info.nextAvailableTime && info.trackIdentifier.contains(NSStringFromClass(type(of: barrageCell))) {
                             availableTrackInfos.append(info)
@@ -445,10 +452,10 @@ open class BarrageRenderView: UIView {
                         trackIndex = randomInfo?.trackIndex ?? 0
                     } else {
                         // 刚开始不是每一条轨道都跑过弹幕, 还有空轨道
-                        if trackNextAvailableTime.count < trackCount {
+                        if mutableState.trackNextAvailableTime.count < trackCount {
                             var numberArray = [Int]()
                             for index in 0..<trackCount {
-                                let emptyTrackInfo = trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
+                                let emptyTrackInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey(barrageCell, index: index)]
                                 if emptyTrackInfo == nil {
                                     numberArray.append(index)
                                 }
@@ -479,16 +486,16 @@ open class BarrageRenderView: UIView {
     @objc private func clearIdleCells() {
         idleCellsLock.wait()
         let timeInterval = Date().timeIntervalSince1970
-        let cells = idleCells.reversed()
+        let cells = mutableState.idleCells.reversed()
         for cell in cells {
             let time = timeInterval - cell.idleTime
             if time > 5.0 && cell.idleTime > 0 {
-                idleCells.removeAll { $0 == cell }
+                mutableState.idleCells.removeAll { $0 == cell }
             }
         }
 
-        if idleCells.isEmpty {
-            autoClear = false
+        if mutableState.idleCells.isEmpty {
+            mutableState.autoClear = false
         } else {
             perform(#selector(clearIdleCells), with: nil, afterDelay: 5.0)
         }
@@ -524,7 +531,7 @@ open class BarrageRenderView: UIView {
             trackInfoLock.wait()
 
             var trackInfo: BarrageTrackInfo
-            if let nextInfo = trackNextAvailableTime[nextAvailableTimeKey] {
+            if let nextInfo = mutableState.trackNextAvailableTime[nextAvailableTimeKey] {
                 trackInfo = nextInfo
             } else {
                 trackInfo = BarrageTrackInfo()
@@ -542,7 +549,7 @@ open class BarrageRenderView: UIView {
             if distanceX == distance {
                 let time = barrageCell.bounds.width / speed
                 trackInfo.nextAvailableTime = CACurrentMediaTime() + time + 0.1
-                trackNextAvailableTime[nextAvailableTimeKey] = trackInfo
+                mutableState.trackNextAvailableTime[nextAvailableTimeKey] = trackInfo
             }
 
             trackInfoLock.signal()

@@ -33,8 +33,8 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     public static let shared = Autoloader()
 
     // MARK: - Accessor
-    private nonisolated(unsafe) static var isAutoloaded = false
-    private nonisolated(unsafe) static var debugMethods: [String] = []
+    private var isAutoloaded = false
+    private var debugMethods: [String] = []
 
     // MARK: - Public
     /// 自动加载Swift类并调用autoload方法，参数为Class或String
@@ -92,12 +92,12 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
         }
         return nil
     }
-
+    
     /// 自动加载器调试描述
-    override public class func debugDescription() -> String {
+    public override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for methodName in debugMethods {
+        for methodName in shared.debugMethods {
             let formatName = methodName
                 .replacingOccurrences(of: "load", with: "")
                 .trimmingCharacters(in: .init(charactersIn: "_"))
@@ -112,11 +112,11 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
     // MARK: - AutoloadProtocol
     /// 自动加载load开头objc扩展方法
     public static func autoload() {
-        guard !isAutoloaded else { return }
-        isAutoloaded = true
+        guard !shared.isAutoloaded else { return }
+        shared.isAutoloaded = true
 
-        FrameworkAutoloader.debugMethods = autoloadMethods(FrameworkAutoloader.self)
-        debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
+        FrameworkAutoloader.shared.debugMethods = autoloadMethods(FrameworkAutoloader.self)
+        shared.debugMethods = autoloadMethods(Autoloader.self) + autoloadMethods(Autoloader.shared)
 
         #if DEBUG
         // Logger.debug(group: Logger.fw.moduleName, "%@", FrameworkAutoloader.debugDescription())
@@ -128,13 +128,15 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
 // MARK: - FrameworkAutoloader
 /// 框架内部自动加载器，自动加载框架内置组件
 class FrameworkAutoloader: NSObject, @unchecked Sendable {
-    fileprivate nonisolated(unsafe) static var debugMethods: [String] = []
-
-    /// 自动加载器调试描述
+    static let shared = FrameworkAutoloader()
+    
+    fileprivate var debugMethods: [String] = []
+    
+    /// 内部加载器调试描述
     override class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
-        for methodName in debugMethods {
+        for methodName in shared.debugMethods {
             let formatName = methodName
                 .replacingOccurrences(of: "load", with: "")
                 .trimmingCharacters(in: .init(charactersIn: "_"))

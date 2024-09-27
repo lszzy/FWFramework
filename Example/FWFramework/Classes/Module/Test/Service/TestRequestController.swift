@@ -619,11 +619,11 @@ extension TestRequestController {
         FileManager.app.createDirectory(atPath: testPath)
         var fileName = "upload.mp4"
         var saveName = "download.mp4"
-        let isVideo = SendableObject(true)
+        let isVideo = SendableValue(true)
         if !FileManager.app.fileExists(atPath: testPath.app.appendingPath(fileName), isDirectory: false) {
             fileName = "upload.jpg"
             saveName = "download.jpg"
-            isVideo.object = false
+            isVideo.value = false
         }
 
         let request = TestDownloadRequest()
@@ -637,8 +637,8 @@ extension TestRequestController {
             let filePath = request.savePath
             let fileSize = String.app.sizeString(FileManager.app.fileSize(filePath))
 
-            self?.app.showConfirm(title: "下载\(isVideo.object ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: { [weak self] in
-                self?.app.showImagePreview(imageURLs: [isVideo.object ? filePath : previewRequest], imageInfos: nil, currentIndex: 0)
+            self?.app.showConfirm(title: "下载\(isVideo.value ? "视频" : "图片")成功，大小: \(fileSize)", message: "是否打开预览？", confirmBlock: { [weak self] in
+                self?.app.showImagePreview(imageURLs: [isVideo.value ? filePath : previewRequest], imageInfos: nil, currentIndex: 0)
             })
         } failure: { [weak self] _ in
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)

@@ -224,23 +224,6 @@ extension URLRequest {
 
 /// Can be used for registering Mocked data, returned by the `MockingURLProtocol`.
 public struct NetworkMocker {
-    private struct IgnoredRule: Equatable {
-        let urlToIgnore: URL
-        let ignoreQuery: Bool
-
-        /// Checks if the passed URL should be ignored.
-        ///
-        /// - Parameter url: The URL to check for.
-        /// - Returns: `true` if it should be ignored, `false` if the URL doesn't correspond to ignored rules.
-        func shouldIgnore(_ url: URL) -> Bool {
-            if ignoreQuery {
-                return urlToIgnore.baseString == url.baseString
-            }
-
-            return urlToIgnore.absoluteString == url.absoluteString
-        }
-    }
-
     public enum HTTPVersion: String {
         case http1_0 = "HTTP/1.0"
         case http1_1 = "HTTP/1.1"
@@ -262,15 +245,47 @@ public struct NetworkMocker {
         /// - Any other URL: Ignored by Mocker, default process is applied as if the Mocker doesn't exist.
         case optin
     }
+    
+    private struct IgnoredRule: Equatable {
+        let urlToIgnore: URL
+        let ignoreQuery: Bool
+
+        /// Checks if the passed URL should be ignored.
+        ///
+        /// - Parameter url: The URL to check for.
+        /// - Returns: `true` if it should be ignored, `false` if the URL doesn't correspond to ignored rules.
+        func shouldIgnore(_ url: URL) -> Bool {
+            if ignoreQuery {
+                return urlToIgnore.baseString == url.baseString
+            }
+
+            return urlToIgnore.absoluteString == url.absoluteString
+        }
+    }
+    
+    private actor Configuration {
+        static var mode: Mode = .optout
+        static var shared = NetworkMocker()
+        static var httpVersion: HTTPVersion = .http1_1
+    }
 
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
-    public nonisolated(unsafe) static var mode: Mode = .optout
+    public static var mode: Mode {
+        get { Configuration.mode }
+        set { Configuration.mode = newValue }
+    }
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
-    nonisolated(unsafe) static var shared = NetworkMocker()
+    static var shared: NetworkMocker {
+        get { Configuration.shared }
+        set { Configuration.shared = newValue }
+    }
 
     /// The HTTP Version to use in the mocked response.
-    public nonisolated(unsafe) static var httpVersion: HTTPVersion = .http1_1
+    public static var httpVersion: HTTPVersion {
+        get { Configuration.httpVersion }
+        set { Configuration.httpVersion = newValue }
+    }
 
     /// The registrated mocks.
     private(set) var mocks: [NetworkMock] = []
