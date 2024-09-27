@@ -55,12 +55,12 @@ extension MainActor {
     public static func runSyncIf<T>(execute block: @MainActor () -> T, otherwise: () -> T) -> T where T: Sendable {
         if Thread.isMainThread {
             #if swift(>=5.10)
-            MainActor.assumeIsolated(block)
+            return MainActor.assumeIsolated(block)
             #else
-            MainActor.adaptAssumeIsolated(block)
+            return MainActor.adaptAssumeIsolated(block)
             #endif
         } else {
-            otherwise()
+            return otherwise()
         }
     }
 

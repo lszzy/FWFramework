@@ -617,7 +617,7 @@ extension Wrapper where Base: UIDevice {
         var hasWindow = false
         let sendableTimer = SendableValue(timer)
         timer.setEventHandler { @Sendable [weak base] in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak base] in
                 var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
                 if countDown <= 0 {
                     sendableTimer.value.cancel()
