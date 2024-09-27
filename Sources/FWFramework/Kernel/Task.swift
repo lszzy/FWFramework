@@ -20,7 +20,7 @@ open class TaskOperation: Operation, @unchecked Sendable {
     }
 
     /// 任务句柄，执行完成需调用task.finish(error:)
-    open var taskBlock: ((TaskOperation) -> Void)?
+    open var taskBlock: (@Sendable (TaskOperation) -> Void)?
 
     /// 是否在主线程执行，会阻碍UI渲染，默认false
     open var onMainThread = false
@@ -33,7 +33,11 @@ open class TaskOperation: Operation, @unchecked Sendable {
         self.state = .ready
     }
 
-    public convenience init(onMainThread: Bool = false, queuePriority: Operation.QueuePriority = .normal, taskBlock: ((TaskOperation) -> Void)?) {
+    public convenience init(
+        onMainThread: Bool = false,
+        queuePriority: Operation.QueuePriority = .normal,
+        taskBlock: (@Sendable (TaskOperation) -> Void)?
+    ) {
         self.init()
         self.onMainThread = onMainThread
         self.queuePriority = queuePriority

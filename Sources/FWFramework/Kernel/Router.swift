@@ -134,7 +134,7 @@ public class Router: NSObject, @unchecked Sendable {
     private var routeHandler: (@MainActor @Sendable (Context, Any) -> Any?)?
     private var errorHandler: (@MainActor @Sendable (Context) -> Void)?
     private var rewriteRules = [String: String]()
-    private var rewriteFilter: ((String) -> String)?
+    private var rewriteFilter: (@Sendable (String) -> String)?
 
     // MARK: - Public
     /// 注册路由类或对象，批量注册路由规则
@@ -675,7 +675,7 @@ public class Router: NSObject, @unchecked Sendable {
 // MARK: - Router+Extension
 extension Router {
     /// 全局重写过滤器
-    public static var rewriteFilter: ((String) -> String)? {
+    public static var rewriteFilter: (@Sendable (String) -> String)? {
         get { shared.rewriteFilter }
         set { shared.rewriteFilter = newValue }
     }
