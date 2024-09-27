@@ -96,7 +96,7 @@ class AppDelegate: AppResponder {
 
     override func applicationDidEnterBackground(_ application: UIApplication) {
         super.applicationDidEnterBackground(application)
-        
+
         didEnterBackground?()
     }
 }

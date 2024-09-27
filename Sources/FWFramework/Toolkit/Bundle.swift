@@ -19,7 +19,7 @@ open class ModuleBundle: NSObject {
     actor Configuration {
         static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
     }
-    
+
     private class Target {
         let identifier = UUID().uuidString
         var bundle: Bundle?

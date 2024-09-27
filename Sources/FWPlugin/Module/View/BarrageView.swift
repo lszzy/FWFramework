@@ -79,7 +79,7 @@ open class BarrageRenderView: UIView {
         var trackNextAvailableTime: [String: BarrageTrackInfo] = [:]
         var autoClear = false
     }
-    
+
     open var renderPositionStyle: BarrageRenderPositionStyle = .randomTracks
     open var animatingCells: [BarrageCell] { mutableState.animatingCells }
     open var idleCells: [BarrageCell] { mutableState.idleCells }

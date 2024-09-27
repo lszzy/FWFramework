@@ -947,11 +947,12 @@ actor AdaptiveConfiguration {
             cachedCurrentDevice = newValue
         }
     }
+
     private static var cachedCurrentDevice: UIDevice?
     fileprivate static var deviceWidth: CGFloat?
     fileprivate static var deviceHeight: CGFloat?
     fileprivate static var deviceModel: String?
-    
+
     fileprivate static var mainScreen: UIScreen? {
         get {
             if let mainScreen = cachedMainScreen { return mainScreen }
@@ -968,6 +969,7 @@ actor AdaptiveConfiguration {
             cachedMainScreen = newValue
         }
     }
+
     private static var cachedMainScreen: UIScreen?
     fileprivate static var screenScale: CGFloat?
     fileprivate static var referenceSize: CGSize = .init(width: 375, height: 812)

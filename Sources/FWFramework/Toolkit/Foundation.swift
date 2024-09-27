@@ -1374,7 +1374,7 @@ private actor FoundationConfiguration {
     static var onceTokens = [AnyHashable]()
     static var taskPool = NSMutableDictionary()
     static var taskSemaphore = DispatchSemaphore(value: 1)
-    
+
     static var currentBaseTime: TimeInterval = 0
     static var localBaseTime: TimeInterval = 0
     static var dateFormatter: DateFormatter = {
@@ -1391,9 +1391,9 @@ private actor FoundationConfiguration {
         formatter.locale = Locale(identifier: "en_US")
         return formatter
     }()
-    
+
     static var httpProxyDisabled = false
-    
+
     static var swizzleHttpProxy = false
 }
 

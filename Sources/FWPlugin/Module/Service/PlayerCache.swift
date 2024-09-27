@@ -952,12 +952,13 @@ public class PlayerCacheManager: NSObject, @unchecked Sendable {
         get { shared.cacheUpdateNotifyInterval }
         set { shared.cacheUpdateNotifyInterval = newValue }
     }
-    
+
     private static let shared = PlayerCacheManager()
     private var cacheDirectory: String = {
         let result = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "PlayerCache"])
         return result
     }()
+
     private var cacheUpdateNotifyInterval: TimeInterval = 0.1
     private var cacheFileNameRules: ((URL) -> String)?
 

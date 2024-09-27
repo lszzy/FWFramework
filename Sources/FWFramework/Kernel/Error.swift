@@ -76,7 +76,7 @@ public class ErrorManager: @unchecked Sendable {
         SIGILL: "SIGILL"
     ]
     private var tryCatchHandler: ((_ block: () -> Void, _ exceptionHandler: (NSException) -> Void) -> Void)?
-    
+
     private var isStarted = false
     private var isExceptionStarted = false
     private var isSignalStarted = false

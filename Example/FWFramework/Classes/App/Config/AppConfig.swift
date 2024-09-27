@@ -15,7 +15,7 @@ class AppConfig: Configuration {
 extension AppConfig {
     class Network: @unchecked Sendable {
         static let shared = Network()
-        
+
         var apiUrl = ""
     }
 

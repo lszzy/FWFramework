@@ -245,7 +245,7 @@ public struct NetworkMocker {
         /// - Any other URL: Ignored by Mocker, default process is applied as if the Mocker doesn't exist.
         case optin
     }
-    
+
     private struct IgnoredRule: Equatable {
         let urlToIgnore: URL
         let ignoreQuery: Bool
@@ -262,7 +262,7 @@ public struct NetworkMocker {
             return urlToIgnore.absoluteString == url.absoluteString
         }
     }
-    
+
     private actor Configuration {
         static var mode: Mode = .optout
         static var shared = NetworkMocker()

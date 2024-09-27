@@ -48,14 +48,14 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
         static var trackExposureBlock: (@MainActor (UIView) -> Void)?
     }
-    
+
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
     @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)? {
         get { Configuration.trackClickBlock }
         set { Configuration.trackClickBlock = newValue }
     }
-    
+
     @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor (UIView) -> Void)? {
         get { Configuration.trackExposureBlock }
         set { Configuration.trackExposureBlock = newValue }

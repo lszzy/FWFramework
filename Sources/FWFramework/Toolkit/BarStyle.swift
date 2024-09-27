@@ -311,7 +311,7 @@ open class NavigationBarAppearance {
         static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
         fileprivate static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     }
-    
+
     /// 根据style获取全局appearance对象
     public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
         Configuration.appearances[style]

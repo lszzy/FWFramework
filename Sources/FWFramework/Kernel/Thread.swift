@@ -63,7 +63,7 @@ extension MainActor {
             otherwise()
         }
     }
-    
+
     #if swift(<5.10)
     /// 适配Swift5.10以下不能调用MainActor.assumeIsolated方法问题
     private static func adaptAssumeIsolated<T>(_ operation: () throws -> T) rethrows -> T {
@@ -77,7 +77,7 @@ extension MainActor {
 public protocol LockingProtocol {
     /// 加锁方法
     func lock()
-    
+
     /// 解锁方法
     func unlock()
 }
@@ -153,7 +153,7 @@ public final class ProtectedValue<Value>: @unchecked Sendable {
     public init(_ value: Value) {
         self._value = value
     }
-    
+
     /// 同步方式读取或设置值
     public var value: Value {
         get { read() }
@@ -164,7 +164,7 @@ public final class ProtectedValue<Value>: @unchecked Sendable {
     public func read<U>(_ closure: (Value) throws -> U) rethrows -> U {
         try lock.around { try closure(self._value) }
     }
-    
+
     /// 同步方式读取值
     public func read() -> Value {
         read { $0 }

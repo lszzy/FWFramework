@@ -1013,7 +1013,7 @@ extension UITextView {
 // MARK: - KeyboardConfig
 private class KeyboardConfig: @unchecked Sendable {
     static let shared = KeyboardConfig()
-    
+
     var keyboardShowing = false
     var keyboardOrigin: CGFloat = 0
     var keyboardOffset: CGFloat = 0
@@ -1027,6 +1027,7 @@ private class KeyboardConfig: @unchecked Sendable {
         _toolbarPreviousImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
         return _toolbarPreviousImage
     }
+
     var _toolbarPreviousImage: UIImage?
 
     var toolbarNextImage: UIImage? {
@@ -1037,6 +1038,7 @@ private class KeyboardConfig: @unchecked Sendable {
         _toolbarNextImage = UIImage(data: data, scale: 3)?.imageFlippedForRightToLeftLayoutDirection()
         return _toolbarNextImage
     }
+
     var _toolbarNextImage: UIImage?
 }
 

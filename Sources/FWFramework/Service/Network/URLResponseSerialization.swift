@@ -169,7 +169,7 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
         fileprivate static var imageLock = NSLock()
     }
-    
+
     open var imageScale: CGFloat = UIScreen.fw.screenScale
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false

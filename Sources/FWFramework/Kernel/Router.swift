@@ -126,7 +126,7 @@ public class Router: NSObject, @unchecked Sendable {
     private static let routeSpecialCharacters = "/?&."
     private static let routeCoreKey = "FWRouterCore"
     private static let routeBlockKey = "FWRouterBlock"
-    
+
     private static let shared = Router()
     private var strictMode = false
     private var routeRules = NSMutableDictionary()

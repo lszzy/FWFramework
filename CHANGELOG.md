@@ -2,37 +2,34 @@
 
 ## [6.0.0-beta.2] - 2024-09-27
 
-### Changed
-* Removed the use of nonisolated(unsafe) to make it compatible with Swift 5.9
-* Added LockingProtocol and common mutex encapsulation
-* Added ProtectedValue thread-safe value wrapper
-* WeakObject renamed to WeakValue, migration and upgrade required
-* SendableObject renamed to SendableValue, migration and upgrade required
-* Modified some static configuration items to singleton configuration item mode
-* Fixed compatibility issues when AssetManager turns on Swift 6 mode
-* Fixed the issue that performBlock method does not use parameter queue
-
-## [6.0.0-beta.1] - 2024-09-25
-
 ### Added
-* Compatible with Swift 6, code marks MainActor, Sendable, etc., easy to write safer code
+* Compatible with Swift 6, code marks MainActor, Sendable, nonisolated, etc., easy to write safer code
 * Compatible with iOS 18, ViewIntrospect adds iOS 18 related variables
-* Refactored the proportional scaling implementation, and related methods support non-main thread calls
-* Add SendableObject object to solve the problem of passing parameters of any object Sendable
-* Add safe-starting Message related observe method for main thread call listener handle
-* Router, JSBridge component related methods mark MainActor main thread call, need to migrate and adapt
-* Remove the method marked as obsolete in version 5.x, please use the new API to replace the implementation, need to migrate and adapt
-* Reconstruct the height acquisition method of the global status bar, navigation bar, tab bar, etc., give priority to dynamic acquisition and caching
+* Refactor the proportional scaling implementation scheme, and related methods support non-main thread calls
+* Add SendableValue objects to solve the problem of passing parameters of any object Sendable
+* Add observe methods related to Message starting with safe, which are used for main thread calls to listener handles
+* Add ProtectedValue, LockingProtocol and other thread safety tool classes
+* Router, JSBridge component related methods mark MainActor main thread calls, which need to be migrated and adapted
+* Remove the methods marked as deprecated in version 5.x, please use the new API to replace the implementation, which needs to be migrated and adapted
+* Refactor the height acquisition methods of the global status bar, navigation bar, tab bar, etc., and give priority to dynamic acquisition and caching
 
 ### Migrate
-1. Adapt to Swift 6. Need to fix the compilation error of related code after marking MainActor and Sendable, need to migrate and adapt
-2. Adapt to iOS 18, if you use ViewIntrospect components, you need to adapt v18 related variables, need to migrate and adapt
-3. Adapt Plugin, when implementing custom Plugin, you need to synchronously mark MainActor, Sendable, etc., need to migrate and adapt
-4. If the main thread needs to call Message related observe listener handle, please migrate to use the corresponding method starting with safe
+1. Adapt to Swift 6. Need to fix the compilation error of related code after marking MainActor, Sendable, nonisolated, and need to migrate and adapt
+2. Adapt to iOS 18. If you use ViewIntrospect components, you need to adapt v18 related variables, and need to migrate and adapt
+3. Adapt Plugin. When implementing custom Plugin, you need to synchronously mark MainActor, Sendable, etc., and need to migrate and adapt
+4. If the main thread needs to call Message-related observe listener handles, please migrate to use the corresponding method starting with safe
 5. If the main project opens Swift 6 compilation, HTTPRequest request subclasses, etc. need to be synchronously marked as `@unchecked Sendable`
-6. The obsolete methods of version 5.x have been removed, please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), need to migrate and adapt
-7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor related functions, etc.)
+6. The obsolete methods of version 5.x have been removed. Please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), which requires migration and adaptation
+7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor-related functions, etc.)
 8. For more usage examples, please refer to the Example project
+
+## [5.12.1] - 2024-09-27
+
+### Fixed
+* Mark WeakObject as deprecated, please migrate to WeakValue
+* Added isIpod and pointHalf tool methods
+* Fixed the issue that performBlock method does not use queue parameter
+* Fixed the judgment method of isMac in iOS13 system
 
 ## [5.12.0] - 2024-09-23
 
