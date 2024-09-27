@@ -146,7 +146,7 @@ extension Color {
     private actor Configuration {
         static var colorCaches: [Color: UIColor] = [:]
     }
-    
+
     /// 从16进制创建Color
     /// - Parameters:
     ///   - hex: 十六进制值，格式0xFFFFFF
@@ -290,7 +290,7 @@ extension Font {
     private actor Configuration {
         static var fontBlock: ((CGFloat, Font.Weight) -> Font?)?
     }
-    
+
     /// 全局自定义字体句柄，优先调用
     public static var fontBlock: ((CGFloat, Font.Weight) -> Font?)? {
         get { Configuration.fontBlock }
@@ -367,7 +367,7 @@ extension Divider {
         static var defaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
         static var defaultColorConfiguration: (() -> Color)?
     }
-    
+
     /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
     public nonisolated static var defaultSize: CGFloat {
         get { Configuration.defaultSize }

@@ -58,7 +58,7 @@ open class MarqueeLabel: UILabel {
 
     private let mutableState = MutableState()
     private var fadeLayer: CAGradientLayer?
-    
+
     private class MutableState: @unchecked Sendable {
         var displayLink: CADisplayLink?
     }

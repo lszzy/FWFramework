@@ -68,7 +68,7 @@ public class PluginManager: @unchecked Sendable {
 
     /// 单例插件加载器，加载未注册插件时会尝试调用并注册，block返回值为register方法object参数
     public static let sharedLoader = Loader<Any, Any>()
-    
+
     private static let shared = PluginManager()
     private var pluginPool: [String: Target] = [:]
 
@@ -161,7 +161,7 @@ public class PluginManager: @unchecked Sendable {
         plugin.isFactory = false
         plugin.locked = false
     }
-    
+
     /// 插件调试描述
     public class func debugDescription() -> String {
         var debugDescription = ""

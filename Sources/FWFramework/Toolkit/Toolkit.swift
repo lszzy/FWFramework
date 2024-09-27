@@ -2251,9 +2251,9 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
 // MARK: - ToolkitConfiguration
 private actor ToolkitConfiguration {
     static var appVersion: String?
-    
+
     static var colorStandardARGB = false
-    
+
     static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
     static var autoFlatFont = false
     static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
@@ -2268,7 +2268,7 @@ private actor ToolkitConfiguration {
         .heavy: "-Heavy",
         .black: "-Black"
     ]
-    
+
     static var swizzleToolkitNavigationController = false
 }
 

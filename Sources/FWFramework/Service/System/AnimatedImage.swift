@@ -251,7 +251,7 @@ public class ImageFrame {
 open class ImageCoder: @unchecked Sendable {
     /// 单例模式
     public static let shared = ImageCoder()
-    
+
     /// 扩展系统UTType
     public static var kUTTypeHEIC: CFString { "public.heic" as CFString }
     public static var kUTTypeHEIF: CFString { "public.heif" as CFString }

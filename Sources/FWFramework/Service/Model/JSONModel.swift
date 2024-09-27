@@ -1330,7 +1330,7 @@ public class JSONModelConfiguration: @unchecked Sendable {
     }
 
     public static let shared = JSONModelConfiguration()
-    
+
     public var memoryMode = true
     public var debugMode: DebugMode = .error
     public var deserializeOptions: DeserializeOptions = .defaultOptions
