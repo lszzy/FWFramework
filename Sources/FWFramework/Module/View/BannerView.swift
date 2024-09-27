@@ -44,16 +44,21 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 ///
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
+    private actor Configuration {
+        static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
+        static var trackExposureBlock: (@MainActor (UIView) -> Void)?
+    }
+    
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
     @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)? {
-        get { FrameworkStorage.trackClickBlock }
-        set { FrameworkStorage.trackClickBlock = newValue }
+        get { Configuration.trackClickBlock }
+        set { Configuration.trackClickBlock = newValue }
     }
     
     @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor (UIView) -> Void)? {
-        get { FrameworkStorage.trackExposureBlock }
-        set { FrameworkStorage.trackExposureBlock = newValue }
+        get { Configuration.trackExposureBlock }
+        set { Configuration.trackExposureBlock = newValue }
     }
 
     // MARK: - Accessor
@@ -1104,10 +1109,4 @@ open class BannerViewCell: UICollectionViewCell {
             titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
     }
-}
-
-// MARK: - FrameworkStorage+BannerView
-extension FrameworkStorage {
-    fileprivate static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
-    fileprivate static var trackExposureBlock: (@MainActor (UIView) -> Void)?
 }

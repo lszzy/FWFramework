@@ -47,7 +47,7 @@ extension Wrapper where Base: UIColor {
 
     /// 动态创建主题色，指定名称和bundle，兼容iOS11+系统方式(仅iOS13+支持动态颜色)和手工指定。失败时返回clear防止崩溃
     public static func themeNamed(_ name: String, bundle: Bundle? = nil) -> UIColor {
-        if let themeColor = FrameworkStorage.themeColors[name] {
+        if let themeColor = ThemeManager.shared.themeColors[name] {
             return themeColor
         }
 
@@ -62,12 +62,12 @@ extension Wrapper where Base: UIColor {
 
     /// 手工单个注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
     public static func setThemeColor(_ color: UIColor?, forName name: String) {
-        FrameworkStorage.themeColors[name] = color
+        ThemeManager.shared.themeColors[name] = color
     }
 
     /// 手工批量注册主题色，未配置主题色或者需兼容iOS11以下时可使用本方式
     public static func setThemeColors(_ nameColors: [String: UIColor]) {
-        FrameworkStorage.themeColors.merge(nameColors) { _, last in last }
+        ThemeManager.shared.themeColors.merge(nameColors) { _, last in last }
     }
 }
 
@@ -144,7 +144,7 @@ extension Wrapper where Base: UIImage {
 
     /// 创建主题模拟动态图像，指定名称和bundle，兼容系统方式(仅iOS13+支持动态图像)和手工指定，支持动态切换，需配置any和dark
     public static func themeNamed(_ name: String, bundle: Bundle? = nil) -> UIImage {
-        if let themeImage = FrameworkStorage.themeImages[name] {
+        if let themeImage = ThemeManager.shared.themeImages[name] {
             return themeImage
         }
 
@@ -158,12 +158,12 @@ extension Wrapper where Base: UIImage {
 
     /// 手工单个注册主题图像，未配置主题图像时可使用本方式
     public static func setThemeImage(_ image: UIImage?, forName name: String) {
-        FrameworkStorage.themeImages[name] = image
+        ThemeManager.shared.themeImages[name] = image
     }
 
     /// 手工批量注册主题图像，未配置主题图像时可使用本方式
     public static func setThemeImages(_ nameImages: [String: UIImage]) {
-        FrameworkStorage.themeImages.merge(nameImages) { _, last in last }
+        ThemeManager.shared.themeImages.merge(nameImages) { _, last in last }
     }
 
     // MARK: - Color
@@ -174,8 +174,8 @@ extension Wrapper where Base: UIImage {
 
     /// 默认主题图片颜色配置句柄，默认nil
     public static var themeImageColorConfiguration: (() -> UIColor)? {
-        get { FrameworkStorage.themeImageColorConfiguration }
-        set { FrameworkStorage.themeImageColorConfiguration = newValue }
+        get { ThemeManager.shared.themeImageColorConfiguration }
+        set { ThemeManager.shared.themeImageColorConfiguration = newValue }
     }
 }
 
@@ -445,6 +445,10 @@ public class ThemeManager: @unchecked Sendable {
     }
 
     private var _overrideWindow = false
+    
+    fileprivate var themeColors: [String: UIColor] = [:]
+    fileprivate var themeImages: [String: UIImage] = [:]
+    fileprivate var themeImageColorConfiguration: (() -> UIColor)?
 
     /// 初始化方法
     public init() {
@@ -515,14 +519,6 @@ extension UIImageView {
             image = themeAsset.fw.image
         }
     }
-}
-
-// MARK: - FrameworkStorage+Theme
-extension FrameworkStorage {
-    fileprivate static var themeColors: [String: UIColor] = [:]
-    
-    fileprivate static var themeImages: [String: UIImage] = [:]
-    fileprivate static var themeImageColorConfiguration: (() -> UIColor)?
 }
 
 // MARK: - FrameworkAutoloader+Theme
