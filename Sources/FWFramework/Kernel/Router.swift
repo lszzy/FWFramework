@@ -425,11 +425,11 @@ public class Router: NSObject, @unchecked Sendable {
                 }, isPreset: isPreset) && result
             }
         } else if let targetObject = clazz as? NSObject {
-            let sendableObject = SendableObject(targetObject)
+            let sendableObject = SendableValue(targetObject)
             for (key, obj) in routes {
                 guard let pattern = targetObject.perform(NSSelectorFromString(key))?.takeUnretainedValue() else { continue }
                 result = registerURL(with: pattern, handler: { context in
-                    sendableObject.object.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
+                    sendableObject.value.perform(NSSelectorFromString(obj), with: context)?.takeUnretainedValue()
                 }, isPreset: isPreset) && result
             }
         }

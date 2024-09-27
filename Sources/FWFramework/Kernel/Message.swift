@@ -36,9 +36,9 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func safeObserveMessage(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
         observeMessage(name, object: object) { notification in
-            let sendableNotification = SendableObject(notification)
+            let sendableNotification = SendableValue(notification)
             DispatchQueue.fw.mainAsync {
-                block(sendableNotification.object)
+                block(sendableNotification.value)
             }
         }
     }
@@ -193,9 +193,9 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func safeObserveNotification(_ name: Notification.Name, object: AnyObject? = nil, block: @escaping @MainActor @Sendable (Notification) -> Void) -> NSObjectProtocol {
         observeNotification(name, object: object) { notification in
-            let sendableNotification = SendableObject(notification)
+            let sendableNotification = SendableValue(notification)
             DispatchQueue.fw.mainAsync {
-                block(sendableNotification.object)
+                block(sendableNotification.value)
             }
         }
     }
@@ -246,9 +246,9 @@ extension Wrapper where Base: WrapperObject {
         queue: OperationQueue? = nil,
         using block: @escaping @Sendable (_ notification: Notification) -> Void
     ) {
-        let sendableObserver = SendableObject<Any?>(nil)
-        sendableObserver.object = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) { notification in
-            if let observer = sendableObserver.object {
+        let sendableObserver = SendableValue<Any?>(nil)
+        sendableObserver.value = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) { notification in
+            if let observer = sendableObserver.value {
                 NotificationCenter.default.removeObserver(observer)
             }
             block(notification)
@@ -266,9 +266,9 @@ extension Wrapper where Base: WrapperObject {
         using block: @escaping @MainActor @Sendable (_ notification: Notification) -> Void
     ) {
         observeOnce(forName: name, object: object, queue: .main) { notification in
-            let sendableNotification = SendableObject(notification)
+            let sendableNotification = SendableValue(notification)
             DispatchQueue.fw.mainAsync {
-                block(sendableNotification.object)
+                block(sendableNotification.value)
             }
         }
     }
@@ -397,9 +397,9 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 监听者
     @discardableResult
     public func observeProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let weakObject = WeakObject(target)
+        let weakValue = WeakValue(target)
         let observation = base.observe(keyPath, options: options) { object, change in
-            if let weakTarget = weakObject.object, weakTarget.responds(to: action) {
+            if let weakTarget = weakValue.value, weakTarget.responds(to: action) {
                 _ = weakTarget.perform(action, with: object, with: change)
             }
         }
@@ -415,13 +415,13 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 监听者
     @discardableResult
     public func safeObserveProperty<Value>(_ keyPath: KeyPath<Base, Value>, options: NSKeyValueObservingOptions = [], target: AnyObject?, action: Selector) -> NSObjectProtocol {
-        let weakObject = WeakObject(target)
+        let weakValue = WeakValue(target)
         let observation = base.observe(keyPath, options: options) { object, change in
-            let sendableObject = SendableObject(object)
-            let sendableChange = SendableObject(change)
+            let sendableObject = SendableValue(object)
+            let sendableChange = SendableValue(change)
             DispatchQueue.fw.mainAsync {
-                if let weakTarget = weakObject.object, weakTarget.responds(to: action) {
-                    _ = weakTarget.perform(action, with: sendableObject.object, with: sendableChange.object)
+                if let weakTarget = weakValue.value, weakTarget.responds(to: action) {
+                    _ = weakTarget.perform(action, with: sendableObject.value, with: sendableChange.value)
                 }
             }
         }
@@ -455,9 +455,9 @@ extension Wrapper where Base: NSObject {
     @discardableResult
     public func safeObserveProperty(_ property: String, block: @escaping @MainActor @Sendable (Base, [NSKeyValueChangeKey: Any]) -> Void) -> NSObjectProtocol where Base: Sendable {
         observeProperty(property) { object, change in
-            let sendableChange = SendableObject(change)
+            let sendableChange = SendableValue(change)
             DispatchQueue.fw.mainAsync {
-                block(object, sendableChange.object)
+                block(object, sendableChange.value)
             }
         }
     }
@@ -622,9 +622,9 @@ private class NotificationTarget: NSObject, @unchecked Sendable {
 
     @objc func handle(_ notification: Notification) {
         if onMainThread {
-            let sendableNotification = SendableObject(notification)
+            let sendableNotification = SendableValue(notification)
             DispatchQueue.fw.mainAsync { [weak self] in
-                self?.handleNotification(sendableNotification.object)
+                self?.handleNotification(sendableNotification.value)
             }
         } else {
             handleNotification(notification)
@@ -692,10 +692,10 @@ private class PropertyTarget: NSObject, @unchecked Sendable {
         }
 
         if onMainThread {
-            let sendableObject = SendableObject(object)
-            let sendableChange = SendableObject(newChange)
+            let sendableObject = SendableValue(object)
+            let sendableChange = SendableValue(newChange)
             DispatchQueue.fw.mainAsync { [weak self] in
-                self?.handleObservation(sendableObject.object, with: sendableChange.object)
+                self?.handleObservation(sendableObject.value, with: sendableChange.value)
             }
         } else {
             handleObservation(object, with: newChange)

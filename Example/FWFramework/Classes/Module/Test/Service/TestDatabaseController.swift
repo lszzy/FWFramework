@@ -10,7 +10,7 @@ import FWFramework
 
 class TestDatabaseModel: NSObject, DatabaseModel {
     // 用于模拟数据库结构更新
-    static let isLatest = SendableObject(false)
+    static let isLatest = SendableValue(false)
 
     @objc var id: Int = 0
     @objc var content: String = ""
@@ -22,7 +22,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     @objc var archives: [TestDatabaseArchivableModel] = []
 
     static func databaseVersion() -> String? {
-        isLatest.object ? "2.0" : nil
+        isLatest.value ? "2.0" : nil
     }
 
     static func databaseMigration(_ versionString: String) {
@@ -38,7 +38,7 @@ class TestDatabaseModel: NSObject, DatabaseModel {
     }
 
     static func tablePropertyBlacklist() -> [String]? {
-        isLatest.object ? nil : ["tag"]
+        isLatest.value ? nil : ["tag"]
     }
 }
 
@@ -80,7 +80,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
 
     func didInitialize() {
         let version = DatabaseManager.version(with: TestDatabaseModel.self).safeDouble
-        TestDatabaseModel.isLatest.object = version > 1
+        TestDatabaseModel.isLatest.value = version > 1
     }
 
     func setupNavbar() {
@@ -224,7 +224,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
         }
 
         // 数据库下次操作时会自动更新，无需手工调用
-        TestDatabaseModel.isLatest.object = true
+        TestDatabaseModel.isLatest.value = true
         app.showAlert(title: "数据库更新完成", message: nil)
 
         setupSubviews()
@@ -238,7 +238,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
 
     func onDelete() {
         DatabaseManager.removeModel(TestDatabaseModel.self)
-        TestDatabaseModel.isLatest.object = false
+        TestDatabaseModel.isLatest.value = false
 
         setupSubviews()
     }

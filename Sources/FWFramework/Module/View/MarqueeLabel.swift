@@ -56,8 +56,12 @@ open class MarqueeLabel: UILabel {
     /// 绘制文本时重复绘制的次数，用于实现首尾连接的滚动效果，1 表示不首尾连接，大于 1 表示首尾连接。
     private var textRepeatCount: Int = 2
 
-    private var displayLink = SendableObject<CADisplayLink?>(nil)
+    private let mutableState = MutableState()
     private var fadeLayer: CAGradientLayer?
+    
+    private class MutableState: @unchecked Sendable {
+        var displayLink: CADisplayLink?
+    }
 
     // MARK: - Lifecycle
     override public init(frame: CGRect) {
@@ -86,22 +90,22 @@ open class MarqueeLabel: UILabel {
     }
 
     deinit {
-        displayLink.object?.invalidate()
-        displayLink.object = nil
+        mutableState.displayLink?.invalidate()
+        mutableState.displayLink = nil
     }
 
     // MARK: - Override
     override open func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil {
-            displayLink.object = CADisplayLink(target: self, selector: #selector(handleDisplayLink(_:)))
-            displayLink.object?.add(to: RunLoop.current, forMode: .common)
+            mutableState.displayLink = CADisplayLink(target: self, selector: #selector(handleDisplayLink(_:)))
+            mutableState.displayLink?.add(to: RunLoop.current, forMode: .common)
         } else {
-            displayLink.object?.invalidate()
-            displayLink.object = nil
+            mutableState.displayLink?.invalidate()
+            mutableState.displayLink = nil
         }
         offsetX = 0
-        displayLink.object?.isPaused = !shouldPlayDisplayLink()
+        mutableState.displayLink?.isPaused = !shouldPlayDisplayLink()
         checkIfShouldShowGradientLayer()
     }
 
@@ -110,7 +114,7 @@ open class MarqueeLabel: UILabel {
             super.text = text
             offsetX = 0
             textWidth = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)).width
-            displayLink.object?.isPaused = !shouldPlayDisplayLink()
+            mutableState.displayLink?.isPaused = !shouldPlayDisplayLink()
             checkIfShouldShowGradientLayer()
         }
     }
@@ -120,7 +124,7 @@ open class MarqueeLabel: UILabel {
             super.attributedText = attributedText
             offsetX = 0
             textWidth = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)).width
-            displayLink.object?.isPaused = !shouldPlayDisplayLink()
+            mutableState.displayLink?.isPaused = !shouldPlayDisplayLink()
             checkIfShouldShowGradientLayer()
         }
     }
@@ -134,7 +138,7 @@ open class MarqueeLabel: UILabel {
             super.frame = frame
             if isSizeChanged {
                 offsetX = 0
-                displayLink.object?.isPaused = !shouldPlayDisplayLink()
+                mutableState.displayLink?.isPaused = !shouldPlayDisplayLink()
                 checkIfShouldShowGradientLayer()
             }
         }
@@ -268,7 +272,7 @@ open class MarqueeLabel: UILabel {
         automaticallyValidateVisibleFrame = false
         let shouldPlayDisplayLink = shouldPlayDisplayLink()
         if shouldPlayDisplayLink {
-            displayLink.object?.isPaused = false
+            mutableState.displayLink?.isPaused = false
         }
         return shouldPlayDisplayLink
     }
@@ -278,7 +282,7 @@ open class MarqueeLabel: UILabel {
      *  @return 是否成功停止
      */
     open func requestToStopAnimation() -> Bool {
-        displayLink.object?.isPaused = true
+        mutableState.displayLink?.isPaused = true
         return true
     }
 }

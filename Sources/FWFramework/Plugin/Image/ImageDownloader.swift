@@ -158,12 +158,12 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
                     }
                 }
             }, completionHandler: { [weak self] response, responseObject, error in
-                let sendableResponseObject = SendableObject(responseObject)
+                let sendableResponseObject = SendableValue(responseObject)
                 self?.responseQueue.async { [weak self] in
                     var mergedTask = self?.safelyGetMergedTask(urlIdentifier)
                     if mergedTask?.identifier == mergedTaskIdentifier {
                         mergedTask = self?.safelyRemoveMergedTask(urlIdentifier)
-                        if let image = sendableResponseObject.object as? UIImage, error == nil {
+                        if let image = sendableResponseObject.value as? UIImage, error == nil {
                             if self?.imageCache?.shouldCacheImage(image, for: request, additionalIdentifier: nil) ?? false {
                                 self?.imageCache?.addImage(image, for: request, additionalIdentifier: nil)
                             }

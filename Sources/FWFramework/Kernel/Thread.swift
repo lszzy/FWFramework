@@ -129,21 +129,21 @@ public final class SemaphoreLock: LockingProtocol {
 @dynamicMemberLookup
 public final class ProtectedValue<Value>: @unchecked Sendable {
     private let lock = UnfairLock()
-    private var value: Value
+    private var _value: Value
 
     public init(_ value: Value) {
-        self.value = value
+        self._value = value
     }
     
     /// 同步方式读取或设置值
-    public var protectedValue: Value {
+    public var value: Value {
         get { read() }
         set { write(newValue) }
     }
 
     /// 同步闭包方式读取或转换值
     public func read<U>(_ closure: (Value) throws -> U) rethrows -> U {
-        try lock.around { try closure(self.value) }
+        try lock.around { try closure(self._value) }
     }
     
     /// 同步方式读取值
@@ -154,7 +154,7 @@ public final class ProtectedValue<Value>: @unchecked Sendable {
     /// 同步闭包方式修改值
     @discardableResult
     public func write<U>(_ closure: (inout Value) throws -> U) rethrows -> U {
-        try lock.around { try closure(&self.value) }
+        try lock.around { try closure(&self._value) }
     }
 
     /// 同步方式修改值
@@ -163,12 +163,12 @@ public final class ProtectedValue<Value>: @unchecked Sendable {
     }
 
     public subscript<Property>(dynamicMember keyPath: WritableKeyPath<Value, Property>) -> Property {
-        get { lock.around { value[keyPath: keyPath] } }
-        set { lock.around { value[keyPath: keyPath] = newValue } }
+        get { lock.around { _value[keyPath: keyPath] } }
+        set { lock.around { _value[keyPath: keyPath] = newValue } }
     }
 
     public subscript<Property>(dynamicMember keyPath: KeyPath<Value, Property>) -> Property {
-        lock.around { value[keyPath: keyPath] }
+        lock.around { _value[keyPath: keyPath] }
     }
 }
 
