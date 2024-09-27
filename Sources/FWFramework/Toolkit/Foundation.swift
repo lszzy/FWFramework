@@ -153,7 +153,7 @@ extension Wrapper where Base: WrapperObject {
     @discardableResult
     public func performBlock(
         _ block: @escaping (Base) -> Void,
-        on: DispatchQueue,
+        on queue: DispatchQueue,
         afterDelay delay: TimeInterval
     ) -> Any {
         var cancelled = false
