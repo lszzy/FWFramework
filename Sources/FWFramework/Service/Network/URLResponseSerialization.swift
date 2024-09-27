@@ -165,6 +165,11 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 }
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
+    actor Configuration {
+        static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
+        static var imageLock = NSLock()
+    }
+    
     open var imageScale: CGFloat = UIScreen.fw.screenScale
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
@@ -192,16 +197,16 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         }
 
         var image: UIImage?
-        FrameworkStorage.imageLock.lock()
-        if FrameworkStorage.imageDecodeBlock != nil {
-            image = FrameworkStorage.imageDecodeBlock?(data, scale, options)
+        Configuration.imageLock.lock()
+        if Configuration.imageDecodeBlock != nil {
+            image = Configuration.imageDecodeBlock?(data, scale, options)
         } else {
             image = UIImage(data: data)
             if image?.images == nil, let cgImage = image?.cgImage {
                 image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
             }
         }
-        FrameworkStorage.imageLock.unlock()
+        Configuration.imageLock.unlock()
         return image
     }
 
@@ -329,10 +334,4 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
 
         return try super.responseObject(for: response, data: data)
     }
-}
-
-// MARK: - FrameworkStorage+URLResponseSerialization
-extension FrameworkStorage {
-    static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
-    fileprivate static var imageLock = NSLock()
 }

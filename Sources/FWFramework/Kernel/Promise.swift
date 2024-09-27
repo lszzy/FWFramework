@@ -30,23 +30,29 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 
 /// 约定类
 public class Promise: @unchecked Sendable {
+    private actor Configuration {
+        static var failedError: Error = PromiseError.failed
+        static var validationError: Error = PromiseError.validation
+        static var timeoutError: Error = PromiseError.timeout
+    }
+    
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
     public static var failedError: Error {
-        get { FrameworkStorage.failedError }
-        set { FrameworkStorage.failedError = newValue }
+        get { Configuration.failedError }
+        set { Configuration.failedError = newValue }
     }
     
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
     public static var validationError: Error {
-        get { FrameworkStorage.validationError }
-        set { FrameworkStorage.validationError = newValue }
+        get { Configuration.validationError }
+        set { Configuration.validationError = newValue }
     }
     
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
     public static var timeoutError: Error {
-        get { FrameworkStorage.timeoutError }
-        set { FrameworkStorage.timeoutError = newValue }
+        get { Configuration.timeoutError }
+        set { Configuration.timeoutError = newValue }
     }
 
     /// 约定进度值
@@ -369,11 +375,4 @@ extension Promise {
         }
         return value
     }
-}
-
-// MARK: - FrameworkStorage+Promise
-extension FrameworkStorage {
-    fileprivate static var failedError: Error = PromiseError.failed
-    fileprivate static var validationError: Error = PromiseError.validation
-    fileprivate static var timeoutError: Error = PromiseError.timeout
 }
