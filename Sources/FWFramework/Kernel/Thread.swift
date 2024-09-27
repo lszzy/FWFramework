@@ -30,7 +30,11 @@ extension MainActor {
     /// 主Actor安全异步执行句柄
     public static func runAsync(execute block: @escaping @MainActor @Sendable () -> Void) {
         if Thread.isMainThread {
+            #if swift(>=5.10)
             MainActor.assumeIsolated(block)
+            #else
+            MainActor.adaptAssumeIsolated(block)
+            #endif
         } else {
             DispatchQueue.main.async(execute: block)
         }
@@ -39,18 +43,33 @@ extension MainActor {
     /// 当主线程时执行句柄，非主线程不执行
     public static func runSyncIf(execute block: @MainActor () -> Void) {
         if Thread.isMainThread {
+            #if swift(>=5.10)
             MainActor.assumeIsolated(block)
+            #else
+            MainActor.adaptAssumeIsolated(block)
+            #endif
         }
     }
 
     /// 当主线程时执行句柄，非主线程执行另一个句柄
     public static func runSyncIf<T>(execute block: @MainActor () -> T, otherwise: () -> T) -> T where T: Sendable {
         if Thread.isMainThread {
+            #if swift(>=5.10)
             MainActor.assumeIsolated(block)
+            #else
+            MainActor.adaptAssumeIsolated(block)
+            #endif
         } else {
             otherwise()
         }
     }
+    
+    #if swift(<5.10)
+    /// 适配Swift5.10以下不能调用MainActor.assumeIsolated方法问题
+    private static func adaptAssumeIsolated<T>(_ operation: () throws -> T) rethrows -> T {
+        try operation()
+    }
+    #endif
 }
 
 // MARK: - LockingProtocol
