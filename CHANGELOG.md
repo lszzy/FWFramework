@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.12.1] - 2024-09-27
+
+### Fixed
+* Mark WeakObject as deprecated, please migrate to WeakValue
+* Added isIpod and pointHalf tool methods
+* Fixed the issue that performBlock method does not use queue parameter
+* Fixed the judgment method of isMac in iOS13 system
+
 ## [5.12.0] - 2024-09-23
 
 ### Added

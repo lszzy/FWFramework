@@ -1,5 +1,13 @@
 # 更新日志
 
+## [5.12.1] - 2024-09-27
+
+### Fixed
+* 标记WeakObject为废弃，请迁移至WeakValue
+* 新增isIpod和pointHalf工具方法
+* 修复performBlock方法未使用queue参数问题
+* 修复iOS13系统isMac的判断方法
+
 ## [5.12.0] - 2024-09-23
 
 ### Added
