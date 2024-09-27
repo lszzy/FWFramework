@@ -608,7 +608,7 @@ extension Wrapper where Base: UIView {
         let startTime = Date.fw.currentTime
         var hasWindow = false
         timer.setEventHandler { [weak base] in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak base] in
                 var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
                 if countDown <= 0 {
                     timer.cancel()

@@ -889,7 +889,11 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding {
                 let location = min(firstRange.location, fragment.location)
                 let endOffset = max(lastRange.location + lastRange.length, fragment.location + fragment.length)
                 let combineRange = NSMakeRange(location, endOffset - location)
+                #if swift(>=5.9)
                 cacheFragments.remove(atOffsets: indexSet)
+                #else
+                indexSet.forEach { cacheFragments.remove(at: $0) }
+                #endif
                 cacheFragments.insert(NSValue(range: combineRange), at: indexSet.first ?? 0)
             } else if indexSet.count == 1 {
                 let firstRange = self.internalCacheFragments[indexSet.first ?? 0].rangeValue
