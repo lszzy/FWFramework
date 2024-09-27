@@ -295,20 +295,26 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
         let taskManager = TaskManager(maxConcurrentTaskCount: 1, isSuspended: true)
 
         let task = TaskOperation(onMainThread: true, queuePriority: .low) { [weak self] task in
-            self?.app.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: {
-                task.finish()
-            })
+            MainActor.runSyncIf { [weak self] in
+                self?.app.showSheet(title: "低优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                    task.finish()
+                })
+            }
         }
 
         let task2 = TaskOperation(onMainThread: true, queuePriority: .normal) { [weak self] task in
-            self?.app.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
-                task.finish()
-            })
+            MainActor.runSyncIf { [weak self] in
+                self?.app.showSheet(title: "普通优先级", message: "操作表消息", cancel: nil, cancelBlock: {
+                    task.finish()
+                })
+            }
         }
 
         let task3 = TaskOperation(onMainThread: true, queuePriority: .high) { [weak self] task in
-            self?.app.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) {
-                task.finish()
+            MainActor.runSyncIf { [weak self] in
+                self?.app.showSheet(title: "高优先级", message: "操作表消息", cancel: nil) {
+                    task.finish()
+                }
             }
         }
 

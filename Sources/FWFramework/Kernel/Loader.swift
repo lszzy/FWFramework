@@ -11,7 +11,7 @@ import Foundation
 public class Loader<Input, Output>: @unchecked Sendable {
     private class Target {
         let identifier = UUID().uuidString
-        var block: ((Input) -> Output?)?
+        var block: (@Sendable (Input) -> Output?)?
         weak var target: AnyObject?
         var action: Selector?
 
@@ -32,7 +32,7 @@ public class Loader<Input, Output>: @unchecked Sendable {
 
     /// 添加block加载器，返回标志id
     @discardableResult
-    public func append(block: @escaping (Input) -> Output?) -> String {
+    public func append(block: @escaping @Sendable (Input) -> Output?) -> String {
         let loader = Target()
         loader.block = block
         allLoaders.append(loader)
