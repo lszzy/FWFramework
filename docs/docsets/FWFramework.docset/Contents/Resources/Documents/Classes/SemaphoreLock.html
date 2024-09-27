@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>JSONModelConfiguration Enumeration Reference</title>
+    <title>SemaphoreLock Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/JSONModelConfiguration" class="dashAnchor"></a>
-    <a title="JSONModelConfiguration Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Class/SemaphoreLock" class="dashAnchor"></a>
+    <a title="SemaphoreLock Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0-beta.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.2 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -30,9 +30,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">FWFramework</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Enums.html">Enumerations</a>
+        <a href="../Classes.html">Classes</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        JSONModelConfiguration Enumeration Reference
+        SemaphoreLock Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -411,6 +411,12 @@
                 <a href="../Classes/JSONDeserializer.html">JSONDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/JSONRequestSerializer.html">JSONRequestSerializer</a>
               </li>
               <li class="nav-group-task">
@@ -600,6 +606,9 @@
                 <a href="../Classes/PropertyListResponseSerializer.html">PropertyListResponseSerializer</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/ProtectedValue.html">ProtectedValue</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/PullRefreshView.html">PullRefreshView</a>
               </li>
               <li class="nav-group-task">
@@ -696,7 +705,10 @@
                 <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/SendableObject.html">SendableObject</a>
+                <a href="../Classes/SemaphoreLock.html">SemaphoreLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SendableValue.html">SendableValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
@@ -834,6 +846,9 @@
                 <a href="../Classes/URLTransform.html">URLTransform</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/UnfairLock.html">UnfairLock</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/UnitTest.html">UnitTest</a>
               </li>
               <li class="nav-group-task">
@@ -864,10 +879,10 @@
                 <a href="../Classes/ViewPreferenceKey.html">ViewPreferenceKey</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakObject.html">WeakObject</a>
+                <a href="../Classes/WeakProxy.html">WeakProxy</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/WeakProxy.html">WeakProxy</a>
+                <a href="../Classes/WeakValue.html">WeakValue</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/WebSocket.html">WebSocket</a>
@@ -1056,12 +1071,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/JSONKey.html">JSONKey</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/JSONModelConfiguration.html">JSONModelConfiguration</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/JSONType.html">JSONType</a>
@@ -1373,6 +1382,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSLock">NSLock</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/NSMutableAttributedString.html">NSMutableAttributedString</a>
@@ -1797,6 +1809,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/KeyMappable.html">KeyMappable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LockingProtocol.html">LockingProtocol</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/LoggerPlugin.html">LoggerPlugin</a>
@@ -2514,15 +2529,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>JSONModelConfiguration</h1>
+            <h1>SemaphoreLock</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">JSONModelConfiguration</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">SemaphoreLock</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/LockingProtocol.html">LockingProtocol</a></span></code></pre>
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>DispatchSemaphore包装锁</p>
 
           </section>
           <section class="section task-group-section">
@@ -2531,9 +2546,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework22JSONModelConfigurationO9DebugModeO"></a>
-                    <a name="//apple_ref/swift/Enum/DebugMode" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationO9DebugModeO">DebugMode</a>
+                    <a name="/s:11FWFramework13SemaphoreLockCACycfc"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework13SemaphoreLockCACycfc">init()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2543,13 +2558,12 @@
                       <div class="abstract">
                         <p>Undocumented</p>
 
-                        <a href="../Enums/JSONModelConfiguration/DebugMode.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">DebugMode</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2559,9 +2573,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework22JSONModelConfigurationO10memoryModeSbvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/memoryMode" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationO10memoryModeSbvpZ">memoryMode</a>
+                    <a name="/s:11FWFramework15LockingProtocolP4lockyyF"></a>
+                    <a name="//apple_ref/swift/Method/lock()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15LockingProtocolP4lockyyF">lock()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2569,14 +2583,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">memoryMode</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">lock</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2586,9 +2599,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework22JSONModelConfigurationO9debugModeAC05DebugE0OvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/debugMode" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationO9debugModeAC05DebugE0OvpZ">debugMode</a>
+                    <a name="/s:11FWFramework15LockingProtocolP6unlockyyF"></a>
+                    <a name="//apple_ref/swift/Method/unlock()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework15LockingProtocolP6unlockyyF">unlock()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2596,41 +2609,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">debugMode</span><span class="p">:</span> <span class="kt"><a href="../Enums/JSONModelConfiguration/DebugMode.html">DebugMode</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework22JSONModelConfigurationO18deserializeOptionsAA011DeserializeE0VvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/deserializeOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework22JSONModelConfigurationO18deserializeOptionsAA011DeserializeE0VvpZ">deserializeOptions</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">nonisolated</span><span class="p">(</span><span class="n">unsafe</span><span class="p">)</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">deserializeOptions</span><span class="p">:</span> <span class="kt"><a href="../Structs/DeserializeOptions.html">DeserializeOptions</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unlock</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -2642,7 +2627,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-25)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

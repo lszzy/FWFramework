@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.0-beta.2] - 2024-09-27
+
+### Changed
+* Removed the use of nonisolated(unsafe) to make it compatible with Swift 5.9
+* Added LockingProtocol and common mutex encapsulation
+* Added ProtectedValue thread-safe value wrapper
+* WeakObject renamed to WeakValue, migration and upgrade required
+* SendableObject renamed to SendableValue, migration and upgrade required
+* Modified some static configuration items to singleton configuration item mode
+* Fixed compatibility issues when AssetManager turns on Swift 6 mode
+* Fixed the issue that performBlock method does not use parameter queue
+
 ## [6.0.0-beta.1] - 2024-09-25
 
 ### Added

@@ -1,5 +1,17 @@
 # 更新日志
 
+## [6.0.0-beta.2] - 2024-09-27
+
+### Changed
+* 去掉nonisolated(unsafe)使用，兼容Swift 5.9
+* 新增LockingProtocol和常见互斥锁封装
+* 新增ProtectedValue线程安全的值包装器
+* WeakObject重命名为WeakValue，需迁移升级
+* SendableObject重命名为SendableValue，需迁移升级
+* 修改部分静态配置项为单例配置项方式
+* 修复AssetManager开启Swift 6模式时兼容问题
+* 修复performBlock方法未使用参数queue问题
+
 ## [6.0.0-beta.1] - 2024-09-25
 
 ### Added
