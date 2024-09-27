@@ -350,12 +350,12 @@ open class PullRefreshView: UIView {
     }
 
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        let sendableChange = SendableObject(change)
+        let sendableChange = SendableValue(change)
         DispatchQueue.fw.mainAsync { [weak self] in
             guard let self, let scrollView else { return }
 
             if keyPath == "contentOffset" {
-                guard let contentOffset = sendableChange.object?[.newKey] as? CGPoint else { return }
+                guard let contentOffset = sendableChange.value?[.newKey] as? CGPoint else { return }
 
                 if (scrollView.fw.infiniteScrollView?.isActive ?? false) ||
                     (contentOffset.y + scrollView.adjustedContentInset.top - scrollView.contentInset.top) > 0 {
@@ -834,13 +834,13 @@ open class InfiniteScrollView: UIView {
     }
 
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        let sendableChange = SendableObject(change)
+        let sendableChange = SendableValue(change)
         DispatchQueue.fw.mainAsync { [weak self] in
             guard let self, let scrollView else { return }
 
             if keyPath == "contentOffset" {
                 if finished { return }
-                guard let contentOffset = sendableChange.object?[.newKey] as? CGPoint else { return }
+                guard let contentOffset = sendableChange.value?[.newKey] as? CGPoint else { return }
 
                 if (scrollView.fw.pullRefreshView?.isActive ?? false) ||
                     (contentOffset.y + ceil(scrollView.adjustedContentInset.top) - scrollView.contentInset.top) < 0 {

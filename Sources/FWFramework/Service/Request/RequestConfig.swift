@@ -328,10 +328,10 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             return
         }
 
-        let sendableResponseObject = SendableObject(responseObject)
+        let sendableResponseObject = SendableValue(responseObject)
         retryQueue.async { [weak self] in
             self?.retrySemaphore.wait()
-            filter(request, response, sendableResponseObject.object, error) { [weak self] filterResult in
+            filter(request, response, sendableResponseObject.value, error) { [weak self] filterResult in
                 self?.retrySemaphore.signal()
                 if request.isCancelled { return }
 
@@ -340,7 +340,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
                     return
                 }
 
-                self?.retryProcess(request, response: response, responseObject: sendableResponseObject.object, error: error, completionHandler: completionHandler)
+                self?.retryProcess(request, response: response, responseObject: sendableResponseObject.value, error: error, completionHandler: completionHandler)
             }
         }
     }

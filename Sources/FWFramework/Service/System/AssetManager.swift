@@ -327,15 +327,15 @@ public class Asset: NSObject, @unchecked Sendable {
                 return
             }
 
-            let sendableInfo = SendableObject(info)
-            let sendableExportSession = SendableObject(exportSession)
+            let sendableInfo = SendableValue(info)
+            let sendableExportSession = SendableValue(exportSession)
             exportSession.outputURL = outputURL
             exportSession.outputFileType = .mp4
             exportSession.exportAsynchronously {
-                if sendableExportSession.object.status == .completed {
-                    completion?(outputURL, sendableInfo.object)
+                if sendableExportSession.value.status == .completed {
+                    completion?(outputURL, sendableInfo.value)
                 } else {
-                    completion?(nil, sendableInfo.object)
+                    completion?(nil, sendableInfo.value)
                 }
             }
         }
@@ -1021,9 +1021,9 @@ public class AssetLivePhoto: @unchecked Sendable {
 
     /// 导出LivePhoto资源
     public class func extractResources(from livePhoto: PHLivePhoto, completion: @escaping @MainActor @Sendable (Resources?) -> Void) {
-        let sendableLivePhoto = SendableObject(livePhoto)
+        let sendableLivePhoto = SendableValue(livePhoto)
         queue.async {
-            shared.extractResources(from: sendableLivePhoto.object, completion: completion)
+            shared.extractResources(from: sendableLivePhoto.value, completion: completion)
         }
     }
 
@@ -1076,9 +1076,9 @@ public class AssetLivePhoto: @unchecked Sendable {
                     if let isDegraded = info[PHLivePhotoInfoIsDegradedKey] as? Bool, isDegraded {
                         return
                     }
-                    let sendableLivePhoto = SendableObject(livePhoto)
+                    let sendableLivePhoto = SendableValue(livePhoto)
                     DispatchQueue.main.async {
-                        completion(sendableLivePhoto.object, (pairedImageURL, pairedVideoURL))
+                        completion(sendableLivePhoto.value, (pairedImageURL, pairedVideoURL))
                     }
                 })
             } else {
@@ -1218,11 +1218,11 @@ public class AssetLivePhoto: @unchecked Sendable {
             let _stillImagePercent: Float = 0.5
             stillImageTimeMetadataAdapter.append(AVTimedMetadataGroup(items: [metadataItemForStillImageTime()], timeRange: makeStillImageTimeRange(asset: videoAsset, percent: _stillImagePercent, inFrameCount: frameCount)))
             // For end of writing / progress
-            let writingVideoFinished = SendableObject<Bool>(false)
-            let writingAudioFinished = SendableObject<Bool>(false)
-            let currentFrameCount = SendableObject<Int>(0)
+            let writingVideoFinished = SendableValue<Bool>(false)
+            let writingAudioFinished = SendableValue<Bool>(false)
+            let currentFrameCount = SendableValue<Int>(0)
             @Sendable func didCompleteWriting() {
-                guard writingAudioFinished.object && writingVideoFinished.object else { return }
+                guard writingAudioFinished.value && writingVideoFinished.value else { return }
                 assetWriter?.finishWriting {
                     if self.assetWriter?.status == .completed {
                         completion(destinationURL)
@@ -1233,48 +1233,48 @@ public class AssetLivePhoto: @unchecked Sendable {
             }
             // Start writing video
             if videoReader?.startReading() ?? false {
-                let sendableVideoWriterInput = SendableObject(videoWriterInput)
-                let sendableVideoReaderOutput = SendableObject(videoReaderOutput)
+                let sendableVideoWriterInput = SendableValue(videoWriterInput)
+                let sendableVideoReaderOutput = SendableValue(videoReaderOutput)
                 videoWriterInput.requestMediaDataWhenReady(on: DispatchQueue(label: "videoWriterInputQueue")) {
-                    while sendableVideoWriterInput.object.isReadyForMoreMediaData {
-                        if let sampleBuffer = sendableVideoReaderOutput.object.copyNextSampleBuffer() {
-                            currentFrameCount.object += 1
-                            let percent = CGFloat(currentFrameCount.object) / CGFloat(frameCount)
+                    while sendableVideoWriterInput.value.isReadyForMoreMediaData {
+                        if let sampleBuffer = sendableVideoReaderOutput.value.copyNextSampleBuffer() {
+                            currentFrameCount.value += 1
+                            let percent = CGFloat(currentFrameCount.value) / CGFloat(frameCount)
                             DispatchQueue.main.async {
                                 progress(percent)
                             }
-                            if !sendableVideoWriterInput.object.append(sampleBuffer) {
+                            if !sendableVideoWriterInput.value.append(sampleBuffer) {
                                 print("Cannot write: \(String(describing: self.assetWriter?.error?.localizedDescription))")
                                 self.videoReader?.cancelReading()
                             }
                         } else {
-                            sendableVideoWriterInput.object.markAsFinished()
-                            writingVideoFinished.object = true
+                            sendableVideoWriterInput.value.markAsFinished()
+                            writingVideoFinished.value = true
                             didCompleteWriting()
                         }
                     }
                 }
             } else {
-                writingVideoFinished.object = true
+                writingVideoFinished.value = true
                 didCompleteWriting()
             }
             // Start writing audio
             if audioReader?.startReading() ?? false {
-                let sendableAudioWriterInput = SendableObject(audioWriterInput)
-                let sendableAudioReaderOutput = SendableObject(audioReaderOutput)
+                let sendableAudioWriterInput = SendableValue(audioWriterInput)
+                let sendableAudioReaderOutput = SendableValue(audioReaderOutput)
                 audioWriterInput?.requestMediaDataWhenReady(on: DispatchQueue(label: "audioWriterInputQueue")) {
-                    while sendableAudioWriterInput.object?.isReadyForMoreMediaData ?? false {
-                        guard let sampleBuffer = sendableAudioReaderOutput.object?.copyNextSampleBuffer() else {
-                            sendableAudioWriterInput.object?.markAsFinished()
-                            writingAudioFinished.object = true
+                    while sendableAudioWriterInput.value?.isReadyForMoreMediaData ?? false {
+                        guard let sampleBuffer = sendableAudioReaderOutput.value?.copyNextSampleBuffer() else {
+                            sendableAudioWriterInput.value?.markAsFinished()
+                            writingAudioFinished.value = true
                             didCompleteWriting()
                             return
                         }
-                        sendableAudioWriterInput.object?.append(sampleBuffer)
+                        sendableAudioWriterInput.value?.append(sampleBuffer)
                     }
                 }
             } else {
-                writingAudioFinished.object = true
+                writingAudioFinished.value = true
                 didCompleteWriting()
             }
         } catch {
@@ -1667,10 +1667,10 @@ extension AssetSessionExporter {
         if let videoInput = _videoInput,
            let videoOutput = _videoOutput,
            videoTracks.count > 0 {
-            let sendableVideoInput = SendableObject(videoInput)
-            let sendableVideoOutput = SendableObject(videoOutput)
+            let sendableVideoInput = SendableValue(videoInput)
+            let sendableVideoOutput = SendableValue(videoOutput)
             videoInput.requestMediaDataWhenReady(on: _inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: sendableVideoOutput.object, toWriterInput: sendableVideoInput.object) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableVideoOutput.value, toWriterInput: sendableVideoInput.value) == false {
                     group.leave()
                 }
             })
@@ -1680,10 +1680,10 @@ extension AssetSessionExporter {
 
         if let audioInput = _audioInput,
            let audioOutput = _audioOutput {
-            let sendableAudioInput = SendableObject(audioInput)
-            let sendableAudioOutput = SendableObject(audioOutput)
+            let sendableAudioInput = SendableValue(audioInput)
+            let sendableAudioOutput = SendableValue(audioOutput)
             audioInput.requestMediaDataWhenReady(on: _inputQueue, using: {
-                if self.encode(readySamplesFromReaderOutput: sendableAudioOutput.object, toWriterInput: sendableAudioInput.object) == false {
+                if self.encode(readySamplesFromReaderOutput: sendableAudioOutput.value, toWriterInput: sendableAudioInput.value) == false {
                     group.leave()
                 }
             })

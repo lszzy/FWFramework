@@ -78,35 +78,37 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable, Sendable
     public static let all: ProgressViewStyle = .init(999)
 
     // MARK: - Config
+    private actor Configuration {
+        static var indicatorSizes: [Int: CGSize] = [:]
+        static var indicatorColors: [Int: UIColor] = [:]
+    }
+    
     /// 自定义样式尺寸
     public static func setIndicatorSize(_ size: CGSize, for style: ProgressViewStyle) {
-        indicatorSizes.object[style.rawValue] = size
+        Configuration.indicatorSizes[style.rawValue] = size
     }
 
     /// 自定义样式颜色
     public static func setIndicatorColor(_ color: UIColor?, for style: ProgressViewStyle) {
-        indicatorColors.object[style.rawValue] = color
+        Configuration.indicatorColors[style.rawValue] = color
     }
-
-    private static let indicatorSizes = SendableObject([Int: CGSize]())
-    private static let indicatorColors = SendableObject([Int: UIColor]())
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = Self.indicatorSizes.object[rawValue] {
+        if let indicatorSize = Self.Configuration.indicatorSizes[rawValue] {
             return indicatorSize
         }
 
-        return Self.indicatorSizes.object[ProgressViewStyle.all.rawValue]
+        return Self.Configuration.indicatorSizes[ProgressViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = Self.indicatorColors.object[rawValue] {
+        if let indicatorColor = Self.Configuration.indicatorColors[rawValue] {
             return indicatorColor
         }
 
-        return Self.indicatorColors.object[ProgressViewStyle.all.rawValue]
+        return Self.Configuration.indicatorColors[ProgressViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle
@@ -162,35 +164,37 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable, Sendabl
     public static let all: IndicatorViewStyle = .init(999)
 
     // MARK: - Config
+    private actor Configuration {
+        static var indicatorSizes: [Int: CGSize] = [:]
+        static var indicatorColors: [Int: UIColor] = [:]
+    }
+    
     /// 自定义样式尺寸，默认nil
     public static func setIndicatorSize(_ size: CGSize, for style: IndicatorViewStyle) {
-        indicatorSizes.object[style.rawValue] = size
+        Configuration.indicatorSizes[style.rawValue] = size
     }
 
     /// 自定义样式颜色，默认nil
     public static func setIndicatorColor(_ color: UIColor?, for style: IndicatorViewStyle) {
-        indicatorColors.object[style.rawValue] = color
+        Configuration.indicatorColors[style.rawValue] = color
     }
-
-    private static let indicatorSizes = SendableObject([Int: CGSize]())
-    private static let indicatorColors = SendableObject([Int: UIColor]())
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = Self.indicatorSizes.object[rawValue] {
+        if let indicatorSize = Self.Configuration.indicatorSizes[rawValue] {
             return indicatorSize
         }
 
-        return Self.indicatorSizes.object[IndicatorViewStyle.all.rawValue]
+        return Self.Configuration.indicatorSizes[IndicatorViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = Self.indicatorColors.object[rawValue] {
+        if let indicatorColor = Self.Configuration.indicatorColors[rawValue] {
             return indicatorColor
         }
 
-        return Self.indicatorColors.object[IndicatorViewStyle.all.rawValue]
+        return Self.Configuration.indicatorColors[IndicatorViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle

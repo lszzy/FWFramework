@@ -615,12 +615,12 @@ extension Wrapper where Base: UIDevice {
 
         let startTime = Date.fw.currentTime
         var hasWindow = false
-        let sendableTimer = SendableObject(timer)
+        let sendableTimer = SendableValue(timer)
         timer.setEventHandler { @Sendable [weak base] in
             DispatchQueue.main.async {
                 var countDown = seconds - Int(round(Date.fw.currentTime - startTime))
                 if countDown <= 0 {
-                    sendableTimer.object.cancel()
+                    sendableTimer.value.cancel()
                 }
 
                 // 按钮从window移除时自动cancel倒计时
@@ -629,7 +629,7 @@ extension Wrapper where Base: UIDevice {
                 } else if hasWindow && base?.window == nil {
                     hasWindow = false
                     countDown = 0
-                    sendableTimer.object.cancel()
+                    sendableTimer.value.cancel()
                 }
 
                 block(countDown <= 0 ? 0 : countDown)

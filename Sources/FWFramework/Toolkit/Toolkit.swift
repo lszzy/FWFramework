@@ -478,17 +478,17 @@ extension Wrapper where Base: UIApplication {
         name: String? = nil,
         expirationHandler: (@MainActor @Sendable () -> Void)? = nil
     ) {
-        let bgTask = SendableObject<UIBackgroundTaskIdentifier>(.invalid)
+        let bgTask = SendableValue<UIBackgroundTaskIdentifier>(.invalid)
         let application = UIApplication.shared
-        bgTask.object = application.beginBackgroundTask(withName: name, expirationHandler: {
+        bgTask.value = application.beginBackgroundTask(withName: name, expirationHandler: {
             expirationHandler?()
-            application.endBackgroundTask(bgTask.object)
-            bgTask.object = .invalid
+            application.endBackgroundTask(bgTask.value)
+            bgTask.value = .invalid
         })
 
         task { @Sendable in
-            application.endBackgroundTask(bgTask.object)
-            bgTask.object = .invalid
+            application.endBackgroundTask(bgTask.value)
+            bgTask.value = .invalid
         }
     }
 }
