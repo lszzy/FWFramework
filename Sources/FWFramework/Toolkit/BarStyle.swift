@@ -308,7 +308,7 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendabl
 /// 导航栏样式配置
 open class NavigationBarAppearance {
     actor Configuration {
-        static var appearanceChanged: (@MainActor (UIViewController) -> Void)?
+        static var appearanceChanged: (@MainActor @Sendable (UIViewController) -> Void)?
         fileprivate static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     }
 
@@ -345,7 +345,7 @@ open class NavigationBarAppearance {
     /// 左侧返回按钮图片，自动配合VC导航栏样式生效，默认nil
     open var leftBackImage: UIImage?
     /// 自定义句柄，最后调用，可自定义样式，默认nil
-    open var appearanceBlock: ((UINavigationBar) -> Void)?
+    open var appearanceBlock: (@MainActor @Sendable (UINavigationBar) -> Void)?
 
     public init() {}
 }
