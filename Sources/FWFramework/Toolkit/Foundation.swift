@@ -29,7 +29,7 @@ extension WrapperGlobal {
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
         _ token: AnyHashable,
-        closure: @escaping () -> Void
+        closure: () -> Void
     ) {
         NSObject.fw.dispatchOnce(token, closure: closure)
     }
@@ -122,7 +122,7 @@ extension Wrapper where Base: WrapperObject {
     /// 同一个token仅执行一次block，对象范围
     public func dispatchOnce(
         _ token: String,
-        closure: @escaping () -> Void
+        closure: () -> Void
     ) {
         synchronized {
             var tokens: NSMutableSet
@@ -192,7 +192,7 @@ extension Wrapper where Base: NSObject {
     /// 同一个token仅执行一次block，全局范围
     public static func dispatchOnce(
         _ token: AnyHashable,
-        closure: @escaping () -> Void
+        closure: () -> Void
     ) {
         objc_sync_enter(NSObject.self)
         defer { objc_sync_exit(NSObject.self) }
