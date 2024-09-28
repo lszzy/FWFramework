@@ -14,16 +14,16 @@ public class StateObject: @unchecked Sendable {
     public private(set) var name: String
 
     /// 即将进入block
-    public var willEnterBlock: ((StateTransition?) -> Void)?
+    public var willEnterBlock: (@MainActor @Sendable (StateTransition?) -> Void)?
 
     /// 已进入block
-    public var didEnterBlock: ((StateTransition?) -> Void)?
+    public var didEnterBlock: (@MainActor @Sendable (StateTransition?) -> Void)?
 
     /// 即将退出block
-    public var willExitBlock: ((StateTransition) -> Void)?
+    public var willExitBlock: (@MainActor @Sendable (StateTransition) -> Void)?
 
     /// 已退出block
-    public var didExitBlock: ((StateTransition) -> Void)?
+    public var didExitBlock: (@MainActor @Sendable (StateTransition) -> Void)?
 
     /// 从名称初始化
     public init(name: String) {
@@ -44,16 +44,16 @@ public class StateEvent: @unchecked Sendable {
     public private(set) var targetState: StateObject
 
     /// 能否触发block
-    public var shouldFireBlock: ((StateTransition) -> Bool)?
+    public var shouldFireBlock: (@MainActor @Sendable (StateTransition) -> Bool)?
 
     /// 即将触发block
-    public var willFireBlock: ((StateTransition) -> Void)?
+    public var willFireBlock: (@MainActor @Sendable (StateTransition) -> Void)?
 
     /// 正在触发block，必须调用completion标记完成结果。YES事件完成、状态改变，NO事件失败、状态不变。不设置默认完成
-    public var fireBlock: ((StateTransition, @escaping (Bool) -> Void) -> Void)?
+    public var fireBlock: (@MainActor @Sendable (StateTransition, @escaping @Sendable (Bool) -> Void) -> Void)?
 
     /// 触发完成block，finished为完成状态
-    public var didFireBlock: ((StateTransition, Bool) -> Void)?
+    public var didFireBlock: (@MainActor @Sendable (StateTransition, Bool) -> Void)?
 
     /// 初始化事件
     public init(name: String, from states: [StateObject], to state: StateObject) {
@@ -230,9 +230,13 @@ public class StateMachine: @unchecked Sendable {
         lock.lock()
         isActive = true
 
-        initialState?.willEnterBlock?(nil)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            self?.initialState?.willEnterBlock?(nil)
+        }
         state = initialState
-        initialState?.didEnterBlock?(nil)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            self?.initialState?.didEnterBlock?(nil)
+        }
         lock.unlock()
     }
 
@@ -253,7 +257,7 @@ public class StateMachine: @unchecked Sendable {
     /// - Parameter object: 附加参数，默认nil
     /// - Returns: 触发状态
     @discardableResult
-    public func fireEvent(_ name: Any?, object: Any? = nil) -> Bool {
+    @MainActor public func fireEvent(_ name: Any?, object: Any? = nil) -> Bool {
         lock.lock()
         if !isActive {
             activate()
@@ -280,19 +284,21 @@ public class StateMachine: @unchecked Sendable {
         return true
     }
 
-    private func fireBegin(_ transition: StateTransition) {
+    @MainActor private func fireBegin(_ transition: StateTransition) {
         transition.event.willFireBlock?(transition)
 
         if let fireBlock = transition.event.fireBlock {
             fireBlock(transition) { finished in
-                transition.machine.fireEnd(transition, finished: finished)
+                DispatchQueue.fw.mainAsync {
+                    transition.machine.fireEnd(transition, finished: finished)
+                }
             }
         } else {
             fireEnd(transition, finished: true)
         }
     }
 
-    private func fireEnd(_ transition: StateTransition, finished: Bool) {
+    @MainActor private func fireEnd(_ transition: StateTransition, finished: Bool) {
         lock.lock()
         if finished {
             let oldState = state
