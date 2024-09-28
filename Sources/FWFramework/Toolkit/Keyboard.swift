@@ -154,7 +154,7 @@ import UIKit
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
-    public func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    public func keyboardAnimate(_ notification: Notification, animations: @escaping @MainActor @Sendable () -> Void, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
 
@@ -372,7 +372,7 @@ import UIKit
     }
 
     /// 执行键盘跟随动画，支持AutoLayout，可通过keyboardHeight:获取键盘高度
-    public func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    public func keyboardAnimate(_ notification: Notification, animations: @escaping @MainActor @Sendable () -> Void, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         keyboardTarget.keyboardAnimate(notification, animations: animations, completion: completion)
     }
 
@@ -955,7 +955,7 @@ extension UITextView {
         return keyboardRect.size.height
     }
 
-    func keyboardAnimate(_ notification: Notification, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    func keyboardAnimate(_ notification: Notification, animations: @escaping @MainActor @Sendable () -> Void, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let animationDuration: TimeInterval = (notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? .zero
         var animationCurve: UInt = (notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.uintValue ?? .zero
         animationCurve = animationCurve << 16
