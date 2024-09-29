@@ -69,7 +69,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
         } else if let notify = notification as? UNNotification {
             userInfo = notify.request.content.userInfo
         }
-        
+
         let sendableUserInfo = SendableValue(userInfo)
         let sendableNotification = SendableValue(notification)
         DispatchQueue.fw.mainAsync { [weak self] in
@@ -89,7 +89,7 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
         } else if let notify = notification as? UNNotification {
             userInfo = notify.request.content.userInfo
         }
-        
+
         let sendableUserInfo = SendableValue(userInfo)
         let sendableNotification = SendableValue(notification)
         DispatchQueue.fw.mainAsync { [weak self] in

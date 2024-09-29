@@ -362,12 +362,12 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             return
         }
 
-        let retryWaitTime = waitTime
+        let sendableWaitTime = waitTime
         request.requestRetryProcessor(response, responseObject: responseObject, error: error) { shouldRetry in
             if request.isCancelled { return }
 
             if shouldRetry {
-                DispatchQueue.main.asyncAfter(deadline: .now() + retryWaitTime) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + sendableWaitTime) {
                     if request.isCancelled { return }
 
                     completionHandler(true)
