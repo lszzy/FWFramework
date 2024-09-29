@@ -383,10 +383,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
 
         removeAllItems()
 
-        if let player = _audioPlayer {
-            DispatchQueue.fw.mainDeinit(object: player) { player in
-                player.pause()
-            }
+        let sendablePlayer = SendableValue(_audioPlayer)
+        DispatchQueue.fw.mainDeinit(object: sendablePlayer) { player in
+            player.value?.pause()
         }
         delegate = nil
         dataSource = nil
