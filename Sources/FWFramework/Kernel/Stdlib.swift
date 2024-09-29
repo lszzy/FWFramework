@@ -363,7 +363,7 @@ extension Optional {
         guard let value = self else { return defaultValue() }
         return value
     }
-    
+
     public func or(_ defaultValue: @autoclosure () -> Wrapped, _ block: (Wrapped) -> Wrapped) -> Wrapped {
         guard let value = self else { return defaultValue() }
         return block(value)
