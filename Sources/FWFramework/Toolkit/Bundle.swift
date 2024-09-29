@@ -20,7 +20,7 @@ open class ModuleBundle: NSObject {
         static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
     }
 
-    private class Target {
+    private class Target: @unchecked Sendable {
         let identifier = UUID().uuidString
         var bundle: Bundle?
         var images: [String: Any] = [:]

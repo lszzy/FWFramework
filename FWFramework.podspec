@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '6.0.0-beta.2'
+  s.version               = '6.0.0-beta.3'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -98,8 +98,6 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
       sss.preserve_paths = [
         'Sources/FWPlugin/Macros/Package.swift',
-        'Sources/FWPlugin/Macros/Package@Swift-5.9.swift',
-        'Sources/FWPlugin/Macros/Package@Swift-5.10.swift',
         'Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift'
       ]
       
@@ -121,7 +119,7 @@ Pod::Spec.new do |s|
       sss.script_phase = {
         :name => 'Build FWMacroMacros',
         :script => build_script,
-        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/Package@Swift-5.9.swift, Sources/FWPlugin/Macros/Package@Swift-5.10.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
+        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
           |path| "$(PODS_TARGET_SRCROOT)/#{path}"
         },
         :output_files => ["#{product_folder}/release/FWMacroMacros"],

@@ -512,12 +512,12 @@ extension Wrapper where Base: Timer {
 }
 
 // MARK: - BlockTarget
-private class BlockTarget {
+private class BlockTarget: @unchecked Sendable {
     let identifier = UUID().uuidString
-    var block: ((Any) -> Void)?
+    var block: (@MainActor @Sendable (Any) -> Void)?
     var events: UIControl.Event = []
 
-    @objc func invoke(_ sender: Any) {
+    @MainActor @objc func invoke(_ sender: Any) {
         block?(sender)
     }
 }
