@@ -1559,10 +1559,10 @@ extension AssetSessionExporter {
     public typealias CompletionHandler = @MainActor @Sendable (Swift.Result<AVAssetExportSession.Status, Error>) -> Void
 
     /// Progress handler type
-    public typealias ProgressHandler = (_ progress: Float) -> Void
+    public typealias ProgressHandler = @Sendable (_ progress: Float) -> Void
 
     /// Render handler type for frame processing
-    public typealias RenderHandler = (_ renderFrame: CVPixelBuffer, _ presentationTime: CMTime, _ resultingBuffer: CVPixelBuffer) -> Void
+    public typealias RenderHandler = @Sendable (_ renderFrame: CVPixelBuffer, _ presentationTime: CMTime, _ resultingBuffer: CVPixelBuffer) -> Void
 
     /// Initiates an export session.
     ///

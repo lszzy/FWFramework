@@ -82,17 +82,17 @@ extension AuthorizeProtocol {
 /// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
 public class AuthorizeManager {
     private actor Configuration {
-        static var blocks: [AuthorizeType: () -> AuthorizeProtocol] = [:]
+        static var blocks: [AuthorizeType: @Sendable () -> AuthorizeProtocol] = [:]
     }
 
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
-    public static func registerAuthorize(_ type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) {
+    public static func registerAuthorize(_ type: AuthorizeType, block: @escaping @Sendable () -> AuthorizeProtocol) {
         Configuration.blocks[type] = block
     }
 
     /// 预置指定类型的权限管理器创建句柄，已注册时不生效，用于动态扩展权限类型
     @discardableResult
-    public static func presetAuthorize(_ type: AuthorizeType, block: @escaping () -> AuthorizeProtocol) -> Bool {
+    public static func presetAuthorize(_ type: AuthorizeType, block: @escaping @Sendable () -> AuthorizeProtocol) -> Bool {
         guard Configuration.blocks[type] == nil else { return false }
         Configuration.blocks[type] = block
         return true
