@@ -23,6 +23,16 @@ extension Wrapper where Base: DispatchQueue {
     public static func mainSyncIf<T>(execute block: @MainActor () -> T, otherwise: () -> T) -> T where T: Sendable {
         MainActor.runSyncIf(execute: block, otherwise: otherwise)
     }
+    
+    /// 主现成安全异步执行deinit句柄
+    public static func mainDeinit(execute block: @escaping @MainActor @Sendable () -> Void) {
+        MainActor.runDeinit(execute: block)
+    }
+    
+    /// 主现成安全异步执行deinit句柄，可携带参数(非释放对象)
+    public static func mainDeinit<T>(object: T, execute block: @escaping @MainActor @Sendable (T) -> Void) where T: Sendable {
+        MainActor.runDeinit(object: object, execute: block)
+    }
 }
 
 // MARK: - MainActor+Task
@@ -61,6 +71,28 @@ extension MainActor {
             #endif
         } else {
             return otherwise()
+        }
+    }
+    
+    /// 主Actor安全异步执行deinit句柄
+    public static func runDeinit(execute block: @escaping @MainActor @Sendable () -> Void) {
+        runSyncIf {
+            block()
+        } otherwise: {
+            Task { @MainActor in
+                block()
+            }
+        }
+    }
+    
+    /// 主Actor安全异步执行deinit句柄，可携带参数(非释放对象)
+    public static func runDeinit<T>(object: T, execute block: @escaping @MainActor @Sendable (T) -> Void) where T: Sendable {
+        runSyncIf {
+            block(object)
+        } otherwise: {
+            Task { @MainActor [object] in
+                block(object)
+            }
         }
     }
 

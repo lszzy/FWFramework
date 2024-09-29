@@ -382,7 +382,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
         vc.context = Router.Context(url: "http://kvm.wuyong.site/test.php?key=value")
-        vc.app.shouldPopController = { [weak self] in
+        vc.app.shouldPopController = { @MainActor @Sendable [weak self] in
             TestRouterController.popCount += 1
             let index = TestRouterController.popCount % 3
             if index == 0 {
