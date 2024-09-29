@@ -34,7 +34,7 @@ extension Wrapper where Base: Timer {
         RunLoop.current.add(timer, forMode: .common)
         return timer
     }
-    
+
     /// 创建Timer，使用主线程block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameters:
     ///   - timeInterval: 时间
@@ -42,7 +42,7 @@ extension Wrapper where Base: Timer {
     ///   - repeats: 是否重复
     /// - Returns: 定时器
     public static func safeCommonTimer(timeInterval: TimeInterval, block: @escaping @MainActor @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
-        return commonTimer(timeInterval: timeInterval, block: { timer in
+        commonTimer(timeInterval: timeInterval, block: { timer in
             let sendableTimer = SendableValue(timer)
             DispatchQueue.fw.mainAsync {
                 block(sendableTimer.value)
