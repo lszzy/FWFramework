@@ -235,7 +235,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { _ in
+        vc.app.completionHandler = { @MainActor @Sendable _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
@@ -254,7 +254,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { _ in
+        vc.app.completionHandler = { @MainActor @Sendable _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
@@ -269,7 +269,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         nav.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        nav.app.completionHandler = { _ in
+        nav.app.completionHandler = { @MainActor @Sendable _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         present(nav, animated: true)
@@ -293,7 +293,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         vc.app.presentationDidDismiss = { @MainActor @Sendable in
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { _ in
+        vc.app.completionHandler = { @MainActor @Sendable _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         present(vc, animated: true)
