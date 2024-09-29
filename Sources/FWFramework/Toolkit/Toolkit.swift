@@ -263,7 +263,11 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    @MainActor public static func openSafariController(_ url: URLParameter?, completionHandler: (@MainActor @Sendable () -> Void)? = nil, customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil) {
+    @MainActor public static func openSafariController(
+        _ url: URLParameter?,
+        completionHandler: (@MainActor @Sendable () -> Void)? = nil,
+        customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil
+    ) {
         guard let url = url?.urlValue, isHttpURL(url) else { return }
         let safariController = SFSafariViewController(url: url)
         if completionHandler != nil {
@@ -275,7 +279,10 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开短信控制器，完成时回调
-    @MainActor public static func openMessageController(_ controller: MFMessageComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageController(
+        _ controller: MFMessageComposeViewController,
+        completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil
+    ) {
         if !MFMessageComposeViewController.canSendText() {
             completionHandler?(false)
             return
@@ -289,7 +296,10 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开邮件控制器，完成时回调
-    @MainActor public static func openMailController(_ controller: MFMailComposeViewController, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMailController(
+        _ controller: MFMailComposeViewController,
+        completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil
+    ) {
         if !MFMailComposeViewController.canSendMail() {
             completionHandler?(false)
             return
@@ -303,7 +313,11 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开Store控制器，完成时回调
-    @MainActor public static func openStoreController(_ parameters: [String: Any], completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil, customBlock: (@MainActor @Sendable (SKStoreProductViewController) -> Void)? = nil) {
+    @MainActor public static func openStoreController(
+        _ parameters: [String: Any],
+        completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil,
+        customBlock: (@MainActor @Sendable (SKStoreProductViewController) -> Void)? = nil
+    ) {
         let controller = SKStoreProductViewController()
         controller.delegate = SafariViewControllerDelegate.shared
         controller.loadProduct(withParameters: parameters) { result, _ in
@@ -362,7 +376,7 @@ extension Wrapper where Base: UIApplication {
 
     /// 播放内置声音文件，完成后回调
     @discardableResult
-    public static func playSystemSound(_ file: String, completionHandler: (() -> Void)? = nil) -> SystemSoundID {
+    public static func playSystemSound(_ file: String, completionHandler: (@Sendable () -> Void)? = nil) -> SystemSoundID {
         guard !file.isEmpty else { return 0 }
 
         var soundFile = file
@@ -390,7 +404,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 播放内置震动，完成后回调
-    public static func playSystemVibrate(_ completionHandler: (() -> Void)? = nil) {
+    public static func playSystemVibrate(_ completionHandler: (@Sendable () -> Void)? = nil) {
         AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
 
@@ -782,7 +796,7 @@ extension Wrapper where Base: UIFont {
     }
 
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
-    public static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)? {
+    public static var fontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)? {
         get { ToolkitConfiguration.fontBlock }
         set { ToolkitConfiguration.fontBlock = newValue }
     }
@@ -1241,7 +1255,13 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 后台线程压缩图片，完成后主线程回调
-    public static func compressImages(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([UIImage]) -> Void) {
+    public static func compressImages(
+        _ images: [UIImage],
+        maxWidth: CGFloat,
+        maxLength: Int,
+        compressRatio: CGFloat = 0,
+        completion: @escaping @MainActor @Sendable ([UIImage]) -> Void
+    ) {
         DispatchQueue.global().async {
             let compressImages = images.compactMap { image in
                 image
@@ -1256,7 +1276,13 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 后台线程压缩图片数据，完成后主线程回调
-    public static func compressDatas(_ images: [UIImage], maxWidth: CGFloat, maxLength: Int, compressRatio: CGFloat = 0, completion: @escaping @MainActor @Sendable ([Data]) -> Void) {
+    public static func compressDatas(
+        _ images: [UIImage],
+        maxWidth: CGFloat,
+        maxLength: Int,
+        compressRatio: CGFloat = 0,
+        completion: @escaping @MainActor @Sendable ([Data]) -> Void
+    ) {
         DispatchQueue.global().async {
             let compressDatas = images.compactMap { image in
                 image
@@ -1342,13 +1368,13 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 保存图片到相册，保存成功时error为nil
-    public func saveImage(completion: ((Error?) -> Void)? = nil) {
+    public func saveImage(completion: (@Sendable (Error?) -> Void)? = nil) {
         setPropertyCopy(completion, forName: "saveImage")
         UIImageWriteToSavedPhotosAlbum(base, base, #selector(UIImage.innerSaveImage(_:didFinishSavingWithError:contextInfo:)), nil)
     }
 
     /// 保存视频到相册，保存成功时error为nil。如果视频地址为NSURL，需使用NSURL.path
-    public static func saveVideo(_ videoPath: String, completion: ((Error?) -> Void)? = nil) {
+    public static func saveVideo(_ videoPath: String, completion: (@Sendable (Error?) -> Void)? = nil) {
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: completion, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
             UISaveVideoAtPathToSavedPhotosAlbum(videoPath, UIImage.self, #selector(UIImage.innerSaveVideo(_:didFinishSavingWithError:contextInfo:)), nil)
@@ -1916,14 +1942,14 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    @MainActor public var allowsPopGesture: (() -> Bool)? {
-        get { property(forName: "allowsPopGesture") as? () -> Bool }
+    @MainActor public var allowsPopGesture: (@MainActor @Sendable () -> Bool)? {
+        get { property(forName: "allowsPopGesture") as? @MainActor @Sendable () -> Bool }
         set { setPropertyCopy(newValue, forName: "allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-    @MainActor public var shouldPopController: (() -> Bool)? {
-        get { property(forName: "shouldPopController") as? () -> Bool }
+    @MainActor public var shouldPopController: (@MainActor @Sendable () -> Bool)? {
+        get { property(forName: "shouldPopController") as? @MainActor @Sendable () -> Bool }
         set { setPropertyCopy(newValue, forName: "shouldPopController") }
     }
 }
@@ -2003,13 +2029,13 @@ extension Wrapper where Base: UIViewController {
 // MARK: - UIImage+Toolkit
 extension UIImage {
     @objc fileprivate func innerSaveImage(_ image: UIImage?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = fw.property(forName: "saveImage") as? (Error?) -> Void
+        let block = fw.property(forName: "saveImage") as? @Sendable (Error?) -> Void
         fw.setPropertyCopy(nil, forName: "saveImage")
         block?(error)
     }
 
     @objc fileprivate static func innerSaveVideo(_ videoPath: String?, didFinishSavingWithError error: Error?, contextInfo: Any?) {
-        let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "saveVideo") as? (Error?) -> Void
+        let block = NSObject.fw.getAssociatedObject(UIImage.self, key: "saveVideo") as? @Sendable (Error?) -> Void
         NSObject.fw.setAssociatedObject(UIImage.self, key: "saveVideo", value: nil, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC)
         block?(error)
     }
@@ -2256,7 +2282,7 @@ private actor ToolkitConfiguration {
 
     static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
     static var autoFlatFont = false
-    static var fontBlock: ((CGFloat, UIFont.Weight) -> UIFont?)?
+    static var fontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)?
     static let weightSuffixes: [UIFont.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
