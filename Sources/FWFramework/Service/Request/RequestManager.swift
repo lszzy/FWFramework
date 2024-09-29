@@ -211,7 +211,7 @@ open class RequestManager: @unchecked Sendable {
         }
     }
 
-    private func startSessionTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func startSessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
             startDownloadTask(for: request, completionHandler: completionHandler)
         } else {
@@ -219,11 +219,11 @@ open class RequestManager: @unchecked Sendable {
         }
     }
 
-    private func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         request.config.requestPlugin.startDataTask(for: request, completionHandler: completionHandler)
     }
 
-    private func startDownloadTask(for request: HTTPRequest, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+    private func startDownloadTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
         let downloadPath = request.resumableDownloadPath ?? ""
         var downloadTargetPath = ""
         var isDirectory: ObjCBool = false

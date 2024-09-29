@@ -110,7 +110,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var requestCachePolicy: URLRequest.CachePolicy?
         public private(set) var requestMethod: RequestMethod?
         public private(set) var requestArgument: Any?
-        public private(set) var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+        public private(set) var constructingBodyBlock: (@Sendable (RequestMultipartFormData) -> Void)?
         public private(set) var resumableDownloadPath: String?
         public private(set) var requestSerializerType: RequestSerializerType?
         public private(set) var responseSerializerType: ResponseSerializerType?
@@ -121,17 +121,17 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var customUrlRequest: URLRequest?
         public private(set) var isSynchronously: Bool?
         public private(set) var tag: Int?
-        public private(set) var statusCodeValidator: ((_ request: HTTPRequest) -> Bool)?
+        public private(set) var statusCodeValidator: (@Sendable (_ request: HTTPRequest) -> Bool)?
         public private(set) var jsonValidator: Any?
-        public private(set) var urlRequestFilter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
-        public private(set) var responseFilter: ((_ request: HTTPRequest) throws -> Void)?
-        public private(set) var responseMockValidator: ((HTTPRequest) -> Bool)?
-        public private(set) var responseMockProcessor: ((HTTPRequest) -> Bool)?
+        public private(set) var urlRequestFilter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        public private(set) var responseFilter: (@Sendable (_ request: HTTPRequest) throws -> Void)?
+        public private(set) var responseMockValidator: (@Sendable (HTTPRequest) -> Bool)?
+        public private(set) var responseMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
         public private(set) var requestRetryCount: Int?
         public private(set) var requestRetryInterval: TimeInterval?
         public private(set) var requestRetryTimeout: TimeInterval?
-        public private(set) var requestRetryValidator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-        public private(set) var requestRetryProcessor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?
+        public private(set) var requestRetryValidator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        public private(set) var requestRetryProcessor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?
         public private(set) var requestCompletePreprocessor: (@Sendable (HTTPRequest) -> Void)?
         public private(set) var requestCompleteFilter: Completion?
         public private(set) var requestFailedPreprocessor: (@Sendable (HTTPRequest) -> Void)?
@@ -139,7 +139,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var cacheTimeInSeconds: Int?
         public private(set) var cacheVersion: Int?
         public private(set) var cacheSensitiveData: Any?
-        public private(set) var cacheArgumentFilter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?
+        public private(set) var cacheArgumentFilter: (@Sendable (_ request: HTTPRequest, _ argument: Any?) -> Any?)?
         public private(set) var writeCacheAsynchronously: Bool?
 
         /// 构造方法
@@ -227,7 +227,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 自定义POST请求HTTP body数据
         @discardableResult
-        public func constructingBodyBlock(_ block: ((RequestMultipartFormData) -> Void)?) -> Self {
+        public func constructingBodyBlock(_ block: (@Sendable (RequestMultipartFormData) -> Void)?) -> Self {
             constructingBodyBlock = block
             return self
         }
@@ -337,35 +337,35 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 状态码验证器
         @discardableResult
-        public func statusCodeValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+        public func statusCodeValidator(_ validator: (@Sendable (_ request: HTTPRequest) -> Bool)?) -> Self {
             statusCodeValidator = validator
             return self
         }
 
         /// 请求发送前URLRequest过滤方法，默认不处理
         @discardableResult
-        public func urlRequestFilter(_ filter: ((_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
+        public func urlRequestFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
             urlRequestFilter = filter
             return self
         }
 
         /// 请求回调前Response过滤方法，默认成功不抛异常
         @discardableResult
-        public func responseFilter(_ filter: ((_ request: HTTPRequest) throws -> Void)?) -> Self {
+        public func responseFilter(_ filter: (@Sendable (_ request: HTTPRequest) throws -> Void)?) -> Self {
             responseFilter = filter
             return self
         }
 
         /// 调试请求Mock验证器，默认判断404
         @discardableResult
-        public func responseMockValidator(_ validator: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+        public func responseMockValidator(_ validator: (@Sendable (_ request: HTTPRequest) -> Bool)?) -> Self {
             responseMockValidator = validator
             return self
         }
 
         /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
         @discardableResult
-        public func responseMockProcessor(_ block: ((_ request: HTTPRequest) -> Bool)?) -> Self {
+        public func responseMockProcessor(_ block: (@Sendable (_ request: HTTPRequest) -> Bool)?) -> Self {
             responseMockProcessor = block
             return self
         }
@@ -421,14 +421,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求重试验证方法，默认检查状态码和错误
         @discardableResult
-        public func requestRetryValidator(_ validator: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
+        public func requestRetryValidator(_ validator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
             requestRetryValidator = validator
             return self
         }
 
         /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
         @discardableResult
-        public func requestRetryProcessor(_ processor: ((_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping (Bool) -> Void) -> Void)?) -> Self {
+        public func requestRetryProcessor(_ processor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?) -> Self {
             requestRetryProcessor = processor
             return self
         }
@@ -456,7 +456,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 缓存文件名过滤器，参数为请求参数，默认返回argument
         @discardableResult
-        public func cacheArgumentFilter(_ filter: ((_ request: HTTPRequest, _ argument: Any?) -> Any?)?) -> Self {
+        public func cacheArgumentFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ argument: Any?) -> Any?)?) -> Self {
             cacheArgumentFilter = filter
             return self
         }
@@ -494,13 +494,13 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     /// 自定义请求配件数组
     open var requestAccessories: [RequestAccessoryProtocol]?
     /// 自定义POST请求HTTP body数据
-    open var constructingBodyBlock: ((RequestMultipartFormData) -> Void)?
+    open var constructingBodyBlock: (@Sendable (RequestMultipartFormData) -> Void)?
     /// 断点续传下载路径
     open var resumableDownloadPath: String?
     /// 断点续传进度句柄
-    open var downloadProgressBlock: ((Progress) -> Void)?
+    open var downloadProgressBlock: (@Sendable (Progress) -> Void)?
     /// 上传进度句柄
-    open var uploadProgressBlock: ((Progress) -> Void)?
+    open var uploadProgressBlock: (@Sendable (Progress) -> Void)?
     /// 请求优先级，默认default
     open var requestPriority: RequestPriority = .default
     /// 是否是同步串行请求，默认false为异步并发请求
@@ -888,7 +888,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
-    open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping (Bool) -> Void) {
+    open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (Bool) -> Void) {
         if let processor = builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
@@ -1011,14 +1011,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 断点续传进度句柄
     @discardableResult
-    open func downloadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+    open func downloadProgressBlock(_ block: (@Sendable (Progress) -> Void)?) -> Self {
         downloadProgressBlock = block
         return self
     }
 
     /// 上传进度句柄
     @discardableResult
-    open func uploadProgressBlock(_ block: ((Progress) -> Void)?) -> Self {
+    open func uploadProgressBlock(_ block: (@Sendable (Progress) -> Void)?) -> Self {
         uploadProgressBlock = block
         return self
     }

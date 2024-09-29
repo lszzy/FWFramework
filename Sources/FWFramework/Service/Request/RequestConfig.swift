@@ -74,13 +74,13 @@ open class RequestConfig: @unchecked Sendable {
     open var cdnUrl: String = ""
 
     /// 是否后台预加载数据模型过滤句柄，默认nil
-    open var preloadModelFilter: ((HTTPRequest) -> Bool)?
+    open var preloadModelFilter: (@Sendable (HTTPRequest) -> Bool)?
     /// 是否预加载请求缓存过滤句柄(一般仅GET开启)，注意开启后当缓存存在时会调用成功句柄一次，默认nil
-    open var preloadCacheFilter: ((HTTPRequest) -> Bool)?
+    open var preloadCacheFilter: (@Sendable (HTTPRequest) -> Bool)?
     /// 自定义缓存敏感数据过滤句柄，默认nil
-    open var cacheSensitiveFilter: ((HTTPRequest) -> Any?)?
+    open var cacheSensitiveFilter: (@Sendable (HTTPRequest) -> Any?)?
     /// 自定义请求上下文配件句柄，默认nil
-    open var contextAccessoryBlock: ((HTTPRequest) -> RequestContextAccessory)?
+    open var contextAccessoryBlock: (@Sendable (HTTPRequest) -> RequestContextAccessory)?
 
     /// 是否启用调试
     open var debugLogEnabled: Bool = {
@@ -94,9 +94,9 @@ open class RequestConfig: @unchecked Sendable {
     /// 是否启用调试Mock
     open var debugMockEnabled: Bool = false
     /// 调试Mock验证器，默认nil
-    open var debugMockValidator: ((HTTPRequest) -> Bool)?
+    open var debugMockValidator: (@Sendable (HTTPRequest) -> Bool)?
     /// 调试Mock处理器，默认nil
-    open var debugMockProcessor: ((HTTPRequest) -> Bool)?
+    open var debugMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
 
     /// 内部显示错误和加载条句柄
     var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
@@ -130,11 +130,11 @@ public protocol RequestAccessoryProtocol: AnyObject {
 /// 默认句柄请求配件类
 open class RequestAccessory: RequestAccessoryProtocol {
     /// 即将开始句柄
-    open var willStartBlock: ((Any) -> Void)?
+    open var willStartBlock: (@Sendable (Any) -> Void)?
     /// 即将结束句柄
-    open var willStopBlock: ((Any) -> Void)?
+    open var willStopBlock: (@Sendable (Any) -> Void)?
     /// 已经结束句柄
-    open var didStopBlock: ((Any) -> Void)?
+    open var didStopBlock: (@Sendable (Any) -> Void)?
 
     public init() {}
 
@@ -362,11 +362,12 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             return
         }
 
+        let retryWaitTime = waitTime
         request.requestRetryProcessor(response, responseObject: responseObject, error: error) { shouldRetry in
             if request.isCancelled { return }
 
             if shouldRetry {
-                DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + retryWaitTime) {
                     if request.isCancelled { return }
 
                     completionHandler(true)
@@ -448,10 +449,10 @@ open class RequestCache: RequestCacheProtocol, @unchecked Sendable {
     static let cacheQueue = DispatchQueue(label: "site.wuyong.queue.request.cache", qos: .background)
 
     /// 请求缓存路径过滤句柄，返回处理后的路径
-    open var cacheFilePathFilter: ((_ request: HTTPRequest, _ filePath: String) -> String)?
+    open var cacheFilePathFilter: (@Sendable (_ request: HTTPRequest, _ filePath: String) -> String)?
 
     /// 请求缓存文件名过滤器，返回处理后的文件名
-    open var cacheFileNameFilter: ((_ request: HTTPRequest, _ fileName: String) -> String)?
+    open var cacheFileNameFilter: (@Sendable (_ request: HTTPRequest, _ fileName: String) -> String)?
 
     public init() {}
 
