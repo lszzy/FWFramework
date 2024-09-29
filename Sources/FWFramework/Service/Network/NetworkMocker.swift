@@ -108,9 +108,9 @@ extension Data {
 
 /// A handler for verifying outgoing requests.
 public struct NetworkMockOnRequestHandler {
-    public typealias OnRequest<HTTPBody> = (_ request: URLRequest, _ httpBody: HTTPBody?) -> Void
+    public typealias OnRequest<HTTPBody> = @Sendable (_ request: URLRequest, _ httpBody: HTTPBody?) -> Void
 
-    private let internalCallback: (_ request: URLRequest) -> Void
+    private let internalCallback: @Sendable (_ request: URLRequest) -> Void
     let legacyCallback: NetworkMock.OnRequest?
 
     /// Creates a new request handler using the given `HTTPBody` type, which can be any `Decodable`.
@@ -133,14 +133,14 @@ public struct NetworkMockOnRequestHandler {
 
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments.
     /// - Parameter requestCallback: The callback which will be executed just before the request executes, containing the request.
-    public init(requestCallback: @escaping (_ request: URLRequest) -> Void) {
+    public init(requestCallback: @escaping @Sendable (_ request: URLRequest) -> Void) {
         self.internalCallback = requestCallback
         self.legacyCallback = nil
     }
 
     /// Creates a new request handler using the given callback to call on request without parsing the body arguments and without passing the request.
     /// - Parameter callback: The callback which will be executed just before the request executes.
-    public init(callback: @escaping () -> Void) {
+    public init(callback: @escaping @Sendable () -> Void) {
         self.internalCallback = { _ in
             callback()
         }
@@ -149,7 +149,7 @@ public struct NetworkMockOnRequestHandler {
 
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Dictionary.
-    public init(jsonDictionaryCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void)) {
+    public init(jsonDictionaryCallback: @escaping @Sendable (_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void) {
         self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
@@ -165,7 +165,7 @@ public struct NetworkMockOnRequestHandler {
 
     /// Creates a new request handler using the given callback to call on request.
     /// - Parameter jsonDictionaryCallback: The callback that executes just before the request executes, containing the HTTP Body Arguments as a JSON Object Array.
-    public init(jsonArrayCallback: @escaping ((_ request: URLRequest, _ httpBodyArguments: [[String: Any]]?) -> Void)) {
+    public init(jsonArrayCallback: @escaping @Sendable (_ request: URLRequest, _ httpBodyArguments: [[String: Any]]?) -> Void) {
         self.internalCallback = { request in
             guard
                 let httpBody = request.httpBodyStreamData() ?? request.httpBody,
@@ -384,7 +384,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
         case connect = "CONNECT"
     }
 
-    public typealias OnRequest = (_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void
+    public typealias OnRequest = @Sendable (_ request: URLRequest, _ httpBodyArguments: [String: Any]?) -> Void
 
     /// The type of the data which designates the Content-Type header. If set to `nil`, no Content-Type header is added to the headers.
     public let contentType: DataType?
@@ -431,7 +431,7 @@ public struct NetworkMock: Equatable, @unchecked Sendable {
     public var cacheStoragePolicy: URLCache.StoragePolicy = .notAllowed
 
     /// The callback which will be executed everytime this `Mock` was completed. Can be used within unit tests for validating that a request has been executed. The callback must be set before calling `register`.
-    public var completion: (() -> Void)?
+    public var completion: (@Sendable () -> Void)?
 
     /// The on request handler which will be executed everytime this `Mock` was started. Can be used within unit tests for validating that a request has been started. The handler must be set before calling `register`.
     public var onRequestHandler: NetworkMockOnRequestHandler?
