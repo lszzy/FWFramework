@@ -14,6 +14,26 @@ import FWFramework
 }
 
 class TestWorkflowController: UIViewController, TableViewControllerProtocol {
+    class DeinitObject {
+        let name: String
+        
+        init(name: String = "DeinitObject") {
+            self.name = name
+        }
+        
+        func test() {
+            Logger.debug("%@", "\(name) test")
+        }
+        
+        deinit {
+            Logger.debug("%@", "\(name) deinit")
+            
+            MainActor.runDeinit(object: name) { name in
+                UIWindow.app.showMessage(text: "\(name) deinit")
+            }
+        }
+    }
+    
     // MARK: - Accessor
     var step: Int = 1
     weak var delegate: TestWorkflowProtocol?
@@ -65,7 +85,9 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
             ["Uncaught exception (Crash)", "onUncaughtException"],
             ["Uncaught signal (Crash)", "onUncaughtError"],
             ["Background task", "onBackground"],
-            ["Background request", "onRequest"]
+            ["Background request", "onRequest"],
+            ["MainActor deinit", "onDeinit1"],
+            ["MainActor deinit (global)", "onDeinit2"],
         ])
     }
 
@@ -207,6 +229,20 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
             }, expirationHandler: {
                 CacheFile.shared.setObject("后台请求已过期\n时间：\(Date.app.currentTime)", forKey: "backgroundTask")
             })
+        }
+    }
+    
+    func onDeinit1() {
+        var object: DeinitObject? = DeinitObject()
+        object?.test()
+        object = nil
+    }
+    
+    func onDeinit2() {
+        DispatchQueue.global().async {
+            var object: DeinitObject? = DeinitObject()
+            object?.test()
+            object = nil
         }
     }
 }
