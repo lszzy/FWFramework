@@ -94,7 +94,8 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
 
     deinit {
-        stopScanManager()
+        scanCode.stopRunning()
+        ScanCode.turnOffTorch()
     }
 
     func setupScanManager() {
@@ -125,11 +126,9 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         scanView.startScanning()
     }
 
-    nonisolated func stopScanManager() {
+    func stopScanManager() {
         scanCode.stopRunning()
-        DispatchQueue.app.mainSyncIf {
-            scanView.stopScanning()
-        }
+        scanView.stopScanning()
         removeFlashlightBtn()
     }
 
@@ -143,13 +142,11 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         }
     }
 
-    @objc nonisolated func removeFlashlightBtn() {
+    @objc func removeFlashlightBtn() {
         ScanCode.turnOffTorch()
 
-        DispatchQueue.app.mainSyncIf {
-            flashlightBtn.isSelected = false
-            flashlightBtn.removeFromSuperview()
-        }
+        flashlightBtn.isSelected = false
+        flashlightBtn.removeFromSuperview()
     }
 
     @objc func onPhotoLibrary(_ isBarcode: Bool = false) {
