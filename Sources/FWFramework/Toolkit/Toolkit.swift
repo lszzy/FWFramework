@@ -1867,7 +1867,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 添加生命周期变化监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
-    public func observeLifecycleState(_ block: @escaping (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
+    public func observeLifecycleState(_ block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
         let target = LifecycleStateHandler()
         target.object = nil
         target.block = { viewController, state, _ in
@@ -1879,7 +1879,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 添加生命周期变化监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
-    public func observeLifecycleState<T>(object: T, block: @escaping (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol {
+    public func observeLifecycleState<T>(object: T, block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol where T: Sendable {
         let target = LifecycleStateHandler()
         target.object = object
         target.block = { viewController, state, object in
@@ -1905,7 +1905,7 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义完成结果对象，默认nil
-    public var completionResult: Any? {
+    public var completionResult: Sendable? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.completionResult
@@ -1916,7 +1916,7 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
-    public var completionHandler: ((Any?) -> Void)? {
+    public var completionHandler: (@MainActor @Sendable (Sendable?) -> Void)? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.completionHandler
@@ -2118,20 +2118,29 @@ public enum ViewControllerLifecycleState: Int, Sendable {
 private class LifecycleStateTarget {
     unowned(unsafe) var viewController: UIViewController?
     var handlers: [LifecycleStateHandler] = []
-    var completionResult: Any?
-    var completionHandler: ((Any?) -> Void)?
+    var completionResult: Sendable?
+    var completionHandler: (@MainActor @Sendable (Sendable?) -> Void)?
     var state: ViewControllerLifecycleState = .didInit {
         didSet { stateChanged(from: oldValue, to: state) }
     }
 
     deinit {
-        // 注意deinit不会触发属性的didSet，需手工调用stateChanged
+        // 注意deinit不会触发属性的didSet，需手工触发handlers
         let oldState = state
         state = .didDeinit
-        stateChanged(from: oldState, to: state)
+        if let viewController, state != oldState {
+            for handler in handlers {
+                DispatchQueue.fw.mainDeinit(object: handler) { handler in
+                    handler.block?(viewController, .didDeinit, handler.object)
+                }
+            }
+        }
+        handlers.removeAll()
 
-        if completionHandler != nil {
-            completionHandler?(completionResult)
+        if let completionHandler {
+            DispatchQueue.fw.mainDeinit(object: completionResult) { result in
+                completionHandler(result)
+            }
         }
 
         #if DEBUG
@@ -2143,18 +2152,19 @@ private class LifecycleStateTarget {
 
     private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
         if let viewController, newState != oldState {
-            handlers.forEach { $0.block?(viewController, newState, $0.object) }
-        }
-        if newState == .didDeinit {
-            handlers.removeAll()
+            handlers.forEach { handler in
+                DispatchQueue.fw.mainAsync {
+                    handler.block?(viewController, newState, handler.object)
+                }
+            }
         }
     }
 }
 
 // MARK: - LifecycleStateHandler
-private class LifecycleStateHandler: NSObject {
+private class LifecycleStateHandler: NSObject, @unchecked Sendable {
     var object: Any?
-    var block: ((UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
+    var block: (@MainActor @Sendable (UIViewController, ViewControllerLifecycleState, Any?) -> Void)?
 }
 
 // MARK: - PopProxyTarget
