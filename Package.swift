@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:5.9
 
 import CompilerPluginSupport
 import PackageDescription
@@ -195,6 +195,5 @@ let package = Package(
                 .define("FWMacroSPM")
             ]
         )
-    ],
-    swiftLanguageVersions: [.v5]
+    ]
 )

@@ -2152,7 +2152,7 @@ private class LifecycleStateTarget {
 
     private func stateChanged(from oldState: ViewControllerLifecycleState, to newState: ViewControllerLifecycleState) {
         if let viewController, newState != oldState {
-            handlers.forEach { handler in
+            for handler in handlers {
                 DispatchQueue.fw.mainAsync {
                     handler.block?(viewController, newState, handler.object)
                 }
