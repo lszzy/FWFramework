@@ -17,7 +17,7 @@
     <a title="StateEvent Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0-beta.2 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.3 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -1516,6 +1516,9 @@
                 <a href="../Extensions/URL.html">URL</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/URLAuthenticationChallenge">URLAuthenticationChallenge</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/URLRequest.html">URLRequest</a>
               </li>
               <li class="nav-group-task">
@@ -2627,9 +2630,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10StateEventC15shouldFireBlockSbAA0B10TransitionCcSgvp"></a>
+                    <a name="/s:11FWFramework10StateEventC15shouldFireBlockSbAA0B10TransitionCYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/shouldFireBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10StateEventC15shouldFireBlockSbAA0B10TransitionCcSgvp">shouldFireBlock</a>
+                    <a class="token" href="#/s:11FWFramework10StateEventC15shouldFireBlockSbAA0B10TransitionCYbScMYccSgvp">shouldFireBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2644,7 +2647,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">shouldFireBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">shouldFireBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2654,9 +2657,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10StateEventC13willFireBlockyAA0B10TransitionCcSgvp"></a>
+                    <a name="/s:11FWFramework10StateEventC13willFireBlockyAA0B10TransitionCYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/willFireBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10StateEventC13willFireBlockyAA0B10TransitionCcSgvp">willFireBlock</a>
+                    <a class="token" href="#/s:11FWFramework10StateEventC13willFireBlockyAA0B10TransitionCYbScMYccSgvp">willFireBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2671,7 +2674,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">willFireBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">willFireBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2681,9 +2684,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10StateEventC9fireBlockyAA0B10TransitionC_ySbctcSgvp"></a>
+                    <a name="/s:11FWFramework10StateEventC9fireBlockyAA0B10TransitionC_ySbYbctYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/fireBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10StateEventC9fireBlockyAA0B10TransitionC_ySbctcSgvp">fireBlock</a>
+                    <a class="token" href="#/s:11FWFramework10StateEventC9fireBlockyAA0B10TransitionC_ySbYbctYbScMYccSgvp">fireBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2698,7 +2701,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fireBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">,</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fireBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">,</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2708,9 +2711,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework10StateEventC12didFireBlockyAA0B10TransitionC_SbtcSgvp"></a>
+                    <a name="/s:11FWFramework10StateEventC12didFireBlockyAA0B10TransitionC_SbtYbScMYccSgvp"></a>
                     <a name="//apple_ref/swift/Property/didFireBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework10StateEventC12didFireBlockyAA0B10TransitionC_SbtcSgvp">didFireBlock</a>
+                    <a class="token" href="#/s:11FWFramework10StateEventC12didFireBlockyAA0B10TransitionC_SbtYbScMYccSgvp">didFireBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2725,7 +2728,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">didFireBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">didFireBlock</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt"><a href="../Classes/StateTransition.html">StateTransition</a></span><span class="p">,</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -2764,7 +2767,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
