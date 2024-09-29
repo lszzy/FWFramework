@@ -37,7 +37,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
     private var mutableHTTPRequestHeaders: [String: String] = [:]
     private let requestHeaderModificationQueue = DispatchQueue(label: "requestHeaderModificationQueue", attributes: .concurrent)
     private var queryStringSerializationStyle: HTTPRequestQueryStringSerializationStyle = .default
-    private var queryStringSerialization: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?
+    private var queryStringSerialization: (@Sendable (_ request: URLRequest, _ parameters: Any) throws -> String?)?
 
     override public init() {
         super.init()
@@ -87,7 +87,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         queryStringSerialization = nil
     }
 
-    open func setQueryStringSerialization(block: ((_ request: URLRequest, _ parameters: Any) throws -> String?)?) {
+    open func setQueryStringSerialization(block: (@Sendable (_ request: URLRequest, _ parameters: Any) throws -> String?)?) {
         queryStringSerialization = block
     }
 
@@ -110,7 +110,7 @@ open class HTTPRequestSerializer: NSObject, URLRequestSerialization {
         return mutableRequest
     }
 
-    open func multipartFormRequest(method: String, urlString: String, parameters: [String: Any]?, constructingBody block: ((MultipartFormData) -> Void)?) throws -> URLRequest {
+    open func multipartFormRequest(method: String, urlString: String, parameters: [String: Any]?, constructingBody block: (@Sendable (MultipartFormData) -> Void)?) throws -> URLRequest {
         guard method != "GET" && method != "HEAD" else {
             throw NSError(domain: NSURLErrorDomain, code: NSURLErrorUnsupportedURL, userInfo: nil)
         }

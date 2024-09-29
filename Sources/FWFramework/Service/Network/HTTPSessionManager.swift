@@ -91,7 +91,7 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         urlString: String,
         parameters: Any? = nil,
         headers: [String: String]? = nil,
-        constructingBody block: ((MultipartFormData) -> Void)?,
+        constructingBody block: (@Sendable (MultipartFormData) -> Void)?,
         progress: (@Sendable (Progress) -> Void)? = nil,
         success: (@Sendable (_ task: URLSessionDataTask, _ responseObject: Any?) -> Void)? = nil,
         failure: (@Sendable (_ task: URLSessionDataTask?, _ error: Error) -> Void)? = nil
@@ -113,16 +113,16 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
             return nil
         }
 
-        var dataTask: URLSessionDataTask?
-        dataTask = uploadTask(streamedRequest: request, progress: progress) { _, responseObject, error in
+        let sendableDataTask = SendableValue<URLSessionDataTask?>(nil)
+        sendableDataTask.value = uploadTask(streamedRequest: request, progress: progress) { _, responseObject, error in
             if let error {
-                failure?(dataTask, error)
-            } else if let dataTask {
+                failure?(sendableDataTask.value, error)
+            } else if let dataTask = sendableDataTask.value {
                 success?(dataTask, responseObject)
             }
         }
-        dataTask?.resume()
-        return dataTask
+        sendableDataTask.value?.resume()
+        return sendableDataTask.value
     }
 
     open func put(
@@ -188,15 +188,15 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
             return nil
         }
 
-        var dataTask: URLSessionDataTask?
-        dataTask = self.dataTask(request: request, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { _, responseObject, error in
+        let sendableDataTask = SendableValue<URLSessionDataTask?>(nil)
+        sendableDataTask.value = self.dataTask(request: request, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { _, responseObject, error in
             if let error {
-                failure?(dataTask, error)
-            } else if let dataTask {
+                failure?(sendableDataTask.value, error)
+            } else if let dataTask = sendableDataTask.value {
                 success?(dataTask, responseObject)
             }
         })
-        return dataTask
+        return sendableDataTask.value
     }
 
     override open var description: String {
