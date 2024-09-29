@@ -17,7 +17,7 @@
     <a title="Validator Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.0-beta.2 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.0-beta.3 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -1516,6 +1516,9 @@
                 <a href="../Extensions/URL.html">URL</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions.html#/URLAuthenticationChallenge">URLAuthenticationChallenge</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/URLRequest.html">URLRequest</a>
               </li>
               <li class="nav-group-task">
@@ -2533,7 +2536,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt">Sendable</span></code></pre>
 
                 </div>
               </div>
@@ -2546,9 +2549,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorV9predicateyACyxGSbxSgcFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorV9predicateyACyxGSbxSgYbcFZ"></a>
                     <a name="//apple_ref/swift/Method/predicate(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV9predicateyACyxGSbxSgcFZ">predicate(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV9predicateyACyxGSbxSgYbcFZ">predicate(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2564,7 +2567,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">predicate</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Value</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+    <span class="n">_</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Value</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -2685,9 +2688,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVyACyxGSbxccfc"></a>
+                    <a name="/s:11FWFramework9ValidatorVyACyxGSbxYbccfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVyACyxGSbxccfc">init(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVyACyxGSbxYbccfc">init(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2703,7 +2706,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+    <span class="n">_</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">(</span><span class="kt">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2862,9 +2865,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0Cyxqd__GyXA_ACyqd__GyXAtlFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0Cyxqd__GyYbXA_ACyqd__GyYbXAtlFZ"></a>
                     <a name="//apple_ref/swift/Method/keyPath(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0Cyxqd__GyXA_ACyqd__GyXAtlFZ">keyPath(_:<wbr>_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0Cyxqd__GyYbXA_ACyqd__GyYbXAtlFZ">keyPath(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2880,8 +2883,8 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">keyPath</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">keyPath</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">KeyPath</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span>
-    <span class="n">_</span> <span class="nv">validator</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span>
+    <span class="n">_</span> <span class="nv">keyPath</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">KeyPath</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">validator</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Validator</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -2892,9 +2895,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0CyxSbGyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0CyxSbGyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/keyPath(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0CyxSbGyXAFZ">keyPath(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV7keyPathyACyxGs03KeyD0CyxSbGyYbXAFZ">keyPath(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2910,7 +2913,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">keyPath</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">keyPath</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">KeyPath</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Bool</span><span class="o">&gt;</span>
+    <span class="n">_</span> <span class="nv">keyPath</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">KeyPath</span><span class="o">&lt;</span><span class="kt">Value</span><span class="p">,</span> <span class="kt">Bool</span><span class="o">&gt;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3010,9 +3013,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorV2aaoiyACyxGAE_AEyXAtFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorV2aaoiyACyxGAE_AEyYbXAtFZ"></a>
                     <a name="//apple_ref/swift/Method/&amp;&amp;(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV2aaoiyACyxGAE_AEyXAtFZ">&&(_:<wbr>_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV2aaoiyACyxGAE_AEyYbXAtFZ">&&(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3029,7 +3032,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">&amp;&amp;</span><span class="p">(</span>
     <span class="nv">lhs</span><span class="p">:</span> <span class="k">Self</span><span class="p">,</span>
-    <span class="nv">rhs</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span>
+    <span class="nv">rhs</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3040,9 +3043,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorV2oooiyACyxGAE_AEyXAtFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorV2oooiyACyxGAE_AEyYbXAtFZ"></a>
                     <a name="//apple_ref/swift/Method/||(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorV2oooiyACyxGAE_AEyXAtFZ">||(_:<wbr>_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorV2oooiyACyxGAE_AEyYbXAtFZ">||(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3059,7 +3062,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">||</span><span class="p">(</span>
     <span class="nv">lhs</span><span class="p">:</span> <span class="k">Self</span><span class="p">,</span>
-    <span class="nv">rhs</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span>
+    <span class="nv">rhs</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3150,9 +3153,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASQRzlE7isEqualyACyxGxyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASQRzlE7isEqualyACyxGxyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/isEqual(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASQRzlE7isEqualyACyxGxyXAFZ">isEqual(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASQRzlE7isEqualyACyxGxyYbXAFZ">isEqual(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3168,7 +3171,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isEqual</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">equatableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="n">_</span> <span class="nv">equatableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3192,9 +3195,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASLRzlE4lessyACyxGxyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASLRzlE4lessyACyxGxyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/less(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE4lessyACyxGxyXAFZ">less(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE4lessyACyxGxyYbXAFZ">less(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3210,7 +3213,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">less</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3221,9 +3224,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASLRzlE11lessOrEqualyACyxGxyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASLRzlE11lessOrEqualyACyxGxyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/lessOrEqual(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE11lessOrEqualyACyxGxyXAFZ">lessOrEqual(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE11lessOrEqualyACyxGxyYbXAFZ">lessOrEqual(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3239,7 +3242,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">lessOrEqual</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3250,9 +3253,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASLRzlE7greateryACyxGxyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASLRzlE7greateryACyxGxyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/greater(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE7greateryACyxGxyXAFZ">greater(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE7greateryACyxGxyYbXAFZ">greater(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3268,7 +3271,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">greater</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3279,9 +3282,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASLRzlE14greaterOrEqualyACyxGxyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASLRzlE14greaterOrEqualyACyxGxyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/greaterOrEqual(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE14greaterOrEqualyACyxGxyXAFZ">greaterOrEqual(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE14greaterOrEqualyACyxGxyYbXAFZ">greaterOrEqual(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3297,7 +3300,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">greaterOrEqual</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="n">_</span> <span class="nv">comparableValue</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3308,9 +3311,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASLRzlE7between3min3maxACyxGxyXA_xyXAtFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASLRzlE7between3min3maxACyxGxyYbXA_xyYbXAtFZ"></a>
                     <a name="//apple_ref/swift/Method/between(min:max:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE7between3min3maxACyxGxyXA_xyXAtFZ">between(min:<wbr>max:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASLRzlE7between3min3maxACyxGxyYbXA_xyYbXAtFZ">between(min:<wbr>max:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3326,8 +3329,8 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">between</span><span class="p">(</span>
-    <span class="nv">min</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span><span class="p">,</span>
-    <span class="nv">max</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
+    <span class="nv">min</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span><span class="p">,</span>
+    <span class="nv">max</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Value</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3351,9 +3354,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASyRzlE8contains_7optionsACyxGqd__yXA_So22NSStringCompareOptionsVyXAtSyRd__lFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASyRzlE8contains_7optionsACyxGqd__yYbXA_So22NSStringCompareOptionsVyYbXAtSyRd__lFZ"></a>
                     <a name="//apple_ref/swift/Method/contains(_:options:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE8contains_7optionsACyxGqd__yXA_So22NSStringCompareOptionsVyXAtSyRd__lFZ">contains(_:<wbr>options:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE8contains_7optionsACyxGqd__yYbXA_So22NSStringCompareOptionsVyYbXAtSyRd__lFZ">contains(_:<wbr>options:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3369,8 +3372,8 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">contains</span><span class="o">&lt;</span><span class="kt">S</span><span class="p">:</span> <span class="kt">StringProtocol</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span><span class="p">,</span>
-    <span class="nv">options</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">.</span><span class="kt">CompareOptions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span><span class="p">,</span>
+    <span class="nv">options</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">.</span><span class="kt">CompareOptions</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3381,9 +3384,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASyRzlE9hasPrefixyACyxGqd__yXASyRd__lFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASyRzlE9hasPrefixyACyxGqd__yYbXASyRd__lFZ"></a>
                     <a name="//apple_ref/swift/Method/hasPrefix(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE9hasPrefixyACyxGqd__yXASyRd__lFZ">hasPrefix(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE9hasPrefixyACyxGqd__yYbXASyRd__lFZ">hasPrefix(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3399,7 +3402,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">hasPrefix</span><span class="o">&lt;</span><span class="kt">S</span><span class="p">:</span> <span class="kt">StringProtocol</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">prefix</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span>
+    <span class="n">_</span> <span class="nv">prefix</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3410,9 +3413,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASyRzlE9hasSuffixyACyxGqd__yXASyRd__lFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASyRzlE9hasSuffixyACyxGqd__yYbXASyRd__lFZ"></a>
                     <a name="//apple_ref/swift/Method/hasSuffix(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE9hasSuffixyACyxGqd__yXASyRd__lFZ">hasSuffix(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE9hasSuffixyACyxGqd__yYbXASyRd__lFZ">hasSuffix(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3428,7 +3431,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">hasSuffix</span><span class="o">&lt;</span><span class="kt">S</span><span class="p">:</span> <span class="kt">StringProtocol</span><span class="o">&gt;</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">suffix</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span>
+    <span class="n">_</span> <span class="nv">suffix</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">S</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3439,9 +3442,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASyRzlE6lengthyACyxGSiyXAFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASyRzlE6lengthyACyxGSiyYbXAFZ"></a>
                     <a name="//apple_ref/swift/Method/length(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE6lengthyACyxGSiyXAFZ">length(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE6lengthyACyxGSiyYbXAFZ">length(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3457,7 +3460,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">length</span><span class="p">(</span>
-    <span class="n">_</span> <span class="nv">count</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
+    <span class="n">_</span> <span class="nv">count</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -3468,9 +3471,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ValidatorVAASyRzlE6length3min3maxACyxGSiyXA_SiyXAtFZ"></a>
+                    <a name="/s:11FWFramework9ValidatorVAASyRzlE6length3min3maxACyxGSiyYbXA_SiyYbXAtFZ"></a>
                     <a name="//apple_ref/swift/Method/length(min:max:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE6length3min3maxACyxGSiyXA_SiyXAtFZ">length(min:<wbr>max:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ValidatorVAASyRzlE6length3min3maxACyxGSiyYbXA_SiyYbXAtFZ">length(min:<wbr>max:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -3486,8 +3489,8 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">length</span><span class="p">(</span>
-    <span class="nv">min</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nv">max</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
+    <span class="nv">min</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">max</span><span class="p">:</span> <span class="kd">@autoclosure</span> <span class="kd">@escaping</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
 
                         </div>
@@ -4030,7 +4033,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-27)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-09-29)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

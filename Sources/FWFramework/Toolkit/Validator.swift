@@ -26,7 +26,7 @@ extension AnyValidator {
         validateType: Bool = true
     ) {
         if validateType {
-            predicate = { value in
+            predicate = { @Sendable value in
                 if value == nil {
                     return validator.validate(nil)
                 } else if let value = value as? WrappedValue {
@@ -35,7 +35,7 @@ extension AnyValidator {
                 return false
             }
         } else {
-            predicate = { value in
+            predicate = { @Sendable value in
                 validator.validate(value as? WrappedValue)
             }
         }
@@ -44,10 +44,10 @@ extension AnyValidator {
 
 // MARK: - Validator
 /// 规则验证器，可扩展
-public struct Validator<Value> {
+public struct Validator<Value>: Sendable {
     /// 创建可选句柄验证器，值为nil时自行处理
     public static func predicate(
-        _ predicate: @escaping (Value?) -> Bool
+        _ predicate: @escaping @Sendable (Value?) -> Bool
     ) -> Self {
         var validator = Self()
         validator.predicate = predicate
@@ -64,11 +64,11 @@ public struct Validator<Value> {
         AnyValidator(self, validateType: false)
     }
 
-    private var predicate: (Value?) -> Bool
+    private var predicate: @Sendable (Value?) -> Bool
 
     /// 默认验证器，值为nil时返回false
     public init() {
-        self.predicate = { value in
+        self.predicate = { @Sendable value in
             value != nil
         }
     }
@@ -77,16 +77,16 @@ public struct Validator<Value> {
     public init<WrappedValue>(
         _ validator: Validator<WrappedValue>
     ) where WrappedValue? == Value {
-        self.predicate = { value in
+        self.predicate = { @Sendable value in
             validator.validate(value as? WrappedValue)
         }
     }
 
     /// 初始化句柄验证器，值为nil时返回false
     public init(
-        _ predicate: @escaping (Value) -> Bool
+        _ predicate: @escaping @Sendable (Value) -> Bool
     ) {
-        self.predicate = { value in
+        self.predicate = { @Sendable value in
             if let value {
                 return predicate(value)
             }
@@ -131,8 +131,8 @@ extension Validator {
 
     /// KeyPath包装验证器
     public static func keyPath<T>(
-        _ keyPath: @autoclosure @escaping () -> KeyPath<Value, T>,
-        _ validator: @autoclosure @escaping () -> Validator<T>
+        _ keyPath: @autoclosure @escaping @Sendable () -> KeyPath<Value, T>,
+        _ validator: @autoclosure @escaping @Sendable () -> Validator<T>
     ) -> Self {
         .init { value in
             validator().validate(value[keyPath: keyPath()])
@@ -141,7 +141,7 @@ extension Validator {
 
     /// KeyPath验证器
     public static func keyPath(
-        _ keyPath: @autoclosure @escaping () -> KeyPath<Value, Bool>
+        _ keyPath: @autoclosure @escaping @Sendable () -> KeyPath<Value, Bool>
     ) -> Self {
         .init { value in
             value[keyPath: keyPath()]
@@ -180,7 +180,7 @@ extension Validator {
     /// 与验证器
     public static func &&(
         lhs: Self,
-        rhs: @autoclosure @escaping () -> Self
+        rhs: @autoclosure @escaping @Sendable () -> Self
     ) -> Self {
         .init { value in
             lhs.validate(value) && rhs().validate(value)
@@ -190,7 +190,7 @@ extension Validator {
     /// 或验证器
     public static func ||(
         lhs: Self,
-        rhs: @autoclosure @escaping () -> Self
+        rhs: @autoclosure @escaping @Sendable () -> Self
     ) -> Self {
         .init { value in
             lhs.validate(value) || rhs().validate(value)
@@ -224,7 +224,7 @@ extension Validator where Value: BasicType {
 extension Validator where Value: Equatable {
     /// 相等验证器
     public static func isEqual(
-        _ equatableValue: @autoclosure @escaping () -> Value
+        _ equatableValue: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value == equatableValue()
@@ -235,7 +235,7 @@ extension Validator where Value: Equatable {
 extension Validator where Value: Comparable {
     /// 小于验证器
     public static func less(
-        _ comparableValue: @autoclosure @escaping () -> Value
+        _ comparableValue: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value < comparableValue()
@@ -244,7 +244,7 @@ extension Validator where Value: Comparable {
 
     /// 小于等于验证器
     public static func lessOrEqual(
-        _ comparableValue: @autoclosure @escaping () -> Value
+        _ comparableValue: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value <= comparableValue()
@@ -253,7 +253,7 @@ extension Validator where Value: Comparable {
 
     /// 大于验证器
     public static func greater(
-        _ comparableValue: @autoclosure @escaping () -> Value
+        _ comparableValue: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value > comparableValue()
@@ -262,7 +262,7 @@ extension Validator where Value: Comparable {
 
     /// 大于等于验证器
     public static func greaterOrEqual(
-        _ comparableValue: @autoclosure @escaping () -> Value
+        _ comparableValue: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value >= comparableValue()
@@ -271,8 +271,8 @@ extension Validator where Value: Comparable {
 
     /// 值区间验证器
     public static func between(
-        min: @autoclosure @escaping () -> Value,
-        max: @autoclosure @escaping () -> Value
+        min: @autoclosure @escaping @Sendable () -> Value,
+        max: @autoclosure @escaping @Sendable () -> Value
     ) -> Self {
         .init { value in
             value >= min() && value <= max()
@@ -283,8 +283,8 @@ extension Validator where Value: Comparable {
 extension Validator where Value: StringProtocol {
     /// 包含验证器
     public static func contains<S: StringProtocol>(
-        _ string: @autoclosure @escaping () -> S,
-        options: @autoclosure @escaping () -> String.CompareOptions = []
+        _ string: @autoclosure @escaping @Sendable () -> S,
+        options: @autoclosure @escaping @Sendable () -> String.CompareOptions = []
     ) -> Self {
         .init { value in
             value.range(of: string(), options: options()) != nil
@@ -293,7 +293,7 @@ extension Validator where Value: StringProtocol {
 
     /// 包含前缀验证器
     public static func hasPrefix<S: StringProtocol>(
-        _ prefix: @autoclosure @escaping () -> S
+        _ prefix: @autoclosure @escaping @Sendable () -> S
     ) -> Self {
         .init { value in
             value.hasPrefix(prefix())
@@ -302,7 +302,7 @@ extension Validator where Value: StringProtocol {
 
     /// 包含后缀验证器
     public static func hasSuffix<S: StringProtocol>(
-        _ suffix: @autoclosure @escaping () -> S
+        _ suffix: @autoclosure @escaping @Sendable () -> S
     ) -> Self {
         .init { value in
             value.hasSuffix(suffix())
@@ -311,7 +311,7 @@ extension Validator where Value: StringProtocol {
 
     /// 指定长度验证器
     public static func length(
-        _ count: @autoclosure @escaping () -> Int
+        _ count: @autoclosure @escaping @Sendable () -> Int
     ) -> Self {
         .init { value in
             value.count == count()
@@ -320,8 +320,8 @@ extension Validator where Value: StringProtocol {
 
     /// 长度区间验证器
     public static func length(
-        min: @autoclosure @escaping () -> Int = 0,
-        max: @autoclosure @escaping () -> Int
+        min: @autoclosure @escaping @Sendable () -> Int = 0,
+        max: @autoclosure @escaping @Sendable () -> Int
     ) -> Self {
         .init { value in
             value.count >= min() && value.count <= max()

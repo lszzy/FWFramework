@@ -9,7 +9,7 @@
 import FWFramework
 
 class TestThemeController: UIViewController, ViewControllerProtocol {
-    static let testImage = APP.iconImage("zmdi-var-flower", 24)
+    nonisolated static let testImage = APP.iconImage("zmdi-var-flower", 24)
 
     func didInitialize() {
         app.observeNotification(.ThemeChanged) { _ in
@@ -107,7 +107,7 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
         view.layer.addSublayer(layer)
 
         imageView = UIImageView(frame: CGRect(x: 20, y: 300, width: 50, height: 50))
-        UIImage.app.themeImageColorConfiguration = { AppTheme.textColor }
+        UIImage.app.themeImageColorConfiguration = { @Sendable in AppTheme.textColor }
         imageView.app.themeImage = Self.testImage?.app.themeImage
         view.addSubview(imageView)
 

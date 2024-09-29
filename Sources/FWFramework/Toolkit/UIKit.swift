@@ -11,7 +11,12 @@ import UIKit
 // MARK: - Wrapper+UIBezierPath
 extension Wrapper where Base: UIBezierPath {
     /// 绘制形状图片，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-    public func shapeImage(_ size: CGSize, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> UIImage? {
+    public func shapeImage(
+        _ size: CGSize,
+        strokeWidth: CGFloat,
+        strokeColor: UIColor,
+        fillColor: UIColor?
+    ) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
         context.setLineWidth(strokeWidth)
@@ -32,7 +37,12 @@ extension Wrapper where Base: UIBezierPath {
     }
 
     /// 绘制形状Layer，自定义画笔宽度、画笔颜色、填充颜色，填充颜色为nil时不执行填充
-    public func shapeLayer(_ rect: CGRect, strokeWidth: CGFloat, strokeColor: UIColor, fillColor: UIColor?) -> CAShapeLayer {
+    public func shapeLayer(
+        _ rect: CGRect,
+        strokeWidth: CGFloat,
+        strokeColor: UIColor,
+        fillColor: UIColor?
+    ) -> CAShapeLayer {
         let layer = CAShapeLayer()
         layer.frame = rect
         layer.lineWidth = strokeWidth
@@ -450,12 +460,22 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
+    public func setBorderLayer(
+        _ edge: UIRectEdge,
+        color: UIColor?,
+        width: CGFloat
+    ) {
         setBorderLayer(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func setBorderLayer(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
+    public func setBorderLayer(
+        _ edge: UIRectEdge,
+        color: UIColor?,
+        width: CGFloat,
+        leftInset: CGFloat,
+        rightInset: CGFloat
+    ) {
         if edge.contains(.top) {
             let borderLayer = borderLayer("borderLayerTop")
             borderLayer.frame = CGRect(x: leftInset, y: 0, width: base.bounds.size.width - leftInset - rightInset, height: width)
@@ -493,7 +513,13 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 绘制四边虚线边框和四角圆角。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func setDashBorderLayer(color: UIColor?, width: CGFloat, cornerRadius: CGFloat, lineLength: CGFloat, lineSpacing: CGFloat) {
+    public func setDashBorderLayer(
+        color: UIColor?,
+        width: CGFloat,
+        cornerRadius: CGFloat,
+        lineLength: CGFloat,
+        lineSpacing: CGFloat
+    ) {
         var borderLayer: CAShapeLayer
         if let layer = property(forName: "dashBorderLayer") as? CAShapeLayer {
             borderLayer = layer
@@ -514,7 +540,10 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 绘制单个或多个边框圆角，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func setCornerLayer(_ corner: UIRectCorner, radius: CGFloat) {
+    public func setCornerLayer(
+        _ corner: UIRectCorner,
+        radius: CGFloat
+    ) {
         let cornerLayer = CAShapeLayer()
         let path = UIBezierPath(roundedRect: base.bounds, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
         cornerLayer.frame = base.bounds
@@ -523,7 +552,12 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 绘制单个或多个边框圆角和四边边框，frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
-    public func setCornerLayer(_ corner: UIRectCorner, radius: CGFloat, borderColor: UIColor?, width: CGFloat) {
+    public func setCornerLayer(
+        _ corner: UIRectCorner,
+        radius: CGFloat,
+        borderColor: UIColor?,
+        width: CGFloat
+    ) {
         setCornerLayer(corner, radius: radius)
 
         var borderLayer: CAShapeLayer
@@ -544,12 +578,22 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 绘制单边或多边边框视图。使用AutoLayout
-    public func setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat) {
+    public func setBorderView(
+        _ edge: UIRectEdge,
+        color: UIColor?,
+        width: CGFloat
+    ) {
         setBorderView(edge, color: color, width: width, leftInset: 0, rightInset: 0)
     }
 
     /// 绘制单边或多边边框。使用AutoLayout
-    public func setBorderView(_ edge: UIRectEdge, color: UIColor?, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat) {
+    public func setBorderView(
+        _ edge: UIRectEdge,
+        color: UIColor?,
+        width: CGFloat,
+        leftInset: CGFloat,
+        rightInset: CGFloat
+    ) {
         if edge.contains(.top) {
             let borderView = borderView("borderViewTop", edge: .top)
             borderView.fw.setDimension(.height, size: width, autoScale: false)
@@ -608,7 +652,10 @@ extension Wrapper where Base: UIDevice {
 
     /// 开始倒计时，从window移除时自动取消，回调参数为剩余时间
     @discardableResult
-    public func startCountDown(_ seconds: Int, block: @escaping @MainActor @Sendable (Int) -> Void) -> DispatchSourceTimer {
+    public func startCountDown(
+        _ seconds: Int,
+        block: @escaping @MainActor @Sendable (Int) -> Void
+    ) -> DispatchSourceTimer {
         let queue = DispatchQueue.global()
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
@@ -822,7 +869,10 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 定义类通用样式实现句柄，默认样式default
-    public static func defineStyle(_ style: ViewStyle = .default, block: @escaping @MainActor @Sendable (Base) -> Void) {
+    public static func defineStyle(
+        _ style: ViewStyle = .default,
+        block: @escaping @MainActor @Sendable (Base) -> Void
+    ) {
         let styleBlock: @MainActor @Sendable (UIView) -> Void = { view in
             if let target = view as? Base { block(target) }
         }
@@ -2658,7 +2708,12 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 简单曝光方案，willDisplay调用即可，表格快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func willDisplay(_ cell: UITableViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping @MainActor @Sendable () -> Void) {
+    public func willDisplay(
+        _ cell: UITableViewCell,
+        at indexPath: IndexPath,
+        key: AnyHashable? = nil,
+        exposure: @escaping @MainActor @Sendable () -> Void
+    ) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: @MainActor @Sendable (UITableViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
@@ -2757,8 +2812,8 @@ extension Wrapper where Base: UIDevice {
 
     /// 执行所属tableView的批量更新
     public func performBatchUpdates(
-        _ updates: ((UITableView, IndexPath?) -> Void)?,
-        completion: ((UITableView, IndexPath?, Bool) -> Void)? = nil
+        _ updates: (@MainActor @Sendable (UITableView, IndexPath?) -> Void)?,
+        completion: (@MainActor @Sendable (UITableView, IndexPath?, Bool) -> Void)? = nil
     ) {
         guard let tableView else { return }
 
@@ -2846,7 +2901,12 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 简单曝光方案，willDisplay调用即可，集合快速滑动、数据不变等情况不计曝光。如需完整曝光方案，请使用StatisticalView
-    public func willDisplay(_ cell: UICollectionViewCell, at indexPath: IndexPath, key: AnyHashable? = nil, exposure: @escaping @MainActor @Sendable () -> Void) {
+    public func willDisplay(
+        _ cell: UICollectionViewCell,
+        at indexPath: IndexPath,
+        key: AnyHashable? = nil,
+        exposure: @escaping @MainActor @Sendable () -> Void
+    ) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
         let block: @MainActor @Sendable (UICollectionViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
@@ -2885,8 +2945,8 @@ extension Wrapper where Base: UIDevice {
 
     /// 执行所属collectionView的批量更新
     public func performBatchUpdates(
-        _ updates: ((UICollectionView, IndexPath?) -> Void)?,
-        completion: ((UICollectionView, IndexPath?, Bool) -> Void)? = nil
+        _ updates: (@MainActor @Sendable (UICollectionView, IndexPath?) -> Void)?,
+        completion: (@MainActor @Sendable (UICollectionView, IndexPath?, Bool) -> Void)? = nil
     ) {
         guard let collectionView else { return }
 
@@ -3142,13 +3202,8 @@ extension Wrapper where Base: UIDevice {
         viewController.view.removeFromSuperview()
     }
 
-    /// 添加子控制器到当前视图，解决不能触发viewWillAppear等的bug
-    public func addChild(_ viewController: UIViewController, layout: ((UIView) -> Void)? = nil) {
-        addChild(viewController, in: nil, layout: layout)
-    }
-
     /// 添加子控制器到指定视图，解决不能触发viewWillAppear等的bug
-    public func addChild(_ viewController: UIViewController, in view: UIView?, layout: ((UIView) -> Void)? = nil) {
+    public func addChild(_ viewController: UIViewController, in view: UIView? = nil, layout: (@MainActor (UIView) -> Void)? = nil) {
         base.addChild(viewController)
         let superview: UIView = view ?? base.view
         superview.addSubview(viewController.view)
@@ -3167,7 +3222,7 @@ extension Wrapper where Base: UIDevice {
         size: CGSize? = nil,
         delegate: (any UIPopoverPresentationControllerDelegate)? = nil,
         animated: Bool = true,
-        completion: (() -> Void)? = nil
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         popover.modalPresentationStyle = .popover
         if let size {

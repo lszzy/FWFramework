@@ -25,7 +25,7 @@ extension Wrapper where Base: CADisplayLink {
     /// 创建CADisplayLink，使用block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
-    public static func commonDisplayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
+    public static func commonDisplayLink(block: @escaping @Sendable (CADisplayLink) -> Void) -> CADisplayLink {
         let displayLink = displayLink(block: block)
         displayLink.add(to: .current, forMode: .common)
         return displayLink
@@ -36,7 +36,7 @@ extension Wrapper where Base: CADisplayLink {
     /// 示例：[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes]
     /// - Parameter block: 代码块
     /// - Returns: CADisplayLink
-    public static func displayLink(block: @escaping (CADisplayLink) -> Void) -> CADisplayLink {
+    public static func displayLink(block: @escaping @Sendable (CADisplayLink) -> Void) -> CADisplayLink {
         let displayLink = CADisplayLink(target: CADisplayLink.self, selector: #selector(CADisplayLink.innerDisplayLinkAction(_:)))
         displayLink.fw.setPropertyCopy(block, forName: "displayLinkAction")
         return displayLink
@@ -46,7 +46,7 @@ extension Wrapper where Base: CADisplayLink {
 // MARK: - Wrapper+CAAnimation
 extension Wrapper where Base: CAAnimation {
     /// 设置动画开始回调，需要在add之前添加，因为add时会自动拷贝一份对象
-    public var startBlock: ((CAAnimation) -> Void)? {
+    public var startBlock: (@Sendable (CAAnimation) -> Void)? {
         get {
             let target = animationTarget(false)
             return target?.startBlock
@@ -59,7 +59,7 @@ extension Wrapper where Base: CAAnimation {
     }
 
     /// 设置动画停止回调
-    public var stopBlock: ((CAAnimation, Bool) -> Void)? {
+    public var stopBlock: (@Sendable (CAAnimation, Bool) -> Void)? {
         get {
             let target = animationTarget(false)
             return target?.stopBlock
@@ -411,10 +411,10 @@ extension Wrapper where Base: CAGradientLayer {
      @param completion 完成事件
      */
     public func addAnimation(
-        block: @escaping () -> Void,
+        block: @escaping @MainActor @Sendable () -> Void,
         duration: TimeInterval,
         options: UIView.AnimationOptions? = nil,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         // 注意：AutoLayout动画需要调用父视图(如控制器view)的layoutIfNeeded更新布局才能生效
         UIView.animate(
@@ -439,8 +439,8 @@ extension Wrapper where Base: CAGradientLayer {
         curve: UIView.AnimationOptions,
         transition: UIView.AnimationOptions,
         duration: TimeInterval,
-        animations: (() -> Void)? = nil,
-        completion: ((Bool) -> Void)? = nil
+        animations: (@MainActor @Sendable () -> Void)? = nil,
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         UIView.transition(
             with: base,
@@ -467,7 +467,7 @@ extension Wrapper where Base: CAGradientLayer {
         fromValue: Any,
         toValue: Any,
         duration: CFTimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) -> CABasicAnimation {
         // keyPath支持值如下：
         // transform.rotation[.(x|y|z)]: 轴旋转动画
@@ -481,8 +481,10 @@ extension Wrapper where Base: CAGradientLayer {
 
         // 设置完成事件，需要在add之前设置才能生效，因为add时会copy动画对象
         if completion != nil {
-            animation.fw.stopBlock = { _, finished in
-                completion?(finished)
+            animation.fw.stopBlock = { @Sendable _, finished in
+                DispatchQueue.fw.mainAsync {
+                    completion?(finished)
+                }
             }
         }
 
@@ -501,10 +503,10 @@ extension Wrapper where Base: CAGradientLayer {
      */
     public func addTransition(
         options: UIView.AnimationOptions = [],
-        block: @escaping () -> Void,
+        block: @escaping @MainActor @Sendable () -> Void,
         duration: TimeInterval,
         animationsEnabled: Bool = true,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         UIView.transition(
             with: base,
@@ -537,7 +539,7 @@ extension Wrapper where Base: CAGradientLayer {
         subtype: CATransitionSubtype?,
         timingFunction: CAMediaTimingFunction?,
         duration: CFTimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) -> CATransition {
         // 默认动画完成后自动移除，removedOnCompletion为YES
         let transition = CATransition()
@@ -606,8 +608,10 @@ extension Wrapper where Base: CAGradientLayer {
 
         // 设置完成事件
         if completion != nil {
-            transition.fw.stopBlock = { _, finished in
-                completion?(finished)
+            transition.fw.stopBlock = { @Sendable _, finished in
+                DispatchQueue.fw.mainAsync {
+                    completion?(finished)
+                }
             }
         }
 
@@ -638,7 +642,7 @@ extension Wrapper where Base: CAGradientLayer {
     public func stroke(
         layer: CAShapeLayer,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) -> CABasicAnimation {
         // strokeEnd动画，仅CAShapeLayer支持
         let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -650,8 +654,10 @@ extension Wrapper where Base: CAGradientLayer {
 
         // 设置完成事件
         if completion != nil {
-            animation.fw.stopBlock = { _, finished in
-                completion?(finished)
+            animation.fw.stopBlock = { @Sendable _, finished in
+                DispatchQueue.fw.mainAsync {
+                    completion?(finished)
+                }
             }
         }
 
@@ -671,7 +677,7 @@ extension Wrapper where Base: CAGradientLayer {
         times: Int,
         delta: CGFloat,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         shake(
             times: times > 0 ? times : 10,
@@ -689,7 +695,7 @@ extension Wrapper where Base: CAGradientLayer {
         duration: TimeInterval,
         direction: CGFloat,
         currentTimes: Int,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         // 是否是文本输入框
         let isTextField = base is UITextField
@@ -740,7 +746,7 @@ extension Wrapper where Base: CAGradientLayer {
     public func fade(
         alpha: CGFloat,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         let strongBase = base
         UIView.animate(
@@ -762,9 +768,9 @@ extension Wrapper where Base: CAGradientLayer {
      *  @param completion 完成回调
      */
     public func fade(
-        block: @escaping () -> Void,
+        block: @escaping @MainActor @Sendable () -> Void,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         UIView.transition(
             with: base,
@@ -785,7 +791,7 @@ extension Wrapper where Base: CAGradientLayer {
     public func rotate(
         degree: CGFloat,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         let strongBase = base
         UIView.animate(
@@ -811,7 +817,7 @@ extension Wrapper where Base: CAGradientLayer {
         scaleX: CGFloat,
         scaleY: CGFloat,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         let strongBase = base
         UIView.animate(
@@ -835,7 +841,7 @@ extension Wrapper where Base: CAGradientLayer {
     public func move(
         point: CGPoint,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         let strongBase = base
         UIView.animate(
@@ -859,7 +865,7 @@ extension Wrapper where Base: CAGradientLayer {
     public func move(
         frame: CGRect,
         duration: TimeInterval,
-        completion: ((Bool) -> Void)? = nil
+        completion: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
         let strongBase = base
         UIView.animate(
@@ -880,8 +886,8 @@ extension Wrapper where Base: CAGradientLayer {
      @param completion 完成事件
      */
     public static func animateNone(
-        block: @escaping () -> Void,
-        completion: (() -> Void)? = nil
+        block: @escaping @MainActor @Sendable () -> Void,
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         UIView.animate(withDuration: 0, animations: block) { _ in
             completion?()
@@ -895,8 +901,8 @@ extension Wrapper where Base: CAGradientLayer {
      @param completion 完成事件
      */
     public static func animate(
-        block: () -> Void,
-        completion: (() -> Void)? = nil
+        block: @MainActor @Sendable () -> Void,
+        completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         CATransaction.begin()
         CATransaction.setCompletionBlock(completion)
@@ -1009,7 +1015,7 @@ extension Wrapper where Base: CAGradientLayer {
 // MARK: - CADisplayLink+QuartzCore
 extension CADisplayLink {
     @objc fileprivate class func innerDisplayLinkAction(_ displayLink: CADisplayLink) {
-        let block = displayLink.fw.property(forName: "displayLinkAction") as? (CADisplayLink) -> Void
+        let block = displayLink.fw.property(forName: "displayLinkAction") as? @Sendable (CADisplayLink) -> Void
         block?(displayLink)
     }
 }
@@ -1102,9 +1108,9 @@ extension UIView {
 }
 
 // MARK: - AnimationTarget
-private class AnimationTarget: NSObject, CAAnimationDelegate {
-    var startBlock: ((CAAnimation) -> Void)?
-    var stopBlock: ((CAAnimation, Bool) -> Void)?
+private class AnimationTarget: NSObject, CAAnimationDelegate, @unchecked Sendable {
+    var startBlock: (@Sendable (CAAnimation) -> Void)?
+    var stopBlock: (@Sendable (CAAnimation, Bool) -> Void)?
 
     func animationDidStart(_ anim: CAAnimation) {
         startBlock?(anim)

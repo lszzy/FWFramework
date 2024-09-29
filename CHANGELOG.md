@@ -1,27 +1,29 @@
 # Changelog
 
-## [6.0.0-beta.2] - 2024-09-27
+## [6.0.0-beta.3] - 2024-09-29
 
 ### Added
 * Compatible with Swift 6, code marks MainActor, Sendable, nonisolated, etc., easy to write safer code
 * Compatible with iOS 18, ViewIntrospect adds iOS 18 related variables
 * Refactor the proportional scaling implementation scheme, and related methods support non-main thread calls
-* Add SendableValue objects to solve the problem of passing parameters of any object Sendable
-* Add observe methods related to Message starting with safe, which are used for main thread calls to listener handles
+* Add SendableValue object to solve the problem of passing parameters of any object Sendable
+* Add observe method related to Message starting with safe, used for main thread calling listener handle
 * Add ProtectedValue, LockingProtocol and other thread safety tool classes
-* Router, JSBridge component related methods mark MainActor main thread calls, which need to be migrated and adapted
-* Remove the methods marked as deprecated in version 5.x, please use the new API to replace the implementation, which needs to be migrated and adapted
+* Add MainActor.runDeinit method to uniformly handle deinit calling main thread code problems
+* Router, JSBridge component related methods mark MainActor main thread calls, need to migrate and adapt
+* Remove the methods marked as deprecated in version 5.x, please use the new API to replace the implementation, need to migrate and adapt
 * Refactor the height acquisition methods of the global status bar, navigation bar, tab bar, etc., and give priority to dynamic acquisition and caching
 
 ### Migrate
-1. Adapt to Swift 6. Need to fix the compilation error of related code after marking MainActor, Sendable, nonisolated, and need to migrate and adapt
-2. Adapt to iOS 18. If you use ViewIntrospect components, you need to adapt v18 related variables, and need to migrate and adapt
-3. Adapt Plugin. When implementing custom Plugin, you need to synchronously mark MainActor, Sendable, etc., and need to migrate and adapt
-4. If the main thread needs to call Message-related observe listener handles, please migrate to use the corresponding method starting with safe
-5. If the main project opens Swift 6 compilation, HTTPRequest request subclasses, etc. need to be synchronously marked as `@unchecked Sendable`
-6. The obsolete methods of version 5.x have been removed. Please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), which requires migration and adaptation
-7. After fixing the compilation error, you need to synchronously test whether the related functions are normal (such as the height of the status bar, navigation bar, etc., MainActor-related functions, etc.)
-8. For more usage examples, please refer to the Example project
+1. To adapt to Swift 6, you need to fix the compilation errors of related codes after marking MainActor, Sendable, and nonisolated, and you need to migrate and adapt
+2. To adapt to iOS 18, if you use the ViewIntrospect component, you need to adapt to v18 related variables, and you need to migrate and adapt
+3. To adapt to Plugin, you need to synchronously mark MainActor, Sendable, etc. when implementing custom Plugins, and you need to migrate and adapt
+4. If the main thread needs to call the Message-related observe listener handle, please migrate to the corresponding method starting with safe
+5. If you need to handle the problem of deinit calling the main thread code, please migrate to use the MainActor.runDeinit method
+6. If the main project opens Swift 6 compilation, HTTPRequest request subclasses, etc. need to be synchronously marked as `@unchecked Sendable`
+7. The obsolete methods of version 5.x have been removed. Please use the new Api to replace the implementation (such as chain=>layoutChain, etc.), and you need to migrate and adapt
+8. After fixing the compilation error, you need to test whether the related functions are normal (such as the height of the status bar, navigation bar, MainActor related functions, etc.)
+9. For more usage examples, please refer to the Example project
 
 ## [5.12.2] - 2024-09-27
 

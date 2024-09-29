@@ -367,7 +367,7 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
                 Logger.debug(group: Logger.fw.moduleName, "AudioPlayer: set active error: %@", error.localizedDescription)
             }
         }
-        DispatchQueue.fw.mainSyncIf {
+        DispatchQueue.fw.mainDeinit {
             UIApplication.shared.endReceivingRemoteControlEvents()
         }
         NotificationCenter.default.removeObserver(self)
@@ -383,8 +383,9 @@ open class AudioPlayer: NSObject, @unchecked Sendable {
 
         removeAllItems()
 
-        DispatchQueue.fw.mainSyncIf {
-            _audioPlayer?.pause()
+        let sendablePlayer = SendableValue(_audioPlayer)
+        DispatchQueue.fw.mainDeinit(object: sendablePlayer) { player in
+            player.value?.pause()
         }
         delegate = nil
         dataSource = nil
