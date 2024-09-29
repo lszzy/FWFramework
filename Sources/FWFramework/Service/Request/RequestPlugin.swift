@@ -14,10 +14,10 @@ public protocol RequestPlugin: AnyObject {
     func buildUrlRequest(for request: HTTPRequest) throws -> URLRequest
 
     /// 构建数据任务，自动开始
-    func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?)
+    func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?)
 
     /// 构建下载任务，支持断点续传，自动开始
-    func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?)
+    func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?)
 
     /// 暂停请求，开始后可调用
     func suspendRequest(_ request: HTTPRequest)
@@ -36,12 +36,12 @@ extension RequestPlugin {
     }
 
     /// 默认实现构建数据任务，自动开始
-    public func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    public func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         RequestPluginImpl.shared.startDataTask(for: request, completionHandler: completionHandler)
     }
 
     /// 默认实现构建下载任务，支持断点续传自动开始
-    public func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+    public func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
         RequestPluginImpl.shared.startDownloadTask(for: request, resumeData: resumeData, destination: destination, completionHandler: completionHandler)
     }
 
@@ -74,7 +74,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
     /// 自定义安全策略，默认default
     open var securityPolicy: SecurityPolicy = .default
     /// SessionTaskMetrics配置句柄，默认nil
-    open var collectingMetricsBlock: ((_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
+    open var collectingMetricsBlock: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
 
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
@@ -174,7 +174,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
         return urlRequest
     }
 
-    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    open func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         let urlRequest: URLRequest
         do {
             urlRequest = try buildUrlRequest(for: request)
@@ -190,7 +190,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
         startRequestTask(dataTask, for: request)
     }
 
-    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
         let downloadTask: URLSessionDownloadTask
         if let resumeData {
             downloadTask = manager.downloadTask(resumeData: resumeData, progress: request.downloadProgressBlock, destination: { _, _ in
@@ -248,7 +248,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
         requestTask.resume()
     }
 
-    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {

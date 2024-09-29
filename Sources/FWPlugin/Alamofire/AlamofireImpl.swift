@@ -32,7 +32,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
     /// 事件模拟器数组，默认空
     open var eventMonitors: [EventMonitor] = []
     /// 自定义请求intercepter句柄，如配置RetryPolicy等，默认nil
-    open var requestIntercepterBlock: ((HTTPRequest) -> RequestInterceptor?)?
+    open var requestIntercepterBlock: (@Sendable (HTTPRequest) -> RequestInterceptor?)?
 
     /// 是否移除响应JSON中的NSNull值，默认true
     open var removeNullValues = true
@@ -108,7 +108,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         return urlRequest
     }
 
-    open func startDataTask(for request: HTTPRequest, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    open func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         let urlRequest: URLRequest
         do {
             urlRequest = try buildUrlRequest(for: request)
@@ -154,7 +154,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         }
     }
 
-    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: ((URLResponse, URL?, Error?) -> Void)?) {
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
         let requestIntercepter = requestIntercepterBlock?(request)
         let downloadRequest: DownloadRequest
 
@@ -227,7 +227,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         request.requestAdapter = alamofireRequest
     }
 
-    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: ((URLResponse, Any?, Error?) -> Void)?) {
+    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
         var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {
