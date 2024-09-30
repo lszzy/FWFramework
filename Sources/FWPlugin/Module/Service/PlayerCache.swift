@@ -348,8 +348,8 @@ public class PlayerCacheDownloader: NSObject, PlayerCacheActionWorkerDelegate {
 }
 
 private protocol PlayerCacheSessionDelegateObjectDelegate: AnyObject {
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void)
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping @Sendable (URLSession.ResponseDisposition) -> Void)
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?)
 }
@@ -365,11 +365,11 @@ private class PlayerCacheSessionDelegateObject: NSObject, URLSessionDataDelegate
         self.delegate = delegate
     }
 
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         delegate?.urlSession(session, didReceive: challenge, completionHandler: completionHandler)
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping @Sendable (URLSession.ResponseDisposition) -> Void) {
         delegate?.urlSession(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
     }
 
@@ -964,7 +964,7 @@ public class PlayerCacheManager: NSObject, @unchecked Sendable {
     }()
 
     private var cacheUpdateNotifyInterval: TimeInterval = 0.1
-    private var cacheFileNameRules: ((URL) -> String)?
+    private var cacheFileNameRules: (@Sendable (URL) -> String)?
 
     public static func cachedFilePath(for url: URL) -> String {
         var pathComponent = ""
@@ -981,7 +981,7 @@ public class PlayerCacheManager: NSObject, @unchecked Sendable {
         return PlayerCacheConfiguration.configuration(filePath: filePath)
     }
 
-    public static func setFileNameRules(_ block: ((URL) -> String)?) {
+    public static func setFileNameRules(_ block: (@Sendable (URL) -> String)?) {
         shared.cacheFileNameRules = block
     }
 
