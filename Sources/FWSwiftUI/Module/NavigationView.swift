@@ -18,8 +18,8 @@ import SwiftUI
     public var trailing: Any?
     public var background: Any?
     public var style: NavigationBarStyle?
-    public var appearance: (() -> NavigationBarAppearance)?
-    public var customize: ((UIViewController) -> Void)?
+    public var appearance: (@MainActor @Sendable () -> NavigationBarAppearance)?
+    public var customize: (@MainActor @Sendable (UIViewController) -> Void)?
 
     public init(
         leading: Any? = nil,
@@ -27,8 +27,8 @@ import SwiftUI
         trailing: Any? = nil,
         background: Any? = nil,
         style: NavigationBarStyle? = nil,
-        appearance: (() -> NavigationBarAppearance)? = nil,
-        customize: ((UIViewController) -> Void)? = nil
+        appearance: (@MainActor @Sendable () -> NavigationBarAppearance)? = nil,
+        customize: (@MainActor @Sendable (UIViewController) -> Void)? = nil
     ) {
         self.leading = leading
         self.title = title

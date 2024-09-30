@@ -19,12 +19,12 @@ public typealias RefreshFooter = Refresh.Footer
 // MARK: - Header
 extension Refresh {
     public struct Header<Label> where Label: View {
-        let action: () -> Void
+        let action: @MainActor @Sendable () -> Void
         let label: (CGFloat) -> Label
 
         @Binding var refreshing: Bool
 
-        public init(refreshing: Binding<Bool>, action: @escaping () -> Void, @ViewBuilder label: @escaping (CGFloat) -> Label) {
+        public init(refreshing: Binding<Bool>, action: @escaping @MainActor @Sendable () -> Void, @ViewBuilder label: @escaping (CGFloat) -> Label) {
             self.action = action
             self.label = label
             _refreshing = refreshing
@@ -108,7 +108,7 @@ extension Refresh.HeaderUpdateKey: EnvironmentKey {
 // MARK: - Footer
 extension Refresh {
     public struct Footer<Label> where Label: View {
-        let action: () -> Void
+        let action: @MainActor @Sendable () -> Void
         let label: () -> Label
 
         @Binding var refreshing: Bool
@@ -116,7 +116,7 @@ extension Refresh {
         private var noMore = false
         private var preloadOffset: CGFloat = 0
 
-        public init(refreshing: Binding<Bool>, action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
+        public init(refreshing: Binding<Bool>, action: @escaping @MainActor @Sendable () -> Void, @ViewBuilder label: @escaping () -> Label) {
             self.action = action
             self.label = label
             _refreshing = refreshing
