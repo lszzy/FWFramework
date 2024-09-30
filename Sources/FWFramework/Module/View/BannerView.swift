@@ -45,18 +45,18 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     private actor Configuration {
-        static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
-        static var trackExposureBlock: (@MainActor (UIView) -> Void)?
+        static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
+        static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
     }
 
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
-    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)? {
+    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)? {
         get { Configuration.trackClickBlock }
         set { Configuration.trackClickBlock = newValue }
     }
 
-    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor (UIView) -> Void)? {
+    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)? {
         get { Configuration.trackExposureBlock }
         set { Configuration.trackExposureBlock = newValue }
     }
@@ -182,13 +182,13 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     /// 句柄方式监听点击，参数为index
-    open var didSelectItemBlock: ((Int) -> Void)?
+    open var didSelectItemBlock: (@MainActor @Sendable (Int) -> Void)?
 
     /// 句柄方式监听滚动，快速滚动时也会回调，参数为index
-    open var didScrollToItemBlock: ((Int) -> Void)?
+    open var didScrollToItemBlock: (@MainActor @Sendable (Int) -> Void)?
 
     /// 自定义cell句柄，参数为cell和index
-    open var customCellBlock: ((UICollectionViewCell, Int) -> Void)?
+    open var customCellBlock: (@MainActor @Sendable (UICollectionViewCell, Int) -> Void)?
 
     /// 轮播图片的ContentMode，默认为scaleAspectFill
     open var imageViewContentMode: UIView.ContentMode = .scaleAspectFill
@@ -204,7 +204,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     /// 自定义pageControl控件，初始化后调用
-    open var customPageControl: ((UIControl) -> Void)?
+    open var customPageControl: (@MainActor @Sendable (UIControl) -> Void)?
 
     /// 是否在只有一张图时隐藏pagecontrol，默认为true
     open var hidesForSinglePage: Bool = true

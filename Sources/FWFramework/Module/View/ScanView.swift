@@ -104,14 +104,14 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     }
 
     /// 扫描二维码回调句柄
-    open var scanResultBlock: ((String?) -> Void)? {
+    open var scanResultBlock: (@Sendable (String?) -> Void)? {
         didSet {
             setupMetadataOutput()
         }
     }
 
     /// 扫描二维码光线强弱回调句柄
-    open var scanBrightnessBlock: ((CGFloat) -> Void)? {
+    open var scanBrightnessBlock: (@Sendable (CGFloat) -> Void)? {
         didSet {
             setupVideoDataOutput()
         }
@@ -622,14 +622,14 @@ open class ScanView: UIView {
     }
 
     /// 双击回调方法
-    open var doubleTapBlock: ((Bool) -> Void)? {
+    open var doubleTapBlock: (@MainActor @Sendable (Bool) -> Void)? {
         didSet {
             tapGesture.isEnabled = doubleTapBlock != nil
         }
     }
 
     /// 缩放回调方法，0表示开始
-    open var pinchScaleBlock: ((CGFloat) -> Void)? {
+    open var pinchScaleBlock: (@MainActor @Sendable (CGFloat) -> Void)? {
         didSet {
             pinchGesture.isEnabled = pinchScaleBlock != nil
         }

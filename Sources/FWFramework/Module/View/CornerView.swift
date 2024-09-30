@@ -37,7 +37,7 @@ open class RoundedCornerView: UIView {
     }
 
     /// 自定义layoutSubviews句柄，默认nil
-    open var layoutSubviewsBlock: ((UIView) -> Void)? {
+    open var layoutSubviewsBlock: (@MainActor @Sendable (UIView) -> Void)? {
         didSet { setNeedsLayout() }
     }
 
@@ -93,7 +93,7 @@ open class RectCornerView: UIView {
     }
 
     /// 自定义layoutSubviews句柄，默认nil
-    open var layoutSubviewsBlock: ((UIView) -> Void)? {
+    open var layoutSubviewsBlock: (@MainActor @Sendable (UIView) -> Void)? {
         didSet { setNeedsLayout() }
     }
 

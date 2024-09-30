@@ -309,7 +309,7 @@ open class WebView: WKWebView {
     open var allowsRouterSchemes: [String] = []
 
     /// 配置允许下载的url句柄(iOS14.5+生效)，默认nil
-    open var allowsDownloadUrl: ((URL) -> Bool)?
+    open var allowsDownloadUrl: (@MainActor @Sendable (URL) -> Bool)?
 
     /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
@@ -339,7 +339,7 @@ open class WebView: WKWebView {
     open var isFirstLoad = true
 
     /// 设置重用时预缓存资源的url句柄，同一个reuseIdentifier仅生效一次，自动处理堆栈
-    public static var reusePreloadUrlBlock: (@Sendable (String) -> Any?)?
+    public static var reusePreloadUrlBlock: (@MainActor @Sendable (String) -> Any?)?
 
     private static var preloadedReuseIdentifiers: [String] = []
 
