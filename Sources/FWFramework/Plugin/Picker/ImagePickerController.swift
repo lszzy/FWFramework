@@ -81,10 +81,10 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     open weak var albumControllerDelegate: ImageAlbumControllerDelegate?
 
     /// 自定义pickerController句柄，优先级低于delegate
-    open var pickerControllerBlock: (() -> ImagePickerController)?
+    open var pickerControllerBlock: (@MainActor @Sendable () -> ImagePickerController)?
 
     /// 自定义cell展示句柄，cellForRow自动调用，优先级低于delegate
-    open var customCellBlock: ((ImageAlbumTableCell, IndexPath) -> Void)?
+    open var customCellBlock: (@MainActor @Sendable (ImageAlbumTableCell, IndexPath) -> Void)?
 
     /// 相册列表默认封面图，默认nil
     open var defaultPosterImage: UIImage?
@@ -135,8 +135,8 @@ open class ImageAlbumController: UIViewController, UITableViewDataSource, UITabl
     }()
 
     weak var imagePickerController: ImagePickerController?
-    var assetsGroupSelected: ((AssetGroup) -> Void)?
-    var albumsArrayLoaded: (() -> Void)?
+    var assetsGroupSelected: (@MainActor @Sendable (AssetGroup) -> Void)?
+    var albumsArrayLoaded: (@MainActor @Sendable () -> Void)?
 
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -529,9 +529,9 @@ open class ImageAlbumTableCell: UITableViewCell {
 open class ImagePickerPreviewController: ImagePreviewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePreviewViewDelegate {
     open weak var delegate: ImagePickerPreviewControllerDelegate?
     /// 自定义裁剪控制器句柄，优先级低于delegate
-    open var cropControllerBlock: ((UIImage) -> ImageCropController)?
+    open var cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?
     /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
-    open var customCellBlock: ((_ cell: ImagePickerPreviewCollectionCell, _ indexPath: IndexPath) -> Void)?
+    open var customCellBlock: (@MainActor @Sendable (_ cell: ImagePickerPreviewCollectionCell, _ indexPath: IndexPath) -> Void)?
 
     open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
         didSet {
@@ -1622,16 +1622,16 @@ extension Asset {
 open class ImagePickerController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ImagePickerPreviewControllerDelegate, ImagePickerTitleViewDelegate {
     open weak var imagePickerControllerDelegate: ImagePickerControllerDelegate?
     /// 自定义预览控制器句柄，优先级低于delegate
-    open var previewControllerBlock: (() -> ImagePickerPreviewController)?
+    open var previewControllerBlock: (@MainActor @Sendable () -> ImagePickerPreviewController)?
     /// 自定义相册控制器句柄，优先级低于delegate
-    open var albumControllerBlock: (() -> ImageAlbumController)?
+    open var albumControllerBlock: (@MainActor @Sendable () -> ImageAlbumController)?
     /// 自定义cell展示句柄，cellForItem自动调用，优先级低于delegate
-    open var customCellBlock: ((_ cell: ImagePickerCollectionCell, _ indexPath: IndexPath) -> Void)?
+    open var customCellBlock: (@MainActor @Sendable (_ cell: ImagePickerCollectionCell, _ indexPath: IndexPath) -> Void)?
 
     /// 图片选取完成回调句柄，优先级低于delegate
-    open var didFinishPicking: (([Asset]) -> Void)?
+    open var didFinishPicking: (@MainActor @Sendable ([Asset]) -> Void)?
     /// 图片选取取消回调句柄，优先级低于delegate
-    open var didCancelPicking: (() -> Void)?
+    open var didCancelPicking: (@MainActor @Sendable () -> Void)?
 
     open var toolbarBackgroundColor: UIColor? = UIColor(red: 27.0 / 255.0, green: 27.0 / 255.0, blue: 27.0 / 255.0, alpha: 1.0) {
         didSet {

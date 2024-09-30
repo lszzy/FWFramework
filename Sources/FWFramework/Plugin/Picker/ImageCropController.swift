@@ -156,10 +156,10 @@ open class ImageCropController: UIViewController, ImageCropViewDelegate {
     }
 
     open var allowedAspectRatios: [ImageCropAspectRatioPreset]?
-    open var onDidFinishCancelled: ((_ isFinished: Bool) -> Void)?
-    open var onDidCropImageToRect: ((_ cropRect: CGRect, _ angle: Int) -> Void)?
-    open var onDidCropToImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
-    open var onDidCropToCircularImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
+    open var onDidFinishCancelled: (@MainActor @Sendable (_ isFinished: Bool) -> Void)?
+    open var onDidCropImageToRect: (@MainActor @Sendable (_ cropRect: CGRect, _ angle: Int) -> Void)?
+    open var onDidCropToImage: (@MainActor @Sendable (_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
+    open var onDidCropToCircularImage: (@MainActor @Sendable (_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)?
 
     open lazy var cropView: ImageCropView = {
         let result = ImageCropView(croppingStyle: croppingStyle, image: image)
@@ -895,9 +895,9 @@ open class ImageCropOverlayView: UIView {
 }
 
 open class ImageCropScrollView: UIScrollView {
-    open var touchesBegan: (() -> Void)?
-    open var touchesCancelled: (() -> Void)?
-    open var touchesEnded: (() -> Void)?
+    open var touchesBegan: (@MainActor @Sendable () -> Void)?
+    open var touchesCancelled: (@MainActor @Sendable () -> Void)?
+    open var touchesEnded: (@MainActor @Sendable () -> Void)?
 
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchesBegan?()
@@ -939,12 +939,12 @@ open class ImageCropToolbar: UIView {
         }
     }
 
-    open var cancelButtonTapped: (() -> Void)?
-    open var doneButtonTapped: (() -> Void)?
-    open var rotateCounterClockwiseButtonTapped: (() -> Void)?
-    open var rotateClockwiseButtonTapped: (() -> Void)?
-    open var clampButtonTapped: (() -> Void)?
-    open var resetButtonTapped: (() -> Void)?
+    open var cancelButtonTapped: (@MainActor @Sendable () -> Void)?
+    open var doneButtonTapped: (@MainActor @Sendable () -> Void)?
+    open var rotateCounterClockwiseButtonTapped: (@MainActor @Sendable () -> Void)?
+    open var rotateClockwiseButtonTapped: (@MainActor @Sendable () -> Void)?
+    open var clampButtonTapped: (@MainActor @Sendable () -> Void)?
+    open var resetButtonTapped: (@MainActor @Sendable () -> Void)?
 
     open var clampButtonGlowing = false {
         didSet {
@@ -1662,10 +1662,10 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
         result.showsVerticalScrollIndicator = false
         result.delegate = self
         result.contentInsetAdjustmentBehavior = .never
-        result.touchesBegan = { [weak self] in
+        result.touchesBegan = { @MainActor @Sendable [weak self] in
             self?.startEditing()
         }
-        result.touchesEnded = { [weak self] in
+        result.touchesEnded = { @MainActor @Sendable [weak self] in
             self?.startResetTimer()
         }
         return result
