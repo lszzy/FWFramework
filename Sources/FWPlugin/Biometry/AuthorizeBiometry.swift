@@ -25,11 +25,11 @@ public class AuthorizeBiometry: NSObject, AuthorizeProtocol, @unchecked Sendable
     /// 当前识别策略，默认为1不含Passcode，可设置为2开启Passcode
     public var policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics
     /// 本地化识别原因，默认身份验证，详见evaluatePolicy
-    public var localizedReason: ((LAContext) -> String)?
+    public var localizedReason: (@Sendable (LAContext) -> String)?
     /// 本地化回滚标题，默认根据policy自动处理，详见LAContext。为空串时隐藏Fallback操作，为nil时开启Fallback且需处理LAError.userFallback错误
-    public var localizedFallbackTitle: ((LAContext) -> String?)?
+    public var localizedFallbackTitle: (@Sendable (LAContext) -> String?)?
     /// 自定义上下文配置句柄，默认nil
-    public var customContextBlock: ((LAContext) -> Void)?
+    public var customContextBlock: (@Sendable (LAContext) -> Void)?
 
     /// 当前生物识别类型，如none|touchID|faceID|opticID，详见LAContext
     public var biometryType: LABiometryType {

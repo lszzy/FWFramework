@@ -19,7 +19,7 @@ import UIKit
     }
 
     /// 显示骨架屏，指定布局句柄
-    public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
+    public func showSkeleton(block: (@MainActor (SkeletonLayout) -> Void)?) {
         showSkeleton(delegate: nil, block: block)
     }
 
@@ -51,7 +51,7 @@ import UIKit
         return base.subviews.firstIndex(where: { $0.tag == 2051 }) != nil
     }
 
-    private func showSkeleton(delegate: SkeletonViewDelegate? = nil, block: ((SkeletonLayout) -> Void)? = nil) {
+    private func showSkeleton(delegate: SkeletonViewDelegate? = nil, block: (@MainActor (SkeletonLayout) -> Void)? = nil) {
         // UITableView|UICollectionView调用addSubview不会显示，此处使用父视图
         if base is UITableView || base is UICollectionView {
             base.superview?.fw.showSkeleton(delegate: delegate, block: block)
@@ -84,7 +84,7 @@ import UIKit
     }
 
     /// 显示view骨架屏，指定布局句柄
-    public func showSkeleton(block: ((SkeletonLayout) -> Void)?) {
+    public func showSkeleton(block: (@MainActor (SkeletonLayout) -> Void)?) {
         base.view.fw.showSkeleton(block: block)
     }
 
@@ -498,7 +498,7 @@ open class SkeletonLayout: SkeletonView {
 
     /// 批量添加子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图数组
     @discardableResult
-    open func addSkeletonViews(_ views: [UIView], block: ((SkeletonView, Int) -> Void)?) -> [SkeletonView] {
+    open func addSkeletonViews(_ views: [UIView], block: (@MainActor (SkeletonView, Int) -> Void)?) -> [SkeletonView] {
         var resultViews: [SkeletonView] = []
         for (index, view) in views.enumerated() {
             resultViews.append(addSkeletonView(view, block: { skeletonView in
@@ -516,13 +516,13 @@ open class SkeletonLayout: SkeletonView {
 
     /// 添加单个子视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架视图
     @discardableResult
-    open func addSkeletonView(_ view: UIView, block: ((SkeletonView) -> Void)?) -> SkeletonView {
+    open func addSkeletonView(_ view: UIView, block: (@MainActor (SkeletonView) -> Void)?) -> SkeletonView {
         let skeletonView = SkeletonLayout.parseSkeletonView(view)
         return addSkeletonView(view, skeletonView: skeletonView, block: block)
     }
 
     /// 添加骨架视图，内部方法
-    private func addSkeletonView<T: SkeletonView>(_ view: UIView, skeletonView: T, block: ((T) -> Void)?) -> T {
+    private func addSkeletonView<T: SkeletonView>(_ view: UIView, skeletonView: T, block: (@MainActor (T) -> Void)?) -> T {
         if layoutView != nil && view.isDescendant(of: layoutView!) {
             skeletonView.frame = view.convert(view.bounds, to: layoutView!)
         }
@@ -541,7 +541,7 @@ open class SkeletonLayout: SkeletonView {
 
     /// 添加单个布局视图(兼容骨架视图)，支持自定义骨架，返回生成的骨架布局
     @discardableResult
-    open func addSkeletonLayout(_ view: UIView, block: ((SkeletonLayout) -> Void)?) -> SkeletonLayout {
+    open func addSkeletonLayout(_ view: UIView, block: (@MainActor (SkeletonLayout) -> Void)?) -> SkeletonLayout {
         let skeletonView = SkeletonLayout.parseSkeletonLayout(view)
         return addSkeletonView(view, skeletonView: skeletonView, block: block)
     }
