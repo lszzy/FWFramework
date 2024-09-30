@@ -43,7 +43,7 @@ class TestSocketController: UIViewController {
     private lazy var server: WebSocketServer = {
         let result = WebSocketServer()
         result.onEvent = { [weak self] event in
-            DispatchQueue.app.mainAsync {
+            DispatchQueue.app.mainAsync { [weak self] in
                 switch event {
                 case let .connected(connection, headers):
                     self?.serverLabel.text = "\(String(describing: connection)) is connected"
@@ -70,7 +70,7 @@ class TestSocketController: UIViewController {
         request.timeoutInterval = 5
         let result = WebSocket(request: request)
         result.onEvent = { [weak self] event in
-            DispatchQueue.app.mainAsync {
+            DispatchQueue.app.mainAsync { [weak self] in
                 switch event {
                 case let .connected(headers):
                     self?.isConnected = true

@@ -189,7 +189,7 @@ open class HTTPSessionManager: URLSessionManager, @unchecked Sendable {
         }
 
         let sendableDataTask = SendableValue<URLSessionDataTask?>(nil)
-        sendableDataTask.value = self.dataTask(request: request, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { _, responseObject, error in
+        sendableDataTask.value = dataTask(request: request, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: { _, responseObject, error in
             if let error {
                 failure?(sendableDataTask.value, error)
             } else if let dataTask = sendableDataTask.value {

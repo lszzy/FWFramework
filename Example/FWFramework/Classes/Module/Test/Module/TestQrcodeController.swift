@@ -97,13 +97,14 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     }
 
     func setupScanManager() {
+        scanCode.stopWhenScanned = true
         scanCode.scanResultBlock = { [weak self] result in
             if result != nil, let sound = ModuleBundle.resourcePath("Qrcode.caf") {
                 ScanCode.playSoundEffect(sound)
             }
 
-            self?.stopScanManager()
-            DispatchQueue.app.mainAsync {
+            DispatchQueue.app.mainAsync { [weak self] in
+                self?.stopScanManager()
                 self?.onScanResult(result)
             }
         }
@@ -128,27 +129,25 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         scanView.startScanning()
     }
 
-    nonisolated func stopScanManager() {
+    func stopScanManager() {
         scanCode.stopRunning()
-        DispatchQueue.app.mainAsync { [weak self] in
-            self?.scanView.stopScanning()
-            self?.removeFlashlightBtn()
-        }
+        scanView.stopScanning()
+        removeFlashlightBtn()
     }
 
     func toggleFlashlightBtn() {
         if !flashlightBtn.isSelected {
             flashlightBtn.isSelected = true
-            
+
             ScanCode.turnOnTorch()
         } else {
             removeFlashlightBtn()
         }
     }
-    
+
     func removeFlashlightBtn() {
         ScanCode.turnOffTorch()
-        
+
         flashlightBtn.isSelected = false
         flashlightBtn.isHidden = true
     }
