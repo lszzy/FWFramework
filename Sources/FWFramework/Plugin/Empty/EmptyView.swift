@@ -67,7 +67,7 @@ open class PlaceholderView: UIView {
 
     private var _verticalOffset: CGFloat = -30
     /// 自定义垂直偏移句柄，参数依次为总高度，内容高度，图片高度
-    open var verticalOffsetBlock: ((_ totalHeight: CGFloat, _ contentHeight: CGFloat, _ imageHeight: CGFloat) -> CGFloat)? {
+    open var verticalOffsetBlock: (@MainActor @Sendable (_ totalHeight: CGFloat, _ contentHeight: CGFloat, _ imageHeight: CGFloat) -> CGFloat)? {
         didSet { setNeedsLayout() }
     }
 
