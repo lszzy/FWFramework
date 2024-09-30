@@ -91,11 +91,11 @@ open class PasscodeView: UIView, UICollectionViewDataSource, UICollectionViewDel
     /// 输入完成时，是否自动结束编辑模式，收起键盘。默认: YES
     open var endEditWhenEditingFinished: Bool = true
 
-    open var textDidChangeBlock: ((_ text: String, _ isFinished: Bool) -> Void)?
+    open var textDidChangeBlock: (@MainActor @Sendable (_ text: String, _ isFinished: Bool) -> Void)?
 
-    open var editStatusChangeBlock: ((PasscodeEditStatus) -> Void)?
+    open var editStatusChangeBlock: (@MainActor @Sendable (PasscodeEditStatus) -> Void)?
 
-    open var customCellBlock: ((PasscodeView, IndexPath) -> UICollectionViewCell)?
+    open var customCellBlock: (@MainActor @Sendable (PasscodeView, IndexPath) -> UICollectionViewCell)?
 
     open lazy var collectionView: UICollectionView = {
         let result = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -555,13 +555,13 @@ open class PasscodeCellProperty: NSObject, NSCopying {
     open var cellPlaceholderFont: UIFont? = .systemFont(ofSize: 20)
 
     /// 自定义密文View回调，默认创建视图
-    open var customSecurityViewBlock: (@MainActor () -> UIView)?
+    open var customSecurityViewBlock: (@MainActor @Sendable () -> UIView)?
 
     /// 自定义下划线回调，默认PasscodeLineView
-    open var customLineViewBlock: (@MainActor () -> PasscodeLineView)?
+    open var customLineViewBlock: (@MainActor @Sendable () -> PasscodeLineView)?
 
     /// 自定义阴影回调，默认nil
-    open var configCellShadowBlock: ((CALayer) -> Void)?
+    open var configCellShadowBlock: (@MainActor @Sendable (CALayer) -> Void)?
 
     open var index: Int = 0
 
@@ -835,7 +835,7 @@ open class PasscodeLineView: UIView {
     open var underlineColorFilled: UIColor? = .init(red: 49.0 / 255.0, green: 51.0 / 255.0, blue: 64.0 / 255.0, alpha: 1.0)
 
     /// 选择状态改变时回调
-    open var selectChangeBlock: ((PasscodeLineView, Bool) -> Void)?
+    open var selectChangeBlock: (@MainActor @Sendable (PasscodeLineView, Bool) -> Void)?
 
     open lazy var lineView: UIView = {
         let result = UIView()

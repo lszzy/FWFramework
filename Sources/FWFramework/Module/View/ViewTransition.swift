@@ -35,7 +35,7 @@ import UIKit
 
     /// 自定义控制器present系统转场(蒙层渐变，内容默认向上动画)，会设置fwModalTransition
     @discardableResult
-    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
+    public func setPresentTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
         let animatedTransition = SwipeAnimatedTransition(edge: edge)
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -49,7 +49,7 @@ import UIKit
 
     /// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
     @discardableResult
-    public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
+    public func setAlertTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil) -> AnimatedTransition {
         let animatedTransition = TransformAnimatedTransition.alertTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -63,7 +63,7 @@ import UIKit
 
     /// 自定义控制器fade渐变转场(蒙层和内容渐变动画)，会设置fwModalTransition;
     @discardableResult
-    public func setFadeTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
+    public func setFadeTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil) -> AnimatedTransition {
         let animatedTransition = AnimatedTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -87,7 +87,7 @@ import UIKit
     }
 
     /// 自定义控制器popover弹出效果(preferredContentSize设置大小)，会自动设置modalPresentationStyle和popoverPresentationController.delegate
-    public func setPopoverPresentation(_ presentationBlock: ((UIPopoverPresentationController) -> Void)?, shouldDismiss: Bool) {
+    public func setPopoverPresentation(_ presentationBlock: (@MainActor @Sendable (UIPopoverPresentationController) -> Void)?, shouldDismiss: Bool) {
         base.modalPresentationStyle = .popover
         presentationTarget.isPopover = true
         presentationTarget.shouldDismiss = shouldDismiss
@@ -136,7 +136,7 @@ import UIKit
     }
 
     /// 自定义视图模拟present系统转场(蒙层渐变，内容默认向上动画)
-    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: ((Bool) -> Void)? = nil) {
+    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transform: CGAffineTransform
         switch edge {
         case .top:
@@ -174,7 +174,7 @@ import UIKit
     }
 
     /// 自定义视图模拟alert缩放转场(蒙层渐变，内容缩放动画)
-    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
+    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
@@ -198,7 +198,7 @@ import UIKit
     }
 
     /// 自定义视图模拟fade渐变转场(蒙层和内容渐变动画)
-    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
+    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
@@ -265,7 +265,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }()
 
     /// 设置动画句柄
-    open var transitionBlock: ((AnimatedTransition) -> Void)?
+    open var transitionBlock: (@MainActor @Sendable (AnimatedTransition) -> Void)?
 
     /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
     open var transitionDuration: TimeInterval = 0.35
@@ -311,7 +311,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     /// 创建动画句柄转场
-    public convenience init(block: ((AnimatedTransition) -> Void)?) {
+    public convenience init(block: (@MainActor @Sendable (AnimatedTransition) -> Void)?) {
         self.init()
         self.transitionBlock = block
     }
@@ -345,13 +345,13 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open private(set) var isInteractDismissing = false
 
     /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
-    open var interactBlock: ((UIPanGestureRecognizer) -> Bool)?
+    open var interactBlock: (@MainActor @Sendable (UIPanGestureRecognizer) -> Bool)?
 
     /// 自定义交互时dismiss关闭动画完成回调(仅交互才会触发)，默认nil
-    open var interactDismissCompletion: (() -> Void)?
+    open var interactDismissCompletion: (@MainActor @Sendable () -> Void)?
 
     /// 自定义dismiss关闭动画完成回调(交互和非交互都会触发)，默认nil
-    open var dismissCompletion: (() -> Void)?
+    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
 
     /// 当前交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
     open var gestureRecognizer: UIPanGestureRecognizer {
@@ -425,7 +425,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     /// 设置展示控制器创建句柄，自定义弹出效果。present时建议设置modalPresentationStyle为Custom
-    open var presentationBlock: ((UIViewController, UIViewController?) -> UIPresentationController)?
+    open var presentationBlock: (@MainActor @Sendable (UIViewController, UIViewController?) -> UIPresentationController)?
 
     // MARK: - Private
     private var isSystem = false
@@ -434,7 +434,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         !isSystem && (interactEnabled || interactScreenEdge)
     }
 
-    private var interactBegan: (() -> Void)?
+    private var interactBegan: (@MainActor @Sendable () -> Void)?
 
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
@@ -838,7 +838,7 @@ open class PresentationController: UIPresentationController {
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
     /// 设置点击暗色背景关闭完成回调(非交互才会触发)，默认nil
-    open var dismissCompletion: (() -> Void)?
+    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
 
     /// 设置弹出视图的圆角位置，默认左上和右上。如果弹出视图占满容器，不生效需弹出视图自定义
     open var rectCorner: UIRectCorner = [.topLeft, .topRight]
@@ -846,7 +846,7 @@ open class PresentationController: UIPresentationController {
     open var cornerRadius: CGFloat = 0
 
     /// 自定义弹出视图的frame计算block，默认nil占满容器，优先级高
-    open var frameBlock: ((PresentationController) -> CGRect)?
+    open var frameBlock: (@MainActor @Sendable (PresentationController) -> CGRect)?
     /// 设置弹出视图的frame，默认CGRectZero占满容器，优先级中
     open var presentedFrame: CGRect = .zero
     /// 设置弹出视图的居中size，默认CGSizeZero占满容器，优先级中
@@ -955,16 +955,16 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     open var maximumDistance: CGFloat = 0
 
     /// 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
-    open var shouldFailed: ((PanGestureRecognizer) -> Bool)?
+    open var shouldFailed: (@MainActor @Sendable (PanGestureRecognizer) -> Bool)?
 
     /// 自定义shouldBegin判断句柄
-    open var shouldBegin: ((PanGestureRecognizer) -> Bool)?
+    open var shouldBegin: (@MainActor @Sendable (PanGestureRecognizer) -> Bool)?
 
     /// 自定义shouldBeRequiredToFail判断句柄
-    open var shouldBeRequiredToFail: ((UIGestureRecognizer) -> Bool)?
+    open var shouldBeRequiredToFail: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)?
 
     /// 自定义shouldRequireFailure判断句柄
-    open var shouldRequireFailure: ((UIGestureRecognizer) -> Bool)?
+    open var shouldRequireFailure: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)?
 
     /// 获取当前手势在指定交互方向的滑动进度
     open var swipePercent: CGFloat {

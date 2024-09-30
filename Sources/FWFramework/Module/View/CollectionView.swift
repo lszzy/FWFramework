@@ -107,94 +107,94 @@ import UIKit
 /// 常用集合视图数据源和事件代理，可继承
 open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
-    open var numberOfSections: (() -> Int)?
+    open var numberOfSections: (@MainActor @Sendable () -> Int)?
     /// 集合section数，默认1，优先级低
     open var sectionCount: Int = 1
     /// 集合item数句柄
-    open var numberOfItems: ((Int) -> Int)?
+    open var numberOfItems: (@MainActor @Sendable (Int) -> Int)?
     /// 集合item数，优先级低
     open var itemCount: Int = 0
 
     /// 集合section边距句柄，默认nil
-    open var insetForSection: ((UICollectionView, Int) -> UIEdgeInsets)?
+    open var insetForSection: (@MainActor @Sendable (UICollectionView, Int) -> UIEdgeInsets)?
     /// 集合section边距，默认nil
     open var sectionInset: UIEdgeInsets?
     /// 集合section滚动方向最小平行间距句柄，默认nil
-    open var minimumLineSpacingForSection: ((UICollectionView, Int) -> CGFloat)?
+    open var minimumLineSpacingForSection: (@MainActor @Sendable (UICollectionView, Int) -> CGFloat)?
     /// 集合section滚动方向最小平行间距，默认nil
     open var minimumLineSpacing: CGFloat?
     /// 集合section滚动方向最小垂直间距句柄，默认nil
-    open var minimumInteritemSpacingForSection: ((UICollectionView, Int) -> CGFloat)?
+    open var minimumInteritemSpacingForSection: (@MainActor @Sendable (UICollectionView, Int) -> CGFloat)?
     /// 集合section滚动方向最小垂直间距，默认nil
     open var minimumInteritemSpacing: CGFloat?
 
     /// 集合section头视图句柄，size未指定时为automaticSize，默认nil
-    open var viewForHeader: ((UICollectionView, IndexPath) -> UICollectionReusableView?)?
+    open var viewForHeader: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionReusableView?)?
     /// 集合section头视图类句柄，搭配headerConfiguration使用，默认nil
-    open var viewClassForHeader: ((UICollectionView, IndexPath) -> UICollectionReusableView.Type?)?
+    open var viewClassForHeader: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionReusableView.Type?)?
     /// 集合section头视图类，搭配headerConfiguration使用，默认nil，优先级低
     open var headerViewClass: UICollectionReusableView.Type?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var headerConfiguration: ((UICollectionReusableView, IndexPath) -> Void)?
+    open var headerConfiguration: (@MainActor @Sendable (UICollectionReusableView, IndexPath) -> Void)?
     /// 集合section头尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var sizeForHeader: ((UICollectionView, Int) -> CGSize)?
+    open var sizeForHeader: (@MainActor @Sendable (UICollectionView, Int) -> CGSize)?
     /// 集合section头尺寸，默认nil，可设置为automaticSize，优先级低
     open var headerSize: CGSize?
 
     /// 集合section尾视图句柄，size未指定时为automaticSize，默认nil
-    open var viewForFooter: ((UICollectionView, IndexPath) -> UICollectionReusableView?)?
+    open var viewForFooter: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionReusableView?)?
     /// 集合section尾视图类句柄，搭配footerConfiguration使用，默认nil
-    open var viewClassForFooter: ((UICollectionView, IndexPath) -> UICollectionReusableView.Type?)?
+    open var viewClassForFooter: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionReusableView.Type?)?
     /// 集合section尾视图类，搭配footerConfiguration使用，默认nil，优先级低
     open var footerViewClass: UICollectionReusableView.Type?
     /// 集合section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var footerConfiguration: ((UICollectionReusableView, IndexPath) -> Void)?
+    open var footerConfiguration: (@MainActor @Sendable (UICollectionReusableView, IndexPath) -> Void)?
     /// 集合section尾尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var sizeForFooter: ((UICollectionView, Int) -> CGSize)?
+    open var sizeForFooter: (@MainActor @Sendable (UICollectionView, Int) -> CGSize)?
     /// 集合section尾尺寸，默认nil，可设置为automaticSize，优先级低
     open var footerSize: CGSize?
 
     /// 集合cell视图句柄，size未指定时为automaticSize，默认nil
-    open var cellForItem: ((UICollectionView, IndexPath) -> UICollectionViewCell?)?
+    open var cellForItem: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionViewCell?)?
     /// 集合cell视图类句柄，搭配cellConfiguration使用，默认nil
-    open var cellClassForItem: ((UICollectionView, IndexPath) -> UICollectionViewCell.Type?)?
+    open var cellClassForItem: (@MainActor @Sendable (UICollectionView, IndexPath) -> UICollectionViewCell.Type?)?
     /// 集合cell类，搭配cellConfiguation使用，默认nil时为UITableViewCell.Type，优先级低
     open var cellClass: UICollectionViewCell.Type?
     /// 集合cell配置句柄，参数为对应cellClass对象
-    open var cellConfiguration: ((UICollectionViewCell, IndexPath) -> Void)?
+    open var cellConfiguration: (@MainActor @Sendable (UICollectionViewCell, IndexPath) -> Void)?
     /// 集合cell尺寸句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
-    open var sizeForItem: ((UICollectionView, IndexPath) -> CGSize)?
+    open var sizeForItem: (@MainActor @Sendable (UICollectionView, IndexPath) -> CGSize)?
     /// 集合cell尺寸，默认nil，可设置为automaticSize，优先级低
     open var itemSize: CGSize?
 
     /// 是否启用默认尺寸缓存，优先级低于cacheKey句柄，默认false
     open var sizeCacheEnabled = false
     /// 集合cell自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForItem: ((IndexPath) -> AnyHashable?)?
+    open var cacheKeyForItem: (@MainActor @Sendable (IndexPath) -> AnyHashable?)?
     /// 集合section头自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
+    open var cacheKeyForHeader: (@MainActor @Sendable (Int) -> AnyHashable?)?
     /// 集合section尾自定义尺寸缓存key句柄，默认nil，优先级高
-    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
+    open var cacheKeyForFooter: (@MainActor @Sendable (Int) -> AnyHashable?)?
 
     /// 集合选中事件，默认nil
-    open var didSelectItem: ((UICollectionView, IndexPath) -> Void)?
+    open var didSelectItem: (@MainActor @Sendable (UICollectionView, IndexPath) -> Void)?
     /// 集合cell即将显示句柄，默认nil
-    open var willDisplayCell: ((UICollectionViewCell, IndexPath) -> Void)?
+    open var willDisplayCell: (@MainActor @Sendable (UICollectionViewCell, IndexPath) -> Void)?
     /// 集合cell即将停止显示，默认nil
-    open var didEndDisplayingCell: ((UICollectionViewCell, IndexPath) -> Void)?
+    open var didEndDisplayingCell: (@MainActor @Sendable (UICollectionViewCell, IndexPath) -> Void)?
 
     /// 集合滚动句柄，默认nil
-    open var didScroll: ((UIScrollView) -> Void)?
+    open var didScroll: (@MainActor @Sendable (UIScrollView) -> Void)?
     /// 集合即将开始拖动句柄，默认nil
-    open var willBeginDragging: ((UIScrollView) -> Void)?
+    open var willBeginDragging: (@MainActor @Sendable (UIScrollView) -> Void)?
     /// 集合即将停止拖动句柄，默认nil
-    open var willEndDragging: ((UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
+    open var willEndDragging: (@MainActor @Sendable (UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
     /// 集合已经停止拖动句柄，默认nil
-    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
+    open var didEndDragging: (@MainActor @Sendable (UIScrollView, Bool) -> Void)?
     /// 集合已经停止减速句柄，默认nil
-    open var didEndDecelerating: ((UIScrollView) -> Void)?
+    open var didEndDecelerating: (@MainActor @Sendable (UIScrollView) -> Void)?
     /// 集合已经停止滚动动画句柄，默认nil
-    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
+    open var didEndScrollingAnimation: (@MainActor @Sendable (UIScrollView) -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定collectionView

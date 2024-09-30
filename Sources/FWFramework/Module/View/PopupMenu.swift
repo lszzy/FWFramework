@@ -195,7 +195,7 @@ public class PopupMenuPath {
     /// 根据屏幕旋转方向自动旋转 Default is YES
     open var autoRotateWhenDeviceOrientationChanged: Bool = true
 
-    open var deviceOrientationDidChangeHandler: ((UIInterfaceOrientation) -> Void)?
+    open var deviceOrientationDidChangeHandler: (@MainActor @Sendable (UIInterfaceOrientation) -> Void)?
 
     private var isGeneratingDeviceOrientationNotifications = false
 
@@ -278,12 +278,12 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
     /// 动画视图
     open weak var animationView: UIView?
 
-    private var showAnimationHandler: (() -> Void)?
-    private var dismissAnimationHandler: (() -> Void)?
+    private var showAnimationHandler: (@MainActor @Sendable () -> Void)?
+    private var dismissAnimationHandler: (@MainActor @Sendable () -> Void)?
     private let showAnimationKey = "showAnimation"
     private let dismissAnimationKey = "dismissAnimation"
 
-    open func displayShowAnimationCompletion(_ completion: (() -> Void)? = nil) {
+    open func displayShowAnimationCompletion(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         showAnimationHandler = completion
         guard let showAnimation else {
             showAnimationHandler?()
@@ -294,7 +294,7 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
         animationView?.layer.add(showAnimation, forKey: showAnimationKey)
     }
 
-    open func displayDismissAnimationCompletion(_ completion: (() -> Void)? = nil) {
+    open func displayDismissAnimationCompletion(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         dismissAnimationHandler = completion
         guard let dismissAnimation else {
             dismissAnimationHandler?()
@@ -495,10 +495,10 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     open var titleEdgeInsets: UIEdgeInsets = .zero
 
     /// 点击事件回调句柄
-    open var didSelectItemBlock: ((Int) -> Void)?
+    open var didSelectItemBlock: (@MainActor @Sendable (Int) -> Void)?
 
     /// 自定义cell句柄，优先级低于delegate
-    open var customCellBlock: ((PopupMenu, Int) -> UITableViewCell?)?
+    open var customCellBlock: (@MainActor @Sendable (PopupMenu, Int) -> UITableViewCell?)?
 
     /// 屏幕旋转管理
     open var orientationManager: PopupMenuDeviceOrientationManager = .init()
@@ -566,7 +566,14 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 在指定位置弹出，可指定容器视图
     @discardableResult
-    open class func show(in containerView: UIView? = nil, at point: CGPoint, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(
+        in containerView: UIView? = nil,
+        at point: CGPoint,
+        titles: [Any]?,
+        icons: [Any]? = nil,
+        menuWidth: CGFloat,
+        customize: (@MainActor (PopupMenu) -> Void)? = nil
+    ) -> PopupMenu {
         let popupMenu = PopupMenu()
         popupMenu.containerView = containerView
         popupMenu.point = point
@@ -580,7 +587,14 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 依赖指定view弹出，可指定容器视图
     @discardableResult
-    open class func show(in containerView: UIView? = nil, relyOn view: UIView?, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(
+        in containerView: UIView? = nil,
+        relyOn view: UIView?,
+        titles: [Any]?,
+        icons: [Any]? = nil,
+        menuWidth: CGFloat,
+        customize: (@MainActor (PopupMenu) -> Void)? = nil
+    ) -> PopupMenu {
         let popupMenu = PopupMenu()
         popupMenu.containerView = containerView
         popupMenu.relyView = view

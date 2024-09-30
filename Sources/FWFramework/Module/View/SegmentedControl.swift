@@ -79,8 +79,8 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         return 0
     }
 
-    open var indexChangedBlock: ((Int) -> Void)?
-    open var titleFormatter: ((_ segmentedControl: SegmentedControl, _ title: String, _ index: Int, _ selected: Bool) -> NSAttributedString)?
+    open var indexChangedBlock: (@MainActor @Sendable (Int) -> Void)?
+    open var titleFormatter: (@MainActor @Sendable (_ segmentedControl: SegmentedControl, _ title: String, _ index: Int, _ selected: Bool) -> NSAttributedString)?
 
     open var titleTextAttributes: [NSAttributedString.Key: Any]?
     open var selectedTitleTextAttributes: [NSAttributedString.Key: Any]?
@@ -172,7 +172,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
     open var segmentBackgroundOpacity: Float = 1.0
     open var segmentBackgroundCornerRadius: CGFloat = 0
     open var segmentBackgroundEdgeInset: UIEdgeInsets = .zero
-    open var segmentCustomBlock: ((_ segmentedControl: SegmentedControl, _ index: Int, _ rect: CGRect) -> Void)?
+    open var segmentCustomBlock: (@MainActor @Sendable (_ segmentedControl: SegmentedControl, _ index: Int, _ rect: CGRect) -> Void)?
     open var enlargeEdgeInset: UIEdgeInsets = .zero
     open var shouldAnimateUserSelection: Bool = true
     open var contentSize: CGSize {

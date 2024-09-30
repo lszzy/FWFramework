@@ -27,7 +27,7 @@ open class PageControl: UIControl {
     }
 
     /// 点视图句柄
-    open var customDotView: ((UIView) -> Void)?
+    open var customDotView: (@MainActor @Sendable (UIView) -> Void)?
 
     /// 点图片
     open var dotImage: UIImage? {
