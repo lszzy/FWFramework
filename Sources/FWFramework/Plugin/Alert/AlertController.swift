@@ -441,7 +441,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     open var tapActionDismiss: Bool = true
 
     /// 单击背景dismiss完成回调，默认nil
-    open var dismissCompletion: (() -> Void)?
+    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
     /// 事件代理
     open weak var delegate: AlertControllerDelegate?
     /// 弹出框样式
@@ -816,7 +816,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
 
     /// 添加文本输入框，一旦添加后就会仅回调一次configurationHandler
-    open func addTextField(configurationHandler: ((UITextField) -> Void)? = nil) {
+    open func addTextField(configurationHandler: (@MainActor @Sendable (UITextField) -> Void)? = nil) {
         assert(preferredStyle == .alert, "AlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of AlertControllerStyleActionSheet")
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -1730,7 +1730,7 @@ public enum AlertActionStyle: Int, Sendable {
 }
 
 /// 弹窗动作
-public class AlertAction: NSObject {
+@MainActor public class AlertAction: NSObject {
     /// action的标题
     public var title: String? {
         didSet { propertyChangedBlock?(self, true) }
@@ -1809,10 +1809,10 @@ public class AlertAction: NSObject {
     }
 
     var appearance: AlertControllerAppearance?
-    var handler: ((AlertAction) -> Void)?
-    var propertyChangedBlock: ((_ action: AlertAction, _ needUpdateConstraints: Bool) -> Void)?
+    var handler: (@MainActor @Sendable (AlertAction) -> Void)?
+    var propertyChangedBlock: (@MainActor @Sendable (_ action: AlertAction, _ needUpdateConstraints: Bool) -> Void)?
 
-    public init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: ((AlertAction) -> Void)?) {
+    public init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: (@MainActor @Sendable (AlertAction) -> Void)?) {
         super.init()
         self.appearance = appearance
         self.title = title
@@ -1902,7 +1902,7 @@ class AlertActionItemSeparatorView: UIView {
 }
 
 class AlertHeaderScrollView: UIScrollView {
-    var headerViewSafeAreaDidChangedBlock: (() -> Void)?
+    var headerViewSafeAreaDidChangedBlock: (@MainActor @Sendable () -> Void)?
     var imageLimitSize: CGSize = .zero
     var contentEdgeInsets: UIEdgeInsets = .zero
     private var textFields: [UITextField] = []
@@ -2263,7 +2263,7 @@ class AlertActionSequenceView: UIView {
         }
     }
 
-    var buttonClickedInActionViewBlock: ((_ index: Int, _ actionView: AlertControllerActionView) -> Void)?
+    var buttonClickedInActionViewBlock: (@MainActor @Sendable (_ index: Int, _ actionView: AlertControllerActionView) -> Void)?
     private var actionLineConstraints: [NSLayoutConstraint] = []
     private var appearance: AlertControllerAppearance?
 
