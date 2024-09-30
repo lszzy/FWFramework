@@ -90,12 +90,12 @@ public struct WebImageView: View {
         configure { $0.antialiased(isAntialiased) }
     }
 
-    public func onCompletion(perform action: ((UIImage?, Error?) -> Void)?) -> Self {
+    public func onCompletion(perform action: (@MainActor @Sendable (UIImage?, Error?) -> Void)?) -> Self {
         binder.onCompletion(perform: action)
         return self
     }
 
-    public func onProgress(perform action: ((Double) -> Void)?) -> Self {
+    public func onProgress(perform action: (@MainActor @Sendable (Double) -> Void)?) -> Self {
         binder.onProgress(perform: action)
         return self
     }
@@ -109,8 +109,8 @@ extension WebImageView {
         var isLoaded: Binding<Bool>
         var loadingSucceed: Bool = false
         var receipt: Any?
-        var completionBlock: ((UIImage?, Error?) -> Void)?
-        var progressBlock: ((Double) -> Void)?
+        var completionBlock: (@MainActor @Sendable (UIImage?, Error?) -> Void)?
+        var progressBlock: (@MainActor @Sendable (Double) -> Void)?
 
         init(url: URLParameter?, isLoaded: Binding<Bool>) {
             self.url = url
@@ -142,11 +142,11 @@ extension WebImageView {
             UIImage.fw.cancelImageDownload(receipt)
         }
 
-        func onCompletion(perform action: ((UIImage?, Error?) -> Void)?) {
+        func onCompletion(perform action: (@MainActor @Sendable (UIImage?, Error?) -> Void)?) {
             completionBlock = action
         }
 
-        func onProgress(perform action: ((Double) -> Void)?) {
+        func onProgress(perform action: (@MainActor @Sendable (Double) -> Void)?) {
             progressBlock = action
         }
     }
