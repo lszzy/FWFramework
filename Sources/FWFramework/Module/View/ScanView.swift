@@ -192,11 +192,13 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
 
-    #if DEBUG
     deinit {
+        stopRunning()
+        
+        #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        #endif
     }
-    #endif
 
     private func setupMetadataOutput() {
         guard !issetMetadataOutput else { return }
