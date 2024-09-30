@@ -45,10 +45,10 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
         // pullView.image = ModuleBundle.imageNamed("Loading.gif")
         // tableView.app.pullRefreshView?.shouldChangeAlpha = false
         // tableView.app.pullRefreshView?.setCustomView(pullView, for: .all)
-        tableView.app.pullRefreshView?.stateBlock = { [weak self] _, state in
+        tableView.app.pullRefreshView?.stateBlock = { @MainActor @Sendable [weak self] _, state in
             self?.navigationItem.title = "refresh state-\(state.rawValue)"
         }
-        tableView.app.pullRefreshView?.progressBlock = { [weak self] _, progress in
+        tableView.app.pullRefreshView?.progressBlock = { @MainActor @Sendable [weak self] _, progress in
             self?.navigationItem.title = String(format: "refresh progress-%.2f", progress)
         }
 
@@ -56,10 +56,10 @@ class TestRefreshController: UIViewController, TableViewControllerProtocol, Empt
         // infiniteView.image = ModuleBundle.imageNamed("Loading.gif")
         // tableView.app.infiniteScrollView?.setCustomView(infiniteView, for: .all)
         // tableView.app.infiniteScrollView?.preloadHeight = 200
-        tableView.app.infiniteScrollView?.stateBlock = { [weak self] _, state in
+        tableView.app.infiniteScrollView?.stateBlock = { @MainActor @Sendable [weak self] _, state in
             self?.navigationItem.title = "load state-\(state.rawValue)"
         }
-        tableView.app.infiniteScrollView?.progressBlock = { [weak self] _, progress in
+        tableView.app.infiniteScrollView?.progressBlock = { @MainActor @Sendable [weak self] _, progress in
             self?.navigationItem.title = String(format: "load progress-%.2f", progress)
         }
     }

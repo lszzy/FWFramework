@@ -163,7 +163,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             self?.testSwitch.thumbTintColor = UIColor.app.randomColor
         }, for: .valueChanged)
 
-        bannerView.didSelectItemBlock = { [weak self] index in
+        bannerView.didSelectItemBlock = { @MainActor @Sendable [weak self] index in
             self?.clickHandler(index)
         }
 
@@ -267,7 +267,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         }
         configShieldView(testSwitch.app.statisticalExposure)
         segmentedControl.app.statisticalExposure = StatisticalEvent(name: "exposure_segment", object: "segment")
-        segmentedControl.app.statisticalExposure?.eventFormatter = { [weak self] event in
+        segmentedControl.app.statisticalExposure?.eventFormatter = { @MainActor @Sendable [weak self] event in
             guard let indexPath = event.indexPath else { return event }
             event.userInfo = [
                 "title": self?.segmentedControl.sectionTitles[safe: indexPath.row] ?? ""
