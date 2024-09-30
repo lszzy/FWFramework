@@ -96,6 +96,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
 
+    /// 扫描到结果时是否自动停止，停止后需调用startRunning才会继续扫描，默认false
+    open var stopWhenScanned = false
+
     /// 采样缓冲区代理
     open weak var sampleBufferDelegate: ScanCodeSampleBufferDelegate? {
         didSet {
@@ -194,7 +197,7 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
 
     deinit {
         stopRunning()
-        
+
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
         #endif
@@ -270,6 +273,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         let obj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject
         let resultString = obj?.stringValue
 
+        if stopWhenScanned {
+            stopRunning()
+        }
         delegate?.scanCode(self, result: resultString)
         scanResultBlock?(resultString)
     }
