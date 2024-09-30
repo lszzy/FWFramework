@@ -44,7 +44,7 @@ open class PopupConfiguration {
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
     /// 设置弹窗关闭完成回调(交互和非交互都会触发)，默认nil
-    open var dismissCompletion: (() -> Void)?
+    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
 
     public init() {}
 }
