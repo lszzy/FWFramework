@@ -26,9 +26,9 @@ open class TabBarController: UITabBarController, TabBarDelegate {
     fileprivate var ignoreNextSelection = false
 
     /// Should hijack select action or not.
-    open var shouldHijackHandler: ((_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> (Bool))?
+    open var shouldHijackHandler: (@MainActor @Sendable (_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> (Bool))?
     /// Hijack select action.
-    open var didHijackHandler: ((_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> Void)?
+    open var didHijackHandler: (@MainActor @Sendable (_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> Void)?
 
     /// Observer tabBarController's selectedViewController. change its selection when it will-set.
     override open var selectedViewController: UIViewController? {
@@ -1010,7 +1010,7 @@ open class TabBarItemContentView: UIView {
     }
 
     // MARK: - INTERNAL METHODS
-    final func select(animated: Bool, completion: (() -> Void)?) {
+    final func select(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         selected = true
         if enabled && highlighted {
             highlighted = false
@@ -1024,13 +1024,13 @@ open class TabBarItemContentView: UIView {
         }
     }
 
-    final func deselect(animated: Bool, completion: (() -> Void)?) {
+    final func deselect(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         selected = false
         updateDisplay()
         deselectAnimation(animated: animated, completion: completion)
     }
 
-    final func reselect(animated: Bool, completion: (() -> Void)?) {
+    final func reselect(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         if selected == false {
             select(animated: animated, completion: completion)
         } else {
@@ -1045,7 +1045,7 @@ open class TabBarItemContentView: UIView {
         }
     }
 
-    final func highlight(animated: Bool, completion: (() -> Void)?) {
+    final func highlight(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         if !enabled {
             return
         }
@@ -1056,7 +1056,7 @@ open class TabBarItemContentView: UIView {
         highlightAnimation(animated: animated, completion: completion)
     }
 
-    final func dehighlight(animated: Bool, completion: (() -> Void)?) {
+    final func dehighlight(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         if !enabled {
             return
         }
@@ -1067,32 +1067,32 @@ open class TabBarItemContentView: UIView {
         dehighlightAnimation(animated: animated, completion: completion)
     }
 
-    func badgeChanged(animated: Bool, completion: (() -> Void)?) {
+    func badgeChanged(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         badgeChangedAnimation(animated: animated, completion: completion)
     }
 
     // MARK: - ANIMATION METHODS
-    open func selectAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func selectAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 
-    open func deselectAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func deselectAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 
-    open func reselectAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func reselectAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 
-    open func highlightAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func highlightAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 
-    open func dehighlightAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func dehighlightAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 
-    open func badgeChangedAnimation(animated: Bool, completion: (() -> Void)?) {
+    open func badgeChangedAnimation(animated: Bool, completion: (@MainActor @Sendable () -> Void)?) {
         completion?()
     }
 }
