@@ -75,16 +75,16 @@ open class ImagePreviewView: UIView, UICollectionViewDataSource, UICollectionVie
     /// 自定义图片信息数组，默认未使用，可用于自定义内容展示，默认nil
     open var imageInfos: [Any]?
     /// 占位图片句柄，仅imageURLs生效，默认nil
-    open var placeholderImage: ((_ index: Int) -> UIImage?)?
+    open var placeholderImage: (@MainActor @Sendable (_ index: Int) -> UIImage?)?
     /// 是否自动播放video，默认NO
     open var autoplayVideo: Bool = false
 
     /// 自定义zoomImageView样式句柄，cellForItem方法自动调用，先于renderZoomImageView
-    open var customZoomImageView: ((_ zoomImageView: ZoomImageView, _ index: Int) -> Void)?
+    open var customZoomImageView: (@MainActor @Sendable (_ zoomImageView: ZoomImageView, _ index: Int) -> Void)?
     /// 自定义渲染zoomImageView句柄，cellForItem方法自动调用，优先级低于delegate
-    open var renderZoomImageView: ((_ zoomImageView: ZoomImageView, _ index: Int) -> Void)?
+    open var renderZoomImageView: (@MainActor @Sendable (_ zoomImageView: ZoomImageView, _ index: Int) -> Void)?
     /// 自定义内容视图句柄，内容显示完成自动调用，优先级低于delegate
-    open var customZoomContentView: ((_ zoomImageView: ZoomImageView, _ contentView: UIView) -> Void)?
+    open var customZoomContentView: (@MainActor @Sendable (_ zoomImageView: ZoomImageView, _ contentView: UIView) -> Void)?
     /// 获取当前正在查看的zoomImageView，若当前 index 对应的图片不可见（不处于可视区域），则返回 nil
     open weak var currentZoomImageView: ZoomImageView? {
         zoomImageView(at: currentImageIndex)
@@ -418,10 +418,10 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open var dismissingStyle: ImagePreviewTransitioningStyle = .fade
 
     /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 nil，则会强制使用 fade 动画。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。支持UIView|NSValue.CGRect类型
-    open var sourceImageView: ((_ index: Int) -> Any?)?
+    open var sourceImageView: (@MainActor @Sendable (_ index: Int) -> Any?)?
 
     /// 当以 zoom 动画进入/退出大图预览时，会通过这个 block 获取到原本界面上的图片所在的 view，从而进行动画的位置计算，如果返回的值为 CGRectZero，则会强制使用 fade 动画。注意返回值要进行坐标系转换。当同时存在 sourceImageView 和 sourceImageRect 时，只有 sourceImageRect 会被调用。
-    open var sourceImageRect: ((_ index: Int) -> CGRect)?
+    open var sourceImageRect: (@MainActor @Sendable (_ index: Int) -> CGRect)?
 
     /// 当以 zoom 动画进入/退出大图预览时，可以指定一个圆角值，默认为 -1(小于0即可)，也即自动从 sourceImageView.layer.cornerRadius 获取，如果使用的是 sourceImageRect 或希望自定义圆角值，则直接给 sourceImageCornerRadius 赋值即可。
     open var sourceImageCornerRadius: CGFloat = -1
@@ -439,7 +439,7 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     open var dismissingWhenTappedVideo: Bool = false
 
     /// 当前页数发生变化回调，默认nil
-    open var pageIndexChanged: ((_ index: Int) -> Void)?
+    open var pageIndexChanged: (@MainActor @Sendable (_ index: Int) -> Void)?
 
     /// 是否显示页数标签，默认NO
     open var showsPageLabel: Bool {
@@ -452,10 +452,10 @@ open class ImagePreviewController: UIViewController, UIViewControllerTransitioni
     }
 
     /// 页数标签中心句柄，默认nil时离底部安全距离+18
-    open var pageLabelCenter: (() -> CGPoint)?
+    open var pageLabelCenter: (@MainActor @Sendable () -> CGPoint)?
 
     /// 页数文本句柄，默认nil时为index / count
-    open var pageLabelText: ((_ index: Int, _ count: Int) -> String)?
+    open var pageLabelText: (@MainActor @Sendable (_ index: Int, _ count: Int) -> String)?
 
     /// 图片预览视图
     open lazy var imagePreviewView: ImagePreviewView = {

@@ -97,13 +97,13 @@ open class PullRefreshView: UIView {
     open var userTriggered = false
 
     /// 自定义状态改变句柄
-    open var stateBlock: ((_ view: PullRefreshView, _ state: PullRefreshState) -> Void)?
+    open var stateBlock: (@MainActor @Sendable (_ view: PullRefreshView, _ state: PullRefreshState) -> Void)?
 
     /// 自定义进度句柄
-    open var progressBlock: ((_ view: PullRefreshView, _ progress: CGFloat) -> Void)?
+    open var progressBlock: (@MainActor @Sendable (_ view: PullRefreshView, _ progress: CGFloat) -> Void)?
 
     /// 自定义下拉刷新句柄
-    open var pullRefreshBlock: (() -> Void)?
+    open var pullRefreshBlock: (@MainActor @Sendable () -> Void)?
 
     /// 自定义下拉刷新目标和动作
     open weak var target: AnyObject?
@@ -208,8 +208,8 @@ open class PullRefreshView: UIView {
     private var viewForState: [Any] = ["", "", ""]
 
     private weak var currentCustomView: UIView?
-    private var animationStateBlock: ((PullRefreshView, PullRefreshState) -> Void)?
-    private var animationProgressBlock: ((PullRefreshView, CGFloat) -> Void)?
+    private var animationStateBlock: (@MainActor @Sendable (PullRefreshView, PullRefreshState) -> Void)?
+    private var animationProgressBlock: (@MainActor @Sendable (PullRefreshView, CGFloat) -> Void)?
 
     private var pullingPercent: CGFloat = 0 {
         didSet {
@@ -612,19 +612,19 @@ open class InfiniteScrollView: UIView {
     open var userTriggered = false
 
     /// 自定义状态改变句柄
-    open var stateBlock: ((_ view: InfiniteScrollView, _ state: InfiniteScrollState) -> Void)?
+    open var stateBlock: (@MainActor @Sendable (_ view: InfiniteScrollView, _ state: InfiniteScrollState) -> Void)?
 
     /// 自定义进度句柄
-    open var progressBlock: ((_ view: InfiniteScrollView, _ progress: CGFloat) -> Void)?
+    open var progressBlock: (@MainActor @Sendable (_ view: InfiniteScrollView, _ progress: CGFloat) -> Void)?
 
     /// 自定义完成句柄
-    open var finishedBlock: ((_ view: InfiniteScrollView, _ finished: Bool) -> Void)?
+    open var finishedBlock: (@MainActor @Sendable (_ view: InfiniteScrollView, _ finished: Bool) -> Void)?
 
     /// 自定义数据是否为空句柄，返回true时不显示finishedView
-    open var emptyDataBlock: ((_ scrollView: UIScrollView) -> Bool)?
+    open var emptyDataBlock: (@MainActor @Sendable (_ scrollView: UIScrollView) -> Bool)?
 
     /// 自定义上拉追加句柄
-    open var infiniteScrollBlock: (() -> Void)?
+    open var infiniteScrollBlock: (@MainActor @Sendable () -> Void)?
 
     /// 自定义上拉追加目标和动作
     open weak var target: AnyObject?
@@ -786,8 +786,8 @@ open class InfiniteScrollView: UIView {
     private var viewForState: [Any] = ["", "", ""]
 
     private weak var currentCustomView: UIView?
-    private var animationStateBlock: ((InfiniteScrollView, InfiniteScrollState) -> Void)?
-    private var animationProgressBlock: ((InfiniteScrollView, CGFloat) -> Void)?
+    private var animationStateBlock: (@MainActor @Sendable (InfiniteScrollView, InfiniteScrollState) -> Void)?
+    private var animationProgressBlock: (@MainActor @Sendable (InfiniteScrollView, CGFloat) -> Void)?
 
     var isActive = false
 

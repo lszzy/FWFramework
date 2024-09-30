@@ -141,13 +141,13 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     private var _minimumZoomScale: CGFloat = 0
 
     /// 自定义最大缩放比率句柄，默认nil时根据contentMode自动计算
-    open var maximumZoomScaleBlock: ((_ scaleX: CGFloat, _ scaleY: CGFloat) -> CGFloat)?
+    open var maximumZoomScaleBlock: (@MainActor @Sendable (_ scaleX: CGFloat, _ scaleY: CGFloat) -> CGFloat)?
 
     /// 最定义最小缩放比率句柄，默认nil时根据contentMode自动计算
-    open var minimumZoomScaleBlock: ((_ scaleX: CGFloat, _ scaleY: CGFloat) -> CGFloat)?
+    open var minimumZoomScaleBlock: (@MainActor @Sendable (_ scaleX: CGFloat, _ scaleY: CGFloat) -> CGFloat)?
 
     /// 自定义双击放大比率句柄，默认nil时直接放大到最大比率
-    open var zoomInScaleBlock: ((UIScrollView) -> CGFloat)?
+    open var zoomInScaleBlock: (@MainActor @Sendable (UIScrollView) -> CGFloat)?
 
     /// 重用标识符
     open var reusedIdentifier: String?
@@ -311,7 +311,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     }
 
     /// 播放 video 时屏幕左上角的关闭按钮中心句柄，默认同导航栏关闭按钮
-    open var videoCloseButtonCenter: (() -> CGPoint)? {
+    open var videoCloseButtonCenter: (@MainActor @Sendable () -> CGPoint)? {
         didSet {
             setNeedsLayout()
         }
@@ -602,7 +602,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// let asset = resourceLoader.urlAsset(with: videoURL)
     /// let playerItem = AVPlayerItem(asset: asset)
     /// ```
-    open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
+    open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: (@MainActor @Sendable (UIImage?) -> Void)? = nil) {
         var imageURL = aImageURL
         var isUrlRequest = false
         if let urlString = imageURL as? String {
