@@ -38,7 +38,7 @@ public class Recognizer {
     }
 
     // MARK: - Private
-    private static func performOcr(image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping ([Result]) -> Void) {
+    private static func performOcr(image: CGImage, configuration: (@Sendable (VNRecognizeTextRequest) -> Void)?, completion: @escaping @Sendable ([Result]) -> Void) {
         let textRequest = VNRecognizeTextRequest { request, _ in
             let imageSize = CGSize(width: image.width, height: image.height)
             guard let results = request.results as? [VNRecognizedTextObservation], !results.isEmpty else {

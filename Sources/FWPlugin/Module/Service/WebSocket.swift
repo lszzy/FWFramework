@@ -101,7 +101,7 @@ public protocol WebSocketDelegate: AnyObject {
 open class WebSocket: WebSocketClient, WebSocketEngineDelegate, @unchecked Sendable {
     private let engine: WebSocketEngineProtocol
     public weak var delegate: WebSocketDelegate?
-    public var onEvent: ((WebSocketEvent) -> Void)?
+    public var onEvent: (@Sendable (WebSocketEvent) -> Void)?
 
     public var request: URLRequest
     // Where the callback is executed. It defaults to the main UI thread queue.
@@ -214,7 +214,7 @@ import Network
 
 /// WebSocketServer is a Network.framework implementation of a WebSocket server
 public class WebSocketServer: WebSocketServerProtocol, WebSocketConnectionDelegate, @unchecked Sendable {
-    public var onEvent: ((WebSocketServerEvent) -> Void)?
+    public var onEvent: (@Sendable (WebSocketServerEvent) -> Void)?
     public var callbackQueue = DispatchQueue.main
     private var connections = [String: WebSocketServerConnection]()
     private var listener: NWListener?
@@ -285,7 +285,7 @@ public class WebSocketServerConnection: WebSocketConnection, WebSocketHTTPServer
     private let framer = WebSocketFramer(isServer: true)
     private let frameHandler = WebSocketFrameCollector()
     private var didUpgrade = false
-    public var onEvent: ((WebSocketConnectionEvent) -> Void)?
+    public var onEvent: (@Sendable (WebSocketConnectionEvent) -> Void)?
     public weak var delegate: WebSocketConnectionDelegate?
     private let id: String
     var uuid: String {
@@ -1241,7 +1241,7 @@ public protocol WebSocketTransport: AnyObject {
     func register(delegate: WebSocketTransportEventClient)
     func connect(url: URL, timeout: Double, certificatePinning: WebSocketCertificatePinning?)
     func disconnect()
-    func write(data: Data, completion: @escaping (@Sendable (Error?) -> Void))
+    func write(data: Data, completion: @escaping @Sendable (Error?) -> Void)
     var usingTLS: Bool { get }
 }
 
