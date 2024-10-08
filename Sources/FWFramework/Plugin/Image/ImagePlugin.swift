@@ -222,9 +222,9 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - Wrapper+UIImageView
-extension Wrapper where Base: UIImageView {
+@MainActor extension Wrapper where Base: UIImageView {
     /// 加载网络图片，支持占位、选项、回调和进度，优先加载插件，默认使用框架网络库
-    @MainActor public func setImage(
+    public func setImage(
         url: URLParameter?,
         placeholderImage: UIImage? = nil,
         options: WebImageOptions = [],
@@ -236,20 +236,20 @@ extension Wrapper where Base: UIImageView {
     }
 
     /// 加载指定URL的本地缓存图片
-    public static func loadImageCache(url: URLParameter?) -> UIImage? {
+    public nonisolated static func loadImageCache(url: URLParameter?) -> UIImage? {
         let imageURL = url?.urlValue
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         return imagePlugin.loadImageCache(imageURL)
     }
 
     /// 清除所有本地图片缓存
-    public static func clearImageCaches(completion: (@MainActor @Sendable () -> Void)? = nil) {
+    public nonisolated static func clearImageCaches(completion: (@MainActor @Sendable () -> Void)? = nil) {
         let imagePlugin = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         imagePlugin.clearImageCaches(completion)
     }
 
     /// 创建动画ImageView视图，优先加载插件，默认UIImageView
-    @MainActor public static func animatedImageView() -> UIImageView {
+    public static func animatedImageView() -> UIImageView {
         let imagePlugin: ImagePlugin? = PluginManager.loadPlugin(ImagePlugin.self) ?? ImagePluginImpl.shared
         if let imagePlugin {
             return imagePlugin.animatedImageView()

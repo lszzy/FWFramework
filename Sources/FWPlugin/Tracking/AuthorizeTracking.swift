@@ -13,9 +13,9 @@ import UIKit
 #endif
 
 // MARK: - Wrapper+UIDevice
-extension Wrapper where Base: UIDevice {
+@MainActor extension Wrapper where Base: UIDevice {
     /// 获取设备IDFA(外部使用)，重置广告或系统后会改变，需先检测广告追踪权限
-    public static var deviceIDFA: String {
+    public nonisolated static var deviceIDFA: String {
         ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
 }

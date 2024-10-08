@@ -349,7 +349,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 
     func onOpenSafari() {
         UIApplication.app.openSafariController("http://kvm.wuyong.site/test.php") {
-            APP.debug("SafariController completionHandler")
+            UIWindow.app.showMessage(text: "SafariController已关闭")
         }
     }
 

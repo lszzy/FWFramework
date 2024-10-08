@@ -147,9 +147,9 @@ extension Wrapper where Base: UIBezierPath {
 }
 
 // MARK: - Wrapper+UIDevice
-extension Wrapper where Base: UIDevice {
+@MainActor extension Wrapper where Base: UIDevice {
     /// 设置设备token原始Data，格式化并保存
-    public static func setDeviceTokenData(_ tokenData: Data?) {
+    public nonisolated static func setDeviceTokenData(_ tokenData: Data?) {
         if let tokenData {
             deviceToken = tokenData.map { String(format: "%02.0hhx", $0) }.joined()
         } else {
@@ -158,7 +158,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 获取设备Token格式化后的字符串
-    public static var deviceToken: String? {
+    public nonisolated static var deviceToken: String? {
         get {
             UserDefaults.standard.string(forKey: "FWDeviceToken")
         }
@@ -174,7 +174,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
-    public static var deviceIDFV: String? {
+    public nonisolated static var deviceIDFV: String? {
         if let deviceIDFV = UIKitConfiguration.deviceIDFV { return deviceIDFV }
 
         let identifier = DispatchQueue.fw.mainSyncIf {
@@ -187,7 +187,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
-    public static var deviceUUID: String {
+    public nonisolated static var deviceUUID: String {
         get {
             if let deviceUUID = UIKitConfiguration.deviceUUID {
                 return deviceUUID
@@ -210,7 +210,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否越狱
-    public static var isJailbroken: Bool {
+    public nonisolated static var isJailbroken: Bool {
         #if targetEnvironment(simulator)
         return false
         #else
@@ -247,7 +247,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 本地IP地址
-    public static var ipAddress: String? {
+    public nonisolated static var ipAddress: String? {
         var ipAddr: String?
         var addrs: UnsafeMutablePointer<ifaddrs>? = nil
 
@@ -271,7 +271,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 本地主机名称
-    public static var hostName: String? {
+    public nonisolated static var hostName: String? {
         var hostName = [CChar](repeating: 0, count: 256)
         let success = gethostname(&hostName, 255)
         if success != 0 { return nil }
@@ -285,7 +285,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
-    public static var networkTypes: [String]? {
+    public nonisolated static var networkTypes: [String]? {
         guard let currentRadio = UIKitConfiguration.networkInfo.serviceCurrentRadioAccessTechnology else {
             return nil
         }
@@ -293,7 +293,7 @@ extension Wrapper where Base: UIDevice {
         return currentRadio.values.compactMap { networkType($0) }
     }
 
-    private static func networkType(_ accessTechnology: String) -> String? {
+    private nonisolated static func networkType(_ accessTechnology: String) -> String? {
         let types2G = [
             CTRadioAccessTechnologyGPRS,
             CTRadioAccessTechnologyEdge,
