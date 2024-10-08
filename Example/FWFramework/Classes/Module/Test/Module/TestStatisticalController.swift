@@ -274,7 +274,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             ]
             return event
         }
-        segmentedControl.app.statisticalExposureListener = { /* [weak self] */ @MainActor @Sendable _ in
+        segmentedControl.app.statisticalExposureListener = { /* [weak self] */ _ in
             // self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
         }
         configShieldView(segmentedControl.app.statisticalExposure)
