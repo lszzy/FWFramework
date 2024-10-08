@@ -85,7 +85,7 @@ import UIKit
 }
 
 /// 抽屉拖拽视图
-open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate {
+@MainActor open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate {
     /// 事件代理，默认nil
     open weak var delegate: DrawerViewDelegate?
 
@@ -164,25 +164,25 @@ open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelega
     }
 
     /// 抽屉视图位移回调，参数为相对view父视图的origin位置和是否拖拽完成的标记
-    open var positionChanged: (@MainActor @Sendable (_ position: CGFloat, _ finished: Bool) -> Void)?
+    open var positionChanged: ((_ position: CGFloat, _ finished: Bool) -> Void)?
 
     /// 是否使用物理弹簧动画，默认true
     open var springAnimation = true
 
     /// 自定义动画句柄，动画必须调用animations和completion句柄
-    open var animationBlock: (@MainActor @Sendable (_ animations: @MainActor @Sendable () -> Void, _ completion: @MainActor @Sendable (Bool) -> Void) -> Void)?
+    open var animationBlock: ((_ animations: () -> Void, _ completion: (Bool) -> Void) -> Void)?
 
     /// 滚动视图过滤器，默认只处理可滚动视图的冲突。如需其它条件，可自定义此句柄
-    open var scrollViewFilter: (@MainActor @Sendable (UIScrollView) -> Bool)?
+    open var scrollViewFilter: ((UIScrollView) -> Bool)?
 
     /// 自定义滚动视图允许滚动的位置，默认nil时仅openPosition可滚动
-    open var scrollViewPositions: (@MainActor @Sendable (UIScrollView) -> [CGFloat])?
+    open var scrollViewPositions: ((UIScrollView) -> [CGFloat])?
 
     /// 自定义拖动区域句柄，参数为开始拖动位置，默认nil
-    open var draggingAreaBlock: (@MainActor @Sendable (CGFloat) -> CGRect)?
+    open var draggingAreaBlock: ((CGFloat) -> CGRect)?
 
     /// 自定义滚动视图在各个位置的contentInset(从小到大，数量同positions)，默认nil时不处理。UITableView时也可使用tableFooterView等实现
-    open var scrollViewInsets: (@MainActor @Sendable (UIScrollView) -> [UIEdgeInsets])?
+    open var scrollViewInsets: ((UIScrollView) -> [UIEdgeInsets])?
 
     private var displayLink: CADisplayLink?
     private var panDisabled = false
