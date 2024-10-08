@@ -76,9 +76,9 @@ import UIKit
     }
 
     /// 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发，手工dismiss不会触发。会自动设置presentationController.delegate
-    public var presentationDidDismiss: (@MainActor @Sendable () -> Void)? {
+    public var presentationDidDismiss: (() -> Void)? {
         get {
-            property(forName: "presentationDidDismiss") as? @MainActor @Sendable () -> Void
+            property(forName: "presentationDidDismiss") as? () -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "presentationDidDismiss")
@@ -265,7 +265,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }()
 
     /// 设置动画句柄
-    open var transitionBlock: (@MainActor @Sendable (AnimatedTransition) -> Void)?
+    open var transitionBlock: ((AnimatedTransition) -> Void)?
 
     /// 动画持续时间，必须大于0，默认同completionSpeed为0.35秒
     open var transitionDuration: TimeInterval = 0.35
@@ -345,13 +345,13 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     open private(set) var isInteractDismissing = false
 
     /// 自定义交互句柄，可根据手势state处理不同状态的交互，返回YES执行默认交互，返回NO不执行。默认为空，执行默认交互
-    open var interactBlock: (@MainActor @Sendable (UIPanGestureRecognizer) -> Bool)?
+    open var interactBlock: ((UIPanGestureRecognizer) -> Bool)?
 
     /// 自定义交互时dismiss关闭动画完成回调(仅交互才会触发)，默认nil
-    open var interactDismissCompletion: (@MainActor @Sendable () -> Void)?
+    open var interactDismissCompletion: (() -> Void)?
 
     /// 自定义dismiss关闭动画完成回调(交互和非交互都会触发)，默认nil
-    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
+    open var dismissCompletion: (() -> Void)?
 
     /// 当前交互pan手势对象，默认PanGestureRecognizer，可设置交互方向，滚动视图等
     open var gestureRecognizer: UIPanGestureRecognizer {
@@ -425,7 +425,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     /// 设置展示控制器创建句柄，自定义弹出效果。present时建议设置modalPresentationStyle为Custom
-    open var presentationBlock: (@MainActor @Sendable (UIViewController, UIViewController?) -> UIPresentationController)?
+    open var presentationBlock: ((UIViewController, UIViewController?) -> UIPresentationController)?
 
     // MARK: - Private
     private var isSystem = false
@@ -434,7 +434,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
         !isSystem && (interactEnabled || interactScreenEdge)
     }
 
-    private var interactBegan: (@MainActor @Sendable () -> Void)?
+    private var interactBegan: (() -> Void)?
 
     @objc private func gestureRecognizerAction(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
@@ -838,7 +838,7 @@ open class PresentationController: UIPresentationController {
     /// 设置点击暗色背景关闭时是否执行动画，默认true
     open var dismissAnimated = true
     /// 设置点击暗色背景关闭完成回调(非交互才会触发)，默认nil
-    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
+    open var dismissCompletion: (() -> Void)?
 
     /// 设置弹出视图的圆角位置，默认左上和右上。如果弹出视图占满容器，不生效需弹出视图自定义
     open var rectCorner: UIRectCorner = [.topLeft, .topRight]
@@ -846,7 +846,7 @@ open class PresentationController: UIPresentationController {
     open var cornerRadius: CGFloat = 0
 
     /// 自定义弹出视图的frame计算block，默认nil占满容器，优先级高
-    open var frameBlock: (@MainActor @Sendable (PresentationController) -> CGRect)?
+    open var frameBlock: ((PresentationController) -> CGRect)?
     /// 设置弹出视图的frame，默认CGRectZero占满容器，优先级中
     open var presentedFrame: CGRect = .zero
     /// 设置弹出视图的居中size，默认CGSizeZero占满容器，优先级中
@@ -955,16 +955,16 @@ open class PanGestureRecognizer: UIPanGestureRecognizer, UIGestureRecognizerDele
     open var maximumDistance: CGFloat = 0
 
     /// 自定义Failed判断句柄。默认判定失败时直接修改状态为Failed，可设置此block修改判定条件
-    open var shouldFailed: (@MainActor @Sendable (PanGestureRecognizer) -> Bool)?
+    open var shouldFailed: ((PanGestureRecognizer) -> Bool)?
 
     /// 自定义shouldBegin判断句柄
-    open var shouldBegin: (@MainActor @Sendable (PanGestureRecognizer) -> Bool)?
+    open var shouldBegin: ((PanGestureRecognizer) -> Bool)?
 
     /// 自定义shouldBeRequiredToFail判断句柄
-    open var shouldBeRequiredToFail: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)?
+    open var shouldBeRequiredToFail: ((UIGestureRecognizer) -> Bool)?
 
     /// 自定义shouldRequireFailure判断句柄
-    open var shouldRequireFailure: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)?
+    open var shouldRequireFailure: ((UIGestureRecognizer) -> Bool)?
 
     /// 获取当前手势在指定交互方向的滑动进度
     open var swipePercent: CGFloat {

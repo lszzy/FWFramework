@@ -441,7 +441,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     open var tapActionDismiss: Bool = true
 
     /// 单击背景dismiss完成回调，默认nil
-    open var dismissCompletion: (@MainActor @Sendable () -> Void)?
+    open var dismissCompletion: (() -> Void)?
     /// 事件代理
     open weak var delegate: AlertControllerDelegate?
     /// 弹出框样式
@@ -1809,10 +1809,10 @@ public enum AlertActionStyle: Int, Sendable {
     }
 
     var appearance: AlertControllerAppearance?
-    var handler: (@MainActor @Sendable (AlertAction) -> Void)?
-    var propertyChangedBlock: (@MainActor @Sendable (_ action: AlertAction, _ needUpdateConstraints: Bool) -> Void)?
+    var handler: ((AlertAction) -> Void)?
+    var propertyChangedBlock: ((_ action: AlertAction, _ needUpdateConstraints: Bool) -> Void)?
 
-    public init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: (@MainActor @Sendable (AlertAction) -> Void)?) {
+    public init(title: String?, style: AlertActionStyle, appearance: AlertControllerAppearance? = nil, handler: ((AlertAction) -> Void)?) {
         super.init()
         self.appearance = appearance
         self.title = title
@@ -1902,7 +1902,7 @@ class AlertActionItemSeparatorView: UIView {
 }
 
 class AlertHeaderScrollView: UIScrollView {
-    var headerViewSafeAreaDidChangedBlock: (@MainActor @Sendable () -> Void)?
+    var headerViewSafeAreaDidChangedBlock: (() -> Void)?
     var imageLimitSize: CGSize = .zero
     var contentEdgeInsets: UIEdgeInsets = .zero
     private var textFields: [UITextField] = []
@@ -2263,7 +2263,7 @@ class AlertActionSequenceView: UIView {
         }
     }
 
-    var buttonClickedInActionViewBlock: (@MainActor @Sendable (_ index: Int, _ actionView: AlertControllerActionView) -> Void)?
+    var buttonClickedInActionViewBlock: ((_ index: Int, _ actionView: AlertControllerActionView) -> Void)?
     private var actionLineConstraints: [NSLayoutConstraint] = []
     private var appearance: AlertControllerAppearance?
 

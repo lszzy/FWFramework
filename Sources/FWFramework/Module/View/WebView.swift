@@ -12,8 +12,8 @@ import WebKit
 // MARK: - Wrapper+WKWebView
 @MainActor extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
-    public static var reuseConfigurationBlock: (@MainActor @Sendable (WKWebViewConfiguration, String) -> Void)? {
-        get { return NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? @MainActor @Sendable (WKWebViewConfiguration, String) -> Void }
+    public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
+        get { return NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: "reuseConfigurationBlock", value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 
@@ -309,7 +309,7 @@ open class WebView: WKWebView {
     open var allowsRouterSchemes: [String] = []
 
     /// 配置允许下载的url句柄(iOS14.5+生效)，默认nil
-    open var allowsDownloadUrl: (@MainActor @Sendable (URL) -> Bool)?
+    open var allowsDownloadUrl: ((URL) -> Bool)?
 
     /// 是否允许打开通用链接，默认false
     open var allowsUniversalLinks = false
@@ -339,7 +339,7 @@ open class WebView: WKWebView {
     open var isFirstLoad = true
 
     /// 设置重用时预缓存资源的url句柄，同一个reuseIdentifier仅生效一次，自动处理堆栈
-    public static var reusePreloadUrlBlock: (@MainActor @Sendable (String) -> Any?)?
+    public static var reusePreloadUrlBlock: ((String) -> Any?)?
 
     private static var preloadedReuseIdentifiers: [String] = []
 
@@ -1129,7 +1129,7 @@ extension WKWebView {
     /// 初始化WKWebView可重用视图
     override open class func reusableViewInitialize(reuseIdentifier: String) -> Self {
         let configuration = WKWebView.fw.defaultConfiguration()
-        let reuseBlock = NSObject.fw.getAssociatedObject(self, key: "reuseConfigurationBlock") as? @MainActor @Sendable (WKWebViewConfiguration, String) -> Void
+        let reuseBlock = NSObject.fw.getAssociatedObject(self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void
         reuseBlock?(configuration, reuseIdentifier)
         return self.init(frame: .zero, configuration: configuration)
     }

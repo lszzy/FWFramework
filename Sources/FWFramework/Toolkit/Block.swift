@@ -527,12 +527,12 @@ extension Wrapper where Base: Timer {
 }
 
 // MARK: - BlockTarget
-private class BlockTarget: @unchecked Sendable {
+@MainActor private class BlockTarget: @unchecked Sendable {
     let identifier = UUID().uuidString
-    var block: (@MainActor @Sendable (Any) -> Void)?
+    var block: ((Any) -> Void)?
     var events: UIControl.Event = []
 
-    @MainActor @objc func invoke(_ sender: Any) {
+    @objc func invoke(_ sender: Any) {
         block?(sender)
     }
 }
@@ -723,7 +723,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 自定义高亮状态变化时处理句柄
-    open var highlightedChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
+    open var highlightedChanged: ((TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if isEnabled && highlightedChanged != nil {
                 highlightedChanged?(self, isHighlighted)
@@ -741,7 +741,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 自定义禁用状态变化时处理句柄
-    open var disabledChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
+    open var disabledChanged: ((TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if disabledChanged != nil {
                 disabledChanged?(self, isEnabled)

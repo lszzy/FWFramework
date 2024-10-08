@@ -873,7 +873,7 @@ extension Wrapper where Base: UIDevice {
         _ style: ViewStyle = .default,
         block: @escaping @MainActor @Sendable (Base) -> Void
     ) {
-        let styleBlock: @MainActor @Sendable (UIView) -> Void = { view in
+        let styleBlock: (UIView) -> Void = { view in
             if let target = view as? Base { block(target) }
         }
         let styleKey = "viewStyleBlock_\(style.rawValue)"
@@ -883,10 +883,10 @@ extension Wrapper where Base: UIDevice {
     /// 应用类通用样式，默认样式default
     public func addStyle(_ style: ViewStyle = .default) {
         let styleKey = "viewStyleBlock_\(style.rawValue)"
-        var styleBlock: (@MainActor @Sendable (UIView) -> Void)?
+        var styleBlock: ((UIView) -> Void)?
         var styleClass: AnyClass? = type(of: base)
         while let targetClass = styleClass, targetClass != UIResponder.self {
-            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? @MainActor @Sendable (UIView) -> Void
+            styleBlock = NSObject.fw.getAssociatedObject(targetClass, key: styleKey) as? (UIView) -> Void
             if styleBlock != nil {
                 break
             }
@@ -1578,9 +1578,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义按钮禁用状态改变时的句柄，默认nil
-    public var disabledChanged: (@MainActor @Sendable (UIButton, Bool) -> Void)? {
+    public var disabledChanged: ((UIButton, Bool) -> Void)? {
         get {
-            property(forName: "disabledChanged") as? @MainActor @Sendable (UIButton, Bool) -> Void
+            property(forName: "disabledChanged") as? (UIButton, Bool) -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "disabledChanged")
@@ -1600,9 +1600,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义按钮高亮状态改变时的句柄，默认nil
-    public var highlightedChanged: (@MainActor @Sendable (UIButton, Bool) -> Void)? {
+    public var highlightedChanged: ((UIButton, Bool) -> Void)? {
         get {
-            property(forName: "highlightedChanged") as? @MainActor @Sendable (UIButton, Bool) -> Void
+            property(forName: "highlightedChanged") as? (UIButton, Bool) -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "highlightedChanged")
@@ -1972,9 +1972,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否开始识别pan手势
-    public var shouldBegin: (@MainActor @Sendable (UIGestureRecognizer) -> Bool)? {
+    public var shouldBegin: ((UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldBegin") as? @MainActor @Sendable (UIGestureRecognizer) -> Bool
+            property(forName: "shouldBegin") as? (UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldBegin")
@@ -1983,9 +1983,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否允许同时识别多个手势
-    public var shouldRecognizeSimultaneously: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldRecognizeSimultaneously: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldRecognizeSimultaneously") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldRecognizeSimultaneously") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldRecognizeSimultaneously")
@@ -1994,9 +1994,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否另一个手势识别失败后，才能识别pan手势
-    public var shouldRequireFailure: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldRequireFailure: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldRequireFailure") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldRequireFailure") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldRequireFailure")
@@ -2005,9 +2005,9 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否pan手势识别失败后，才能识别另一个手势
-    public var shouldBeRequiredToFail: (@MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
+    public var shouldBeRequiredToFail: ((UIGestureRecognizer, UIGestureRecognizer) -> Bool)? {
         get {
-            property(forName: "shouldBeRequiredToFail") as? @MainActor @Sendable (UIGestureRecognizer, UIGestureRecognizer) -> Bool
+            property(forName: "shouldBeRequiredToFail") as? (UIGestureRecognizer, UIGestureRecognizer) -> Bool
         }
         set {
             setPropertyCopy(newValue, forName: "shouldBeRequiredToFail")
@@ -2203,7 +2203,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var textChangedBlock: (@MainActor @Sendable (String) -> Void)? {
+    public var textChangedBlock: ((String) -> Void)? {
         get { inputTarget(false)?.textChangedBlock }
         set { inputTarget(true)?.textChangedBlock = newValue }
     }
@@ -2228,7 +2228,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设置自动完成处理句柄，自动trimString，默认nil，注意输入框内容为空时会立即触发
-    public var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)? {
+    public var autoCompleteBlock: ((String) -> Void)? {
         get { inputTarget(false)?.autoCompleteBlock }
         set { inputTarget(true)?.autoCompleteBlock = newValue }
     }
@@ -2320,7 +2320,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 自定义文字改变处理句柄，自动trimString，默认nil
-    public var textChangedBlock: (@MainActor @Sendable (String) -> Void)? {
+    public var textChangedBlock: ((String) -> Void)? {
         get { inputTarget(false)?.textChangedBlock }
         set { inputTarget(true)?.textChangedBlock = newValue }
     }
@@ -2345,7 +2345,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设置自动完成处理句柄，默认nil，注意输入框内容为空时会立即触发
-    public var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)? {
+    public var autoCompleteBlock: ((String) -> Void)? {
         get { inputTarget(false)?.autoCompleteBlock }
         set { inputTarget(true)?.autoCompleteBlock = newValue }
     }
@@ -2614,7 +2614,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 配置全局resetTableStyle钩子句柄，默认nil
-    public static var resetTableConfiguration: (@MainActor @Sendable (UITableView) -> Void)? {
+    public static var resetTableConfiguration: ((UITableView) -> Void)? {
         get { UITableView.innerResetTableConfiguration }
         set { UITableView.innerResetTableConfiguration = newValue }
     }
@@ -2715,7 +2715,7 @@ extension Wrapper where Base: UIDevice {
         exposure: @escaping @MainActor @Sendable () -> Void
     ) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: @MainActor @Sendable (UITableViewCell) -> Void = { [weak base] cell in
+        let block: (UITableViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
             guard base?.visibleCells.contains(cell) ?? false,
                   base?.indexPath(for: cell) != nil,
@@ -2895,8 +2895,8 @@ extension Wrapper where Base: UIDevice {
         return movementGesture
     }
 
-    fileprivate var movementGestureBlock: (@MainActor @Sendable (UILongPressGestureRecognizer) -> Bool)? {
-        get { property(forName: #function) as? @MainActor @Sendable (UILongPressGestureRecognizer) -> Bool }
+    fileprivate var movementGestureBlock: ((UILongPressGestureRecognizer) -> Bool)? {
+        get { property(forName: #function) as? (UILongPressGestureRecognizer) -> Bool }
         set { setPropertyCopy(newValue, forName: #function) }
     }
 
@@ -2908,7 +2908,7 @@ extension Wrapper where Base: UIDevice {
         exposure: @escaping @MainActor @Sendable () -> Void
     ) {
         let identifier = "\(indexPath.section).\(indexPath.row)-\(String.fw.safeString(key))"
-        let block: @MainActor @Sendable (UICollectionViewCell) -> Void = { [weak base] cell in
+        let block: (UICollectionViewCell) -> Void = { [weak base] cell in
             let previousIdentifier = cell.fw.property(forName: "willDisplayIdentifier") as? String
             guard base?.visibleCells.contains(cell) ?? false,
                   base?.indexPath(for: cell) != nil,
@@ -3377,10 +3377,10 @@ extension UISwitch {
 
 // MARK: - UITableView+UIKit
 extension UITableView {
-    fileprivate static var innerResetTableConfiguration: (@MainActor @Sendable (UITableView) -> Void)?
+    fileprivate static var innerResetTableConfiguration: ((UITableView) -> Void)?
 
     @objc fileprivate func innerWillDisplay(_ cell: UITableViewCell) {
-        let block = cell.fw.property(forName: "willDisplay") as? @MainActor @Sendable (UITableViewCell) -> Void
+        let block = cell.fw.property(forName: "willDisplay") as? (UITableViewCell) -> Void
         block?(cell)
     }
 }
@@ -3406,7 +3406,7 @@ extension UICollectionView {
     }
 
     @objc fileprivate func innerWillDisplay(_ cell: UICollectionViewCell) {
-        let block = cell.fw.property(forName: "willDisplay") as? @MainActor @Sendable (UICollectionViewCell) -> Void
+        let block = cell.fw.property(forName: "willDisplay") as? (UICollectionViewCell) -> Void
         block?(cell)
     }
 }
@@ -3423,10 +3423,10 @@ private class SaturationGrayView: UIView {
     weak var textInput: (UIView & UITextInput)?
     var maxLength: Int = 0
     var maxUnicodeLength: Int = 0
-    var textChangedBlock: (@MainActor @Sendable (String) -> Void)?
+    var textChangedBlock: ((String) -> Void)?
     var autoCompleteInterval: TimeInterval = 0.5
     var autoCompleteTimestamp: TimeInterval = 0
-    var autoCompleteBlock: (@MainActor @Sendable (String) -> Void)?
+    var autoCompleteBlock: ((String) -> Void)?
 
     private var shouldCheckLength: Bool {
         if let markedTextRange = textInput?.markedTextRange,

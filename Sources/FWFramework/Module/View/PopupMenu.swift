@@ -195,7 +195,7 @@ public class PopupMenuPath {
     /// 根据屏幕旋转方向自动旋转 Default is YES
     open var autoRotateWhenDeviceOrientationChanged: Bool = true
 
-    open var deviceOrientationDidChangeHandler: (@MainActor @Sendable (UIInterfaceOrientation) -> Void)?
+    open var deviceOrientationDidChangeHandler: ((UIInterfaceOrientation) -> Void)?
 
     private var isGeneratingDeviceOrientationNotifications = false
 
@@ -278,8 +278,8 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
     /// 动画视图
     open weak var animationView: UIView?
 
-    private var showAnimationHandler: (@MainActor @Sendable () -> Void)?
-    private var dismissAnimationHandler: (@MainActor @Sendable () -> Void)?
+    private var showAnimationHandler: (() -> Void)?
+    private var dismissAnimationHandler: (() -> Void)?
     private let showAnimationKey = "showAnimation"
     private let dismissAnimationKey = "dismissAnimation"
 
@@ -495,10 +495,10 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     open var titleEdgeInsets: UIEdgeInsets = .zero
 
     /// 点击事件回调句柄
-    open var didSelectItemBlock: (@MainActor @Sendable (Int) -> Void)?
+    open var didSelectItemBlock: ((Int) -> Void)?
 
     /// 自定义cell句柄，优先级低于delegate
-    open var customCellBlock: (@MainActor @Sendable (PopupMenu, Int) -> UITableViewCell?)?
+    open var customCellBlock: ((PopupMenu, Int) -> UITableViewCell?)?
 
     /// 屏幕旋转管理
     open var orientationManager: PopupMenuDeviceOrientationManager = .init()

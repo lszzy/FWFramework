@@ -141,7 +141,7 @@ open class AttributedLabel: UIView {
 
     private var _linkDetector: AttributedLabelURLDetectorProtocol?
     /// 链接点击句柄
-    open var clickedOnLink: (@MainActor @Sendable (Any) -> Void)?
+    open var clickedOnLink: ((Any) -> Void)?
     /// 行数
     open var numberOfLines: Int = 0 {
         didSet {

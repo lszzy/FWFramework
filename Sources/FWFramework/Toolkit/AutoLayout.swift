@@ -36,7 +36,7 @@ import UIKit
     /// 2. 尽量不使用screenWidth固定屏幕宽度方式布局，推荐相对于父视图布局
     /// 2. 只会对offset值生效，其他属性不受影响
     /// 3. 某个视图如需固定offset值，可指定autoScaleLayout为false关闭该功能
-    public static var autoScaleBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)? {
+    public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
         get { AutoLayoutConfiguration.autoScaleBlock }
         set { AutoLayoutConfiguration.autoScaleBlock = newValue }
     }
@@ -51,7 +51,7 @@ import UIKit
         }
         set {
             guard newValue != autoScaleLayout else { return }
-            autoScaleBlock = newValue ? { @MainActor @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatLayout) } : nil
+            autoScaleBlock = newValue ? { UIScreen.fw.relativeValue($0, flat: autoFlatLayout) } : nil
         }
     }
 
@@ -1935,7 +1935,7 @@ extension UIView {
 // MARK: - AutoLayoutConfiguration
 private actor AutoLayoutConfiguration {
     fileprivate static var autoLayoutRTL = false
-    fileprivate static var autoScaleBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)?
+    fileprivate static var autoScaleBlock: ((CGFloat) -> CGFloat)?
     fileprivate static var autoFlatLayout = false
 
     fileprivate static var autoLayoutDebug: Bool = {

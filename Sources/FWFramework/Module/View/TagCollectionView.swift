@@ -101,8 +101,8 @@ open class TagCollectionView: UIView {
         set { scrollView.showsVerticalScrollIndicator = newValue }
     }
 
-    open var onTapBlankArea: (@MainActor @Sendable (CGPoint) -> Void)?
-    open var onTapAllArea: (@MainActor @Sendable (CGPoint) -> Void)?
+    open var onTapBlankArea: ((CGPoint) -> Void)?
+    open var onTapAllArea: ((CGPoint) -> Void)?
 
     open lazy var scrollView: UIScrollView = {
         let result = UIScrollView(frame: self.bounds)
@@ -598,17 +598,17 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
         set { tagCollectionView.showsVerticalScrollIndicator = newValue }
     }
 
-    open var onTapBlankArea: (@MainActor @Sendable (CGPoint) -> Void)? {
+    open var onTapBlankArea: ((CGPoint) -> Void)? {
         get { tagCollectionView.onTapBlankArea }
         set { tagCollectionView.onTapBlankArea = newValue }
     }
 
-    open var onTapAllArea: (@MainActor @Sendable (CGPoint) -> Void)? {
+    open var onTapAllArea: ((CGPoint) -> Void)? {
         get { tagCollectionView.onTapAllArea }
         set { tagCollectionView.onTapAllArea = newValue }
     }
 
-    open var onTapTag: (@MainActor @Sendable (_ tagText: String, _ index: Int, _ selected: Bool) -> Void)?
+    open var onTapTag: ((_ tagText: String, _ index: Int, _ selected: Bool) -> Void)?
 
     open var defaultConfig: TextTagConfig = .init()
 

@@ -182,13 +182,13 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     /// 句柄方式监听点击，参数为index
-    open var didSelectItemBlock: (@MainActor @Sendable (Int) -> Void)?
+    open var didSelectItemBlock: ((Int) -> Void)?
 
     /// 句柄方式监听滚动，快速滚动时也会回调，参数为index
-    open var didScrollToItemBlock: (@MainActor @Sendable (Int) -> Void)?
+    open var didScrollToItemBlock: ((Int) -> Void)?
 
     /// 自定义cell句柄，参数为cell和index
-    open var customCellBlock: (@MainActor @Sendable (UICollectionViewCell, Int) -> Void)?
+    open var customCellBlock: ((UICollectionViewCell, Int) -> Void)?
 
     /// 轮播图片的ContentMode，默认为scaleAspectFill
     open var imageViewContentMode: UIView.ContentMode = .scaleAspectFill
@@ -204,7 +204,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     /// 自定义pageControl控件，初始化后调用
-    open var customPageControl: (@MainActor @Sendable (UIControl) -> Void)?
+    open var customPageControl: ((UIControl) -> Void)?
 
     /// 是否在只有一张图时隐藏pagecontrol，默认为true
     open var hidesForSinglePage: Bool = true

@@ -26,9 +26,9 @@ open class TabBarController: UITabBarController, TabBarDelegate {
     fileprivate var ignoreNextSelection = false
 
     /// Should hijack select action or not.
-    open var shouldHijackHandler: (@MainActor @Sendable (_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> (Bool))?
+    open var shouldHijackHandler: ((_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> (Bool))?
     /// Hijack select action.
-    open var didHijackHandler: (@MainActor @Sendable (_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> Void)?
+    open var didHijackHandler: ((_ tabBarController: UITabBarController, _ viewController: UIViewController, _ index: Int) -> Void)?
 
     /// Observer tabBarController's selectedViewController. change its selection when it will-set.
     override open var selectedViewController: UIViewController? {

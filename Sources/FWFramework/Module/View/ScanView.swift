@@ -630,14 +630,14 @@ open class ScanView: UIView {
     }
 
     /// 双击回调方法
-    open var doubleTapBlock: (@MainActor @Sendable (Bool) -> Void)? {
+    open var doubleTapBlock: ((Bool) -> Void)? {
         didSet {
             tapGesture.isEnabled = doubleTapBlock != nil
         }
     }
 
     /// 缩放回调方法，0表示开始
-    open var pinchScaleBlock: (@MainActor @Sendable (CGFloat) -> Void)? {
+    open var pinchScaleBlock: ((CGFloat) -> Void)? {
         didSet {
             pinchGesture.isEnabled = pinchScaleBlock != nil
         }

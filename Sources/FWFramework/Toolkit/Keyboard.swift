@@ -23,7 +23,7 @@ import UIKit
     }
 
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { base.innerKeyboardDistanceBlock }
         set { base.innerKeyboardDistanceBlock = newValue }
     }
@@ -71,7 +71,7 @@ import UIKit
     }
 
     /// 设置点击键盘完成按钮的事件句柄
-    public var returnBlock: (@MainActor @Sendable (UITextField) -> Void)? {
+    public var returnBlock: ((UITextField) -> Void)? {
         get {
             keyboardTarget.returnBlock
         }
@@ -115,13 +115,13 @@ import UIKit
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: (@MainActor @Sendable (UITextField) -> UIResponder?)? {
+    public var previousResponder: ((UITextField) -> UIResponder?)? {
         get { keyboardTarget.previousResponder }
         set { keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: (@MainActor @Sendable (UITextField) -> UIResponder?)? {
+    public var nextResponder: ((UITextField) -> UIResponder?)? {
         get { keyboardTarget.nextResponder }
         set { keyboardTarget.nextResponder = newValue }
     }
@@ -203,7 +203,7 @@ import UIKit
     }
 
     /// 设置输入框和键盘的空白间距句柄，参数为键盘高度、输入框高度，优先级高，默认nil
-    public var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    public var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { base.innerKeyboardDistanceBlock }
         set { base.innerKeyboardDistanceBlock = newValue }
     }
@@ -251,7 +251,7 @@ import UIKit
     }
 
     /// 设置点击键盘完成按钮的事件句柄。此方法会修改delegate，可使用fwDelegate访问原始delegate
-    public var returnBlock: (@MainActor @Sendable (UITextView) -> Void)? {
+    public var returnBlock: ((UITextView) -> Void)? {
         get {
             keyboardTarget.returnBlock
         }
@@ -333,13 +333,13 @@ import UIKit
     }
 
     /// 设置Toolbar点击前一个按钮时聚焦的输入框句柄，默认nil
-    public var previousResponder: (@MainActor @Sendable (UITextView) -> UIResponder?)? {
+    public var previousResponder: ((UITextView) -> UIResponder?)? {
         get { keyboardTarget.previousResponder }
         set { keyboardTarget.previousResponder = newValue }
     }
 
     /// 设置Toolbar点击下一个按钮时聚焦的输入框句柄，默认nil
-    public var nextResponder: (@MainActor @Sendable (UITextView) -> UIResponder?)? {
+    public var nextResponder: ((UITextView) -> UIResponder?)? {
         get { keyboardTarget.nextResponder }
         set { keyboardTarget.nextResponder = newValue }
     }
@@ -551,8 +551,8 @@ import UIKit
     }
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
-    public var heightDidChange: (@MainActor @Sendable (CGFloat) -> Void)? {
-        get { return property(forName: "heightDidChange") as? @MainActor @Sendable (CGFloat) -> Void }
+    public var heightDidChange: ((CGFloat) -> Void)? {
+        get { return property(forName: "heightDidChange") as? (CGFloat) -> Void }
         set { setPropertyCopy(newValue, forName: "heightDidChange") }
     }
 
@@ -577,7 +577,7 @@ extension UITextField {
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
 
-    @objc fileprivate dynamic var innerKeyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc fileprivate dynamic var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
@@ -621,7 +621,7 @@ extension UITextView {
         set { fw.keyboardTarget.keyboardDistance = newValue }
     }
 
-    @objc fileprivate dynamic var innerKeyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
+    @objc fileprivate dynamic var innerKeyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)? {
         get { fw.keyboardTarget.keyboardDistanceBlock }
         set { fw.keyboardTarget.keyboardDistanceBlock = newValue }
     }
@@ -669,7 +669,7 @@ extension UITextView {
 
     var keyboardDistance: CGFloat = 10
 
-    var keyboardDistanceBlock: (@MainActor @Sendable (_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
+    var keyboardDistanceBlock: ((_ keyboardHeight: CGFloat, _ height: CGFloat) -> CGFloat)?
 
     var reboundDistance: CGFloat = 0
 
@@ -713,7 +713,7 @@ extension UITextView {
 
     var returnNext = false
 
-    var returnBlock: (@MainActor @Sendable (T) -> Void)?
+    var returnBlock: ((T) -> Void)?
 
     lazy var keyboardToolbar: UIToolbar = .init()
 
@@ -723,13 +723,13 @@ extension UITextView {
 
     lazy var toolbarDoneButton: Any? = NSNumber(value: UIBarButtonItem.SystemItem.done.rawValue)
 
-    var previousResponder: (@MainActor @Sendable (T) -> UIResponder?)? {
+    var previousResponder: ((T) -> UIResponder?)? {
         didSet {
             previousItem?.isEnabled = previousResponder != nil || previousResponderTag > 0
         }
     }
 
-    var nextResponder: (@MainActor @Sendable (T) -> UIResponder?)? {
+    var nextResponder: ((T) -> UIResponder?)? {
         didSet {
             nextItem?.isEnabled = nextResponder != nil || nextResponderTag > 0
         }
