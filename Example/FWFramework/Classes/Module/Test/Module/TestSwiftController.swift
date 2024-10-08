@@ -265,12 +265,12 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         result.delegate = result.app.collectionDelegate
         result.dataSource = result.app.collectionDelegate
         result.app.collectionDelegate.itemCount = 10
-        result.app.collectionDelegate.cellForItem = { @MainActor @Sendable collectionView, indexPath in
+        result.app.collectionDelegate.cellForItem = { collectionView, indexPath in
             let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
             cell.contentView.backgroundColor = UIColor.app.randomColor
             return cell
         }
-        result.app.collectionDelegate.didSelectItem = { @MainActor @Sendable [weak self] _, indexPath in
+        result.app.collectionDelegate.didSelectItem = { [weak self] _, indexPath in
             layout.scrollToPage(indexPath.item)
         }
         return result
@@ -291,12 +291,12 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
         result.delegate = result.app.collectionDelegate
         result.dataSource = result.app.collectionDelegate
         result.app.collectionDelegate.itemCount = 10
-        result.app.collectionDelegate.cellForItem = { @MainActor @Sendable collectionView, indexPath in
+        result.app.collectionDelegate.cellForItem = { collectionView, indexPath in
             let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
             cell.contentView.backgroundColor = UIColor.app.randomColor
             return cell
         }
-        result.app.collectionDelegate.didSelectItem = { @MainActor @Sendable [weak self] _, indexPath in
+        result.app.collectionDelegate.didSelectItem = { [weak self] _, indexPath in
             layout.scrollToPage(indexPath.item)
         }
         return result

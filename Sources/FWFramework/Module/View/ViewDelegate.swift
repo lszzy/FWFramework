@@ -85,19 +85,19 @@ import UIKit
 
 // MARK: - ScrollViewDelegate
 /// 常用滚动视图事件代理，可继承
-open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollViewDelegate {
+@MainActor open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollViewDelegate {
     /// 滚动句柄，默认nil
-    open var didScroll: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didScroll: ((UIScrollView) -> Void)?
     /// 即将开始拖动句柄，默认nil
-    open var willBeginDragging: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var willBeginDragging: ((UIScrollView) -> Void)?
     /// 即将停止拖动句柄，默认nil
-    open var willEndDragging: (@MainActor @Sendable (UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
+    open var willEndDragging: ((UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
     /// 已经停止拖动句柄，默认nil
-    open var didEndDragging: (@MainActor @Sendable (UIScrollView, Bool) -> Void)?
+    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
     /// 已经停止减速句柄，默认nil
-    open var didEndDecelerating: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didEndDecelerating: ((UIScrollView) -> Void)?
     /// 已经停止滚动动画句柄，默认nil
-    open var didEndScrollingAnimation: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定scrollView
@@ -158,23 +158,23 @@ open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollView
 
 // MARK: - TextFieldDelegate
 /// 常用TextField事件代理，可继承
-open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDelegate {
+@MainActor open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDelegate {
     /// 是否应该开始编辑，默认nil
-    open var shouldBeginEditing: (@MainActor @Sendable (UITextField) -> Bool)?
+    open var shouldBeginEditing: ((UITextField) -> Bool)?
     /// 已开始编辑，默认nil
-    open var didBeginEditing: (@MainActor @Sendable (UITextField) -> Void)?
+    open var didBeginEditing: ((UITextField) -> Void)?
     /// 是否应该结束编辑，默认nil
-    open var shouldEndEditing: (@MainActor @Sendable (UITextField) -> Bool)?
+    open var shouldEndEditing: ((UITextField) -> Bool)?
     /// 已结束编辑，默认nil
-    open var didEndEditing: (@MainActor @Sendable (UITextField) -> Void)?
+    open var didEndEditing: ((UITextField) -> Void)?
     /// 是否应该改变字符，默认nil
-    open var shouldChangeCharacters: (@MainActor @Sendable (UITextField, NSRange, String) -> Bool)?
+    open var shouldChangeCharacters: ((UITextField, NSRange, String) -> Bool)?
     /// 选中已改变，仅iOS13+支持，默认nil
-    open var didChangeSelection: (@MainActor @Sendable (UITextField) -> Void)?
+    open var didChangeSelection: ((UITextField) -> Void)?
     /// 是否应该清除，默认nil
-    open var shouldClear: (@MainActor @Sendable (UITextField) -> Bool)?
+    open var shouldClear: ((UITextField) -> Bool)?
     /// 是否应该回车，默认nil
-    open var shouldReturn: (@MainActor @Sendable (UITextField) -> Bool)?
+    open var shouldReturn: ((UITextField) -> Bool)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定textField
@@ -251,21 +251,21 @@ open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDel
 
 // MARK: - TextViewDelegate
 /// 常用TextView事件代理，可继承
-open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
+@MainActor open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
     /// 是否应该开始编辑，默认nil
-    open var shouldBeginEditing: (@MainActor @Sendable (UITextView) -> Bool)?
+    open var shouldBeginEditing: ((UITextView) -> Bool)?
     /// 已开始编辑，默认nil
-    open var didBeginEditing: (@MainActor @Sendable (UITextView) -> Void)?
+    open var didBeginEditing: ((UITextView) -> Void)?
     /// 是否应该结束编辑，默认nil
-    open var shouldEndEditing: (@MainActor @Sendable (UITextView) -> Bool)?
+    open var shouldEndEditing: ((UITextView) -> Bool)?
     /// 已结束编辑，默认nil
-    open var didEndEditing: (@MainActor @Sendable (UITextView) -> Void)?
+    open var didEndEditing: ((UITextView) -> Void)?
     /// 是否应该改变文本，默认nil
-    open var shouldChangeText: (@MainActor @Sendable (UITextView, NSRange, String) -> Bool)?
+    open var shouldChangeText: ((UITextView, NSRange, String) -> Bool)?
     /// 文本已改变，默认nil
-    open var didChange: (@MainActor @Sendable (UITextView) -> Void)?
+    open var didChange: ((UITextView) -> Void)?
     /// 选中已改变，默认nil
-    open var didChangeSelection: (@MainActor @Sendable (UITextView) -> Void)?
+    open var didChangeSelection: ((UITextView) -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定textView
@@ -326,23 +326,23 @@ open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelega
 
 // MARK: - SearchBarDelegate
 /// 常用SearchBar事件代理，可继承
-open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDelegate {
+@MainActor open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDelegate {
     /// 是否应该开始编辑，默认nil
-    open var shouldBeginEditing: (@MainActor @Sendable (UISearchBar) -> Bool)?
+    open var shouldBeginEditing: ((UISearchBar) -> Bool)?
     /// 已开始编辑，默认nil
-    open var didBeginEditing: (@MainActor @Sendable (UISearchBar) -> Void)?
+    open var didBeginEditing: ((UISearchBar) -> Void)?
     /// 是否应该结束编辑，默认nil
-    open var shouldEndEditing: (@MainActor @Sendable (UISearchBar) -> Bool)?
+    open var shouldEndEditing: ((UISearchBar) -> Bool)?
     /// 已结束编辑，默认nil
-    open var didEndEditing: (@MainActor @Sendable (UISearchBar) -> Void)?
+    open var didEndEditing: ((UISearchBar) -> Void)?
     /// 文字已改变，默认nil
-    open var textDidChange: (@MainActor @Sendable (UISearchBar, String) -> Void)?
+    open var textDidChange: ((UISearchBar, String) -> Void)?
     /// 是否应该改变文字，默认nil
-    open var shouldChangeText: (@MainActor @Sendable (UISearchBar, NSRange, String) -> Bool)?
+    open var shouldChangeText: ((UISearchBar, NSRange, String) -> Bool)?
     /// 点击搜索按钮，默认nil
-    open var searchButtonClicked: (@MainActor @Sendable (UISearchBar) -> Void)?
+    open var searchButtonClicked: ((UISearchBar) -> Void)?
     /// 点击取消按钮，默认nil
-    open var cancelButtonClicked: (@MainActor @Sendable (UISearchBar) -> Void)?
+    open var cancelButtonClicked: ((UISearchBar) -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定searchBar

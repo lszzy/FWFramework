@@ -2320,7 +2320,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
 
@@ -2335,7 +2335,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
 
@@ -2350,7 +2350,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
 
@@ -2364,7 +2364,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2378,7 +2378,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2392,7 +2392,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2406,7 +2406,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2420,7 +2420,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 

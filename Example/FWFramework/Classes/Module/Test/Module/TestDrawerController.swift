@@ -40,15 +40,15 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         result.backgroundColor = AppTheme.tableColor
         result.dataSource = result.app.tableDelegate
         result.delegate = result.app.tableDelegate
-        result.app.tableDelegate.numberOfRows = { @MainActor @Sendable [weak self] _ in
+        result.app.tableDelegate.numberOfRows = { [weak self] _ in
             return (self?.canScroll ?? false) ? 30 : 3
         }
-        result.app.tableDelegate.cellConfiguation = { @MainActor @Sendable cell, indexPath in
+        result.app.tableDelegate.cellConfiguation = { cell, indexPath in
             cell.app.maxYViewExpanded = true
             cell.contentView.backgroundColor = AppTheme.cellColor
             cell.textLabel?.text = "\(indexPath.row + 1)"
         }
-        result.app.tableDelegate.didScroll = { @MainActor @Sendable [weak self] scrollView in
+        result.app.tableDelegate.didScroll = { [weak self] scrollView in
             self?.bottomView.app.drawerView?.scrollViewDidScroll(scrollView)
         }
         return result
