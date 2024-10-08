@@ -174,9 +174,9 @@ extension WrapperGlobal {
 }
 
 // MARK: - Wrapper+UIApplication
-extension Wrapper where Base: UIApplication {
+@MainActor extension Wrapper where Base: UIApplication {
     /// 是否是调试模式
-    public static var isDebug: Bool {
+    public nonisolated static var isDebug: Bool {
         #if DEBUG
         return true
         #else
@@ -186,9 +186,9 @@ extension Wrapper where Base: UIApplication {
 }
 
 // MARK: - Wrapper+UIDevice
-extension Wrapper where Base: UIDevice {
+@MainActor extension Wrapper where Base: UIDevice {
     /// 是否是模拟器
-    public static var isSimulator: Bool {
+    public nonisolated static var isSimulator: Bool {
         #if targetEnvironment(simulator)
         return true
         #else
@@ -197,22 +197,22 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否是iPhone
-    public static var isIphone: Bool {
+    public nonisolated static var isIphone: Bool {
         deviceModel.hasPrefix("iPhone")
     }
 
     /// 是否是iPod
-    public static var isIpod: Bool {
+    public nonisolated static var isIpod: Bool {
         deviceModel.hasPrefix("iPod")
     }
 
     /// 是否是iPad
-    public static var isIpad: Bool {
+    public nonisolated static var isIpad: Bool {
         deviceModel.hasPrefix("iPad")
     }
 
     /// 是否是Mac
-    public static var isMac: Bool {
+    public nonisolated static var isMac: Bool {
         if #available(iOS 14.0, *) {
             return ProcessInfo.processInfo.isiOSAppOnMac ||
                 ProcessInfo.processInfo.isMacCatalystApp
@@ -221,7 +221,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// iOS系统版本字符串
-    public static var iosVersionString: String {
+    public nonisolated static var iosVersionString: String {
         let version = ProcessInfo.processInfo.operatingSystemVersion
         var versionString = "\(version.majorVersion).\(version.minorVersion)"
         if version.patchVersion != 0 {
@@ -231,12 +231,12 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// iOS系统版本浮点数
-    public static var iosVersion: Double {
+    public nonisolated static var iosVersion: Double {
         (iosVersionString as NSString).doubleValue
     }
 
     /// 是否是指定iOS版本
-    public static func isIos(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+    public nonisolated static func isIos(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
         let version = ProcessInfo.processInfo.operatingSystemVersion
         var result = version.majorVersion == major
         if result, let minor {
@@ -249,18 +249,18 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 是否是大于等于指定iOS版本
-    public static func isIosLater(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
+    public nonisolated static func isIosLater(_ major: Int, _ minor: Int? = nil, _ patch: Int? = nil) -> Bool {
         let version = OperatingSystemVersion(majorVersion: major, minorVersion: minor ?? 0, patchVersion: patch ?? 0)
         return ProcessInfo.processInfo.isOperatingSystemAtLeast(version)
     }
 
     /// 设备尺寸，跟横竖屏无关
-    public static var deviceSize: CGSize {
+    public nonisolated static var deviceSize: CGSize {
         CGSize(width: deviceWidth, height: deviceHeight)
     }
 
     /// 设备宽度，跟横竖屏无关
-    public static var deviceWidth: CGFloat {
+    public nonisolated static var deviceWidth: CGFloat {
         if let deviceWidth = AdaptiveConfiguration.deviceWidth { return deviceWidth }
 
         let deviceWidth = DispatchQueue.fw.mainSyncIf {
@@ -273,7 +273,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设备高度，跟横竖屏无关
-    public static var deviceHeight: CGFloat {
+    public nonisolated static var deviceHeight: CGFloat {
         if let deviceHeight = AdaptiveConfiguration.deviceHeight { return deviceHeight }
 
         let deviceHeight = DispatchQueue.fw.mainSyncIf {
@@ -286,12 +286,12 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设备分辨率，跟横竖屏无关
-    public static var deviceResolution: CGSize {
+    public nonisolated static var deviceResolution: CGSize {
         CGSize(width: deviceWidth * UIScreen.fw.screenScale, height: deviceHeight * UIScreen.fw.screenScale)
     }
 
     /// 获取设备模型，格式："iPhone15,1"
-    public static var deviceModel: String {
+    public nonisolated static var deviceModel: String {
         if let deviceModel = AdaptiveConfiguration.deviceModel {
             return deviceModel
         }
@@ -312,7 +312,7 @@ extension Wrapper where Base: UIDevice {
     }
 
     /// 设备是否横屏，无论支不支持横屏
-    public static var isDeviceLandscape: Bool {
+    public nonisolated static var isDeviceLandscape: Bool {
         let isLandscape = DispatchQueue.fw.mainSyncIf {
             UIDevice.current.orientation.isLandscape
         } otherwise: {
@@ -327,7 +327,7 @@ extension Wrapper where Base: UIDevice {
 
     /// 设置界面方向，支持旋转方向时生效
     @discardableResult
-    @MainActor public static func setDeviceOrientation(_ orientation: UIDeviceOrientation) -> Bool {
+    public static func setDeviceOrientation(_ orientation: UIDeviceOrientation) -> Bool {
         if UIDevice.current.orientation == orientation {
             UIViewController.attemptRotationToDeviceOrientation()
             return false
