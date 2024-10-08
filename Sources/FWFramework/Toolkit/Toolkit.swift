@@ -1916,13 +1916,17 @@ extension Wrapper where Base: UIImage {
     }
 
     /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
-    public nonisolated var completionHandler: (@MainActor @Sendable (Sendable?) -> Void)? {
+    public var completionHandler: ((Sendable?) -> Void)? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.completionHandler
         }
         set {
-            lifecycleStateTarget.completionHandler = newValue
+            if let handler = newValue {
+                lifecycleStateTarget.completionHandler = { handler($0) }
+            } else {
+                lifecycleStateTarget.completionHandler = nil
+            }
         }
     }
 
