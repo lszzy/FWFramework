@@ -104,7 +104,7 @@ extension ViewControllerManager {
         webView.fw.safeObserveProperty(\.title) { [weak webController] _, _ in
             webController?.navigationItem.title = webController?.webView.title
         }
-        viewController.fw.allowsPopGesture = { @MainActor @Sendable [weak webController] in
+        viewController.fw.allowsPopGesture = { [weak webController] in
             return !(webController?.webView.canGoBack ?? false)
         }
 

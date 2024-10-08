@@ -157,7 +157,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
 
         app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
             guard let imagePicker = imagePicker as? UIViewController else { return }
-            imagePicker.app.presentationDidDismiss = { @MainActor @Sendable in
+            imagePicker.app.presentationDidDismiss = {
                 self?.startScanManager()
             }
         } completion: { [weak self] objects, _, cancel in
