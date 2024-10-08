@@ -70,7 +70,7 @@ open class ToastView: UIControl {
     /// 自定义内容垂直偏移，默认nil时自动处理，center时为-30，top时为10，bottom时为-10
     open var verticalOffset: CGFloat?
     /// 自定义内容垂直偏移句柄，参数为内容高度，默认nil
-    open var verticalOffsetBlock: (@MainActor @Sendable (CGFloat) -> CGFloat)?
+    open var verticalOffsetBlock: ((CGFloat) -> CGFloat)?
     /// 标题字体，默认16号
     open var titleFont: UIFont = .systemFont(ofSize: 16)
     /// 标题颜色，默认白色
@@ -126,7 +126,7 @@ open class ToastView: UIControl {
     }
 
     /// 手动点击取消时触发的句柄，默认nil不可点击取消
-    open var cancelBlock: (@MainActor @Sendable () -> Void)? {
+    open var cancelBlock: (() -> Void)? {
         didSet {
             if cancelBlock != nil, !touchEnabled {
                 touchEnabled = true

@@ -39,8 +39,8 @@ import UIKit
     }
 
     /// 配置创建tableView钩子句柄，默认nil
-    public static var tableViewConfiguration: (@MainActor @Sendable (Base) -> Void)? {
-        get { NSObject.fw.getAssociatedObject(Base.self, key: #function) as? @MainActor @Sendable (Base) -> Void }
+    public static var tableViewConfiguration: ((Base) -> Void)? {
+        get { NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (Base) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 }

@@ -140,16 +140,16 @@ open class PagingListContainerView: UIView {
         containerVC = PagingListContainerViewController()
         containerVC.view.backgroundColor = .clear
         addSubview(containerVC.view)
-        containerVC.viewWillAppearClosure = { @MainActor @Sendable [weak self] in
+        containerVC.viewWillAppearClosure = { [weak self] in
             self?.listWillAppear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewDidAppearClosure = { @MainActor @Sendable [weak self] in
+        containerVC.viewDidAppearClosure = { [weak self] in
             self?.listDidAppear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewWillDisappearClosure = { @MainActor @Sendable [weak self] in
+        containerVC.viewWillDisappearClosure = { [weak self] in
             self?.listWillDisappear(at: self?.currentIndex ?? 0)
         }
-        containerVC.viewDidDisappearClosure = { @MainActor @Sendable [weak self] in
+        containerVC.viewDidDisappearClosure = { [weak self] in
             self?.listDidDisappear(at: self?.currentIndex ?? 0)
         }
         if type == .scrollView {
@@ -540,10 +540,10 @@ extension PagingListContainerView: UICollectionViewDataSource, UICollectionViewD
 }
 
 class PagingListContainerViewController: UIViewController {
-    var viewWillAppearClosure: (@MainActor @Sendable () -> Void)?
-    var viewDidAppearClosure: (@MainActor @Sendable () -> Void)?
-    var viewWillDisappearClosure: (@MainActor @Sendable () -> Void)?
-    var viewDidDisappearClosure: (@MainActor @Sendable () -> Void)?
+    var viewWillAppearClosure: (() -> Void)?
+    var viewDidAppearClosure: (() -> Void)?
+    var viewWillDisappearClosure: (() -> Void)?
+    var viewDidDisappearClosure: (() -> Void)?
     override var shouldAutomaticallyForwardAppearanceMethods: Bool { false }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -1059,7 +1059,7 @@ extension PagingView: PagingListContainerViewDelegate {
 
 open class PagingListRefreshView: PagingView {
     // listScrollView悬停时可下拉的contentInset，用于实现悬停时子页面下拉刷新效果
-    public var listScrollViewPinContentInsetBlock: (@MainActor @Sendable (UIScrollView) -> CGFloat)?
+    public var listScrollViewPinContentInsetBlock: ((UIScrollView) -> CGFloat)?
 
     private var lastScrollingListViewContentOffsetY: CGFloat = 0
 
