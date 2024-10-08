@@ -47,89 +47,89 @@ import UIKit
 
 // MARK: - TableViewDelegate
 /// 常用表格视图数据源和事件代理，可继承
-open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
+@MainActor open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
-    open var numberOfSections: (@MainActor @Sendable () -> Int)?
+    open var numberOfSections: (() -> Int)?
     /// 表格section数，默认1，优先级低
     open var sectionCount: Int = 1
     /// 表格row数句柄
-    open var numberOfRows: (@MainActor @Sendable (Int) -> Int)?
+    open var numberOfRows: ((Int) -> Int)?
     /// 表格row数，优先级低
     open var rowCount: Int = 0
 
     /// 表格section头视图句柄，高度未指定时automaticDimension，默认nil
-    open var viewForHeader: (@MainActor @Sendable (UITableView, Int) -> UIView?)?
+    open var viewForHeader: ((UITableView, Int) -> UIView?)?
     /// 表格section头视图类句柄，搭配headerConfiguration使用，默认nil
-    open var viewClassForHeader: (@MainActor @Sendable (UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
+    open var viewClassForHeader: ((UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
     /// 表格section头视图类，搭配headerConfiguration使用，默认nil，优先级低
     open var headerViewClass: UITableViewHeaderFooterView.Type?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var headerConfiguration: (@MainActor @Sendable (UITableViewHeaderFooterView, Int) -> Void)?
+    open var headerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section头高度句柄，不指定时默认使用DynamicLayout自动计算并按section缓存
-    open var heightForHeader: (@MainActor @Sendable (UITableView, Int) -> CGFloat)?
+    open var heightForHeader: ((UITableView, Int) -> CGFloat)?
     /// 表格section头高度，默认nil，可设置为automaticDimension，优先级低
     open var headerHeight: CGFloat?
 
     /// 表格section尾视图句柄，高度未指定时automaticDimension，默认nil
-    open var viewForFooter: (@MainActor @Sendable (UITableView, Int) -> UIView?)?
+    open var viewForFooter: ((UITableView, Int) -> UIView?)?
     /// 表格section尾视图类句柄，搭配footerConfiguration使用，默认nil
-    open var viewClassForFooter: (@MainActor @Sendable (UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
+    open var viewClassForFooter: ((UITableView, Int) -> UITableViewHeaderFooterView.Type?)?
     /// 表格section尾视图，搭配footerConfiguration使用，默认nil，优先级低
     open var footerViewClass: UITableViewHeaderFooterView.Type?
     /// 表格section头视图配置句柄，参数为headerClass对象，默认为nil
-    open var footerConfiguration: (@MainActor @Sendable (UITableViewHeaderFooterView, Int) -> Void)?
+    open var footerConfiguration: ((UITableViewHeaderFooterView, Int) -> Void)?
     /// 表格section尾高度句柄，不指定时默认使用FWDynamicLayout自动计算并按section缓存
-    open var heightForFooter: (@MainActor @Sendable (UITableView, Int) -> CGFloat)?
+    open var heightForFooter: ((UITableView, Int) -> CGFloat)?
     /// 表格section尾高度，默认nil，可设置为automaticDimension，优先级低
     open var footerHeight: CGFloat?
 
     /// 表格cell视图句柄，高度未指定时automaticDimension，默认nil
-    open var cellForRow: (@MainActor @Sendable (UITableView, IndexPath) -> UITableViewCell?)?
+    open var cellForRow: ((UITableView, IndexPath) -> UITableViewCell?)?
     /// 表格cell视图类句柄，搭配cellConfiguation使用，默认nil
-    open var cellClassForRow: (@MainActor @Sendable (UITableView, IndexPath) -> UITableViewCell.Type?)?
+    open var cellClassForRow: ((UITableView, IndexPath) -> UITableViewCell.Type?)?
     /// 表格cell视图类，搭配cellConfiguation使用，默认nil时为UITableViewCell.Type，优先级低
     open var cellClass: UITableViewCell.Type?
     /// 表格cell配置句柄，参数为对应cellClass对象
-    open var cellConfiguation: (@MainActor @Sendable (UITableViewCell, IndexPath) -> Void)?
+    open var cellConfiguation: ((UITableViewCell, IndexPath) -> Void)?
     /// 表格cell高度句柄，不指定时默认使用FWDynamicLayout自动计算并按indexPath缓存
-    open var heightForRow: (@MainActor @Sendable (UITableView, IndexPath) -> CGFloat)?
+    open var heightForRow: ((UITableView, IndexPath) -> CGFloat)?
     /// 表格cell高度，默认nil，可设置为automaticDimension，优先级低
     open var rowHeight: CGFloat?
 
     /// 是否启用默认高度缓存，优先级低于cacheKey句柄，默认false
     open var heightCacheEnabled = false
     /// 表格cell自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForRow: (@MainActor @Sendable (IndexPath) -> AnyHashable?)?
+    open var cacheKeyForRow: ((IndexPath) -> AnyHashable?)?
     /// 表格section头自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForHeader: (@MainActor @Sendable (Int) -> AnyHashable?)?
+    open var cacheKeyForHeader: ((Int) -> AnyHashable?)?
     /// 表格section尾自定义高度缓存key句柄，默认nil，优先级高
-    open var cacheKeyForFooter: (@MainActor @Sendable (Int) -> AnyHashable?)?
+    open var cacheKeyForFooter: ((Int) -> AnyHashable?)?
 
     /// 表格选中事件，默认nil
-    open var didSelectRow: (@MainActor @Sendable (UITableView, IndexPath) -> Void)?
+    open var didSelectRow: ((UITableView, IndexPath) -> Void)?
     /// 表格删除标题句柄，不为空才能删除，默认nil不能删除
-    open var titleForDelete: (@MainActor @Sendable (IndexPath) -> String?)?
+    open var titleForDelete: ((IndexPath) -> String?)?
     /// 表格删除标题，不为空才能删除，默认nil不能删除，优先级低
     open var deleteTitle: String?
     /// 表格删除事件，默认nil
-    open var didDeleteRow: (@MainActor @Sendable (UITableView, IndexPath) -> Void)?
+    open var didDeleteRow: ((UITableView, IndexPath) -> Void)?
     /// 表格cell即将显示句柄，默认nil
-    open var willDisplayCell: (@MainActor @Sendable (UITableViewCell, IndexPath) -> Void)?
+    open var willDisplayCell: ((UITableViewCell, IndexPath) -> Void)?
     /// 表格cell即将停止显示，默认nil
-    open var didEndDisplayingCell: (@MainActor @Sendable (UITableViewCell, IndexPath) -> Void)?
+    open var didEndDisplayingCell: ((UITableViewCell, IndexPath) -> Void)?
 
     /// 表格滚动句柄，默认nil
-    open var didScroll: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didScroll: ((UIScrollView) -> Void)?
     /// 表格即将开始拖动句柄，默认nil
-    open var willBeginDragging: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var willBeginDragging: ((UIScrollView) -> Void)?
     /// 表格即将停止拖动句柄，默认nil
-    open var willEndDragging: (@MainActor @Sendable (UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
+    open var willEndDragging: ((UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> Void)?
     /// 表格已经停止拖动句柄，默认nil
-    open var didEndDragging: (@MainActor @Sendable (UIScrollView, Bool) -> Void)?
+    open var didEndDragging: ((UIScrollView, Bool) -> Void)?
     /// 表格已经停止减速句柄，默认nil
-    open var didEndDecelerating: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didEndDecelerating: ((UIScrollView) -> Void)?
     /// 表格已经停止滚动动画句柄，默认nil
-    open var didEndScrollingAnimation: (@MainActor @Sendable (UIScrollView) -> Void)?
+    open var didEndScrollingAnimation: ((UIScrollView) -> Void)?
 
     // MARK: - Lifecycle
     /// 初始化并绑定tableView
