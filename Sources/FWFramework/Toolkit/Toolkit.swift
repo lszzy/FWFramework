@@ -53,21 +53,21 @@ extension WrapperGlobal {
 // MARK: - Wrapper+UIApplication
 /// 注意Info.plist文件URL SCHEME配置项只影响canOpenUrl方法，不影响openUrl。微信返回app就是获取sourceUrl，直接openUrl实现。因为跳转微信的时候，来源app肯定已打开过，可以跳转，只要不检查canOpenUrl，就可以跳转回app。
 /// 为了防止系统启动图缓存，每次更换启动图时建议修改启动图名称(比如添加日期等)，防止刚更新App时新图不生效
-@MainActor extension Wrapper where Base: UIApplication {
+extension Wrapper where Base: UIApplication {
     /// 读取应用名称
-    public nonisolated static var appName: String {
+    public static var appName: String {
         let appName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
         return appName ?? ""
     }
 
     /// 读取应用显示名称，未配置时读取名称
-    public nonisolated static var appDisplayName: String {
+    public static var appDisplayName: String {
         let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         return displayName ?? appName
     }
 
     /// 读取应用主版本号，可自定义，示例：1.0.0
-    public nonisolated static var appVersion: String {
+    public static var appVersion: String {
         get {
             if let appVersion = ToolkitConfiguration.appVersion {
                 return appVersion
@@ -81,30 +81,30 @@ extension WrapperGlobal {
     }
 
     /// 读取应用构建版本号，示例：1.0.0.1
-    public nonisolated static var appBuildVersion: String {
+    public static var appBuildVersion: String {
         let buildVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
         return buildVersion ?? ""
     }
 
     /// 读取应用唯一标识
-    public nonisolated static var appIdentifier: String {
+    public static var appIdentifier: String {
         let appIdentifier = Bundle.main.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
         return appIdentifier ?? ""
     }
 
     /// 读取应用可执行程序名称
-    public nonisolated static var appExecutable: String {
+    public static var appExecutable: String {
         let appExecutable = Bundle.main.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
         return appExecutable ?? appIdentifier
     }
 
     /// 读取应用信息字典
-    public nonisolated static func appInfo(_ key: String) -> Any? {
+    public static func appInfo(_ key: String) -> Any? {
         Bundle.main.object(forInfoDictionaryKey: key)
     }
 
     /// 读取应用启动URL
-    public nonisolated static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey: Any]?) -> URL? {
+    public static func appLaunchURL(_ options: [UIApplication.LaunchOptionsKey: Any]?) -> URL? {
         if let url = options?[.url] as? URL {
             return url
         } else if let dict = options?[.userActivityDictionary] as? [AnyHashable: Any],
@@ -116,13 +116,13 @@ extension WrapperGlobal {
     }
 
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
-    public static func canOpenURL(_ url: URLParameter?) -> Bool {
+    @MainActor public static func canOpenURL(_ url: URLParameter?) -> Bool {
         guard let url = url?.urlValue else { return false }
         return UIApplication.shared.canOpenURL(url)
     }
 
     /// 打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App
-    public static func openURL(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openURL(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -131,7 +131,7 @@ extension WrapperGlobal {
     }
 
     /// 打开通用链接URL，支持NSString|NSURL，完成时回调。如果是iOS10+通用链接且安装了App，打开并回调YES，否则回调NO
-    public static func openUniversalLinks(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openUniversalLinks(_ url: URLParameter?, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         guard let url = url?.urlValue else {
             completionHandler?(false)
             return
@@ -140,7 +140,7 @@ extension WrapperGlobal {
     }
 
     /// 判断URL是否是系统链接(如AppStore|电话|设置等)，支持NSString|NSURL
-    public nonisolated static func isSystemURL(_ url: URLParameter?) -> Bool {
+    public static func isSystemURL(_ url: URLParameter?) -> Bool {
         guard let url = url?.urlValue else { return false }
         if let scheme = url.scheme?.lowercased(),
            ["tel", "telprompt", "sms", "mailto"].contains(scheme) {
@@ -165,7 +165,7 @@ extension WrapperGlobal {
     }
 
     /// 判断URL是否在指定Scheme链接数组中，不区分大小写
-    public nonisolated static func isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
+    public static func isSchemeURL(_ url: URLParameter?, schemes: [String]) -> Bool {
         guard let url = url?.urlValue,
               let urlScheme = url.scheme?.lowercased(),
               !urlScheme.isEmpty else { return false }
@@ -174,13 +174,13 @@ extension WrapperGlobal {
     }
 
     /// 判断URL是否HTTP链接，支持NSString|NSURL
-    public nonisolated static func isHttpURL(_ url: URLParameter?) -> Bool {
+    public static func isHttpURL(_ url: URLParameter?) -> Bool {
         let urlString = url?.urlValue.absoluteString ?? ""
         return urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://")
     }
 
     /// 判断URL是否是AppStore链接，支持NSString|NSURL
-    public nonisolated static func isAppStoreURL(_ url: URLParameter?) -> Bool {
+    public static func isAppStoreURL(_ url: URLParameter?) -> Bool {
         guard let url = url?.urlValue else { return false }
         // itms-apps等
         if let scheme = url.scheme, scheme.lowercased().hasPrefix("itms") {
@@ -193,28 +193,28 @@ extension WrapperGlobal {
     }
 
     /// 打开AppStore下载页
-    public static func openAppStore(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStore(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         // SKStoreProductViewController可以内部打开
         openURL("https://apps.apple.com/app/id\(appId)", completionHandler: completionHandler)
     }
 
     /// 打开AppStore评价页
-    public static func openAppStoreReview(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openAppStoreReview(_ appId: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("https://apps.apple.com/app/id\(appId)?action=write-review", completionHandler: completionHandler)
     }
 
     /// 打开应用内评价，有次数限制
-    public nonisolated static func openAppReview() {
+    @MainActor public static func openAppReview() {
         SKStoreReviewController.requestReview()
     }
 
     /// 打开系统应用设置页
-    public static func openAppSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openAppSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL(UIApplication.openSettingsURLString, completionHandler: completionHandler)
     }
 
     /// 打开系统应用通知设置页
-    public static func openAppNotificationSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openAppNotificationSettings(_ completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         if #available(iOS 16.0, *) {
             openURL(UIApplication.openNotificationSettingsURLString, completionHandler: completionHandler)
         } else if #available(iOS 15.4, *) {
@@ -225,22 +225,22 @@ extension WrapperGlobal {
     }
 
     /// 打开系统邮件App
-    public static func openMailApp(_ email: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMailApp(_ email: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("mailto:" + email, completionHandler: completionHandler)
     }
 
     /// 打开系统短信App
-    public static func openMessageApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openMessageApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("sms:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统电话App
-    public static func openPhoneApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
+    @MainActor public static func openPhoneApp(_ phone: String, completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         openURL("tel:" + phone, completionHandler: completionHandler)
     }
 
     /// 打开系统分享
-    public static func openActivityItems(
+    @MainActor public static func openActivityItems(
         _ activityItems: [Any],
         excludedTypes: [UIActivity.ActivityType]? = nil,
         completionHandler: UIActivityViewController.CompletionWithItemsHandler? = nil,
@@ -263,7 +263,7 @@ extension WrapperGlobal {
     }
 
     /// 打开内部浏览器，支持NSString|NSURL，点击完成时回调
-    public static func openSafariController(
+    @MainActor public static func openSafariController(
         _ url: URLParameter?,
         completionHandler: (@MainActor @Sendable () -> Void)? = nil,
         customBlock: (@MainActor (SFSafariViewController) -> Void)? = nil
@@ -279,7 +279,7 @@ extension WrapperGlobal {
     }
 
     /// 打开短信控制器，完成时回调
-    public static func openMessageController(
+    @MainActor public static func openMessageController(
         _ controller: MFMessageComposeViewController,
         completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
@@ -296,7 +296,7 @@ extension WrapperGlobal {
     }
 
     /// 打开邮件控制器，完成时回调
-    public static func openMailController(
+    @MainActor public static func openMailController(
         _ controller: MFMailComposeViewController,
         completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil
     ) {
@@ -313,7 +313,7 @@ extension WrapperGlobal {
     }
 
     /// 打开Store控制器，完成时回调
-    public static func openStoreController(
+    @MainActor public static func openStoreController(
         _ parameters: [String: Any],
         completionHandler: (@MainActor @Sendable (Bool) -> Void)? = nil,
         customBlock: (@MainActor @Sendable (SKStoreProductViewController) -> Void)? = nil
@@ -333,7 +333,7 @@ extension WrapperGlobal {
     }
 
     /// 打开视频播放器，支持AVPlayerItem|NSURL|NSString
-    public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
+    @MainActor public static func openVideoPlayer(_ url: Any?) -> AVPlayerViewController? {
         var player: AVPlayer?
         if let playerItem = url as? AVPlayerItem {
             player = AVPlayer(playerItem: playerItem)
@@ -350,7 +350,7 @@ extension WrapperGlobal {
     }
 
     /// 打开音频播放器，支持NSURL|NSString
-    public nonisolated static func openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
+    public static func openAudioPlayer(_ url: URLParameter?) -> AVAudioPlayer? {
         // 设置播放模式示例: ambient不支持后台，playback支持后台和混音(需配置后台audio模式)
         // try? AVAudioSession.sharedInstance().setCategory(.ambient)
         // try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
@@ -376,7 +376,7 @@ extension WrapperGlobal {
 
     /// 播放内置声音文件，完成后回调
     @discardableResult
-    public nonisolated static func playSystemSound(_ file: String, completionHandler: (@Sendable () -> Void)? = nil) -> SystemSoundID {
+    public static func playSystemSound(_ file: String, completionHandler: (@Sendable () -> Void)? = nil) -> SystemSoundID {
         guard !file.isEmpty else { return 0 }
 
         var soundFile = file
@@ -396,7 +396,7 @@ extension WrapperGlobal {
     }
 
     /// 停止播放内置声音文件
-    public nonisolated static func stopSystemSound(_ soundId: SystemSoundID) {
+    public static func stopSystemSound(_ soundId: SystemSoundID) {
         if soundId == 0 { return }
 
         AudioServicesRemoveSystemSoundCompletion(soundId)
@@ -404,18 +404,18 @@ extension WrapperGlobal {
     }
 
     /// 播放内置震动，完成后回调
-    public nonisolated static func playSystemVibrate(_ completionHandler: (@Sendable () -> Void)? = nil) {
+    public static func playSystemVibrate(_ completionHandler: (@Sendable () -> Void)? = nil) {
         AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, completionHandler)
     }
 
     /// 播放触控反馈
-    public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
         feedbackGenerator.impactOccurred()
     }
 
     /// 语音朗读文字，可指定语言(如zh-CN)
-    public nonisolated static func playSpeechUtterance(_ string: String, language: String?) {
+    public static func playSpeechUtterance(_ string: String, language: String?) {
         let speechUtterance = AVSpeechUtterance(string: string)
         speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
         speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
@@ -424,7 +424,7 @@ extension WrapperGlobal {
     }
 
     /// 是否是盗版(不是从AppStore安装)
-    public nonisolated static var isPirated: Bool {
+    public static var isPirated: Bool {
         #if targetEnvironment(simulator)
         return true
         #else
@@ -452,17 +452,17 @@ extension WrapperGlobal {
     }
 
     /// 是否是Testflight版本(非AppStore)
-    public nonisolated static var isTestflight: Bool {
+    public static var isTestflight: Bool {
         inferredEnvironment == 1
     }
 
     /// 是否是AppStore版本
-    public nonisolated static var isAppStore: Bool {
+    public static var isAppStore: Bool {
         inferredEnvironment == 2
     }
 
     /// 推测的运行环境，0=>Debug, 1=>Testflight, 2=>AppStore
-    private nonisolated static var inferredEnvironment: Int {
+    private static var inferredEnvironment: Int {
         #if DEBUG
         return 0
 
@@ -487,7 +487,7 @@ extension WrapperGlobal {
     }
 
     /// 开始后台任务，task必须调用completionHandler
-    public static func beginBackgroundTask(
+    @MainActor public static func beginBackgroundTask(
         _ task: (@escaping @Sendable () -> Void) -> Void,
         name: String? = nil,
         expirationHandler: (@MainActor @Sendable () -> Void)? = nil
