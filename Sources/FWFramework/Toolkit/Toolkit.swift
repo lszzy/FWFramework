@@ -204,7 +204,7 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 打开应用内评价，有次数限制
-    public static func openAppReview() {
+    @MainActor public static func openAppReview() {
         SKStoreReviewController.requestReview()
     }
 
@@ -1852,9 +1852,9 @@ extension Wrapper where Base: UIImage {
 }
 
 // MARK: - Wrapper+UIViewController
-extension Wrapper where Base: UIViewController {
+@MainActor extension Wrapper where Base: UIViewController {
     /// 当前生命周期状态，需实现ViewControllerLifecycleObservable或手动添加监听后才有值，默认nil
-    public var lifecycleState: ViewControllerLifecycleState? {
+    public nonisolated var lifecycleState: ViewControllerLifecycleState? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.state
@@ -1867,7 +1867,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 添加生命周期变化监听句柄(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
-    public func observeLifecycleState(_ block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
+    public nonisolated func observeLifecycleState(_ block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState) -> Void) -> NSObjectProtocol {
         let target = LifecycleStateHandler()
         target.object = nil
         target.block = { viewController, state, _ in
@@ -1879,7 +1879,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 添加生命周期变化监听句柄，并携带自定义参数(注意deinit不能访问runtime关联属性)，返回监听者observer
     @discardableResult
-    public func observeLifecycleState<T>(object: T, block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol where T: Sendable {
+    public nonisolated func observeLifecycleState<T>(object: T, block: @escaping @MainActor @Sendable (Base, ViewControllerLifecycleState, T) -> Void) -> NSObjectProtocol where T: Sendable {
         let target = LifecycleStateHandler()
         target.object = object
         target.block = { viewController, state, object in
@@ -1891,7 +1891,7 @@ extension Wrapper where Base: UIViewController {
 
     /// 移除生命周期监听者，传nil时移除所有
     @discardableResult
-    public func unobserveLifecycleState(observer: Any? = nil) -> Bool {
+    public nonisolated func unobserveLifecycleState(observer: Any? = nil) -> Bool {
         guard issetLifecycleStateTarget else { return false }
 
         if let observer = observer as? LifecycleStateHandler {
@@ -1905,7 +1905,7 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义完成结果对象，默认nil
-    public var completionResult: Sendable? {
+    public nonisolated var completionResult: Sendable? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.completionResult
@@ -1916,21 +1916,25 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义完成句柄，默认nil，dealloc时自动调用，参数为completionResult。支持提前调用，调用后需置为nil
-    public var completionHandler: (@MainActor @Sendable (Sendable?) -> Void)? {
+    public var completionHandler: ((Sendable?) -> Void)? {
         get {
             guard issetLifecycleStateTarget else { return nil }
             return lifecycleStateTarget.completionHandler
         }
         set {
-            lifecycleStateTarget.completionHandler = newValue
+            if let handler = newValue {
+                lifecycleStateTarget.completionHandler = { handler($0) }
+            } else {
+                lifecycleStateTarget.completionHandler = nil
+            }
         }
     }
 
-    private var issetLifecycleStateTarget: Bool {
+    private nonisolated var issetLifecycleStateTarget: Bool {
         property(forName: "lifecycleStateTarget") != nil
     }
 
-    private var lifecycleStateTarget: LifecycleStateTarget {
+    private nonisolated var lifecycleStateTarget: LifecycleStateTarget {
         if let target = property(forName: "lifecycleStateTarget") as? LifecycleStateTarget {
             return target
         }
@@ -1942,14 +1946,14 @@ extension Wrapper where Base: UIViewController {
     }
 
     /// 自定义侧滑返回手势VC开关句柄，enablePopProxy启用后生效，仅处理边缘返回手势，优先级低，默认nil
-    @MainActor public var allowsPopGesture: (@MainActor @Sendable () -> Bool)? {
-        get { property(forName: "allowsPopGesture") as? @MainActor @Sendable () -> Bool }
+    public var allowsPopGesture: (() -> Bool)? {
+        get { property(forName: "allowsPopGesture") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "allowsPopGesture") }
     }
 
     /// 自定义控制器返回VC开关句柄，enablePopProxy启用后生效，统一处理返回按钮点击和边缘返回手势，优先级高，默认nil
-    @MainActor public var shouldPopController: (@MainActor @Sendable () -> Bool)? {
-        get { property(forName: "shouldPopController") as? @MainActor @Sendable () -> Bool }
+    public var shouldPopController: (() -> Bool)? {
+        get { property(forName: "shouldPopController") as? () -> Bool }
         set { setPropertyCopy(newValue, forName: "shouldPopController") }
     }
 }
@@ -2320,7 +2324,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(nibName:bundle:)),
             methodSignature: (@convention(c) (UIViewController, Selector, String?, Bundle?) -> UIViewController).self,
-            swizzleSignature: (@convention(block) (UIViewController, String?, Bundle?) -> UIViewController).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, String?, Bundle?) -> UIViewController).self
         ) { store in { selfObject, nibNameOrNil, nibBundleOrNil in
             let viewController = store.original(selfObject, store.selector, nibNameOrNil, nibBundleOrNil)
 
@@ -2335,7 +2339,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.init(coder:)),
             methodSignature: (@convention(c) (UIViewController, Selector, NSCoder) -> UIViewController?).self,
-            swizzleSignature: (@convention(block) (UIViewController, NSCoder) -> UIViewController?).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, NSCoder) -> UIViewController?).self
         ) { store in { selfObject, coder in
             guard let viewController = store.original(selfObject, store.selector, coder) else { return nil }
 
@@ -2350,7 +2354,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidLoad),
             methodSignature: (@convention(c) (UIViewController, Selector) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController) -> Void).self
         ) { store in { selfObject in
             store.original(selfObject, store.selector)
 
@@ -2364,7 +2368,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2378,7 +2382,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: NSSelectorFromString("viewIsAppearing:"),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2392,7 +2396,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidAppear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2406,7 +2410,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewWillDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 
@@ -2420,7 +2424,7 @@ extension FrameworkAutoloader {
             UIViewController.self,
             selector: #selector(UIViewController.viewDidDisappear(_:)),
             methodSignature: (@convention(c) (UIViewController, Selector, Bool) -> Void).self,
-            swizzleSignature: (@convention(block) (UIViewController, Bool) -> Void).self
+            swizzleSignature: (@convention(block) @MainActor (UIViewController, Bool) -> Void).self
         ) { store in { selfObject, animated in
             store.original(selfObject, store.selector, animated)
 

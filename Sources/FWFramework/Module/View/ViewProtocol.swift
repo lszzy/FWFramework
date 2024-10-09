@@ -69,8 +69,8 @@ extension EventViewProtocol where Self: UIView {
     }
 
     /// 事件已触发句柄，同eventDelegate.eventTriggered方法，句柄方式
-    public var eventTriggered: (@MainActor @Sendable (Notification) -> Void)? {
-        get { fw.property(forName: "eventTriggered") as? @MainActor @Sendable (Notification) -> Void }
+    public var eventTriggered: ((Notification) -> Void)? {
+        get { fw.property(forName: "eventTriggered") as? (Notification) -> Void }
         set { fw.setPropertyCopy(newValue, forName: "eventTriggered") }
     }
 

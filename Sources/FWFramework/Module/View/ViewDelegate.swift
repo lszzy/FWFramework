@@ -85,7 +85,7 @@ import UIKit
 
 // MARK: - ScrollViewDelegate
 /// 常用滚动视图事件代理，可继承
-open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollViewDelegate {
+@MainActor open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollViewDelegate {
     /// 滚动句柄，默认nil
     open var didScroll: ((UIScrollView) -> Void)?
     /// 即将开始拖动句柄，默认nil
@@ -158,7 +158,7 @@ open class ScrollViewDelegate: DelegateProxy<UIScrollViewDelegate>, UIScrollView
 
 // MARK: - TextFieldDelegate
 /// 常用TextField事件代理，可继承
-open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDelegate {
+@MainActor open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDelegate {
     /// 是否应该开始编辑，默认nil
     open var shouldBeginEditing: ((UITextField) -> Bool)?
     /// 已开始编辑，默认nil
@@ -251,7 +251,7 @@ open class TextFieldDelegate: DelegateProxy<UITextFieldDelegate>, UITextFieldDel
 
 // MARK: - TextViewDelegate
 /// 常用TextView事件代理，可继承
-open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
+@MainActor open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelegate {
     /// 是否应该开始编辑，默认nil
     open var shouldBeginEditing: ((UITextView) -> Bool)?
     /// 已开始编辑，默认nil
@@ -326,7 +326,7 @@ open class TextViewDelegate: DelegateProxy<UITextViewDelegate>, UITextViewDelega
 
 // MARK: - SearchBarDelegate
 /// 常用SearchBar事件代理，可继承
-open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDelegate {
+@MainActor open class SearchBarDelegate: DelegateProxy<UISearchBarDelegate>, UISearchBarDelegate {
     /// 是否应该开始编辑，默认nil
     open var shouldBeginEditing: ((UISearchBar) -> Bool)?
     /// 已开始编辑，默认nil

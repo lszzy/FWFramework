@@ -39,15 +39,15 @@ import UIKit
     }
 
     /// 配置创建tableView钩子句柄，默认nil
-    public static var tableViewConfiguration: (@MainActor @Sendable (Base) -> Void)? {
-        get { NSObject.fw.getAssociatedObject(Base.self, key: #function) as? @MainActor @Sendable (Base) -> Void }
+    public static var tableViewConfiguration: ((Base) -> Void)? {
+        get { NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (Base) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 }
 
 // MARK: - TableViewDelegate
 /// 常用表格视图数据源和事件代理，可继承
-open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
+@MainActor open class TableViewDelegate: DelegateProxy<UITableViewDelegate>, UITableViewDelegate, UITableViewDataSource {
     /// 表格section数
     open var numberOfSections: (() -> Int)?
     /// 表格section数，默认1，优先级低

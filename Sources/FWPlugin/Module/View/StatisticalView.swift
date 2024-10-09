@@ -26,8 +26,8 @@ import UIKit
     }
 
     /// 设置统计点击事件触发时自定义监听器，默认nil
-    public var statisticalClickListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalClickListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
+    public var statisticalClickListener: ((StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalClickListener") as? (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalClickListener") }
     }
 
@@ -66,8 +66,8 @@ import UIKit
     }
 
     /// 设置统计曝光事件触发时自定义监听器，默认nil
-    public var statisticalExposureListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalExposureListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
+    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalExposureListener") as? (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalExposureListener") }
     }
 
@@ -377,8 +377,8 @@ import UIKit
     }
 
     /// 设置统计曝光事件触发时自定义监听器，默认nil
-    public var statisticalExposureListener: (@MainActor @Sendable (StatisticalEvent) -> Void)? {
-        get { property(forName: "statisticalExposureListener") as? @MainActor @Sendable (StatisticalEvent) -> Void }
+    public var statisticalExposureListener: ((StatisticalEvent) -> Void)? {
+        get { property(forName: "statisticalExposureListener") as? (StatisticalEvent) -> Void }
         set { setPropertyCopy(newValue, forName: "statisticalExposureListener") }
     }
 
@@ -502,9 +502,9 @@ public class StatisticalManager: NSObject, @unchecked Sendable {
     /// 是否启用分析上报，默认false
     public var reportEnabled = false
     /// 设置全局事件过滤器
-    public var eventFilter: ((StatisticalEvent) -> Bool)?
+    public var eventFilter: (@MainActor @Sendable (StatisticalEvent) -> Bool)?
     /// 设置全局事件处理器
-    public var eventHandler: ((StatisticalEvent) -> Void)?
+    public var eventHandler: (@MainActor @Sendable (StatisticalEvent) -> Void)?
 
     /// 是否相同点击只触发一次，默认false，视图自定义后覆盖默认
     public var clickOnce = false
@@ -522,11 +522,11 @@ public class StatisticalManager: NSObject, @unchecked Sendable {
     /// 应用回到前台时是否重新计算曝光，默认true
     public var exposureBecomeActive = true
 
-    private var eventHandlers: [String: (StatisticalEvent) -> Void] = [:]
+    private var eventHandlers: [String: @MainActor @Sendable (StatisticalEvent) -> Void] = [:]
 
     // MARK: - Public
     /// 注册单个事件处理器
-    public func registerEvent(_ name: String, handler: @escaping (StatisticalEvent) -> Void) {
+    public func registerEvent(_ name: String, handler: @escaping @MainActor @Sendable (StatisticalEvent) -> Void) {
         eventHandlers[name] = handler
     }
 
@@ -770,11 +770,11 @@ public class StatisticalEvent: NSObject, NSCopying {
     /// 是否忽略事件触发，默认false
     public var triggerIgnored = false
     /// 曝光遮挡视图，被遮挡时不计曝光，参数为所在视图
-    public var shieldView: ((UIView) -> UIView?)?
+    public var shieldView: (@MainActor @Sendable (UIView) -> UIView?)?
     /// 自定义曝光句柄，参数为所在视图或控制器，用于自定义处理
-    public var exposureBlock: ((Any) -> Bool)?
+    public var exposureBlock: (@MainActor @Sendable (Any) -> Bool)?
     /// 格式化事件句柄，用于替换indexPath数据为cell数据，默认nil
-    public var eventFormatter: ((StatisticalEvent) -> StatisticalEvent)?
+    public var eventFormatter: (@MainActor @Sendable (StatisticalEvent) -> StatisticalEvent)?
 
     /// 事件来源视图，触发时自动赋值
     public fileprivate(set) weak var view: UIView?

@@ -43,21 +43,23 @@ class TestSocketController: UIViewController {
     private lazy var server: WebSocketServer = {
         let result = WebSocketServer()
         result.onEvent = { [weak self] event in
-            switch event {
-            case let .connected(connection, headers):
-                self?.serverLabel.text = "\(String(describing: connection)) is connected"
-            case let .disconnected(connection, reason, code):
-                self?.serverLabel.text = "\(String(describing: connection)) is disconnected"
-            case let .text(connection, string):
-                self?.serverLabel.text = "Received text: \(string)"
-                connection.write(data: string.replacingOccurrences(of: "request", with: "response").app.utf8Data!, opcode: .textFrame)
-            case let .binary(connection, data):
-                self?.serverLabel.text = "Received data: \(data.count)"
-                connection.write(data: data, opcode: .binaryFrame)
-            case .ping:
-                break
-            case .pong:
-                break
+            DispatchQueue.app.mainAsync { [weak self] in
+                switch event {
+                case let .connected(connection, headers):
+                    self?.serverLabel.text = "\(String(describing: connection)) is connected"
+                case let .disconnected(connection, reason, code):
+                    self?.serverLabel.text = "\(String(describing: connection)) is disconnected"
+                case let .text(connection, string):
+                    self?.serverLabel.text = "Received text: \(string)"
+                    connection.write(data: string.replacingOccurrences(of: "request", with: "response").app.utf8Data!, opcode: .textFrame)
+                case let .binary(connection, data):
+                    self?.serverLabel.text = "Received data: \(data.count)"
+                    connection.write(data: data, opcode: .binaryFrame)
+                case .ping:
+                    break
+                case .pong:
+                    break
+                }
             }
         }
         return result
@@ -68,29 +70,31 @@ class TestSocketController: UIViewController {
         request.timeoutInterval = 5
         let result = WebSocket(request: request)
         result.onEvent = { [weak self] event in
-            switch event {
-            case let .connected(headers):
-                self?.isConnected = true
-            case let .disconnected(reason, code):
-                self?.isConnected = false
-            case let .text(string):
-                self?.clientLabel.text = "Received text: \(string)"
-            case let .binary(data):
-                self?.clientLabel.text = "Received data: \(data.count)"
-            case .ping:
-                break
-            case .pong:
-                break
-            case .viabilityChanged:
-                break
-            case .reconnectSuggested:
-                break
-            case .cancelled:
-                self?.isConnected = false
-            case let .error(error):
-                self?.isConnected = false
-            case .peerClosed:
-                break
+            DispatchQueue.app.mainAsync { [weak self] in
+                switch event {
+                case let .connected(headers):
+                    self?.isConnected = true
+                case let .disconnected(reason, code):
+                    self?.isConnected = false
+                case let .text(string):
+                    self?.clientLabel.text = "Received text: \(string)"
+                case let .binary(data):
+                    self?.clientLabel.text = "Received data: \(data.count)"
+                case .ping:
+                    break
+                case .pong:
+                    break
+                case .viabilityChanged:
+                    break
+                case .reconnectSuggested:
+                    break
+                case .cancelled:
+                    self?.isConnected = false
+                case let .error(error):
+                    self?.isConnected = false
+                case .peerClosed:
+                    break
+                }
             }
         }
         return result

@@ -186,13 +186,17 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         if isInset {
             tableView.tableFooterView = nil
             // 使用scrollViewInsets占满底部
-            drawerView.scrollViewInsets = canScroll ? { _ in
-                [
-                    .zero,
-                    UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0),
-                    UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)
-                ]
-            } : nil
+            if canScroll {
+                drawerView.scrollViewInsets = { _ in
+                    [
+                        .zero,
+                        UIEdgeInsets(top: 0, left: 0, bottom: drawerView.middlePosition - drawerView.openPosition, right: 0),
+                        UIEdgeInsets(top: 0, left: 0, bottom: drawerView.closePosition - drawerView.openPosition, right: 0)
+                    ]
+                }
+            } else {
+                drawerView.scrollViewInsets = nil
+            }
         } else {
             drawerView.scrollViewInsets = nil
             tableView.contentInset = .zero

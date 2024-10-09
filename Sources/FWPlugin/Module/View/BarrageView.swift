@@ -578,7 +578,7 @@ open class BarrageDescriptor: NSObject {
     open var fixedSpeed: CGFloat = 0
 
     /// 新属性里回传了被点击的cell, 可以在代码块里更改被点击的cell的属性, 比如之前有用户需要在弹幕被点击的时候修改被点击的弹幕的文字颜色等等. 用来替代旧版本的touchAction
-    open var cellTouchedAction: ((BarrageDescriptor, BarrageCell) -> Void)?
+    open var cellTouchedAction: (@MainActor @Sendable (BarrageDescriptor, BarrageCell) -> Void)?
     /// 边框颜色
     open var borderColor: UIColor?
     /// 边框宽度

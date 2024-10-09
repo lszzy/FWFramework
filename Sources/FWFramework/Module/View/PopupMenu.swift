@@ -283,7 +283,7 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
     private let showAnimationKey = "showAnimation"
     private let dismissAnimationKey = "dismissAnimation"
 
-    open func displayShowAnimationCompletion(_ completion: (() -> Void)? = nil) {
+    open func displayShowAnimationCompletion(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         showAnimationHandler = completion
         guard let showAnimation else {
             showAnimationHandler?()
@@ -294,7 +294,7 @@ public enum PopupMenuAnimationStyle: Int, Sendable {
         animationView?.layer.add(showAnimation, forKey: showAnimationKey)
     }
 
-    open func displayDismissAnimationCompletion(_ completion: (() -> Void)? = nil) {
+    open func displayDismissAnimationCompletion(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         dismissAnimationHandler = completion
         guard let dismissAnimation else {
             dismissAnimationHandler?()
@@ -566,7 +566,14 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 在指定位置弹出，可指定容器视图
     @discardableResult
-    open class func show(in containerView: UIView? = nil, at point: CGPoint, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(
+        in containerView: UIView? = nil,
+        at point: CGPoint,
+        titles: [Any]?,
+        icons: [Any]? = nil,
+        menuWidth: CGFloat,
+        customize: (@MainActor (PopupMenu) -> Void)? = nil
+    ) -> PopupMenu {
         let popupMenu = PopupMenu()
         popupMenu.containerView = containerView
         popupMenu.point = point
@@ -580,7 +587,14 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 依赖指定view弹出，可指定容器视图
     @discardableResult
-    open class func show(in containerView: UIView? = nil, relyOn view: UIView?, titles: [Any]?, icons: [Any]? = nil, menuWidth: CGFloat, customize: ((PopupMenu) -> Void)? = nil) -> PopupMenu {
+    open class func show(
+        in containerView: UIView? = nil,
+        relyOn view: UIView?,
+        titles: [Any]?,
+        icons: [Any]? = nil,
+        menuWidth: CGFloat,
+        customize: (@MainActor (PopupMenu) -> Void)? = nil
+    ) -> PopupMenu {
         let popupMenu = PopupMenu()
         popupMenu.containerView = containerView
         popupMenu.relyView = view

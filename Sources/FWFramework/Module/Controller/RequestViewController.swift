@@ -11,7 +11,7 @@ import UIKit
 /// 通用请求视图控制器协议，可扩展重写
 @MainActor public protocol RequestViewControllerProtocol {
     /// 请求数据完成句柄，回调数据是否追加完成
-    typealias Completion = (_ request: HTTPRequestProtocol, _ finished: Bool) -> Void
+    typealias Completion = @MainActor @Sendable (_ request: HTTPRequestProtocol, _ finished: Bool) -> Void
 
     /// 自定义请求滚动视图，ViewControllerProtocol自动处理
     var requestScrollView: UIScrollView? { get }

@@ -96,6 +96,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
 
+    /// 扫描到结果时是否自动停止，停止后需调用startRunning才会继续扫描，默认false
+    open var stopWhenScanned = false
+
     /// 采样缓冲区代理
     open weak var sampleBufferDelegate: ScanCodeSampleBufferDelegate? {
         didSet {
@@ -104,14 +107,14 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
     }
 
     /// 扫描二维码回调句柄
-    open var scanResultBlock: ((String?) -> Void)? {
+    open var scanResultBlock: (@Sendable (String?) -> Void)? {
         didSet {
             setupMetadataOutput()
         }
     }
 
     /// 扫描二维码光线强弱回调句柄
-    open var scanBrightnessBlock: ((CGFloat) -> Void)? {
+    open var scanBrightnessBlock: (@Sendable (CGFloat) -> Void)? {
         didSet {
             setupVideoDataOutput()
         }
@@ -192,11 +195,13 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         }
     }
 
-    #if DEBUG
     deinit {
+        stopRunning()
+
+        #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "%@ deinit", NSStringFromClass(type(of: self)))
+        #endif
     }
-    #endif
 
     private func setupMetadataOutput() {
         guard !issetMetadataOutput else { return }
@@ -268,6 +273,9 @@ open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCapture
         let obj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject
         let resultString = obj?.stringValue
 
+        if stopWhenScanned {
+            stopRunning()
+        }
         delegate?.scanCode(self, result: resultString)
         scanResultBlock?(resultString)
     }

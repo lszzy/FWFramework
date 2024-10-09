@@ -20,10 +20,10 @@ public struct AttributedText: View {
     private var viewModel = ViewModel()
 
     private let attributedText: NSAttributedString
-    private let clickedOnLink: ((Any?) -> Void)?
+    private let clickedOnLink: (@MainActor @Sendable (Any?) -> Void)?
 
     // MARK: - Lifecycle
-    public init(_ attributedText: AttributedStringParameter, clickedOnLink: ((Any?) -> Void)? = nil) {
+    public init(_ attributedText: AttributedStringParameter, clickedOnLink: (@MainActor @Sendable (Any?) -> Void)? = nil) {
         self.attributedText = attributedText.attributedStringValue
         self.clickedOnLink = clickedOnLink
     }
@@ -85,7 +85,7 @@ extension AttributedText {
         var attributedText: NSAttributedString
         var maxLayoutWidth: CGFloat
         var viewModel: ViewModel
-        var clickedOnLink: ((Any?) -> Void)?
+        var clickedOnLink: (@MainActor @Sendable (Any?) -> Void)?
 
         // MARK: - UIViewRepresentable
         typealias UIViewType = ViewLabel
@@ -149,7 +149,7 @@ extension AttributedText {
             }
         }
 
-        var clickedOnLink: ((Any?) -> Void)? {
+        var clickedOnLink: (@MainActor @Sendable (Any?) -> Void)? {
             didSet {
                 linkGesture?.isEnabled = clickedOnLink != nil
             }

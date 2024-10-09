@@ -254,7 +254,7 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         imageURL: Any?,
         options: WebImageOptions,
         context: [ImageCoderOptions: Any]?,
-        placeholder: (() -> Void)?,
+        placeholder: (@MainActor @Sendable () -> Void)?,
         completion: (@MainActor @Sendable (UIImage?, Bool, Error?) -> Void)?,
         progress: (@MainActor @Sendable (Double) -> Void)?
     ) where T: Sendable {
@@ -267,8 +267,8 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
         setImageURL(urlRequest?.url, for: object)
 
         guard let urlRequest, urlRequest.url != nil else {
-            placeholder?()
             DispatchQueue.fw.mainAsync {
+                placeholder?()
                 completion?(nil, false, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
             }
             return
@@ -284,7 +284,9 @@ open class ImageDownloader: NSObject, @unchecked Sendable {
                 self?.setActiveImageDownloadReceipt(nil, for: object)
             }
         } else {
-            placeholder?()
+            DispatchQueue.fw.mainAsync {
+                placeholder?()
+            }
             let downloadID = UUID()
             let receipt = downloadImage(for: urlRequest, receiptID: downloadID, options: options, context: context, success: { [weak self] _, _, responseObject in
                 if self?.activeImageDownloadReceipt(for: object)?.receiptID == downloadID {

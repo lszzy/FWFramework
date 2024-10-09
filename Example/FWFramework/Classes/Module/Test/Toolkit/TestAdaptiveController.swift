@@ -232,10 +232,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
 
     @objc func onPresent() {
         let vc = TestAdaptiveController()
-        vc.app.presentationDidDismiss = { @MainActor @Sendable in
+        vc.app.presentationDidDismiss = {
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { @MainActor @Sendable _ in
+        vc.app.completionHandler = { _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
@@ -251,10 +251,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
 
     @objc func onPresent3() {
         let vc = TestAdaptiveController()
-        vc.app.presentationDidDismiss = { @MainActor @Sendable in
+        vc.app.presentationDidDismiss = {
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { @MainActor @Sendable _ in
+        vc.app.completionHandler = { _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         vc.hideToast = true
@@ -266,10 +266,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
         let vc = TestAdaptiveController()
         vc.hideToast = true
         let nav = UINavigationController(rootViewController: vc)
-        nav.app.presentationDidDismiss = { @MainActor @Sendable in
+        nav.app.presentationDidDismiss = {
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        nav.app.completionHandler = { @MainActor @Sendable _ in
+        nav.app.completionHandler = { _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         present(nav, animated: true)
@@ -290,10 +290,10 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             let cell = self?.tableView.cellForRow(at: indexPath)
             controller.passthroughViews = cell != nil ? [cell!] : []
         }, shouldDismiss: Bool.random())
-        vc.app.presentationDidDismiss = { @MainActor @Sendable in
+        vc.app.presentationDidDismiss = {
             UIWindow.app.showMessage(text: "presentationDidDismiss")
         }
-        vc.app.completionHandler = { @MainActor @Sendable _ in
+        vc.app.completionHandler = { _ in
             UIWindow.app.showMessage(text: "completionHandler")
         }
         present(vc, animated: true)

@@ -816,7 +816,7 @@ open class AlertController: UIViewController, UIViewControllerTransitioningDeleg
     }
 
     /// 添加文本输入框，一旦添加后就会仅回调一次configurationHandler
-    open func addTextField(configurationHandler: ((UITextField) -> Void)? = nil) {
+    open func addTextField(configurationHandler: (@MainActor @Sendable (UITextField) -> Void)? = nil) {
         assert(preferredStyle == .alert, "AlertController does not allow 'addTextFieldWithConfigurationHandler:' to be called in the style of AlertControllerStyleActionSheet")
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -1730,7 +1730,7 @@ public enum AlertActionStyle: Int, Sendable {
 }
 
 /// 弹窗动作
-public class AlertAction: NSObject {
+@MainActor public class AlertAction: NSObject {
     /// action的标题
     public var title: String? {
         didSet { propertyChangedBlock?(self, true) }
