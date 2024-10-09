@@ -1,6 +1,6 @@
 # 更新日志
 
-## [6.0.0-beta.3] - 2024-09-29
+## [6.0.0] - 2024-09-29
 
 ### Added
 * 兼容Swift 6，代码标记MainActor、Sendable、nonisolated等，轻松编写更安全的代码
