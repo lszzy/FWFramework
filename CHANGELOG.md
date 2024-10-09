@@ -1,6 +1,6 @@
 # Changelog
 
-## [6.0.0-beta.3] - 2024-09-29
+## [6.0.0] - 2024-09-29
 
 ### Added
 * Compatible with Swift 6, code marks MainActor, Sendable, nonisolated, etc., easy to write safer code
