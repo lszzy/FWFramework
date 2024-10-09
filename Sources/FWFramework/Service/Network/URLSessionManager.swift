@@ -51,22 +51,22 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open var completionQueue: DispatchQueue?
     open var completionGroup: DispatchGroup?
 
-    open var sessionDidBecomeInvalid: ((_ session: URLSession, _ error: Error?) -> Void)?
-    open var sessionDidReceiveAuthenticationChallenge: ((_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ credential: inout URLCredential?) -> URLSession.AuthChallengeDisposition)?
-    open var taskNeedNewBodyStream: ((_ session: URLSession, _ task: URLSessionTask) -> InputStream)?
-    open var taskWillPerformHTTPRedirection: ((_ session: URLSession, _ task: URLSessionTask, _ response: URLResponse, _ request: URLRequest) -> URLRequest?)?
-    open var authenticationChallengeHandler: ((_ session: URLSession, _ task: URLSessionTask, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Any?)?
-    open var taskDidSendBodyData: ((_ session: URLSession, _ task: URLSessionTask, _ bytesSent: Int64, _ totalBytesSent: Int64, _ totalBytesExpectedToSend: Int64) -> Void)?
-    open var taskDidComplete: ((_ session: URLSession, _ task: URLSessionTask, _ error: Error?) -> Void)?
-    open var taskDidFinishCollectingMetrics: ((_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
-    open var dataTaskDidReceiveResponse: ((_ session: URLSession, _ task: URLSessionDataTask, _ response: URLResponse) -> URLSession.ResponseDisposition)?
-    open var dataTaskDidBecomeDownloadTask: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ downloadTask: URLSessionDownloadTask) -> Void)?
-    open var dataTaskDidReceiveData: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ data: Data) -> Void)?
-    open var dataTaskWillCacheResponse: ((_ session: URLSession, _ dataTask: URLSessionDataTask, _ proposedResponse: CachedURLResponse) -> CachedURLResponse)?
+    open var sessionDidBecomeInvalid: (@Sendable (_ session: URLSession, _ error: Error?) -> Void)?
+    open var sessionDidReceiveAuthenticationChallenge: (@Sendable (_ session: URLSession, _ challenge: URLAuthenticationChallenge, _ credential: inout URLCredential?) -> URLSession.AuthChallengeDisposition)?
+    open var taskNeedNewBodyStream: (@Sendable (_ session: URLSession, _ task: URLSessionTask) -> InputStream)?
+    open var taskWillPerformHTTPRedirection: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ response: URLResponse, _ request: URLRequest) -> URLRequest?)?
+    open var authenticationChallengeHandler: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ challenge: URLAuthenticationChallenge, _ completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Any?)?
+    open var taskDidSendBodyData: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ bytesSent: Int64, _ totalBytesSent: Int64, _ totalBytesExpectedToSend: Int64) -> Void)?
+    open var taskDidComplete: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ error: Error?) -> Void)?
+    open var taskDidFinishCollectingMetrics: (@Sendable (_ session: URLSession, _ task: URLSessionTask, _ metrics: URLSessionTaskMetrics?) -> Void)?
+    open var dataTaskDidReceiveResponse: (@Sendable (_ session: URLSession, _ task: URLSessionDataTask, _ response: URLResponse) -> URLSession.ResponseDisposition)?
+    open var dataTaskDidBecomeDownloadTask: (@Sendable (_ session: URLSession, _ dataTask: URLSessionDataTask, _ downloadTask: URLSessionDownloadTask) -> Void)?
+    open var dataTaskDidReceiveData: (@Sendable (_ session: URLSession, _ dataTask: URLSessionDataTask, _ data: Data) -> Void)?
+    open var dataTaskWillCacheResponse: (@Sendable (_ session: URLSession, _ dataTask: URLSessionDataTask, _ proposedResponse: CachedURLResponse) -> CachedURLResponse)?
     open var didFinishEventsForBackgroundURLSession: (@Sendable (_ session: URLSession) -> Void)?
-    open var downloadTaskDidFinishDownloading: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
-    open var downloadTaskDidWriteData: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?
-    open var downloadTaskDidResume: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ fileOffset: Int64, _ expectedTotalBytes: Int64) -> Void)?
+    open var downloadTaskDidFinishDownloading: (@Sendable (_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
+    open var downloadTaskDidWriteData: (@Sendable (_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?
+    open var downloadTaskDidResume: (@Sendable (_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ fileOffset: Int64, _ expectedTotalBytes: Int64) -> Void)?
 
     private var sessionConfiguration: URLSessionConfiguration
     private var mutableTaskDelegates: [Int: URLSessionManagerTaskDelegate] = [:]
@@ -122,9 +122,9 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     open func dataTask(
         request: URLRequest,
-        uploadProgress: ((Progress) -> Void)? = nil,
-        downloadProgress: ((Progress) -> Void)? = nil,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        uploadProgress: (@Sendable (Progress) -> Void)? = nil,
+        downloadProgress: (@Sendable (Progress) -> Void)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDataTask {
         let dataTask = session.dataTask(with: request)
         addDelegate(for: dataTask, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: completionHandler)
@@ -134,8 +134,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open func uploadTask(
         request: URLRequest,
         fromFile fileURL: URL,
-        progress: ((Progress) -> Void)? = nil,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(with: request, fromFile: fileURL)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -145,8 +145,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open func uploadTask(
         request: URLRequest,
         fromData bodyData: Data,
-        progress: ((Progress) -> Void)? = nil,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(with: request, from: bodyData)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -155,8 +155,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     open func uploadTask(
         streamedRequest: URLRequest,
-        progress: ((Progress) -> Void)? = nil,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(withStreamedRequest: streamedRequest)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -165,9 +165,9 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     open func downloadTask(
         request: URLRequest,
-        progress: ((Progress) -> Void)? = nil,
-        destination: ((_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
-        completionHandler: ((_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDownloadTask {
         let downloadTask = session.downloadTask(with: request)
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
@@ -176,9 +176,9 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     open func downloadTask(
         resumeData: Data,
-        progress: ((Progress) -> Void)? = nil,
-        destination: ((_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
-        completionHandler: ((_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
+        progress: (@Sendable (Progress) -> Void)? = nil,
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDownloadTask {
         let downloadTask = session.downloadTask(withResumeData: resumeData)
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
@@ -236,9 +236,9 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     private func addDelegate(
         for dataTask: URLSessionDataTask,
-        uploadProgress: ((Progress) -> Void)?,
-        downloadProgress: ((Progress) -> Void)?,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+        uploadProgress: (@Sendable (Progress) -> Void)?,
+        downloadProgress: (@Sendable (Progress) -> Void)?,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: dataTask)
         delegate.manager = self
@@ -253,8 +253,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     private func addDelegate(
         for uploadTask: URLSessionUploadTask,
-        progress: ((Progress) -> Void)?,
-        completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+        progress: (@Sendable (Progress) -> Void)?,
+        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: uploadTask)
         delegate.manager = self
@@ -268,13 +268,13 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
     private func addDelegate(
         for downloadTask: URLSessionDownloadTask,
-        progress: ((Progress) -> Void)?,
-        destination: ((_ targetPath: URL, _ response: URLResponse) -> URL)?,
-        completionHandler: ((_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)?
+        progress: (@Sendable (Progress) -> Void)?,
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)?,
+        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: downloadTask)
         delegate.manager = self
-        delegate.completionHandler = completionHandler != nil ? { response, responseObject, error in
+        delegate.completionHandler = completionHandler != nil ? { @Sendable response, responseObject, error in
             completionHandler?(response, responseObject as? URL, error)
         } : nil
 
@@ -335,7 +335,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         NotificationCenter.default.post(name: Self.urlSessionDidInvalidateNotification, object: session)
     }
 
-    open func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    open func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         assert(sessionDidReceiveAuthenticationChallenge != nil, "`respondsToSelector:` implementation forces `URLSession:didReceiveChallenge:completionHandler:` to be called only if `self.sessionDidReceiveAuthenticationChallenge` is not nil")
 
         var credential: URLCredential?
@@ -344,7 +344,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     }
 
     // MARK: - URLSessionTaskDelegate
-    open func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+    open func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
         var redirectRequest: URLRequest? = request
         if taskWillPerformHTTPRedirection != nil {
             redirectRequest = taskWillPerformHTTPRedirection?(session, task, response, request)
@@ -352,7 +352,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         completionHandler(redirectRequest)
     }
 
-    open func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    open func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         var evaluateServerTrust = false
         var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
         var credential: URLCredential?
@@ -412,7 +412,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         return NSError(domain: NSURLErrorDomain, code: NSURLErrorServerCertificateUntrusted, userInfo: userInfo)
     }
 
-    open func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
+    open func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping @Sendable (InputStream?) -> Void) {
         var inputStream: InputStream?
 
         if taskNeedNewBodyStream != nil {
@@ -458,7 +458,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     }
 
     // MARK: - URLSessionDataDelegate
-    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping @Sendable (URLSession.ResponseDisposition) -> Void) {
         var disposition: URLSession.ResponseDisposition = .allow
         if dataTaskDidReceiveResponse != nil {
             disposition = dataTaskDidReceiveResponse!(session, dataTask, response)
@@ -483,7 +483,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         dataTaskDidReceiveData?(session, dataTask, data)
     }
 
-    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
+    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping @Sendable (CachedURLResponse?) -> Void) {
         var cachedResponse = proposedResponse
         if dataTaskWillCacheResponse != nil {
             cachedResponse = dataTaskWillCacheResponse!(session, dataTask, proposedResponse)
@@ -568,10 +568,10 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
     var downloadProgress = Progress(parent: nil, userInfo: nil)
     var downloadFileURL: URL?
     private var sessionTaskMetrics: URLSessionTaskMetrics?
-    var downloadTaskDidFinishDownloading: ((_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
-    var uploadProgressBlock: ((Progress) -> Void)?
-    var downloadProgressBlock: ((Progress) -> Void)?
-    var completionHandler: ((_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+    var downloadTaskDidFinishDownloading: (@Sendable (_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
+    var uploadProgressBlock: (@Sendable (Progress) -> Void)?
+    var downloadProgressBlock: (@Sendable (Progress) -> Void)?
+    var completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
 
     init(task: URLSessionTask) {
         super.init()

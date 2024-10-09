@@ -28,7 +28,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     /// 队列请求完成句柄
     public typealias Completion = @MainActor @Sendable (ChainRequest) -> Void
     /// 回调处理句柄声明
-    public typealias CallbackHandler = (ChainRequest, HTTPRequest) -> Void
+    public typealias CallbackHandler = @Sendable (ChainRequest, HTTPRequest) -> Void
 
     // MARK: - Accessor
     /// 当前请求数组
@@ -69,7 +69,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     /// 某个请求成功时，是否立即停止队列请求，默认false
     open var stoppedOnSuccess = false
     /// 请求构建句柄，所有请求完成后才会主线程调用
-    open var requestBuilder: ((_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
+    open var requestBuilder: (@Sendable (_ chainRequest: ChainRequest, _ previousRequest: HTTPRequest?) -> HTTPRequest?)?
 
     private var requestCallbackArray: [CallbackHandler] = []
     private var nextRequestIndex: Int = 0

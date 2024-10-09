@@ -103,7 +103,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     open private(set) var error: Error?
 
     /// 定位改变block方式回调，可通过error判断是否定位成功
-    open var locationChanged: ((LocationManager) -> Void)?
+    open var locationChanged: (@Sendable (LocationManager) -> Void)?
 
     private var isCompleted: Bool = false
 

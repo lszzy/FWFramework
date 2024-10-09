@@ -188,7 +188,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示通用控制器插件，自动切换
     public func showPlugin(
         _ isShowing: Binding<Bool>,
-        customize: @escaping (UIViewController) -> Void,
+        customize: @escaping @MainActor @Sendable (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         then(isShowing.wrappedValue) { view in
@@ -202,7 +202,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示控制器弹窗插件，自动切换
     public func showAlert(
         _ isShowing: Binding<Bool>,
-        customize: @escaping (UIViewController) -> Void,
+        customize: @escaping @MainActor @Sendable (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         showPlugin(isShowing, customize: customize, viewContext: viewContext)
@@ -211,7 +211,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示控制器消息吐司插件，自动切换
     public func showToast(
         _ isShowing: Binding<Bool>,
-        customize: @escaping (UIViewController) -> Void,
+        customize: @escaping @MainActor @Sendable (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         showPlugin(isShowing, customize: customize, viewContext: viewContext)
@@ -220,7 +220,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示控制器空界面插件，需手工切换
     public func showEmpty(
         _ isShowing: Bool,
-        customize: ((UIViewController) -> Void)? = nil,
+        customize: (@MainActor @Sendable (UIViewController) -> Void)? = nil,
         viewContext: ViewContext? = nil
     ) -> some View {
         viewControllerConfigure({ viewController in
@@ -241,7 +241,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示控制器加载吐司插件，需手工切换
     public func showLoading(
         _ isShowing: Bool,
-        customize: ((UIViewController) -> Void)? = nil,
+        customize: (@MainActor @Sendable (UIViewController) -> Void)? = nil,
         viewContext: ViewContext? = nil
     ) -> some View {
         viewControllerConfigure({ viewController in
@@ -262,7 +262,7 @@ public struct EmptyPluginView: UIViewRepresentable {
     /// 显示控制器进度吐司插件，需手工切换
     public func showProgress(
         _ isShowing: Bool,
-        customize: @escaping (UIViewController) -> Void,
+        customize: @escaping @MainActor @Sendable (UIViewController) -> Void,
         viewContext: ViewContext? = nil
     ) -> some View {
         viewControllerConfigure({ viewController in

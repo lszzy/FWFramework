@@ -45,18 +45,18 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     private actor Configuration {
-        static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)?
-        static var trackExposureBlock: (@MainActor (UIView) -> Void)?
+        static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
+        static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
     }
 
     // MARK: - Track
     // 框架内部统计点击和曝光扩展钩子句柄
-    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor (UIView, IndexPath?) -> Bool)? {
+    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)? {
         get { Configuration.trackClickBlock }
         set { Configuration.trackClickBlock = newValue }
     }
 
-    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor (UIView) -> Void)? {
+    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)? {
         get { Configuration.trackExposureBlock }
         set { Configuration.trackExposureBlock = newValue }
     }

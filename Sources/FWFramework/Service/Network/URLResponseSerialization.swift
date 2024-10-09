@@ -166,7 +166,7 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
     actor Configuration {
-        static var imageDecodeBlock: ((_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
+        static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
         fileprivate static var imageLock = NSLock()
     }
 

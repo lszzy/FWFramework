@@ -104,7 +104,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
 
     static func toggleReuse(enabled: Bool) {
         if enabled {
-            WebView.app.reuseConfigurationBlock = { @MainActor @Sendable configuration, _ in
+            WebView.app.reuseConfigurationBlock = { configuration, _ in
                 configuration.allowsInlineMediaPlayback = true
             }
             WebView.reusePreloadUrlBlock = { _ in

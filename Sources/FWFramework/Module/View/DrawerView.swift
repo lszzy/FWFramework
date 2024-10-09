@@ -34,7 +34,7 @@ import UIKit
         _ direction: UISwipeGestureRecognizer.Direction,
         positions: [CGFloat],
         kickbackHeight: CGFloat,
-        positionChanged: ((CGFloat, Bool) -> Void)? = nil
+        positionChanged: (@MainActor @Sendable (CGFloat, Bool) -> Void)? = nil
     ) -> DrawerView {
         let drawerView = DrawerView(view: base)
         if direction.rawValue > 0 {
@@ -85,7 +85,7 @@ import UIKit
 }
 
 /// 抽屉拖拽视图
-open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate {
+@MainActor open class DrawerView: NSObject, UIGestureRecognizerDelegate, UIScrollViewDelegate {
     /// 事件代理，默认nil
     open weak var delegate: DrawerViewDelegate?
 

@@ -10,6 +10,7 @@ import FWFramework
 
 class TestQrcodeController: UIViewController, ViewControllerProtocol {
     private let scanCode = ScanCode()
+    private var currentZoomFactor: CGFloat = 1.0
 
     private lazy var scanView: ScanView = {
         let configuration = ScanViewConfiguration()
@@ -32,14 +33,15 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         return result
     }()
 
-    private var currentZoomFactor: CGFloat = 1.0
-
     private lazy var flashlightBtn: UIButton = {
         let result = UIButton(type: .custom)
+        result.isHidden = true
         result.frame = CGRect(x: (APP.screenWidth - 30) / 2, y: scanView.scanFrame.maxY + 30, width: 30, height: 30)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightOpen"), for: .normal)
         result.setBackgroundImage(ModuleBundle.imageNamed("qrcodeFlashlightClose"), for: .selected)
-        result.addTarget(self, action: #selector(toggleFlashlightBtn(_:)), for: .touchUpInside)
+        result.app.addTouch { [weak self] _ in
+            self?.toggleFlashlightBtn()
+        }
         return result
     }()
 
@@ -76,6 +78,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.backgroundColor = .black
         view.addSubview(scanView)
+        view.addSubview(flashlightBtn)
     }
 
     override func viewDidLoad() {
@@ -93,28 +96,28 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         stopScanManager()
     }
 
-    deinit {
-        scanCode.stopRunning()
-        ScanCode.turnOffTorch()
-    }
-
     func setupScanManager() {
+        scanCode.stopWhenScanned = true
         scanCode.scanResultBlock = { [weak self] result in
             if result != nil, let sound = ModuleBundle.resourcePath("Qrcode.caf") {
                 ScanCode.playSoundEffect(sound)
             }
 
-            self?.stopScanManager()
-            self?.onScanResult(result)
+            DispatchQueue.app.mainAsync { [weak self] in
+                self?.stopScanManager()
+                self?.onScanResult(result)
+            }
         }
         scanCode.scanBrightnessBlock = { [weak self] brightness in
-            guard let self else { return }
-
             if brightness < -1 {
-                view.addSubview(flashlightBtn)
+                DispatchQueue.app.mainAsync { [weak self] in
+                    self?.flashlightBtn.isHidden = false
+                }
             } else {
                 if !ScanCode.isTorchActive() {
-                    removeFlashlightBtn()
+                    DispatchQueue.app.mainAsync { [weak self] in
+                        self?.removeFlashlightBtn()
+                    }
                 }
             }
         }
@@ -132,9 +135,9 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         removeFlashlightBtn()
     }
 
-    @objc func toggleFlashlightBtn(_ button: UIButton) {
-        if !button.isSelected {
-            button.isSelected = true
+    func toggleFlashlightBtn() {
+        if !flashlightBtn.isSelected {
+            flashlightBtn.isSelected = true
 
             ScanCode.turnOnTorch()
         } else {
@@ -142,19 +145,19 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         }
     }
 
-    @objc func removeFlashlightBtn() {
+    func removeFlashlightBtn() {
         ScanCode.turnOffTorch()
 
         flashlightBtn.isSelected = false
-        flashlightBtn.removeFromSuperview()
+        flashlightBtn.isHidden = true
     }
 
-    @objc func onPhotoLibrary(_ isBarcode: Bool = false) {
+    func onPhotoLibrary(_ isBarcode: Bool = false) {
         stopScanManager()
 
         app.showImagePicker(filterType: .image, selectionLimit: 1, allowsEditing: false) { [weak self] imagePicker in
             guard let imagePicker = imagePicker as? UIViewController else { return }
-            imagePicker.app.presentationDidDismiss = { @MainActor @Sendable in
+            imagePicker.app.presentationDidDismiss = {
                 self?.startScanManager()
             }
         } completion: { [weak self] objects, _, cancel in
@@ -180,7 +183,7 @@ class TestQrcodeController: UIViewController, ViewControllerProtocol {
         }
     }
 
-    @objc func onGenerateCode(_ isBarcode: Bool = false) {
+    func onGenerateCode(_ isBarcode: Bool = false) {
         stopScanManager()
 
         app.showPrompt(title: nil, message: "Please input code", cancel: nil, confirm: nil, promptBlock: nil) { [weak self] value in

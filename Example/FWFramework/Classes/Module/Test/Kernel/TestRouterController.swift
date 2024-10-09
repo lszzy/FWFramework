@@ -349,7 +349,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 
     func onOpenSafari() {
         UIApplication.app.openSafariController("http://kvm.wuyong.site/test.php") {
-            APP.debug("SafariController completionHandler")
+            UIWindow.app.showMessage(text: "SafariController已关闭")
         }
     }
 
@@ -361,7 +361,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         let vc = UIViewController()
         vc.title = "弹出框"
         vc.view.backgroundColor = AppTheme.backgroundColor
-        vc.app.completionHandler = { @MainActor @Sendable [weak self] result in
+        vc.app.completionHandler = { [weak self] result in
             let result = result != nil ? APP.safeString(result) : "deinit"
             self?.app.showMessage(text: "完成回调：\(result)")
         }
@@ -382,7 +382,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         let vc = TestRouterResultController()
         vc.navigationItem.title = "iOS14 bug"
         vc.context = Router.Context(url: "http://kvm.wuyong.site/test.php?key=value")
-        vc.app.shouldPopController = { @MainActor @Sendable [weak self] in
+        vc.app.shouldPopController = { [weak self] in
             TestRouterController.popCount += 1
             let index = TestRouterController.popCount % 3
             if index == 0 {

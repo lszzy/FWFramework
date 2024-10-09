@@ -42,16 +42,16 @@ extension ViewControllerProtocol where Self: UIViewController {
 // MARK: - ViewControllerIntercepter
 /// 视图控制器拦截器
 public class ViewControllerIntercepter: NSObject {
-    public var initIntercepter: (@MainActor (UIViewController) -> Void)?
-    public var viewDidLoadIntercepter: (@MainActor (UIViewController) -> Void)?
-    public var viewWillAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
-    public var viewIsAppearingIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
-    public var viewDidLayoutSubviewsIntercepter: (@MainActor (UIViewController) -> Void)?
-    public var viewDidAppearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
-    public var viewWillDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
-    public var viewDidDisappearIntercepter: (@MainActor (UIViewController, Bool) -> Void)?
+    public var initIntercepter: (@MainActor @Sendable (UIViewController) -> Void)?
+    public var viewDidLoadIntercepter: (@MainActor @Sendable (UIViewController) -> Void)?
+    public var viewWillAppearIntercepter: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
+    public var viewIsAppearingIntercepter: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
+    public var viewDidLayoutSubviewsIntercepter: (@MainActor @Sendable (UIViewController) -> Void)?
+    public var viewDidAppearIntercepter: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
+    public var viewWillDisappearIntercepter: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
+    public var viewDidDisappearIntercepter: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
 
-    fileprivate var intercepterValidator: ((UIViewController) -> Bool)?
+    fileprivate var intercepterValidator: (@MainActor @Sendable (UIViewController) -> Bool)?
 }
 
 // MARK: - ViewControllerManager
@@ -64,39 +64,41 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
 
     // MARK: - Global
     /// 默认全局控制器init钩子句柄，init优先自动调用
-    public var hookInit: (@MainActor (UIViewController) -> Void)?
+    public var hookInit: (@MainActor @Sendable (UIViewController) -> Void)?
     /// 默认全局控制器viewDidLoad钩子句柄，viewDidLoad优先自动调用
-    public var hookViewDidLoad: (@MainActor (UIViewController) -> Void)?
+    public var hookViewDidLoad: (@MainActor @Sendable (UIViewController) -> Void)?
     /// 默认全局控制器viewWillAppear钩子句柄，viewWillAppear优先自动调用
-    public var hookViewWillAppear: (@MainActor (UIViewController, Bool) -> Void)?
+    public var hookViewWillAppear: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewIsAppearing钩子句柄，viewIsAppearing优先自动调用
-    public var hookViewIsAppearing: (@MainActor (UIViewController, Bool) -> Void)?
+    public var hookViewIsAppearing: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidLayoutSubviews钩子句柄，viewDidLayoutSubviews优先自动调用
-    public var hookViewDidLayoutSubviews: (@MainActor (UIViewController) -> Void)?
+    public var hookViewDidLayoutSubviews: (@MainActor @Sendable (UIViewController) -> Void)?
     /// 默认全局控制器viewDidAppear钩子句柄，viewDidAppear优先自动调用
-    public var hookViewDidAppear: (@MainActor (UIViewController, Bool) -> Void)?
+    public var hookViewDidAppear: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewWillDisappear钩子句柄，viewWillDisappear优先自动调用
-    public var hookViewWillDisappear: (@MainActor (UIViewController, Bool) -> Void)?
+    public var hookViewWillDisappear: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
     /// 默认全局控制器viewDidDisappear钩子句柄，viewDidDisappear优先自动调用
-    public var hookViewDidDisappear: (@MainActor (UIViewController, Bool) -> Void)?
+    public var hookViewDidDisappear: (@MainActor @Sendable (UIViewController, Bool) -> Void)?
 
     // MARK: - ViewController
     /// 默认全局scrollViewController钩子句柄，viewDidLoad自动调用，先于setupScrollView
-    public var hookScrollViewController: (@MainActor (UIViewController & ScrollViewControllerProtocol) -> Void)?
+    public var hookScrollViewController: (@MainActor @Sendable (UIViewController & ScrollViewControllerProtocol) -> Void)?
     /// 默认全局tableViewController钩子句柄，viewDidLoad自动调用，先于setupTableView
-    public var hookTableViewController: (@MainActor (any UIViewController & TableDelegateControllerProtocol) -> Void)?
+    public var hookTableViewController: (@MainActor @Sendable (any UIViewController & TableDelegateControllerProtocol) -> Void)?
     /// 默认全局collectionViewController钩子句柄，viewDidLoad自动调用，先于setupCollectionView
-    public var hookCollectionViewController: (@MainActor (any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
+    public var hookCollectionViewController: (@MainActor @Sendable (any UIViewController & CollectionDelegateControllerProtocol) -> Void)?
     /// 默认全局webViewController钩子句柄，viewDidLoad自动调用，先于setupWebView
-    public var hookWebViewController: (@MainActor (UIViewController & WebViewControllerProtocol) -> Void)?
+    public var hookWebViewController: (@MainActor @Sendable (UIViewController & WebViewControllerProtocol) -> Void)?
     /// 默认全局popupViewController钩子句柄，viewDidLoad自动调用，先于setupPopupView
-    public var hookPopupViewController: (@MainActor (UIViewController & PopupViewControllerProtocol) -> Void)?
+    public var hookPopupViewController: (@MainActor @Sendable (UIViewController & PopupViewControllerProtocol) -> Void)?
 
     /// WebView重用标志，设置后自动开启重用并预加载第一个WebView，默认nil未开启重用
-    @MainActor public var webViewReuseIdentifier: String? {
+    public var webViewReuseIdentifier: String? {
         didSet {
             if let reuseIdentifier = webViewReuseIdentifier {
-                ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
+                DispatchQueue.fw.mainAsync {
+                    ReusableViewPool.shared.preloadReusableView(with: WebView.self, reuseIdentifier: reuseIdentifier)
+                }
             }
         }
     }
@@ -120,7 +122,7 @@ public class ViewControllerManager: NSObject, @unchecked Sendable {
         }
     }
 
-    private func intercepterNames(for viewController: UIViewController) -> [String] {
+    @MainActor private func intercepterNames(for viewController: UIViewController) -> [String] {
         // 同一个类只解析一次，优先加载类缓存
         let className = NSStringFromClass(type(of: viewController))
         if let intercepterNames = classIntercepters[className] {

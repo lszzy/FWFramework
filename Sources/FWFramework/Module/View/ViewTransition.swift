@@ -35,7 +35,7 @@ import UIKit
 
     /// 自定义控制器present系统转场(蒙层渐变，内容默认向上动画)，会设置fwModalTransition
     @discardableResult
-    public func setPresentTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
+    public func setPresentTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil, edge: UIRectEdge = .bottom) -> AnimatedTransition {
         let animatedTransition = SwipeAnimatedTransition(edge: edge)
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -49,7 +49,7 @@ import UIKit
 
     /// 自定义控制器alert缩放转场(蒙层渐变，内容缩放动画)，会设置fwModalTransition
     @discardableResult
-    public func setAlertTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
+    public func setAlertTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil) -> AnimatedTransition {
         let animatedTransition = TransformAnimatedTransition.alertTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -63,7 +63,7 @@ import UIKit
 
     /// 自定义控制器fade渐变转场(蒙层和内容渐变动画)，会设置fwModalTransition;
     @discardableResult
-    public func setFadeTransition(_ presentationBlock: ((PresentationController) -> Void)? = nil) -> AnimatedTransition {
+    public func setFadeTransition(_ presentationBlock: (@MainActor @Sendable (PresentationController) -> Void)? = nil) -> AnimatedTransition {
         let animatedTransition = AnimatedTransition()
         animatedTransition.presentationBlock = { presented, presenting in
             let presentationController = PresentationController(presentedViewController: presented, presenting: presenting)
@@ -76,9 +76,9 @@ import UIKit
     }
 
     /// 设置iOS13默认present手势下拉dismiss时的回调block，仅iOS13生效，自动触发，手工dismiss不会触发。会自动设置presentationController.delegate
-    public var presentationDidDismiss: (@MainActor @Sendable () -> Void)? {
+    public var presentationDidDismiss: (() -> Void)? {
         get {
-            property(forName: "presentationDidDismiss") as? @MainActor @Sendable () -> Void
+            property(forName: "presentationDidDismiss") as? () -> Void
         }
         set {
             setPropertyCopy(newValue, forName: "presentationDidDismiss")
@@ -87,7 +87,7 @@ import UIKit
     }
 
     /// 自定义控制器popover弹出效果(preferredContentSize设置大小)，会自动设置modalPresentationStyle和popoverPresentationController.delegate
-    public func setPopoverPresentation(_ presentationBlock: ((UIPopoverPresentationController) -> Void)?, shouldDismiss: Bool) {
+    public func setPopoverPresentation(_ presentationBlock: (@MainActor @Sendable (UIPopoverPresentationController) -> Void)?, shouldDismiss: Bool) {
         base.modalPresentationStyle = .popover
         presentationTarget.isPopover = true
         presentationTarget.shouldDismiss = shouldDismiss
@@ -136,7 +136,7 @@ import UIKit
     }
 
     /// 自定义视图模拟present系统转场(蒙层渐变，内容默认向上动画)
-    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: ((Bool) -> Void)? = nil) {
+    public func setPresentTransition(_ transitionType: AnimatedTransitionType, contentView: UIView?, edge: UIRectEdge = .bottom, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transform: CGAffineTransform
         switch edge {
         case .top:
@@ -174,7 +174,7 @@ import UIKit
     }
 
     /// 自定义视图模拟alert缩放转场(蒙层渐变，内容缩放动画)
-    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
+    public func setAlertTransition(_ transitionType: AnimatedTransitionType, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
@@ -198,7 +198,7 @@ import UIKit
     }
 
     /// 自定义视图模拟fade渐变转场(蒙层和内容渐变动画)
-    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: ((Bool) -> Void)? = nil) {
+    public func setFadeTransition(_ transitionType: AnimatedTransitionType, completion: (@MainActor @Sendable (Bool) -> Void)? = nil) {
         let transitionIn = transitionType == .push || transitionType == .present
         if transitionIn {
             base.alpha = 0
@@ -311,7 +311,7 @@ open class AnimatedTransition: UIPercentDrivenInteractiveTransition,
     }
 
     /// 创建动画句柄转场
-    public convenience init(block: ((AnimatedTransition) -> Void)?) {
+    public convenience init(block: (@MainActor @Sendable (AnimatedTransition) -> Void)?) {
         self.init()
         self.transitionBlock = block
     }

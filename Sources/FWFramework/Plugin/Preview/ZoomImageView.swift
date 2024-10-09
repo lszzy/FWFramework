@@ -602,7 +602,7 @@ open class ZoomImageView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
     /// let asset = resourceLoader.urlAsset(with: videoURL)
     /// let playerItem = AVPlayerItem(asset: asset)
     /// ```
-    open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: ((UIImage?) -> Void)? = nil) {
+    open func setImageURL(_ aImageURL: Any?, placeholderImage aPlaceholderImage: UIImage? = nil, completion: (@MainActor @Sendable (UIImage?) -> Void)? = nil) {
         var imageURL = aImageURL
         var isUrlRequest = false
         if let urlString = imageURL as? String {

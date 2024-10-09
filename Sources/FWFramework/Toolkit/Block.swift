@@ -13,7 +13,7 @@ extension Wrapper where Base: Timer {
     /// - Parameters:
     ///   - timeInterval: 时间
     ///   - target: 目标
-    ///   - selector: 方法，主线程方法需标记nonisolated
+    ///   - selector: 方法
     ///   - userInfo: 参数
     ///   - repeats: 是否重复
     /// - Returns: 定时器
@@ -33,6 +33,21 @@ extension Wrapper where Base: Timer {
         let timer = timer(timeInterval: timeInterval, block: block, repeats: repeats)
         RunLoop.current.add(timer, forMode: .common)
         return timer
+    }
+
+    /// 创建Timer，使用主线程block，自动CommonModes添加到当前的运行循环中，避免ScrollView滚动时不触发
+    /// - Parameters:
+    ///   - timeInterval: 时间
+    ///   - block: 代码块
+    ///   - repeats: 是否重复
+    /// - Returns: 定时器
+    public static func safeCommonTimer(timeInterval: TimeInterval, block: @escaping @MainActor @Sendable (Timer) -> Void, repeats: Bool) -> Timer {
+        commonTimer(timeInterval: timeInterval, block: { timer in
+            let sendableTimer = SendableValue(timer)
+            DispatchQueue.fw.mainAsync {
+                block(sendableTimer.value)
+            }
+        }, repeats: repeats)
     }
 
     /// 创建倒计时定时器
@@ -512,12 +527,12 @@ extension Wrapper where Base: Timer {
 }
 
 // MARK: - BlockTarget
-private class BlockTarget: @unchecked Sendable {
+@MainActor private class BlockTarget: @unchecked Sendable {
     let identifier = UUID().uuidString
-    var block: (@MainActor @Sendable (Any) -> Void)?
+    var block: ((Any) -> Void)?
     var events: UIControl.Event = []
 
-    @MainActor @objc func invoke(_ sender: Any) {
+    @objc func invoke(_ sender: Any) {
         block?(sender)
     }
 }
@@ -708,7 +723,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 自定义高亮状态变化时处理句柄
-    open var highlightedChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
+    open var highlightedChanged: ((TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if isEnabled && highlightedChanged != nil {
                 highlightedChanged?(self, isHighlighted)
@@ -726,7 +741,7 @@ open class TapGestureRecognizer: UITapGestureRecognizer {
     }
 
     /// 自定义禁用状态变化时处理句柄
-    open var disabledChanged: (@MainActor @Sendable (TapGestureRecognizer, Bool) -> Void)? {
+    open var disabledChanged: ((TapGestureRecognizer, Bool) -> Void)? {
         didSet {
             if disabledChanged != nil {
                 disabledChanged?(self, isEnabled)

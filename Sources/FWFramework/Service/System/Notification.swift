@@ -47,10 +47,10 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
 
     // MARK: - Handler
     /// 设置远程推送处理句柄，参数为userInfo和原始通知对象
-    public var remoteNotificationHandler: (([AnyHashable: Any]?, Any) -> Void)?
+    public var remoteNotificationHandler: (@MainActor @Sendable ([AnyHashable: Any]?, Any) -> Void)?
 
     /// 设置本地推送处理句柄，参数为userInfo和原始通知对象
-    public var localNotificationHandler: (([AnyHashable: Any]?, Any) -> Void)?
+    public var localNotificationHandler: (@MainActor @Sendable ([AnyHashable: Any]?, Any) -> Void)?
 
     /// 注册通知处理器，iOS10+生效，iOS10以下详见UIApplicationDelegate
     public func registerNotificationHandler() {
@@ -69,7 +69,12 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
         } else if let notify = notification as? UNNotification {
             userInfo = notify.request.content.userInfo
         }
-        remoteNotificationHandler?(userInfo, notification)
+
+        let sendableUserInfo = SendableValue(userInfo)
+        let sendableNotification = SendableValue(notification)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            self?.remoteNotificationHandler?(sendableUserInfo.value, sendableNotification.value)
+        }
     }
 
     /// 处理本地通知，支持NSDictionary|UNNotification|UNNotificationResponse
@@ -84,12 +89,28 @@ public class NotificationManager: NSObject, UNUserNotificationCenterDelegate, @u
         } else if let notify = notification as? UNNotification {
             userInfo = notify.request.content.userInfo
         }
-        localNotificationHandler?(userInfo, notification)
+
+        let sendableUserInfo = SendableValue(userInfo)
+        let sendableNotification = SendableValue(notification)
+        DispatchQueue.fw.mainAsync { [weak self] in
+            self?.localNotificationHandler?(sendableUserInfo.value, sendableNotification.value)
+        }
     }
 
     // MARK: - Local
     /// 注册本地通知，badge为0时不改变，sound为default时为默认声音，timeInterval为触发时间间隔(0为立即触发)，block为自定义内容句柄，iOS15+支持时效性通知，需entitlements配置开启
-    public func registerLocalNotification(_ identifier: String, title: String?, subtitle: String?, body: String?, userInfo: [AnyHashable: Any]?, badge: Int, sound: Any?, timeInterval: TimeInterval, repeats: Bool, block: ((UNMutableNotificationContent) -> Void)? = nil) {
+    public func registerLocalNotification(
+        _ identifier: String,
+        title: String?,
+        subtitle: String?,
+        body: String?,
+        userInfo: [AnyHashable: Any]?,
+        badge: Int,
+        sound: Any?,
+        timeInterval: TimeInterval,
+        repeats: Bool,
+        block: ((UNMutableNotificationContent) -> Void)? = nil
+    ) {
         let notification = UNMutableNotificationContent()
         if let title { notification.title = title }
         if let subtitle { notification.subtitle = subtitle }

@@ -592,8 +592,8 @@ extension TestRequestController {
         let request = TestUploadRequest()
         request.context = self
         request.uploadData = uploadData
-        request.uploadProgressBlock = { [weak self] progress in
-            DispatchQueue.app.mainAsync {
+        request.uploadProgressBlock = { @Sendable [weak self] progress in
+            DispatchQueue.app.mainAsync { [weak self] in
                 self?.app.showProgress(progress.fractionCompleted, text: "上传中...")
             }
         }

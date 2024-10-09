@@ -51,7 +51,7 @@ public class VersionManager: @unchecked Sendable {
 
     private var checkDate: Date?
     private var hasResult: Bool = false
-    private var dataMigrations: [String: () -> Void] = [:]
+    private var dataMigrations: [String: @Sendable () -> Void] = [:]
 
     // MARK: - Lifecycle
     public init() {
@@ -98,7 +98,7 @@ public class VersionManager: @unchecked Sendable {
 
     /// 检查数据版本号并指定版本迁移方法，调用migrateData之前生效，仅会调用一次
     @discardableResult
-    public func checkDataVersion(_ version: String, migration: @escaping () -> Void) -> Bool {
+    public func checkDataVersion(_ version: String, migration: @escaping @Sendable () -> Void) -> Bool {
         // 需要执行时才放到队列中
         if checkDataVersion(version) {
             dataMigrations[version] = migration

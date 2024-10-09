@@ -105,7 +105,7 @@ import UIKit
 
 // MARK: - CollectionViewDelegate
 /// 常用集合视图数据源和事件代理，可继承
-open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+@MainActor open class CollectionViewDelegate: DelegateProxy<UICollectionViewDelegate>, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     /// 集合section数
     open var numberOfSections: (() -> Int)?
     /// 集合section数，默认1，优先级低

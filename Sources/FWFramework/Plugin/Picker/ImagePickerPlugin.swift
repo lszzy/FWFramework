@@ -505,7 +505,7 @@ import UIKit
     }
 
     /// 自定义全局PHPickerConfiguration创建句柄，默认nil
-    public static var pickerConfigurationBlock: (@MainActor @Sendable () -> PHPickerConfiguration)? {
+    public static var pickerConfigurationBlock: (() -> PHPickerConfiguration)? {
         get { PHPickerViewController.innerPickerConfigurationBlock }
         set { PHPickerViewController.innerPickerConfigurationBlock = newValue }
     }
@@ -517,8 +517,8 @@ import UIKit
     }
 
     /// 自定义照片选择器导出进度句柄，主线程回调，默认nil
-    public var exportProgressBlock: (@MainActor @Sendable (_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
-        get { property(forName: #function) as? @MainActor @Sendable (PHPickerViewController, Int, Int) -> Void }
+    public var exportProgressBlock: ((_ picker: PHPickerViewController, _ finishedCount: Int, _ totalCount: Int) -> Void)? {
+        get { property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
         set { setPropertyCopy(newValue, forName: #function) }
     }
 }
@@ -598,10 +598,10 @@ extension ImagePickerPlugin {
 }
 
 // MARK: - ImagePickerControllerTarget
-private class ImagePickerControllerTarget: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+@MainActor private class ImagePickerControllerTarget: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var filterType: ImagePickerFilterType = []
     var shouldDismiss: Bool = false
-    var completionBlock: (@MainActor @Sendable (UIImagePickerController?, Any?, [AnyHashable: Any]?, Bool) -> Void)?
+    var completionBlock: ((UIImagePickerController?, Any?, [AnyHashable: Any]?, Bool) -> Void)?
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         var object: Any?
@@ -654,7 +654,7 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
 @MainActor private class PickerViewControllerTarget: NSObject, PHPickerViewControllerDelegate {
     var filterType: ImagePickerFilterType = []
     var shouldDismiss: Bool = false
-    var completionBlock: (@MainActor @Sendable (PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void)?
+    var completionBlock: ((PHPickerViewController?, [Any], [PHPickerResult], Bool) -> Void)?
 
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         guard !picker.fw.pickerControllerDismissed else { return }
@@ -688,12 +688,7 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
 
         let totalCount = results.count
         var finishCount = 0
-        let progressBlock = picker.fw.exportProgressBlock
-        if progressBlock != nil {
-            DispatchQueue.fw.mainAsync {
-                progressBlock?(picker, finishCount, totalCount)
-            }
-        }
+        picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
 
         let sendableObjectDict = SendableValue<[Int: (Any, PHPickerResult)]>([:])
         let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
@@ -718,7 +713,7 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
                         }
 
                         finishCount += 1
-                        progressBlock?(picker, finishCount, totalCount)
+                        picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
                         if finishCount == totalCount {
                             let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                             let sortedObjects = objectList.map(\.value.0)
@@ -752,7 +747,7 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
                     }
 
                     finishCount += 1
-                    progressBlock?(picker, finishCount, totalCount)
+                    picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
                     if finishCount == totalCount {
                         let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                         let sortedObjects = objectList.map(\.value.0)
@@ -767,5 +762,5 @@ private class ImagePickerControllerTarget: NSObject, UINavigationControllerDeleg
 
 @available(iOS 14, *)
 extension PHPickerViewController {
-    fileprivate static var innerPickerConfigurationBlock: (@MainActor @Sendable () -> PHPickerConfiguration)?
+    fileprivate static var innerPickerConfigurationBlock: (() -> PHPickerConfiguration)?
 }
