@@ -13,7 +13,7 @@ import WebKit
 @MainActor extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
+        get { NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: "reuseConfigurationBlock", value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 
