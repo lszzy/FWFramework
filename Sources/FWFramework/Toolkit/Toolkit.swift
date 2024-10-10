@@ -1923,7 +1923,7 @@ extension Wrapper where Base: UIImage {
         }
         set {
             if let handler = newValue {
-                lifecycleStateTarget.completionHandler = { handler($0) }
+                lifecycleStateTarget.completionHandler = { @MainActor @Sendable in handler($0) }
             } else {
                 lifecycleStateTarget.completionHandler = nil
             }
