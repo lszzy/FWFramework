@@ -552,7 +552,7 @@ import UIKit
 
     /// 高度改变回调句柄，默认nil，启用自动高度后生效
     public var heightDidChange: ((CGFloat) -> Void)? {
-        get { return property(forName: "heightDidChange") as? (CGFloat) -> Void }
+        get { property(forName: "heightDidChange") as? (CGFloat) -> Void }
         set { setPropertyCopy(newValue, forName: "heightDidChange") }
     }
 
