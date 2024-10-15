@@ -409,18 +409,24 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 播放触控反馈
-    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium, intensity: CGFloat? = nil) {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
-        feedbackGenerator.impactOccurred()
+        if let intensity {
+            feedbackGenerator.impactOccurred(intensity: intensity)
+        } else {
+            feedbackGenerator.impactOccurred()
+        }
     }
 
-    /// 语音朗读文字，可指定语言(如zh-CN)
-    public static func playSpeechUtterance(_ string: String, language: String?) {
+    /// 语音朗读文字，可指定语言(如zh-CN)，默认系统
+    @discardableResult
+    public static func playSpeechUtterance(_ string: String, language: String? = nil) -> AVSpeechSynthesizer {
         let speechUtterance = AVSpeechUtterance(string: string)
         speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
         speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
         let speechSynthesizer = AVSpeechSynthesizer()
         speechSynthesizer.speak(speechUtterance)
+        return speechSynthesizer
     }
 
     /// 是否是盗版(不是从AppStore安装)
