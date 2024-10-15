@@ -940,6 +940,14 @@ extension Wrapper where Base: UIImage {
         UIGraphicsEndImageContext()
         return image
     }
+    
+    /// 等比例缩放图片长边到指定宽度
+    public func image(scaleWidth width: CGFloat) -> UIImage? {
+        let size = base.size
+        guard width > 0, size.width > 0, size.height > 0 else { return nil }
+        let ratio = width / max(size.width, size.height)
+        return image(scaleSize: CGSize(width: size.width * ratio, height: size.height * ratio))
+    }
 
     /// 缩放图片到指定大小
     public func image(scaleSize size: CGSize) -> UIImage? {
@@ -1219,7 +1227,7 @@ extension Wrapper where Base: UIImage {
 
     /// 长边压缩图片尺寸，获取等比例的图片
     public func compressImage(maxWidth: CGFloat) -> UIImage? {
-        let newSize = scaleSize(maxWidth: maxWidth)
+        let newSize = compressSize(maxWidth: maxWidth)
         if newSize.equalTo(base.size) { return base }
 
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
@@ -1229,8 +1237,8 @@ extension Wrapper where Base: UIImage {
         return image
     }
 
-    /// 通过指定图片最长边，获取等比例的图片size
-    public func scaleSize(maxWidth: CGFloat) -> CGSize {
+    /// 通过指定图片最长边，获取等比例的图片压缩size
+    public func compressSize(maxWidth: CGFloat) -> CGSize {
         if maxWidth <= 0 { return base.size }
 
         let width = base.size.width
