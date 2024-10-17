@@ -94,7 +94,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
                 encoding = URLEncoding.default
             }
 
-            let parameters = request.requestArgument() as? [String: Any]
+            let parameters = request.requestArgument() as? Parameters
             urlRequest = try encoding.encode(urlRequest, with: parameters)
         }
 

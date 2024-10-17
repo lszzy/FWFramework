@@ -595,7 +595,7 @@ open class ScanViewConfiguration: NSObject {
 
 /// 扫码视图
 open class ScanView: UIView {
-    private class Proxy: NSObject {
+    private class WeakProxy: NSObject {
         weak var target: ScanView?
 
         init(target: ScanView?) {
@@ -790,7 +790,7 @@ open class ScanView: UIView {
 
         contentView.addSubview(scanlineImgView)
         if mutableState.displayLink == nil {
-            mutableState.displayLink = CADisplayLink(target: Proxy(target: self), selector: #selector(Proxy.updateUI))
+            mutableState.displayLink = CADisplayLink(target: WeakProxy(target: self), selector: #selector(WeakProxy.updateUI))
             mutableState.displayLink?.add(to: .main, forMode: .common)
         }
     }
