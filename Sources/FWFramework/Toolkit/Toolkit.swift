@@ -409,18 +409,24 @@ extension Wrapper where Base: UIApplication {
     }
 
     /// 播放触控反馈
-    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    @MainActor public static func playImpactFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium, intensity: CGFloat? = nil) {
         let feedbackGenerator = UIImpactFeedbackGenerator(style: style)
-        feedbackGenerator.impactOccurred()
+        if let intensity {
+            feedbackGenerator.impactOccurred(intensity: intensity)
+        } else {
+            feedbackGenerator.impactOccurred()
+        }
     }
 
-    /// 语音朗读文字，可指定语言(如zh-CN)
-    public static func playSpeechUtterance(_ string: String, language: String?) {
+    /// 语音朗读文字，可指定语言(如zh-CN)，默认系统
+    @discardableResult
+    public static func playSpeechUtterance(_ string: String, language: String? = nil) -> AVSpeechSynthesizer {
         let speechUtterance = AVSpeechUtterance(string: string)
         speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate
         speechUtterance.voice = AVSpeechSynthesisVoice(language: language)
         let speechSynthesizer = AVSpeechSynthesizer()
         speechSynthesizer.speak(speechUtterance)
+        return speechSynthesizer
     }
 
     /// 是否是盗版(不是从AppStore安装)
@@ -941,6 +947,14 @@ extension Wrapper where Base: UIImage {
         return image
     }
 
+    /// 等比例缩放图片长边到指定宽度
+    public func image(scaleWidth width: CGFloat) -> UIImage? {
+        let size = base.size
+        guard width > 0, size.width > 0, size.height > 0 else { return nil }
+        let ratio = width / max(size.width, size.height)
+        return image(scaleSize: CGSize(width: size.width * ratio, height: size.height * ratio))
+    }
+
     /// 缩放图片到指定大小
     public func image(scaleSize size: CGSize) -> UIImage? {
         guard size.width > 0, size.height > 0 else { return nil }
@@ -1219,7 +1233,7 @@ extension Wrapper where Base: UIImage {
 
     /// 长边压缩图片尺寸，获取等比例的图片
     public func compressImage(maxWidth: CGFloat) -> UIImage? {
-        let newSize = scaleSize(maxWidth: maxWidth)
+        let newSize = compressSize(maxWidth: maxWidth)
         if newSize.equalTo(base.size) { return base }
 
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
@@ -1229,8 +1243,8 @@ extension Wrapper where Base: UIImage {
         return image
     }
 
-    /// 通过指定图片最长边，获取等比例的图片size
-    public func scaleSize(maxWidth: CGFloat) -> CGSize {
+    /// 通过指定图片最长边，获取等比例的图片压缩size
+    public func compressSize(maxWidth: CGFloat) -> CGSize {
         if maxWidth <= 0 { return base.size }
 
         let width = base.size.width
@@ -1923,7 +1937,7 @@ extension Wrapper where Base: UIImage {
         }
         set {
             if let handler = newValue {
-                lifecycleStateTarget.completionHandler = { handler($0) }
+                lifecycleStateTarget.completionHandler = { @MainActor @Sendable in handler($0) }
             } else {
                 lifecycleStateTarget.completionHandler = nil
             }

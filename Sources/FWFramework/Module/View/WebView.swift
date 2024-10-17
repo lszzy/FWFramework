@@ -13,7 +13,7 @@ import WebKit
 @MainActor extension Wrapper where Base: WKWebView {
     /// 重用WebView全局配置句柄(第二个参数为重用标志)，为所有复用WebView提供预先的默认configuration
     public static var reuseConfigurationBlock: ((WKWebViewConfiguration, String) -> Void)? {
-        get { return NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
+        get { NSObject.fw.getAssociatedObject(Base.self, key: "reuseConfigurationBlock") as? (WKWebViewConfiguration, String) -> Void }
         set { NSObject.fw.setAssociatedObject(Base.self, key: "reuseConfigurationBlock", value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 
@@ -629,25 +629,26 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
         }
     }
 
+    /// JS桥接WKScriptMessageHandler弱引用代理类，解决delegate无法释放问题
+    public class WeakProxy: NSObject, WKScriptMessageHandler {
+        public weak var delegate: WKScriptMessageHandler?
+
+        public init(delegate: WKScriptMessageHandler?) {
+            super.init()
+            self.delegate = delegate
+        }
+
+        public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            delegate?.userContentController(userContentController, didReceive: message)
+        }
+    }
+
     /// JS桥接处理句柄
     public typealias Handler = @MainActor @Sendable (Context) -> Void
     /// JS桥接完成回调
     public typealias Completion = @MainActor @Sendable (Any?) -> Void
     /// JS桥接消息对象
     public typealias Message = [String: Any]
-
-    private class Proxy: NSObject, WKScriptMessageHandler {
-        weak var delegate: WKScriptMessageHandler?
-
-        init(delegate: WKScriptMessageHandler) {
-            super.init()
-            self.delegate = delegate
-        }
-
-        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            delegate?.userContentController(userContentController, didReceive: message)
-        }
-    }
 
     /// 是否启用日志，默认false
     public var isLogEnabled = false
@@ -656,7 +657,6 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     private let iOS_Native_FlushMessageQueue = "iOS_Native_FlushMessageQueue"
 
     private weak var webView: WKWebView?
-
     private var startupMessageQueue: [Message]? = []
     private var responseCallbacks = [String: Completion]()
     private var messageHandlers = [String: Handler]()
@@ -816,8 +816,8 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
     }
 
     private func addScriptMessageHandlers() {
-        webView?.configuration.userContentController.add(Proxy(delegate: self), name: iOS_Native_InjectJavascript)
-        webView?.configuration.userContentController.add(Proxy(delegate: self), name: iOS_Native_FlushMessageQueue)
+        webView?.configuration.userContentController.add(WeakProxy(delegate: self), name: iOS_Native_InjectJavascript)
+        webView?.configuration.userContentController.add(WeakProxy(delegate: self), name: iOS_Native_FlushMessageQueue)
     }
 
     private func removeScriptMessageHandlers() {
