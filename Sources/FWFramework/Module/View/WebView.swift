@@ -628,7 +628,7 @@ public class WebViewJSBridge: NSObject, WKScriptMessageHandler {
             self.completion = completion
         }
     }
-    
+
     /// JS桥接WKScriptMessageHandler弱引用代理类，解决delegate无法释放问题
     public class WeakProxy: NSObject, WKScriptMessageHandler {
         public weak var delegate: WKScriptMessageHandler?

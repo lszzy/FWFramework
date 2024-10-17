@@ -5,8 +5,8 @@
 //  Created by wuyong on 2022/8/25.
 //
 
-import UIKit
 import NaturalLanguage
+import UIKit
 #if canImport(Vision)
 import Vision
 #endif
@@ -37,7 +37,7 @@ public class Recognizer {
             }
         }
     }
-    
+
     /// 识别指定文字的主要语言，可指定限制范围
     public static func recognizeLanguage(with string: String, constraints: [NLLanguage]? = nil) -> NLLanguage? {
         let recognizer = NLLanguageRecognizer()

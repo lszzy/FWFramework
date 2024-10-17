@@ -946,7 +946,7 @@ extension Wrapper where Base: UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    
+
     /// 等比例缩放图片长边到指定宽度
     public func image(scaleWidth width: CGFloat) -> UIImage? {
         let size = base.size
