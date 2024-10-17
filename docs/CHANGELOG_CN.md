@@ -1,5 +1,13 @@
 # 更新日志
 
+## [6.0.1] - 2024-10-17
+
+### Changed
+* 兼容Alamofire 5.10.0最新版
+* 新增UIImage长边缩放工具方法
+* 移动VersionManager到Service子模块
+* 开放WebViewJSBridge.WeakProxy用于扩展
+
 ## [6.0.0] - 2024-10-09
 
 ### Added

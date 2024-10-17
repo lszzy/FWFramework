@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.1] - 2024-10-17
+
+### Changed
+* Compatible with the latest version of Alamofire 5.10.0
+* Added UIImage long edge scaling tool method
+* Moved VersionManager to Service submodule
+* Opened WebViewJSBridge.WeakProxy for extension
+
 ## [6.0.0] - 2024-10-09
 
 ### Added
