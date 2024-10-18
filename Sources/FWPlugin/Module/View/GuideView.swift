@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 引导控制器
 ///
@@ -156,7 +159,11 @@ open class GuideViewController: UIViewController {
         textLabel.textColor = textColor
         textLabel.font = font
         textLabel.textAlignment = .left
-        textLabel.text = currentItem.text
+        if let attributedText = currentItem.text as? NSAttributedString {
+            textLabel.attributedText = attributedText
+        } else {
+            textLabel.text = currentItem.text?.stringValue
+        }
         textLabel.numberOfLines = 0
         view.addSubview(textLabel)
         
@@ -198,9 +205,15 @@ open class GuideViewController: UIViewController {
         var transform: CGAffineTransform = .identity
         let arrowSize = arrowImageView.image?.size ?? .zero
         let maxWidth = view.frame.size.width - padding * 2
-        let textSize = currentItem.text.fw.size(font: font, drawSize: CGSize(width: maxWidth, height: .infinity))
+        var textSize: CGSize = .zero
+        if let attributedText = currentItem.text as? NSAttributedString {
+            textSize = attributedText.fw.textSize(drawSize: CGSize(width: maxWidth, height: .infinity))
+        } else {
+            textSize = currentItem.text?.stringValue.fw.size(font: font, drawSize: CGSize(width: maxWidth, height: .infinity)) ?? .zero
+        }
         let imageSize = currentItem.image?.size ?? .zero
         let maxX = padding + maxWidth - textSize.width
+        let maxImageX = padding + maxWidth - imageSize.width
 
         switch region {
         case .upperLeft:
@@ -214,7 +227,7 @@ open class GuideViewController: UIViewController {
                               y: arrowRect.maxY + spacing,
                               width: textSize.width,
                               height: textSize.height)
-            let imageX: CGFloat = max(padding, min(maxX, arrowRect.maxX - imageSize.width / 2))
+            let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.maxX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
                               y: arrowRect.maxY + spacing,
                               width: imageSize.width,
@@ -230,7 +243,7 @@ open class GuideViewController: UIViewController {
                               y: arrowRect.maxY + spacing,
                               width: textSize.width,
                               height: textSize.height)
-            let imageX: CGFloat = max(padding, min(maxX, arrowRect.minX - imageSize.width / 2))
+            let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.minX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
                               y: arrowRect.maxY + spacing,
                               width: imageSize.width,
@@ -247,7 +260,7 @@ open class GuideViewController: UIViewController {
                               y: arrowRect.minY - spacing - textSize.height,
                               width: textSize.width,
                               height: textSize.height)
-            let imageX: CGFloat = max(padding, min(maxX, arrowRect.maxX - imageSize.width / 2))
+            let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.maxX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
                               y: arrowRect.minY - spacing - imageSize.height,
                               width: imageSize.width,
@@ -264,7 +277,7 @@ open class GuideViewController: UIViewController {
                               y: arrowRect.minY - spacing - textSize.height,
                               width: textSize.width,
                               height: textSize.height)
-            let imageX: CGFloat = max(padding, min(maxX, arrowRect.minX - imageSize.width / 2))
+            let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.minX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
                               y: arrowRect.minY - spacing - imageSize.height,
                               width: imageSize.width,
@@ -353,11 +366,11 @@ open class GuideViewItem {
     open var rect: CGRect = .zero
     open var arrowImage: UIImage?
     open var image: UIImage?
-    open var text: String = ""
+    open var text: StringParameter?
 
     public init() {}
 
-    public convenience init(sourceView: UIView?, arrowImage: UIImage? = nil, text: String = "", image: UIImage? = nil) {
+    public convenience init(sourceView: UIView?, arrowImage: UIImage? = nil, text: StringParameter? = nil, image: UIImage? = nil) {
         self.init()
         self.sourceView = sourceView
         self.arrowImage = arrowImage
@@ -365,7 +378,7 @@ open class GuideViewItem {
         self.image = image
     }
 
-    public convenience init(rect: CGRect, arrowImage: UIImage? = nil, text: String = "", image: UIImage? = nil) {
+    public convenience init(rect: CGRect, arrowImage: UIImage? = nil, text: StringParameter? = nil, image: UIImage? = nil) {
         self.init()
         self.rect = rect
         self.arrowImage = arrowImage
