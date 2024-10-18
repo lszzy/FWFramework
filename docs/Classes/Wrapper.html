@@ -17,7 +17,7 @@
     <a title="Wrapper Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.1 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.2 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -295,6 +295,15 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/GridView.html">GridView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewController.html">GuideViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewItem.html">GuideViewItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewManager.html">GuideViewManager</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/HTTPRequest.html">HTTPRequest</a>
@@ -11565,9 +11574,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0xyFZ"></a>
-                    <a name="//apple_ref/swift/Method/collectionView()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0xyFZ">collectionView()</a>
+                    <a name="/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE10flowLayoutSo0cd4FlowF0CyFZ"></a>
+                    <a name="//apple_ref/swift/Method/flowLayout()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE10flowLayoutSo0cd4FlowF0CyFZ">flowLayout()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -11575,7 +11584,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建collectionView</p>
+                        <p>快速创建flowLayout</p>
 
                       </div>
                       <div class="declaration">
@@ -11583,7 +11592,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">flowLayout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewFlowLayout</span></code></pre>
 
                         </div>
                       </div>
@@ -11593,9 +11602,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0yxSo0cD6LayoutCFZ"></a>
-                    <a name="//apple_ref/swift/Method/collectionView(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0yxSo0cD6LayoutCFZ">collectionView(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0_15delegateEnabledxSo0cD6LayoutCSg_SbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/collectionView(_:delegateEnabled:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo16UICollectionViewCRbzlE010collectionD0_15delegateEnabledxSo0cD6LayoutCSg_SbtFZ">collectionView(_:<wbr>delegateEnabled:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -11603,7 +11612,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建collectionView，自定义collectionViewLayout</p>
+                        <p>快速创建collectionView，可自定义collectionViewLayout(默认flowLayout)，可启用collectionDelegate(默认false)</p>
 
                       </div>
                       <div class="declaration">
@@ -11611,7 +11620,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionViewLayout</span><span class="p">:</span> <span class="kt">UICollectionViewLayout</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewLayout</span><span class="p">:</span> <span class="kt">UICollectionViewLayout</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">delegateEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
 
                         </div>
                       </div>
@@ -12090,9 +12099,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0yxSo0cD5StyleVFZ"></a>
-                    <a name="//apple_ref/swift/Method/tableView(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0yxSo0cD5StyleVFZ">tableView(_:<wbr>)</a>
+                    <a name="/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0_15delegateEnabledxSo0cD5StyleV_SbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/tableView(_:delegateEnabled:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo11UITableViewCRbzlE05tableD0_15delegateEnabledxSo0cD5StyleV_SbtFZ">tableView(_:<wbr>delegateEnabled:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -12100,7 +12109,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>快速创建tableView，可配置钩子句柄</p>
+                        <p>快速创建tableView，可配置钩子句柄，可启用tableDelegate(默认false)</p>
 
                       </div>
                       <div class="declaration">
@@ -12108,7 +12117,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n">plain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n">plain</span><span class="p">,</span> <span class="nv">delegateEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Base</span></code></pre>
 
                         </div>
                       </div>
@@ -41673,7 +41682,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">animate</span><span class="p">(</span>
-    <span class="nv">block</span><span class="p">:</span> <span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
+    <span class="nv">block</span><span class="p">:</span> <span class="kd">@MainActor</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kd">@MainActor</span> <span class="kd">@Sendable</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span></code></pre>
 
@@ -45802,6 +45811,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">pixelSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework7WrapperCAASo7UIImageCRbzlE5image10systemName10scaleWidthAESgSS_14CoreFoundation7CGFloatVSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/image(systemName:scaleWidth:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework7WrapperCAASo7UIImageCRbzlE5image10systemName10scaleWidthAESgSS_14CoreFoundation7CGFloatVSgtFZ">image(systemName:<wbr>scaleWidth:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>从SF符号创建UIImage，可指定长边大小</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">image</span><span class="p">(</span><span class="nv">systemName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">scaleWidth</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -55054,7 +55090,7 @@ contentEdgeInsets: 内容边距，setImageEdge时不影响，sizeThatFits包含<
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-10-17)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-10-18)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
