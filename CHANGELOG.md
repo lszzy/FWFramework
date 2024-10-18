@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.2] - 2024-10-18
+
+### Added
+* Added GuideView guide view component
+* PopupMenu supports custom view customView
+* Optimize the method of quickly creating tableView and collectionView
+* Added UISearchController test case
+
 ## [6.0.1] - 2024-10-17
 
 ### Changed

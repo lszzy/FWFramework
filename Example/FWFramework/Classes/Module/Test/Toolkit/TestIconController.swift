@@ -8,26 +8,30 @@
 
 import FWFramework
 
-class TestIconController: UIViewController, CollectionViewControllerProtocol, UISearchBarDelegate {
-    private var iconClass: Icon.Type = MaterialIcons.self
-
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
-        searchBar.delegate = self
-        searchBar.tintColor = AppTheme.textColor
-        searchBar.app.contentInset = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
-        searchBar.app.backgroundColor = AppTheme.barColor
-        searchBar.app.textFieldBackgroundColor = AppTheme.tableColor
-        searchBar.app.searchIconOffset = 16 - 6
-        searchBar.app.searchTextOffset = 4
-        searchBar.app.searchIconCenter = false
-        searchBar.app.font = UIFont.systemFont(ofSize: 12)
-        searchBar.app.textField.app.setCornerRadius(16)
-        searchBar.app.textField.app.touchResign = true
-        return searchBar
+class TestIconController: UIViewController, CollectionViewControllerProtocol {
+    typealias CollectionElement = String
+    
+    private lazy var searchController: UISearchController = {
+        let result = UISearchController(searchResultsController: resultController)
+        result.searchResultsUpdater = resultController
+        result.searchBar.sizeToFit()
+        result.searchBar.placeholder = "搜索"
+        return result
     }()
-
+    
+    private lazy var resultController: TestIconResultController = {
+        let result = TestIconResultController()
+        return result
+    }()
+    
+    func setupNavbar() {
+        navigationItem.searchController = searchController
+        // 设置searchBar为tableHeaderView示例：
+        // tableView.tableHeaderView = searchController.searchBar
+        // 如果进入预编辑状态时searchBar消失，可添加如下代码：
+        // definesPresentationContext = true
+    }
+    
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 60, height: 100)
@@ -35,27 +39,13 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
     }
 
     func setupCollectionLayout() {
-        view.addSubview(searchBar)
-        searchBar.app.layoutChain
-            .top(toSafeArea: .zero)
-            .horizontal()
-            .height(44)
-        collectionView.app.layoutChain
-            .edges(excludingEdge: .top)
-            .top(toViewBottom: searchBar)
+        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.app.layoutChain.edges(toSafeArea: .zero)
     }
 
     func setupSubviews() {
-        var array = Array(iconClass.iconMapper().keys)
-        let text = APP.safeString(searchBar.text?.app.trimString)
-        if text.count > 0 {
-            array.removeAll { icon in
-                !icon.lowercased().contains(text.lowercased())
-            }
-        }
-        collectionData = array
-        collectionView.backgroundColor = AppTheme.backgroundColor
-        collectionView.keyboardDismissMode = .onDrag
+        collectionData = Array(MaterialIcons.iconMapper().keys)
+        resultController.collectionData = collectionData
         collectionView.reloadData()
     }
 
@@ -65,21 +55,71 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol, UI
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestIconCell.app.cell(collectionView: collectionView, indexPath: indexPath)
-        let name = collectionData[indexPath.item] as? String
-        cell.imageView.app.themeImage = APP.iconImage(name.safeValue, 60)?.app.themeImage
+        let name = collectionData[indexPath.item]
+        cell.imageView.app.themeImage = APP.iconImage(name, 60)?.app.themeImage
         cell.nameLabel.text = name
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let name = collectionData[indexPath.item] as? String
+        let name = collectionData[indexPath.item]
         UIPasteboard.general.string = APP.safeString(name)
         app.showMessage(text: name)
     }
+}
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        setupSubviews()
+class TestIconResultController: UIViewController, CollectionViewControllerProtocol, UISearchResultsUpdating {
+    typealias CollectionElement = String
+    
+    var searchData: [CollectionElement] = []
+    
+    func setupCollectionViewLayout() -> UICollectionViewLayout {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: 60, height: 100)
+        return flowLayout
+    }
+    
+    func setupCollectionLayout() {
+        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.app.layoutChain.edges(toSafeArea: .zero)
+    }
+
+    func setupSubviews() {
+        collectionView.reloadData()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        searchData.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = TestIconCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        let name = searchData[indexPath.item]
+        cell.imageView.app.themeImage = APP.iconImage(name, 60)?.app.themeImage
+        cell.nameLabel.text = name
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let name = searchData[indexPath.item]
+        UIPasteboard.general.string = name
+        app.showMessage(text: name)
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        searchController.searchResultsController?.view.isHidden = false
+        
+        var result: [CollectionElement] = []
+        let text = searchController.searchBar.text ?? ""
+        if text.count > 0 {
+            result = collectionData.filter({ icon in
+                icon.lowercased().contains(text.lowercased())
+            })
+        }
+        searchData = result
+        collectionView.reloadData()
     }
 }
 

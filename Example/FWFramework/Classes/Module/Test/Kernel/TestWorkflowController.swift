@@ -55,7 +55,7 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
         if step < 3 {
             app.setRightBarItem(Icon.iconImage("zmdi-var-arrow-right", size: 24), target: self, action: #selector(onNext))
         } else {
-            app.addRightBarItem(Icon.iconImage("zmdi-var-close", size: 24), target: self, action: #selector(onExit))
+            app.addRightBarItem(Icon.closeImage, target: self, action: #selector(onExit))
             app.addRightBarItem(Icon.iconImage("zmdi-var-replay", size: 24), target: self, action: #selector(onOpen))
         }
 

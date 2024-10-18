@@ -46,7 +46,7 @@ class TestPickerController: UIViewController, TableViewControllerProtocol {
             cropController.aspectRatioPickerButtonHidden = true
             cropController.cropView.backgroundColor = .black
             cropController.toolbar.tintColor = .white
-            cropController.toolbar.cancelTextButton.app.setImage(APP.iconImage("zmdi-var-close", 22))
+            cropController.toolbar.cancelTextButton.app.setImage(Icon.closeImage)
             cropController.toolbar.cancelTextButton.setTitle(nil, for: .normal)
             cropController.toolbar.doneTextButton.app.setImage(APP.iconImage("zmdi-var-check", 22))
             cropController.toolbar.doneTextButton.setTitle(nil, for: .normal)
