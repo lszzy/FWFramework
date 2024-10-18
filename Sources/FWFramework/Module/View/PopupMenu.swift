@@ -785,7 +785,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         let containerSize = containerBounds.size
         menuMaskView.frame = CGRect(x: 0, y: 0, width: containerSize.width, height: containerSize.height)
         let height = getMenuTotalHeight()
-        if let customView {
+        if customView != nil {
             tableView.isHidden = true
         } else {
             tableView.isHidden = false

@@ -901,7 +901,7 @@ extension Wrapper where Base: CAGradientLayer {
      @param completion 完成事件
      */
     public static func animate(
-        block: @MainActor @Sendable () -> Void,
+        block: @MainActor () -> Void,
         completion: (@MainActor @Sendable () -> Void)? = nil
     ) {
         CATransaction.begin()
