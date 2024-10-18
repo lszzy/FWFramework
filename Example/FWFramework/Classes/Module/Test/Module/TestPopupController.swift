@@ -42,6 +42,20 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         app.addRightBarItem(APP.iconImage("zmdi-var-help-outline", 24)) { [weak self] _ in
             self?.showGuide()
         }
+        app.addRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            let customView = UIImageView()
+            customView.image = UIImage.app.appIconImage()
+            customView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            customView.isUserInteractionEnabled = true
+            
+            let popupMenu = PopupMenu.show(at: self?.view.center ?? .zero, customView: customView, menuWidth: customView.frame.width) { popupMenu in
+                popupMenu.dismissOnTouchOutside = false
+                popupMenu.arrowHeight = 0
+            }
+            customView.app.addTapGesture { _ in
+                popupMenu.dismiss()
+            }
+        }
     }
 
     func setupSubviews() {
