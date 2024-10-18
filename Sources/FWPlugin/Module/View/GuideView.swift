@@ -20,8 +20,8 @@ open class GuideViewController: UIViewController {
 
     /// 样式属性定制
     open var maskCornerRadius: CGFloat = 5
-    open var backgroundAlpha: CGFloat = 0.7
-    open var maskColor: UIColor?
+    open var bgAlpha: CGFloat = 0.7
+    open var bgColor: UIColor?
     open var spacing: CGFloat = 20
     open var padding: CGFloat = 50
     open var maskInsets = UIEdgeInsets(top: -8, left: -8, bottom: -8, right: -8)
@@ -141,12 +141,6 @@ open class GuideViewController: UIViewController {
     }
 
     open func configViews() {
-        if let maskColor {
-            view.backgroundColor = maskColor
-        } else {
-            view.backgroundColor = UIColor(white: 0, alpha: backgroundAlpha)
-        }
-
         let image = currentItem.arrowImage ?? arrowImage
         if let arrowColor {
             arrowImageView.image = image?.withRenderingMode(.alwaysTemplate)
@@ -154,6 +148,7 @@ open class GuideViewController: UIViewController {
         } else {
             arrowImageView.image = image
         }
+        view.backgroundColor = bgColor ?? UIColor(white: 0, alpha: bgAlpha)
         view.addSubview(arrowImageView)
 
         textLabel.textColor = textColor
@@ -171,9 +166,8 @@ open class GuideViewController: UIViewController {
         let fromPath = maskLayer.path
 
         maskLayer.fillColor = UIColor.black.cgColor
-        var radius = maskCornerRadius
         let frame = hollowFrame
-        radius = min(radius, min(frame.width / 2.0, frame.height / 2.0))
+        let radius = min(maskCornerRadius, min(frame.width / 2.0, frame.height / 2.0))
         let highlightedPath = UIBezierPath(roundedRect: hollowFrame, cornerRadius: radius)
         let toPath = UIBezierPath(rect: view.bounds)
         toPath.append(highlightedPath)
