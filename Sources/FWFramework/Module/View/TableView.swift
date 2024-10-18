@@ -25,8 +25,8 @@ import UIKit
         }
     }
 
-    /// 快速创建tableView，可配置钩子句柄
-    public static func tableView(_ style: UITableView.Style = .plain) -> Base {
+    /// 快速创建tableView，可配置钩子句柄，可启用tableDelegate(默认false)
+    public static func tableView(_ style: UITableView.Style = .plain, delegateEnabled: Bool = false) -> Base {
         let tableView = Base(frame: .zero, style: style)
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -35,6 +35,10 @@ import UIKit
             tableView.sectionHeaderTopPadding = 0
         }
         tableViewConfiguration?(tableView)
+        if delegateEnabled {
+            tableView.dataSource = tableView.fw.tableDelegate
+            tableView.delegate = tableView.fw.tableDelegate
+        }
         return tableView
     }
 
