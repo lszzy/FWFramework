@@ -98,7 +98,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         var items: [GuideViewItem] = []
         let textItem = GuideViewItem(sourceView: textField, text: "我是输入框的引导")
         items.append(textItem)
-        let labelItem = GuideViewItem(sourceView: customLabel, text: "我是自定义标签的引导")
+        let labelItem = GuideViewItem(sourceView: customLabel, image: UIImage.app.appIconImage())
         items.append(labelItem)
         
         let vc = GuideViewController(items: items)
