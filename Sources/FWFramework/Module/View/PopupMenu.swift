@@ -398,6 +398,16 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 图片数组，支持String|UIImage，需show之前调用
     open var images: [Any] = []
+    
+    /// 自定义视图，需设置高度，优先级高
+    open weak var customView: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let customView {
+                addSubview(customView)
+            }
+        }
+    }
 
     /// 圆角半径
     open var cornerRadius: CGFloat = 5.0
@@ -564,13 +574,14 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     private var isCornerChanged = false
     private var isChangeDirection = false
 
-    /// 在指定位置弹出，可指定容器视图
+    /// 在指定位置弹出菜单，可指定容器视图
     @discardableResult
     open class func show(
         in containerView: UIView? = nil,
         at point: CGPoint,
-        titles: [Any]?,
+        titles: [Any]? = nil,
         icons: [Any]? = nil,
+        customView: UIView? = nil,
         menuWidth: CGFloat,
         customize: (@MainActor (PopupMenu) -> Void)? = nil
     ) -> PopupMenu {
@@ -579,19 +590,21 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         popupMenu.point = point
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
+        popupMenu.customView = customView
         popupMenu.itemWidth = menuWidth
         customize?(popupMenu)
         popupMenu.show()
         return popupMenu
     }
 
-    /// 依赖指定view弹出，可指定容器视图
+    /// 依赖指定view弹出菜单，可指定容器视图
     @discardableResult
     open class func show(
         in containerView: UIView? = nil,
         relyOn view: UIView?,
-        titles: [Any]?,
+        titles: [Any]? = nil,
         icons: [Any]? = nil,
+        customView: UIView? = nil,
         menuWidth: CGFloat,
         customize: (@MainActor (PopupMenu) -> Void)? = nil
     ) -> PopupMenu {
@@ -600,6 +613,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
         popupMenu.relyView = view
         popupMenu.titles = titles ?? []
         popupMenu.images = icons ?? []
+        popupMenu.customView = customView
         popupMenu.itemWidth = menuWidth
         customize?(popupMenu)
         popupMenu.show()
@@ -735,14 +749,15 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     // MARK: - Private
     override open var frame: CGRect {
         didSet {
+            let contentView = customView ?? tableView
             if arrowDirection == .top {
-                tableView.frame = CGRect(x: borderWidth, y: borderWidth + arrowHeight, width: frame.size.width - borderWidth * 2, height: frame.size.height - arrowHeight)
+                contentView.frame = CGRect(x: borderWidth, y: borderWidth + arrowHeight, width: frame.size.width - borderWidth * 2, height: frame.size.height - arrowHeight)
             } else if arrowDirection == .bottom {
-                tableView.frame = CGRect(x: borderWidth, y: borderWidth, width: frame.size.width - borderWidth * 2, height: frame.size.height - arrowHeight)
+                contentView.frame = CGRect(x: borderWidth, y: borderWidth, width: frame.size.width - borderWidth * 2, height: frame.size.height - arrowHeight)
             } else if arrowDirection == .left {
-                tableView.frame = CGRect(x: borderWidth + arrowHeight, y: borderWidth, width: frame.size.width - borderWidth * 2 - arrowHeight, height: frame.size.height)
+                contentView.frame = CGRect(x: borderWidth + arrowHeight, y: borderWidth, width: frame.size.width - borderWidth * 2 - arrowHeight, height: frame.size.height)
             } else if arrowDirection == .right {
-                tableView.frame = CGRect(x: borderWidth, y: borderWidth, width: frame.size.width - borderWidth * 2 - arrowHeight, height: frame.size.height)
+                contentView.frame = CGRect(x: borderWidth, y: borderWidth, width: frame.size.width - borderWidth * 2 - arrowHeight, height: frame.size.height)
             }
         }
     }
@@ -769,13 +784,12 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
     private func updateUI() {
         let containerSize = containerBounds.size
         menuMaskView.frame = CGRect(x: 0, y: 0, width: containerSize.width, height: containerSize.height)
-        var height: CGFloat = 0
-        if titles.count > maxVisibleCount {
-            height = itemHeight * CGFloat(maxVisibleCount) + borderWidth * 2
-            tableView.bounces = true
+        let height = getMenuTotalHeight()
+        if let customView {
+            tableView.isHidden = true
         } else {
-            height = itemHeight * CGFloat(titles.count) + borderWidth * 2
-            tableView.bounces = false
+            tableView.isHidden = false
+            tableView.bounces = titles.count > maxVisibleCount
         }
         isChangeDirection = false
         if priorityDirection == .top {
@@ -998,7 +1012,9 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     private func getMenuTotalHeight() -> CGFloat {
         var menuHeight: CGFloat = 0
-        if titles.count > maxVisibleCount {
+        if let customView {
+            menuHeight = customView.bounds.height + borderWidth * 2
+        } else if titles.count > maxVisibleCount {
             menuHeight = itemHeight * CGFloat(maxVisibleCount) + borderWidth * 2
         } else {
             menuHeight = itemHeight * CGFloat(titles.count) + borderWidth * 2
