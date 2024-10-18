@@ -114,6 +114,8 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
         items.append(textItem)
         let labelItem = GuideViewItem(sourceView: customLabel, image: UIImage.app.appIconImage())
         items.append(labelItem)
+        let rectItem = GuideViewItem(rect: CGRect(x: 10, y: app.topBarHeight + 10, width: 44, height: 44), text: NSAttributedString(string: "我是最左侧的引导", attributes: [.font: UIFont.app.font(ofSize: 16), .foregroundColor: UIColor.yellow]))
+        items.append(rectItem)
         
         let vc = GuideViewController(items: items)
         vc.arrowImage = UIImage(named: "guideArrow")
