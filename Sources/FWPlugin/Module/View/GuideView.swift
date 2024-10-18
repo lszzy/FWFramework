@@ -19,20 +19,21 @@ open class GuideViewController: UIViewController {
     }
 
     /// 样式属性定制
-    open var maskCornerRadius: CGFloat = 5
     open var bgAlpha: CGFloat = 0.7
     open var bgColor: UIColor?
     open var spacing: CGFloat = 20
     open var padding: CGFloat = 50
+    open var maskCornerRadius: CGFloat = 5
     open var maskInsets = UIEdgeInsets(top: -8, left: -8, bottom: -8, right: -8)
+    open var maskFillColor = UIColor.black
     open var font = UIFont.systemFont(ofSize: 14)
     open var textColor = UIColor.white
     open var arrowColor: UIColor? = UIColor.white
     open var arrowImage: UIImage?
     open var animationDuration = 0.3
     open var animatedMask = true
-    open var animatedText = true
     open var animatedArrow = true
+    open var animatedContent = true
     open var statusBarHidden = false
 
     /// 设置或获取当前索引
@@ -52,6 +53,7 @@ open class GuideViewController: UIViewController {
     private var items = [GuideViewItem]()
     private let arrowImageView = UIImageView()
     private let textLabel = UILabel()
+    private let imageView = UIImageView()
     private let maskLayer = CAShapeLayer()
     private var completion: (() -> Void)?
     private var guideKey: String?
@@ -157,6 +159,9 @@ open class GuideViewController: UIViewController {
         textLabel.text = currentItem.text
         textLabel.numberOfLines = 0
         view.addSubview(textLabel)
+        
+        imageView.image = currentItem.image
+        view.addSubview(imageView)
 
         configMask()
         configViewFrames()
@@ -165,7 +170,7 @@ open class GuideViewController: UIViewController {
     open func configMask() {
         let fromPath = maskLayer.path
 
-        maskLayer.fillColor = UIColor.black.cgColor
+        maskLayer.fillColor = maskFillColor.cgColor
         let frame = hollowFrame
         let radius = min(maskCornerRadius, min(frame.width / 2.0, frame.height / 2.0))
         let highlightedPath = UIBezierPath(roundedRect: hollowFrame, cornerRadius: radius)
@@ -188,67 +193,90 @@ open class GuideViewController: UIViewController {
         maskLayer.frame = view.bounds
 
         var textRect: CGRect = .zero
+        var imageRect: CGRect = .zero
         var arrowRect: CGRect = .zero
         var transform: CGAffineTransform = .identity
-        let imageSize = arrowImageView.image?.size ?? .zero
+        let arrowSize = arrowImageView.image?.size ?? .zero
         let maxWidth = view.frame.size.width - padding * 2
-        let size = currentItem.text.fw.size(font: font, drawSize: CGSize(width: maxWidth, height: .infinity))
-        let maxX = padding + maxWidth - size.width
+        let textSize = currentItem.text.fw.size(font: font, drawSize: CGSize(width: maxWidth, height: .infinity))
+        let imageSize = currentItem.image?.size ?? .zero
+        let maxX = padding + maxWidth - textSize.width
 
         switch region {
         case .upperLeft:
             transform = CGAffineTransform(scaleX: -1, y: 1)
-            arrowRect = CGRect(x: hollowFrame.midX - imageSize.width / 2,
+            arrowRect = CGRect(x: hollowFrame.midX - arrowSize.width / 2,
                                y: hollowFrame.maxY + spacing,
-                               width: imageSize.width,
-                               height: imageSize.height)
-            let x: CGFloat = max(padding, min(maxX, arrowRect.maxX - size.width / 2))
+                               width: arrowSize.width,
+                               height: arrowSize.height)
+            let x: CGFloat = max(padding, min(maxX, arrowRect.maxX - textSize.width / 2))
             textRect = CGRect(x: x,
                               y: arrowRect.maxY + spacing,
-                              width: size.width,
-                              height: size.height)
+                              width: textSize.width,
+                              height: textSize.height)
+            let imageX: CGFloat = max(padding, min(maxX, arrowRect.maxX - imageSize.width / 2))
+            imageRect = CGRect(x: imageX,
+                              y: arrowRect.maxY + spacing,
+                              width: imageSize.width,
+                              height: imageSize.height)
 
         case .upperRight:
-            arrowRect = CGRect(x: hollowFrame.midX - imageSize.width / 2,
+            arrowRect = CGRect(x: hollowFrame.midX - arrowSize.width / 2,
                                y: hollowFrame.maxY + spacing,
-                               width: imageSize.width,
-                               height: imageSize.height)
-            let x: CGFloat = max(padding, min(maxX, arrowRect.minX - size.width / 2))
+                               width: arrowSize.width,
+                               height: arrowSize.height)
+            let x: CGFloat = max(padding, min(maxX, arrowRect.minX - textSize.width / 2))
             textRect = CGRect(x: x,
                               y: arrowRect.maxY + spacing,
-                              width: size.width,
-                              height: size.height)
+                              width: textSize.width,
+                              height: textSize.height)
+            let imageX: CGFloat = max(padding, min(maxX, arrowRect.minX - imageSize.width / 2))
+            imageRect = CGRect(x: imageX,
+                              y: arrowRect.maxY + spacing,
+                              width: imageSize.width,
+                              height: imageSize.height)
 
         case .lowerLeft:
             transform = CGAffineTransform(scaleX: -1, y: -1)
-            arrowRect = CGRect(x: hollowFrame.midX - imageSize.width / 2,
-                               y: hollowFrame.minY - spacing - imageSize.height,
-                               width: imageSize.width,
-                               height: imageSize.height)
-            let x: CGFloat = max(padding, min(maxX, arrowRect.maxX - size.width / 2))
+            arrowRect = CGRect(x: hollowFrame.midX - arrowSize.width / 2,
+                               y: hollowFrame.minY - spacing - arrowSize.height,
+                               width: arrowSize.width,
+                               height: arrowSize.height)
+            let x: CGFloat = max(padding, min(maxX, arrowRect.maxX - textSize.width / 2))
             textRect = CGRect(x: x,
-                              y: arrowRect.minY - spacing - size.height,
-                              width: size.width,
-                              height: size.height)
+                              y: arrowRect.minY - spacing - textSize.height,
+                              width: textSize.width,
+                              height: textSize.height)
+            let imageX: CGFloat = max(padding, min(maxX, arrowRect.maxX - imageSize.width / 2))
+            imageRect = CGRect(x: imageX,
+                              y: arrowRect.minY - spacing - imageSize.height,
+                              width: imageSize.width,
+                              height: imageSize.height)
 
         case .lowerRight:
             transform = CGAffineTransform(scaleX: 1, y: -1)
-            arrowRect = CGRect(x: hollowFrame.midX - imageSize.width / 2,
-                               y: hollowFrame.minY - spacing - imageSize.height,
-                               width: imageSize.width,
-                               height: imageSize.height)
-            let x: CGFloat = max(padding, min(maxX, arrowRect.minX - size.width / 2))
+            arrowRect = CGRect(x: hollowFrame.midX - arrowSize.width / 2,
+                               y: hollowFrame.minY - spacing - arrowSize.height,
+                               width: arrowSize.width,
+                               height: arrowSize.height)
+            let x: CGFloat = max(padding, min(maxX, arrowRect.minX - textSize.width / 2))
             textRect = CGRect(x: x,
-                              y: arrowRect.minY - spacing - size.height,
-                              width: size.width,
-                              height: size.height)
+                              y: arrowRect.minY - spacing - textSize.height,
+                              width: textSize.width,
+                              height: textSize.height)
+            let imageX: CGFloat = max(padding, min(maxX, arrowRect.minX - imageSize.width / 2))
+            imageRect = CGRect(x: imageX,
+                              y: arrowRect.minY - spacing - imageSize.height,
+                              width: imageSize.width,
+                              height: imageSize.height)
         }
 
-        if animatedArrow && animatedText {
+        if animatedArrow && animatedContent {
             UIView.animate(withDuration: animationDuration, animations: {
                 self.arrowImageView.transform = transform
                 self.arrowImageView.frame = arrowRect
                 self.textLabel.frame = textRect
+                self.imageView.frame = imageRect
             }, completion: nil)
             return
         }
@@ -259,12 +287,14 @@ open class GuideViewController: UIViewController {
                 self.arrowImageView.frame = arrowRect
             }, completion: nil)
             textLabel.frame = textRect
+            imageView.frame = imageRect
             return
         }
 
-        if animatedText {
+        if animatedContent {
             UIView.animate(withDuration: animationDuration, animations: {
                 self.textLabel.frame = textRect
+                self.imageView.frame = imageRect
             }, completion: nil)
             arrowImageView.transform = transform
             arrowImageView.frame = arrowRect
@@ -274,6 +304,7 @@ open class GuideViewController: UIViewController {
         arrowImageView.transform = transform
         arrowImageView.frame = arrowRect
         textLabel.frame = textRect
+        imageView.frame = imageRect
     }
 
     override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -321,21 +352,24 @@ open class GuideViewItem {
     open var sourceView: UIView?
     open var rect: CGRect = .zero
     open var arrowImage: UIImage?
+    open var image: UIImage?
     open var text: String = ""
 
     public init() {}
 
-    public convenience init(sourceView: UIView?, arrowImage: UIImage? = nil, text: String) {
+    public convenience init(sourceView: UIView?, arrowImage: UIImage? = nil, text: String = "", image: UIImage? = nil) {
         self.init()
         self.sourceView = sourceView
         self.arrowImage = arrowImage
         self.text = text
+        self.image = image
     }
 
-    public convenience init(rect: CGRect, arrowImage: UIImage? = nil, text: String) {
+    public convenience init(rect: CGRect, arrowImage: UIImage? = nil, text: String = "", image: UIImage? = nil) {
         self.init()
         self.rect = rect
         self.arrowImage = arrowImage
         self.text = text
+        self.image = image
     }
 }
