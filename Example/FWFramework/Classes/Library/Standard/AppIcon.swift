@@ -10,11 +10,11 @@ import FWFramework
 
 extension Icon {
     static var backImage: UIImage? {
-        UIImage(systemName: "chevron.left")?.app.image(scaleWidth: 24)
+        UIImage.app.image(systemName: "chevron.left", scaleWidth: 24)
     }
 
     static var closeImage: UIImage? {
-        UIImage(systemName: "xmark")?.app.image(scaleWidth: 24)
+        UIImage.app.image(systemName: "xmark", scaleWidth: 24)
     }
 }
 

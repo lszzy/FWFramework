@@ -1,5 +1,13 @@
 # 更新日志
 
+## [6.0.2] - 2024-10-18
+
+### Added
+* 新增GuideView引导视图组件
+* PopupMenu支持自定义视图customView
+* 优化快速创建tableView和collectionView方法
+* 新增UISearchController测试用例
+
 ## [6.0.1] - 2024-10-17
 
 ### Changed
