@@ -39,11 +39,8 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
 
     func setupNavbar() {
         navigationItem.titleView = titleView
-        app.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
-            UIWindow.app.showMessage(text: "点击了刷新按钮")
-        }
-        app.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
-            UIWindow.app.showMessage(text: "点击了动作按钮")
+        app.addRightBarItem(APP.iconImage("zmdi-var-help-outline", 24)) { [weak self] _ in
+            self?.showGuide()
         }
     }
 
@@ -95,6 +92,26 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
 
         view.setNeedsLayout()
         view.layoutIfNeeded()
+    }
+    
+    func showGuide() {
+        var items: [GuideViewItem] = []
+        let textItem = GuideViewItem(sourceView: textField, text: "我是输入框的引导")
+        items.append(textItem)
+        let labelItem = GuideViewItem(sourceView: customLabel, text: "我是自定义标签的引导")
+        items.append(labelItem)
+        
+        let vc = GuideViewController(items: items)
+        vc.arrowImage = UIImage(named: "guideArrow")
+        vc.indexWillChangeBlock = { index, item in
+            print("showGuide indexWillChangeBlock: \(index)")
+        }
+        vc.indexDidChangeBlock = { index, item in
+            print("showGuide indexDidChangeBlock: \(index)")
+        }
+        vc.show(from: self) {
+            print("showGuide completion")
+        }
     }
 
     @objc func onPopupClick(_ sender: UIButton) {
