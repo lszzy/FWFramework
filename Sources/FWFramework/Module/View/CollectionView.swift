@@ -24,21 +24,24 @@ import UIKit
             setProperty(newValue, forName: "collectionDelegate")
         }
     }
-
-    /// 快速创建collectionView
-    public static func collectionView() -> Base {
+    
+    /// 快速创建flowLayout
+    public static func flowLayout() -> UICollectionViewFlowLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
-
-        return collectionView(flowLayout)
+        return flowLayout
     }
 
-    /// 快速创建collectionView，自定义collectionViewLayout
-    public static func collectionView(_ collectionViewLayout: UICollectionViewLayout) -> Base {
-        let collectionView = Base(frame: .zero, collectionViewLayout: collectionViewLayout)
+    /// 快速创建collectionView，可自定义collectionViewLayout(默认flowLayout)，可启用collectionDelegate(默认false)
+    public static func collectionView(_ viewLayout: UICollectionViewLayout? = nil, delegateEnabled: Bool = false) -> Base {
+        let collectionView = Base(frame: .zero, collectionViewLayout: viewLayout ?? flowLayout())
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        if delegateEnabled {
+            collectionView.dataSource = collectionView.fw.collectionDelegate
+            collectionView.delegate = collectionView.fw.collectionDelegate
+        }
         return collectionView
     }
 }

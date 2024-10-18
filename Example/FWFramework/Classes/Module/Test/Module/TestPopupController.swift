@@ -39,11 +39,22 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
 
     func setupNavbar() {
         navigationItem.titleView = titleView
-        app.addRightBarItem(UIBarButtonItem.SystemItem.refresh.rawValue) { _ in
-            UIWindow.app.showMessage(text: "点击了刷新按钮")
+        app.addRightBarItem(APP.iconImage("zmdi-var-help-outline", 24)) { [weak self] _ in
+            self?.showGuide()
         }
-        app.addRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { _ in
-            UIWindow.app.showMessage(text: "点击了动作按钮")
+        app.addRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            let customView = UIImageView()
+            customView.image = UIImage.app.appIconImage()
+            customView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+            customView.isUserInteractionEnabled = true
+            
+            let popupMenu = PopupMenu.show(at: self?.view.center ?? .zero, customView: customView, menuWidth: customView.frame.width) { popupMenu in
+                popupMenu.dismissOnTouchOutside = false
+                popupMenu.arrowHeight = 0
+            }
+            customView.app.addTapGesture { _ in
+                popupMenu.dismiss()
+            }
         }
     }
 
@@ -95,6 +106,28 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
 
         view.setNeedsLayout()
         view.layoutIfNeeded()
+    }
+    
+    func showGuide() {
+        var items: [GuideViewItem] = []
+        let textItem = GuideViewItem(sourceView: textField, text: "我是输入框的引导")
+        items.append(textItem)
+        let labelItem = GuideViewItem(sourceView: customLabel, image: UIImage.app.appIconImage())
+        items.append(labelItem)
+        let rectItem = GuideViewItem(rect: CGRect(x: 10, y: app.topBarHeight + 10, width: 44, height: 44), text: NSAttributedString(string: "我是最左侧的引导", attributes: [.font: UIFont.app.font(ofSize: 16), .foregroundColor: UIColor.yellow]))
+        items.append(rectItem)
+        
+        let vc = GuideViewController(items: items)
+        vc.arrowImage = UIImage(named: "guideArrow")
+        vc.indexWillChangeBlock = { index, item in
+            print("showGuide indexWillChangeBlock: \(index)")
+        }
+        vc.indexDidChangeBlock = { index, item in
+            print("showGuide indexDidChangeBlock: \(index)")
+        }
+        vc.show(from: self) {
+            print("showGuide completion")
+        }
     }
 
     @objc func onPopupClick(_ sender: UIButton) {
