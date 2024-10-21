@@ -149,7 +149,7 @@ extension SettingsController {
         actions.append(APP.localized("themeDark"))
         actions.append(APP.localized("themeGray"))
 
-        app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { index in
+        app.showSheet(title: APP.localized("themeTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in
             if index == actions.count - 1 {
                 if UIWindow.app.main?.app.hasGrayView ?? false {
                     UIWindow.app.main?.app.hideGrayView()
@@ -158,7 +158,7 @@ extension SettingsController {
                 }
             } else {
                 ThemeManager.shared.mode = ThemeMode(index)
-                AppDelegate.shared.reloadController()
+                self?.tableView.reloadData()
             }
         }
     }
