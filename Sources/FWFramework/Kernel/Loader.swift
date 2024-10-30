@@ -29,7 +29,7 @@ public class Loader<Input, Output>: @unchecked Sendable {
     }
 
     private var allLoaders: [Target] = []
-    
+
     /// 初始化方法
     public init() {}
 
