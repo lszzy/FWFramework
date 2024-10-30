@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 // MARK: - CollectionViewFlowLayout
 /// 集合视图流式布局，支持纵向渲染和分页滚动效果
