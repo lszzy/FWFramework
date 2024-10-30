@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.0.3] - 2024-10-30
+
+### Changed
+* Compatible with Xcode 16.1
+* Split uncommonly used Views and Services into FWPlugin/Module submodules, which can be imported as needed
+
 ## [6.0.2] - 2024-10-18
 
 ### Added

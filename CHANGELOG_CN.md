@@ -1,5 +1,11 @@
 # 更新日志
 
+## [6.0.3] - 2024-10-30
+
+### Changed
+* 兼容Xcode 16.1
+* 拆分不常用View和Service到FWPlugin/Module子模块，可按需引入
+
 ## [6.0.2] - 2024-10-18
 
 ### Added
