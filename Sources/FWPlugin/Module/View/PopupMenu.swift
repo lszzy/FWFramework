@@ -401,7 +401,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 图片数组，支持String|UIImage，需show之前调用
     open var images: [Any] = []
-    
+
     /// 自定义视图，需设置高度，优先级高
     open weak var customView: UIView? {
         didSet {

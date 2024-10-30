@@ -24,7 +24,7 @@ import UIKit
             setProperty(newValue, forName: "collectionDelegate")
         }
     }
-    
+
     /// 快速创建flowLayout
     public static func flowLayout() -> UICollectionViewFlowLayout {
         let flowLayout = UICollectionViewFlowLayout()

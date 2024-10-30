@@ -166,7 +166,7 @@ open class GuideViewController: UIViewController {
         }
         textLabel.numberOfLines = 0
         view.addSubview(textLabel)
-        
+
         imageView.image = currentItem.image
         view.addSubview(imageView)
 
@@ -229,9 +229,9 @@ open class GuideViewController: UIViewController {
                               height: textSize.height)
             let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.maxX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
-                              y: arrowRect.maxY + spacing,
-                              width: imageSize.width,
-                              height: imageSize.height)
+                               y: arrowRect.maxY + spacing,
+                               width: imageSize.width,
+                               height: imageSize.height)
 
         case .upperRight:
             arrowRect = CGRect(x: hollowFrame.midX - arrowSize.width / 2,
@@ -245,9 +245,9 @@ open class GuideViewController: UIViewController {
                               height: textSize.height)
             let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.minX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
-                              y: arrowRect.maxY + spacing,
-                              width: imageSize.width,
-                              height: imageSize.height)
+                               y: arrowRect.maxY + spacing,
+                               width: imageSize.width,
+                               height: imageSize.height)
 
         case .lowerLeft:
             transform = CGAffineTransform(scaleX: -1, y: -1)
@@ -262,9 +262,9 @@ open class GuideViewController: UIViewController {
                               height: textSize.height)
             let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.maxX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
-                              y: arrowRect.minY - spacing - imageSize.height,
-                              width: imageSize.width,
-                              height: imageSize.height)
+                               y: arrowRect.minY - spacing - imageSize.height,
+                               width: imageSize.width,
+                               height: imageSize.height)
 
         case .lowerRight:
             transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -279,9 +279,9 @@ open class GuideViewController: UIViewController {
                               height: textSize.height)
             let imageX: CGFloat = max(padding, min(maxImageX, arrowRect.minX - imageSize.width / 2))
             imageRect = CGRect(x: imageX,
-                              y: arrowRect.minY - spacing - imageSize.height,
-                              width: imageSize.width,
-                              height: imageSize.height)
+                               y: arrowRect.minY - spacing - imageSize.height,
+                               width: imageSize.width,
+                               height: imageSize.height)
         }
 
         if animatedArrow && animatedContent {

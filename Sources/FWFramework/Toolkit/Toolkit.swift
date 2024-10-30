@@ -1332,7 +1332,7 @@ extension Wrapper where Base: UIImage {
     public var pixelSize: CGSize {
         CGSize(width: base.size.width * base.scale, height: base.size.height * base.scale)
     }
-    
+
     /// 从SF符号创建UIImage，可指定长边大小
     public static func image(systemName: String, scaleWidth: CGFloat? = nil) -> UIImage? {
         var image = UIImage(systemName: systemName)

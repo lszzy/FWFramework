@@ -307,7 +307,7 @@ public struct NetworkMocker {
         // Whenever someone is requesting the Mocker, we want the URL protocol to be activated.
         _ = URLProtocol.registerClass(NetworkMockerURLProtocol.self)
     }
-    
+
     /// Register mock for sessionConfiguration
     public static func register(for sessionConfiguration: URLSessionConfiguration) {
         let protocolClasses = sessionConfiguration.protocolClasses ?? []
