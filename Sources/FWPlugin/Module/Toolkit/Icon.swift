@@ -7,6 +7,9 @@
 
 import CoreText
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - WrapperGlobal
 extension WrapperGlobal {

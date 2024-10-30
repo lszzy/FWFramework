@@ -83,18 +83,6 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: Set<String>?
 
-    #if DEBUG
-    /// 是否启用Mock，配合NetworkMocker使用，默认false
-    open var mockEnabled: Bool = false {
-        didSet {
-            guard mockEnabled else { return }
-
-            let protocolClasses = sessionConfiguration.protocolClasses ?? []
-            sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
-        }
-    }
-    #endif
-
     private var completionQueue = DispatchQueue(label: "site.wuyong.queue.request.completion", attributes: .concurrent)
 
     /// 管理器，延迟加载前可配置
