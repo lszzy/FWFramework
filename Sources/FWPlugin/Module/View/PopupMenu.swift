@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 弹出菜单箭头方向
 public enum PopupMenuArrowDirection: Int, Sendable {
@@ -398,7 +401,7 @@ open class PopupMenu: UIView, UITableViewDataSource, UITableViewDelegate {
 
     /// 图片数组，支持String|UIImage，需show之前调用
     open var images: [Any] = []
-    
+
     /// 自定义视图，需设置高度，优先级高
     open weak var customView: UIView? {
         didSet {

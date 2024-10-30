@@ -24,7 +24,7 @@ import UIKit
             setProperty(newValue, forName: "collectionDelegate")
         }
     }
-    
+
     /// 快速创建flowLayout
     public static func flowLayout() -> UICollectionViewFlowLayout {
         let flowLayout = UICollectionViewFlowLayout()
@@ -523,6 +523,22 @@ import UIKit
 
         didEndScrollingAnimation?(scrollView)
     }
+}
+
+// MARK: - CollectionViewSectionConfig
+/// 通用布局section配置类
+open class CollectionViewSectionConfig: NSObject {
+    /// 自定义section背景色，默认nil
+    open var backgroundColor: UIColor?
+
+    /// 自定义section句柄，可用于处理边框、圆角、阴影等其他效果
+    open var customBlock: ((UICollectionReusableView) -> Void)?
+}
+
+/// 通用布局section配置协议
+@MainActor @objc public protocol CollectionViewDelegateFlowLayout: UICollectionViewDelegateFlowLayout {
+    /// 自定义section配置可选代理方法
+    @objc optional func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, configForSectionAt index: Int) -> CollectionViewSectionConfig?
 }
 
 // MARK: - CollectionViewLayoutAttributes

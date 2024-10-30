@@ -41,18 +41,6 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
     /// 有效的contentType列表，默认nil不修改
     open var acceptableContentTypes: [String]?
 
-    #if DEBUG
-    /// 是否启用Mock，配合NetworkMocker使用，默认false
-    open var mockEnabled: Bool = false {
-        didSet {
-            guard mockEnabled else { return }
-
-            let protocolClasses = sessionConfiguration.protocolClasses ?? []
-            sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
-        }
-    }
-    #endif
-
     private var rootQueue = DispatchQueue(label: "site.wuyong.queue.request.alamofire.root")
     private var urlEncodingMethods: [RequestMethod] = [.GET, .HEAD, .DELETE]
 

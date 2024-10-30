@@ -30,6 +30,9 @@ public class Loader<Input, Output>: @unchecked Sendable {
 
     private var allLoaders: [Target] = []
 
+    /// 初始化方法
+    public init() {}
+
     /// 添加block加载器，返回标志id
     @discardableResult
     public func append(block: @escaping @Sendable (Input) -> Output?) -> String {

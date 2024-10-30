@@ -5,7 +5,10 @@
 //  Created by wuyong on 2024/8/17.
 //
 
-import Foundation
+import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - AnyChainable
 public protocol AnyChainable {}
@@ -73,5 +76,44 @@ extension Dictionary {
         var result = self
         closure(&result)
         return result
+    }
+}
+
+// MARK: - UIView+ResultBuilder
+/// UIView兼容ArrayResultBuilder
+public protocol ArrayResultBuilderCompatible {}
+
+extension UIView: ArrayResultBuilderCompatible {}
+
+@MainActor extension ArrayResultBuilderCompatible where Self: UIView {
+    /// 初始化并批量配置子视图
+    public init(
+        frame: CGRect = .zero,
+        @ArrayResultBuilder<UIView> _ subviews: () -> [UIView]
+    ) {
+        self.init(frame: frame)
+        arrangeSubviews(subviews)
+    }
+
+    /// 批量配置子视图，支持链式调用
+    @discardableResult
+    public func arrangeSubviews(
+        @ArrayResultBuilder<UIView> _ subviews: () -> [UIView]
+    ) -> Self {
+        for view in subviews() {
+            if view.superview == nil {
+                addSubview(view)
+            }
+        }
+        return self
+    }
+
+    /// 调用布局句柄，支持链式调用
+    @discardableResult
+    public func arrangeLayout(
+        _ block: (Self) -> Void
+    ) -> Self {
+        block(self)
+        return self
     }
 }

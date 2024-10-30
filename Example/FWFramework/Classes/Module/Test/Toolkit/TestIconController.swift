@@ -10,7 +10,7 @@ import FWFramework
 
 class TestIconController: UIViewController, CollectionViewControllerProtocol {
     typealias CollectionElement = String
-    
+
     private lazy var searchController: UISearchController = {
         let result = UISearchController(searchResultsController: resultController)
         result.searchResultsUpdater = resultController
@@ -18,12 +18,12 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
         result.searchBar.placeholder = "搜索"
         return result
     }()
-    
+
     private lazy var resultController: TestIconResultController = {
         let result = TestIconResultController()
         return result
     }()
-    
+
     func setupNavbar() {
         navigationItem.searchController = searchController
         // 设置searchBar为tableHeaderView示例：
@@ -31,7 +31,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
         // 如果进入预编辑状态时searchBar消失，可添加如下代码：
         // definesPresentationContext = true
     }
-    
+
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 60, height: 100)
@@ -71,15 +71,15 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
 
 class TestIconResultController: UIViewController, CollectionViewControllerProtocol, UISearchResultsUpdating {
     typealias CollectionElement = String
-    
+
     var searchData: [CollectionElement] = []
-    
+
     func setupCollectionViewLayout() -> UICollectionViewLayout {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 60, height: 100)
         return flowLayout
     }
-    
+
     func setupCollectionLayout() {
         collectionView.backgroundColor = AppTheme.backgroundColor
         collectionView.app.layoutChain.edges(toSafeArea: .zero)
@@ -88,7 +88,7 @@ class TestIconResultController: UIViewController, CollectionViewControllerProtoc
     func setupSubviews() {
         collectionView.reloadData()
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         searchData.count
     }
@@ -107,16 +107,16 @@ class TestIconResultController: UIViewController, CollectionViewControllerProtoc
         UIPasteboard.general.string = name
         app.showMessage(text: name)
     }
-    
+
     func updateSearchResults(for searchController: UISearchController) {
         searchController.searchResultsController?.view.isHidden = false
-        
+
         var result: [CollectionElement] = []
         let text = searchController.searchBar.text ?? ""
         if text.count > 0 {
-            result = collectionData.filter({ icon in
+            result = collectionData.filter { icon in
                 icon.lowercased().contains(text.lowercased())
-            })
+            }
         }
         searchData = result
         collectionView.reloadData()
