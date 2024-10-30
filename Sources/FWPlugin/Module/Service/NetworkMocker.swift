@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 #if DEBUG
 
@@ -303,6 +306,12 @@ public struct NetworkMocker {
     private init() {
         // Whenever someone is requesting the Mocker, we want the URL protocol to be activated.
         _ = URLProtocol.registerClass(NetworkMockerURLProtocol.self)
+    }
+    
+    /// Register mock for sessionConfiguration
+    public static func register(for sessionConfiguration: URLSessionConfiguration) {
+        let protocolClasses = sessionConfiguration.protocolClasses ?? []
+        sessionConfiguration.protocolClasses = [NetworkMockerURLProtocol.self] + protocolClasses
     }
 
     /// Register new Mocked data. If a mock for the same URL and HTTPMethod exists, it will be overwritten.

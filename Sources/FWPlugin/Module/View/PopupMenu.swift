@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 弹出菜单箭头方向
 public enum PopupMenuArrowDirection: Int, Sendable {

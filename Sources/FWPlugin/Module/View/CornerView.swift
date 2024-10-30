@@ -7,6 +7,9 @@
 
 import QuartzCore
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - RoundedCornerView
 /// 半圆圆角View，无需frame快捷设置半圆圆角、边框等
