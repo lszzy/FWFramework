@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 分析上报者协议
 public protocol AnalysisReporter {

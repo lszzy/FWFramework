@@ -388,7 +388,7 @@ extension Divider {
 
     /// 自定义分割线尺寸，使用scale实现，参数nil时为Divider默认配置
     public func dividerStyle(size: CGFloat? = nil, color: Color? = nil) -> some View {
-        scaleEffect(y: UIScreen.main.scale * (size ?? Divider.defaultSize))
+        scaleEffect(y: UIScreen.fw.screenScale * (size ?? Divider.defaultSize))
             .frame(height: size ?? Divider.defaultSize)
             .background(color ?? Divider.defaultColor)
     }

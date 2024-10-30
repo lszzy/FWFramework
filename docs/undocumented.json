@@ -1997,287 +1997,287 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 70,
+      "line": 54,
       "symbol": "CollectionViewFlowLayout.prepare()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 90,
+      "line": 74,
       "symbol": "CollectionViewFlowLayout.layoutAttributesForItem(at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 106,
+      "line": 90,
       "symbol": "CollectionViewFlowLayout.layoutAttributesForElements(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 193,
+      "line": 177,
       "symbol": "CollectionViewFlowLayout.invalidateLayout(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 221,
+      "line": 205,
       "symbol": "CollectionViewFlowLayout.targetContentOffset(forProposedContentOffset:withScrollingVelocity:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 323,
+      "line": 307,
       "symbol": "CollectionViewWaterfallLayoutItemRenderDirection",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 324,
+      "line": 308,
       "symbol": "CollectionViewWaterfallLayoutItemRenderDirection.shortestFirst",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 325,
+      "line": 309,
       "symbol": "CollectionViewWaterfallLayoutItemRenderDirection.leftToRight",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 326,
+      "line": 310,
       "symbol": "CollectionViewWaterfallLayoutItemRenderDirection.rightToLeft",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 329,
+      "line": 313,
       "symbol": "CollectionViewDelegateWaterfallLayout",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 331,
+      "line": 315,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:sizeForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 333,
+      "line": 317,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:columnCountForSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 335,
+      "line": 319,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:heightForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 337,
+      "line": 321,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:heightForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 339,
+      "line": 323,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:insetForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 341,
+      "line": 325,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:insetForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 343,
+      "line": 327,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:insetForFooterInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 345,
+      "line": 329,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:minimumInteritemSpacingForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 347,
+      "line": 331,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:minimumColumnSpacingForSectionAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 349,
+      "line": 333,
       "symbol": "CollectionViewDelegateWaterfallLayout.collectionView(_:layout:pinOffsetForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 354,
+      "line": 338,
       "symbol": "CollectionViewWaterfallLayout.columnCount",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 362,
+      "line": 346,
       "symbol": "CollectionViewWaterfallLayout.minimumColumnSpacing",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 370,
+      "line": 354,
       "symbol": "CollectionViewWaterfallLayout.minimumInteritemSpacing",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 378,
+      "line": 362,
       "symbol": "CollectionViewWaterfallLayout.headerHeight",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 386,
+      "line": 370,
       "symbol": "CollectionViewWaterfallLayout.footerHeight",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 394,
+      "line": 378,
       "symbol": "CollectionViewWaterfallLayout.headerInset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 402,
+      "line": 386,
       "symbol": "CollectionViewWaterfallLayout.footerInset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 410,
+      "line": 394,
       "symbol": "CollectionViewWaterfallLayout.sectionInset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 418,
+      "line": 402,
       "symbol": "CollectionViewWaterfallLayout.itemRenderDirection",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 426,
+      "line": 410,
       "symbol": "CollectionViewWaterfallLayout.minimumContentHeight",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 427,
+      "line": 411,
       "symbol": "CollectionViewWaterfallLayout.sectionHeadersPinToVisibleBounds",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 452,
+      "line": 436,
       "symbol": "CollectionViewWaterfallLayout.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 456,
+      "line": 440,
       "symbol": "CollectionViewWaterfallLayout.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 460,
+      "line": 444,
       "symbol": "CollectionViewWaterfallLayout.columnCountForSection(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 468,
+      "line": 452,
       "symbol": "CollectionViewWaterfallLayout.itemWidthInSectionAt(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 483,
+      "line": 467,
       "symbol": "CollectionViewWaterfallLayout.prepare()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 630,
+      "line": 614,
       "symbol": "CollectionViewWaterfallLayout.collectionViewContentSize",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 642,
+      "line": 626,
       "symbol": "CollectionViewWaterfallLayout.layoutAttributesForItem(at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 653,
+      "line": 637,
       "symbol": "CollectionViewWaterfallLayout.layoutAttributesForSupplementaryView(ofKind:at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 663,
+      "line": 647,
       "symbol": "CollectionViewWaterfallLayout.layoutAttributesForElements(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionLayout.swift",
-      "line": 746,
+      "line": 730,
       "symbol": "CollectionViewWaterfallLayout.shouldInvalidateLayout(forBoundsChange:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -2412,48 +2412,6 @@
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CollectionView.swift",
       "line": 519,
       "symbol": "CollectionViewDelegate.scrollViewDidEndScrollingAnimation(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 53,
-      "symbol": "RoundedCornerView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 58,
-      "symbol": "RoundedCornerView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 63,
-      "symbol": "RoundedCornerView.layoutSubviews()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 107,
-      "symbol": "RectCornerView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 112,
-      "symbol": "RectCornerView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/CornerView.swift",
-      "line": 117,
-      "symbol": "RectCornerView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -2602,580 +2560,6 @@
       "line": 309,
       "symbol": "BorderDotView.currentDotColor",
       "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 11,
-      "symbol": "PasscodeEditStatus",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 12,
-      "symbol": "PasscodeEditStatus.idle",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 13,
-      "symbol": "PasscodeEditStatus.beginEdit",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 14,
-      "symbol": "PasscodeEditStatus.endEdit",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 17,
-      "symbol": "PasscodeInputType",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 94,
-      "symbol": "PasscodeView.textDidChangeBlock",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 96,
-      "symbol": "PasscodeView.editStatusChangeBlock",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 98,
-      "symbol": "PasscodeView.customCellBlock",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 100,
-      "symbol": "PasscodeView.collectionView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 111,
-      "symbol": "PasscodeView.flowLayout",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 122,
-      "symbol": "PasscodeView.cellProperty",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 124,
-      "symbol": "PasscodeView.textValue",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 128,
-      "symbol": "PasscodeView.textAccessoryView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 153,
-      "symbol": "PasscodeView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 160,
-      "symbol": "PasscodeView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 167,
-      "symbol": "PasscodeView.init(codeLength:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 265,
-      "symbol": "PasscodeView.collectionView(_:numberOfItemsInSection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 269,
-      "symbol": "PasscodeView.collectionView(_:cellForItemAt:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 308,
-      "symbol": "PasscodeView.textFieldDidBeginEditing(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 319,
-      "symbol": "PasscodeView.textFieldDidEndEditing(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 485,
-      "symbol": "PasscodeSecurityType",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 486,
-      "symbol": "PasscodeSecurityType.symbol",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 487,
-      "symbol": "PasscodeSecurityType.view",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 490,
-      "symbol": "PasscodeCellProperty",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 566,
-      "symbol": "PasscodeCellProperty.index",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 568,
-      "symbol": "PasscodeCellProperty.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 590,
-      "symbol": "PasscodeCellProperty.copy(with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 623,
-      "symbol": "PasscodeCell",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 634,
-      "symbol": "PasscodeCell.cursorView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 661,
-      "symbol": "PasscodeCell.isSelected",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 717,
-      "symbol": "PasscodeCell.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 723,
-      "symbol": "PasscodeCell.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 741,
-      "symbol": "PasscodeCell.layoutSubviews()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 827,
-      "symbol": "PasscodeLineView",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 840,
-      "symbol": "PasscodeLineView.lineView",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 851,
-      "symbol": "PasscodeLineView.selected",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 857,
-      "symbol": "PasscodeLineView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 863,
-      "symbol": "PasscodeLineView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 877,
-      "symbol": "PasscodeSecrectImageView",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 878,
-      "symbol": "PasscodeSecrectImageView.image",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 884,
-      "symbol": "PasscodeSecrectImageView.imageWidth",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 890,
-      "symbol": "PasscodeSecrectImageView.imageHeight",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 901,
-      "symbol": "PasscodeSecrectImageView.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 907,
-      "symbol": "PasscodeSecrectImageView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 920,
-      "symbol": "PasscodeFlowLayout",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 921,
-      "symbol": "PasscodeFlowLayout.equalGap",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 923,
-      "symbol": "PasscodeFlowLayout.itemNum",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 925,
-      "symbol": "PasscodeFlowLayout.minLineSpacing",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 927,
-      "symbol": "PasscodeFlowLayout.prepare()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PasscodeView.swift",
-      "line": 935,
-      "symbol": "PasscodeFlowLayout.updateLineSpacing()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 12,
-      "symbol": "PopupMenuArrowDirection.top",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 13,
-      "symbol": "PopupMenuArrowDirection.bottom",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 14,
-      "symbol": "PopupMenuArrowDirection.left",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 15,
-      "symbol": "PopupMenuArrowDirection.right",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 16,
-      "symbol": "PopupMenuArrowDirection.none",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 21,
-      "symbol": "PopupMenuPath.maskLayer(rect:rectCorner:cornerRadius:arrowWidth:arrowHeight:arrowPosition:arrowDirection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 35,
-      "symbol": "PopupMenuPath.bezierPath(rect:rectCorner:cornerRadius:borderWidth:borderColor:backgroundColor:arrowWidth:arrowHeight:arrowPosition:arrowDirection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 198,
-      "symbol": "PopupMenuDeviceOrientationManager.deviceOrientationDidChangeHandler",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 234,
-      "symbol": "PopupMenuAnimationStyle.scale",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 235,
-      "symbol": "PopupMenuAnimationStyle.fade",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 236,
-      "symbol": "PopupMenuAnimationStyle.none",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 237,
-      "symbol": "PopupMenuAnimationStyle.custom",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 286,
-      "symbol": "PopupMenuAnimationManager.displayShowAnimationCompletion(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 297,
-      "symbol": "PopupMenuAnimationManager.displayDismissAnimationCompletion(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 308,
-      "symbol": "PopupMenuAnimationManager.animationDidStop(_:finished:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 372,
-      "symbol": "PopupMenuPriorityDirection.top",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 373,
-      "symbol": "PopupMenuPriorityDirection.bottom",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 374,
-      "symbol": "PopupMenuPriorityDirection.left",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 375,
-      "symbol": "PopupMenuPriorityDirection.right",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 376,
-      "symbol": "PopupMenuPriorityDirection.none",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 381,
-      "symbol": "PopupMenuDelegate.popupMenuBeganDismiss(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 382,
-      "symbol": "PopupMenuDelegate.popupMenuDidDismiss(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 383,
-      "symbol": "PopupMenuDelegate.popupMenuBeganShow(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 384,
-      "symbol": "PopupMenuDelegate.popupMenuDidShow(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 623,
-      "symbol": "PopupMenu.init(frame:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 628,
-      "symbol": "PopupMenu.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 687,
-      "symbol": "PopupMenu.tableView(_:numberOfRowsInSection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 691,
-      "symbol": "PopupMenu.tableView(_:cellForRowAt:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 735,
-      "symbol": "PopupMenu.tableView(_:heightForRowAt:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 739,
-      "symbol": "PopupMenu.tableView(_:didSelectRowAt:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 750,
-      "symbol": "PopupMenu.frame",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/PopupMenu.swift",
-      "line": 765,
-      "symbol": "PopupMenu.draw(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -10515,160 +9899,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 111,
-      "symbol": "NetworkMockOnRequestHandler.OnRequest",
-      "symbol_kind": "source.lang.swift.decl.typealias",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 227,
-      "symbol": "NetworkMocker.HTTPVersion",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 228,
-      "symbol": "NetworkMocker.HTTPVersion.http1_0",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 229,
-      "symbol": "NetworkMocker.HTTPVersion.http1_1",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 230,
-      "symbol": "NetworkMocker.HTTPVersion.http2_0",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 376,
-      "symbol": "NetworkMock.HTTPMethod.options",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 377,
-      "symbol": "NetworkMock.HTTPMethod.get",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 378,
-      "symbol": "NetworkMock.HTTPMethod.head",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 379,
-      "symbol": "NetworkMock.HTTPMethod.post",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 380,
-      "symbol": "NetworkMock.HTTPMethod.put",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 381,
-      "symbol": "NetworkMock.HTTPMethod.patch",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 382,
-      "symbol": "NetworkMock.HTTPMethod.delete",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 383,
-      "symbol": "NetworkMock.HTTPMethod.trace",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 384,
-      "symbol": "NetworkMock.HTTPMethod.connect",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 387,
-      "symbol": "NetworkMock.OnRequest",
-      "symbol_kind": "source.lang.swift.decl.typealias",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 608,
-      "symbol": "NetworkMock.DataType.init(name:headerValue:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 616,
-      "symbol": "NetworkMock.DataType.json",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 617,
-      "symbol": "NetworkMock.DataType.html",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 618,
-      "symbol": "NetworkMock.DataType.imagePNG",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 619,
-      "symbol": "NetworkMock.DataType.pdf",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 620,
-      "symbol": "NetworkMock.DataType.mp4",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/NetworkMocker.swift",
-      "line": 621,
-      "symbol": "NetworkMock.DataType.zip",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/SecurityPolicy.swift",
       "line": 11,
       "symbol": "SSLPinningMode",
@@ -11006,7 +10236,7 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/Network/URLRequestSerialization.swift",
-      "line": 276,
+      "line": 264,
       "symbol": "StreamingMultipartFormData",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
@@ -12706,13 +11936,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Analyzer.swift",
-      "line": 62,
-      "symbol": "Analyzer.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/AnimatedImage.swift",
       "line": 105,
       "symbol": "ImageCoderOptions.init(_:)",
@@ -13500,13 +12723,6 @@
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/Location.swift",
       "line": 201,
       "symbol": "LocationManager.locationManager(_:didFailWithError:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Service/System/VersionManager.swift",
-      "line": 57,
-      "symbol": "VersionManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -14635,27 +13851,6 @@
       "line": 797,
       "symbol": "TapGestureRecognizer.reset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Chainable.swift",
-      "line": 11,
-      "symbol": "AnyChainable",
-      "symbol_kind": "source.lang.swift.decl.protocol",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Chainable.swift",
-      "line": 15,
-      "symbol": "AnyChainable",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Toolkit/Chainable.swift",
-      "line": 36,
-      "symbol": "AnyChainable",
-      "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
@@ -16241,6 +15436,167 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/Analyzer.swift",
+      "line": 65,
+      "symbol": "Analyzer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 114,
+      "symbol": "NetworkMockOnRequestHandler.OnRequest",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 230,
+      "symbol": "NetworkMocker.HTTPVersion",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 231,
+      "symbol": "NetworkMocker.HTTPVersion.http1_0",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 232,
+      "symbol": "NetworkMocker.HTTPVersion.http1_1",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 233,
+      "symbol": "NetworkMocker.HTTPVersion.http2_0",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 385,
+      "symbol": "NetworkMock.HTTPMethod.options",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 386,
+      "symbol": "NetworkMock.HTTPMethod.get",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 387,
+      "symbol": "NetworkMock.HTTPMethod.head",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 388,
+      "symbol": "NetworkMock.HTTPMethod.post",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 389,
+      "symbol": "NetworkMock.HTTPMethod.put",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 390,
+      "symbol": "NetworkMock.HTTPMethod.patch",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 391,
+      "symbol": "NetworkMock.HTTPMethod.delete",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 392,
+      "symbol": "NetworkMock.HTTPMethod.trace",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 393,
+      "symbol": "NetworkMock.HTTPMethod.connect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 396,
+      "symbol": "NetworkMock.OnRequest",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 617,
+      "symbol": "NetworkMock.DataType.init(name:headerValue:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 625,
+      "symbol": "NetworkMock.DataType.json",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 626,
+      "symbol": "NetworkMock.DataType.html",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 627,
+      "symbol": "NetworkMock.DataType.imagePNG",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 628,
+      "symbol": "NetworkMock.DataType.pdf",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 629,
+      "symbol": "NetworkMock.DataType.mp4",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/NetworkMocker.swift",
+      "line": 630,
+      "symbol": "NetworkMock.DataType.zip",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/PlayerCache.swift",
       "line": 17,
       "symbol": "PlayerCacheLoaderManagerDelegate",
@@ -17109,9 +16465,9 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/Recognizer.swift",
-      "line": 27,
-      "symbol": "Recognizer.Result.init()",
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Service/VersionManager.swift",
+      "line": 57,
+      "symbol": "VersionManager.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -18873,6 +18229,34 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Toolkit/Chainable.swift",
+      "line": 14,
+      "symbol": "AnyChainable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Toolkit/Chainable.swift",
+      "line": 18,
+      "symbol": "AnyChainable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Toolkit/Chainable.swift",
+      "line": 39,
+      "symbol": "AnyChainable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/Toolkit/Recognizer.swift",
+      "line": 27,
+      "symbol": "Recognizer.Result.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/AlignLayout.swift",
       "line": 41,
       "symbol": "CollectionViewItemsDirection.ltr",
@@ -19395,6 +18779,48 @@
       "line": 860,
       "symbol": "BarrageTrackInfo.trackIdentifier",
       "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 56,
+      "symbol": "RoundedCornerView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 61,
+      "symbol": "RoundedCornerView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 66,
+      "symbol": "RoundedCornerView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 110,
+      "symbol": "RectCornerView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 115,
+      "symbol": "RectCornerView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/CornerView.swift",
+      "line": 120,
+      "symbol": "RectCornerView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -20409,6 +19835,580 @@
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PagingView.swift",
       "line": 1506,
       "symbol": "PagingSmoothCollectionView.gestureRecognizer(_:shouldReceive:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 14,
+      "symbol": "PasscodeEditStatus",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 15,
+      "symbol": "PasscodeEditStatus.idle",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 16,
+      "symbol": "PasscodeEditStatus.beginEdit",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 17,
+      "symbol": "PasscodeEditStatus.endEdit",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 20,
+      "symbol": "PasscodeInputType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 97,
+      "symbol": "PasscodeView.textDidChangeBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 99,
+      "symbol": "PasscodeView.editStatusChangeBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 101,
+      "symbol": "PasscodeView.customCellBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 103,
+      "symbol": "PasscodeView.collectionView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 114,
+      "symbol": "PasscodeView.flowLayout",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 125,
+      "symbol": "PasscodeView.cellProperty",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 127,
+      "symbol": "PasscodeView.textValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 131,
+      "symbol": "PasscodeView.textAccessoryView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 156,
+      "symbol": "PasscodeView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 163,
+      "symbol": "PasscodeView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 170,
+      "symbol": "PasscodeView.init(codeLength:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 268,
+      "symbol": "PasscodeView.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 272,
+      "symbol": "PasscodeView.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 311,
+      "symbol": "PasscodeView.textFieldDidBeginEditing(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 322,
+      "symbol": "PasscodeView.textFieldDidEndEditing(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 488,
+      "symbol": "PasscodeSecurityType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 489,
+      "symbol": "PasscodeSecurityType.symbol",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 490,
+      "symbol": "PasscodeSecurityType.view",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 493,
+      "symbol": "PasscodeCellProperty",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 569,
+      "symbol": "PasscodeCellProperty.index",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 571,
+      "symbol": "PasscodeCellProperty.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 593,
+      "symbol": "PasscodeCellProperty.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 626,
+      "symbol": "PasscodeCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 637,
+      "symbol": "PasscodeCell.cursorView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 664,
+      "symbol": "PasscodeCell.isSelected",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 720,
+      "symbol": "PasscodeCell.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 726,
+      "symbol": "PasscodeCell.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 744,
+      "symbol": "PasscodeCell.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 830,
+      "symbol": "PasscodeLineView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 843,
+      "symbol": "PasscodeLineView.lineView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 854,
+      "symbol": "PasscodeLineView.selected",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 860,
+      "symbol": "PasscodeLineView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 866,
+      "symbol": "PasscodeLineView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 880,
+      "symbol": "PasscodeSecrectImageView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 881,
+      "symbol": "PasscodeSecrectImageView.image",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 887,
+      "symbol": "PasscodeSecrectImageView.imageWidth",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 893,
+      "symbol": "PasscodeSecrectImageView.imageHeight",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 904,
+      "symbol": "PasscodeSecrectImageView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 910,
+      "symbol": "PasscodeSecrectImageView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 923,
+      "symbol": "PasscodeFlowLayout",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 924,
+      "symbol": "PasscodeFlowLayout.equalGap",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 926,
+      "symbol": "PasscodeFlowLayout.itemNum",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 928,
+      "symbol": "PasscodeFlowLayout.minLineSpacing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 930,
+      "symbol": "PasscodeFlowLayout.prepare()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PasscodeView.swift",
+      "line": 938,
+      "symbol": "PasscodeFlowLayout.updateLineSpacing()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 15,
+      "symbol": "PopupMenuArrowDirection.top",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 16,
+      "symbol": "PopupMenuArrowDirection.bottom",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 17,
+      "symbol": "PopupMenuArrowDirection.left",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 18,
+      "symbol": "PopupMenuArrowDirection.right",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 19,
+      "symbol": "PopupMenuArrowDirection.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 24,
+      "symbol": "PopupMenuPath.maskLayer(rect:rectCorner:cornerRadius:arrowWidth:arrowHeight:arrowPosition:arrowDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 38,
+      "symbol": "PopupMenuPath.bezierPath(rect:rectCorner:cornerRadius:borderWidth:borderColor:backgroundColor:arrowWidth:arrowHeight:arrowPosition:arrowDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 201,
+      "symbol": "PopupMenuDeviceOrientationManager.deviceOrientationDidChangeHandler",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 237,
+      "symbol": "PopupMenuAnimationStyle.scale",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 238,
+      "symbol": "PopupMenuAnimationStyle.fade",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 239,
+      "symbol": "PopupMenuAnimationStyle.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 240,
+      "symbol": "PopupMenuAnimationStyle.custom",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 289,
+      "symbol": "PopupMenuAnimationManager.displayShowAnimationCompletion(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 300,
+      "symbol": "PopupMenuAnimationManager.displayDismissAnimationCompletion(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 311,
+      "symbol": "PopupMenuAnimationManager.animationDidStop(_:finished:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 375,
+      "symbol": "PopupMenuPriorityDirection.top",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 376,
+      "symbol": "PopupMenuPriorityDirection.bottom",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 377,
+      "symbol": "PopupMenuPriorityDirection.left",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 378,
+      "symbol": "PopupMenuPriorityDirection.right",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 379,
+      "symbol": "PopupMenuPriorityDirection.none",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 384,
+      "symbol": "PopupMenuDelegate.popupMenuBeganDismiss(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 385,
+      "symbol": "PopupMenuDelegate.popupMenuDidDismiss(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 386,
+      "symbol": "PopupMenuDelegate.popupMenuBeganShow(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 387,
+      "symbol": "PopupMenuDelegate.popupMenuDidShow(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 626,
+      "symbol": "PopupMenu.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 631,
+      "symbol": "PopupMenu.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 690,
+      "symbol": "PopupMenu.tableView(_:numberOfRowsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 694,
+      "symbol": "PopupMenu.tableView(_:cellForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 738,
+      "symbol": "PopupMenu.tableView(_:heightForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 742,
+      "symbol": "PopupMenu.tableView(_:didSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 753,
+      "symbol": "PopupMenu.frame",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWPlugin/Module/View/PopupMenu.swift",
+      "line": 768,
+      "symbol": "PopupMenu.draw(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
