@@ -870,7 +870,7 @@ extension Wrapper where Base: UIBezierPath {
 
     /// 定义类通用样式实现句柄，默认样式default
     public static func defineStyle(
-        _ style: ViewStyle = .default,
+        _ style: ViewStyle<Base> = .default,
         block: @escaping @MainActor @Sendable (Base) -> Void
     ) {
         let styleBlock: (UIView) -> Void = { view in
@@ -881,7 +881,7 @@ extension Wrapper where Base: UIBezierPath {
     }
 
     /// 应用类通用样式，默认样式default
-    public func addStyle(_ style: ViewStyle = .default) {
+    public func addStyle(_ style: ViewStyle<Base> = .default) {
         let styleKey = "viewStyleBlock_\(style.rawValue)"
         var styleBlock: ((UIView) -> Void)?
         var styleClass: AnyClass? = type(of: base)
@@ -3241,11 +3241,18 @@ extension Wrapper where Base: UIBezierPath {
 
 // MARK: - ViewStyle
 /// 视图样式可扩展枚举
-public struct ViewStyle: RawRepresentable, Equatable, Hashable, Sendable {
+///
+/// 自定义UITextField扩展custom样式示例：
+/// ```swift
+/// extension ViewStyle where Base: UITextField {
+///     public static var custom: Self { .init("custom") }
+/// }
+/// ```
+public struct ViewStyle<Base: UIView>: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = String
-
-    /// 默认视图样式
-    public static let `default`: ViewStyle = .init("default")
+    
+    /// 默认视图通用样式
+    public static var `default`: Self { .init("default") }
 
     public var rawValue: String
 
