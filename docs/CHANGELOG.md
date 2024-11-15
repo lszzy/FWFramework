@@ -1,5 +1,10 @@
 # Changelog
 
+## [6.0.4] - 2024-11-15
+
+### Changed
+* ViewStyle supports extending custom styles based on view types and removes the default style
+
 ## [6.0.3] - 2024-10-30
 
 ### Changed
