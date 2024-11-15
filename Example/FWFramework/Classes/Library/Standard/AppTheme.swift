@@ -23,6 +23,10 @@ extension NavigationBarStyle {
     public static let transparent: NavigationBarStyle = .init(2)
 }
 
+extension ViewStyle where Base: UIView {
+    public static var `default`: Self { .init("default") }
+}
+
 class AppTheme: NSObject {
     public static var backgroundColor: UIColor {
         UIColor.app.themeLight(.white, dark: .black)
