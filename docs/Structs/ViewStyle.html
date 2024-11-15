@@ -17,7 +17,7 @@
     <a title="ViewStyle Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">FWFramework 6.0.3 Docs</a> (63% documented)</p>
+        <p><a href="../index.html">FWFramework 6.0.4 Docs</a> (63% documented)</p>
         <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
         <div class="header-right">
           <form role="search" action="../search.json">
@@ -2548,11 +2548,23 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ViewStyle</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Sendable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ViewStyle</span><span class="o">&lt;</span><span class="kt">Base</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Sendable</span> <span class="k">where</span> <span class="kt">Base</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                 </div>
               </div>
             <p>视图样式可扩展枚举</p>
+
+<p>定义UIView通用default样式示例：</p>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ViewStyle</span> <span class="k">where</span> <span class="kt">Base</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">var</span> <span class="p">`</span><span class="nv">default</span><span class="p">`:</span> <span class="k">Self</span> <span class="p">{</span> <span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="s">"default"</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>自定义UITextField扩展custom样式示例：</p>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ViewStyle</span> <span class="k">where</span> <span class="kt">Base</span><span class="p">:</span> <span class="kt">UITextField</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">custom</span><span class="p">:</span> <span class="k">Self</span> <span class="p">{</span> <span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="s">"custom"</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
           </section>
           <section class="section task-group-section">
@@ -2578,33 +2590,6 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RawValue</span> <span class="o">=</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:11FWFramework9ViewStyleV7defaultACvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/default" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ViewStyleV7defaultACvpZ">default</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>默认视图样式</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">let</span> <span class="p">`</span><span class="nv">default</span><span class="p">`:</span> <span class="kt">ViewStyle</span></code></pre>
 
                         </div>
                       </div>
@@ -2666,9 +2651,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11FWFramework9ViewStyleVyACSScfc"></a>
+                    <a name="/s:11FWFramework9ViewStyleVyACyxGSScfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11FWFramework9ViewStyleVyACSScfc">init(_:<wbr>)</a>
+                    <a class="token" href="#/s:11FWFramework9ViewStyleVyACyxGSScfc">init(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2695,7 +2680,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-10-30)</p>
+          <p>&copy; 2024 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2024-11-15)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
