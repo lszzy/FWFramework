@@ -882,8 +882,11 @@ open class PresentationController: UIPresentationController {
                 presentedView?.fw.setCornerLayer(rectCorner, radius: cornerRadius)
             }
         }
-        dimmingView.frame = containerView?.bounds ?? .zero
-        containerView?.insertSubview(dimmingView, at: 0)
+        if let containerView {
+            dimmingView.frame = containerView.bounds
+            containerView.insertSubview(dimmingView, at: 0)
+            dimmingView.fw.pinEdges(autoScale: false)
+        }
 
         if dimmingAnimated {
             dimmingView.alpha = 0
