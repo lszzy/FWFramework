@@ -859,6 +859,7 @@ open class PresentationController: UIPresentationController {
     private lazy var dimmingView: UIView = {
         let result = UIView(frame: containerView?.bounds ?? .zero)
         result.backgroundColor = dimmingColor
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTapAction(_:)))
         result.addGestureRecognizer(tapGesture)
@@ -882,11 +883,8 @@ open class PresentationController: UIPresentationController {
                 presentedView?.fw.setCornerLayer(rectCorner, radius: cornerRadius)
             }
         }
-        if let containerView {
-            dimmingView.frame = containerView.bounds
-            containerView.insertSubview(dimmingView, at: 0)
-            dimmingView.fw.pinEdges(autoScale: false)
-        }
+        dimmingView.frame = containerView?.bounds ?? .zero
+        containerView?.insertSubview(dimmingView, at: 0)
 
         if dimmingAnimated {
             dimmingView.alpha = 0
