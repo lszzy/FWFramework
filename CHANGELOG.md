@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.0.5] - 2025-02-12
+
+### Fixed
+* Fixed the issue that the dimmingColor of the ViewTransition component does not occupy the full space when switching to horizontal screen
+* Added the appendURL method in Router to splice query parameters
+
 ## [6.0.4] - 2024-11-15
 
 ### Changed
