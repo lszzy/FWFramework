@@ -859,6 +859,7 @@ open class PresentationController: UIPresentationController {
     private lazy var dimmingView: UIView = {
         let result = UIView(frame: containerView?.bounds ?? .zero)
         result.backgroundColor = dimmingColor
+        result.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTapAction(_:)))
         result.addGestureRecognizer(tapGesture)
