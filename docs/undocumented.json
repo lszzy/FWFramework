@@ -4867,91 +4867,91 @@
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 873,
+      "line": 874,
       "symbol": "PresentationController.presentationTransitionWillBegin()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 896,
+      "line": 897,
       "symbol": "PresentationController.dismissalTransitionWillBegin()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 906,
+      "line": 907,
       "symbol": "PresentationController.dismissalTransitionDidEnd(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 914,
+      "line": 915,
       "symbol": "PresentationController.frameOfPresentedViewInContainerView",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 992,
+      "line": 993,
       "symbol": "PanGestureRecognizer.init(target:action:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 997,
+      "line": 998,
       "symbol": "PanGestureRecognizer.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1002,
+      "line": 1003,
       "symbol": "PanGestureRecognizer.reset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1007,
+      "line": 1008,
       "symbol": "PanGestureRecognizer.touchesBegan(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1013,
+      "line": 1014,
       "symbol": "PanGestureRecognizer.touchesMoved(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1083,
+      "line": 1084,
       "symbol": "PanGestureRecognizer.gestureRecognizerShouldBegin(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1102,
+      "line": 1103,
       "symbol": "PanGestureRecognizer.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1123,
+      "line": 1124,
       "symbol": "PanGestureRecognizer.gestureRecognizer(_:shouldBeRequiredToFailBy:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Volumes/Data/Work/Github/lszzy/FWFramework/Sources/FWFramework/Module/View/ViewTransition.swift",
-      "line": 1150,
+      "line": 1151,
       "symbol": "PanGestureRecognizer.gestureRecognizer(_:shouldRequireFailureOf:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
