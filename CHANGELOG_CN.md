@@ -1,5 +1,11 @@
 # 更新日志
 
+## [6.0.5] - 2025-02-12
+
+### Fixed
+* 修复ViewTransition组件dimmingColor切换横屏时未占满问题
+* Router新增appendURL方法拼接query参数
+
 ## [6.0.4] - 2024-11-15
 
 ### Changed
