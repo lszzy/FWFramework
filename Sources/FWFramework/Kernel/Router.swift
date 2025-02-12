@@ -412,6 +412,25 @@ public class Router: NSObject, @unchecked Sendable {
         }
         return parsedResult
     }
+    
+    /// 调用此方法来给URL附加query参数
+    ///
+    /// Router.appendURL(url, parameters: ["id": 1])
+    /// - Parameters:
+    ///   - url: 需要拼接query参数的链接
+    ///   - parameters: query参数字典
+    /// - Returns: 返回生成的URL String
+    public class func appendURL(_ url: String, parameters: [AnyHashable: Any]?) -> String {
+        var urlString = url + (url.contains("?") ? "&" : "?")
+        let urlParams = parameters ?? [:]
+        for (key, value) in urlParams {
+            let valueStr = String.fw.safeString(value)
+                .replacingOccurrences(of: " ", with: "+")
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            urlString += "\(String.fw.safeString(key))=\(valueStr ?? "")&"
+        }
+        return urlString.fw.substring(to: urlString.count - 1)
+    }
 
     // MARK: - Private
     private class func registerClass(with clazz: Any, isPreset: Bool, mapper: (([String]) -> [String: String])?) -> Bool {
