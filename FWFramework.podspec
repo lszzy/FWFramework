@@ -153,5 +153,11 @@ Pod::Spec.new do |s|
       sss.dependency 'lottie-ios'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end
+    
+    ss.subspec 'MMKV' do |sss|
+      sss.source_files = 'Sources/FWPlugin/MMKV/**/*.swift'
+      sss.dependency 'MMKV'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
   end
 end
