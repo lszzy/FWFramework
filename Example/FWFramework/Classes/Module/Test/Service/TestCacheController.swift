@@ -74,7 +74,7 @@ class TestCacheController: UIViewController {
 extension TestCacheController: ViewControllerProtocol {
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-            self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
+            self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite", "CacheMMKV"], actionBlock: { index in
                 if index == 0 {
                     self?.cache = CacheManager.manager(type: .memory)
                 } else if index == 1 {
@@ -85,6 +85,8 @@ extension TestCacheController: ViewControllerProtocol {
                     self?.cache = CacheManager.manager(type: .file)
                 } else if index == 4 {
                     self?.cache = CacheManager.manager(type: .sqlite)
+                } else if index == 5 {
+                    self?.cache = CacheManager.manager(type: .mmkv)
                 }
                 self?.refreshCache()
             })
