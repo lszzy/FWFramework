@@ -26,9 +26,66 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
         super.init()
     }
 
-    // 和非缓存Key区分开，防止清除非缓存信息
+    /// 和非缓存Key区分开，防止清除非缓存信息
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
+    }
+    
+    // MARK: - UserDefaults
+    /// 高性能读取Int值，必须和setInt(_:forKey:)配对使用
+    open func int(forKey key: String) -> Int {
+        return userDefaults.integer(forKey: key)
+    }
+    
+    /// 高性能设置Int值，必须和int(forKey:)配对使用
+    open func setInt(_ value: Int?, forKey key: String) {
+        if let value {
+            userDefaults.set(value, forKey: key)
+        } else {
+            userDefaults.removeObject(forKey: key)
+        }
+    }
+    
+    /// 高性能读取Bool值，必须和setBool(_:forKey:)配对使用
+    open func bool(forKey key: String) -> Bool {
+        return userDefaults.bool(forKey: key)
+    }
+    
+    /// 高性能设置Bool值，必须和bool(forKey:)配对使用
+    open func setBool(_ value: Bool?, forKey key: String) {
+        if let value {
+            userDefaults.set(value, forKey: key)
+        } else {
+            userDefaults.removeObject(forKey: key)
+        }
+    }
+    
+    /// 高性能读取Double值，必须和setDouble(_:forKey:)配对使用
+    open func double(forKey key: String) -> Double {
+        return userDefaults.double(forKey: key)
+    }
+    
+    /// 高性能设置Double值，必须和double(forKey:)配对使用
+    open func setDouble(_ value: Double?, forKey key: String) {
+        if let value {
+            userDefaults.set(value, forKey: key)
+        } else {
+            userDefaults.removeObject(forKey: key)
+        }
+    }
+    
+    /// 高性能读取String值，必须和setString(_:forKey:)配对使用
+    open func string(forKey key: String) -> String? {
+        return userDefaults.string(forKey: key)
+    }
+    
+    /// 高性能设置String值，必须和string(forKey:)配对使用
+    open func setString(_ value: String?, forKey key: String) {
+        if let value {
+            userDefaults.set(value, forKey: key)
+        } else {
+            userDefaults.removeObject(forKey: key)
+        }
     }
 
     // MARK: - CacheEngineProtocol
