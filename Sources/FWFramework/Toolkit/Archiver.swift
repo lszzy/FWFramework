@@ -105,6 +105,23 @@ extension Wrapper where Base == Data {
 // MARK: - ArchiveCoder
 /// AnyArchivable归档编码器，注意当archiveObject为struct时，必须先调用registerType注册
 public class ArchiveCoder: NSObject, NSSecureCoding {
+    // MARK: - Safe
+    /// 仅当参数为有效的AnyArchivable归档对象或对象数组时编码为Data，否则原样返回
+    public static func safeArchivedData(_ object: Any?) -> Any? {
+        if ArchiveCoder.isArchivableObject(object) {
+            return Data.fw.archivedData(object)
+        }
+        return object
+    }
+
+    /// 仅当参数为有效的AnyArchivable归档数据(即ArchiveCoder归档数据)时解码为对象，否则原样返回
+    public static func safeUnarchivedObject(_ value: Any?) -> Any? {
+        if let data = value as? Data, let coder = ArchiveCoder.unarchiveData(data) {
+            return coder.archivableObject
+        }
+        return value
+    }
+    
     // MARK: - Static
     /// 是否是有效的AnyArchivable归档对象或对象数组
     public static func isArchivableObject(_ object: Any?) -> Bool {
