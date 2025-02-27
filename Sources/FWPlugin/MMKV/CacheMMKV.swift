@@ -71,85 +71,9 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         super.init()
     }
     
-    /// 和非缓存Key区分开，防止清除非缓存信息
+    // 和非缓存Key区分开，防止清除非缓存信息
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
-    }
-    
-    // MARK: - MMKV
-    /// 高性能读取Int值，必须和setInt(_:forKey:)配对使用
-    open func int(forKey key: String, defaultValue: Int = 0) -> Int {
-        if let value = mmkv?.int64(forKey: key) {
-            return Int(value)
-        }
-        return defaultValue
-    }
-    
-    /// 高性能设置Int值，必须和int(forKey:)配对使用
-    open func setInt(_ value: Int?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(Int64(value), forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(Int64(value), forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取Bool值，必须和setBool(_:forKey:)配对使用
-    open func bool(forKey key: String, defaultValue: Bool = false) -> Bool {
-        return mmkv?.bool(forKey: key) ?? defaultValue
-    }
-    
-    /// 高性能设置Bool值，必须和bool(forKey:)配对使用
-    open func setBool(_ value: Bool?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取Double值，必须和setDouble(_:forKey:)配对使用
-    open func double(forKey key: String, defaultValue: Double = 0) -> Double {
-        return mmkv?.double(forKey: key) ?? defaultValue
-    }
-    
-    /// 高性能设置Double值，必须和double(forKey:)配对使用
-    open func setDouble(_ value: Double?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取String值，必须和setString(_:forKey:)配对使用
-    open func string(forKey key: String, defaultValue: String? = nil) -> String? {
-        return mmkv?.string(forKey: key, defaultValue: defaultValue)
-    }
-    
-    /// 高性能设置String值，必须和string(forKey:)配对使用
-    open func setString(_ value: String?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
     }
 
     // MARK: - CacheEngineProtocol
