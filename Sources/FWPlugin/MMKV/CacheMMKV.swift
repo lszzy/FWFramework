@@ -44,7 +44,8 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         }
     }
 
-    private let mmkv: MMKV?
+    /// 获取原始MMKV对象
+    public let mmkv: MMKV?
 
     /// 初始化默认MMKV缓存
     override public convenience init() {

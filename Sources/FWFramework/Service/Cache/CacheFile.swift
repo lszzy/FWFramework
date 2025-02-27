@@ -12,8 +12,9 @@ import Foundation
 open class CacheFile: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheFile()
-
-    private var path: String = ""
+    
+    /// 缓存根目录路径
+    public private(set) var cachePath: String = ""
 
     override public convenience init() {
         self.init(path: nil)
@@ -24,18 +25,18 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
         super.init()
         // 绝对路径: path
         if let path, (path as NSString).isAbsolutePath {
-            self.path = path
-            // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
+            self.cachePath = path
+        // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
         } else {
             let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheFile"])
             let fileName = path ?? ""
-            self.path = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
+            self.cachePath = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
         }
     }
 
     private func filePath(_ key: String) -> String {
         let fileName = "\(key.fw.md5Encode).plist"
-        return (path as NSString).appendingPathComponent(fileName)
+        return (cachePath as NSString).appendingPathComponent(fileName)
     }
 
     // MARK: - CacheEngineProtocol
@@ -65,6 +66,6 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
     }
 
     override open func clearAllCaches() {
-        try? FileManager.default.removeItem(atPath: path)
+        try? FileManager.default.removeItem(atPath: cachePath)
     }
 }
