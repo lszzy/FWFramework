@@ -23,24 +23,27 @@ extension CacheType {
 open class CacheMMKV: CacheEngine, @unchecked Sendable {
     private actor Configuration {
         static var initialized = false
+        static var cryptKey: Data?
     }
     
     /// 单例模式
     public static let shared = CacheMMKV()
     
-    /// 主线程初始化MMKV，仅第一次生效
-    @discardableResult
+    /// 主线程初始化MMKV，仅第一次生效，参数cryptKey仅对默认MMKV生效
     public static func initializeMMKV(
+        cryptKey: Data? = nil,
         rootDir: String? = nil,
         groupDir: String? = nil,
         logLevel: MMKVLogLevel = .info,
         handler: MMKVHandler? = nil
-    ) -> String {
+    ) {
+        guard !Configuration.initialized else { return }
         Configuration.initialized = true
+        Configuration.cryptKey = cryptKey
         if let groupDir {
-            return MMKV.initialize(rootDir: rootDir, groupDir: groupDir, logLevel: logLevel, handler: handler)
+            MMKV.initialize(rootDir: rootDir, groupDir: groupDir, logLevel: logLevel, handler: handler)
         } else {
-            return MMKV.initialize(rootDir: rootDir, logLevel: logLevel, handler: handler)
+            MMKV.initialize(rootDir: rootDir, logLevel: logLevel, handler: handler)
         }
     }
 
@@ -48,14 +51,13 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     public let mmkv: MMKV?
 
     /// 初始化默认MMKV缓存
-    override public convenience init() {
-        self.init(cryptKey: nil)
-    }
-    
-    /// 指定加密key初始化默认MMKV缓存
-    public init(cryptKey: Data?) {
+    override public init() {
         if !Configuration.initialized { Self.initializeMMKV() }
-        self.mmkv = cryptKey != nil ? MMKV.defaultMMKV(withCryptKey: cryptKey) : MMKV.default()
+        if let cryptKey = Configuration.cryptKey {
+            self.mmkv = MMKV.defaultMMKV(withCryptKey: cryptKey)
+        } else {
+            self.mmkv = MMKV.default()
+        }
         super.init()
     }
     
@@ -71,9 +73,85 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         super.init()
     }
     
-    // 和非缓存Key区分开，防止清除非缓存信息
+    /// 和非缓存Key区分开，防止清除非缓存信息
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
+    }
+    
+    // MARK: - MMKV
+    /// 高性能读取Int值，必须和setInt(_:forKey:)配对使用
+    open func int(forKey key: String, defaultValue: Int = 0) -> Int {
+        if let value = mmkv?.int64(forKey: key) {
+            return Int(value)
+        }
+        return defaultValue
+    }
+    
+    /// 高性能设置Int值，必须和int(forKey:)配对使用
+    open func setInt(_ value: Int?, forKey key: String, expireDuration: Int? = nil) {
+        if let value {
+            if let expireDuration, expireDuration >= 0 {
+                mmkv?.set(Int64(value), forKey: key, expireDuration: UInt32(expireDuration))
+            } else {
+                mmkv?.set(Int64(value), forKey: key)
+            }
+        } else {
+            mmkv?.removeValue(forKey: key)
+        }
+    }
+    
+    /// 高性能读取Bool值，必须和setBool(_:forKey:)配对使用
+    open func bool(forKey key: String, defaultValue: Bool = false) -> Bool {
+        return mmkv?.bool(forKey: key) ?? defaultValue
+    }
+    
+    /// 高性能设置Bool值，必须和bool(forKey:)配对使用
+    open func setBool(_ value: Bool?, forKey key: String, expireDuration: Int? = nil) {
+        if let value {
+            if let expireDuration, expireDuration >= 0 {
+                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
+            } else {
+                mmkv?.set(value, forKey: key)
+            }
+        } else {
+            mmkv?.removeValue(forKey: key)
+        }
+    }
+    
+    /// 高性能读取Double值，必须和setDouble(_:forKey:)配对使用
+    open func double(forKey key: String, defaultValue: Double = 0) -> Double {
+        return mmkv?.double(forKey: key) ?? defaultValue
+    }
+    
+    /// 高性能设置Double值，必须和double(forKey:)配对使用
+    open func setDouble(_ value: Double?, forKey key: String, expireDuration: Int? = nil) {
+        if let value {
+            if let expireDuration, expireDuration >= 0 {
+                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
+            } else {
+                mmkv?.set(value, forKey: key)
+            }
+        } else {
+            mmkv?.removeValue(forKey: key)
+        }
+    }
+    
+    /// 高性能读取String值，必须和setString(_:forKey:)配对使用
+    open func string(forKey key: String, defaultValue: String? = nil) -> String? {
+        return mmkv?.string(forKey: key, defaultValue: defaultValue)
+    }
+    
+    /// 高性能设置String值，必须和string(forKey:)配对使用
+    open func setString(_ value: String?, forKey key: String, expireDuration: Int? = nil) {
+        if let value {
+            if let expireDuration, expireDuration >= 0 {
+                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
+            } else {
+                mmkv?.set(value, forKey: key)
+            }
+        } else {
+            mmkv?.removeValue(forKey: key)
+        }
     }
 
     // MARK: - CacheEngineProtocol
@@ -99,6 +177,59 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
             }
         })
         mmkv?.removeValues(forKeys: keys)
+    }
+}
+
+// MARK: - MMAPValue
+/// MMKV缓存属性包装器注解，默认为手工指定或初始值
+///
+/// 使用示例：
+/// @MMAPValue("mmapKey")
+/// static var mmapValue: String = ""
+@propertyWrapper
+public struct MMAPValue<Value> {
+    private let key: String
+    private let defaultValue: Value
+    private let mmapID: String?
+    
+    private var cacheMMKV: CacheMMKV {
+        return mmapID != nil ? CacheMMKV(mmapID: mmapID!) : CacheMMKV.shared
+    }
+
+    public init(
+        wrappedValue: Value,
+        _ key: String,
+        defaultValue: Value? = nil,
+        mmapID: String? = nil
+    ) {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.mmapID = mmapID
+    }
+
+    public init<WrappedValue>(
+        wrappedValue: WrappedValue? = nil,
+        _ key: String,
+        defaultValue: Value? = nil,
+        mmapID: String? = nil
+    ) where WrappedValue? == Value {
+        self.key = key
+        self.defaultValue = defaultValue ?? wrappedValue
+        self.mmapID = mmapID
+    }
+
+    public var wrappedValue: Value {
+        get {
+            let value = cacheMMKV.object(forKey: key) as? Value
+            return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
+        }
+        set {
+            if !Optional<Any>.isNil(newValue) {
+                cacheMMKV.setObject(newValue, forKey: key)
+            } else {
+                cacheMMKV.removeObject(forKey: key)
+            }
+        }
     }
 }
 
