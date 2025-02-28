@@ -156,11 +156,21 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 
     // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
+        if let compatibleType = T.self as? CacheCompatible.Type,
+           let value = compatibleType.readMMKV(mmkv, forKey: cacheKey(key)) as? T {
+            return value
+        }
+        
         guard let data = mmkv?.data(forKey: cacheKey(key)) else { return nil }
         return data.fw.unarchivedObject() as? T
     }
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
+        if let compatibleType = T.self as? CacheCompatible.Type {
+            compatibleType.writeMMKV(mmkv, forKey: cacheKey(key), value: object)
+            return
+        }
+        
         guard let data = Data.fw.archivedData(object) else { return }
         mmkv?.set(data, forKey: cacheKey(key))
     }
@@ -177,6 +187,21 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
             }
         })
         mmkv?.removeValues(forKeys: keys)
+    }
+}
+
+// MARK: - CacheCompatible+MMKV
+extension CacheCompatible {
+    /// 从MMKV读取当前类型值，默认采用Archiver解档方式
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        guard let data = mmkv?.data(forKey: key) else { return nil }
+        return data.fw.unarchivedObject() as? Self
+    }
+    
+    /// 往MMKV写入当前类型值，默认采用Archiver归档方式。参数value类型为Self，此处为兼容Swift编译设置为Any
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        guard let data = Data.fw.archivedData(value) else { return }
+        mmkv?.set(data, forKey: key)
     }
 }
 

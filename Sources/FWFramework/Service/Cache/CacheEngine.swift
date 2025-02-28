@@ -35,6 +35,16 @@ public protocol CacheEngineProtocol {
     func clearAllCaches()
 }
 
+// MARK: - CacheCompatible
+/// 可扩展缓存兼容类型，用于针对指定类型优化存取方式，默认采用Archiver归档存取
+public protocol CacheCompatible {}
+
+extension Int: CacheCompatible {}
+extension Bool: CacheCompatible {}
+extension Float: CacheCompatible {}
+extension Double: CacheCompatible {}
+extension String: CacheCompatible {}
+
 // MARK: - CacheEngine
 /// 缓存引擎基类，自动管理缓存有效期，线程安全。复杂对象需遵循NSCoding|AnyArchivable协议
 open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
