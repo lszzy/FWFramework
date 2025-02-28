@@ -155,12 +155,12 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     }
 
     // MARK: - CacheEngineProtocol
-    override open func readCache(forKey key: String) -> Any? {
+    override open func readCache<T>(forKey key: String) -> T? {
         guard let data = mmkv?.data(forKey: cacheKey(key)) else { return nil }
-        return data.fw.unarchivedObject()
+        return data.fw.unarchivedObject() as? T
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         guard let data = Data.fw.archivedData(object) else { return }
         mmkv?.set(data, forKey: cacheKey(key))
     }
@@ -220,7 +220,7 @@ public struct MMAPValue<Value> {
 
     public var wrappedValue: Value {
         get {
-            let value = cacheMMKV.object(forKey: key) as? Value
+            let value = cacheMMKV.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {

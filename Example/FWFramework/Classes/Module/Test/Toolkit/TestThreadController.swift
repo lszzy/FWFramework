@@ -297,11 +297,11 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         CacheMemory.shared.setObject(NSNumber(value: 0), forKey: key)
 
         onQueue {
-            let value = CacheMemory.shared.object(forKey: key) as? NSNumber ?? NSNumber(value: 0)
+            let value = CacheMemory.shared.object(forKey: key) as NSNumber? ?? NSNumber(value: 0)
             CacheMemory.shared.setObject(NSNumber(value: value.intValue + 1), forKey: key)
         } completion: { [weak self] in
 
-            let value = CacheMemory.shared.object(forKey: key) as? NSNumber ?? NSNumber(value: 0)
+            let value = CacheMemory.shared.object(forKey: key) as NSNumber? ?? NSNumber(value: 0)
             self?.onResult(value.intValue)
         }
     }
@@ -313,12 +313,12 @@ class TestThreadController: UIViewController, TableViewControllerProtocol {
         onQueue { [weak self] in
 
             self?.app.lock()
-            let value = CacheMemory.shared.object(forKey: key) as? NSNumber ?? NSNumber(value: 0)
+            let value = CacheMemory.shared.object(forKey: key) as NSNumber? ?? NSNumber(value: 0)
             CacheMemory.shared.setObject(NSNumber(value: value.intValue + 1), forKey: key)
             self?.app.unlock()
         } completion: { [weak self] in
 
-            let value = CacheMemory.shared.object(forKey: key) as? NSNumber ?? NSNumber(value: 0)
+            let value = CacheMemory.shared.object(forKey: key) as NSNumber? ?? NSNumber(value: 0)
             self?.onResult(value.intValue)
         }
     }

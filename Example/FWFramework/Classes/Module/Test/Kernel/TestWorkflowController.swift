@@ -165,8 +165,8 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
     }
 
     func onBackground() {
-        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
-        if !string.isEmpty {
+        let string = CacheFile.shared.object(forKey: "backgroundTask") as String?
+        if let string, !string.isEmpty {
             app.showAlert(title: "上次后台结果", message: string)
         } else {
             app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
@@ -202,8 +202,8 @@ class TestWorkflowController: UIViewController, TableViewControllerProtocol {
     }
 
     func onRequest() {
-        let string = CacheFile.shared.object(forKey: "backgroundTask").safeString
-        if !string.isEmpty {
+        let string = CacheFile.shared.object(forKey: "backgroundTask") as String?
+        if let string, !string.isEmpty {
             app.showAlert(title: "上次后台结果", message: string)
         } else {
             app.showAlert(title: "后台任务创建成功", message: "请将App退后台测试\n时间：\(Date.app.currentTime)")
