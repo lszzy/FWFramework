@@ -145,7 +145,7 @@ extension TestCacheController {
         }
 
         var hasCache = false
-        if let cacheStr = cache?.object(forKey: TestCacheController.testCacheKey) as? String, !cacheStr.isEmpty {
+        if let cacheStr = cache?.object(forKey: TestCacheController.testCacheKey) as String?, !cacheStr.isEmpty {
             statusStr += cacheStr
             hasCache = true
         } else {
@@ -154,7 +154,7 @@ extension TestCacheController {
         }
         statusStr += "\n"
 
-        if let expireNum = cache?.object(forKey: TestCacheController.testExpireKey) as? NSNumber {
+        if let expireNum = cache?.object(forKey: TestCacheController.testExpireKey) as NSNumber? {
             statusStr += String(format: "%.1fs有效", expireNum.doubleValue - Date().timeIntervalSince1970)
         } else {
             statusStr += hasCache ? "永久有效" : "缓存无效"

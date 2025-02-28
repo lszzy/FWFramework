@@ -116,7 +116,7 @@ public struct CachedValue<Value> {
 
     public var wrappedValue: Value {
         get {
-            let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value
+            let value = CacheManager.manager(type: type)?.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {

@@ -40,16 +40,16 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
     }
 
     // MARK: - CacheEngineProtocol
-    override open func readCache(forKey key: String) -> Any? {
+    override open func readCache<T>(forKey key: String) -> T? {
         let filePath = filePath(key)
         if FileManager.default.fileExists(atPath: filePath) {
             guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
-            return data.fw.unarchivedObject()
+            return data.fw.unarchivedObject() as? T
         }
         return nil
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         let filePath = filePath(key)
         // 自动创建目录
         let fileDir = (filePath as NSString).deletingLastPathComponent
