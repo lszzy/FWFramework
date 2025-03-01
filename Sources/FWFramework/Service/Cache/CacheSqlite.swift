@@ -79,7 +79,7 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
                         let dataSize = sqlite3_column_bytes(stmt, 0)
                         if let dataBuffer {
                             let data = Data(bytes: dataBuffer, count: Int(dataSize))
-                            object = data.fw.unarchivedObject() as? T
+                            object = data.fw.unarchivedObject(as: T.self)
                         }
                     }
                 }

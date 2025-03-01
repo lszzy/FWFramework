@@ -39,11 +39,17 @@ public struct StoredValue<Value> {
     public var wrappedValue: Value {
         get {
             let object = UserDefaults.standard.object(forKey: key)
-            let value = ArchiveCoder.safeUnarchivedObject(object) as? Value
+            var value = object as? Value
+            if let data = object as? Data, let coder = ArchiveCoder.unarchivedCoder(data) {
+                value = coder.archivableObject(as: Value.self)
+            }
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
-            let value = ArchiveCoder.safeArchivedData(newValue)
+            var value: Any? = newValue
+            if ArchiveCoder.isArchivableObject(newValue) {
+                value = Data.fw.archivedData(newValue)
+            }
             if !Optional<Any>.isNil(value) {
                 UserDefaults.standard.set(value, forKey: key)
             } else {

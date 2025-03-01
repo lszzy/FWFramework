@@ -86,7 +86,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         }
         
         guard let data = mmkv?.data(forKey: cacheKey(key)) else { return nil }
-        return data.fw.unarchivedObject() as? T
+        return data.fw.unarchivedObject(as: T.self)
     }
 
     override open func writeCache<T>(_ object: T, forKey key: String) {

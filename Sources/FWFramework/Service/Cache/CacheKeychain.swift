@@ -64,8 +64,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
             return nil
         }
 
-        let object = passwordData.fw.unarchivedObject()
-        return object as? T
+        return passwordData.fw.unarchivedObject(as: T.self)
     }
 
     @discardableResult
