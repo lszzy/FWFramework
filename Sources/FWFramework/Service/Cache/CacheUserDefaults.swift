@@ -33,7 +33,7 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
 
     // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
-        var value = userDefaults.object(forKey: cacheKey(key))
+        let value = userDefaults.object(forKey: cacheKey(key))
         return ArchiveCoder.safeUnarchivedObject(value) as? T
     }
 

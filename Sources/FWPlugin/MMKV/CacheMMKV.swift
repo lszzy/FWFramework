@@ -77,86 +77,10 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
     }
-    
-    // MARK: - MMKV
-    /// 高性能读取Int值，必须和setInt(_:forKey:)配对使用
-    open func int(forKey key: String, defaultValue: Int = 0) -> Int {
-        if let value = mmkv?.int64(forKey: key) {
-            return Int(value)
-        }
-        return defaultValue
-    }
-    
-    /// 高性能设置Int值，必须和int(forKey:)配对使用
-    open func setInt(_ value: Int?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(Int64(value), forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(Int64(value), forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取Bool值，必须和setBool(_:forKey:)配对使用
-    open func bool(forKey key: String, defaultValue: Bool = false) -> Bool {
-        return mmkv?.bool(forKey: key) ?? defaultValue
-    }
-    
-    /// 高性能设置Bool值，必须和bool(forKey:)配对使用
-    open func setBool(_ value: Bool?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取Double值，必须和setDouble(_:forKey:)配对使用
-    open func double(forKey key: String, defaultValue: Double = 0) -> Double {
-        return mmkv?.double(forKey: key) ?? defaultValue
-    }
-    
-    /// 高性能设置Double值，必须和double(forKey:)配对使用
-    open func setDouble(_ value: Double?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
-    
-    /// 高性能读取String值，必须和setString(_:forKey:)配对使用
-    open func string(forKey key: String, defaultValue: String? = nil) -> String? {
-        return mmkv?.string(forKey: key, defaultValue: defaultValue)
-    }
-    
-    /// 高性能设置String值，必须和string(forKey:)配对使用
-    open func setString(_ value: String?, forKey key: String, expireDuration: Int? = nil) {
-        if let value {
-            if let expireDuration, expireDuration >= 0 {
-                mmkv?.set(value, forKey: key, expireDuration: UInt32(expireDuration))
-            } else {
-                mmkv?.set(value, forKey: key)
-            }
-        } else {
-            mmkv?.removeValue(forKey: key)
-        }
-    }
 
     // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
-        if let compatibleType = T.self as? CacheCompatible.Type,
+        if let compatibleType = T.self as? CacheMMKVCompatible.Type,
            let value = compatibleType.readMMKV(mmkv, forKey: cacheKey(key)) as? T {
             return value
         }
@@ -166,7 +90,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     }
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
-        if let compatibleType = T.self as? CacheCompatible.Type {
+        if let compatibleType = T.self as? CacheMMKVCompatible.Type {
             compatibleType.writeMMKV(mmkv, forKey: cacheKey(key), value: object)
             return
         }
@@ -190,18 +114,64 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     }
 }
 
-// MARK: - CacheCompatible+MMKV
-extension CacheCompatible {
-    /// 从MMKV读取当前类型值，默认采用Archiver解档方式
+// MARK: - CacheMMKVCompatible
+/// 可扩展MMKV缓存兼容类型，用于针对指定类型优化存取方式，默认采用Archiver归档存取
+public protocol CacheMMKVCompatible {
+    /// 从MMKV读取当前类型值，未实现时默认采用Archiver解档方式
+    static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self?
+    
+    /// 往MMKV写入当前类型值，未实现时默认采用Archiver归档方式。参数value类型为Self，此处为兼容Swift编译设置为Any
+    static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any)
+}
+
+extension Int: CacheMMKVCompatible {
     public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        guard let data = mmkv?.data(forKey: key) else { return nil }
-        return data.fw.unarchivedObject() as? Self
+        if let value = mmkv?.int64(forKey: key) { return Int(value) }
+        return nil
     }
     
-    /// 往MMKV写入当前类型值，默认采用Archiver归档方式。参数value类型为Self，此处为兼容Swift编译设置为Any
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        guard let data = Data.fw.archivedData(value) else { return }
-        mmkv?.set(data, forKey: key)
+        mmkv?.set(Int64(value as! Self), forKey: key)
+    }
+}
+
+extension Bool: CacheMMKVCompatible {
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        return mmkv?.bool(forKey: key)
+    }
+    
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        mmkv?.set(value as! Self, forKey: key)
+    }
+}
+
+extension Float: CacheMMKVCompatible {
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        return mmkv?.float(forKey: key)
+    }
+    
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        mmkv?.set(value as! Self, forKey: key)
+    }
+}
+
+extension Double: CacheMMKVCompatible {
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        return mmkv?.double(forKey: key)
+    }
+    
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        mmkv?.set(value as! Self, forKey: key)
+    }
+}
+
+extension String: CacheMMKVCompatible {
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        return mmkv?.string(forKey: key)
+    }
+    
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        mmkv?.set(value as! Self, forKey: key)
     }
 }
 
