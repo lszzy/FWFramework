@@ -12,7 +12,6 @@ class TestCacheController: UIViewController {
     private var cache: CacheProtocol?
 
     private static var testCacheKey = "testCacheKey"
-    private static var testExpireKey = "testCacheKey.__EXPIRE__"
 
     private lazy var cacheLabel: UILabel = {
         let result = UILabel()
@@ -154,8 +153,9 @@ extension TestCacheController {
         }
         statusStr += "\n"
 
-        if let expireNum = cache?.object(forKey: TestCacheController.testExpireKey) as NSNumber? {
-            statusStr += String(format: "%.1fs有效", expireNum.doubleValue - Date().timeIntervalSince1970)
+        let expire = (cache as? CacheEngine)?.expire(forKey: TestCacheController.testCacheKey)
+        if let expire {
+            statusStr += String(format: "%.1fs有效", expire)
         } else {
             statusStr += hasCache ? "永久有效" : "缓存无效"
         }
