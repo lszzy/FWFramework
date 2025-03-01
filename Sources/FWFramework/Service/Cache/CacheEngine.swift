@@ -43,12 +43,25 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     override public init() {
         super.init()
     }
+    
+    /// 读取指定key缓存的有效期，大于0有效，小于等于0无效，nil未设置有效期
+    open func expire(forKey key: String) -> TimeInterval? {
+        if key.isEmpty { return nil }
+        
+        var expire: TimeInterval?
+        semaphore.wait()
+        if let number = readCache(forKey: expireKey(key)) as NSNumber? {
+            expire = number.doubleValue - Date.fw.currentTime
+        }
+        semaphore.signal()
+        return expire
+    }
 
     private func expireKey(_ key: String) -> String {
         key + ".__EXPIRE__"
     }
 
-    // MARK: - Public
+    // MARK: - CacheProtocol
     open func object<T>(forKey key: String) -> T? {
         if key.isEmpty { return nil }
 
@@ -62,7 +75,7 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         // 检查缓存有效期
         if let expire = readCache(forKey: expireKey(key)) as NSNumber? {
             // 检查是否过期，大于0为过期
-            if Date().timeIntervalSince1970 > expire.doubleValue {
+            if Date.fw.currentTime > expire.doubleValue {
                 clearCache(forKey: key)
                 clearCache(forKey: expireKey(key))
                 semaphore.signal()
@@ -89,7 +102,7 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
             if expire <= 0 {
                 clearCache(forKey: expireKey(key))
             } else {
-                writeCache(NSNumber(value: Date().timeIntervalSince1970 + expire), forKey: expireKey(key))
+                writeCache(NSNumber(value: Date.fw.currentTime + expire), forKey: expireKey(key))
             }
         } else {
             clearCache(forKey: key)
