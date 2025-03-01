@@ -44,7 +44,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
         let filePath = filePath(key)
         if FileManager.default.fileExists(atPath: filePath) {
             guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
-            return data.fw.unarchivedObject() as? T
+            return data.fw.unarchivedObject(as: T.self)
         }
         return nil
     }

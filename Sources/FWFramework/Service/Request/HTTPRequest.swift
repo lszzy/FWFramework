@@ -1261,7 +1261,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     private func validateCache(_ metadata: Data) throws -> RequestCacheMetadata {
-        guard let cacheMetadata = metadata.fw.unarchivedObject() as? RequestCacheMetadata else {
+        guard let cacheMetadata = metadata.fw.unarchivedObject(as: RequestCacheMetadata.self) else {
             throw RequestError.cacheInvalidMetadata
         }
 
