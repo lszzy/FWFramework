@@ -20,9 +20,7 @@ public class UserService: @unchecked Sendable {
     private var userModel: UserModel?
 
     // MARK: - Lifecycle
-    private init() {
-        ArchiveCoder.registerType(UserModel.self)
-    }
+    private init() {}
 }
 
 extension UserService {
