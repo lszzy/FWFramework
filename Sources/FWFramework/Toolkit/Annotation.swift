@@ -17,6 +17,7 @@ import Foundation
 public struct StoredValue<Value> {
     private let key: String
     private let defaultValue: Value
+    private let block: ((ArchiveCoder) -> Value?)?
 
     public init(
         wrappedValue: Value,
@@ -25,6 +26,7 @@ public struct StoredValue<Value> {
     ) {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
+        self.block = nil
     }
 
     public init<WrappedValue>(
@@ -34,6 +36,7 @@ public struct StoredValue<Value> {
     ) where WrappedValue? == Value {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
+        self.block = { $0.archivableObject(as: WrappedValue.self) }
     }
 
     public var wrappedValue: Value {
@@ -41,7 +44,7 @@ public struct StoredValue<Value> {
             let object = UserDefaults.standard.object(forKey: key)
             var value = object as? Value
             if let data = object as? Data, let coder = ArchiveCoder.unarchivedCoder(data) {
-                value = coder.archivableObject(as: Value.self)
+                value = block != nil ? block?(coder) : coder.archivableObject(as: Value.self)
             }
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
