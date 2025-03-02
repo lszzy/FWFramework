@@ -91,6 +91,7 @@ public struct CachedValue<Value> {
     private let key: String
     private let defaultValue: Value
     private let type: CacheType
+    private let block: ((CacheType, String) -> Value?)?
 
     public init(
         wrappedValue: Value,
@@ -101,6 +102,7 @@ public struct CachedValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
+        self.block = nil
     }
 
     public init<WrappedValue>(
@@ -112,11 +114,12 @@ public struct CachedValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
+        self.block = { CacheManager.manager(type: $0)?.object(forKey: $1) as WrappedValue? }
     }
 
     public var wrappedValue: Value {
         get {
-            let value = CacheManager.manager(type: type)?.object(forKey: key) as Value?
+            let value = block != nil ? block?(type, key) : CacheManager.manager(type: type)?.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {

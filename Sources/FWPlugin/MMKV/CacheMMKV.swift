@@ -218,7 +218,7 @@ public struct MMAPValue<Value> {
 
     public var wrappedValue: Value {
         get {
-            let value = block?(cacheMMKV, key) ?? cacheMMKV.object(forKey: key) as Value?
+            let value = block != nil ? block?(cacheMMKV, key) : cacheMMKV.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
