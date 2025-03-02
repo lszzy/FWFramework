@@ -43,11 +43,11 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     override public init() {
         super.init()
     }
-    
+
     /// 读取指定key缓存的有效期，大于0有效，小于等于0无效，nil未设置有效期
     open func expire(forKey key: String) -> TimeInterval? {
         if key.isEmpty { return nil }
-        
+
         var expire: TimeInterval?
         semaphore.wait()
         if let number = readCache(forKey: expireKey(key)) as NSNumber? {

@@ -12,7 +12,7 @@ import Foundation
 open class CacheFile: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheFile()
-    
+
     /// 缓存根目录路径
     public private(set) var cachePath: String = ""
 
@@ -26,7 +26,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
         // 绝对路径: path
         if let path, (path as NSString).isAbsolutePath {
             self.cachePath = path
-        // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
+            // 相对路径: Libray/Caches/FWFramework/CacheFile/path[shared]
         } else {
             let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheFile"])
             let fileName = path ?? ""
