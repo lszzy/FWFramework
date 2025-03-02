@@ -278,7 +278,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
 }
 
 // MARK: - AnyArchivable
-/// 任意可归档对象协议，兼容UserDefaults | Cache | Database | Keychain | Codable | CodableModel | JSONModel使用
+/// 任意可归档对象协议，兼容UserDefaults | Cache | Database | Keychain | Codable | CodableModel | JSONModel | SmartModel使用
 public protocol AnyArchivable: ObjectType {
     /// 将Data数据解码为对象，不调用NSKeyedUnarchiver
     static func archiveDecode(_ data: Data?) -> Self?
