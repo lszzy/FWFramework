@@ -41,7 +41,7 @@ public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
 public class CacheManager: NSObject, @unchecked Sendable {
     private static let shared = CacheManager()
     private var blocks: [CacheType: @Sendable () -> CacheProtocol] = [:]
-    
+
     /// 注册指定类型的缓存管理器创建句柄，用于动态扩展缓存类型
     public static func registerCache(_ type: CacheType, block: @escaping @Sendable () -> CacheProtocol) {
         shared.blocks[type] = block

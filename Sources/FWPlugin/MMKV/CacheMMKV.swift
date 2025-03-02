@@ -25,10 +25,10 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         static var initialized = false
         static var cryptKey: Data?
     }
-    
+
     /// 单例模式
     public static let shared = CacheMMKV()
-    
+
     /// 主线程初始化MMKV，仅第一次生效，参数cryptKey仅对默认MMKV生效
     public static func initializeMMKV(
         cryptKey: Data? = nil,
@@ -60,7 +60,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         }
         super.init()
     }
-    
+
     /// 指定参数初始化MMKV缓存
     public init(
         mmapID: String,
@@ -72,7 +72,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         self.mmkv = MMKV(mmapID: mmapID, cryptKey: cryptKey, rootPath: rootPath, mode: mode, expectedCapacity: 0)
         super.init()
     }
-    
+
     /// 和非缓存Key区分开，防止清除非缓存信息
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
@@ -84,7 +84,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
            let value = compatibleType.readMMKV(mmkv, forKey: cacheKey(key)) as? T {
             return value
         }
-        
+
         guard let data = mmkv?.data(forKey: cacheKey(key)) else { return nil }
         return data.fw.unarchivedObject(as: T.self)
     }
@@ -94,7 +94,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
             compatibleType.writeMMKV(mmkv, forKey: cacheKey(key), value: object)
             return
         }
-        
+
         guard let data = Data.fw.archivedData(object) else { return }
         mmkv?.set(data, forKey: cacheKey(key))
     }
@@ -105,11 +105,11 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 
     override open func clearAllCaches() {
         var keys: [String] = []
-        mmkv?.enumerateKeys({ key, _ in
+        mmkv?.enumerateKeys { key, _ in
             if key.hasPrefix("FWCache.") {
                 keys.append(key)
             }
-        })
+        }
         mmkv?.removeValues(forKeys: keys)
     }
 }
@@ -119,7 +119,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 public protocol CacheMMKVCompatible {
     /// 从MMKV读取当前类型值，未实现时默认采用Archiver解档方式
     static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self?
-    
+
     /// 往MMKV写入当前类型值，未实现时默认采用Archiver归档方式。参数value类型为Self，此处为兼容Swift编译设置为Any
     static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any)
 }
@@ -129,7 +129,7 @@ extension Int: CacheMMKVCompatible {
         if let value = mmkv?.int64(forKey: key) { return Int(value) }
         return nil
     }
-    
+
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
         mmkv?.set(Int64(value as! Self), forKey: key)
     }
@@ -137,9 +137,9 @@ extension Int: CacheMMKVCompatible {
 
 extension Bool: CacheMMKVCompatible {
     public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        return mmkv?.bool(forKey: key)
+        mmkv?.bool(forKey: key)
     }
-    
+
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
         mmkv?.set(value as! Self, forKey: key)
     }
@@ -147,9 +147,9 @@ extension Bool: CacheMMKVCompatible {
 
 extension Float: CacheMMKVCompatible {
     public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        return mmkv?.float(forKey: key)
+        mmkv?.float(forKey: key)
     }
-    
+
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
         mmkv?.set(value as! Self, forKey: key)
     }
@@ -157,9 +157,9 @@ extension Float: CacheMMKVCompatible {
 
 extension Double: CacheMMKVCompatible {
     public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        return mmkv?.double(forKey: key)
+        mmkv?.double(forKey: key)
     }
-    
+
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
         mmkv?.set(value as! Self, forKey: key)
     }
@@ -167,9 +167,9 @@ extension Double: CacheMMKVCompatible {
 
 extension String: CacheMMKVCompatible {
     public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        return mmkv?.string(forKey: key)
+        mmkv?.string(forKey: key)
     }
-    
+
     public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
         mmkv?.set(value as! Self, forKey: key)
     }
@@ -187,9 +187,9 @@ public struct MMAPValue<Value> {
     private let defaultValue: Value
     private let mmapID: String?
     private let block: ((CacheMMKV, String) -> Value?)?
-    
+
     private var cacheMMKV: CacheMMKV {
-        return mmapID != nil ? CacheMMKV(mmapID: mmapID!) : CacheMMKV.shared
+        mmapID != nil ? CacheMMKV(mmapID: mmapID!) : CacheMMKV.shared
     }
 
     public init(
