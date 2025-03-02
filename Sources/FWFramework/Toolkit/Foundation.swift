@@ -1342,23 +1342,23 @@ extension Wrapper where Base: UserDefaults {
     }
 
     /// 从standard解档对象，兼容NSCoding和AnyArchivable
-    public static func archivableObject(forKey: String) -> Any? {
+    public static func archivableObject<T>(forKey: String) -> T? {
         UserDefaults.standard.fw.archivableObject(forKey: forKey)
     }
 
     /// 归档对象到standard，兼容NSCoding和AnyArchivable
-    public static func setArchivableObject(_ object: Any?, forKey: String) {
+    public static func setArchivableObject<T>(_ object: T?, forKey: String) {
         UserDefaults.standard.fw.setArchivableObject(object, forKey: forKey)
     }
 
     /// 解档对象，兼容NSCoding和AnyArchivable
-    public func archivableObject(forKey: String) -> Any? {
+    public func archivableObject<T>(forKey: String) -> T? {
         let data = base.object(forKey: forKey) as? Data
-        return data?.fw.unarchivedObject()
+        return data?.fw.unarchivedObject(as: T.self)
     }
 
     /// 归档对象，兼容NSCoding和AnyArchivable
-    public func setArchivableObject(_ object: Any?, forKey: String) {
+    public func setArchivableObject<T>(_ object: T?, forKey: String) {
         let data = Data.fw.archivedData(object)
         if let data {
             base.set(data, forKey: forKey)

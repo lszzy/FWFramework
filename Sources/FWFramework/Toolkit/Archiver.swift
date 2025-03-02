@@ -153,9 +153,25 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         return array.compactMap { T.archiveDecode($0.data(using: .utf8)) }
     }
     
+    // MARK: - Register
+    /// 当识别不出类型时需先注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
+    public static func registerType<T: AnyArchivable>(_ type: T.Type) {
+        let key = String(describing: type as AnyObject)
+        Configuration.registeredTypes[key] = type
+    }
+
+    /// 归档类型加载器，加载未注册类型时会尝试调用并注册，block返回值为registerType方法type参数
+    public static let sharedLoader = Loader<String, AnyArchivable.Type>()
+
+    private actor Configuration {
+        static var registeredTypes: [String: AnyArchivable.Type] = [:]
+    }
+    
     // MARK: - Public
     /// 归档数据，设置归档对象时自动处理
     public private(set) var archiveData: Data?
+    /// 归档类型，当识别不出类型且归档对象为struct时，必须先调用registerType注册
+    public private(set) var archiveType: String?
     
     override public init() {
         super.init()
@@ -163,21 +179,112 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     
     /// 读取指定AnyArchivable对象或对象数组，自动处理归档数据
     public func archivableObject<T>(as type: T.Type = T.self) -> T? {
+        // 指定对象数组类型
         if let objectsType = type as? [AnyArchivable].Type,
            let objectType = objectsType.Element as? AnyArchivable.Type {
             return ArchiveCoder.decodeObjects(archiveData, as: objectType) as? T
+        // 指定对象类型
         } else if let objectType = type as? AnyArchivable.Type {
             return ArchiveCoder.decodeObject(archiveData, as: objectType) as? T
+        // 未指定类型
+        } else {
+            guard var archiveType else { return nil }
+            var isArray = false
+            if archiveType.hasPrefix("["), archiveType.hasSuffix("]") {
+                archiveType = String(archiveType.dropFirst().dropLast())
+                isArray = true
+            }
+            var objectType = ArchiveCoder.Configuration.registeredTypes[archiveType]
+            if objectType == nil {
+                if let loadType = ArchiveCoder.sharedLoader.load(archiveType) {
+                    ArchiveCoder.registerType(loadType)
+                    objectType = loadType
+                } else {
+                    objectType = NSClassFromString(archiveType) as? AnyArchivable.Type
+                }
+            }
+            guard let objectType else {
+                #if DEBUG
+                Logger.error(group: Logger.fw.moduleName, "\n========== ERROR ==========\nYou must call ArchiveCoder.registerType(_:) to register %@ before using it\n========== ERROR ==========", archiveType)
+                #endif
+                return nil
+            }
+
+            if isArray {
+                return ArchiveCoder.decodeObjects(archiveData, as: objectType) as? T
+            } else {
+                return ArchiveCoder.decodeObject(archiveData, as: objectType) as? T
+            }
         }
-        return nil
     }
     
     /// 设置指定AnyArchivable对象或对象数组，自动处理归档数据
     public func setArchivableObject<T>(_ value: T?) {
-        if let object = value as? AnyArchivable {
-            archiveData = ArchiveCoder.encodeObject(object)
-        } else if let objects = value as? [AnyArchivable] {
-            archiveData = ArchiveCoder.encodeObjects(objects)
+        // 指定对象数组类型
+        if let objectsType = T.self as? [AnyArchivable].Type,
+           let objectType = objectsType.Element as? AnyArchivable.Type {
+            archiveData = ArchiveCoder.encodeObjects(value as? [AnyArchivable])
+            
+            var targetType = ""
+            if let clazz = objectType as? AnyClass {
+                targetType = NSStringFromClass(clazz)
+            } else {
+                targetType = String(describing: objectType as AnyObject)
+                if Configuration.registeredTypes[targetType] == nil {
+                    ArchiveCoder.registerType(objectType)
+                }
+            }
+            if true {
+                targetType = "[\(targetType)]"
+            }
+            archiveType = targetType
+        // 指定对象类型
+        } else if let objectType = T.self as? AnyArchivable.Type {
+            archiveData = ArchiveCoder.encodeObject(value as? AnyArchivable)
+            
+            var targetType: String = ""
+            if let clazz = objectType as? AnyClass {
+                targetType = NSStringFromClass(clazz)
+            } else {
+                targetType = String(describing: objectType as AnyObject)
+                if Configuration.registeredTypes[targetType] == nil {
+                    ArchiveCoder.registerType(objectType)
+                }
+            }
+            if false {
+                targetType = "[\(targetType)]"
+            }
+            archiveType = targetType
+        // 未指定类型
+        } else {
+            var object = value as? AnyArchivable
+            var isArray = false
+            if let objects = value as? [AnyArchivable] {
+                object = objects.first
+                isArray = true
+                archiveData = ArchiveCoder.encodeObjects(objects)
+            } else {
+                archiveData = ArchiveCoder.encodeObject(object)
+            }
+            guard let object else {
+                archiveType = nil
+                return
+            }
+
+            let objectType = type(of: object)
+            var targetType = ""
+            if let clazz = objectType as? AnyClass {
+                targetType = NSStringFromClass(clazz)
+            } else {
+                targetType = String(describing: objectType as AnyObject)
+                if Configuration.registeredTypes[targetType] == nil {
+                    ArchiveCoder.registerType(objectType)
+                }
+            }
+            if isArray {
+                targetType = "[\(targetType)]"
+            }
+            archiveType = targetType
         }
     }
 
@@ -189,10 +296,12 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     public required init?(coder: NSCoder) {
         super.init()
         self.archiveData = coder.decodeObject(forKey: "archiveData") as? Data
+        self.archiveType = coder.decodeObject(forKey: "archiveType") as? String
     }
 
     public func encode(with coder: NSCoder) {
         coder.encode(archiveData, forKey: "archiveData")
+        coder.encode(archiveType, forKey: "archiveType")
     }
 }
 
