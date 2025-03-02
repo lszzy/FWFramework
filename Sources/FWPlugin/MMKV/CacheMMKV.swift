@@ -175,16 +175,6 @@ extension String: CacheMMKVCompatible {
     }
 }
 
-extension Optional: CacheMMKVCompatible where Wrapped: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        Wrapped.readMMKV(mmkv, forKey: key)
-    }
-    
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        Wrapped.writeMMKV(mmkv, forKey: key, value: value)
-    }
-}
-
 // MARK: - MMAPValue
 /// MMKV缓存属性包装器注解，默认为手工指定或初始值
 ///
@@ -196,6 +186,7 @@ public struct MMAPValue<Value> {
     private let key: String
     private let defaultValue: Value
     private let mmapID: String?
+    private let block: ((CacheMMKV, String) -> Value?)?
     
     private var cacheMMKV: CacheMMKV {
         return mmapID != nil ? CacheMMKV(mmapID: mmapID!) : CacheMMKV.shared
@@ -210,6 +201,7 @@ public struct MMAPValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.mmapID = mmapID
+        self.block = nil
     }
 
     public init<WrappedValue>(
@@ -221,11 +213,12 @@ public struct MMAPValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.mmapID = mmapID
+        self.block = { $0.object(forKey: $1) as WrappedValue? }
     }
 
     public var wrappedValue: Value {
         get {
-            let value = cacheMMKV.object(forKey: key) as Value?
+            let value = block?(cacheMMKV, key) ?? cacheMMKV.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
