@@ -892,7 +892,8 @@ extension DatabaseManager {
                         let blob = sqlite3_column_blob(ppStmt, column)
                         if blob != nil {
                             let value = NSData(bytes: blob, length: Int(length)) as Data
-                            if var fieldValue = value.fw.unarchivedObject() {
+                            var fieldValue: Any? = value.fw.unarchivedObject()
+                            if fieldValue != nil {
                                 switch propertyInfo.type {
                                 case .mutableArray:
                                     if let valueArray = fieldValue as? NSArray {
@@ -915,7 +916,8 @@ extension DatabaseManager {
                         let blob = sqlite3_column_blob(ppStmt, column)
                         if blob != nil {
                             let value = NSData(bytes: blob, length: Int(length)) as Data
-                            if let fieldValue = value.fw.unarchivedObject() {
+                            let fieldValue: Any? = value.fw.unarchivedObject()
+                            if let fieldValue {
                                 currentModel.setValue(fieldValue, forKey: fieldName)
                             }
                         }
