@@ -220,71 +220,43 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     
     /// 设置指定AnyArchivable对象或对象数组，自动处理归档数据
     public func setArchivableObject<T>(_ value: T?) {
+        var objectType: AnyArchivable.Type?
+        var isArray = false
         // 指定对象数组类型
-        if let objectsType = T.self as? [AnyArchivable].Type,
-           let objectType = objectsType.Element as? AnyArchivable.Type {
+        if let genericTypes = T.self as? [AnyArchivable].Type,
+           let genericType = genericTypes.Element as? AnyArchivable.Type {
             archiveData = ArchiveCoder.encodeObjects(value as? [AnyArchivable])
-            
-            var targetType = ""
-            if let clazz = objectType as? AnyClass {
-                targetType = NSStringFromClass(clazz)
-            } else {
-                targetType = String(describing: objectType as AnyObject)
-                if Configuration.registeredTypes[targetType] == nil {
-                    ArchiveCoder.registerType(objectType)
-                }
-            }
-            if true {
-                targetType = "[\(targetType)]"
-            }
-            archiveType = targetType
+            objectType = genericType
+            isArray = true
         // 指定对象类型
-        } else if let objectType = T.self as? AnyArchivable.Type {
+        } else if let genericType = T.self as? AnyArchivable.Type {
             archiveData = ArchiveCoder.encodeObject(value as? AnyArchivable)
-            
-            var targetType: String = ""
-            if let clazz = objectType as? AnyClass {
-                targetType = NSStringFromClass(clazz)
-            } else {
-                targetType = String(describing: objectType as AnyObject)
-                if Configuration.registeredTypes[targetType] == nil {
-                    ArchiveCoder.registerType(objectType)
-                }
-            }
-            if false {
-                targetType = "[\(targetType)]"
-            }
-            archiveType = targetType
+            objectType = genericType
         // 未指定类型
         } else {
-            var object = value as? AnyArchivable
-            var isArray = false
             if let objects = value as? [AnyArchivable] {
-                object = objects.first
-                isArray = true
                 archiveData = ArchiveCoder.encodeObjects(objects)
-            } else {
+                if let object = objects.first { objectType = type(of: object) }
+                isArray = true
+            } else if let object = value as? AnyArchivable {
                 archiveData = ArchiveCoder.encodeObject(object)
-            }
-            guard let object else {
-                archiveType = nil
-                return
-            }
-
-            let objectType = type(of: object)
-            var targetType = ""
-            if let clazz = objectType as? AnyClass {
-                targetType = NSStringFromClass(clazz)
+                objectType = type(of: object)
             } else {
-                targetType = String(describing: objectType as AnyObject)
-                if Configuration.registeredTypes[targetType] == nil {
-                    ArchiveCoder.registerType(objectType)
-                }
+                archiveData = nil
             }
-            if isArray {
-                targetType = "[\(targetType)]"
+        }
+        
+        if let clazz = objectType as? AnyClass {
+            let className = NSStringFromClass(clazz)
+            archiveType = isArray ? "[\(className)]" : className
+        } else if let objectType {
+            let typeName = String(describing: objectType as AnyObject)
+            if Configuration.registeredTypes[typeName] == nil {
+                ArchiveCoder.registerType(objectType)
             }
-            archiveType = targetType
+            archiveType = isArray ? "[\(typeName)]" : typeName
+        } else {
+            archiveType = nil
         }
     }
 
