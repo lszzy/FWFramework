@@ -175,6 +175,16 @@ extension String: CacheMMKVCompatible {
     }
 }
 
+extension Optional: CacheMMKVCompatible where Wrapped: CacheMMKVCompatible {
+    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
+        Wrapped.readMMKV(mmkv, forKey: key)
+    }
+    
+    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
+        Wrapped.writeMMKV(mmkv, forKey: key, value: value)
+    }
+}
+
 // MARK: - MMAPValue
 /// MMKV缓存属性包装器注解，默认为手工指定或初始值
 ///
