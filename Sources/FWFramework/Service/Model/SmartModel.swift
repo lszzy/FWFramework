@@ -1683,7 +1683,7 @@ extension JSONParserValue {
                     startCopyIndex = nextIndex
 
                 case UInt8(ascii: "/"):
-                    if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *), options.contains(.withoutEscapingSlashes) == false {
+                    if options.contains(.withoutEscapingSlashes) == false {
                         bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
                         bytes.append(contentsOf: [._backslash, UInt8(ascii: "/")])
                         nextIndex = stringBytes.index(after: nextIndex)
@@ -3125,12 +3125,9 @@ extension _SpecialTreatmentEncoder {
             return .number((date.timeIntervalSince1970 * 1000).description)
 
         case .iso8601:
-            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
-                return .string(_iso8601Formatter.string(from: date))
-            } else {
-                fatalError("ISO8601DateFormatter is unavailable on this platform.")
-            }
-
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = .withInternetDateTime
+            return .string(formatter.string(from: date))
         case let .formatted(formatter):
             return .string(formatter.string(from: date))
 
@@ -4933,17 +4930,14 @@ extension JSONDecoderImpl {
             return Date(timeIntervalSince1970: double / 1000.0)
 
         case .iso8601:
-            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
-                let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
-                let string = try container.decode(String.self)
-                guard let date = _iso8601Formatter.date(from: string) else {
-                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
-                }
-
-                return date
-            } else {
-                fatalError("ISO8601DateFormatter is unavailable on this platform.")
+            let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
+            let string = try container.decode(String.self)
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = .withInternetDateTime
+            guard let date = formatter.date(from: string) else {
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
             }
+            return date
 
         case let .formatted(formatter):
             let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
@@ -5085,12 +5079,6 @@ extension Decodable {
         return try Self(from: decoder)
     }
 }
-
-var _iso8601Formatter: ISO8601DateFormatter = {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = .withInternetDateTime
-    return formatter
-}()
 
 enum Patcher<T> {
     static func defaultForType() throws -> T {
