@@ -469,13 +469,13 @@ public enum SmartEncodingOption: Hashable {
 
 extension SmartEncodable {
     /// Serializes into a dictionary
-    public func toDictionary(useMappedKeys: Bool = false, options: Set<SmartEncodingOption>? = nil) -> [String: Any]? {
-        _transformToJson(self, type: Self.self, useMappedKeys: useMappedKeys, options: options)
+    public func toDictionary(options: Set<SmartEncodingOption>? = nil) -> [String: Any]? {
+        _transformToJson(self, type: Self.self, options: options)
     }
 
     /// Serializes into a JSON string
-    public func toJSONString(useMappedKeys: Bool = false, options: Set<SmartEncodingOption>? = nil, prettyPrint: Bool = false) -> String? {
-        if let anyObject = toDictionary(useMappedKeys: useMappedKeys, options: options) {
+    public func toJSONString(options: Set<SmartEncodingOption>? = nil, prettyPrint: Bool = false) -> String? {
+        if let anyObject = toDictionary(options: options) {
             return _transformToJsonString(object: anyObject, prettyPrint: prettyPrint, type: Self.self)
         }
         return nil
@@ -484,27 +484,21 @@ extension SmartEncodable {
 
 extension Array where Element: SmartEncodable {
     /// Serializes into a array
-    public func toArray(useMappedKeys: Bool = false, options: Set<SmartEncodingOption>? = nil) -> [Any]? {
-        _transformToJson(self, type: Element.self, useMappedKeys: useMappedKeys, options: options)
+    public func toArray(options: Set<SmartEncodingOption>? = nil) -> [Any]? {
+        _transformToJson(self, type: Element.self, options: options)
     }
 
     /// Serializes into a JSON string
-    public func toJSONString(useMappedKeys: Bool = false, options: Set<SmartEncodingOption>? = nil, prettyPrint: Bool = false) -> String? {
-        if let anyObject = toArray(useMappedKeys: useMappedKeys, options: options) {
+    public func toJSONString(options: Set<SmartEncodingOption>? = nil, prettyPrint: Bool = false) -> String? {
+        if let anyObject = toArray(options: options) {
             return _transformToJsonString(object: anyObject, prettyPrint: prettyPrint, type: Element.self)
         }
         return nil
     }
 }
 
-private func _transformToJson<T>(_ some: Encodable, type: Any.Type, useMappedKeys: Bool, options: Set<SmartEncodingOption>? = nil) -> T? {
+private func _transformToJson<T>(_ some: Encodable, type: Any.Type, options: Set<SmartEncodingOption>? = nil) -> T? {
     let jsonEncoder = SmartJSONEncoder()
-
-    if useMappedKeys, let key = CodingUserInfoKey.useMappedKeys {
-        var userInfo = jsonEncoder.userInfo
-        userInfo.updateValue(true, forKey: key)
-        jsonEncoder.userInfo = userInfo
-    }
 
     if let _options = options {
         for _option in _options {
@@ -2598,10 +2592,6 @@ extension EncodingError {
     }
 }
 
-extension CodingUserInfoKey {
-    static var useMappedKeys = CodingUserInfoKey(rawValue: "Stamrt.useMappedKeys")
-}
-
 extension JSONEncoder {
     public enum SmartDataEncodingStrategy: Sendable {
         case base64
@@ -3197,16 +3187,11 @@ extension _SpecialTreatmentEncoder {
     func _converted(_ key: CodingKey) -> CodingKey {
         var newKey = key
 
-        var useMappedKeys = false
-        if let key = CodingUserInfoKey.useMappedKeys {
-            useMappedKeys = impl.userInfo[key] as? Bool ?? false
-        }
-
         if let objectType = impl.cache.cacheType {
             if let mappings = objectType.mappingForKey() {
                 for mapping in mappings {
                     if mapping.to.stringValue == newKey.stringValue {
-                        if useMappedKeys, let first = mapping.from.first {
+                        if let first = mapping.from.first {
                             newKey = _JSONKey(stringValue: first, intValue: nil)
                         } else {
                             newKey = mapping.to
