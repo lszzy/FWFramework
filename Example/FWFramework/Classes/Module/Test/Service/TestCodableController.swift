@@ -998,7 +998,7 @@ extension TestCodableController {
                 model?.optional1 == "",
                 model?.optional2 == "",
                 model?.optional3 == "default",
-                model?.optional4 == (encode ? 4 : nil),
+                model?.optional4 == 4,
                 model?.optional5 == 5,
                 model?.sub?.name == "sub",
                 model?.sub2 != nil,
