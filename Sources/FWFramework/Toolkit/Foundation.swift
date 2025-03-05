@@ -1301,11 +1301,32 @@ extension Wrapper where Base: URLSession {
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
-
-    /// 获取手机网络代理，可能为空
+    
+    /// 是否启用了VPN连接
+    public static var isVPNConnected: Bool {
+        let scoped = systemProxySettings?["__SCOPED__"] as? [String: Any]
+        guard let keys = scoped?.keys, !keys.isEmpty else { return false }
+        for key in keys {
+            if key.contains("tap") || key.contains("tun") ||
+                key.contains("ppp") || key.contains("ipsec") {
+                return true
+            }
+        }
+        return false
+    }
+    
+    /// 获取网络HTTP代理和端口，未设置时为空
     public static var httpProxyString: String? {
-        let proxy = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
-        return proxy?[kCFNetworkProxiesHTTPProxy as String] as? String
+        guard let proxy = systemProxySettings else { return nil }
+        let httpProxy = proxy[kCFNetworkProxiesHTTPProxy as String] as? String
+        guard let httpProxy else { return nil }
+        let httpPort = proxy[kCFNetworkProxiesHTTPPort as String] as? Int
+        return httpProxy + (httpPort != nil ? ":\(httpPort!)" : "")
+    }
+    
+    /// 获取系统代理设置，可能为空
+    public static var systemProxySettings: [AnyHashable: Any]? {
+        CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
     }
 }
 
