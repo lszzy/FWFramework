@@ -361,6 +361,7 @@ extension TestRequestController: ViewControllerProtocol {
                         textField.text = self.dnsHostName
                     } confirmBlock: { [weak self] hostName in
                         guard let self else { return }
+                        self.dnsHostName = hostName
                         let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
                         self.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
                     }
