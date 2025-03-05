@@ -340,15 +340,17 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.app.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
 
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "清理上传下载缓存"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络HTTP代理", "检查手机是否连接VPN", "清理上传下载缓存"], actionBlock: { index in
                 guard let self else { return }
                 if index == 0 {
                     URLSession.app.httpProxyDisabled = !URLSession.app.httpProxyDisabled
                     UserDefaults.app.setObject(URLSession.app.httpProxyDisabled, forKey: self.httpProxyKey)
                 } else if index == 1 {
                     let proxyString = URLSession.app.httpProxyString ?? ""
-                    self.app.showMessage(text: "网络代理: \n\(proxyString)")
+                    self.app.showMessage(text: !proxyString.isEmpty ? "网络代理: \(proxyString)" : "未设置网络代理")
                 } else if index == 2 {
+                    self.app.showMessage(text: URLSession.app.isVPNConnected ? "已连接VPN" : "未连接VPN")
+                } else if index == 3 {
                     FileManager.app.removeItem(atPath: self.testPath)
                 }
             })
