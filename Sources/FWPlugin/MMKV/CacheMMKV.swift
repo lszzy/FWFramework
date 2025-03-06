@@ -81,6 +81,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
         if let compatibleType = T.self as? CacheMMKVCompatible.Type,
+           let mmkv, mmkv.contains(key: cacheKey(key)),
            let value = compatibleType.readMMKV(mmkv, forKey: cacheKey(key)) as? T {
             return value
         }
@@ -90,7 +91,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     }
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
-        if let compatibleType = T.self as? CacheMMKVCompatible.Type {
+        if let compatibleType = T.self as? CacheMMKVCompatible.Type, let mmkv {
             compatibleType.writeMMKV(mmkv, forKey: cacheKey(key), value: object)
             return
         }
@@ -118,60 +119,59 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 /// 可扩展MMKV缓存兼容类型，用于针对指定类型优化存取方式，默认采用Archiver归档存取
 public protocol CacheMMKVCompatible {
     /// 从MMKV读取当前类型值，未实现时默认采用Archiver解档方式
-    static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self?
+    static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self?
 
     /// 往MMKV写入当前类型值，未实现时默认采用Archiver归档方式。参数value类型为Self，此处为兼容Swift编译设置为Any
-    static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any)
+    static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any)
 }
 
 extension Int: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        if let value = mmkv?.int64(forKey: key) { return Int(value) }
-        return nil
+    public static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self? {
+        Int(mmkv.int64(forKey: key))
     }
 
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        mmkv?.set(Int64(value as! Self), forKey: key)
+    public static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any) {
+        mmkv.set(Int64(value as! Self), forKey: key)
     }
 }
 
 extension Bool: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        mmkv?.bool(forKey: key)
+    public static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self? {
+        mmkv.bool(forKey: key)
     }
 
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        mmkv?.set(value as! Self, forKey: key)
+    public static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any) {
+        mmkv.set(value as! Self, forKey: key)
     }
 }
 
 extension Float: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        mmkv?.float(forKey: key)
+    public static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self? {
+        mmkv.float(forKey: key)
     }
 
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        mmkv?.set(value as! Self, forKey: key)
+    public static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any) {
+        mmkv.set(value as! Self, forKey: key)
     }
 }
 
 extension Double: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        mmkv?.double(forKey: key)
+    public static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self? {
+        mmkv.double(forKey: key)
     }
 
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        mmkv?.set(value as! Self, forKey: key)
+    public static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any) {
+        mmkv.set(value as! Self, forKey: key)
     }
 }
 
 extension String: CacheMMKVCompatible {
-    public static func readMMKV(_ mmkv: MMKV?, forKey key: String) -> Self? {
-        mmkv?.string(forKey: key)
+    public static func readMMKV(_ mmkv: MMKV, forKey key: String) -> Self? {
+        mmkv.string(forKey: key)
     }
 
-    public static func writeMMKV(_ mmkv: MMKV?, forKey key: String, value: Any) {
-        mmkv?.set(value as! Self, forKey: key)
+    public static func writeMMKV(_ mmkv: MMKV, forKey key: String, value: Any) {
+        mmkv.set(value as! Self, forKey: key)
     }
 }
 
