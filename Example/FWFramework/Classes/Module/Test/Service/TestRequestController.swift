@@ -240,8 +240,8 @@ class TestRequestController: UIViewController {
         FileManager.app.pathDocument.app.appendingPath(["website", "test"])
     }
     
-    @MMAPValue("dnsHostName")
-    private var dnsHostName: String? = "www.wuyong.site"
+    @MMAPValue("testHostName")
+    private var testHostName: String? = "www.wuyong.site"
 
     // MARK: - Subviews
     private lazy var succeedButton: UIButton = {
@@ -358,10 +358,10 @@ extension TestRequestController: ViewControllerProtocol {
                 } else if index == 2 {
                     self.app.showPrompt(title: nil, message: "DNS解析") { [weak self] textField in
                         guard let self else { return }
-                        textField.text = self.dnsHostName
+                        textField.text = self.testHostName
                     } confirmBlock: { [weak self] hostName in
                         guard let self else { return }
-                        self.dnsHostName = hostName
+                        self.testHostName = hostName
                         let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
                         self.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
                     }
