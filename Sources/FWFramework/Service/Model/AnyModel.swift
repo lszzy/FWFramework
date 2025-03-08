@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - AnyModel
-/// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel，可扩展
+/// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel|SmartModel，可扩展
 public protocol AnyModel: ObjectType {
     /// 从Object解码成可选Model，当object为字典和数组时支持具体路径
     static func decodeModel(from object: Any?, designatedPath: String?) -> Self?
@@ -177,6 +177,19 @@ extension AnyModel where Self: JSONModelEnum {
     }
 }
 
+// MARK: - AnyModel+SmartModel
+extension AnyModel where Self: SmartModel {
+    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 默认实现从Model编码成Object
+    public func encodeObject() -> Any? {
+        toDictionary()
+    }
+}
+
 // MARK: - AnyModel+Array
 extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
@@ -208,5 +221,17 @@ extension Array where Element: JSONModel {
     /// 从数组Model编码成Object
     public func encodeObject() -> Any? {
         toJSON()
+    }
+}
+
+extension Array where Element: SmartModel {
+    /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 从数组Model编码成Object
+    public func encodeObject() -> Any? {
+        toArray()
     }
 }

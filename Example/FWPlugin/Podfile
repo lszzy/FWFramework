@@ -21,6 +21,7 @@ target "FWFramework_Plugin" do
   pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
   pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
   pod 'FWFramework/FWPlugin/Lottie', :path => '../../'
+  pod 'FWFramework/FWPlugin/MMKV', :path => '../../'
 
   pod 'FWDebug', :configurations => ['Debug']
 end

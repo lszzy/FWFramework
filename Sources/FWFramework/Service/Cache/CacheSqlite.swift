@@ -13,7 +13,8 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheSqlite()
 
-    private var dbPath: String = ""
+    /// 数据库文件路径
+    public private(set) var dbPath: String = ""
 
     private var database: OpaquePointer!
 
@@ -64,8 +65,8 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
     }
 
     // MARK: - CacheEngineProtocol
-    override open func readCache(forKey key: String) -> Any? {
-        var object: Any?
+    override open func readCache<T>(forKey key: String) -> T? {
+        var object: T?
         autoreleasepool {
             if open() {
                 let sql = "SELECT object FROM FWCache WHERE key = ?"
@@ -78,7 +79,7 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
                         let dataSize = sqlite3_column_bytes(stmt, 0)
                         if let dataBuffer {
                             let data = Data(bytes: dataBuffer, count: Int(dataSize))
-                            object = data.fw.unarchivedObject()
+                            object = data.fw.unarchivedObject(as: T.self)
                         }
                     }
                 }
@@ -90,7 +91,7 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
         return object
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         guard let data = Data.fw.archivedData(object) as? NSData else { return }
 
         autoreleasepool {

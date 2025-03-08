@@ -239,6 +239,9 @@ class TestRequestController: UIViewController {
     private var testPath: String {
         FileManager.app.pathDocument.app.appendingPath(["website", "test"])
     }
+    
+    @MMAPValue("testHostName")
+    private var testHostName: String? = "www.wuyong.site"
 
     // MARK: - Subviews
     private lazy var succeedButton: UIButton = {
@@ -340,15 +343,29 @@ extension TestRequestController: ViewControllerProtocol {
         URLSession.app.httpProxyDisabled = UserDefaults.standard.bool(forKey: httpProxyKey)
 
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络代理", "清理上传下载缓存"], actionBlock: { index in
+            self?.app.showSheet(title: nil, message: nil, actions: [URLSession.app.httpProxyDisabled ? "允许代理抓包(下次启动生效)" : "禁止代理抓包(下次启动生效)", "获取手机网络状态", "DNS解析指定域名", "清理上传下载缓存"], actionBlock: { index in
                 guard let self else { return }
                 if index == 0 {
                     URLSession.app.httpProxyDisabled = !URLSession.app.httpProxyDisabled
                     UserDefaults.app.setObject(URLSession.app.httpProxyDisabled, forKey: self.httpProxyKey)
                 } else if index == 1 {
-                    let proxyString = URLSession.app.httpProxyString ?? ""
-                    self.app.showMessage(text: "网络代理: \n\(proxyString)")
+                    var message = "IP地址：" + (UIDevice.app.ipAddress ?? "-")
+                    message += "\n主机名：" + (UIDevice.app.hostName ?? "-")
+                    message += "\n蜂窝网络：" + (UIDevice.app.networkTypes?.joined(separator: ",") ?? "-")
+                    message += "\nHTTP代理：\(URLSession.app.httpProxyString ?? "-")"
+                    message += "\nVPN状态：\(URLSession.app.isVPNConnected ? "已连接" : "未连接")"
+                    self.app.showAlert(title: "网络状态", message: message)
                 } else if index == 2 {
+                    self.app.showPrompt(title: nil, message: "DNS解析") { [weak self] textField in
+                        guard let self else { return }
+                        textField.text = self.testHostName
+                    } confirmBlock: { [weak self] hostName in
+                        guard let self else { return }
+                        self.testHostName = hostName
+                        let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
+                        self.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
+                    }
+                } else if index == 3 {
                     FileManager.app.removeItem(atPath: self.testPath)
                 }
             })

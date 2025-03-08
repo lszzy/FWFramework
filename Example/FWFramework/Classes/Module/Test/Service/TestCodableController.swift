@@ -536,6 +536,59 @@ enum TestMappedValueMacroJSONModelEnum: String, JSONModelEnum {
     case unknown = ""
 }
 
+// MARK: - TestSmartModel
+struct TestSmartModel: SmartModel {
+    var id: Int = 0
+    var name: String = ""
+    var age: Int?
+    var amount: Float = 0
+    var alias: String = ""
+    @IgnoredKey
+    var except: String = ""
+    var camelName: String = ""
+    @SmartAny
+    var any: Any?
+    @SmartAny
+    var dict: [AnyHashable: Any]?
+    @SmartAny
+    var array: [Any]?
+    var optional1: String = ""
+    var optional2: String = ""
+    var optional3: String? = "default"
+    var optional4: Int? = 4
+    var optional5: Int? = 0
+    var sub: TestSmartSubModel?
+    var sub2: TestSmartSubModel = .init()
+    var subs: [TestSmartSubModel] = []
+    var subdict: [String: TestSmartSubModel] = [:]
+    var enum1: TestSmartModelEnum = .unknown
+    var enum2: TestSmartModelEnum = .unknown
+    var enum3: TestSmartModelEnum?
+    
+    static func mappingForKey() -> [SmartKeyTransformer]? {
+        [
+            CodingKeys.alias <--- "alias_key",
+            CodingKeys.camelName <--- "camel_name"
+        ]
+    }
+}
+
+struct TestSmartSuperModel: SmartModel {
+    var id: Int = 0
+}
+
+struct TestSmartSubModel: SmartModel {
+    var name: String?
+    
+    @SmartFlat
+    var parent: TestSmartSuperModel?
+}
+
+enum TestSmartModelEnum: String, Codable {
+    case test
+    case unknown = ""
+}
+
 // MARK: - TestObjectParameter
 class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
@@ -582,6 +635,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["JSONModel+Custom", "onCustomJSONModel"],
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
+            ["SmartModel", "onSmartModel"],
             ["ObjectParameter", "onObjectParameter"],
             ["Optional.isNil", "onOptionalNil"]
         ])
@@ -923,6 +977,43 @@ extension TestCodableController {
         var model: TestMappedValueMacroJSONModel? = TestMappedValueMacroJSONModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        showResults(tests)
+    }
+    
+    @objc func onSmartModel() {
+        func testModel(_ model: TestSmartModel?, encode: Bool = false) -> [Bool] {
+            let results: [Bool] = [
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == 4,
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
+            ]
+            return results
+        }
+
+        var model: TestSmartModel? = TestSmartModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestSmartModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }

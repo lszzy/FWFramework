@@ -39,19 +39,26 @@ public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
 // MARK: - CacheManager
 /// 缓存管理器
 public class CacheManager: NSObject, @unchecked Sendable {
-    /// 自定义缓存创建句柄，默认nil
-    public static var factoryBlock: (@Sendable (CacheType) -> CacheProtocol?)? {
-        get { shared.factoryBlock }
-        set { shared.factoryBlock = newValue }
+    private static let shared = CacheManager()
+    private var blocks: [CacheType: @Sendable () -> CacheProtocol] = [:]
+
+    /// 注册指定类型的缓存管理器创建句柄，用于动态扩展缓存类型
+    public static func registerCache(_ type: CacheType, block: @escaping @Sendable () -> CacheProtocol) {
+        shared.blocks[type] = block
     }
 
-    private static let shared = CacheManager()
-    private var factoryBlock: (@Sendable (CacheType) -> CacheProtocol?)?
+    /// 预置指定类型的缓存管理器创建句柄，已注册时不生效，用于动态扩展缓存类型
+    @discardableResult
+    public static func presetCache(_ type: CacheType, block: @escaping @Sendable () -> CacheProtocol) -> Bool {
+        guard shared.blocks[type] == nil else { return false }
+        shared.blocks[type] = block
+        return true
+    }
 
     /// 获取指定类型的缓存单例对象
     public static func manager(type: CacheType) -> CacheProtocol? {
-        if let cache = shared.factoryBlock?(type) {
-            return cache
+        if let block = shared.blocks[type] {
+            return block()
         }
 
         switch type {
@@ -84,6 +91,7 @@ public struct CachedValue<Value> {
     private let key: String
     private let defaultValue: Value
     private let type: CacheType
+    private let block: ((CacheType, String) -> Value?)?
 
     public init(
         wrappedValue: Value,
@@ -94,6 +102,7 @@ public struct CachedValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
+        self.block = nil
     }
 
     public init<WrappedValue>(
@@ -105,11 +114,12 @@ public struct CachedValue<Value> {
         self.key = key
         self.defaultValue = defaultValue ?? wrappedValue
         self.type = type
+        self.block = { CacheManager.manager(type: $0)?.object(forKey: $1) as WrappedValue? }
     }
 
     public var wrappedValue: Value {
         get {
-            let value = CacheManager.manager(type: type)?.object(forKey: key) as? Value
+            let value = block != nil ? block?(type, key) : CacheManager.manager(type: type)?.object(forKey: key) as Value?
             return !Optional<Any>.isNil(value) ? (value ?? defaultValue) : defaultValue
         }
         set {
