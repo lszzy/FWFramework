@@ -1,5 +1,21 @@
 # 更新日志
 
+## [6.1.0] - 2025-03-08
+
+### Added
+* 引入SmartCodable组件，新增SmartModel模型兼容AnyModel|AnyArchive协议，建议逐步迁移
+* 新增MMKV缓存插件，MMAPValue属性包装器组件
+* Cache组件修改为泛型方式，需迁移适配
+* Archiver组件修改为泛型方式，registerType不再必须，需迁移适配
+* 新增解析DNS、检查VPN是否连接等工具方法
+* Decimal和CGFloat兼容BasicType协议
+
+### Migrate
+1. JSONModel读写内存方式不稳定，请使用KeyMappable方式或迁移至SmartModel，下个版本将移除memoryMode方式
+2. Archiver组件改为泛型方式后，无需registerType注册，如需兼容旧版本Any类型数据，使用方式和之前保持一致
+3. Cache组件改为泛型方式后，如遇代码报错，可将as? T转换为as T?即可
+4. 下个大版本将拆分UIKit子模块，重构子模块按需加载方式，并移除废弃代码，敬请期待
+
 ## [6.0.5] - 2025-02-12
 
 ### Fixed

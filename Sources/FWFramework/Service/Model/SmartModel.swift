@@ -8,9 +8,7 @@
 import Foundation
 
 // MARK: - SmartModel
-/// 自动解析Codable模型
-///
-/// [SmartCodable](https://github.com/intsig171/SmartCodable)
+/// 智能解析Codable模型，兼容AnyModel、AnyArchivable等协议，推荐使用
 public protocol SmartModel: SmartCodable, AnyModel {}
 
 extension SmartModel where Self: AnyObject {
@@ -22,6 +20,7 @@ extension SmartModel where Self: AnyObject {
 }
 
 // MARK: - SmartCodable
+/// [SmartCodable](https://github.com/intsig171/SmartCodable)
 public typealias SmartCodable = SmartDecodable & SmartEncodable
 
 public protocol SmartDecodable: Decodable {
@@ -631,6 +630,20 @@ extension SmartColor: Codable {
         switch self {
         case let .color(color):
             try container.encode(color.hexString)
+        }
+    }
+}
+
+public protocol SmartCaseDefaultable: RawRepresentable, Codable, CaseIterable { }
+public extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Decodable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let decoded = try container.decode(RawValue.self)
+        if let v = Self.init(rawValue: decoded) {
+            self = v
+        } else {
+            let des = "Cannot initialize \(Self.self) from invalid \(RawValue.self) value `\(decoded)`"
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: des))
         }
     }
 }
@@ -3360,6 +3373,8 @@ class DecodingCache {
 
             if let value = cacheValue as? T {
                 return value
+            } else if let caseValue = cacheValue as? (any SmartCaseDefaultable) {
+                return caseValue.rawValue as? T
             } else if let caseValue = cacheValue as? (any DefaultCaseCodable) {
                 return caseValue.rawValue as? T
             }
@@ -5097,6 +5112,8 @@ extension Patcher {
                 return value.init() as! T
             } else if let object = T.self as? SmartDecodable.Type {
                 return object.init() as! T
+            } else if let object = T.self as? any SmartCaseDefaultable.Type {
+                if let first = object.allCases.first as? T { return first }
             } else if let object = T.self as? any DefaultCaseCodable.Type {
                 return object.defaultCase as! T
             } else if let object = T.self as? any SmartAssociatedEnumerable.Type {
