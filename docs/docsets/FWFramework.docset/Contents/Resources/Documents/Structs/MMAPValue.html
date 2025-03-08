@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MMAPValue Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/MMAPValue" class="dashAnchor"></a>
+    <a title="MMAPValue Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">FWFramework 6.1.0 Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/lszzy/FWFramework"><img src="../img/gh.png" alt="GitHub"/>View on GitHub</a></p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">FWFramework</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        <a href="../Structs.html">Structures</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        MMAPValue Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AlamofireImpl.html">AlamofireImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertAction.html">AlertAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertAnimation.html">AlertAnimation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertAppearance.html">AlertAppearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertController.html">AlertController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertControllerAppearance.html">AlertControllerAppearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertControllerImpl.html">AlertControllerImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertPluginImpl.html">AlertPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AlertPresentationController.html">AlertPresentationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Analyzer.html">Analyzer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AnimatedTransition.html">AnimatedTransition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AppResponder.html">AppResponder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Appearance.html">Appearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ArchiveCoder.html">ArchiveCoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Asset.html">Asset</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AssetGroup.html">AssetGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AssetLivePhoto.html">AssetLivePhoto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AssetManager.html">AssetManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AssetSessionExporter.html">AssetSessionExporter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AttributedLabel.html">AttributedLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AttributedLabelAttachment.html">AttributedLabelAttachment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AttributedLabelURL.html">AttributedLabelURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AttributedLabelURLDetector.html">AttributedLabelURLDetector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AudioPlayer.html">AudioPlayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeBiometry.html">AuthorizeBiometry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeCalendar.html">AuthorizeCalendar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeCamera.html">AuthorizeCamera</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeContacts.html">AuthorizeContacts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeLocation.html">AuthorizeLocation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeManager.html">AuthorizeManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeMicrophone.html">AuthorizeMicrophone</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeNotifications.html">AuthorizeNotifications</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizePhotoLibrary.html">AuthorizePhotoLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AuthorizeTracking.html">AuthorizeTracking</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AutoPurgingImageCache.html">AutoPurgingImageCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Autoloader.html">Autoloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BadgeView.html">BadgeView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BannerView.html">BannerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BannerViewCell.html">BannerViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BannerViewFlowLayout.html">BannerViewFlowLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageCell.html">BarrageCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageDescriptor.html">BarrageDescriptor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageManager.html">BarrageManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageRenderView.html">BarrageRenderView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageTextCell.html">BarrageTextCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageTextDescriptor.html">BarrageTextDescriptor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BarrageTrackInfo.html">BarrageTrackInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BatchRequest.html">BatchRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BatchRequestManager.html">BatchRequestManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Benchmark.html">Benchmark</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BorderDotView.html">BorderDotView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheEngine.html">CacheEngine</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheFile.html">CacheFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheKeychain.html">CacheKeychain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheMMKV.html">CacheMMKV</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheManager.html">CacheManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheMemory.html">CacheMemory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheSqlite.html">CacheSqlite</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CacheUserDefaults.html">CacheUserDefaults</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ChainRequest.html">ChainRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ChainRequestManager.html">ChainRequestManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewAlignLayout.html">CollectionViewAlignLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewDelegate.html">CollectionViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewFlowLayout.html">CollectionViewFlowLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewPagingLayout.html">CollectionViewPagingLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewSectionConfig.html">CollectionViewSectionConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CollectionViewWaterfallLayout.html">CollectionViewWaterfallLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CompoundResponseSerializer.html">CompoundResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Configuration.html">Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ConfigurationTemplate.html">ConfigurationTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CustomDateFormatTransform.html">CustomDateFormatTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataTransform.html">DataTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DatabaseManager.html">DatabaseManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DateFormatterTransform.html">DateFormatterTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DateTransform.html">DateTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DelegateProxy.html">DelegateProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DotView.html">DotView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DrawerView.html">DrawerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EmptyPluginImpl.html">EmptyPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/EnumTransform.html">EnumTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ErrorManager.html">ErrorManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ExpandedTitleView.html">ExpandedTitleView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FloatingView.html">FloatingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FrameworkBundle.html">FrameworkBundle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GradientView.html">GradientView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GridView.html">GridView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewController.html">GuideViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewItem.html">GuideViewItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/GuideViewManager.html">GuideViewManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HTTPRequest.html">HTTPRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HTTPRequest/Builder.html">– Builder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HTTPRequestSerializer.html">HTTPRequestSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HTTPResponseSerializer.html">HTTPResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HTTPSessionManager.html">HTTPSessionManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HelpingMapper.html">HelpingMapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HexColorTransform.html">HexColorTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HostingController.html">HostingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HostingView.html">HostingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ISO8601DateTransform.html">ISO8601DateTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Icon.html">Icon</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageAlbumController.html">ImageAlbumController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageAlbumTableCell.html">ImageAlbumTableCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCoder.html">ImageCoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCropController.html">ImageCropController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCropOverlayView.html">ImageCropOverlayView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCropScrollView.html">ImageCropScrollView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCropToolbar.html">ImageCropToolbar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageCropView.html">ImageCropView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageDownloadReceipt.html">ImageDownloadReceipt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageDownloader.html">ImageDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageFrame.html">ImageFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerCollectionCell.html">ImagePickerCollectionCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerController.html">ImagePickerController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerControllerImpl.html">ImagePickerControllerImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerPluginImpl.html">ImagePickerPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerPreviewCollectionCell.html">ImagePickerPreviewCollectionCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerPreviewController.html">ImagePickerPreviewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePickerTitleView.html">ImagePickerTitleView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePluginImpl.html">ImagePluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePreviewController.html">ImagePreviewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePreviewPluginImpl.html">ImagePreviewPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePreviewTransitionAnimator.html">ImagePreviewTransitionAnimator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImagePreviewView.html">ImagePreviewView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ImageResponseSerializer.html">ImageResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/IndicatorView.html">IndicatorView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/InfiniteScrollView.html">InfiniteScrollView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONDeserializer.html">JSONDeserializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONModelConfiguration.html">JSONModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONModelConfiguration/DebugMode.html">– DebugMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONRequestSerializer.html">JSONRequestSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/JSONResponseSerializer.html">JSONResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeychainManager.html">KeychainManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LayoutChain.html">LayoutChain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Loader.html">Loader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LocationManager.html">LocationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LoggerPluginImpl.html">LoggerPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LoggerPluginNSLog.html">LoggerPluginNSLog</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LoggerPluginOSLog.html">LoggerPluginOSLog</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LottiePluginView.html">LottiePluginView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MappedValue.html">MappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MappingPropertyHandler.html">MappingPropertyHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MarqueeLabel.html">MarqueeLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Mediator.html">Mediator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ModuleBundle.html">ModuleBundle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MulticastBlock.html">MulticastBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MulticastBlock/Priority.html">– Priority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MulticastDelegate.html">MulticastDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NSDecimalNumberTransform.html">NSDecimalNumberTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NavigationBarAppearance.html">NavigationBarAppearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Navigator.html">Navigator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkMockerURLProtocol.html">NetworkMockerURLProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkReachabilityManager.html">NetworkReachabilityManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkReachabilityManager/NetworkReachabilityStatus.html">– NetworkReachabilityStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NotificationManager.html">NotificationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PageControl.html">PageControl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingListContainerView.html">PagingListContainerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingListRefreshView.html">PagingListRefreshView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingMainTableView.html">PagingMainTableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingSmoothCollectionView.html">PagingSmoothCollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingSmoothView.html">PagingSmoothView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PagingView.html">PagingView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PanGestureRecognizer.html">PanGestureRecognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeCell.html">PasscodeCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeCellProperty.html">PasscodeCellProperty</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeFlowLayout.html">PasscodeFlowLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeLineView.html">PasscodeLineView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeSecrectImageView.html">PasscodeSecrectImageView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PasscodeView.html">PasscodeView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlaceholderView.html">PlaceholderView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheAction.html">PlayerCacheAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheConfiguration.html">PlayerCacheConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheContentInfo.html">PlayerCacheContentInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheDownloader.html">PlayerCacheDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheDownloaderStatus.html">PlayerCacheDownloaderStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheLoader.html">PlayerCacheLoader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheLoaderManager.html">PlayerCacheLoaderManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheManager.html">PlayerCacheManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheRequestWorker.html">PlayerCacheRequestWorker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheSessionManager.html">PlayerCacheSessionManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PlayerCacheWorker.html">PlayerCacheWorker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PluginManager.html">PluginManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PopupConfiguration.html">PopupConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PopupMenu.html">PopupMenu</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PopupMenuAnimationManager.html">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PopupMenuDeviceOrientationManager.html">PopupMenuDeviceOrientationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PopupMenuPath.html">PopupMenuPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PresentationController.html">PresentationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ProgressView.html">ProgressView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Promise.html">Promise</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PropertyListRequestSerializer.html">PropertyListRequestSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PropertyListResponseSerializer.html">PropertyListResponseSerializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ProtectedValue.html">ProtectedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/PullRefreshView.html">PullRefreshView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer.html">Recognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Recognizer/Result.html">– Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RectCornerView.html">RectCornerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RefreshPluginImpl.html">RefreshPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestAccessory.html">RequestAccessory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestCache.html">RequestCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestCacheMetadata.html">RequestCacheMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestConfig.html">RequestConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestContextAccessory.html">RequestContextAccessory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestManager.html">RequestManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestPluginImpl.html">RequestPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestRetrier.html">RequestRetrier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RequestValidator.html">RequestValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ResizableView.html">ResizableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ReusableViewPool.html">ReusableViewPool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RoundedCornerView.html">RoundedCornerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Router.html">Router</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Router/Context.html">– Context</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Router/Parameter.html">– Parameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SDWebImageImpl.html">SDWebImageImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SDWebImagePluginIndicator.html">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SDWebImageProgressPluginIndicator.html">SDWebImageProgressPluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ScanCode.html">ScanCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ScanView.html">ScanView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ScanViewConfiguration.html">ScanViewConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SceneResponder.html">SceneResponder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ScrollOverlayView.html">ScrollOverlayView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ScrollViewDelegate.html">ScrollViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SearchBarDelegate.html">SearchBarDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SecurityPolicy.html">SecurityPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SegmentedControl.html">SegmentedControl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SemaphoreLock.html">SemaphoreLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SendableValue.html">SendableValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonAnimation.html">SkeletonAnimation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonAppearance.html">SkeletonAppearance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonCollectionView.html">SkeletonCollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonLabel.html">SkeletonLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonLayout.html">SkeletonLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonTableView.html">SkeletonTableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SkeletonView.html">SkeletonView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SmartJSONDecoder.html">SmartJSONDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SmartJSONEncoder.html">SmartJSONEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StateEvent.html">StateEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StateMachine.html">StateMachine</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StateObject.html">StateObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StateTransition.html">StateTransition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StatisticalEvent.html">StatisticalEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StatisticalManager.html">StatisticalManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StreamingMultipartFormData.html">StreamingMultipartFormData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SwipeAnimatedTransition.html">SwipeAnimatedTransition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SwizzleStore.html">SwizzleStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBar.html">TabBar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBarController.html">TabBarController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBarItem.html">TabBarItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBarItemBadgeView.html">TabBarItemBadgeView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBarItemContentView.html">TabBarItemContentView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TabBarItemMoreContentView.html">TabBarItemMoreContentView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TableViewDelegate.html">TableViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TagCollectionView.html">TagCollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TapGestureRecognizer.html">TapGestureRecognizer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaskManager.html">TaskManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaskOperation.html">TaskOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TestCase.html">TestCase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TextFieldDelegate.html">TextFieldDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TextTagCollectionView.html">TextTagCollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TextTagConfig.html">TextTagConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TextViewDelegate.html">TextViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ThemeManager.html">ThemeManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ThemeObject.html">ThemeObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ThemeStyle.html">ThemeStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToastPluginImpl.html">ToastPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToastView.html">ToastView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToolbarButton.html">ToolbarButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToolbarMenuView.html">ToolbarMenuView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToolbarTitleView.html">ToolbarTitleView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ToolbarView.html">ToolbarView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TransformAnimatedTransition.html">TransformAnimatedTransition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TransformOf.html">TransformOf</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/URLSessionManager.html">URLSessionManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/URLTransform.html">URLTransform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnfairLock.html">UnfairLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UnitTest.html">UnitTest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ValidatedValue.html">ValidatedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VersionManager.html">VersionManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoPlayer.html">VideoPlayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoPlayerView.html">VideoPlayerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewContext.html">ViewContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewControllerIntercepter.html">ViewControllerIntercepter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewControllerManager.html">ViewControllerManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewPluginImpl.html">ViewPluginImpl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewPreferenceKey.html">ViewPreferenceKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WeakProxy.html">WeakProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WeakValue.html">WeakValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocket.html">WebSocket</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketCompression.html">WebSocketCompression</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketEngine.html">WebSocketEngine</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFoundationHTTPHandler.html">WebSocketFoundationHTTPHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFoundationHTTPServerHandler.html">WebSocketFoundationHTTPServerHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFoundationSecurity.html">WebSocketFoundationSecurity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFrameCollector.html">WebSocketFrameCollector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFrameCollector/Event.html">– Event</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketFramer.html">WebSocketFramer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketNativeEngine.html">WebSocketNativeEngine</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketServer.html">WebSocketServer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketServerConnection.html">WebSocketServerConnection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebSocketTCPTransport.html">WebSocketTCPTransport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebView.html">WebView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebViewCookieManager.html">WebViewCookieManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebViewJSBridge.html">WebViewJSBridge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebViewJSBridge/Context.html">– Context</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WebViewJSBridge/WeakProxy.html">– WeakProxy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Wrapper.html">Wrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WrapperGlobal.html">WrapperGlobal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ZoomImageVideoPlayerView.html">ZoomImageVideoPlayerView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ZoomImageVideoToolbar.html">ZoomImageVideoToolbar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ZoomImageView.html">ZoomImageView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AlbumContentType.html">AlbumContentType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AlbumSortType.html">AlbumSortType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AlertActionStyle.html">AlertActionStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AlertAnimationType.html">AlertAnimationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AlertControllerStyle.html">AlertControllerStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AnimatedTransitionType.html">AnimatedTransitionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AssetAuthorizationStatus.html">AssetAuthorizationStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AssetDownloadStatus.html">AssetDownloadStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AssetSessionExporterError.html">AssetSessionExporterError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AssetSubType.html">AssetSubType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AssetType.html">AssetType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AttributedLabelAlignment.html">AttributedLabelAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AudioPlayerRepeatMode.html">AudioPlayerRepeatMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AudioPlayerShuffleMode.html">AudioPlayerShuffleMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AudioPlayerStatus.html">AudioPlayerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/AuthorizeStatus.html">AuthorizeStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BadgeStyle.html">BadgeStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BannerViewPageControlAlignment.html">BannerViewPageControlAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BannerViewPageControlStyle.html">BannerViewPageControlStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BarragePositionPriority.html">BarragePositionPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BarrageRenderPositionStyle.html">BarrageRenderPositionStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/BarrageRenderStatus.html">BarrageRenderStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionViewItemsDirection.html">CollectionViewItemsDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionViewItemsHorizontalAlignment.html">CollectionViewItemsHorizontalAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionViewItemsVerticalAlignment.html">CollectionViewItemsVerticalAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionViewPagingLayoutStyle.html">CollectionViewPagingLayoutStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CollectionViewWaterfallLayoutItemRenderDirection.html">CollectionViewWaterfallLayoutItemRenderDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HTTPRequestQueryStringSerializationStyle.html">HTTPRequestQueryStringSerializationStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HeaderFooterViewType.html">HeaderFooterViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImageCropAspectRatioPreset.html">ImageCropAspectRatioPreset</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImageCropCroppingStyle.html">ImageCropCroppingStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImageCropToolbarPosition.html">ImageCropToolbarPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImageDownloadPrioritization.html">ImageDownloadPrioritization</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImagePreviewMediaType.html">ImagePreviewMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ImagePreviewTransitioningStyle.html">ImagePreviewTransitioningStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Index.html">Index</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/InfiniteScrollState.html">InfiniteScrollState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONError.html">JSONError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONKey.html">JSONKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONType.html">JSONType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/JSONWritingOptionsKeys.html">JSONWritingOptionsKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PagingListContainerType.html">PagingListContainerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PasscodeEditStatus.html">PasscodeEditStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PasscodeInputType.html">PasscodeInputType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PasscodeSecurityType.html">PasscodeSecurityType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PlatformVersionCondition.html">PlatformVersionCondition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PlatformViewVersion.html">PlatformViewVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PlayerCacheAtionType.html">PlayerCacheAtionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PopupMenuAnimationStyle.html">PopupMenuAnimationStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PopupMenuArrowDirection.html">PopupMenuArrowDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PopupMenuPriorityDirection.html">PopupMenuPriorityDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PromiseError.html">PromiseError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/PullRefreshState.html">PullRefreshState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Refresh.html">Refresh</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Refresh/Header.html">– Header</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Refresh/Footer.html">– Footer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/Refresh/Modifier.html">– Modifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RequestError.html">RequestError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RequestMethod.html">RequestMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RequestPriority.html">RequestPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/RequestSerializerType.html">RequestSerializerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ResponseSerializerType.html">ResponseSerializerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SSLPinningMode.html">SSLPinningMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ScanCornerLoaction.html">ScanCornerLoaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SegmentedControlImagePosition.html">SegmentedControlImagePosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SegmentedControlSegmentWidthStyle.html">SegmentedControlSegmentWidthStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SegmentedControlSelectionIndicatorLocation.html">SegmentedControlSelectionIndicatorLocation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SegmentedControlSelectionStyle.html">SegmentedControlSelectionStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SegmentedControlType.html">SegmentedControlType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SkeletonAnimationDirection.html">SkeletonAnimationDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SkeletonAnimationType.html">SkeletonAnimationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SmartColor.html">SmartColor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SmartDecodingOption.html">SmartDecodingOption</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SmartEncodingOption.html">SmartEncodingOption</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TabBarItemContentMode.html">TabBarItemContentMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TabBarItemPositioning.html">TabBarItemPositioning</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TagCollectionAlignment.html">TagCollectionAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TagCollectionScrollDirection.html">TagCollectionScrollDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToastViewPosition.html">ToastViewPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToastViewType.html">ToastViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToolbarTitleViewStyle.html">ToolbarTitleViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ToolbarViewType.html">ToolbarViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/VersionStatus.html">VersionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/VideoPlayerBufferingState.html">VideoPlayerBufferingState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/VideoPlayerPlaybackState.html">VideoPlayerPlaybackState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ViewControllerLifecycleState.html">ViewControllerLifecycleState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ViewState.html">ViewState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketCloseCode.html">WebSocketCloseCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketConnectionEvent.html">WebSocketConnectionEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketConnectionState.html">WebSocketConnectionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketErrorType.html">WebSocketErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketEvent.html">WebSocketEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketFoundationSecurityError.html">WebSocketFoundationSecurityError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketFrameEvent.html">WebSocketFrameEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketFrameOpCode.html">WebSocketFrameOpCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPEvent.html">WebSocketHTTPEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPHeader.html">WebSocketHTTPHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketHTTPUpgradeError.html">WebSocketHTTPUpgradeError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketPinningState.html">WebSocketPinningState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketSecurityErrorCode.html">WebSocketSecurityErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketServerEvent.html">WebSocketServerEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WebSocketTCPTransportError.html">WebSocketTCPTransportError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:9Alamofire7AFErrorO">AFError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Alamofire.html">Alamofire</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Alamofire/MultipartFormData.html">– MultipartFormData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/AnyValidator.html">AnyValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Array%3C%5BString%3A%20SmartAnyImpl%5D%3E.html">Array&lt;[String: SmartAnyImpl]&gt;</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/BarrageRenderView">BarrageRenderView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Binding.html">Binding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CALayer.html">CALayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGFloat.html">CGFloat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGPoint.html">CGPoint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGRect.html">CGRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGSize.html">CGSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Collection.html">Collection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Color.html">Color</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation4DateV">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSDateFormatter">DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decodable.html">Decodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decoder.html">Decoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Divider.html">Divider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/EdgeInsets.html">EdgeInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Encodable.html">Encodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Encoder.html">Encoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/EnvironmentValues.html">EnvironmentValues</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Font.html">Font</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSISO8601DateFormatter">ISO8601DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s5Int16V">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s5Int32V">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s5Int64V">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s4Int8V">Int8</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONDecoder.html">JSONDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONDecoder/SmartDataDecodingStrategy.html">– SmartDataDecodingStrategy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONDecoder/SmartKeyDecodingStrategy.html">– SmartKeyDecodingStrategy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONEncoder.html">JSONEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONEncoder/SmartDataEncodingStrategy.html">– SmartDataEncodingStrategy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/JSONEncoder/SmartKeyEncodingStrategy.html">– SmartKeyEncodingStrategy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/KeyedDecodingContainer.html">KeyedDecodingContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/KeyedEncodingContainer.html">KeyedEncodingContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/List.html">List</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/MainActor.html">MainActor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSAttributedString.html">NSAttributedString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/c:objc(cs)NSLock">NSLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSMutableAttributedString.html">NSMutableAttributedString</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSObject.html">NSObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Notification.html">Notification</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Notification/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/PlatformView.html">PlatformView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/PlatformViewController.html">PlatformViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/PopupMenuAnimationManager">PopupMenuAnimationManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation19PropertyListDecoderC">PropertyListDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:10Foundation19PropertyListEncoderC">PropertyListEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/RawRepresentable.html">RawRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Rectangle.html">Rectangle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImagePluginIndicator">SDWebImagePluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/SDWebImageProgressPluginIndicator">SDWebImageProgressPluginIndicator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/ScrollView.html">ScrollView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:Sh">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Text.html">Text</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIActivityIndicatorView.html">UIActivityIndicatorView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionReusableView.html">UICollectionReusableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionView.html">UICollectionView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UICollectionViewCell.html">UICollectionViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIEdgeInsets.html">UIEdgeInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIHostingController.html">UIHostingController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIImageView.html">UIImageView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UILabel.html">UILabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UILayoutPriority.html">UILayoutPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UINavigationBar.html">UINavigationBar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIPresentationController.html">UIPresentationController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITabBar.html">UITabBar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableView.html">UITableView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableViewCell.html">UITableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITableViewHeaderFooterView.html">UITableViewHeaderFooterView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UITextView.html">UITextView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIToolbar.html">UIToolbar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIViewController.html">UIViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:Su">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s6UInt16V">UInt16</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s6UInt32V">UInt32</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s6UInt64V">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:s5UInt8V">UInt8</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/URL.html">URL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/URLAuthenticationChallenge">URLAuthenticationChallenge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/URLRequest.html">URLRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/View.html">View</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/WKWebView.html">WKWebView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework1loiySbAA4JSONV_ADtF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzSgz_SSSg_xSgttAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzSgz_SaySSG_xSgttAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzSgz_xtAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzz_SSSg_xSgttAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzz_SaySSG_xSgttAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCt6ObjectQzz_xtAA13TransformTypeRzlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCtxz_SStlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3lssoiySS_AA22MappingPropertyHandlerCtxz_SaySSGtlF">&lt;--(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework4lsssoiyAA19SmartKeyTransformerVs06CodingD0_p_SStF">&lt;---(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework4lsssoiyAA19SmartKeyTransformerVs06CodingD0_p_SaySSGtF">&lt;---(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework4lsssoiyAA21SmartValueTransformerVs9CodingKey_p_AA0D13Transformable_ptF">&lt;---(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3llloiyyAA13HelpingMapperC_SS_AA22MappingPropertyHandlerCttF">&lt;&lt;&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3llloiyyAA13HelpingMapperC_SaySS_AA22MappingPropertyHandlerCtGtF">&lt;&lt;&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2leoiySbAA4JSONV_ADtF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2eeoiySbAA4JSONV_ADtF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework1goiySbAA4JSONV_ADtF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework2geoiySbAA4JSONV_ADtF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework3gggoiyyAA13HelpingMapperC_xztlF">&gt;&gt;&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework30_getTypeByMangledNameInContext__07genericH00I9ArgumentsypXpSgSPys5UInt8VG_SuSVSgAItF">_getTypeByMangledNameInContext(_:_:genericContext:genericArguments:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework11writeUint16_6offset5valueySays5UInt8VGz_Sis6UInt16VtF">writeUint16(_:offset:value:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework11writeUint32_6offset5valueySays5UInt8VGz_Sis6UInt32VtF">writeUint32(_:offset:value:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:11FWFramework11writeUint64_6offset5valueySays5UInt8VGz_Sis6UInt64VtF">writeUint64(_:offset:value:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AlertControllerDelegate.html">AlertControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AlertPlugin.html">AlertPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnalysisReporter.html">AnalysisReporter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyArchivable.html">AnyArchivable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyChainable.html">AnyChainable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyDateFormatter.html">AnyDateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyDecoder.html">AnyDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyEncoder.html">AnyEncoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AnyModel.html">AnyModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework12AnyParameterP">AnyParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ArrayParameter.html">ArrayParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ArrayResultBuilderCompatible.html">ArrayResultBuilderCompatible</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AttributedLabelDelegate.html">AttributedLabelDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AttributedLabelURLDetectorProtocol.html">AttributedLabelURLDetectorProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AttributedStringParameter.html">AttributedStringParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioPlayerDataSource.html">AudioPlayerDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioPlayerDelegate.html">AudioPlayerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AuthorizeProtocol.html">AuthorizeProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/AutoloadProtocol.html">AutoloadProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BadgeViewProtocol.html">BadgeViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BannerViewDelegate.html">BannerViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework19BarrageCellDelegateP">BarrageCellDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BasicType.html">BasicType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BatchRequestDelegate.html">BatchRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CacheEngineProtocol.html">CacheEngineProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CacheMMKVCompatible.html">CacheMMKVCompatible</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CacheProtocol.html">CacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ChainRequestDelegate.html">ChainRequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CodableDecodingConverter.html">CodableDecodingConverter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CodableModel.html">CodableModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionDelegateControllerProtocol.html">CollectionDelegateControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework32CollectionViewControllerProtocolP">CollectionViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionViewDelegateAlignLayout.html">CollectionViewDelegateAlignLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionViewDelegateFlowLayout.html">CollectionViewDelegateFlowLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CollectionViewDelegateWaterfallLayout.html">CollectionViewDelegateWaterfallLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ConfigurationTemplateProtocol.html">ConfigurationTemplateProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataParameter.html">DataParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DatabaseModel.html">DatabaseModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DecodableAnyMappedValue.html">DecodableAnyMappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DecodableMappedValue.html">DecodableMappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DefaultCaseCodable.html">DefaultCaseCodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DictionaryParameter.html">DictionaryParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DotViewProtocol.html">DotViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DrawerViewDelegate.html">DrawerViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DynamicLayoutViewProtocol.html">DynamicLayoutViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EmptyPlugin.html">EmptyPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EmptyViewDelegate.html">EmptyViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EncodableAnyMappedValue.html">EncodableAnyMappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EncodableMappedValue.html">EncodableMappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EventViewDelegate.html">EventViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/EventViewProtocol.html">EventViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/HTTPRequestProtocol.html">HTTPRequestProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImageAlbumControllerDelegate.html">ImageAlbumControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImageCache.html">ImageCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImageCropControllerDelegate.html">ImageCropControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImageCropViewDelegate.html">ImageCropViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerControllerDelegate.html">ImagePickerControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerPlugin.html">ImagePickerPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerPreviewControllerDelegate.html">ImagePickerPreviewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePickerTitleViewDelegate.html">ImagePickerTitleViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePlugin.html">ImagePlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePreviewPlugin.html">ImagePreviewPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImagePreviewViewDelegate.html">ImagePreviewViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ImageRequestCache.html">ImageRequestCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/IndicatorViewAnimationProtocol.html">IndicatorViewAnimationProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/IndicatorViewPlugin.html">IndicatorViewPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/IntrospectableViewType.html">IntrospectableViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/JSONMappedValue.html">JSONMappedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/JSONModel.html">JSONModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework28JSONModelCustomTransformableP">JSONModelCustomTransformable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework13JSONModelEnumP">JSONModelEnum</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/JSONSubscriptType.html">JSONSubscriptType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeyMappable.html">KeyMappable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LockingProtocol.html">LockingProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LoggerPlugin.html">LoggerPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ModuleProtocol.html">ModuleProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MultipartFormData.html">MultipartFormData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ObjectParameter.html">ObjectParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ObjectType.html">ObjectType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework19ObservableViewModelP">ObservableViewModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PageControlDelegate.html">PageControlDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingListContainerViewDataSource.html">PagingListContainerViewDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingMainTableViewGestureDelegate.html">PagingMainTableViewGestureDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingSmoothViewDataSource.html">PagingSmoothViewDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingSmoothViewDelegate.html">PagingSmoothViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingSmoothViewListViewDelegate.html">PagingSmoothViewListViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingViewDelegate.html">PagingViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PagingViewListViewDelegate.html">PagingViewListViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlatformEntity.html">PlatformEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlatformVersion.html">PlatformVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlayerCacheDownloaderDelegate.html">PlayerCacheDownloaderDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlayerCacheLoaderDelegate.html">PlayerCacheLoaderDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlayerCacheLoaderManagerDelegate.html">PlayerCacheLoaderManagerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PlayerCacheRequestWorkerDelegate.html">PlayerCacheRequestWorkerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PluginProtocol.html">PluginProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PopupMenuDelegate.html">PopupMenuDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/PopupViewControllerProtocol.html">PopupViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ProgressViewPlugin.html">ProgressViewPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RefreshPlugin.html">RefreshPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestAccessoryProtocol.html">RequestAccessoryProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestCacheProtocol.html">RequestCacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestDelegate.html">RequestDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework20RequestErrorProtocolP">RequestErrorProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestFilterProtocol.html">RequestFilterProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestMultipartFormData.html">RequestMultipartFormData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestPlugin.html">RequestPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestRetrierProtocol.html">RequestRetrierProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestValidatorProtocol.html">RequestValidatorProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestViewControllerProtocol.html">RequestViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ResponseModelRequest.html">ResponseModelRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ReusableViewProtocol.html">ReusableViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ScanCodeDelegate.html">ScanCodeDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ScanCodeSampleBufferDelegate.html">ScanCodeSampleBufferDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ScrollViewControllerProtocol.html">ScrollViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SetupViewProtocol.html">SetupViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SingletonProtocol.html">SingletonProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SkeletonAnimationProtocol.html">SkeletonAnimationProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SkeletonViewDataSource.html">SkeletonViewDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SkeletonViewDelegate.html">SkeletonViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartAssociatedEnumerable.html">SmartAssociatedEnumerable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartCaseDefaultable.html">SmartCaseDefaultable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartDecodable.html">SmartDecodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartEncodable.html">SmartEncodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartModel.html">SmartModel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SmartPublishedProtocol.html">SmartPublishedProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StatisticalViewProtocol.html">StatisticalViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/StringParameter.html">StringParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TableDelegateControllerProtocol.html">TableDelegateControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework27TableViewControllerProtocolP">TableViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TagCollectionViewDataSource.html">TagCollectionViewDataSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TagCollectionViewDelegate.html">TagCollectionViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TextTagCollectionViewDelegate.html">TextTagCollectionViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TitleViewProtocol.html">TitleViewProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ToastPlugin.html">ToastPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ToolbarTitleViewDelegate.html">ToolbarTitleViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/TransformType.html">TransformType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/URLParameter.html">URLParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/URLRequestSerialization.html">URLRequestSerialization</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/URLResponseSerialization.html">URLResponseSerialization</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/UnderlyingErrorProtocol.html">UnderlyingErrorProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ValueTransformable.html">ValueTransformable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VideoPlayerDelegate.html">VideoPlayerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VideoPlayerPlaybackDelegate.html">VideoPlayerPlaybackDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework33ViewControllerLifecycleObservableP">ViewControllerLifecycleObservable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ViewControllerProtocol.html">ViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ViewPlugin.html">ViewPlugin</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework18WebSocketArrayTypeP">WebSocketArrayType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketCertificatePinning.html">WebSocketCertificatePinning</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketClient.html">WebSocketClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketCompressionHandler.html">WebSocketCompressionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketConnection.html">WebSocketConnection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketConnectionDelegate.html">WebSocketConnectionDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketDelegate.html">WebSocketDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketEngineDelegate.html">WebSocketEngineDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketEngineProtocol.html">WebSocketEngineProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketFrameCollectorDelegate.html">WebSocketFrameCollectorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketFramerEventClient.html">WebSocketFramerEventClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketFramerProtocol.html">WebSocketFramerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketHTTPHandler.html">WebSocketHTTPHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketHTTPHandlerDelegate.html">WebSocketHTTPHandlerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketHTTPServerDelegate.html">WebSocketHTTPServerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketHTTPServerHandler.html">WebSocketHTTPServerHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketHeaderValidator.html">WebSocketHeaderValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketServerProtocol.html">WebSocketServerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketTransport.html">WebSocketTransport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebSocketTransportEventClient.html">WebSocketTransportEventClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebViewControllerProtocol.html">WebViewControllerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WebViewDelegate.html">WebViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/WrapperCompatible.html">WrapperCompatible</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ZoomImageViewDelegate.html">ZoomImageViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/_ExtendCustomBasicType.html">_ExtendCustomBasicType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/_ExtendCustomModelType.html">_ExtendCustomModelType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework11_MeasurableP">_Measurable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/_RawEnumProtocol.html">_RawEnumProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols.html#/s:11FWFramework14_TransformableP">_Transformable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AlertStyle.html">AlertStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AnyCodingKey.html">AnyCodingKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ArrayResultBuilder.html">ArrayResultBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AttributedText.html">AttributedText</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AuthorizeType.html">AuthorizeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CacheType.html">CacheType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CachedValue.html">CachedValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework15ColorPickerTypeV">ColorPickerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework14DatePickerTypeV">DatePickerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithCompactStyleType.html">DatePickerWithCompactStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithCompactStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithGraphicalStyleType.html">DatePickerWithGraphicalStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithGraphicalStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithWheelStyleType.html">DatePickerWithWheelStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DatePickerWithWheelStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DeserializeOptions.html">DeserializeOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/EmptyPluginView.html">EmptyPluginView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FastTransformer.html">FastTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework8FormTypeV">FormType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FormWithGroupedStyleType.html">FormWithGroupedStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FormWithGroupedStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FullScreenCoverType.html">FullScreenCoverType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/IgnoredKey.html">IgnoredKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImageCoderOptions.html">ImageCoderOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImageFormat.html">ImageFormat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImagePickerFilterType.html">ImagePickerFilterType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImageView.html">ImageView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/IndicatorViewAnimationType.html">IndicatorViewAnimationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/IndicatorViewStyle.html">IndicatorViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/IntrospectionScope.html">IntrospectionScope</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/IntrospectionSelector.html">IntrospectionSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/InvisibleView.html">InvisibleView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/JSON.html">JSON</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LineShape.html">LineShape</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListCellType.html">ListCellType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListType.html">ListType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithGroupedStyleType.html">ListWithGroupedStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithGroupedStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithInsetGroupedStyleType.html">ListWithInsetGroupedStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithInsetGroupedStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithInsetStyleType.html">ListWithInsetStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithInsetStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithSidebarStyleType.html">ListWithSidebarStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ListWithSidebarStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LoadingPluginView.html">LoadingPluginView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LogLevel.html">LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LogType.html">LogType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MMAPValue.html">MMAPValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ModulePriority.html">ModulePriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ModuleValue.html">ModuleValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationBarConfiguration.html">NavigationBarConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationBarStyle.html">NavigationBarStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework23NavigationSplitViewTypeV">NavigationSplitViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework19NavigationStackTypeV">NavigationStackType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationViewWithColumnsStyleType.html">NavigationViewWithColumnsStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationViewWithColumnsStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationViewWithStackStyleType.html">NavigationViewWithStackStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigationViewWithStackStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NavigatorOptions.html">NavigatorOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMock.html">NetworkMock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMock/HTTPMethod.html">– HTTPMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMock/DataType.html">– DataType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMockOnRequestHandler.html">NetworkMockOnRequestHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMocker.html">NetworkMocker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMocker/HTTPVersion.html">– HTTPVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkMocker/Mode.html">– Mode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OpacityButtonStyle.html">OpacityButtonStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework15PageControlTypeV">PageControlType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PickerWithSegmentedStyleType.html">PickerWithSegmentedStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PickerWithSegmentedStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PickerWithWheelStyleType.html">PickerWithWheelStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PickerWithWheelStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PlatformViewVersionPredicate.html">PlatformViewVersionPredicate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PluginValue.html">PluginValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PopoverType.html">PopoverType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressPluginView.html">ProgressPluginView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressViewStyle.html">ProgressViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressViewWithCircularStyleType.html">ProgressViewWithCircularStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressViewWithCircularStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressViewWithLinearStyleType.html">ProgressViewWithLinearStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ProgressViewWithLinearStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RemovableModifier.html">RemovableModifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RoundedCornerShape.html">RoundedCornerShape</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RouterValue.html">RouterValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ScreenInch.html">ScreenInch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework14ScrollViewTypeV">ScrollViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework15SearchFieldTypeV">SearchFieldType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework15SecureFieldTypeV">SecureFieldType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SegmentedControlBorderType.html">SegmentedControlBorderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SheetType.html">SheetType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework10SliderTypeV">SliderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartAny.html">SmartAny</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartDataTransformer.html">SmartDataTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartDateFormatTransformer.html">SmartDateFormatTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartDateTransformer.html">SmartDateTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartFlat.html">SmartFlat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartHexColorTransformer.html">SmartHexColorTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework19SmartKeyTransformerV">SmartKeyTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartPublished.html">SmartPublished</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartPublished/Publisher.html">– Publisher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartURLTransformer.html">SmartURLTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartUpdater.html">SmartUpdater</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SmartValueTransformer.html">SmartValueTransformer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StateView.html">StateView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework11StepperTypeV">StepperType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StoredValue.html">StoredValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework11TabViewTypeV">TabViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TabViewWithPageStyleType.html">TabViewWithPageStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TabViewWithPageStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework9TableTypeV">TableType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TestSuite.html">TestSuite</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework14TextEditorTypeV">TextEditorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework13TextFieldTypeV">TextFieldType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TextFieldWithVerticalAxisType.html">TextFieldWithVerticalAxisType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TextFieldWithVerticalAxisType/Axis.html">– Axis</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ThemeMode.html">ThemeMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ToastStyle.html">ToastStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework10ToggleTypeV">ToggleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ToggleWithSwitchStyleType.html">ToggleWithSwitchStyleType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ToggleWithSwitchStyleType/Style.html">– Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Validator.html">Validator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ViewControllerType.html">ViewControllerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ViewControllerWrapper.html">ViewControllerWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ViewStyle.html">ViewStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework8ViewTypeV">ViewType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ViewWrapper.html">ViewWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WebImageOptions.html">WebImageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WebImageView.html">WebImageView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WebImageView/ImageBinder.html">– ImageBinder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WebSocketError.html">WebSocketError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework14WebSocketFrameV">WebSocketFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework17WebSocketURLPartsV">WebSocketURLParts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:11FWFramework10WindowTypeV">WindowType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/iOSVersion.html">iOSVersion</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework12AnyValidatora">AnyValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework30AttributedLinkDetectCompletiona">AttributedLinkDetectCompletion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework9BlockBoola">BlockBool</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework14BlockBoolParama">BlockBoolParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework11BlockDoublea">BlockDouble</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework8BlockInta">BlockInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework13BlockIntParama">BlockIntParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework10BlockParama">BlockParam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework9BlockVoida">BlockVoid</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework26CustomMappingKeyValueTuplea">CustomMappingKeyValueTuple</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework2FWa">FW</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework9JSONIndexa">JSONIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework12JSONRawIndexa">JSONRawIndex</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework12PlatformViewa">PlatformView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework22PlatformViewControllera">PlatformViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework13RefreshFootera">RefreshFooter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework13RefreshHeadera">RefreshHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework12SmartCodablea">SmartCodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework13WrapperObjecta">WrapperObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:11FWFramework14iOSViewVersiona">iOSViewVersion</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MMAPValue</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@propertyWrapper</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">MMAPValue</span><span class="o">&lt;</span><span class="kt">Value</span><span class="o">&gt;</span></code></pre>
+
+                </div>
+              </div>
+            <p>MMKV缓存属性包装器注解，默认为手工指定或初始值</p>
+
+<p>使用示例：
+@MMAPValue(&ldquo;mmapKey&rdquo;)
+static var mmapValue: String = &ldquo;&rdquo;</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9MMAPValueV12wrappedValue_07defaultD06mmapIDACyxGx_SSxSgSSSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(wrappedValue:_:defaultValue:mmapID:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9MMAPValueV12wrappedValue_07defaultD06mmapIDACyxGx_SSxSgSSSgtcfc">init(wrappedValue:<wbr>_:<wbr>defaultValue:<wbr>mmapID:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">wrappedValue</span><span class="p">:</span> <span class="kt">Value</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">defaultValue</span><span class="p">:</span> <span class="kt">Value</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">mmapID</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9MMAPValueV12wrappedValue_07defaultD06mmapIDACyqd__SgGAG_SSAGSgSSSgtcAGRszlufc"></a>
+                    <a name="//apple_ref/swift/Method/init(wrappedValue:_:defaultValue:mmapID:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9MMAPValueV12wrappedValue_07defaultD06mmapIDACyqd__SgGAG_SSAGSgSSSgtcAGRszlufc">init(wrappedValue:<wbr>_:<wbr>defaultValue:<wbr>mmapID:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">WrappedValue</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">wrappedValue</span><span class="p">:</span> <span class="kt">WrappedValue</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">defaultValue</span><span class="p">:</span> <span class="kt">Value</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">mmapID</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span> <span class="k">where</span> <span class="kt">WrappedValue</span><span class="p">?</span> <span class="o">==</span> <span class="kt">Value</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11FWFramework9MMAPValueV12wrappedValuexvp"></a>
+                    <a name="//apple_ref/swift/Property/wrappedValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11FWFramework9MMAPValueV12wrappedValuexvp">wrappedValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">wrappedValue</span><span class="p">:</span> <span class="kt">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2025 <a class="link" href="http://wuyong.site" target="_blank" rel="external noopener">Wu Yong</a>. All rights reserved. (Last updated: 2025-03-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

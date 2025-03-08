@@ -1,5 +1,21 @@
 # Changelog
 
+## [6.1.0] - 2025-03-08
+
+### Added
+* SmartCodable component introduced, new SmartModel model compatible with AnyModel|AnyArchive protocol, gradual migration is recommended
+* MMKV cache plug-in, MMAPValue property wrapper component added
+* Cache component changed to generic mode, migration and adaptation required
+* Archiver component changed to generic mode, registerType is no longer required, migration and adaptation required
+* Added tools and methods such as DNS resolution and VPN connection check
+* Decimal and CGFloat are compatible with BasicType protocol
+
+### Migrate
+1. JSONModel memory reading and writing method is unstable, please use KeyMappable method or migrate to SmartModel, memoryMode method will be removed in the next version
+2. After the Archiver component is changed to a generic method, registerType is no longer required. If you need to be compatible with the old version of Any type data, the usage method remains the same as before
+3. After Cache component is changed to generic mode, if you encounter code errors, you can convert as? T to as T?
+4. The next major version will split the UIKit submodules, refactor the on-demand loading method of submodules, and remove obsolete code. Stay tuned.
+
 ## [6.0.5] - 2025-02-12
 
 ### Fixed
