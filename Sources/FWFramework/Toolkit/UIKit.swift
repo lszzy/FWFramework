@@ -246,7 +246,7 @@ extension Wrapper where Base: UIBezierPath {
         #endif
     }
 
-    /// 本地IP地址
+    /// 本地IPV4地址
     public nonisolated static var ipAddress: String? {
         var ipAddr: String?
         var addrs: UnsafeMutablePointer<ifaddrs>? = nil
@@ -282,6 +282,27 @@ extension Wrapper where Base: UIBezierPath {
         #else
         return String(format: "%s.local", hostName)
         #endif
+    }
+    
+    /// DNS解析指定域名
+    public nonisolated static func resolveDNS(for hostName: String) -> [String]? {
+        let cHostName = hostName.cString(using: .utf8)
+        guard let host = gethostbyname(cHostName),
+              host.pointee.h_addr_list != nil else { return nil }
+        
+        var result: [String] = []
+        var i = 0
+        while host.pointee.h_addr_list[i] != nil {
+            var inAddr = in_addr()
+            memcpy(&inAddr, host.pointee.h_addr_list[i], MemoryLayout<in_addr>.size)
+            var ip = [CChar](repeating: 0, count: Int(INET_ADDRSTRLEN))
+            inet_ntop(AF_INET, &inAddr, &ip, socklen_t(INET_ADDRSTRLEN))
+            
+            let ipAddress = String(cString: ip)
+            result.append(ipAddress)
+            i += 1
+        }
+        return result
     }
 
     /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G

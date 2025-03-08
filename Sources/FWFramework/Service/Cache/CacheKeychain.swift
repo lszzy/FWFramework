@@ -29,11 +29,11 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
     }
 
     // MARK: - CacheEngineProtocol
-    override open func readCache(forKey key: String) -> Any? {
+    override open func readCache<T>(forKey key: String) -> T? {
         passwordObject(forService: service, account: key)
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         setPasswordObject(object, forService: service, account: key)
     }
 
@@ -59,13 +59,12 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
         return result as? Data
     }
 
-    private func passwordObject(forService service: String, account: String?) -> Any? {
+    private func passwordObject<T>(forService service: String, account: String?) -> T? {
         guard let passwordData = passwordData(forService: service, account: account) else {
             return nil
         }
 
-        let object = passwordData.fw.unarchivedObject()
-        return object
+        return passwordData.fw.unarchivedObject(as: T.self)
     }
 
     @discardableResult
@@ -88,7 +87,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
     }
 
     @discardableResult
-    private func setPasswordObject(_ passwordObject: Any, forService service: String, account: String?) -> Bool {
+    private func setPasswordObject<T>(_ passwordObject: T, forService service: String, account: String?) -> Bool {
         guard let passwordData = Data.fw.archivedData(passwordObject) else { return false }
         return setPasswordData(passwordData, forService: service, account: account)
     }

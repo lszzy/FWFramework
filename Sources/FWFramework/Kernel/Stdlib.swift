@@ -463,7 +463,11 @@ extension Dictionary: BasicType {
     }
 }
 
-extension CGFloat {
+extension Decimal: BasicType {
+    public var isValid: Bool { !isNaN && !isInfinite }
+}
+
+extension CGFloat: BasicType {
     public var isValid: Bool { !isNaN && !isInfinite }
     public var isNotEmpty: Bool { self != .zero }
 }

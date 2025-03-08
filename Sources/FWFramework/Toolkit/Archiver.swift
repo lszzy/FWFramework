@@ -10,16 +10,16 @@ import Foundation
 // MARK: - Wrapper+Data
 extension Wrapper where Base == Data {
     /// 将对象归档为data数据，兼容NSCoding和AnyArchivable
-    public static func archivedData(_ object: Any?) -> Data? {
-        guard var object else { return nil }
+    public static func archivedData<T>(_ object: T?) -> Data? {
+        guard let object else { return nil }
         do {
             if ArchiveCoder.isArchivableObject(object) {
                 let archiveCoder = ArchiveCoder()
-                archiveCoder.archivableObject = object
-                object = archiveCoder
+                archiveCoder.setArchivableObject(object)
+                return try NSKeyedArchiver.archivedData(withRootObject: archiveCoder, requiringSecureCoding: false)
+            } else {
+                return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
             }
-
-            return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
         } catch {
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Archive error: %@", error.localizedDescription)
@@ -28,41 +28,16 @@ extension Wrapper where Base == Data {
         }
     }
 
-    /// 将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用
-    public func unarchivedObject<T>(_ clazz: T.Type) -> T? where T: NSObject, T: NSCoding {
-        do {
-            return try NSKeyedUnarchiver.unarchivedObject(ofClass: clazz, from: base)
-        } catch {
-            #if DEBUG
-            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
-            #endif
-            return nil
-        }
-    }
-
-    /// 将数据解档为指定AnyArchivable对象，推荐使用
-    public func unarchivedObject<T>(_ type: T.Type) -> T? where T: AnyArchivable {
-        do {
-            let archiveCoder = try NSKeyedUnarchiver.unarchivedObject(ofClass: ArchiveCoder.self, from: base)
-            return archiveCoder?.archivableObject as? T
-        } catch {
-            #if DEBUG
-            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
-            #endif
-            return nil
-        }
-    }
-
     /// 将数据解档为对象，兼容NSCoding和AnyArchivable
-    public func unarchivedObject() -> Any? {
+    public func unarchivedObject<T>(as type: T.Type = T.self) -> T? {
         do {
             let unarchiver = try NSKeyedUnarchiver(forReadingFrom: base)
             unarchiver.requiresSecureCoding = false
             let result = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
             if let archiveCoder = result as? ArchiveCoder {
-                return archiveCoder.archivableObject
+                return archiveCoder.archivableObject(as: type)
             }
-            return result
+            return result as? T
         } catch {
             #if DEBUG
             Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
@@ -73,7 +48,7 @@ extension Wrapper where Base == Data {
 
     /// 将对象归档保存到文件，兼容NSCoding和AnyArchivable
     @discardableResult
-    public static func archiveObject(_ object: Any, toFile path: String) -> Bool {
+    public static func archiveObject<T>(_ object: T, toFile path: String) -> Bool {
         guard let data = archivedData(object) else { return false }
         do {
             try data.write(to: URL(fileURLWithPath: path))
@@ -83,22 +58,47 @@ extension Wrapper where Base == Data {
         }
     }
 
-    /// 从文件解档指定类型对象，需实现NSSecureCoding，推荐使用
-    public static func unarchivedObject<T>(_ clazz: T.Type, withFile path: String) -> T? where T: NSObject, T: NSCoding {
+    /// 从文件解档对象，兼容NSCoding和AnyArchivable
+    public static func unarchivedObject<T>(withFile path: String, as type: T.Type = T.self) -> T? {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
-        return data.fw.unarchivedObject(clazz)
+        return data.fw.unarchivedObject(as: type)
+    }
+
+    /// 将数据解档为指定类型对象，需实现NSSecureCoding，推荐使用
+    public func unarchivedCodingObject<T>(as type: T.Type) -> T? where T: NSObject, T: NSCoding {
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClass: type, from: base)
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
+    }
+
+    /// 将数据解档为指定AnyArchivable对象，推荐使用
+    public func unarchivedArchivableObject<T>(as type: T.Type) -> T? where T: AnyArchivable {
+        do {
+            let archiveCoder = try NSKeyedUnarchiver.unarchivedObject(ofClass: ArchiveCoder.self, from: base)
+            return archiveCoder?.archivableObject(as: type)
+        } catch {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "Unarchive error: %@", error.localizedDescription)
+            #endif
+            return nil
+        }
+    }
+
+    /// 从文件解档指定类型对象，需实现NSSecureCoding，推荐使用
+    public static func unarchivedCodingObject<T>(as type: T.Type, withFile path: String) -> T? where T: NSObject, T: NSCoding {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
+        return data.fw.unarchivedCodingObject(as: type)
     }
 
     /// 从文件解档指定AnyArchivable对象，推荐使用
-    public static func unarchivedObject<T>(_ type: T.Type, withFile path: String) -> T? where T: AnyArchivable {
+    public static func unarchivedArchivableObject<T>(as type: T.Type, withFile path: String) -> T? where T: AnyArchivable {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
-        return data.fw.unarchivedObject(type)
-    }
-
-    /// 从文件解档对象，兼容NSCoding和AnyArchivable
-    public static func unarchivedObject(withFile path: String) -> Any? {
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
-        return data.fw.unarchivedObject()
+        return data.fw.unarchivedArchivableObject(as: type)
     }
 }
 
@@ -115,10 +115,11 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     /// 是否是有效的AnyArchivable归档数据(即ArchiveCoder归档数据)
     public static func isArchivableData(_ data: Data?) -> Bool {
         guard let data else { return false }
-        return unarchiveData(data) != nil
+        return unarchivedCoder(data) != nil
     }
 
-    static func unarchiveData(_ data: Data) -> ArchiveCoder? {
+    /// 将Data数据解档为ArchiveCoder对象，失败时返回nil
+    public static func unarchivedCoder(_ data: Data) -> ArchiveCoder? {
         let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data)
         unarchiver?.requiresSecureCoding = false
         unarchiver?.decodingFailurePolicy = .setErrorAndReturn
@@ -152,7 +153,8 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         return array.compactMap { T.archiveDecode($0.data(using: .utf8)) }
     }
 
-    /// 注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
+    // MARK: - Register
+    /// 当识别不出类型时需先注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
     public static func registerType<T: AnyArchivable>(_ type: T.Type) {
         let key = String(describing: type as AnyObject)
         Configuration.registeredTypes[key] = type
@@ -165,10 +167,27 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
         static var registeredTypes: [String: AnyArchivable.Type] = [:]
     }
 
-    // MARK: - Accessor
-    /// 指定AnyArchivable对象或对象数组，自动处理归档数据
-    public var archivableObject: Any? {
-        get {
+    // MARK: - Public
+    /// 归档数据，设置归档对象时自动处理
+    public private(set) var archiveData: Data?
+    /// 归档类型，当识别不出类型且归档对象为struct时，必须先调用registerType注册
+    public private(set) var archiveType: String?
+
+    override public init() {
+        super.init()
+    }
+
+    /// 读取指定AnyArchivable对象或对象数组，自动处理归档数据
+    public func archivableObject<T>(as type: T.Type = T.self) -> T? {
+        // 指定对象数组类型
+        if let objectsType = type as? [AnyArchivable].Type,
+           let objectType = objectsType.Element as? AnyArchivable.Type {
+            return ArchiveCoder.decodeObjects(archiveData, as: objectType) as? T
+            // 指定对象类型
+        } else if let objectType = type as? AnyArchivable.Type {
+            return ArchiveCoder.decodeObject(archiveData, as: objectType) as? T
+            // 未指定类型
+        } else {
             guard var archiveType else { return nil }
             var isArray = false
             if archiveType.hasPrefix("["), archiveType.hasSuffix("]") {
@@ -192,46 +211,53 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
             }
 
             if isArray {
-                return ArchiveCoder.decodeObjects(archiveData, as: objectType)
+                return ArchiveCoder.decodeObjects(archiveData, as: objectType) as? T
             } else {
-                return ArchiveCoder.decodeObject(archiveData, as: objectType)
+                return ArchiveCoder.decodeObject(archiveData, as: objectType) as? T
             }
-        }
-        set {
-            var object = newValue as? AnyArchivable
-            var isArray = false
-            if let objects = newValue as? [AnyArchivable] {
-                object = objects.first
-                isArray = true
-                archiveData = ArchiveCoder.encodeObjects(objects)
-            } else {
-                archiveData = ArchiveCoder.encodeObject(object)
-            }
-            guard let object else {
-                archiveType = nil
-                return
-            }
-
-            var objectType: String = ""
-            if let clazz = type(of: object) as? AnyClass {
-                objectType = NSStringFromClass(clazz)
-            } else {
-                objectType = String(describing: type(of: object) as AnyObject)
-            }
-            if isArray {
-                objectType = "[\(objectType)]"
-            }
-            archiveType = objectType
         }
     }
 
-    /// 归档数据，设置归档对象时自动处理
-    public private(set) var archiveData: Data?
-    /// 归档类型，如果归档对象为struct时，必须先调用registerType注册
-    public private(set) var archiveType: String?
+    /// 设置指定AnyArchivable对象或对象数组，自动处理归档数据
+    public func setArchivableObject<T>(_ value: T?) {
+        var objectType: AnyArchivable.Type?
+        var isArray = false
+        // 指定对象数组类型
+        if let genericTypes = T.self as? [AnyArchivable].Type,
+           let genericType = genericTypes.Element as? AnyArchivable.Type {
+            archiveData = ArchiveCoder.encodeObjects(value as? [AnyArchivable])
+            objectType = genericType
+            isArray = true
+            // 指定对象类型
+        } else if let genericType = T.self as? AnyArchivable.Type {
+            archiveData = ArchiveCoder.encodeObject(value as? AnyArchivable)
+            objectType = genericType
+            // 未指定类型
+        } else {
+            if let objects = value as? [AnyArchivable] {
+                archiveData = ArchiveCoder.encodeObjects(objects)
+                if let object = objects.first { objectType = type(of: object) }
+                isArray = true
+            } else if let object = value as? AnyArchivable {
+                archiveData = ArchiveCoder.encodeObject(object)
+                objectType = type(of: object)
+            } else {
+                archiveData = nil
+            }
+        }
 
-    override public init() {
-        super.init()
+        if let clazz = objectType as? AnyClass {
+            let className = NSStringFromClass(clazz)
+            archiveType = isArray ? "[\(className)]" : className
+        } else if let objectType {
+            let typeName = String(describing: objectType as AnyObject)
+            if Configuration.registeredTypes[typeName] == nil {
+                ArchiveCoder.registerType(objectType)
+            }
+            archiveType = isArray ? "[\(typeName)]" : typeName
+        } else {
+            archiveType = nil
+        }
     }
 
     // MARK: - NSSecureCoding
@@ -252,7 +278,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
 }
 
 // MARK: - AnyArchivable
-/// 任意可归档对象协议，兼容UserDefaults | Cache | Database | Keychain | Codable | CodableModel | JSONModel使用
+/// 任意可归档对象协议，兼容UserDefaults | Cache | Database | Keychain | Codable | CodableModel | JSONModel | SmartModel使用
 public protocol AnyArchivable: ObjectType {
     /// 将Data数据解码为对象，不调用NSKeyedUnarchiver
     static func archiveDecode(_ data: Data?) -> Self?

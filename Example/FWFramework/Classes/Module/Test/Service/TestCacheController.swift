@@ -12,7 +12,6 @@ class TestCacheController: UIViewController {
     private var cache: CacheProtocol?
 
     private static var testCacheKey = "testCacheKey"
-    private static var testExpireKey = "testCacheKey.__EXPIRE__"
 
     private lazy var cacheLabel: UILabel = {
         let result = UILabel()
@@ -74,7 +73,7 @@ class TestCacheController: UIViewController {
 extension TestCacheController: ViewControllerProtocol {
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-            self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite"], actionBlock: { index in
+            self?.app.showSheet(title: "选择缓存类型", message: nil, actions: ["CacheMemory", "CacheUserDefaults", "CacheKeychain", "CacheFile", "CacheSqlite", "CacheMMKV"], actionBlock: { index in
                 if index == 0 {
                     self?.cache = CacheManager.manager(type: .memory)
                 } else if index == 1 {
@@ -85,6 +84,8 @@ extension TestCacheController: ViewControllerProtocol {
                     self?.cache = CacheManager.manager(type: .file)
                 } else if index == 4 {
                     self?.cache = CacheManager.manager(type: .sqlite)
+                } else if index == 5 {
+                    self?.cache = CacheManager.manager(type: .mmkv)
                 }
                 self?.refreshCache()
             })
@@ -143,7 +144,7 @@ extension TestCacheController {
         }
 
         var hasCache = false
-        if let cacheStr = cache?.object(forKey: TestCacheController.testCacheKey) as? String, !cacheStr.isEmpty {
+        if let cacheStr = cache?.object(forKey: TestCacheController.testCacheKey) as String?, !cacheStr.isEmpty {
             statusStr += cacheStr
             hasCache = true
         } else {
@@ -152,8 +153,9 @@ extension TestCacheController {
         }
         statusStr += "\n"
 
-        if let expireNum = cache?.object(forKey: TestCacheController.testExpireKey) as? NSNumber {
-            statusStr += String(format: "%.1fs有效", expireNum.doubleValue - Date().timeIntervalSince1970)
+        let expire = (cache as? CacheEngine)?.expire(forKey: TestCacheController.testCacheKey)
+        if let expire {
+            statusStr += String(format: "%.1fs有效", expire)
         } else {
             statusStr += hasCache ? "永久有效" : "缓存无效"
         }

@@ -1301,11 +1301,32 @@ extension Wrapper where Base: URLSession {
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
-
-    /// 获取手机网络代理，可能为空
+    
+    /// 是否启用了VPN连接
+    public static var isVPNConnected: Bool {
+        let scoped = systemProxySettings?["__SCOPED__"] as? [String: Any]
+        guard let keys = scoped?.keys, !keys.isEmpty else { return false }
+        for key in keys {
+            if key.contains("tap") || key.contains("tun") ||
+                key.contains("ppp") || key.contains("ipsec") {
+                return true
+            }
+        }
+        return false
+    }
+    
+    /// 获取网络HTTP代理和端口，未设置时为空
     public static var httpProxyString: String? {
-        let proxy = CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
-        return proxy?[kCFNetworkProxiesHTTPProxy as String] as? String
+        guard let proxy = systemProxySettings else { return nil }
+        let httpProxy = proxy[kCFNetworkProxiesHTTPProxy as String] as? String
+        guard let httpProxy else { return nil }
+        let httpPort = proxy[kCFNetworkProxiesHTTPPort as String] as? Int
+        return httpProxy + (httpPort != nil ? ":\(httpPort!)" : "")
+    }
+    
+    /// 获取系统代理设置，可能为空
+    public static var systemProxySettings: [AnyHashable: Any]? {
+        CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]
     }
 }
 
@@ -1342,23 +1363,23 @@ extension Wrapper where Base: UserDefaults {
     }
 
     /// 从standard解档对象，兼容NSCoding和AnyArchivable
-    public static func archivableObject(forKey: String) -> Any? {
+    public static func archivableObject<T>(forKey: String) -> T? {
         UserDefaults.standard.fw.archivableObject(forKey: forKey)
     }
 
     /// 归档对象到standard，兼容NSCoding和AnyArchivable
-    public static func setArchivableObject(_ object: Any?, forKey: String) {
+    public static func setArchivableObject<T>(_ object: T?, forKey: String) {
         UserDefaults.standard.fw.setArchivableObject(object, forKey: forKey)
     }
 
     /// 解档对象，兼容NSCoding和AnyArchivable
-    public func archivableObject(forKey: String) -> Any? {
+    public func archivableObject<T>(forKey: String) -> T? {
         let data = base.object(forKey: forKey) as? Data
-        return data?.fw.unarchivedObject()
+        return data?.fw.unarchivedObject(as: T.self)
     }
 
     /// 归档对象，兼容NSCoding和AnyArchivable
-    public func setArchivableObject(_ object: Any?, forKey: String) {
+    public func setArchivableObject<T>(_ object: T?, forKey: String) {
         let data = Data.fw.archivedData(object)
         if let data {
             base.set(data, forKey: forKey)

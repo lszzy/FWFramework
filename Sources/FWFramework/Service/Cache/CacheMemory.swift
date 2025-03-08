@@ -14,11 +14,11 @@ open class CacheMemory: CacheEngine, @unchecked Sendable {
 
     private var cachePool = [String: Any]()
 
-    override open func readCache(forKey key: String) -> Any? {
-        cachePool[key]
+    override open func readCache<T>(forKey key: String) -> T? {
+        cachePool[key] as? T
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         cachePool[key] = object
     }
 

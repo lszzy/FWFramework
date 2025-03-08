@@ -412,7 +412,7 @@ public class Router: NSObject, @unchecked Sendable {
         }
         return parsedResult
     }
-    
+
     /// 调用此方法来给URL附加query参数
     ///
     /// Router.appendURL(url, parameters: ["id": 1])

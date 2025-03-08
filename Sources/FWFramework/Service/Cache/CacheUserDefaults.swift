@@ -26,21 +26,21 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
         super.init()
     }
 
-    // 和非缓存Key区分开，防止清除非缓存信息
+    /// 和非缓存Key区分开，防止清除非缓存信息
     private func cacheKey(_ key: String) -> String {
         "FWCache.\(key)"
     }
 
     // MARK: - CacheEngineProtocol
-    override open func readCache(forKey key: String) -> Any? {
+    override open func readCache<T>(forKey key: String) -> T? {
         var value = userDefaults.object(forKey: cacheKey(key))
-        if let data = value as? Data, let coder = ArchiveCoder.unarchiveData(data) {
-            value = coder.archivableObject
+        if let data = value as? Data, let coder = ArchiveCoder.unarchivedCoder(data) {
+            value = coder.archivableObject(as: T.self)
         }
-        return value
+        return value as? T
     }
 
-    override open func writeCache(_ object: Any, forKey key: String) {
+    override open func writeCache<T>(_ object: T, forKey key: String) {
         var value: Any? = object
         if ArchiveCoder.isArchivableObject(object) {
             value = Data.fw.archivedData(object)

@@ -21,7 +21,7 @@ import QuartzCore
 /// ```
 public class WrapperGlobal {
     /// 当前框架版本号
-    public static let version = "6.0.5"
+    public static let version = "6.1.0"
 }
 
 /// 全局包装器别名
@@ -124,6 +124,7 @@ extension URL: WrapperCompatible {}
 extension Array: WrapperCompatible {}
 extension Set: WrapperCompatible {}
 extension Dictionary: WrapperCompatible {}
+extension Decimal: WrapperCompatible {}
 extension CGFloat: WrapperCompatible {}
 extension CGPoint: WrapperCompatible {}
 extension CGSize: WrapperCompatible {}
