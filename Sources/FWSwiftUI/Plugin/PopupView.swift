@@ -360,7 +360,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
     var view: () -> PopupContent
 
     // MARK: - Private Properties
-    @SwiftUI.StateObject var keyboardHeightHelper = KeyboardHeightHelper()
+    @StateObject var keyboardHeightHelper = KeyboardHeightHelper()
 
     /// The rect and safe area of the hosting controller
     @State private var presenterContentRect: CGRect = .zero
@@ -384,7 +384,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
 
     // MARK: - Drag to dismiss with scroll
     /// UIScrollView delegate, needed for calling didEndDragging
-    @SwiftUI.StateObject private var scrollViewDelegate = PopupScrollViewDelegate()
+    @StateObject private var scrollViewDelegate = PopupScrollViewDelegate()
 
     /// Position when the scroll content offset became less than 0
     @State private var scrollViewOffset: CGSize = .zero

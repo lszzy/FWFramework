@@ -56,21 +56,21 @@ extension TestStateController: ViewControllerProtocol {
 
     func setupMachine() {
         // 添加状态
-        let unread = StateObject(name: "unread")
+        let unread = StateMachine.State(name: "unread")
         unread.didEnterBlock = { [weak self] _ in
             self?.label.text = "状态：未读"
             self?.button.setTitle("已读", for: .normal)
             self?.button.tag = 1
         }
 
-        let read = StateObject(name: "read")
+        let read = StateMachine.State(name: "read")
         read.didEnterBlock = { [weak self] _ in
             self?.label.text = "状态：已读"
             self?.button.setTitle("删除", for: .normal)
             self?.button.tag = 2
         }
 
-        let delete = StateObject(name: "delete")
+        let delete = StateMachine.State(name: "delete")
         delete.didEnterBlock = { [weak self] _ in
             self?.label.text = "状态：删除"
             self?.button.setTitle("恢复", for: .normal)
@@ -81,7 +81,7 @@ extension TestStateController: ViewControllerProtocol {
         machine.initialState = unread
 
         // 添加事件
-        let viewEvent = StateEvent(name: "view", from: [unread], to: read)
+        let viewEvent = StateMachine.Event(name: "view", from: [unread], to: read)
         viewEvent.fireBlock = { [weak self] _, completion in
             self?.app.showLoading(text: "正在请求")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -96,7 +96,7 @@ extension TestStateController: ViewControllerProtocol {
             }
         }
 
-        let deleteEvent = StateEvent(name: "trash", from: [read, unread], to: delete)
+        let deleteEvent = StateMachine.Event(name: "trash", from: [read, unread], to: delete)
         deleteEvent.shouldFireBlock = { [weak self] _ in
             if self?.isLocked ?? false {
                 self?.app.showMessage(text: "已锁定，不能删除")
@@ -118,7 +118,7 @@ extension TestStateController: ViewControllerProtocol {
             }
         }
 
-        let unreadEvent = StateEvent(name: "restore", from: [read, delete], to: unread)
+        let unreadEvent = StateMachine.Event(name: "restore", from: [read, delete], to: unread)
         unreadEvent.shouldFireBlock = { [weak self] _ in
             if self?.isLocked ?? false {
                 self?.app.showMessage(text: "已锁定，不能恢复")
