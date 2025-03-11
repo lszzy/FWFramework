@@ -95,7 +95,7 @@ extension SmartDecodable {
             return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
         }
     }
-    
+
     /// Deserializes into a model
     public static func deserialize(from dict: [String: Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
         guard let _dict = dict else {
@@ -164,7 +164,7 @@ extension Array where Element: SmartDecodable {
             return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
         }
     }
-    
+
     /// Deserializes into an array of models
     public static func deserialize(from array: [Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
         guard let _arr = array else {
@@ -634,12 +634,12 @@ extension SmartColor: Codable {
     }
 }
 
-public protocol SmartCaseDefaultable: RawRepresentable, Codable, CaseIterable { }
-public extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Decodable {
-    init(from decoder: Decoder) throws {
+public protocol SmartCaseDefaultable: RawRepresentable, Codable, CaseIterable {}
+extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Decodable {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let decoded = try container.decode(RawValue.self)
-        if let v = Self.init(rawValue: decoded) {
+        if let v = Self(rawValue: decoded) {
             self = v
         } else {
             let des = "Cannot initialize \(Self.self) from invalid \(RawValue.self) value `\(decoded)`"
@@ -3141,6 +3141,7 @@ extension _SpecialTreatmentEncoder {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = .withInternetDateTime
             return .string(formatter.string(from: date))
+
         case let .formatted(formatter):
             return .string(formatter.string(from: date))
 
@@ -4945,12 +4946,12 @@ extension JSONDecoderImpl {
             return Date(timeIntervalSince1970: double / 1000.0)
 
         case .iso8601:
-            let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
+            let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
             let string = try container.decode(String.self)
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = .withInternetDateTime
             guard let date = formatter.date(from: string) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
             }
             return date
 
@@ -5556,7 +5557,7 @@ public struct SmartURLTransformer: ValueTransformable {
 // MARK: - AnyArchivable
 extension AnyArchivable where Self: SmartModel {
     public static func archiveDecode(_ data: Data?) -> Self? {
-        return deserialize(from: data)
+        deserialize(from: data)
     }
 
     public func archiveEncode() -> Data? {

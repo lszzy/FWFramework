@@ -283,13 +283,13 @@ extension Wrapper where Base: UIBezierPath {
         return String(format: "%s.local", hostName)
         #endif
     }
-    
+
     /// DNS解析指定域名
     public nonisolated static func resolveDNS(for hostName: String) -> [String]? {
         let cHostName = hostName.cString(using: .utf8)
         guard let host = gethostbyname(cHostName),
               host.pointee.h_addr_list != nil else { return nil }
-        
+
         var result: [String] = []
         var i = 0
         while host.pointee.h_addr_list[i] != nil {
@@ -297,7 +297,7 @@ extension Wrapper where Base: UIBezierPath {
             memcpy(&inAddr, host.pointee.h_addr_list[i], MemoryLayout<in_addr>.size)
             var ip = [CChar](repeating: 0, count: Int(INET_ADDRSTRLEN))
             inet_ntop(AF_INET, &inAddr, &ip, socklen_t(INET_ADDRSTRLEN))
-            
+
             let ipAddress = String(cString: ip)
             result.append(ipAddress)
             i += 1

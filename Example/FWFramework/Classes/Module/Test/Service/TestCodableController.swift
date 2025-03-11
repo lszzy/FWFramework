@@ -564,7 +564,7 @@ struct TestSmartModel: SmartModel {
     var enum1: TestSmartModelEnum = .unknown
     var enum2: TestSmartModelEnum = .unknown
     var enum3: TestSmartModelEnum?
-    
+
     static func mappingForKey() -> [SmartKeyTransformer]? {
         [
             CodingKeys.alias <--- "alias_key",
@@ -579,7 +579,7 @@ struct TestSmartSuperModel: SmartModel {
 
 struct TestSmartSubModel: SmartModel {
     var name: String?
-    
+
     @SmartFlat
     var parent: TestSmartSuperModel?
 }
@@ -980,7 +980,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onSmartModel() {
         func testModel(_ model: TestSmartModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [

@@ -1301,7 +1301,7 @@ extension Wrapper where Base: URLSession {
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
-    
+
     /// 是否启用了VPN连接
     public static var isVPNConnected: Bool {
         let scoped = systemProxySettings?["__SCOPED__"] as? [String: Any]
@@ -1314,7 +1314,7 @@ extension Wrapper where Base: URLSession {
         }
         return false
     }
-    
+
     /// 获取网络HTTP代理和端口，未设置时为空
     public static var httpProxyString: String? {
         guard let proxy = systemProxySettings else { return nil }
@@ -1323,7 +1323,7 @@ extension Wrapper where Base: URLSession {
         let httpPort = proxy[kCFNetworkProxiesHTTPPort as String] as? Int
         return httpProxy + (httpPort != nil ? ":\(httpPort!)" : "")
     }
-    
+
     /// 获取系统代理设置，可能为空
     public static var systemProxySettings: [AnyHashable: Any]? {
         CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]

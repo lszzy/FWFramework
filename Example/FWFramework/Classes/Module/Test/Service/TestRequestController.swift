@@ -239,7 +239,7 @@ class TestRequestController: UIViewController {
     private var testPath: String {
         FileManager.app.pathDocument.app.appendingPath(["website", "test"])
     }
-    
+
     @MMAPValue("testHostName")
     private var testHostName: String? = "www.wuyong.site"
 
@@ -358,12 +358,12 @@ extension TestRequestController: ViewControllerProtocol {
                 } else if index == 2 {
                     self.app.showPrompt(title: nil, message: "DNS解析") { [weak self] textField in
                         guard let self else { return }
-                        textField.text = self.testHostName
+                        textField.text = testHostName
                     } confirmBlock: { [weak self] hostName in
                         guard let self else { return }
-                        self.testHostName = hostName
+                        testHostName = hostName
                         let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
-                        self.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
+                        app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
                     }
                 } else if index == 3 {
                     FileManager.app.removeItem(atPath: self.testPath)
