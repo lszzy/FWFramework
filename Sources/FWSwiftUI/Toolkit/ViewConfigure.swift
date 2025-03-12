@@ -61,9 +61,9 @@ import SwiftUI
                 return
             }
 
-            if let visibleController = viewController.navigationController?.visibleViewController,
-               hostingView.isDescendant(of: visibleController.view) {
-                configuration(visibleController)
+            if let targetController = viewController.navigationController?.viewControllers.reversed()
+                .first(where: { hostingView.isDescendant(of: $0.view) }) {
+                configuration(targetController)
             } else {
                 configuration(viewController)
             }
