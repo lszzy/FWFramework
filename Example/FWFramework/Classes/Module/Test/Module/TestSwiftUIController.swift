@@ -63,7 +63,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     }
 
     // MARK: - Lifecycle
-    override func setupNavbar() {
+    override func didInitialize() {
         hidesBottomBarWhenPushed = true
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.hidesBackButton = true
