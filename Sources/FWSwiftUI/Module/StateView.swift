@@ -88,7 +88,7 @@ public struct InvisibleView: View {
     public init() {}
 
     public var body: some View {
-        Color.clear
+        Color.black.opacity(0.0001)
             .frame(width: 0, height: 0)
             .allowsHitTesting(false)
             .accessibility(hidden: true)
