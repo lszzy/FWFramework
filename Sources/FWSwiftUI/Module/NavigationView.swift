@@ -80,6 +80,7 @@ import SwiftUI
             viewController.fw.rightBarItem = trailing
         }
 
+        viewController.navigationItem.leftItemsSupplementBackButton = false
         viewController.navigationItem.leftBarButtonItem?.customView?.sizeToFit()
         viewController.navigationItem.titleView?.sizeToFit()
         viewController.navigationItem.rightBarButtonItem?.customView?.sizeToFit()
