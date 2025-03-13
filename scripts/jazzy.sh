@@ -2,10 +2,8 @@
 
 framework_name=FWFramework
 
-mv docs/CNAME ./ 
 rm -rf docs
 mkdir docs
-mv CNAME docs/
 mkdir "docs/$framework_name"
 
 lib_path="docs/$framework_name/"
