@@ -146,4 +146,115 @@ final class ViewStorageMember<Root, Value>: ViewStorageValue<Value> {
     }
 }
 
+// MARK: - View+OnChangeOfFrame
+@MainActor extension View {
+    /// Frame改变时触发动作
+    public func onChangeOfFrame(
+        threshold: CGFloat? = nil,
+        onAppear: Bool = false,
+        perform action: @escaping (CGSize) -> Void
+    ) -> some View {
+        modifier(OnChangeOfFrame(threshold: threshold, action: action, onAppear: onAppear))
+    }
+    
+    @_disfavoredOverload
+    @inlinable
+    public func background<Background: View>(
+        alignment: Alignment = .center,
+        @ViewBuilder _ background: () -> Background
+    ) -> some View {
+        self.background(background(), alignment: alignment)
+    }
+    
+    @ViewBuilder
+    public func _onChange<V: Equatable>(
+        of value: V,
+        perform action: @escaping (V) -> Void
+    ) -> some View {
+        if #available(iOS 17.0, *) {
+            self.onChange(of: value) { oldValue, newValue in
+                action(newValue)
+            }
+        } else if #available(iOS 14.0, *) {
+            onChange(of: value, perform: action)
+        } else {
+            OnChangeOfValue(base: self, value: value, action: action)
+        }
+    }
+}
+
+private struct OnChangeOfFrame: ViewModifier {
+    let threshold: CGFloat?
+    let action: (CGSize) -> Void
+    let onAppear: Bool
+
+    @ViewStorage var oldSize: CGSize? = nil
+    
+    func body(content: Content) -> some View {
+        content.background {
+            GeometryReader { proxy in
+                InvisibleView()
+                    .onAppear {
+                        self.oldSize = proxy.size
+
+                        if onAppear {
+                            self.action(proxy.size)
+                        }
+                    }
+                    ._onChange(of: proxy.size) { newSize in
+                        if let oldSize {
+                            if let threshold {
+                                guard !(abs(oldSize.width - newSize.width) < threshold && abs(oldSize.height - newSize.height) < threshold) else {
+                                    return
+                                }
+                            } else {
+                                guard oldSize != newSize else {
+                                    return
+                                }
+                            }
+                            
+                            action(newSize)
+                            self.oldSize = newSize
+                        } else {
+                            self.oldSize = newSize
+                        }
+                    }
+            }
+            .allowsHitTesting(false)
+            .accessibility(hidden: true)
+        }
+    }
+}
+
+private struct OnChangeOfValue<Base: View, Value: Equatable>: View {
+    private class ValueBox {
+        private var savedValue: Value?
+        
+        func update(value: Value) -> Bool {
+            guard value != savedValue else {
+                return false
+            }
+            savedValue = value
+            return true
+        }
+    }
+    
+    let base: Base
+    let value: Value
+    let action: (Value) -> Void
+    
+    @State private var valueBox = ValueBox()
+    @State private var oldValue: Value?
+    
+    public var body: some View {
+        if valueBox.update(value: value) {
+            DispatchQueue.main.async {
+                action(value)
+                oldValue = value
+            }
+        }
+        return base
+    }
+}
+
 #endif

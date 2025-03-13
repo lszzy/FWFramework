@@ -631,9 +631,7 @@ public typealias PlatformView = UIView
 
 public typealias PlatformViewController = UIViewController
 
-typealias _PlatformViewControllerRepresentable = UIViewControllerRepresentable
-
-@MainActor protocol PlatformViewControllerRepresentable: _PlatformViewControllerRepresentable {
+@MainActor protocol PlatformViewControllerRepresentable: UIViewControllerRepresentable {
     typealias ViewController = UIViewControllerType
 
     func makePlatformViewController(context: Context) -> ViewController
