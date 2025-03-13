@@ -822,15 +822,6 @@ public enum PopupDismissSource {
     case autohide
 }
 
-extension UIScrollView {
-    func maxContentOffsetHeight() -> CGFloat {
-        let contentHeight = contentSize.height
-        let visibleHeight = bounds.height
-        let maxOffsetHeight = max(0, contentHeight - visibleHeight)
-        return maxOffsetHeight
-    }
-}
-
 final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDelegate {
     var scrollView: UIScrollView?
 
@@ -838,12 +829,20 @@ final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDel
 
     var didReachTop: (Double) -> Void = { _ in }
     var scrollEnded: (Double) -> Void = { _ in }
+    
+    static func maxContentOffsetHeight(_ scrollView: UIScrollView?) -> CGFloat {
+        guard let scrollView else { return 0 }
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+        let maxOffsetHeight = max(0, contentHeight - visibleHeight)
+        return maxOffsetHeight
+    }
 
     @objc
     func handlePan(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: scrollView)
         let contentOffset = scrollView?.contentOffset.y ?? 0
-        let maxContentOffset = scrollView?.maxContentOffsetHeight() ?? 0
+        let maxContentOffset = PopupScrollViewDelegate.maxContentOffsetHeight(scrollView)
 
         if contentOffset - translation.y > 0 {
             scrollView?.contentOffset.y = min(contentOffset - translation.y, maxContentOffset)
@@ -1316,25 +1315,6 @@ struct PopupBackgroundView<Item: Equatable>: View {
     }
 }
 
-struct PopupMemoryAddress<T>: CustomStringConvertible {
-    let intValue: Int
-
-    var description: String {
-        let length = 2 + 2 * MemoryLayout<UnsafeRawPointer>.size
-        return String(format: "%0\(length)p", intValue)
-    }
-
-    init(of structPointer: UnsafePointer<T>) {
-        self.intValue = Int(bitPattern: structPointer)
-    }
-}
-
-extension PopupMemoryAddress where T: AnyObject {
-    init(of classInstance: T) {
-        self.intValue = unsafeBitCast(classInstance, to: Int.self)
-    }
-}
-
 final class DispatchWorkHolder {
     var work: DispatchWorkItem?
 }
@@ -1344,14 +1324,6 @@ final class ClassReference<T> {
 
     init(_ value: T) {
         self.value = value
-    }
-}
-
-@available(iOS 14.0, *)
-extension View {
-    @ViewBuilder
-    func valueChanged<T: Equatable>(value: T, onChange: @escaping (T) -> Void) -> some View {
-        self.onChange(of: value, perform: onChange)
     }
 }
 
