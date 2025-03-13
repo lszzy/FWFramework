@@ -8,14 +8,15 @@
 #if canImport(SwiftUI)
 import SwiftUI
 import Combine
-import Dispatch
 
 // MARK: - ViewStorage
+/// 和State类似，只是不触发UI自动刷新
+///
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
 @frozen
 @propertyWrapper
 public struct ViewStorage<Value>: Identifiable, DynamicProperty {
-    public final class ValueBox: AnyObservableValue<Value> {
+    public final class ValueBox: ViewStorageValue<Value> {
         @Published fileprivate var value: Value
         
         public override var wrappedValue: Value {
@@ -28,8 +29,7 @@ public struct ViewStorage<Value>: Identifiable, DynamicProperty {
         
         fileprivate init(_ value: Value) {
             self.value = value
-            
-            super.init(configuration: AnyObservableValue.Configuration())
+            super.init()
         }
     }
     
@@ -58,23 +58,8 @@ public struct ViewStorage<Value>: Identifiable, DynamicProperty {
     public init(wrappedValue value: @autoclosure @escaping () -> Value) {
         self.__valueBox = .init(wrappedValue: ValueBox(value()))
     }
-}
-
-// MARK: - Conformances
-extension ViewStorage: Equatable where Value: Equatable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.wrappedValue == rhs.wrappedValue
-    }
-}
-
-extension ViewStorage: Hashable where Value: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        wrappedValue.hash(into: &hasher)
-    }
-}
-
-// MARK: - API
-extension ViewStorage {
+    
+    // MARK: - Public
     public var binding: Binding<Value> {
         .init(
             get: { self.valueBox.value },
@@ -87,52 +72,41 @@ extension ViewStorage {
     }
 }
 
-public protocol _SwiftUIX_AnyIndirectValueBox<Value> {
-    associatedtype Value
-    
-    var wrappedValue: Value { get nonmutating set }
+extension ViewStorage: Equatable where Value: Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.wrappedValue == rhs.wrappedValue
+    }
 }
 
-@dynamicMemberLookup
-public class AnyObservableValue<Value>: _SwiftUIX_AnyIndirectValueBox, ObservableObject {
-    public struct Configuration {
-        public var deferUpdates: Bool
-        
-        public init(
-            deferUpdates: Bool?
-        ) {
-            self.deferUpdates = deferUpdates ?? false
-        }
-        
-        public init() {
-            self.init(
-                deferUpdates: nil
-            )
-        }
+extension ViewStorage: Hashable where Value: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        wrappedValue.hash(into: &hasher)
     }
-    
-    public var configuration = Configuration()
-    
+}
+
+// MARK: - ViewStorageValue
+@dynamicMemberLookup
+public class ViewStorageValue<Value>: ObservableObject {
     public var wrappedValue: Value {
         get {
-            fatalError() // abstract
+            fatalError()
         } set {
-            fatalError() // abstract
+            fatalError()
         }
     }
     
-    init(configuration: Configuration) {
-        self.configuration = configuration
-    }
+    init() {}
 
     public subscript<Subject>(
         dynamicMember keyPath: WritableKeyPath<Value, Subject>
-    ) -> AnyObservableValue<Subject> {
-        ValueMember(root: self, keyPath: keyPath)
+    ) -> ViewStorageValue<Subject> {
+        ViewStorageMember(root: self, keyPath: keyPath)
     }
     
     @_disfavoredOverload
-    public subscript<Subject>(dynamicMember keyPath: WritableKeyPath<Value, Subject>) -> Binding<Subject> {
+    public subscript<Subject>(
+        dynamicMember keyPath: WritableKeyPath<Value, Subject>
+    ) -> Binding<Subject> {
         return Binding<Subject>(
             get: { self.wrappedValue[keyPath: keyPath] },
             set: { self.wrappedValue[keyPath: keyPath] = $0 }
@@ -140,8 +114,9 @@ public class AnyObservableValue<Value>: _SwiftUIX_AnyIndirectValueBox, Observabl
     }
 }
 
-final class ValueMember<Root, Value>: AnyObservableValue<Value> {
-    unowned let root: AnyObservableValue<Root>
+// MARK: - ViewStorageMember
+final class ViewStorageMember<Root, Value>: ViewStorageValue<Value> {
+    unowned let root: ViewStorageValue<Root>
     
     let keyPath: WritableKeyPath<Root, Value>
     var subscription: AnyCancellable?
@@ -150,48 +125,24 @@ final class ValueMember<Root, Value>: AnyObservableValue<Value> {
         get {
             root.wrappedValue[keyPath: keyPath]
         } set {
-            _objectWillChange_send(deferred: configuration.deferUpdates)
-
+            objectWillChange.send()
             root.wrappedValue[keyPath: keyPath] = newValue
         }
     }
     
     public init(
-        root: AnyObservableValue<Root>,
-        keyPath: WritableKeyPath<Root, Value>,
-        configuration: AnyObservableValue<Value>.Configuration = .init()
+        root: ViewStorageValue<Root>,
+        keyPath: WritableKeyPath<Root, Value>
     ) {
         self.root = root
         self.keyPath = keyPath
         self.subscription = nil
-        
-        super.init(configuration: configuration)
+        super.init()
         
         subscription = root.objectWillChange.sink(receiveValue: { [weak self] _ in
-            guard let `self` = self else {
-                return
-            }
-            
-            self._objectWillChange_send(deferred: self.configuration.deferUpdates)
+            guard let `self` = self else { return }
+            self.objectWillChange.send()
         })
-    }
-}
-
-extension ObservableObject {
-    public func _objectWillChange_send(
-        deferred: Bool = false
-    ) where ObjectWillChangePublisher == ObservableObjectPublisher {
-        if deferred {
-            DispatchQueue.main.async { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                
-                self.objectWillChange.send()
-            }
-        } else {
-            objectWillChange.send()
-        }
     }
 }
 
