@@ -93,49 +93,6 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
-    ss.subspec 'Macros' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Macros/FWPluginMacros/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Service'
-      sss.preserve_paths = [
-        'Sources/FWPlugin/Macros/Package.swift',
-        'Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift'
-      ]
-      
-      product_folder = "${PODS_BUILD_DIR}/Products/FWMacroMacros"
-      build_script = <<-SCRIPT.squish
-        env -i PATH="$PATH" "$SHELL" -l -c
-        "swift build -c release --disable-sandbox
-        --package-path \\"$PODS_TARGET_SRCROOT/Sources/FWPlugin/Macros\\"
-        --scratch-path \\"#{product_folder}\\" &&
-        (([ -e \\"#{product_folder}/release/FWMacroMacros-tool\\" ] &&
-          ! [ -L \\"#{product_folder}/release/FWMacroMacros-tool\\" ]) &&
-         ln -sf \\"#{product_folder}/release/FWMacroMacros-tool\\" \\"#{product_folder}/release/FWMacroMacros\\" ||
-         ln -sf \\"#{product_folder}/release/FWMacroMacros\\" \\"#{product_folder}/release/FWMacroMacros-tool\\")"
-      SCRIPT
-      swift_flags = <<-FLAGS.squish
-        -Xfrontend -load-plugin-executable -Xfrontend #{product_folder}/release/FWMacroMacros#FWMacroMacros
-      FLAGS
-      
-      sss.script_phase = {
-        :name => 'Build FWMacroMacros',
-        :script => build_script,
-        :input_files => Dir.glob("{Sources/FWPlugin/Macros/Package.swift, Sources/FWPlugin/Macros/FWMacroMacros/**/*.swift}").map {
-          |path| "$(PODS_TARGET_SRCROOT)/#{path}"
-        },
-        :output_files => ["#{product_folder}/release/FWMacroMacros"],
-        :execution_position => :before_compile
-      }
-      sss.user_target_xcconfig = {
-        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
-        'OTHER_SWIFT_FLAGS' => swift_flags
-      }
-      sss.pod_target_xcconfig = {
-        'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'FWPluginMacros',
-        'ENABLE_USER_SCRIPT_SANDBOXING' => 'NO',
-        'OTHER_SWIFT_FLAGS' => swift_flags
-      }
-    end
-    
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'

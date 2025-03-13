@@ -17,7 +17,6 @@ target "FWFramework_Plugin" do
   pod 'FWFramework/FWPlugin/Calendar', :path => '../../'
   pod 'FWFramework/FWPlugin/Tracking', :path => '../../'
   pod 'FWFramework/FWPlugin/Biometry', :path => '../../'
-  pod 'FWFramework/FWPlugin/Macros', :path => '../../'
   pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
   pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
   pod 'FWFramework/FWPlugin/Lottie', :path => '../../'
@@ -40,13 +39,6 @@ post_install do |installer|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       end
-    end
-  end
-  
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
-      config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
     end
   end
 end
