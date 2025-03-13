@@ -23,7 +23,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
          showContent: Bool,
          positionIsCalculatedCallback: @escaping () -> Void,
          animationCompletedCallback: @escaping () -> Void,
-         dismissCallback: @escaping (DismissSource) -> Void) {
+         dismissCallback: @escaping (PopupDismissSource) -> Void) {
         self.type = params.type
         self.displayMode = params.displayMode
         self.position = params.position ?? params.type.defaultPosition
@@ -171,10 +171,10 @@ public struct Popup<PopupContent: View>: ViewModifier {
         var useKeyboardSafeArea: Bool = false
 
         /// called when when dismiss animation starts
-        var willDismissCallback: (DismissSource) -> Void = { _ in }
+        var willDismissCallback: (PopupDismissSource) -> Void = { _ in }
 
         /// called when when dismiss animation ends
-        var dismissCallback: (DismissSource) -> Void = { _ in }
+        var dismissCallback: (PopupDismissSource) -> Void = { _ in }
 
         public func type(_ type: PopupType) -> PopupParameters {
             var params = self
@@ -265,7 +265,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
         }
 
         // MARK: - dismiss callbacks
-        public func willDismissCallback(_ dismissCallback: @escaping (DismissSource) -> Void) -> PopupParameters {
+        public func willDismissCallback(_ dismissCallback: @escaping (PopupDismissSource) -> Void) -> PopupParameters {
             var params = self
             params.willDismissCallback = dismissCallback
             return params
@@ -279,7 +279,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
             return params
         }
 
-        public func dismissCallback(_ dismissCallback: @escaping (DismissSource) -> Void) -> PopupParameters {
+        public func dismissCallback(_ dismissCallback: @escaping (PopupDismissSource) -> Void) -> PopupParameters {
             var params = self
             params.dismissCallback = dismissCallback
             return params
@@ -355,7 +355,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
     var animationCompletedCallback: () -> Void
 
     /// Call dismiss callback with dismiss source
-    var dismissCallback: (DismissSource) -> Void
+    var dismissCallback: (PopupDismissSource) -> Void
 
     var view: () -> PopupContent
 
@@ -371,7 +371,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
     @State private var safeAreaInsets: EdgeInsets = .init()
 
     /// Variables used to control what is animated and what is not
-    @State var actualCurrentOffset = CGPoint.pointFarAwayFromScreen
+    @State var actualCurrentOffset = KeyboardHeightHelper.pointFarAwayFromScreen
     @State var actualScale = 1.0
     @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
 
@@ -457,7 +457,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
     /// The offset when the popup is hidden
     private var hiddenOffset: CGPoint {
         if sheetContentRect.isEmpty {
-            return CGPoint.pointFarAwayFromScreen
+            return KeyboardHeightHelper.pointFarAwayFromScreen
         }
 
         // appearing animation
@@ -636,7 +636,7 @@ public struct Popup<PopupContent: View>: ViewModifier {
                 .frameGetter($sheetContentRect)
                 .position(x: sheetContentRect.width / 2 + actualCurrentOffset.x, y: sheetContentRect.height / 2 + actualCurrentOffset.y)
                 .onChange(of: shouldShowContent.wrappedValue) { newValue in
-                    if actualCurrentOffset == CGPoint.pointFarAwayFromScreen { // don't animate initial positioning outside the screen
+                    if actualCurrentOffset == KeyboardHeightHelper.pointFarAwayFromScreen { // don't animate initial positioning outside the screen
                         DispatchQueue.main.async {
                             actualCurrentOffset = hiddenOffset
                             actualScale = hiddenScale
@@ -814,16 +814,14 @@ public struct Popup<PopupContent: View>: ViewModifier {
     }
 }
 
-@available(iOS 14.0, *)
-public enum DismissSource {
-    case binding // set isPresented to false ot item to nil
+public enum PopupDismissSource {
+    case binding
     case tapInside
     case tapOutside
     case drag
     case autohide
 }
 
-@available(iOS 14.0, *)
 extension UIScrollView {
     func maxContentOffsetHeight() -> CGFloat {
         let contentHeight = contentSize.height
@@ -833,7 +831,6 @@ extension UIScrollView {
     }
 }
 
-@available(iOS 14.0, *)
 final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDelegate {
     var scrollView: UIScrollView?
 
@@ -873,12 +870,10 @@ final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDel
     }
 }
 
-@available(iOS 14.0, *)
 struct PopupDismissKey: EnvironmentKey {
     static let defaultValue: (@Sendable @MainActor () -> Void)? = nil
 }
 
-@available(iOS 14.0, *)
 extension EnvironmentValues {
     public var popupDismiss: (@Sendable @MainActor () -> Void)? {
         get { self[PopupDismissKey.self] }
@@ -1030,10 +1025,10 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
     var displayMode: Popup<PopupContent>.DisplayMode
 
     /// called when when dismiss animation starts
-    var userWillDismissCallback: (DismissSource) -> Void
+    var userWillDismissCallback: (PopupDismissSource) -> Void
 
     /// called when when dismiss animation ends
-    var userDismissCallback: (DismissSource) -> Void
+    var userDismissCallback: (PopupDismissSource) -> Void
 
     var params: Popup<PopupContent>.PopupParameters
 
@@ -1069,7 +1064,7 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
 
     // MARK: - Internal
     /// Set dismiss source to pass to dismiss callback
-    @State private var dismissSource: DismissSource?
+    @State private var dismissSource: PopupDismissSource?
 
     /// Synchronize isPresented changes and animations
     private let eventsQueue = DispatchQueue(label: "eventsQueue", qos: .utility)
@@ -1128,7 +1123,6 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
                         closingIsInProcess = newValue == nil
                         if let newValue {
-                            /// copying `itemView`
                             tempItemView = itemView(newValue)
                         }
                         appearAction(popupPresented: newValue != nil)
@@ -1161,7 +1155,7 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
             content
                 .onChange(of: showSheet) { newValue in
                     if newValue {
-                        WindowManager.showInNewWindow(id: id, dismissClosure: {
+                        PopupWindowManager.showInNewWindow(id: id, dismissClosure: {
                             dismissSource = .binding
                             isPresented = false
                             item = nil
@@ -1169,7 +1163,7 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
                             constructPopup()
                         }
                     } else {
-                        WindowManager.closeWindow(id: id)
+                        PopupWindowManager.closeWindow(id: id)
                     }
                 }
         }
@@ -1208,12 +1202,11 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
             shouldShowContent: $shouldShowContent,
             showContent: showContent,
             positionIsCalculatedCallback: {
-                // once the closing has been started, don't allow position recalculation to trigger popup showing again
                 if !closingIsInProcess {
                     DispatchQueue.main.async {
-                        shouldShowContent = true // this will cause currentOffset change thus triggering the sliding showing animation
+                        shouldShowContent = true
                         withAnimation(.linear(duration: 0.2)) {
-                            animatableOpacity = 1 // this will cause cross dissolving animation for background color/view
+                            animatableOpacity = 1
                         }
                     }
                     setupAutohide()
@@ -1231,36 +1224,34 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
     func appearAction(popupPresented: Bool) {
         if popupPresented {
             dismissSource = nil
-            showSheet = true // show transparent fullscreen sheet
-            showContent = true // immediately load popup body
-            // shouldShowContent is set after popup's frame is calculated, see positionIsCalculatedCallback
+            showSheet = true
+            showContent = true
         } else {
             closingIsInProcess = true
             userWillDismissCallback(dismissSource ?? .binding)
             dispatchWorkHolder.work?.cancel()
-            shouldShowContent = false // this will cause currentOffset change thus triggering the sliding hiding animation
+            shouldShowContent = false
             animatableOpacity = 0
-            // do the rest once the animation is finished (see onAnimationCompleted())
         }
 
-        if #unavailable(iOS 17.0, tvOS 17.0, macOS 14.0, watchOS 10.0) {
-            performWithDelay(0.3) { // imitate onAnimationCompleted for older os
+        if #unavailable(iOS 17.0) {
+            performWithDelay(0.3) {
                 onAnimationCompleted()
             }
         }
     }
 
     func onAnimationCompleted() {
-        if shouldShowContent { // return if this was called on showing animation, only proceed if called on hiding
+        if shouldShowContent {
             eventsSemaphore.signal()
             return
         }
-        showContent = false // unload popup body after hiding animation is done
+        showContent = false
         tempItemView = nil
         performWithDelay(0.01) {
             showSheet = false
         }
-        if displayMode != .sheet { // for .sheet this callback is called in fullScreenCover's onDisappear
+        if displayMode != .sheet {
             userDismissCallback(dismissSource ?? .binding)
         }
 
@@ -1268,12 +1259,8 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
     }
 
     func setupAutohide() {
-        // if needed, dispatch autohide and cancel previous one
         if let autohideIn {
             dispatchWorkHolder.work?.cancel()
-
-            // Weak reference to avoid the work item capturing the struct,
-            // which would create a retain cycle with the work holder itself.
 
             dispatchWorkHolder.work = DispatchWorkItem(block: { [weak isPresentedRef, weak itemRef] in
                 dismissSource = .autohide
@@ -1294,8 +1281,6 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
     }
 }
 
-/// this is a separe struct with @Bindings because of how UIWindow doesn't receive updates in usual SwiftUI manner
-@available(iOS 14.0, *)
 struct PopupBackgroundView<Item: Equatable>: View {
     @Binding var id: UUID
 
@@ -1303,7 +1288,7 @@ struct PopupBackgroundView<Item: Equatable>: View {
     @Binding var item: Item?
 
     @Binding var animatableOpacity: CGFloat
-    @Binding var dismissSource: DismissSource?
+    @Binding var dismissSource: PopupDismissSource?
 
     var backgroundColor: Color
     var backgroundView: AnyView?
@@ -1331,8 +1316,7 @@ struct PopupBackgroundView<Item: Equatable>: View {
     }
 }
 
-@available(iOS 14.0, *)
-struct MemoryAddress<T>: CustomStringConvertible {
+struct PopupMemoryAddress<T>: CustomStringConvertible {
     let intValue: Int
 
     var description: String {
@@ -1340,25 +1324,21 @@ struct MemoryAddress<T>: CustomStringConvertible {
         return String(format: "%0\(length)p", intValue)
     }
 
-    // for structures
     init(of structPointer: UnsafePointer<T>) {
         self.intValue = Int(bitPattern: structPointer)
     }
 }
 
-@available(iOS 14.0, *)
-extension MemoryAddress where T: AnyObject {
+extension PopupMemoryAddress where T: AnyObject {
     init(of classInstance: T) {
         self.intValue = unsafeBitCast(classInstance, to: Int.self)
     }
 }
 
-@available(iOS 14.0, *)
 final class DispatchWorkHolder {
     var work: DispatchWorkItem?
 }
 
-@available(iOS 14.0, *)
 final class ClassReference<T> {
     var value: T
 
@@ -1375,7 +1355,6 @@ extension View {
     }
 }
 
-@available(iOS 14.0, *)
 extension View {
     @ViewBuilder
     func applyIf<T: View>(_ condition: Bool, apply: (Self) -> T) -> some View {
@@ -1401,7 +1380,6 @@ extension View {
 }
 
 // MARK: - FrameGetter
-@available(iOS 14.0, *)
 struct FrameGetter: ViewModifier {
     @Binding var frame: CGRect
 
@@ -1411,7 +1389,6 @@ struct FrameGetter: ViewModifier {
                 GeometryReader { proxy -> AnyView in
                     DispatchQueue.main.async {
                         let rect = proxy.frame(in: .global)
-                        // This avoids an infinite layout loop
                         if rect.integral != frame.integral {
                             frame = rect
                         }
@@ -1422,14 +1399,12 @@ struct FrameGetter: ViewModifier {
     }
 }
 
-@available(iOS 14.0, *)
 extension View {
     func frameGetter(_ frame: Binding<CGRect>) -> some View {
         modifier(FrameGetter(frame: frame))
     }
 }
 
-@available(iOS 14.0, *)
 struct SafeAreaGetter: ViewModifier {
     @Binding var safeArea: EdgeInsets
 
@@ -1439,7 +1414,6 @@ struct SafeAreaGetter: ViewModifier {
                 GeometryReader { proxy -> AnyView in
                     DispatchQueue.main.async {
                         let area = proxy.safeAreaInsets
-                        // This avoids an infinite layout loop
                         if area != safeArea {
                             safeArea = area
                         }
@@ -1450,7 +1424,6 @@ struct SafeAreaGetter: ViewModifier {
     }
 }
 
-@available(iOS 14.0, *)
 extension View {
     public func safeAreaGetter(_ safeArea: Binding<EdgeInsets>) -> some View {
         modifier(SafeAreaGetter(safeArea: safeArea))
@@ -1462,8 +1435,8 @@ extension View {
 extension View {
     func transparentNonAnimatingFullScreenCover<Content: View>(
         isPresented: Binding<Bool>,
-        dismissSource: DismissSource?,
-        userDismissCallback: @escaping (DismissSource) -> Void,
+        dismissSource: PopupDismissSource?,
+        userDismissCallback: @escaping (PopupDismissSource) -> Void,
         content: @escaping () -> Content
     ) -> some View {
         modifier(TransparentNonAnimatableFullScreenModifier(isPresented: isPresented, dismissSource: dismissSource, userDismissCallback: userDismissCallback, fullScreenContent: content))
@@ -1473,8 +1446,8 @@ extension View {
 @available(iOS 14.0, *)
 private struct TransparentNonAnimatableFullScreenModifier<FullScreenContent: View>: ViewModifier {
     @Binding var isPresented: Bool
-    var dismissSource: DismissSource?
-    var userDismissCallback: (DismissSource) -> Void
+    var dismissSource: PopupDismissSource?
+    var userDismissCallback: (PopupDismissSource) -> Void
     let fullScreenContent: () -> (FullScreenContent)
 
     func body(content: Content) -> some View {
@@ -1502,7 +1475,6 @@ private struct TransparentNonAnimatableFullScreenModifier<FullScreenContent: Vie
     }
 }
 
-@available(iOS 14.0, *)
 private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
     private class BackgroundRemovalView: UIView {
         override func didMoveToWindow() {
@@ -1518,9 +1490,7 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
     func updateUIView(_ uiView: UIView, context: Context) {}
 }
 
-// MARK: - WindowManager
-// A generic wrapper that tracks changes in the view's state
-@available(iOS 14.0, *)
+// MARK: - PopupWindowManager
 @MainActor class HostingViewState<Content: View>: ObservableObject {
     @Published var content: Content
     let id1: UUID
@@ -1530,7 +1500,6 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
     init(content: Content, id: UUID) {
         self.content = content
         self.id1 = id
-        // Subscribe to changes in the content and trigger updates
         self.cancellable = observeStateChanges()
     }
 
@@ -1538,15 +1507,13 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
         Just(content)
             .sink { [weak self] newContent in
                 guard let self else { return }
-                WindowManager.shared.windows[id1]?.rootViewController = UIHostingController(rootView: newContent)
-                // self?.content = newContent // Trigger the content update when state changes
+                PopupWindowManager.shared.windows[id1]?.rootViewController = UIHostingController(rootView: newContent)
             }
     }
 }
 
-@available(iOS 14.0, *)
-@MainActor public final class WindowManager {
-    static let shared = WindowManager()
+@MainActor public final class PopupWindowManager {
+    static let shared = PopupWindowManager()
     var windows: [UUID: UIWindow] = [:]
 
     public static func showInNewWindow<Content: View>(id: UUID, dismissClosure: @escaping () -> Void, content: @escaping () -> Content) {
@@ -1555,10 +1522,10 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
             return
         }
 
-        let window = UIPassthroughWindow(windowScene: scene)
+        let window = PopupPassthroughWindow(windowScene: scene)
         window.backgroundColor = .clear
 
-        let controller = UIPassthroughVC(rootView: content()
+        let controller = PopupPassthroughController(rootView: content()
             .environment(\.popupDismiss) {
                 dismissClosure()
             })
@@ -1567,7 +1534,6 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
         window.windowLevel = .alert + 1
         window.makeKeyAndVisible()
 
-        // Store window reference
         shared.windows[id] = window
     }
 
@@ -1577,17 +1543,15 @@ private struct FullScreenCoverBackgroundRemovalView: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.0, *)
-class UIPassthroughWindow: UIWindow {
+class PopupPassthroughWindow: UIWindow {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let vc = rootViewController {
-            vc.view.layoutSubviews() // otherwise the frame is as if the popup is still outside the screen
+            vc.view.layoutSubviews()
             if let _ = isTouchInsideSubview(point: point, vc: vc.view) {
-                // pass tap to this UIPassthroughVC
                 return vc.view
             }
         }
-        return nil // pass to next window
+        return nil
     }
 
     private func isTouchInsideSubview(point: CGPoint, vc: UIView) -> UIView? {
@@ -1600,12 +1564,9 @@ class UIPassthroughWindow: UIWindow {
     }
 }
 
-@available(iOS 14.0, *)
-class UIPassthroughVC<Content: View>: UIHostingController<Content> {
+class PopupPassthroughController<Content: View>: UIHostingController<Content> {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Check if any touch is inside one of the subviews, if so, ignore it
         if !isTouchInsideSubview(touches) {
-            // If touch is not inside any subview, pass the touch to the next responder
             super.touchesBegan(touches, with: event)
         }
     }
@@ -1628,15 +1589,12 @@ class UIPassthroughVC<Content: View>: UIHostingController<Content> {
         }
     }
 
-    // Helper function to determine if any touch is inside a subview
     private func isTouchInsideSubview(_ touches: Set<UITouch>) -> Bool {
         guard let touch = touches.first else {
             return false
         }
 
         let touchLocation = touch.location(in: view)
-
-        // Iterate over all subviews to check if the touch is inside any of them
         for subview in view.subviews {
             if subview.frame.contains(touchLocation) {
                 return true
@@ -1647,8 +1605,11 @@ class UIPassthroughVC<Content: View>: UIHostingController<Content> {
 }
 
 // MARK: - KeyboardHeightHelper
-@available(iOS 14.0, *)
 @MainActor class KeyboardHeightHelper: ObservableObject {
+    static var pointFarAwayFromScreen: CGPoint {
+        CGPoint(x: 2 * UIScreen.main.bounds.size.width, y: 2 * UIScreen.main.bounds.size.height)
+    }
+    
     @Published var keyboardHeight: CGFloat = 0
     @Published var keyboardDisplayed: Bool = false
 
@@ -1679,23 +1640,6 @@ class UIPassthroughVC<Content: View>: UIHostingController<Content> {
             self.keyboardHeight = keyboardRect.height
             self.keyboardDisplayed = true
         }
-    }
-}
-
-// MARK: - Hide keyboard
-@available(iOS 14.0, *)
-extension CGPoint {
-    @MainActor
-    static var pointFarAwayFromScreen: CGPoint {
-        CGPoint(x: 2 * CGSize.screenSize.width, y: 2 * CGSize.screenSize.height)
-    }
-}
-
-@available(iOS 14.0, *)
-extension CGSize {
-    @MainActor
-    static var screenSize: CGSize {
-        UIScreen.main.bounds.size
     }
 }
 
