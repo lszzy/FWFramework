@@ -434,10 +434,12 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     private class Target {
         var logger: LoggerPlugin
         var level: LogLevel
+        var group: String
 
-        init(logger: LoggerPlugin, level: LogLevel) {
+        init(logger: LoggerPlugin, level: LogLevel, group: String) {
             self.logger = logger
             self.level = level
+            self.group = group
         }
     }
 
@@ -449,9 +451,9 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
         addLogger(LoggerPluginNSLog.shared)
     }
 
-    /// 添加日志插件，并在指定等级生效(默认all)
-    public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all) {
-        allTargets.append(Target(logger: logger, level: level))
+    /// 添加日志插件，并在指定等级(默认all)和指定分组(默认所有)生效
+    public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all, group: String = "") {
+        allTargets.append(Target(logger: logger, level: level, group: group))
     }
 
     /// 移除指定日志插件
@@ -470,9 +472,9 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     /// 记录日志协议方法
     public func log(_ type: LogType, group: String, message: String) {
         for target in allTargets {
-            if LogType(rawValue: target.level.rawValue).contains(type) {
-                target.logger.log(type, group: group, message: message)
-            }
+            guard LogType(rawValue: target.level.rawValue).contains(type) else { continue }
+            guard target.group.isEmpty || target.group == group else { continue }
+            target.logger.log(type, group: group, message: message)
         }
     }
 }
