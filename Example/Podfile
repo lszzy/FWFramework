@@ -20,6 +20,10 @@ post_install do |installer|
       # 处理target编译最低版本问题
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       
+      # 处理FWPlugin/Macros跨模块调用问题
+      config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
+      config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -load-plugin-executable -Xfrontend ${PODS_BUILD_DIR}/Products/FWMacroMacros/release/FWMacroMacros#FWMacroMacros'
+      
       # 选择性开启框架Swift6编译模式
       # if ['FWFramework'].include? target.name
         # config.build_settings['SWIFT_VERSION'] = '6'
