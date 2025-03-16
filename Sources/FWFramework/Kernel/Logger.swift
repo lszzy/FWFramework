@@ -636,7 +636,7 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
             
             let filePath = logPath.fw.appendingPath(fileName)
             let targetPath = logPath.fw.appendingPath(String(fileName.prefix(8)) + ".log")
-            var logText = String(format: "\n=====%@=====\n%@", fileName)
+            var logText = String(format: "\n=====%@=====\n", fileName)
             logText += (try? String(contentsOfFile: filePath, encoding: .utf8)) ?? ""
             LoggerPluginFile.appendText(logText, atPath: targetPath)
             try? FileManager.default.removeItem(atPath: filePath)
