@@ -427,7 +427,20 @@ public protocol LogFormatter {
 public class LogFormatterImpl: LogFormatter {
     public static let shared = LogFormatterImpl()
     
+    /// 自定义日期格式化
+    public lazy var dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return dateFormatter
+    }()
+    
     public init() {}
+    
+    /// 格式化日志时间
+    public func formatDate(_ logMessage: LogMessage) -> String {
+        return dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
+    }
     
     /// 格式化日志消息
     public func format(_ logMessage: LogMessage) -> String? {
@@ -483,14 +496,6 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     public var logFormatter: LogFormatter?
     /// 自定义日志处理句柄
     public var logHandler: ((String) -> Void)?
-    
-    /// 自定义日期格式化
-    public lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-        return dateFormatter
-    }()
 
     /// 记录日志协议方法
     public func log(_ logMessage: LogMessage) {
@@ -516,8 +521,8 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
         }
         #endif
 
-        let timestamp = dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
-        NSLog("%@: %@", timestamp, message)
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
+        NSLog("%@: %@", logTime, message)
     }
 }
 
@@ -528,14 +533,6 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     
     /// 自定义日志格式化处理器
     public var logFormatter: LogFormatter?
-    
-    /// 自定义日期格式化
-    public lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-        return dateFormatter
-    }()
 
     private var log: OSLog
 
@@ -550,18 +547,120 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
         let formatter = logFormatter ?? LogFormatterImpl.shared
         guard let message = formatter.format(logMessage), !message.isEmpty else { return }
         
-        let timestamp = dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
         switch logMessage.type {
         case .error:
-            os_log("%@: %@", log: log, type: .error, timestamp, message)
+            os_log("%@: %@", log: log, type: .error, logTime, message)
         case .warn:
-            os_log("%@: %@", log: log, type: .default, timestamp, message)
+            os_log("%@: %@", log: log, type: .default, logTime, message)
         case .debug:
-            os_log("%@: %@", log: log, type: .debug, timestamp, message)
+            os_log("%@: %@", log: log, type: .debug, logTime, message)
         case .verbose:
-            os_log("%@: %@", log: log, type: .debug, timestamp, message)
+            os_log("%@: %@", log: log, type: .debug, logTime, message)
         default:
-            os_log("%@: %@", log: log, type: .info, timestamp, message)
+            os_log("%@: %@", log: log, type: .info, logTime, message)
+        }
+    }
+}
+
+/// 文件日志插件
+public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
+    @objc(sharedInstance)
+    public static let shared = LoggerPluginFile()
+    
+    /// 自定义日志格式化处理器
+    public var logFormatter: LogFormatter?
+    /// 自定义日志保留天数，默认7天
+    public var logKeepDays: Int = 7
+    /// 是否按天合并日志文件，默认true
+    public var shouldMergeFiles: Bool = true
+    /// 日志根目录路径
+    public private(set) var logPath: String = ""
+    /// 当前日志文件路径
+    public private(set) var logFile: String = ""
+    
+    private var logQueue = DispatchQueue(label: "site.wuyong.queue.logger.file")
+
+    override public convenience init() {
+        self.init(path: nil)
+    }
+
+    /// 指定路径
+    public init(path: String?) {
+        super.init()
+        // 绝对路径: path
+        if let path, (path as NSString).isAbsolutePath {
+            self.logPath = path
+        // 相对路径: Libray/Caches/FWFramework/LogFile/path[shared]
+        } else {
+            let logPath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "LogFile"])
+            let fileName = path ?? ""
+            self.logPath = logPath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
+        }
+        
+        // 当前日志文件路径
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd-HHmmss"
+        logFile = logPath.fw.appendingPath(dateFormatter.string(from: Date()) + ".log")
+        
+        // 处理之前的日志文件
+        processFiles()
+    }
+    
+    private func processFiles() {
+        guard FileManager.default.fileExists(atPath: logPath) else {
+            try? FileManager.default.createDirectory(atPath: logPath, withIntermediateDirectories: true)
+            return
+        }
+        let fileNames = try? FileManager.default.contentsOfDirectory(atPath: logPath)
+        guard let fileNames = fileNames?.filter({ $0.hasSuffix(".log") }), !fileNames.isEmpty else {
+            return
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let currentTime = Date().timeIntervalSince1970
+        
+        for fileName in fileNames {
+            if fileName.count == 12 {
+                if let fileTime = dateFormatter.date(from: String(fileName.prefix(8))),
+                   (currentTime - fileTime.timeIntervalSince1970) >= Double(logKeepDays) * 86400 {
+                    try? FileManager.default.removeItem(atPath: logPath.fw.appendingPath(fileName))
+                }
+                continue
+            }
+            
+            if !shouldMergeFiles || fileName.count != 19 { continue }
+            
+            let filePath = logPath.fw.appendingPath(fileName)
+            let targetPath = logPath.fw.appendingPath(String(fileName.prefix(8)) + ".log")
+            var logText = String(format: "\n=====%@=====\n%@", fileName)
+            logText += (try? String(contentsOfFile: filePath, encoding: .utf8)) ?? ""
+            LoggerPluginFile.appendText(logText, atPath: targetPath)
+            try? FileManager.default.removeItem(atPath: filePath)
+        }
+    }
+    
+    private static func appendText(_ text: String, atPath: String) {
+        guard let data = text.data(using: .utf8) as? NSData, !data.isEmpty else { return }
+        guard let outputStream = OutputStream(toFileAtPath: atPath, append: true) else { return }
+        outputStream.open()
+        defer { outputStream.close() }
+        outputStream.write(data.bytes, maxLength: data.length)
+    }
+
+    /// 记录日志协议方法
+    public func log(_ logMessage: LogMessage) {
+        let formatter = logFormatter ?? LogFormatterImpl.shared
+        guard let message = formatter.format(logMessage), !message.isEmpty else { return }
+        
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
+        let logText = String(format: "%@: %@\n", logTime, message)
+        let targetPath = logFile
+        logQueue.async {
+            LoggerPluginFile.appendText(logText, atPath: targetPath)
         }
     }
 }

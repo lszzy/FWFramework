@@ -850,6 +850,16 @@ extension Wrapper where Base: FileManager {
             return FileManager.default.fileExists(atPath: atPath)
         }
     }
+    
+    /// 追加方式向文件写入数据
+    @discardableResult
+    public static func appendData(_ data: Data?, atPath: String) -> Bool {
+        guard let data = data as? NSData, !data.isEmpty else { return false }
+        guard let outputStream = OutputStream(toFileAtPath: atPath, append: true) else { return false }
+        outputStream.open()
+        defer { outputStream.close() }
+        return outputStream.write(data.bytes, maxLength: data.length) >= 0
+    }
 
     /// 获取文件大小，单位：B
     public static func fileSize(_ filePath: String) -> UInt64 {
