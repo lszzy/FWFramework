@@ -555,12 +555,12 @@ extension TestRouter: AutoloadProtocol {
     }
 
     static func registerFilters() {
-        Router.sharedLoader.append { input in
-            if (input as String) == TestRouter.loaderUrl {
+        Router.sharedLoader.append(LoaderBlock({ input in
+            if input == TestRouter.loaderUrl {
                 return TestRouterResultController.self
             }
             return nil
-        }
+        }))
 
         Router.routeFilter = { context in
             let url = APP.safeURL(context.url)
