@@ -76,9 +76,13 @@ extension Wrapper {
 // MARK: - Wrapper+Data
 extension Wrapper where Base == Data {
     /// 转换为UTF8字符串
-    public var utf8String: String? {
-        String(data: base, encoding: .utf8)
-    }
+    public var utf8String: String? { String(data: base, encoding: .utf8) }
+    /// 转换为UInt8数组
+    public var uint8Array: Array<UInt8> { Array(base) }
+    /// 转换为bytes内容指针
+    public var bytesPointer: UnsafeRawPointer { (base as NSData).bytes }
+    /// 返回bytes内容的长度
+    public var bytesLength: Int { (base as NSData).length }
 }
 
 // MARK: - Wrapper+String

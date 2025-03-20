@@ -15,19 +15,19 @@ import Foundation
 extension Wrapper where Base == Data {
     // MARK: - AES
     /// 利用AES加密数据
-    public func aesEncrypt(key: String, iv: Data) -> Data? {
-        guard let keyData = key.data(using: .utf8) as? NSData,
-              let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
+    public func aesEncrypt(key: DataParameter, iv: DataParameter) -> Data? {
+        guard let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
             return nil
         }
 
+        let keyData = key.dataValue as NSData
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCEncrypt),
                              CCAlgorithm(kCCAlgorithmAES128),
                              CCOptions(kCCOptionPKCS7Padding),
                              keyData.bytes,
                              keyData.length,
-                             (iv as NSData).bytes,
+                             (iv.dataValue as NSData).bytes,
                              (base as NSData).bytes,
                              (base as NSData).length,
                              encryptedData.mutableBytes,
@@ -43,19 +43,19 @@ extension Wrapper where Base == Data {
     }
 
     /// 利用AES解密数据
-    public func aesDecrypt(key: String, iv: Data) -> Data? {
-        guard let keyData = key.data(using: .utf8) as? NSData,
-              let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
+    public func aesDecrypt(key: DataParameter, iv: DataParameter) -> Data? {
+        guard let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSizeAES128) else {
             return nil
         }
 
+        let keyData = key.dataValue as NSData
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCDecrypt),
                              CCAlgorithm(kCCAlgorithmAES128),
                              CCOptions(kCCOptionPKCS7Padding),
                              keyData.bytes,
                              keyData.length,
-                             (iv as NSData).bytes,
+                             (iv.dataValue as NSData).bytes,
                              (base as NSData).bytes,
                              (base as NSData).length,
                              decryptedData.mutableBytes,
@@ -72,19 +72,19 @@ extension Wrapper where Base == Data {
 
     // MARK: - DES
     /// 利用3DES加密数据
-    public func des3Encrypt(key: String, iv: Data) -> Data? {
-        guard let keyData = key.data(using: .utf8) as? NSData,
-              let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
+    public func des3Encrypt(key: DataParameter, iv: DataParameter) -> Data? {
+        guard let encryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
             return nil
         }
 
+        let keyData = key.dataValue as NSData
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCEncrypt),
                              CCAlgorithm(kCCAlgorithm3DES),
                              CCOptions(kCCOptionPKCS7Padding),
                              keyData.bytes,
                              keyData.length,
-                             (iv as NSData).bytes,
+                             (iv.dataValue as NSData).bytes,
                              (base as NSData).bytes,
                              (base as NSData).length,
                              encryptedData.mutableBytes,
@@ -100,19 +100,19 @@ extension Wrapper where Base == Data {
     }
 
     /// 利用3DES解密数据
-    public func des3Decrypt(key: String, iv: Data) -> Data? {
-        guard let keyData = key.data(using: .utf8) as? NSData,
-              let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
+    public func des3Decrypt(key: DataParameter, iv: DataParameter) -> Data? {
+        guard let decryptedData = NSMutableData(length: (base as NSData).length + kCCBlockSize3DES) else {
             return nil
         }
 
+        let keyData = key.dataValue as NSData
         var dataMoved: size_t = 0
         let result = CCCrypt(CCOperation(kCCDecrypt),
                              CCAlgorithm(kCCAlgorithm3DES),
                              CCOptions(kCCOptionPKCS7Padding),
                              keyData.bytes,
                              keyData.length,
-                             (iv as NSData).bytes,
+                             (iv.dataValue as NSData).bytes,
                              (base as NSData).bytes,
                              (base as NSData).length,
                              decryptedData.mutableBytes,
@@ -129,54 +129,54 @@ extension Wrapper where Base == Data {
 
     // MARK: - RSA
     /// RSA公钥加密，数据传输安全，使用默认标签，执行base64编码
-    public func rsaEncrypt(publicKey: String) -> Data? {
+    public func rsaEncrypt(publicKey: StringParameter) -> Data? {
         rsaEncrypt(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Encode: true)
     }
 
     /// RSA公钥加密，数据传输安全，可自定义标签，指定base64编码
-    public func rsaEncrypt(publicKey: String, tag: String, base64Encode: Bool) -> Data? {
-        guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey, tagName: tag) else { return nil }
+    public func rsaEncrypt(publicKey: StringParameter, tag: DataParameter, base64Encode: Bool) -> Data? {
+        guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey.stringValue, tag: tag.dataValue) else { return nil }
 
         let data = Data.fw.rsaEncryptData(data: base, withKeyRef: keyRef, isSign: false)
         return base64Encode ? data?.base64EncodedData() : data
     }
 
     /// RSA私钥解密，数据传输安全，使用默认标签，执行base64解密
-    public func rsaDecrypt(privateKey: String) -> Data? {
+    public func rsaDecrypt(privateKey: StringParameter) -> Data? {
         rsaDecrypt(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Decode: true)
     }
 
     /// RSA私钥解密，数据传输安全，可自定义标签，指定base64解码
-    public func rsaDecrypt(privateKey: String, tag: String, base64Decode: Bool) -> Data? {
+    public func rsaDecrypt(privateKey: StringParameter, tag: DataParameter, base64Decode: Bool) -> Data? {
         guard let data = base64Decode ? Data(base64Encoded: base, options: .ignoreUnknownCharacters) : base else { return nil }
 
-        guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey, tagName: tag) else { return nil }
+        guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey.stringValue, tag: tag.dataValue) else { return nil }
         return Data.fw.rsaDecryptData(data: data, withKeyRef: keyRef)
     }
 
     /// RSA私钥加签，防篡改防否认，使用默认标签，执行base64编码
-    public func rsaSign(privateKey: String) -> Data? {
+    public func rsaSign(privateKey: StringParameter) -> Data? {
         rsaSign(privateKey: privateKey, tag: "FWRSA_PrivateKey", base64Encode: true)
     }
 
     /// RSA私钥加签，防篡改防否认，可自定义标签，指定base64编码
-    public func rsaSign(privateKey: String, tag: String, base64Encode: Bool) -> Data? {
-        guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey, tagName: tag) else { return nil }
+    public func rsaSign(privateKey: StringParameter, tag: DataParameter, base64Encode: Bool) -> Data? {
+        guard let keyRef = Data.fw.rsaAddPrivateKey(key: privateKey.stringValue, tag: tag.dataValue) else { return nil }
 
         let data = Data.fw.rsaEncryptData(data: base, withKeyRef: keyRef, isSign: true)
         return base64Encode ? data?.base64EncodedData() : data
     }
 
     /// RSA公钥验签，防篡改防否认，使用默认标签，执行base64解密
-    public func rsaVerify(publicKey: String) -> Data? {
+    public func rsaVerify(publicKey: StringParameter) -> Data? {
         rsaVerify(publicKey: publicKey, tag: "FWRSA_PublicKey", base64Decode: true)
     }
 
     /// RSA公钥验签，防篡改防否认，可自定义标签，指定base64解码
-    public func rsaVerify(publicKey: String, tag: String, base64Decode: Bool) -> Data? {
+    public func rsaVerify(publicKey: StringParameter, tag: DataParameter, base64Decode: Bool) -> Data? {
         guard let data = base64Decode ? Data(base64Encoded: base, options: .ignoreUnknownCharacters) : base else { return nil }
 
-        guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey, tagName: tag) else { return nil }
+        guard let keyRef = Data.fw.rsaAddPublicKey(key: publicKey.stringValue, tag: tag.dataValue) else { return nil }
         return Data.fw.rsaDecryptData(data: data, withKeyRef: keyRef)
     }
 
@@ -256,7 +256,7 @@ extension Wrapper where Base == Data {
         return ret
     }
 
-    private static func rsaAddPublicKey(key: String, tagName: String) -> SecKey? {
+    private static func rsaAddPublicKey(key: String, tag: Data?) -> SecKey? {
         let key = key
             .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
             .replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
@@ -272,7 +272,7 @@ extension Wrapper where Base == Data {
         var publicKey: [CFString: Any] = [:]
         publicKey[kSecClass] = kSecClassKey
         publicKey[kSecAttrKeyType] = kSecAttrKeyTypeRSA
-        publicKey[kSecAttrApplicationTag] = tagName.data(using: .utf8)
+        publicKey[kSecAttrApplicationTag] = tag
         SecItemDelete(publicKey as CFDictionary)
 
         publicKey[kSecValueData] = data
@@ -298,7 +298,7 @@ extension Wrapper where Base == Data {
         return keyRef as! SecKey?
     }
 
-    private static func rsaAddPrivateKey(key: String, tagName: String) -> SecKey? {
+    private static func rsaAddPrivateKey(key: String, tag: Data?) -> SecKey? {
         let key = key
             .replacingOccurrences(of: "-----BEGIN RSA PRIVATE KEY-----", with: "")
             .replacingOccurrences(of: "-----END RSA PRIVATE KEY-----", with: "")
@@ -313,11 +313,10 @@ extension Wrapper where Base == Data {
             return nil
         }
 
-        let tagData = tagName.data(using: .utf8)
         var privateKey: [String: Any] = [:]
         privateKey[kSecClass as String] = kSecClassKey
         privateKey[kSecAttrKeyType as String] = kSecAttrKeyTypeRSA
-        privateKey[kSecAttrApplicationTag as String] = tagData
+        privateKey[kSecAttrApplicationTag as String] = tag
         SecItemDelete(privateKey as CFDictionary)
 
         privateKey[kSecValueData as String] = data
