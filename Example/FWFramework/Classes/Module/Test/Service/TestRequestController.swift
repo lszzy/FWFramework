@@ -137,7 +137,7 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable
         testFailed ? 30 : 30
     }
 
-    override func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+    override func requestRetryValidator(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?) -> Bool {
         true
     }
 }

@@ -96,12 +96,12 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         return urlRequest
     }
 
-    open func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
+    open func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
         let urlRequest: URLRequest
         do {
             urlRequest = try buildUrlRequest(for: request)
         } catch {
-            completionHandler?(HTTPURLResponse(), nil, error)
+            completionHandler?(nil, nil, error)
             return
         }
 
@@ -138,11 +138,11 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             dataRequest.validate(contentType: contentTypes)
         }
         dataRequest.response { [weak self] response in
-            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.data, error: response.error, completionHandler: completionHandler)
+            self?.handleResponse(for: request, response: response.response, responseObject: response.data, error: response.error, completionHandler: completionHandler)
         }
     }
 
-    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
+    open func startDownloadTask(for request: HTTPRequest, resumeData: Data?, destination: String, completionHandler: (@Sendable (URLResponse?, URL?, Error?) -> Void)?) {
         let requestIntercepter = requestIntercepterBlock?(request)
         let downloadRequest: DownloadRequest
 
@@ -155,7 +155,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             do {
                 urlRequest = try buildUrlRequest(for: request)
             } catch {
-                completionHandler?(HTTPURLResponse(), nil, error)
+                completionHandler?(nil, nil, error)
                 return
             }
 
@@ -179,7 +179,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
             downloadRequest.validate(contentType: contentTypes)
         }
         downloadRequest.response { [weak self] response in
-            self?.handleResponse(for: request, response: response.response ?? HTTPURLResponse(), responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
+            self?.handleResponse(for: request, response: response.response, responseObject: response.fileURL, error: response.error, completionHandler: { response, responseObject, error in
                 completionHandler?(response, responseObject as? URL, error)
             })
         }
@@ -215,7 +215,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         request.requestAdapter = alamofireRequest
     }
 
-    private func handleResponse(for request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
+    private func handleResponse(for request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
         var serializationError: Error?
         request.responseObject = responseObject
         if let responseData = request.responseObject as? Data {

@@ -124,7 +124,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         request: URLRequest,
         uploadProgress: (@Sendable (Progress) -> Void)? = nil,
         downloadProgress: (@Sendable (Progress) -> Void)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDataTask {
         let dataTask = session.dataTask(with: request)
         addDelegate(for: dataTask, uploadProgress: uploadProgress, downloadProgress: downloadProgress, completionHandler: completionHandler)
@@ -135,7 +135,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         request: URLRequest,
         fromFile fileURL: URL,
         progress: (@Sendable (Progress) -> Void)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(with: request, fromFile: fileURL)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -146,7 +146,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         request: URLRequest,
         fromData bodyData: Data,
         progress: (@Sendable (Progress) -> Void)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(with: request, from: bodyData)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -156,7 +156,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open func uploadTask(
         streamedRequest: URLRequest,
         progress: (@Sendable (Progress) -> Void)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionUploadTask {
         let uploadTask = session.uploadTask(withStreamedRequest: streamedRequest)
         addDelegate(for: uploadTask, progress: progress, completionHandler: completionHandler)
@@ -166,8 +166,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open func downloadTask(
         request: URLRequest,
         progress: (@Sendable (Progress) -> Void)? = nil,
-        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse?) -> URL)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse?, _ filePath: URL?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDownloadTask {
         let downloadTask = session.downloadTask(with: request)
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
@@ -177,8 +177,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     open func downloadTask(
         resumeData: Data,
         progress: (@Sendable (Progress) -> Void)? = nil,
-        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)? = nil,
-        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)? = nil
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse?) -> URL)? = nil,
+        completionHandler: (@Sendable (_ response: URLResponse?, _ filePath: URL?, _ error: Error?) -> Void)? = nil
     ) -> URLSessionDownloadTask {
         let downloadTask = session.downloadTask(withResumeData: resumeData)
         addDelegate(for: downloadTask, progress: progress, destination: destination, completionHandler: completionHandler)
@@ -238,7 +238,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
         for dataTask: URLSessionDataTask,
         uploadProgress: (@Sendable (Progress) -> Void)?,
         downloadProgress: (@Sendable (Progress) -> Void)?,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: dataTask)
         delegate.manager = self
@@ -254,7 +254,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     private func addDelegate(
         for uploadTask: URLSessionUploadTask,
         progress: (@Sendable (Progress) -> Void)?,
-        completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+        completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: uploadTask)
         delegate.manager = self
@@ -269,8 +269,8 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
     private func addDelegate(
         for downloadTask: URLSessionDownloadTask,
         progress: (@Sendable (Progress) -> Void)?,
-        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse) -> URL)?,
-        completionHandler: (@Sendable (_ response: URLResponse, _ filePath: URL?, _ error: Error?) -> Void)?
+        destination: (@Sendable (_ targetPath: URL, _ response: URLResponse?) -> URL)?,
+        completionHandler: (@Sendable (_ response: URLResponse?, _ filePath: URL?, _ error: Error?) -> Void)?
     ) {
         let delegate = URLSessionManagerTaskDelegate(task: downloadTask)
         delegate.manager = self
@@ -280,7 +280,7 @@ open class URLSessionManager: NSObject, URLSessionDelegate, URLSessionTaskDelega
 
         if let destination {
             delegate.downloadTaskDidFinishDownloading = { _, task, location in
-                destination(location, task.response ?? HTTPURLResponse())
+                destination(location, task.response)
             }
         }
 
@@ -571,7 +571,7 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
     var downloadTaskDidFinishDownloading: (@Sendable (_ session: URLSession, _ downloadTask: URLSessionDownloadTask, _ location: URL) -> URL?)?
     var uploadProgressBlock: (@Sendable (Progress) -> Void)?
     var downloadProgressBlock: (@Sendable (Progress) -> Void)?
-    var completionHandler: (@Sendable (_ response: URLResponse, _ responseObject: Any?, _ error: Error?) -> Void)?
+    var completionHandler: (@Sendable (_ response: URLResponse?, _ responseObject: Any?, _ error: Error?) -> Void)?
 
     init(task: URLSessionTask) {
         super.init()
@@ -636,7 +636,7 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
             let queue = manager?.completionQueue ?? .main
             let group = manager?.completionGroup ?? Self.completionGroup
             queue.async(group: group) {
-                self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.value, error)
+                self.completionHandler?(task.response, sendableResponseObject.value, error)
 
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.value)
@@ -670,7 +670,7 @@ private class URLSessionManagerTaskDelegate: NSObject, URLSessionTaskDelegate, U
                 let group = manager?.completionGroup ?? Self.completionGroup
                 let responseError = serializationError
                 queue.async(group: group) {
-                    self.completionHandler?(task.response ?? HTTPURLResponse(), sendableResponseObject.value, responseError)
+                    self.completionHandler?(task.response, sendableResponseObject.value, responseError)
 
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: URLSessionManager.networkingTaskDidCompleteNotification, object: task, userInfo: sendableUserInfo.value)

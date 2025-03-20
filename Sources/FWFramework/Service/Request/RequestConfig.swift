@@ -293,7 +293,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
     /// 处理重试请求，处理完成回调是否需要重试
-    func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void)
+    func retryRequest(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
@@ -301,7 +301,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     public static let `default` = RequestRetrier()
 
     /// 自定义重试过滤器，回调过滤结果(nil时继续判定，非nil时停止判定)，优先级最高且线程安全，可用于刷新授权等
-    open var requestRetryFilter: (@Sendable (_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (_ filterResult: Bool?) -> Void) -> Void)?
+    open var requestRetryFilter: (@Sendable (_ request: HTTPRequest, _ response: URLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (_ filterResult: Bool?) -> Void) -> Void)?
 
     private lazy var retryQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
     private lazy var retrySemaphore = DispatchSemaphore(value: 1)
@@ -320,7 +320,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     }
 
     // MARK: - RequestRetrierProtocol
-    open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
+    open func retryRequest(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         if request.isCancelled { return }
 
         guard let filter = requestRetryFilter else {
@@ -345,7 +345,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
         }
     }
 
-    private func retryProcess(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
+    private func retryProcess(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         let retryCount = request.requestRetryCount()
         let remainCount = retryCount - (request.requestTotalCount - 1)
         var canRetry = retryCount < 0 || remainCount > 0
@@ -356,14 +356,13 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             canRetry = (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - request.requestStartTime + waitTime) < timeoutInterval)
         }
 
-        guard canRetry, let response = response as? HTTPURLResponse,
-              request.requestRetryValidator(response, responseObject: responseObject, error: error) else {
+        guard canRetry, request.requestRetryValidator(response as? HTTPURLResponse, responseObject: responseObject, error: error) else {
             completionHandler(false)
             return
         }
 
         let sendableWaitTime = waitTime
-        request.requestRetryProcessor(response, responseObject: responseObject, error: error) { shouldRetry in
+        request.requestRetryProcessor(response as? HTTPURLResponse, responseObject: responseObject, error: error) { shouldRetry in
             if request.isCancelled { return }
 
             if shouldRetry {

@@ -130,8 +130,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var requestRetryCount: Int?
         public private(set) var requestRetryInterval: TimeInterval?
         public private(set) var requestRetryTimeout: TimeInterval?
-        public private(set) var requestRetryValidator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-        public private(set) var requestRetryProcessor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?
+        public private(set) var requestRetryValidator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        public private(set) var requestRetryProcessor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?
         public private(set) var requestCompletePreprocessor: (@Sendable (HTTPRequest) -> Void)?
         public private(set) var requestCompleteFilter: Completion?
         public private(set) var requestFailedPreprocessor: (@Sendable (HTTPRequest) -> Void)?
@@ -421,14 +421,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求重试验证方法，默认检查状态码和错误
         @discardableResult
-        public func requestRetryValidator(_ validator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
+        public func requestRetryValidator(_ validator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
             requestRetryValidator = validator
             return self
         }
 
         /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
         @discardableResult
-        public func requestRetryProcessor(_ processor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?) -> Self {
+        public func requestRetryProcessor(_ processor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?) -> Self {
             requestRetryProcessor = processor
             return self
         }
@@ -878,17 +878,17 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求重试验证方法，默认检查状态码和错误
-    open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+    open func requestRetryValidator(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?) -> Bool {
         if let validator = builder?.requestRetryValidator {
             return validator(self, response, responseObject, error)
         } else {
-            let statusCode = response.statusCode
+            let statusCode = response?.statusCode ?? 0
             return error != nil || statusCode < 200 || statusCode > 299
         }
     }
 
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
-    open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (Bool) -> Void) {
+    open func requestRetryProcessor(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (Bool) -> Void) {
         if let processor = builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
