@@ -91,7 +91,7 @@ open class AlamofireImpl: NSObject, RequestPlugin, @unchecked Sendable {
         if let cachePolicy = request.requestCachePolicy() {
             urlRequest.cachePolicy = cachePolicy
         }
-        RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
+        try RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
 
         return urlRequest
     }

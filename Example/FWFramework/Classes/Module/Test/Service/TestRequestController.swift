@@ -17,8 +17,8 @@ class AppRequest: HTTPRequest, @unchecked Sendable {
         }
     }
 
-    override func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        super.urlRequestFilter(&urlRequest)
+    override func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
+        try super.urlRequestFilter(&urlRequest)
 
         urlRequest.setValue("", forHTTPHeaderField: "Authorization")
     }
@@ -69,7 +69,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
         30
     }
 
-    override func urlRequestFilter(_ urlRequest: inout URLRequest) {
+    override func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
         urlRequest.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
 
         // 一般在filterUrlRequest中进行请求签名，注意header不能含有中文等非法字符

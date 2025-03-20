@@ -15,7 +15,7 @@ public protocol RequestFilterProtocol: AnyObject {
     func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
 
     /// 请求URLRequest过滤器，处理后才发送请求
-    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest)
+    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws
 
     /// 请求Response过滤器，处理后才调用回调
     func filterResponse(for request: HTTPRequest) throws
@@ -28,7 +28,7 @@ extension RequestFilterProtocol {
     }
 
     /// 默认实现请求URLRequest过滤器，处理后才发送请求
-    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {}
+    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {}
 
     /// 默认实现请求Response过滤器，处理后才调用回调
     public func filterResponse(for request: HTTPRequest) throws {}

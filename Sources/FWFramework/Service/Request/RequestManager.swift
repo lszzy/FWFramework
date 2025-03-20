@@ -96,12 +96,12 @@ open class RequestManager: @unchecked Sendable {
     }
 
     /// 过滤URL请求
-    open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {
-        request.urlRequestFilter(&urlRequest)
+    open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {
+        try request.urlRequestFilter(&urlRequest)
 
         let filters = request.config.requestFilters
         for filter in filters {
-            filter.filterUrlRequest(&urlRequest, for: request)
+            try filter.filterUrlRequest(&urlRequest, for: request)
         }
 
         if request.requestSerializerType() == .JSON,

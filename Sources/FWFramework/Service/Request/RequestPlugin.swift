@@ -157,7 +157,7 @@ open class RequestPluginImpl: NSObject, RequestPlugin, @unchecked Sendable {
             urlRequest = try requestSerializer.request(method: request.requestMethod().rawValue, urlString: requestUrl.absoluteString, parameters: request.requestArgument())
         }
 
-        RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
+        try RequestManager.shared.filterUrlRequest(&urlRequest, for: request)
 
         return urlRequest
     }

@@ -123,7 +123,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var tag: Int?
         public private(set) var statusCodeValidator: (@Sendable (_ request: HTTPRequest) -> Bool)?
         public private(set) var jsonValidator: Any?
-        public private(set) var urlRequestFilter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        public private(set) var urlRequestFilter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) throws -> Void)?
         public private(set) var responseFilter: (@Sendable (_ request: HTTPRequest) throws -> Void)?
         public private(set) var responseMockValidator: (@Sendable (HTTPRequest) -> Bool)?
         public private(set) var responseMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
@@ -344,7 +344,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求发送前URLRequest过滤方法，默认不处理
         @discardableResult
-        public func urlRequestFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
+        public func urlRequestFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) throws -> Void)?) -> Self {
             urlRequestFilter = filter
             return self
         }
@@ -768,8 +768,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求发送前URLRequest过滤方法，默认不处理
-    open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        builder?.urlRequestFilter?(self, &urlRequest)
+    open func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
+        try builder?.urlRequestFilter?(self, &urlRequest)
     }
 
     /// 构建自定义URLRequest
