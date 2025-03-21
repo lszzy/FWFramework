@@ -66,28 +66,28 @@ class TestBridgeController: WebController {
         callbackButton.addTarget(self, action: #selector(callHandler(_:)), for: .touchUpInside)
         callbackButton.titleLabel?.font = font
         actionView.addSubview(callbackButton)
-        callbackButton.layoutChain.size(width: 60, height: 35).left(10).bottom(10)
+        callbackButton.layoutChain.size(width: 50, height: 35).left(10).bottom(10)
 
         let errorButton = UIButton(type: .roundedRect)
         errorButton.setTitle("Error", for: .normal)
         errorButton.addTarget(self, action: #selector(errorHandler(_:)), for: .touchUpInside)
         errorButton.titleLabel?.font = font
         actionView.addSubview(errorButton)
-        errorButton.layoutChain.left(70).size(toView: callbackButton).bottom(toView: callbackButton)
+        errorButton.layoutChain.left(60).size(toView: callbackButton).bottom(toView: callbackButton)
 
         let filterButton = UIButton(type: .roundedRect)
         filterButton.setTitle("Filter", for: .normal)
         filterButton.addTarget(self, action: #selector(filterHandler(_:)), for: .touchUpInside)
         filterButton.titleLabel?.font = font
         actionView.addSubview(filterButton)
-        filterButton.layoutChain.left(130).size(toView: callbackButton).bottom(toView: callbackButton)
+        filterButton.layoutChain.left(110).size(toView: callbackButton).bottom(toView: callbackButton)
 
         let reloadButton = UIButton(type: .roundedRect)
         reloadButton.setTitle("Reload", for: .normal)
         reloadButton.addTarget(webView, action: #selector(WKWebView.reload), for: .touchUpInside)
         reloadButton.titleLabel?.font = font
         actionView.addSubview(reloadButton)
-        reloadButton.layoutChain.left(190).size(toView: callbackButton).bottom(toView: callbackButton)
+        reloadButton.layoutChain.left(160).size(toView: callbackButton).bottom(toView: callbackButton)
 
         let jumpButton = UIButton(type: .roundedRect)
         jumpButton.setTitle("Jump", for: .normal)
@@ -96,7 +96,18 @@ class TestBridgeController: WebController {
         }
         jumpButton.titleLabel?.font = font
         actionView.addSubview(jumpButton)
-        jumpButton.layoutChain.left(250).size(toView: callbackButton).bottom(toView: callbackButton)
+        jumpButton.layoutChain.left(210).size(toView: callbackButton).bottom(toView: callbackButton)
+        
+        let wordButton = UIButton(type: .roundedRect)
+        wordButton.setTitle("Word", for: .normal)
+        wordButton.app.addTouch { _ in
+            let webController = WebController()
+            webController.requestUrl = ModuleBundle.resourceURL("Word.html")?.absoluteString
+            Navigator.push(webController)
+        }
+        wordButton.titleLabel?.font = font
+        actionView.addSubview(wordButton)
+        wordButton.layoutChain.left(260).size(toView: callbackButton).bottom(toView: callbackButton)
     }
 
     override func setupLayout() {
