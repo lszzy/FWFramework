@@ -6,10 +6,6 @@
 //
 
 import CommonCrypto
-import Foundation
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 // MARK: - Wrapper+Data
 extension Wrapper where Base == Data {

@@ -15,12 +15,12 @@ let package = Package(
             targets: ["FWFramework"]
         ),
         .library(
-            name: "FWSwiftUI",
-            targets: ["FWSwiftUI"]
+            name: "FWUIKit",
+            targets: ["FWUIKit"]
         ),
         .library(
-            name: "FWPluginModule",
-            targets: ["FWPluginModule"]
+            name: "FWSwiftUI",
+            targets: ["FWSwiftUI"]
         ),
         .library(
             name: "FWPluginCalendar",
@@ -76,18 +76,18 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FWSwiftUI",
+            name: "FWUIKit",
             dependencies: ["FWFramework"],
-            path: "Sources/FWSwiftUI",
+            path: "Sources/FWUIKit",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
             ]
         ),
         .target(
-            name: "FWPluginModule",
-            dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Module",
+            name: "FWSwiftUI",
+            dependencies: ["FWUIKit"],
+            path: "Sources/FWSwiftUI",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

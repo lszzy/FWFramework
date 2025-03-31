@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '13.0'
   s.swift_version         = '5'
   s.frameworks            = ['Foundation', 'UIKit']
-  s.default_subspecs      = ['FWFramework']
+  s.default_subspecs      = ['FWFramework', 'FWUIKit']
   
   s.subspec 'FWFramework' do |ss|
     ss.subspec 'Kernel' do |sss|
@@ -30,15 +30,22 @@ Pod::Spec.new do |s|
       sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Toolkit'
     end
-    
-    ss.subspec 'Plugin' do |sss|
-      sss.source_files = 'Sources/FWFramework/Plugin/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Service'
+  end
+  
+  s.subspec 'FWUIKit' do |ss|
+    ss.subspec 'Toolkit' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Toolkit/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Toolkit'
     end
     
+    ss.subspec 'Plugin' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+      
     ss.subspec 'Module' do |sss|
-      sss.source_files = 'Sources/FWFramework/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Plugin'
+      sss.source_files = 'Sources/FWUIKit/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
   end
   
@@ -46,7 +53,7 @@ Pod::Spec.new do |s|
     ss.subspec 'Toolkit' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Toolkit/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Plugin'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
     
     ss.subspec 'Plugin' do |sss|
@@ -63,11 +70,6 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWPlugin' do |ss|
-    ss.subspec 'Module' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Module'
-    end
-      
     ss.subspec 'Contacts' do |sss|
       sss.source_files = 'Sources/FWPlugin/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
@@ -96,7 +98,7 @@ Pod::Spec.new do |s|
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
-      sss.dependency 'FWFramework/FWFramework/Plugin'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
     
     ss.subspec 'Alamofire' do |sss|
@@ -108,7 +110,7 @@ Pod::Spec.new do |s|
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWPlugin/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
-      sss.dependency 'FWFramework/FWFramework/Plugin'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
     
     ss.subspec 'MMKV' do |sss|
