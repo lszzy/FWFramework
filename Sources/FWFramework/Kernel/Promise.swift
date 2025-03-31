@@ -19,11 +19,11 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
     public var errorUserInfo: [String: Any] {
         switch self {
         case .failed:
-            return [NSLocalizedDescriptionKey: "Promise failed."]
+            return [NSLocalizedDescriptionKey: "Promise failed"]
         case .validation:
-            return [NSLocalizedDescriptionKey: "Promise validation failed."]
+            return [NSLocalizedDescriptionKey: "Promise validation failed"]
         case .timeout:
-            return [NSLocalizedDescriptionKey: "Promise timeout."]
+            return [NSLocalizedDescriptionKey: "Promise timeout"]
         }
     }
 }

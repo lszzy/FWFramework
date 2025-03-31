@@ -63,7 +63,7 @@ open class Icon {
     open class func iconNamed(_ name: String, size: CGFloat) -> Icon? {
         var iconClass = Configuration.iconMappers[name]
         if iconClass == nil {
-            iconClass = sharedLoader.load(name)
+            iconClass = try? sharedLoader.load(name)
             if let iconClass {
                 registerClass(iconClass)
             }

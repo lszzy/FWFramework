@@ -559,7 +559,7 @@ extension TestRouter: AutoloadProtocol {
             if input == TestRouter.loaderUrl {
                 return TestRouterResultController.self
             }
-            return nil
+            throw LoaderError.failed
         }))
 
         Router.routeFilter = { context in

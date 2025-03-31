@@ -125,7 +125,7 @@ public class Mediator: @unchecked Sendable {
         let moduleId = String(describing: type as AnyObject)
         var moduleType = shared.modulePool[moduleId]
         if moduleType == nil {
-            var module = sharedLoader.load(type)
+            var module = try? sharedLoader.load(type)
             if module == nil, moduleId.hasSuffix("Protocol") {
                 module = NSClassFromString(moduleId.replacingOccurrences(of: "Protocol", with: "")) as? ModuleProtocol.Type
             }

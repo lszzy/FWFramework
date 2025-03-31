@@ -111,7 +111,7 @@ public class PluginManager: @unchecked Sendable {
         let pluginId = String(describing: type as AnyObject)
         var target = shared.pluginPool[pluginId]
         if target == nil {
-            var object = sharedLoader.load(type)
+            var object = try? sharedLoader.load(type)
             if object == nil, pluginId.hasSuffix("Protocol") {
                 object = NSClassFromString(pluginId.replacingOccurrences(of: "Protocol", with: ""))
             }
