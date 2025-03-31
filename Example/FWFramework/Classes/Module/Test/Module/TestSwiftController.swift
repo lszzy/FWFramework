@@ -205,7 +205,7 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
     }
 }
 
-class SwiftTestRequestView: UIView, SetupViewProtocol, EventViewProtocol {
+class SwiftTestRequestView: UIView, StandardViewProtocol, EventViewProtocol {
     enum EventName {
         static let refresh = Notification.Name("refresh")
     }
@@ -219,7 +219,17 @@ class SwiftTestRequestView: UIView, SetupViewProtocol, EventViewProtocol {
     private var emptyView: PlaceholderView? {
         app.showingEmptyView as? PlaceholderView
     }
-
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setupStandard()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func setupSubviews() {
         app.showEmptyView(text: nil, action: "刷新") { [weak self] _ in
             self?.triggerEvent(EventName.refresh)

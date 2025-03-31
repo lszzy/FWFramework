@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: - SetupViewProtocol
-/// 通用视图初始化协议，init自动调用
+// MARK: - StandardViewProtocol
+/// 通用规范视图协议，需init手工调用
 ///
 /// 渲染数据规范示例：
 /// 1. 无需外部数据时，实现 setupData() ，示例如下：
@@ -24,25 +24,32 @@ import UIKit
 ///     ...
 /// }
 /// ```
-@MainActor public protocol SetupViewProtocol {
-    /// 初始化完成，init自动调用，默认空实现
+@MainActor public protocol StandardViewProtocol {
+    /// 初始化完成，需init手工调用，默认空实现
     func didInitialize()
 
-    /// 初始化子视图，init自动调用，默认空实现
+    /// 初始化子视图，需init手工调用，默认空实现
     func setupSubviews()
 
-    /// 初始化布局，init自动调用，默认空实现
+    /// 初始化布局，需init手工调用，默认空实现
     func setupLayout()
 }
 
-extension SetupViewProtocol where Self: UIView {
-    /// 初始化完成，init自动调用，默认空实现
+extension StandardViewProtocol where Self: UIView {
+    /// 初始化规范，需init手工调用，默认实现
+    public func setupStandard() {
+        didInitialize()
+        setupSubviews()
+        setupLayout()
+    }
+    
+    /// 初始化完成，需init手工调用，默认空实现
     public func didInitialize() {}
 
-    /// 初始化子视图，init自动调用，默认空实现
+    /// 初始化子视图，需init手工调用，默认空实现
     public func setupSubviews() {}
 
-    /// 初始化布局，init自动调用，默认空实现
+    /// 初始化布局，需init手工调用，默认空实现
     public func setupLayout() {}
 }
 
@@ -83,46 +90,5 @@ extension EventViewProtocol where Self: UIView {
     /// 触发指定事件，通知代理，可附带对象和用户信息
     public func triggerEvent(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         triggerEvent(Notification(name: name, object: object, userInfo: userInfo))
-    }
-}
-
-// MARK: - FrameworkAutoloader+ViewProtocol
-extension FrameworkAutoloader {
-    @objc static func loadModule_ViewProtocol() {
-        swizzleViewProtocol()
-    }
-
-    private static func swizzleViewProtocol() {
-        NSObject.fw.swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.init(frame:)),
-            methodSignature: (@convention(c) (UIView, Selector, CGRect) -> UIView).self,
-            swizzleSignature: (@convention(block) @MainActor (UIView, CGRect) -> UIView).self
-        ) { store in { selfObject, frame in
-            let view = store.original(selfObject, store.selector, frame)
-
-            if let viewProtocol = view as? SetupViewProtocol {
-                viewProtocol.didInitialize()
-                viewProtocol.setupSubviews()
-                viewProtocol.setupLayout()
-            }
-            return view
-        }}
-
-        NSObject.fw.swizzleInstanceMethod(
-            UIView.self,
-            selector: #selector(UIView.init(coder:)),
-            methodSignature: (@convention(c) (UIView, Selector, NSCoder) -> UIView?).self,
-            swizzleSignature: (@convention(block) @MainActor (UIView, NSCoder) -> UIView?).self
-        ) { store in { selfObject, coder in
-            guard let view = store.original(selfObject, store.selector, coder) else { return nil }
-
-            if let viewProtocol = view as? SetupViewProtocol {
-                viewProtocol.didInitialize()
-                viewProtocol.setupSubviews()
-                viewProtocol.setupLayout()
-            }
-            return view
-        }}
     }
 }
