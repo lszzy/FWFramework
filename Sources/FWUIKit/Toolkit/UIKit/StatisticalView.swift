@@ -1338,9 +1338,9 @@ extension TextTagCollectionView {
     }
 }
 
-// MARK: - Autoloader+Module
-@objc extension Autoloader {
-    static func loadPlugin_Module() {
+// MARK: - FrameworkAutoloader+StatisticalView
+@objc extension FrameworkAutoloader {
+    static func loadToolkit_StatisticalView() {
         BannerView.trackClickBlock = { view, indexPath in
             view.fw.statisticalTrackClick(indexPath: indexPath)
         }
