@@ -10,22 +10,6 @@ import Foundation
 /// 请求管理器
 open class RequestManager: @unchecked Sendable {
     public static let shared = RequestManager()
-    
-    /// 自定义请求插件，未设置时自动从插件池加载
-    open var requestPlugin: RequestPlugin! {
-        get {
-            if let requestPlugin = _requestPlugin {
-                return requestPlugin
-            } else if let requestPlugin = PluginManager.loadPlugin(RequestPlugin.self) {
-                return requestPlugin
-            }
-            return RequestPluginImpl.shared
-        }
-        set {
-            _requestPlugin = newValue
-        }
-    }
-    private var _requestPlugin: RequestPlugin?
 
     private var requestsRecord: [String: HTTPRequest] = [:]
     private var downloadFolderName = "Incomplete"
@@ -59,13 +43,13 @@ open class RequestManager: @unchecked Sendable {
                 try? resumeData?.write(to: localUrl, options: .atomic)
             })
         } else {
-            requestPlugin.cancelRequest(request)
+            request.config.requestPlugin.cancelRequest(request)
         }
 
         finishRequest(request)
 
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CANCELLED===========\n%@%@ %@:\n%@", "⏹️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
@@ -92,16 +76,16 @@ open class RequestManager: @unchecked Sendable {
             return url
         }
 
-        let filters = RequestConfig.shared.requestFilters
+        let filters = request.config.requestFilters
         for filter in filters {
             requestUrl = filter.filterUrl(requestUrl, for: request)
         }
 
         let baseUrl: String
         if request.useCDN() {
-            baseUrl = request.cdnUrl().count > 0 ? request.cdnUrl() : RequestConfig.shared.cdnUrl
+            baseUrl = request.cdnUrl().count > 0 ? request.cdnUrl() : request.config.cdnUrl
         } else {
-            baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : RequestConfig.shared.baseUrl
+            baseUrl = request.baseUrl().count > 0 ? request.baseUrl() : request.config.baseUrl
         }
 
         var url = URL.fw.url(string: baseUrl)
@@ -115,7 +99,7 @@ open class RequestManager: @unchecked Sendable {
     open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {
         try request.urlRequestFilter(&urlRequest)
 
-        let filters = RequestConfig.shared.requestFilters
+        let filters = request.config.requestFilters
         for filter in filters {
             try filter.filterUrlRequest(&urlRequest, for: request)
         }
@@ -185,7 +169,7 @@ open class RequestManager: @unchecked Sendable {
 
     private func startRequest(_ request: HTTPRequest) {
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST STARTED===========\n%@%@ %@:\n%@", "▶️ ", request.requestMethod().rawValue, request.requestUrl(), String.fw.safeString(request.requestArgument()))
         }
         #endif
@@ -212,7 +196,7 @@ open class RequestManager: @unchecked Sendable {
             request.requestTotalCount += 1
             request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
 
-            if let requestRetrier = RequestConfig.shared.requestRetrier {
+            if let requestRetrier = request.config.requestRetrier {
                 let sendableResponseObject = SendableValue(responseObject)
                 requestRetrier.retryRequest(request, response: response, responseObject: responseObject, error: error) { [weak self] shouldRetry in
                     if shouldRetry {
@@ -236,7 +220,7 @@ open class RequestManager: @unchecked Sendable {
     }
 
     private func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
-        requestPlugin.startDataTask(for: request, completionHandler: completionHandler)
+        request.config.requestPlugin.startDataTask(for: request, completionHandler: completionHandler)
     }
 
     private func startDownloadTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, URL?, Error?) -> Void)?) {
@@ -269,7 +253,7 @@ open class RequestManager: @unchecked Sendable {
             }
         }
 
-        requestPlugin.startDownloadTask(for: request, resumeData: resumeData, destination: downloadTargetPath, completionHandler: completionHandler)
+        request.config.requestPlugin.startDownloadTask(for: request, resumeData: resumeData, destination: downloadTargetPath, completionHandler: completionHandler)
     }
 
     private func handleResponse(with requestIdentifier: String, response: URLResponse?, responseObject: Any?, error: Error?) {
@@ -293,7 +277,7 @@ open class RequestManager: @unchecked Sendable {
         }
 
         #if DEBUG
-        if !succeed, RequestConfig.shared.debugMockEnabled, request.responseMockValidator() {
+        if !succeed, request.config.debugMockEnabled, request.responseMockValidator() {
             succeed = request.responseMockProcessor()
             if succeed {
                 requestError = nil
@@ -311,7 +295,7 @@ open class RequestManager: @unchecked Sendable {
         }
 
         if succeed {
-            let filters = RequestConfig.shared.requestFilters
+            let filters = request.config.requestFilters
             for filter in filters {
                 do {
                     try filter.filterResponse(for: request)
@@ -337,7 +321,7 @@ open class RequestManager: @unchecked Sendable {
             throw RequestError.validationInvalidStatusCode(request.responseStatusCode)
         }
 
-        if let requestValidator = RequestConfig.shared.requestValidator,
+        if let requestValidator = request.config.requestValidator,
            !requestValidator.validateResponse(for: request) {
             throw RequestError.validationInvalidJSONFormat
         }
@@ -355,7 +339,7 @@ open class RequestManager: @unchecked Sendable {
 
     private func requestDidSucceed(_ request: HTTPRequest) {
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST SUCCEED===========\n%@%@%@ %@:\n%@", "✅ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.responseString))
         }
         #endif
@@ -377,7 +361,7 @@ open class RequestManager: @unchecked Sendable {
     private func requestDidFail(_ request: HTTPRequest, error: Error) {
         request.error = error
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if request.config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST FAILED===========\n%@%@%@ %@:\n%@", "❌ ", request.requestMethod().rawValue, request.requestTotalCount > 1 ? " \(request.requestTotalCount)x" : "", request.requestUrl(), String.fw.safeString(request.responseJSONObject ?? request.error))
         }
         #endif

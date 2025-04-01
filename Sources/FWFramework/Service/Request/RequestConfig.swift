@@ -39,6 +39,23 @@ extension RequestFilterProtocol {
 open class RequestConfig: @unchecked Sendable {
     public static let shared = RequestConfig()
 
+    /// 自定义请求插件，未设置时自动从插件池加载
+    open var requestPlugin: RequestPlugin! {
+        get {
+            if let requestPlugin = _requestPlugin {
+                return requestPlugin
+            } else if let requestPlugin = PluginManager.loadPlugin(RequestPlugin.self) {
+                return requestPlugin
+            }
+            return RequestPluginImpl.shared
+        }
+        set {
+            _requestPlugin = newValue
+        }
+    }
+
+    private var _requestPlugin: RequestPlugin?
+
     /// 当前请求重试器，默认全局重试器，可清空
     open var requestRetrier: RequestRetrierProtocol? = RequestRetrier.default
 

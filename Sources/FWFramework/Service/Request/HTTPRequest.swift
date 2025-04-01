@@ -511,7 +511,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     open var preloadCacheModel: Bool {
         get {
             if let preload = _preloadCacheModel { return preload }
-            return RequestConfig.shared.preloadCacheFilter?(self) ?? false
+            return config.preloadCacheFilter?(self) ?? false
         }
         set {
             _preloadCacheModel = newValue
@@ -636,6 +636,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     private var _error: Error?
 
+    /// 自定义请求配置，未设置时使用全局配置
+    open var config: RequestConfig! {
+        get { _config ?? RequestConfig.shared }
+        set { _config = newValue }
+    }
+
+    private var _config: RequestConfig?
+
     /// 请求构建器，从构建器初始化时才有值
     open private(set) var builder: Builder?
 
@@ -646,7 +654,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
                 return accessory
             }
 
-            let accessory = RequestConfig.shared.contextAccessoryBlock?(self) ?? RequestContextAccessory()
+            let accessory = config.contextAccessoryBlock?(self) ?? RequestContextAccessory()
             _contextAccessory = accessory
             return accessory
         }
@@ -787,7 +795,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 调试请求Mock验证器，默认判断404
     open func responseMockValidator() -> Bool {
-        if let validator = builder?.responseMockValidator ?? RequestConfig.shared.debugMockValidator {
+        if let validator = builder?.responseMockValidator ?? config.debugMockValidator {
             return validator(self)
         }
         return responseStatusCode == 404
@@ -795,7 +803,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 调试请求Mock处理器，请求失败时且回调前在后台线程调用
     open func responseMockProcessor() -> Bool {
-        if let processor = builder?.responseMockProcessor ?? RequestConfig.shared.debugMockProcessor {
+        if let processor = builder?.responseMockProcessor ?? config.debugMockProcessor {
             return processor(self)
         }
         return false
@@ -809,7 +817,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     /// 是否后台预加载响应模型，默认false，仅ResponseModelRequest生效
     open func preloadResponseModel() -> Bool {
         if let preload = _preloadResponseModel { return preload }
-        return RequestConfig.shared.preloadModelFilter?(self) ?? false
+        return config.preloadModelFilter?(self) ?? false
     }
 
     /// 请求完成预处理器，后台线程调用。默认写入请求缓存、预加载响应模型
@@ -904,7 +912,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         if let data = builder?.cacheSensitiveData {
             return data
         }
-        return RequestConfig.shared.cacheSensitiveFilter?(self)
+        return config.cacheSensitiveFilter?(self)
     }
 
     /// 缓存文件名过滤器，参数为请求参数，默认返回argument
@@ -947,7 +955,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         }
 
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST CACHED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
@@ -970,7 +978,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         guard !_isCancelled, isStarted else { return self }
 
         isSuspended = true
-        RequestManager.shared.requestPlugin.suspendRequest(self)
+        config.requestPlugin.suspendRequest(self)
         return self
     }
 
@@ -983,7 +991,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
             start()
         } else {
             isSuspended = false
-            RequestManager.shared.requestPlugin.resumeRequest(self)
+            config.requestPlugin.resumeRequest(self)
         }
         return self
     }
@@ -1164,14 +1172,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
             throw RequestError.cacheInvalidCacheTime
         }
 
-        guard let cache = try? RequestConfig.shared.requestCache?.loadCache(for: self) else {
+        guard let cache = try? config.requestCache?.loadCache(for: self) else {
             throw RequestError.cacheInvalidCacheData
         }
 
         do {
             _cacheMetadata = try validateCache(cache.metadata)
         } catch {
-            try? RequestConfig.shared.requestCache?.clearCache(for: self)
+            try? config.requestCache?.clearCache(for: self)
             throw error
         }
 
@@ -1192,7 +1200,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     /// 保存指定数据到缓存文件
     @discardableResult
     open func saveCache(_ data: Data?) -> Bool {
-        guard let data, let requestCache = RequestConfig.shared.requestCache else { return false }
+        guard let data, let requestCache = config.requestCache else { return false }
         guard cacheTimeInSeconds() > 0, !isDataFromCache else { return false }
 
         let cacheMetadata = RequestCacheMetadata()
@@ -1216,9 +1224,9 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         let requestUrl = requestUrl()
         let baseUrl: String
         if useCDN() {
-            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : RequestConfig.shared.cdnUrl
+            baseUrl = !cdnUrl().isEmpty ? cdnUrl() : config.cdnUrl
         } else {
-            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : RequestConfig.shared.baseUrl
+            baseUrl = !self.baseUrl().isEmpty ? self.baseUrl() : config.baseUrl
         }
         let argument = cacheArgumentFilter(requestArgument())
         let requestInfo = String(format: "Method:%@ Host:%@ Url:%@ Argument:%@", requestMethod().rawValue, baseUrl, requestUrl, String.fw.safeString(argument))
@@ -1231,7 +1239,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         try loadCache()
 
         #if DEBUG
-        if RequestConfig.shared.debugLogEnabled {
+        if config.debugLogEnabled {
             Logger.debug(group: Logger.fw.moduleName, "\n===========REQUEST PRELOADED===========\n%@%@ %@:\n%@", "💾 ", requestMethod().rawValue, requestUrl(), String.fw.safeString(responseJSONObject ?? responseString))
         }
         #endif
