@@ -424,7 +424,7 @@ public protocol LogFormatter {
 }
 
 /// 默认日志格式化处理器实现
-public class LogFormatterImpl: LogFormatter {
+public class LogFormatterImpl: LogFormatter, @unchecked Sendable {
     public static let shared = LogFormatterImpl()
     
     /// 自定义日期格式化

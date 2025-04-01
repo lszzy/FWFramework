@@ -23,7 +23,7 @@ public enum LoaderError: Int, Swift.Error, CustomNSError {
 }
 
 /// 通用加载器抽象类
-open class LoaderAbstract<Input, Output>: Identifiable, Equatable {
+open class LoaderAbstract<Input, Output>: Identifiable, Equatable, @unchecked Sendable {
     public init() {}
     
     /// 指定输入，加载输出，子类必须实现
@@ -37,7 +37,7 @@ open class LoaderAbstract<Input, Output>: Identifiable, Equatable {
 }
 
 /// 通用block加载器
-public class LoaderBlock<Input, Output>: LoaderAbstract<Input, Output> {
+public class LoaderBlock<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Sendable {
     private let block: @Sendable (Input) throws -> Output
     
     public init(_ block: @escaping @Sendable (Input) throws -> Output) {
@@ -51,7 +51,7 @@ public class LoaderBlock<Input, Output>: LoaderAbstract<Input, Output> {
 }
 
 /// 通用target-action加载器，兼容Output | Error | Result<Output,Error>
-public class LoaderTargetAction<Input, Output>: LoaderAbstract<Input, Output> {
+public class LoaderTargetAction<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Sendable {
     private weak var target: AnyObject?
     private let action: Selector
     
@@ -131,7 +131,7 @@ public class Loader<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Se
 
 // MARK: - AsyncLoader
 /// 通用异步加载器抽象类
-open class AsyncLoaderAbstract<Input, Output>: Identifiable, Equatable {
+open class AsyncLoaderAbstract<Input, Output>: Identifiable, Equatable, @unchecked Sendable {
     public init() {}
     
     /// 指定输入，异步加载输出，必须调用completion，子类必须实现
@@ -145,7 +145,7 @@ open class AsyncLoaderAbstract<Input, Output>: Identifiable, Equatable {
 }
 
 /// 通用异步block加载器
-public class AsyncLoaderBlock<Input, Output>: AsyncLoaderAbstract<Input, Output> {
+public class AsyncLoaderBlock<Input, Output>: AsyncLoaderAbstract<Input, Output>, @unchecked Sendable {
     private let block: @Sendable (_ input: Input, _ completion: @escaping @Sendable (Result<Output, Error>) -> Void) -> Void
     
     public init(_ block: @escaping @Sendable (_ input: Input, _ completion: @escaping @Sendable (Result<Output, Error>) -> Void) -> Void) {
@@ -159,7 +159,7 @@ public class AsyncLoaderBlock<Input, Output>: AsyncLoaderAbstract<Input, Output>
 }
 
 /// 通用异步target-action加载器，兼容Output | Error | Result<Output,Error>
-public class AsyncLoaderTargetAction<Input, Output>: AsyncLoaderAbstract<Input, Output> {
+public class AsyncLoaderTargetAction<Input, Output>: AsyncLoaderAbstract<Input, Output>, @unchecked Sendable {
     private weak var target: AnyObject?
     private let action: Selector
     
@@ -215,12 +215,13 @@ public class AsyncLoader<Input, Output>: AsyncLoaderAbstract<Input, Output>, @un
             return
         }
         
+        let sendableInput = SendableValue(input)
         loader.load(input) { result in
             switch result {
                 case let .success(output):
                     completion(.success(output))
                 case let .failure(error):
-                    self.load(input, using: Array(loaders.suffix(from: 1)), error: error, completion: completion)
+                    self.load(sendableInput.value, using: Array(loaders.suffix(from: 1)), error: error, completion: completion)
             }
         }
     }
@@ -229,7 +230,7 @@ public class AsyncLoader<Input, Output>: AsyncLoaderAbstract<Input, Output>, @un
 // MARK: - Concurrency+AsyncLoaderAbstract
 extension AsyncLoaderAbstract {
     /// 指定输入，协程方式异步加载输出，默认调用`load(_:completion:)`
-    public func load(_ input: Input) async throws -> Output {
+    public func load(_ input: Input) async throws -> Output where Output: Sendable {
         try await withCheckedThrowingContinuation { continuation in
             load(input) { result in
                 switch result {

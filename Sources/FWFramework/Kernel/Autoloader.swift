@@ -127,13 +127,13 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
 
 // MARK: - FrameworkAutoloader
 /// 框架内部自动加载器，自动加载框架内置组件
-class FrameworkAutoloader: NSObject, @unchecked Sendable {
+public class FrameworkAutoloader: NSObject, @unchecked Sendable {
     static let shared = FrameworkAutoloader()
 
     fileprivate var debugMethods: [String] = []
 
     /// 内部加载器调试描述
-    override class func debugDescription() -> String {
+    override public class func debugDescription() -> String {
         var debugDescription = ""
         var debugCount = 0
         for methodName in shared.debugMethods {
