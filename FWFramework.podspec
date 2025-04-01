@@ -33,11 +33,6 @@ Pod::Spec.new do |s|
   end
   
   s.subspec 'FWUIKit' do |ss|
-    ss.subspec 'Toolkit' do |sss|
-      sss.source_files = 'Sources/FWUIKit/Toolkit/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Toolkit'
-    end
-    
     ss.subspec 'Plugin' do |sss|
       sss.source_files = 'Sources/FWUIKit/Plugin/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
@@ -47,51 +42,56 @@ Pod::Spec.new do |s|
       sss.source_files = 'Sources/FWUIKit/Module/**/*.swift'
       sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
+    
+    ss.subspec 'Extend' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Extend/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Module'
+    end
   end
   
   s.subspec 'FWSwiftUI' do |ss|
-    ss.subspec 'Toolkit' do |sss|
-      sss.weak_frameworks = 'SwiftUI', 'Combine'
-      sss.source_files = 'Sources/FWSwiftUI/Toolkit/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
-    end
-    
     ss.subspec 'Plugin' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Plugin/**/*.swift'
-      sss.dependency 'FWFramework/FWSwiftUI/Toolkit'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
     
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWSwiftUI/Toolkit'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
+    end
+    
+    ss.subspec 'Extend' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Extend/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
     end
   end
   
   s.subspec 'FWPlugin' do |ss|
     ss.subspec 'Contacts' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Contacts/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeContacts.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Microphone/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeMicrophone.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Calendar/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeCalendar.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Tracking/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeTracking.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Biometry' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Biometry/**/*.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeBiometry.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
