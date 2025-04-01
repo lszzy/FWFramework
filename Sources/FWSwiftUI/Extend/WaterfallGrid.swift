@@ -28,13 +28,16 @@ public struct WaterfallGrid<Data, ID, Content>: View where Data: RandomAccessCol
     public var body: some View {
         VStack {
             GeometryReader { geometry in
+                let styleConfig = self.style
+                let scrollConfig = self.scrollOptions
                 grid(in: geometry)
                     .onPreferenceChange(ElementPreferenceKey.self, perform: { preferences in
+                        let sendablePreferences = SendableValue(preferences)
                         DispatchQueue.global(qos: .userInteractive).async {
-                            let (alignmentGuides, gridHeight) = alignmentsAndGridHeight(columns: style.columns,
-                                                                                        spacing: style.spacing,
-                                                                                        scrollDirection: scrollOptions.direction,
-                                                                                        preferences: preferences)
+                            let (alignmentGuides, gridHeight) = alignmentsAndGridHeight(columns: styleConfig.columns,
+                                                                                        spacing: styleConfig.spacing,
+                                                                                        scrollDirection: scrollConfig.direction,
+                                                                                        preferences: sendablePreferences.value)
                             DispatchQueue.main.async {
                                 self.alignmentGuides = alignmentGuides
                                 self.gridHeight = gridHeight
@@ -53,20 +56,21 @@ public struct WaterfallGrid<Data, ID, Content>: View where Data: RandomAccessCol
         return
             ZStack(alignment: .topLeading) {
                 ForEach(data, id: dataId) { element in
+                    let guideValue = alignmentGuides[element[keyPath: dataId]]
                     content(element)
                         .frame(width: scrollOptions.direction == .vertical ? columnWidth : nil,
                                height: scrollOptions.direction == .horizontal ? columnWidth : nil)
                         .background(PreferenceSetter(id: element[keyPath: dataId]))
-                        .alignmentGuide(.top, computeValue: { _ in alignmentGuides[element[keyPath: dataId]]?.y ?? 0 })
-                        .alignmentGuide(.leading, computeValue: { _ in alignmentGuides[element[keyPath: dataId]]?.x ?? 0 })
-                        .opacity(alignmentGuides[element[keyPath: dataId]] != nil ? 1 : 0)
+                        .alignmentGuide(.top, computeValue: { _ in guideValue?.y ?? 0 })
+                        .alignmentGuide(.leading, computeValue: { _ in guideValue?.x ?? 0 })
+                        .opacity(guideValue != nil ? 1 : 0)
                 }
             }
             .animation(loaded ? style.animation : nil, value: UUID())
     }
 
     // MARK: - Helpers
-    func alignmentsAndGridHeight(columns: Int, spacing: CGFloat, scrollDirection: Axis.Set, preferences: [ElementPreferenceData]) -> ([AnyHashable: CGPoint], CGFloat) {
+    nonisolated func alignmentsAndGridHeight(columns: Int, spacing: CGFloat, scrollDirection: Axis.Set, preferences: [ElementPreferenceData]) -> ([AnyHashable: CGPoint], CGFloat) {
         var heights = Array(repeating: CGFloat(0), count: columns)
         var alignmentGuides = [AnyHashable: CGPoint]()
 
@@ -170,7 +174,7 @@ struct ElementPreferenceData: Equatable {
 struct ElementPreferenceKey: PreferenceKey {
     typealias Value = [ElementPreferenceData]
 
-    static var defaultValue: [ElementPreferenceData] = []
+    static var defaultValue: [ElementPreferenceData] { [] }
 
     static func reduce(value: inout [ElementPreferenceData], nextValue: () -> [ElementPreferenceData]) {
         value.append(contentsOf: nextValue())
@@ -214,7 +218,7 @@ struct GridSyle {
     let animation: Animation?
 
     var columns: Int {
-        let screenSize = UIScreen.main.bounds.size
+        let screenSize = UIScreen.fw.screenSize
         return screenSize.width > screenSize.height ? columnsInLandscape : columnsInPortrait
     }
 }
