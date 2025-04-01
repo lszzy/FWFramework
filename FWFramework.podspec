@@ -71,27 +71,27 @@ Pod::Spec.new do |s|
   
   s.subspec 'FWPlugin' do |ss|
     ss.subspec 'Contacts' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeContacts.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/Contacts/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Microphone' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeMicrophone.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/Microphone/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Calendar' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeCalendar.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/Calendar/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
     ss.subspec 'Tracking' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeTracking.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/Tracking/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Biometry' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/AuthorizeBiometry.swift'
+      sss.source_files = 'Sources/FWPlugin/Authorize/Biometry/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     

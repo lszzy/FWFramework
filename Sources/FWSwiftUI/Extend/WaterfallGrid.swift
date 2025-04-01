@@ -7,6 +7,9 @@
 
 #if canImport(SwiftUI)
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - WaterfallGrid
 /// [WaterfallGrid](https://github.com/paololeonardi/WaterfallGrid)

@@ -96,7 +96,7 @@ let package = Package(
         .target(
             name: "FWPluginCalendar",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Calendar",
+            path: "Sources/FWPlugin/Authorize/Calendar",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -105,7 +105,7 @@ let package = Package(
         .target(
             name: "FWPluginContacts",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Contacts",
+            path: "Sources/FWPlugin/Authorize/Contacts",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -114,7 +114,7 @@ let package = Package(
         .target(
             name: "FWPluginMicrophone",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Microphone",
+            path: "Sources/FWPlugin/Authorize/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -123,7 +123,7 @@ let package = Package(
         .target(
             name: "FWPluginTracking",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Tracking",
+            path: "Sources/FWPlugin/Authorize/Tracking",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -132,7 +132,7 @@ let package = Package(
         .target(
             name: "FWPluginBiometry",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Biometry",
+            path: "Sources/FWPlugin/Authorize/Biometry",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

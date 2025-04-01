@@ -86,7 +86,7 @@ extension UIView: ArrayResultBuilderCompatible {}
     /// 初始化并批量配置子视图
     public init(
         frame: CGRect = .zero,
-        @ArrayResultBuilder<UIView> _ subviews: () -> [UIView]
+        @ArrayResultBuilder<UIView> subviews: () -> [UIView]
     ) {
         self.init(frame: frame)
         arrangeSubviews(subviews)
