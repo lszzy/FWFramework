@@ -98,11 +98,6 @@ open class RequestConfig: @unchecked Sendable {
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
 
-    /// 内部显示错误和加载条句柄
-    var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
-    var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-    var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-
     public init() {}
 
     /// 添加请求过滤器
@@ -162,6 +157,12 @@ open class RequestAccessory: RequestAccessoryProtocol {
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
+    actor Configuration {
+        static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
+        static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+        static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    }
+    
     /// 自定义显示错误方法，主线程优先调用，默认nil
     open var showErrorBlock: HTTPRequest.Completion?
     /// 自定义显示加载条方法，主线程优先调用，默认nil
@@ -252,7 +253,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         }
 
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.showErrorBlock?(request.context, error)
+            Configuration.showErrorBlock?(request.context, error)
         }
     }
 
@@ -269,7 +270,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.showLoadingBlock?(request.context)
+            Configuration.showLoadingBlock?(request.context)
         }
     }
 
@@ -284,7 +285,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.hideLoadingBlock?(request.context)
+            Configuration.hideLoadingBlock?(request.context)
         }
     }
 }

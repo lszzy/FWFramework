@@ -1339,8 +1339,8 @@ extension TextTagCollectionView {
 }
 
 // MARK: - FrameworkAutoloader+StatisticalView
-@objc extension FrameworkAutoloader {
-    static func loadToolkit_StatisticalView() {
+extension FrameworkAutoloader {
+    @objc static func loadToolkit_StatisticalView() {
         BannerView.trackClickBlock = { view, indexPath in
             view.fw.statisticalTrackClick(indexPath: indexPath)
         }
