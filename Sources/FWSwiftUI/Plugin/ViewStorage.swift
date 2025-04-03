@@ -193,7 +193,8 @@ private struct OnChangeOfFrame: ViewModifier {
     func body(content: Content) -> some View {
         content.background {
             GeometryReader { proxy in
-                InvisibleView()
+                Color.black.opacity(0.0001)
+                    .frame(width: 0, height: 0)
                     .onAppear {
                         self.oldSize = proxy.size
 

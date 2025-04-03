@@ -593,16 +593,17 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
             self.logPath = path
         // 相对路径: Libray/Caches/FWFramework/LogFile/path[shared]
         } else {
-            let logPath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "LogFile"])
+            var logPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+            logPath = (logPath as NSString).appendingPathComponent("FWFramework/LogFile")
             let fileName = path ?? ""
-            self.logPath = logPath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared")
+            self.logPath = (logPath as NSString).appendingPathComponent(!fileName.isEmpty ? fileName : "shared")
         }
         
         // 当前日志文件路径
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyyMMdd-HHmmss"
-        logFile = logPath.fw.appendingPath(dateFormatter.string(from: Date()) + ".log")
+        logFile = (logPath as NSString).appendingPathComponent(dateFormatter.string(from: Date()) + ".log")
         
         // 处理之前的日志文件
         processFiles()
@@ -627,15 +628,15 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
             if fileName.count == 12 {
                 if let fileTime = dateFormatter.date(from: String(fileName.prefix(8))),
                    (currentTime - fileTime.timeIntervalSince1970) >= Double(logKeepDays) * 86400 {
-                    try? FileManager.default.removeItem(atPath: logPath.fw.appendingPath(fileName))
+                    try? FileManager.default.removeItem(atPath: (logPath as NSString).appendingPathComponent(fileName))
                 }
                 continue
             }
             
             if !shouldMergeFiles || fileName.count != 19 { continue }
             
-            let filePath = logPath.fw.appendingPath(fileName)
-            let targetPath = logPath.fw.appendingPath(String(fileName.prefix(8)) + ".log")
+            let filePath = (logPath as NSString).appendingPathComponent(fileName)
+            let targetPath = (logPath as NSString).appendingPathComponent(String(fileName.prefix(8)) + ".log")
             var logText = String(format: "\n=====%@=====\n", fileName)
             logText += (try? String(contentsOfFile: filePath, encoding: .utf8)) ?? ""
             LoggerPluginFile.appendText(logText, atPath: targetPath)
