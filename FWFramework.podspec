@@ -59,13 +59,13 @@ Pod::Spec.new do |s|
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+      sss.dependency 'FWFramework/FWSwiftUI/Plugin'
     end
     
     ss.subspec 'Extend' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Extend/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+      sss.dependency 'FWFramework/FWSwiftUI/Module'
     end
   end
   
