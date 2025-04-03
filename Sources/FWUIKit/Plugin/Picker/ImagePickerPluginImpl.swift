@@ -8,6 +8,9 @@
 import Photos
 import PhotosUI
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ImagePickerPluginImpl
 /// 默认图片选取插件

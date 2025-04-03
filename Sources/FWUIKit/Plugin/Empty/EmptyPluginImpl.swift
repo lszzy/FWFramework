@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 默认空界面插件
 open class EmptyPluginImpl: NSObject, EmptyPlugin, @unchecked Sendable {

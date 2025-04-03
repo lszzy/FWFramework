@@ -173,7 +173,7 @@ open class TagCollectionView: UIView {
         setNeedsLayoutTagViews()
         layoutTagViews()
 
-        BannerView.trackExposureBlock?(self)
+        BannerView.Configuration.trackExposureBlock?(self)
     }
 
     open func indexOfTagAt(_ point: CGPoint) -> Int? {
@@ -208,11 +208,11 @@ open class TagCollectionView: UIView {
                 if let shouldSelect = delegate.tagCollectionView?(self, shouldSelectTag: tagView, at: i) {
                     if shouldSelect {
                         delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                        _ = BannerView.trackClickBlock?(self, IndexPath(row: i, section: 0))
+                        _ = BannerView.Configuration.trackClickBlock?(self, IndexPath(row: i, section: 0))
                     }
                 } else {
                     delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                    _ = BannerView.trackClickBlock?(self, IndexPath(row: i, section: 0))
+                    _ = BannerView.Configuration.trackClickBlock?(self, IndexPath(row: i, section: 0))
                 }
             }
         }
@@ -845,7 +845,7 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
         delegate?.textTagCollectionView?(self, didTapTag: label.label.text ?? "", at: index, selected: label.selected, tagConfig: label.config)
         onTapTag?(label.label.text ?? "", index, label.selected)
 
-        _ = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0))
+        _ = BannerView.Configuration.trackClickBlock?(self, IndexPath(row: index, section: 0))
     }
 
     open func tagCollectionView(_ tagCollectionView: TagCollectionView, sizeForTagAt index: Int) -> CGSize {

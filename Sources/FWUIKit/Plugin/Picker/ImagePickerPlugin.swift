@@ -9,6 +9,9 @@ import MobileCoreServices
 import Photos
 import PhotosUI
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - Wrapper+PHPhotoLibrary
 /// 通用相册：[PHPhotoLibrary sharedPhotoLibrary]

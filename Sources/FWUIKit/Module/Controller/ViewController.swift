@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ViewControllerProtocol
 /// 视图控制器挂钩协议，可覆写

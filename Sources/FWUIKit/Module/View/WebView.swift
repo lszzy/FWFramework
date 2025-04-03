@@ -8,6 +8,9 @@
 import JavaScriptCore
 import UIKit
 import WebKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - Wrapper+WKWebView
 @MainActor extension Wrapper where Base: WKWebView {

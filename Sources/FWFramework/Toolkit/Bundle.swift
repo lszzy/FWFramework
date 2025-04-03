@@ -16,8 +16,8 @@ import UIKit
 /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
 /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
 open class ModuleBundle: NSObject {
-    actor Configuration {
-        static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
+    @_spi(FW) public actor Configuration {
+        public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
     }
 
     private class Target: @unchecked Sendable {

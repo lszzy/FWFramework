@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - BannerView
 /// BannerView分页控件对齐方式枚举
@@ -44,21 +47,9 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 ///
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
-    private actor Configuration {
-        static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
-        static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
-    }
-
-    // MARK: - Track
-    // 框架内部统计点击和曝光扩展钩子句柄
-    @_spi(FW) public nonisolated static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)? {
-        get { Configuration.trackClickBlock }
-        set { Configuration.trackClickBlock = newValue }
-    }
-
-    @_spi(FW) public nonisolated static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)? {
-        get { Configuration.trackExposureBlock }
-        set { Configuration.trackExposureBlock = newValue }
+    @_spi(FW) public actor Configuration {
+        public static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
+        public static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
     }
 
     // MARK: - Accessor
@@ -548,10 +539,10 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         var cellTracked = false
         if let cell = collectionView.cellForItem(at: indexPath) {
-            cellTracked = BannerView.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = Configuration.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
         }
         if !cellTracked {
-            cellTracked = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = Configuration.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
         }
     }
 
@@ -589,7 +580,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         let itemIndex = flowLayout.currentPage ?? 0
         // 快速滚动时不计曝光次数
-        BannerView.trackExposureBlock?(self)
+        Configuration.trackExposureBlock?(self)
 
         if infiniteLoop {
             if itemIndex == totalItemsCount - 1 {
@@ -615,7 +606,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         scrollToPageControlIndex(currentIndex, animated: animated)
 
         if !animated, currentIndex != previousIndex {
-            BannerView.trackExposureBlock?(self)
+            Configuration.trackExposureBlock?(self)
         }
 
         if autoScroll {

@@ -10,6 +10,9 @@ import UIKit
 #if canImport(Vision)
 import Vision
 #endif
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ScanCode
 public protocol ScanCodeDelegate: AnyObject {

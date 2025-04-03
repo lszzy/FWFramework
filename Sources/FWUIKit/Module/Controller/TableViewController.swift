@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - TableDelegateControllerProtocol
 /// 表格代理控制器协议，数据源和事件代理为tableDelegate，可覆写

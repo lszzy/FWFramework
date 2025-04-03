@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 默认吐司插件
 open class ToastPluginImpl: NSObject, ToastPlugin, @unchecked Sendable {

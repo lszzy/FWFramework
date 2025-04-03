@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// AppDelegate基类
 open class AppResponder: UIResponder, UIApplicationDelegate {

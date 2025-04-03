@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - RequestViewControllerProtocol
 /// 通用请求视图控制器协议，可扩展重写

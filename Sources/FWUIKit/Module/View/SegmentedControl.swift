@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 public enum SegmentedControlSelectionStyle: Int, Sendable {
     case textWidthStripe
@@ -947,7 +950,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.scrollRectToVisible(rectToScrollTo, animated: animated)
 
         if !animated {
-            BannerView.trackExposureBlock?(self)
+            BannerView.Configuration.trackExposureBlock?(self)
         }
     }
 
@@ -1028,7 +1031,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
 
         indexChangedBlock?(index)
-        _ = BannerView.trackClickBlock?(self, IndexPath(row: index, section: 0))
+        _ = BannerView.Configuration.trackClickBlock?(self, IndexPath(row: index, section: 0))
     }
 
     private func resultingTitleTextAttributes() -> [NSAttributedString.Key: Any] {
@@ -1065,16 +1068,16 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
 
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            BannerView.trackExposureBlock?(self)
+            BannerView.Configuration.trackExposureBlock?(self)
         }
     }
 
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        BannerView.trackExposureBlock?(self)
+        BannerView.Configuration.trackExposureBlock?(self)
     }
 
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        BannerView.trackExposureBlock?(self)
+        BannerView.Configuration.trackExposureBlock?(self)
     }
 
     // MARK: - SegmentedAccessibilityDelegate

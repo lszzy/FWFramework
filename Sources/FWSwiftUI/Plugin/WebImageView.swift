@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
+@_spi(FW) import FWUIKit
 #endif
 
 /// 网络图片视图，仅支持静态图

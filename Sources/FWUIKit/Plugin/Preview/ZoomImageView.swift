@@ -8,6 +8,9 @@
 import AVFoundation
 import PhotosUI
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// ZoomImageView事件代理
 @MainActor @objc public protocol ZoomImageViewDelegate {

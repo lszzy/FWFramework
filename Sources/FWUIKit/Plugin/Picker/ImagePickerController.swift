@@ -7,6 +7,9 @@
 
 import Photos
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ImageAlbumController
 /// 相册列表事件代理

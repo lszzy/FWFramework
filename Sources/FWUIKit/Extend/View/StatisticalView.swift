@@ -1341,11 +1341,11 @@ extension TextTagCollectionView {
 // MARK: - FrameworkAutoloader+StatisticalView
 extension FrameworkAutoloader {
     @objc static func loadToolkit_StatisticalView() {
-        BannerView.trackClickBlock = { view, indexPath in
+        BannerView.Configuration.trackClickBlock = { view, indexPath in
             view.fw.statisticalTrackClick(indexPath: indexPath)
         }
 
-        BannerView.trackExposureBlock = { view in
+        BannerView.Configuration.trackExposureBlock = { view in
             view.fw.statisticalCheckExposure()
         }
     }

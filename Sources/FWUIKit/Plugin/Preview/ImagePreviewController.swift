@@ -7,6 +7,9 @@
 
 import Photos
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ImagePreviewView
 /// 图片预览媒体类型枚举

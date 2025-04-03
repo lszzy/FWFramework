@@ -7,6 +7,9 @@
 
 import UIKit
 import WebKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - WebViewControllerProtocol
 /// 网页视图控制器协议，可覆写

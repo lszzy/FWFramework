@@ -127,7 +127,7 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
 
 // MARK: - FrameworkAutoloader
 /// 框架内部自动加载器，自动加载框架内置组件
-public class FrameworkAutoloader: NSObject, @unchecked Sendable {
+@_spi(FW) public class FrameworkAutoloader: NSObject, @unchecked Sendable {
     static let shared = FrameworkAutoloader()
 
     fileprivate var debugMethods: [String] = []

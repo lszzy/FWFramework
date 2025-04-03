@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - CollectionDelegateControllerProtocol
 /// 集合代理控制器协议，数据源和事件代理为collectionDelegate，可覆写

@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - ScrollViewControllerProtocol
 /// 滚动视图控制器协议，可覆写

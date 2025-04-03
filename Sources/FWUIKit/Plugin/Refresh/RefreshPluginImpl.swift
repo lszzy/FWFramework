@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 默认刷新插件
 open class RefreshPluginImpl: NSObject, RefreshPlugin, @unchecked Sendable {

@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 图片裁剪样式
 public enum ImageCropCroppingStyle: Int, Sendable {
