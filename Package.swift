@@ -217,7 +217,8 @@ let package = Package(
         ),
         .binaryTarget(
             name: "MMKV",
-            path: "Framework/MMKV.xcframework.zip"
+            url: "https://github.com/lszzy/FWFramework/releases/download/6.1.0/MMKV.xcframework.zip",
+            checksum: "9db49d734916e9aee3926ffbf162a976f03aafc294eac74b6979e3dbdf66411b"
         )
     ]
 )
