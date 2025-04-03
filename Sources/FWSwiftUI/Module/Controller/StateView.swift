@@ -21,7 +21,7 @@ import SwiftUI
 /// \@EnvironmentObject: 全局环境对象，使用environmentObject方法绑定，View及其子层级可直接读取
 /// \@StateObject: View引用对象，生命周期和View保持一致，刷新时数据会保持直到View被销毁
 public struct StateView: View {
-    @State public var state: ViewState = .ready
+    @State public var state: ViewLoadingState = .ready
 
     @ViewBuilder var ready: (Self) -> AnyView
     @ViewBuilder var loading: (Self) -> AnyView
@@ -60,7 +60,7 @@ public struct StateView: View {
         self.failure = { failure($0, $1).eraseToAnyView() }
     }
 
-    private func transition(to newState: ViewState) -> AnyView {
+    private func transition(to newState: ViewLoadingState) -> AnyView {
         InvisibleView()
             .onAppear { state = newState }
             .eraseToAnyView()

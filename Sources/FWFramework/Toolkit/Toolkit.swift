@@ -2074,9 +2074,9 @@ extension UINavigationController {
     fileprivate static var innerChildProxyEnabled = false
 }
 
-// MARK: - ViewState
-/// 视图状态枚举，兼容UIKit和SwiftUI
-public enum ViewState: Equatable {
+// MARK: - ViewLoadingState
+/// 视图加载状态枚举，兼容UIKit和SwiftUI
+public enum ViewLoadingState: Equatable {
     case ready
     case loading
     case success(Any? = nil)
@@ -2099,7 +2099,7 @@ public enum ViewState: Equatable {
     }
 
     /// 实现Equatable协议方法，仅比较状态，不比较值
-    public static func ==(lhs: ViewState, rhs: ViewState) -> Bool {
+    public static func ==(lhs: ViewLoadingState, rhs: ViewLoadingState) -> Bool {
         switch lhs {
         case .ready:
             if case .ready = rhs { return true }
