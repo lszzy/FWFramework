@@ -6,6 +6,7 @@
 .build/
 build/
 DerivedData/
+docs/
 
 ## Various settings
 *.pbxuser

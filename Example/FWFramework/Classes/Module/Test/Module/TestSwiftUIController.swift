@@ -63,7 +63,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
     }
 
     // MARK: - Lifecycle
-    override func setupNavbar() {
+    override func didInitialize() {
         hidesBottomBarWhenPushed = true
         extendedLayoutIncludesOpaqueBars = true
         navigationItem.hidesBackButton = true
@@ -120,8 +120,8 @@ struct TestSwiftUIContent: View {
 
     @ObservedObject var viewModel: TestSwiftUIModel = .init()
 
-    @State var topSize: CGSize = .zero
-    @State var contentOffset: CGPoint = .zero
+    @ViewStorage var contentOffset: CGPoint = .zero
+    @State var hoverVisible: Bool = false
     @State var shouldRefresh: Bool = false
     @State var attributedColor = UIColor.app.randomColor
     @State var attributedChanged: Bool = false
@@ -143,10 +143,7 @@ struct TestSwiftUIContent: View {
             ScrollView {
                 VStack(alignment: .center, spacing: 16) {
                     ZStack {
-                        InvisibleView()
-                            .captureContentOffset(proxy: proxy)
-
-                        Text("contentOffset: \(Int(contentOffset.y))")
+                        InvisibleView().captureContentOffset(proxy: proxy)
                     }
 
                     VStack {
@@ -161,18 +158,6 @@ struct TestSwiftUIContent: View {
                                 .resizable()
                                 .clipped()
                                 .frame(width: 100, height: 100)
-                        }
-
-                        Text {
-                            Text("width: \(Int(topSize.width))")
-                                .concatenate {
-                                    Text(" ")
-                                }
-
-                            Text("height: \(Int(topSize.height))")
-                        }
-                        .hostingViewInitialize { hostingView in
-                            hostingView.backgroundColor = UIColor.app.randomColor
                         }
 
                         AttributedText(NSMutableAttributedString {
@@ -215,7 +200,6 @@ struct TestSwiftUIContent: View {
                         .padding(.horizontal, 16)
                     }
                     .padding(.top, 16)
-                    .captureSize(in: $topSize)
 
                     Toggle(isOn: $buttonRemovable) {
                         EmptyView()
@@ -346,7 +330,11 @@ struct TestSwiftUIContent: View {
                     .frame(height: 44)
                 }
             }
-            .captureContentOffset(in: $contentOffset)
+            .captureContentOffset(in: $contentOffset.binding)
+            .onReceive($contentOffset.publisher, perform: { offset in
+                print("offset: \(offset.y)")
+                hoverVisible = contentOffset.y >= 44
+            })
             .scrollViewRefreshing(action: { completionHandler in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     moreItems = []
@@ -362,11 +350,14 @@ struct TestSwiftUIContent: View {
                 }
             })
         }
-        .hoverContentOffset(visible: contentOffset.y >= 44) {
+        .hoverContentOffset(visible: hoverVisible) {
             Text("Hover Header")
                 .frame(width: APP.screenWidth, height: 44)
                 .background(Color.white)
                 .shadow(color: Color.color(0x000000, 0.1), radius: 5, x: 0, y: 2)
+                .wrappedButton {
+                    hoverVisible = false
+                }
         }
         .removable(showingEmpty)
         .showAlert($showingAlert) { viewController in

@@ -9,6 +9,7 @@ import Lottie
 import UIKit
 #if FWMacroSPM
 @_spi(FW) import FWFramework
+@_spi(FW) import FWUIKit
 #endif
 
 /// Lottile插件视图，可用于加载、进度、下拉刷新等

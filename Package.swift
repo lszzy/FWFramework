@@ -15,12 +15,12 @@ let package = Package(
             targets: ["FWFramework"]
         ),
         .library(
-            name: "FWSwiftUI",
-            targets: ["FWSwiftUI"]
+            name: "FWUIKit",
+            targets: ["FWUIKit"]
         ),
         .library(
-            name: "FWPluginModule",
-            targets: ["FWPluginModule"]
+            name: "FWSwiftUI",
+            targets: ["FWSwiftUI"]
         ),
         .library(
             name: "FWPluginCalendar",
@@ -57,6 +57,14 @@ let package = Package(
         .library(
             name: "FWPluginAlamofire",
             targets: ["FWPluginAlamofire"]
+        ),
+        .library(
+            name: "FWPluginMMKV",
+            targets: ["FWPluginMMKV"]
+        ),
+        .library(
+            name: "MMKV",
+            targets: ["MMKV"]
         )
     ],
     dependencies: [
@@ -76,18 +84,18 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FWSwiftUI",
+            name: "FWUIKit",
             dependencies: ["FWFramework"],
-            path: "Sources/FWSwiftUI",
+            path: "Sources/FWUIKit",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
             ]
         ),
         .target(
-            name: "FWPluginModule",
-            dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Module",
+            name: "FWSwiftUI",
+            dependencies: ["FWUIKit"],
+            path: "Sources/FWSwiftUI",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -96,7 +104,7 @@ let package = Package(
         .target(
             name: "FWPluginCalendar",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Calendar",
+            path: "Sources/FWPlugin/Authorize/Calendar",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -105,7 +113,7 @@ let package = Package(
         .target(
             name: "FWPluginContacts",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Contacts",
+            path: "Sources/FWPlugin/Authorize/Contacts",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -114,7 +122,7 @@ let package = Package(
         .target(
             name: "FWPluginMicrophone",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Microphone",
+            path: "Sources/FWPlugin/Authorize/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -123,7 +131,7 @@ let package = Package(
         .target(
             name: "FWPluginTracking",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Tracking",
+            path: "Sources/FWPlugin/Authorize/Tracking",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -132,7 +140,7 @@ let package = Package(
         .target(
             name: "FWPluginBiometry",
             dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Biometry",
+            path: "Sources/FWPlugin/Authorize/Biometry",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -194,6 +202,23 @@ let package = Package(
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
             ]
+        ),
+        .target(
+            name: "FWPluginMMKV",
+            dependencies: [
+                "FWFramework",
+                "MMKV"
+            ],
+            path: "Sources/FWPlugin/MMKV",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .binaryTarget(
+            name: "MMKV",
+            url: "https://github.com/lszzy/FWFramework/releases/download/7.0.0/MMKV.xcframework.zip",
+            checksum: "9db49d734916e9aee3926ffbf162a976f03aafc294eac74b6979e3dbdf66411b"
         )
     ]
 )

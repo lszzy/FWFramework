@@ -196,7 +196,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
             }
             var objectType = ArchiveCoder.Configuration.registeredTypes[archiveType]
             if objectType == nil {
-                if let loadType = ArchiveCoder.sharedLoader.load(archiveType) {
+                if let loadType = try? ArchiveCoder.sharedLoader.load(archiveType) {
                     ArchiveCoder.registerType(loadType)
                     objectType = loadType
                 } else {

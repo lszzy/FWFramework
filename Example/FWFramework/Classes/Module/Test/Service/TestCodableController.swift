@@ -283,58 +283,6 @@ enum TestMappedValueMacroCodableModelEnum: String, Codable {
     case unknown = ""
 }
 
-// MARK: - TestJSONModel
-struct TestJSONModel: JSONModel {
-    var id: Int = 0
-    var name: String = ""
-    var age: Int?
-    var amount: Float = 0
-    var alias: String = ""
-    var except: String = ""
-    var camelName: String = ""
-    var any: Any?
-    var dict: [AnyHashable: Any]?
-    var array: [Any]?
-    var optional1: String = ""
-    var optional2: String = ""
-    var optional3: String? = "default"
-    var optional4: Int? = 4
-    var optional5: Int? = 0
-    var sub: TestJSONSubModel?
-    var sub2: TestJSONSubModel = .init()
-    var subs: [TestJSONSubModel] = []
-    var subdict: [String: TestJSONSubModel] = [:]
-    var enum1: TestJSONModelEnum = .unknown
-    var enum2: TestJSONModelEnum = .unknown
-    var enum3: TestJSONModelEnum?
-
-    // HandyJSON模式时，会去解析属性offset，因此也能使用<<<等infix符号方法
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper >>> except
-
-        mapper <<<
-            alias <-- "alias_key"
-
-        mapper <<<
-            camelName <-- "camel_name"
-    }
-}
-
-class TestJSONSuperModel: JSONModel {
-    var id: Int = 0
-
-    required init() {}
-}
-
-class TestJSONSubModel: TestJSONSuperModel {
-    var name: String?
-}
-
-enum TestJSONModelEnum: String, JSONModelEnum {
-    case test
-    case unknown = ""
-}
-
 // MARK: - TestMappedValueJSONModel
 struct TestMappedValueJSONModel: JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
@@ -454,7 +402,6 @@ struct TestCustomJSONModel: JSONModel, KeyMappable {
         }
     }
 
-    // 非HandyJSON模式时，不会去解析属性offset，因此也不能使用<<<等infix符号方法
     mutating func mapping(mapper: HelpingMapper) {
         mapper.exclude(key: "except")
         mapper.specify(key: "alias", names: "alias_key")
@@ -564,7 +511,7 @@ struct TestSmartModel: SmartModel {
     var enum1: TestSmartModelEnum = .unknown
     var enum2: TestSmartModelEnum = .unknown
     var enum3: TestSmartModelEnum?
-    
+
     static func mappingForKey() -> [SmartKeyTransformer]? {
         [
             CodingKeys.alias <--- "alias_key",
@@ -579,7 +526,7 @@ struct TestSmartSuperModel: SmartModel {
 
 struct TestSmartSubModel: SmartModel {
     var name: String?
-    
+
     @SmartFlat
     var parent: TestSmartSuperModel?
 }
@@ -631,7 +578,6 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["CodableModel+Custom", "onCustomCodableModel"],
             ["CodableModel+MappedValue", "onMappedValueCodableModel"],
             ["CodableModel+MappedValueMacro", "onMappedValueMacroCodableModel"],
-            ["JSONModel", "onJSONModel"],
             ["JSONModel+Custom", "onCustomJSONModel"],
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
@@ -795,7 +741,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-
+    
     @objc func onMappedValueMacroCodableModel() {
         func testModel(_ model: TestMappedValueMacroCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -829,43 +775,6 @@ extension TestCodableController {
         var model: TestMappedValueMacroCodableModel? = TestMappedValueMacroCodableModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
-        tests += testModel(model, encode: true)
-        showResults(tests)
-    }
-
-    @objc func onJSONModel() {
-        func testModel(_ model: TestJSONModel?, encode: Bool = false) -> [Bool] {
-            let results: [Bool] = [
-                model != nil,
-                model?.id == 1,
-                model?.name == "name",
-                model?.age == 2,
-                model?.amount == 100.0,
-                model?.alias == "alias",
-                model?.except == "",
-                model?.camelName == "camelName",
-                String.app.safeString(model?.any) == "any",
-                model?.dict != nil,
-                (model?.array as? [Int])?.first == 1,
-                model?.optional1 == "",
-                model?.optional2 == "",
-                model?.optional3 == "default",
-                model?.optional4 == (encode ? 4 : nil),
-                model?.optional5 == 5,
-                model?.sub?.name == "sub",
-                model?.sub2 != nil,
-                model?.subs.first?.name == "subs",
-                model?.subdict["key"]?.name == "subdict",
-                model?.enum1 == .test,
-                model?.enum2 == .unknown,
-                model?.enum3 == nil
-            ]
-            return results
-        }
-
-        var model: TestJSONModel? = TestJSONModel.decodeModel(from: testCodableData())
-        var tests = testModel(model)
-        model = TestJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
         showResults(tests)
     }
@@ -943,7 +852,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-
+    
     @objc func onMappedValueMacroJSONModel() {
         func testModel(_ model: TestMappedValueMacroJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -980,7 +889,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onSmartModel() {
         func testModel(_ model: TestSmartModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [

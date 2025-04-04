@@ -128,19 +128,18 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
 
     // MARK: - CacheEngineProtocol
     open func readCache<T>(forKey key: String) -> T? {
-        // 子类重写
-        nil
+        fatalError("readCache(forKey:) has not been implemented")
     }
 
     open func writeCache<T>(_ object: T, forKey key: String) {
-        // 子类重写
+        fatalError("writeCache(_:forKey:) has not been implemented")
     }
 
     open func clearCache(forKey key: String) {
-        // 子类重写
+        fatalError("clearCache(forKey:) has not been implemented")
     }
 
     open func clearAllCaches() {
-        // 子类重写
+        fatalError("clearAllCaches() has not been implemented")
     }
 }

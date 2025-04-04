@@ -16,19 +16,21 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func verbose(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.verbose) { return }
-        Logger.log(.verbose, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.verbose, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录调试日志
@@ -37,19 +39,21 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func debug(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.debug) { return }
-        Logger.log(.debug, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.debug, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录信息日志
@@ -58,19 +62,21 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func info(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.info) { return }
-        Logger.log(.info, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.info, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录警告日志
@@ -79,19 +85,21 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func warn(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.warn) { return }
-        Logger.log(.warn, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.warn, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录错误日志
@@ -100,19 +108,21 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func error(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(.error) { return }
-        Logger.log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(.error, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录类型日志
@@ -122,20 +132,22 @@ extension WrapperGlobal {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public static func log(
         type: LogType,
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !Logger.check(type) { return }
-        Logger.log(type, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        Logger.log(type, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 }
 
@@ -214,12 +226,46 @@ public class Logger: NSObject {
     ///   - type: 日志类型
     ///   - group: 日志分组，默认空
     ///   - message: 日志消息
-    public class func log(_ type: LogType, group: String = "", message: String) {
+    ///   - metadata: 日志附加metadata信息
+    ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
+    ///   - line: 行数，默认传参
+    public class func log(
+        _ type: LogType,
+        group: String = "",
+        message: String,
+        metadata: [AnyHashable: Any]? = nil,
+        function: String = #function,
+        file: String = #file,
+        line: Int = #line
+    ) {
         // 过滤不支持的级别
         if !check(type) { return }
-
+        
+        var thread = Thread.current.name ?? ""
+        if thread.isEmpty {
+            if Thread.isMainThread {
+                thread = "main"
+            } else {
+                var threadId: __uint64_t = 0
+                if pthread_threadid_np(nil, &threadId) == 0 {
+                    thread = String(format: "%llu", threadId)
+                }
+            }
+        }
+        
+        let logMessage = LogMessage()
+        logMessage.message = message
+        logMessage.type = type
+        logMessage.group = group
+        logMessage.metadata = metadata
+        logMessage.thread = thread
+        logMessage.file = (file as NSString).lastPathComponent
+        logMessage.line = line
+        logMessage.function = function
+        
         let plugin = PluginManager.loadPlugin(LoggerPlugin.self) ?? LoggerPluginImpl.shared
-        plugin.log(type, group: group, message: message)
+        plugin.log(logMessage)
     }
 
     /// 记录详细日志
@@ -228,19 +274,21 @@ public class Logger: NSObject {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public class func verbose(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !check(.verbose) { return }
-        log(.verbose, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.verbose, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录调试日志
@@ -249,19 +297,21 @@ public class Logger: NSObject {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public class func debug(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !check(.debug) { return }
-        log(.debug, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.debug, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录信息日志
@@ -270,19 +320,21 @@ public class Logger: NSObject {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public class func info(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !check(.info) { return }
-        log(.info, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.info, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录警告日志
@@ -291,19 +343,21 @@ public class Logger: NSObject {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public class func warn(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !check(.warn) { return }
-        log(.warn, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.warn, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 记录错误日志
@@ -312,19 +366,21 @@ public class Logger: NSObject {
     ///   - group: 日志分组，默认空
     ///   - format: 格式化字符串
     ///   - arguments: 可变参数列表，可不传
-    ///   - file: 文件名，默认传参
+    ///   - metadata: 日志附加metadata信息
     ///   - function: 方法名，默认传参
+    ///   - file: 文件名，默认传参
     ///   - line: 行数，默认传参
     public class func error(
         group: String = "",
         _ format: String,
         _ arguments: CVarArg...,
+        metadata: [AnyHashable: Any]? = nil,
         function: String = #function,
         file: String = #file,
         line: Int = #line
     ) {
         if !check(.error) { return }
-        log(.error, group: group, message: String(format: "(%@ %@ #%d %@) %@", Thread.isMainThread ? "[M]" : "[T]", (file as NSString).lastPathComponent, line, function, String(format: format, arguments: arguments)))
+        log(.error, group: group, message: String(format: format, arguments: arguments), metadata: metadata, function: function, file: file, line: line)
     }
 
     /// 检查是否需要记录指定类型日志
@@ -335,15 +391,100 @@ public class Logger: NSObject {
     }
 }
 
+// MARK: - LogMessage
+/// 日志消息结构体
+public class LogMessage {
+    /// 日志消息
+    public var message: String = ""
+    /// 日志时间戳
+    public var timestamp: TimeInterval = Date().timeIntervalSince1970
+    /// 日志类型
+    public var type: LogType = .info
+    /// 日志分组，默认空
+    public var group: String = ""
+    /// 附加metadata信息
+    public var metadata: [AnyHashable: Any]?
+    /// 线程名称
+    public var thread: String = ""
+    /// 方法名
+    public var function: String = ""
+    /// 文件名
+    public var file: String = ""
+    /// 行数
+    public var line: Int = -1
+    
+    public init() {}
+}
+
+// MARK: - LogFormatter
+/// 日志格式化处理器协议
+public protocol LogFormatter {
+    /// 格式化日志消息
+    func format(_ logMessage: LogMessage) -> String?
+}
+
+/// 默认日志格式化处理器实现
+public class LogFormatterImpl: LogFormatter, @unchecked Sendable {
+    public static let shared = LogFormatterImpl()
+    
+    /// 自定义日期格式化
+    public lazy var dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return dateFormatter
+    }()
+    
+    public init() {}
+    
+    /// 格式化日志时间
+    public func formatDate(_ logMessage: LogMessage) -> String {
+        return dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
+    }
+    
+    /// 格式化日志消息
+    public func format(_ logMessage: LogMessage) -> String? {
+        var typeName = ""
+        var typeEmoji = ""
+        switch logMessage.type {
+        case .error:
+            typeName = "ERROR"
+            typeEmoji = "❌"
+        case .warn:
+            typeName = "WARN"
+            typeEmoji = "⚠️"
+        case .debug:
+            typeName = "DEBUG"
+            typeEmoji = "📝"
+        case .verbose:
+            typeName = "VERBOSE"
+            typeEmoji = "⏱️"
+        default:
+            typeName = "INFO"
+            typeEmoji = "ℹ️"
+        }
+        
+        let message = String(
+            format: "%@ %@:%@ (%@%@%@%@) %@%@",
+            typeEmoji,
+            typeName,
+            !logMessage.group.isEmpty ? " [\(logMessage.group)]" : "",
+            !logMessage.thread.isEmpty ? "[\(logMessage.thread)] " : "",
+            !logMessage.file.isEmpty ? "\(logMessage.file) " : "",
+            logMessage.line >= 0 ? "#\(logMessage.line) " : "",
+            logMessage.function,
+            logMessage.message,
+            logMessage.metadata != nil ? String(format: " %@", logMessage.metadata!) : ""
+        )
+        return message
+    }
+}
+
 // MARK: - LoggerPlugin
 /// 日志插件协议
 public protocol LoggerPlugin {
     /// 记录日志协议方法
-    /// - Parameters:
-    ///   - type: 日志类型
-    ///   - group: 日志分组
-    ///   - message: 日志消息
-    func log(_ type: LogType, group: String, message: String)
+    func log(_ logMessage: LogMessage)
 }
 
 /// NSLog日志插件，兼容FWDebug等组件
@@ -351,26 +492,16 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     @objc(sharedInstance)
     public static let shared = LoggerPluginNSLog()
 
+    /// 自定义日志格式化处理器
+    public var logFormatter: LogFormatter?
     /// 自定义日志处理句柄
     public var logHandler: ((String) -> Void)?
 
     /// 记录日志协议方法
-    public func log(_ type: LogType, group: String, message: String) {
-        switch type {
-        case .error:
-            logMessage(String(format: "%@ ERROR:%@ %@", "❌", !group.isEmpty ? " [\(group)]" : "", message))
-        case .warn:
-            logMessage(String(format: "%@ WARN:%@ %@", "⚠️", !group.isEmpty ? " [\(group)]" : "", message))
-        case .info:
-            logMessage(String(format: "%@ INFO:%@ %@", "ℹ️", !group.isEmpty ? " [\(group)]" : "", message))
-        case .debug:
-            logMessage(String(format: "%@ DEBUG:%@ %@", "📝", !group.isEmpty ? " [\(group)]" : "", message))
-        default:
-            logMessage(String(format: "%@ VERBOSE:%@ %@", "⏱️", !group.isEmpty ? " [\(group)]" : "", message))
-        }
-    }
-
-    private func logMessage(_ message: String) {
+    public func log(_ logMessage: LogMessage) {
+        let formatter = logFormatter ?? LogFormatterImpl.shared
+        guard let message = formatter.format(logMessage), !message.isEmpty else { return }
+        
         if logHandler != nil {
             logHandler?(message)
             return
@@ -390,7 +521,8 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
         }
         #endif
 
-        NSLog("%@", message)
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
+        NSLog("%@: %@", logTime, message)
     }
 }
 
@@ -398,6 +530,9 @@ public class LoggerPluginNSLog: NSObject, LoggerPlugin, @unchecked Sendable {
 public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     @objc(sharedInstance)
     public static let shared = LoggerPluginOSLog()
+    
+    /// 自定义日志格式化处理器
+    public var logFormatter: LogFormatter?
 
     private var log: OSLog
 
@@ -408,18 +543,125 @@ public class LoggerPluginOSLog: NSObject, LoggerPlugin, @unchecked Sendable {
     }
 
     /// 记录日志协议方法
-    public func log(_ type: LogType, group: String, message: String) {
-        switch type {
+    public func log(_ logMessage: LogMessage) {
+        let formatter = logFormatter ?? LogFormatterImpl.shared
+        guard let message = formatter.format(logMessage), !message.isEmpty else { return }
+        
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
+        switch logMessage.type {
         case .error:
-            os_log("%@ ERROR:%@ %@", log: log, type: .error, "❌", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@: %@", log: log, type: .error, logTime, message)
         case .warn:
-            os_log("%@ WARN:%@ %@", log: log, type: .default, "⚠️", !group.isEmpty ? " [\(group)]" : "", message)
-        case .info:
-            os_log("%@ INFO:%@ %@", log: log, type: .info, "ℹ️", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@: %@", log: log, type: .default, logTime, message)
         case .debug:
-            os_log("%@ DEBUG:%@ %@", log: log, type: .debug, "📝", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@: %@", log: log, type: .debug, logTime, message)
+        case .verbose:
+            os_log("%@: %@", log: log, type: .debug, logTime, message)
         default:
-            os_log("%@ VERBOSE:%@ %@", log: log, type: .debug, "⏱️", !group.isEmpty ? " [\(group)]" : "", message)
+            os_log("%@: %@", log: log, type: .info, logTime, message)
+        }
+    }
+}
+
+/// 文件日志插件
+public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
+    @objc(sharedInstance)
+    public static let shared = LoggerPluginFile()
+    
+    /// 自定义日志格式化处理器
+    public var logFormatter: LogFormatter?
+    /// 自定义日志保留天数，默认7天
+    public var logKeepDays: Int = 7
+    /// 是否按天合并日志文件，默认true
+    public var shouldMergeFiles: Bool = true
+    /// 日志根目录路径
+    public private(set) var logPath: String = ""
+    /// 当前日志文件路径
+    public private(set) var logFile: String = ""
+    
+    private var logQueue = DispatchQueue(label: "site.wuyong.queue.logger.file")
+
+    override public convenience init() {
+        self.init(path: nil)
+    }
+
+    /// 指定路径
+    public init(path: String?) {
+        super.init()
+        // 绝对路径: path
+        if let path, (path as NSString).isAbsolutePath {
+            self.logPath = path
+        // 相对路径: Libray/Caches/FWFramework/LogFile/path[shared]
+        } else {
+            var logPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? ""
+            logPath = (logPath as NSString).appendingPathComponent("FWFramework/LogFile")
+            let fileName = path ?? ""
+            self.logPath = (logPath as NSString).appendingPathComponent(!fileName.isEmpty ? fileName : "shared")
+        }
+        
+        // 当前日志文件路径
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd-HHmmss"
+        logFile = (logPath as NSString).appendingPathComponent(dateFormatter.string(from: Date()) + ".log")
+        
+        // 处理之前的日志文件
+        processFiles()
+    }
+    
+    private func processFiles() {
+        guard FileManager.default.fileExists(atPath: logPath) else {
+            try? FileManager.default.createDirectory(atPath: logPath, withIntermediateDirectories: true)
+            return
+        }
+        let fileNames = try? FileManager.default.contentsOfDirectory(atPath: logPath)
+        guard let fileNames = fileNames?.filter({ $0.hasSuffix(".log") }), !fileNames.isEmpty else {
+            return
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let currentTime = Date().timeIntervalSince1970
+        
+        for fileName in fileNames {
+            if fileName.count == 12 {
+                if let fileTime = dateFormatter.date(from: String(fileName.prefix(8))),
+                   (currentTime - fileTime.timeIntervalSince1970) >= Double(logKeepDays) * 86400 {
+                    try? FileManager.default.removeItem(atPath: (logPath as NSString).appendingPathComponent(fileName))
+                }
+                continue
+            }
+            
+            if !shouldMergeFiles || fileName.count != 19 { continue }
+            
+            let filePath = (logPath as NSString).appendingPathComponent(fileName)
+            let targetPath = (logPath as NSString).appendingPathComponent(String(fileName.prefix(8)) + ".log")
+            var logText = String(format: "\n=====%@=====\n", fileName)
+            logText += (try? String(contentsOfFile: filePath, encoding: .utf8)) ?? ""
+            LoggerPluginFile.appendText(logText, atPath: targetPath)
+            try? FileManager.default.removeItem(atPath: filePath)
+        }
+    }
+    
+    private static func appendText(_ text: String, atPath: String) {
+        guard let data = text.data(using: .utf8) as? NSData, !data.isEmpty else { return }
+        guard let outputStream = OutputStream(toFileAtPath: atPath, append: true) else { return }
+        outputStream.open()
+        defer { outputStream.close() }
+        outputStream.write(data.bytes, maxLength: data.length)
+    }
+
+    /// 记录日志协议方法
+    public func log(_ logMessage: LogMessage) {
+        let formatter = logFormatter ?? LogFormatterImpl.shared
+        guard let message = formatter.format(logMessage), !message.isEmpty else { return }
+        
+        let logTime = LogFormatterImpl.shared.formatDate(logMessage)
+        let logText = String(format: "%@: %@\n", logTime, message)
+        let targetPath = logFile
+        logQueue.async {
+            LoggerPluginFile.appendText(logText, atPath: targetPath)
         }
     }
 }
@@ -434,10 +676,12 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     private class Target {
         var logger: LoggerPlugin
         var level: LogLevel
+        var groups: [String] = []
 
-        init(logger: LoggerPlugin, level: LogLevel) {
+        init(logger: LoggerPlugin, level: LogLevel, groups: [String]) {
             self.logger = logger
             self.level = level
+            self.groups = groups
         }
     }
 
@@ -449,9 +693,9 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
         addLogger(LoggerPluginNSLog.shared)
     }
 
-    /// 添加日志插件，并在指定等级生效(默认all)
-    public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all) {
-        allTargets.append(Target(logger: logger, level: level))
+    /// 添加日志插件，并在指定等级(默认all)和指定分组(默认所有)生效
+    public func addLogger(_ logger: LoggerPlugin, level: LogLevel = .all, groups: [String] = []) {
+        allTargets.append(Target(logger: logger, level: level, groups: groups))
     }
 
     /// 移除指定日志插件
@@ -468,11 +712,11 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     }
 
     /// 记录日志协议方法
-    public func log(_ type: LogType, group: String, message: String) {
+    public func log(_ logMessage: LogMessage) {
         for target in allTargets {
-            if LogType(rawValue: target.level.rawValue).contains(type) {
-                target.logger.log(type, group: group, message: message)
-            }
+            guard LogType(rawValue: target.level.rawValue).contains(logMessage.type) else { continue }
+            guard target.groups.isEmpty || target.groups.contains(logMessage.group) else { continue }
+            target.logger.log(logMessage)
         }
     }
 }

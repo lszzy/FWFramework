@@ -100,7 +100,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
 }
 
 class SwiftTestViewController: UIViewController, ViewControllerProtocol {
-    var state: ViewState = .ready {
+    var state: ViewLoadingState = .ready {
         didSet {
             setupSubviews()
         }

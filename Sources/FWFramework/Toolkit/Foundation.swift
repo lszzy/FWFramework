@@ -804,6 +804,12 @@ extension Wrapper where Base: FileManager {
     public static var pathResource: String {
         Bundle.main.resourcePath ?? ""
     }
+    
+    /// 共享group路径，需先配置AppGroups能力，groupId默认为group.主bundleId
+    public static func pathGroup(groupId: String? = nil) -> String {
+        let groupIdentifier = groupId ?? "group." + (Bundle.main.bundleIdentifier ?? "")
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupIdentifier)?.absoluteString ?? ""
+    }
 
     /// 递归创建目录，返回是否成功
     @discardableResult
@@ -849,6 +855,16 @@ extension Wrapper where Base: FileManager {
         } else {
             return FileManager.default.fileExists(atPath: atPath)
         }
+    }
+    
+    /// 追加方式向文件写入数据
+    @discardableResult
+    public static func appendData(_ data: Data?, atPath: String) -> Bool {
+        guard let data = data as? NSData, !data.isEmpty else { return false }
+        guard let outputStream = OutputStream(toFileAtPath: atPath, append: true) else { return false }
+        outputStream.open()
+        defer { outputStream.close() }
+        return outputStream.write(data.bytes, maxLength: data.length) >= 0
     }
 
     /// 获取文件大小，单位：B
@@ -1301,7 +1317,7 @@ extension Wrapper where Base: URLSession {
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
-    
+
     /// 是否启用了VPN连接
     public static var isVPNConnected: Bool {
         let scoped = systemProxySettings?["__SCOPED__"] as? [String: Any]
@@ -1314,7 +1330,7 @@ extension Wrapper where Base: URLSession {
         }
         return false
     }
-    
+
     /// 获取网络HTTP代理和端口，未设置时为空
     public static var httpProxyString: String? {
         guard let proxy = systemProxySettings else { return nil }
@@ -1323,7 +1339,7 @@ extension Wrapper where Base: URLSession {
         let httpPort = proxy[kCFNetworkProxiesHTTPPort as String] as? Int
         return httpProxy + (httpPort != nil ? ":\(httpPort!)" : "")
     }
-    
+
     /// 获取系统代理设置，可能为空
     public static var systemProxySettings: [AnyHashable: Any]? {
         CFNetworkCopySystemProxySettings()?.takeUnretainedValue() as? [AnyHashable: Any]

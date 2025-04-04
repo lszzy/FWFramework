@@ -12,6 +12,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "FWFramework"
+        navigationItem.title = "Example"
     }
 }

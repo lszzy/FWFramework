@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.0.0] - 2025-04-04
+
+### Changed
+* Split FWUIKit submodules, refactor submodule list, CocoaPods and SPM projects need to migrate and adapt
+* Remove JSONModel read and write memory method, please implement KeyMappable or migrate to SmartModel
+* Refactor Loader implementation, add AsyncLoader, add file Logger, Logger supports filtering grouping
+* HTTPRequest adds request end callback, RequestFilter supports throws throwing exception
+* Remove obsolete code, refactor some class and method naming, if you encounter code errors, please migrate and adapt
+
+### Migrate
+1. Since the submodule list has been refactored, the old version of the submodule needs to be migrated to the new version of the submodule list
+2. Migrate JSONModel read and write memory method to KeyMappable method or use SmartModel, etc.
+3. If you encounter other compilation errors, please migrate to the new class name and method name, or refer to the Example project
+
 ## [6.1.0] - 2025-03-08
 
 ### Added

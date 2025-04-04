@@ -123,15 +123,15 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
         public private(set) var tag: Int?
         public private(set) var statusCodeValidator: (@Sendable (_ request: HTTPRequest) -> Bool)?
         public private(set) var jsonValidator: Any?
-        public private(set) var urlRequestFilter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?
+        public private(set) var urlRequestFilter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) throws -> Void)?
         public private(set) var responseFilter: (@Sendable (_ request: HTTPRequest) throws -> Void)?
         public private(set) var responseMockValidator: (@Sendable (HTTPRequest) -> Bool)?
         public private(set) var responseMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
         public private(set) var requestRetryCount: Int?
         public private(set) var requestRetryInterval: TimeInterval?
         public private(set) var requestRetryTimeout: TimeInterval?
-        public private(set) var requestRetryValidator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?
-        public private(set) var requestRetryProcessor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?
+        public private(set) var requestRetryValidator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?) -> Bool)?
+        public private(set) var requestRetryProcessor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?
         public private(set) var requestCompletePreprocessor: (@Sendable (HTTPRequest) -> Void)?
         public private(set) var requestCompleteFilter: Completion?
         public private(set) var requestFailedPreprocessor: (@Sendable (HTTPRequest) -> Void)?
@@ -227,7 +227,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 自定义POST请求HTTP body数据
         @discardableResult
-        public func constructingBodyBlock(_ block: (@Sendable (RequestMultipartFormData) -> Void)?) -> Self {
+        public func constructingBody(_ block: (@Sendable (RequestMultipartFormData) -> Void)?) -> Self {
             constructingBodyBlock = block
             return self
         }
@@ -344,7 +344,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求发送前URLRequest过滤方法，默认不处理
         @discardableResult
-        public func urlRequestFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) -> Void)?) -> Self {
+        public func urlRequestFilter(_ filter: (@Sendable (_ request: HTTPRequest, _ urlRequest: inout URLRequest) throws -> Void)?) -> Self {
             urlRequestFilter = filter
             return self
         }
@@ -421,14 +421,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
         /// 请求重试验证方法，默认检查状态码和错误
         @discardableResult
-        public func requestRetryValidator(_ validator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
+        public func requestRetryValidator(_ validator: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?) -> Bool)?) -> Self {
             requestRetryValidator = validator
             return self
         }
 
         /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
         @discardableResult
-        public func requestRetryProcessor(_ processor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?) -> Self {
+        public func requestRetryProcessor(_ processor: (@Sendable (_ request: HTTPRequest, _ response: HTTPURLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (Bool) -> Void) -> Void)?) -> Self {
             requestRetryProcessor = processor
             return self
         }
@@ -489,6 +489,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     open var successCompletionBlock: Completion?
     /// 自定义失败主线程回调句柄
     open var failureCompletionBlock: Completion?
+    /// 自定义请求结束主线程回调句柄，成功失败都会触发
+    open var requestCompletedBlock: Completion?
     /// 自定义取消回调句柄，不一定主线程调用
     open var requestCancelledBlock: (@Sendable (HTTPRequest) -> Void)?
     /// 自定义请求配件数组
@@ -768,8 +770,8 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求发送前URLRequest过滤方法，默认不处理
-    open func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        builder?.urlRequestFilter?(self, &urlRequest)
+    open func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
+        try builder?.urlRequestFilter?(self, &urlRequest)
     }
 
     /// 构建自定义URLRequest
@@ -878,17 +880,17 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     }
 
     /// 请求重试验证方法，默认检查状态码和错误
-    open func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+    open func requestRetryValidator(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?) -> Bool {
         if let validator = builder?.requestRetryValidator {
             return validator(self, response, responseObject, error)
         } else {
-            let statusCode = response.statusCode
+            let statusCode = response?.statusCode ?? 0
             return error != nil || statusCode < 200 || statusCode > 299
         }
     }
 
     /// 请求重试处理方法，回调处理状态，默认调用completionHandler(true)
-    open func requestRetryProcessor(_ response: HTTPURLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (Bool) -> Void) {
+    open func requestRetryProcessor(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (Bool) -> Void) {
         if let processor = builder?.requestRetryProcessor {
             processor(self, response, responseObject, error, completionHandler)
         } else {
@@ -966,6 +968,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
             self.requestCompleteFilter()
             self.delegate?.requestFinished(self)
             self.successCompletionBlock?(self)
+            self.requestCompletedBlock?(self)
 
             self.startWithoutCache()
         }
@@ -1011,14 +1014,14 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
     /// 断点续传进度句柄
     @discardableResult
-    open func downloadProgressBlock(_ block: (@Sendable (Progress) -> Void)?) -> Self {
+    open func downloadProgress(_ block: (@Sendable (Progress) -> Void)?) -> Self {
         downloadProgressBlock = block
         return self
     }
 
     /// 上传进度句柄
     @discardableResult
-    open func uploadProgressBlock(_ block: (@Sendable (Progress) -> Void)?) -> Self {
+    open func uploadProgress(_ block: (@Sendable (Progress) -> Void)?) -> Self {
         uploadProgressBlock = block
         return self
     }
@@ -1056,6 +1059,7 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
     open func clearCompletionBlock() {
         successCompletionBlock = nil
         failureCompletionBlock = nil
+        requestCompletedBlock = nil
     }
 
     /// 添加请求配件
@@ -1309,11 +1313,16 @@ open class HTTPRequest: HTTPRequestProtocol, Equatable, CustomStringConvertible,
 
 // MARK: - HTTPRequestProtocol+HTTPRequest
 extension HTTPRequestProtocol where Self: HTTPRequest {
-    /// 开始请求并指定成功、失败句柄
+    /// 开始请求并指定成功、失败、结束句柄
     @discardableResult
-    public func start(success: (@MainActor @Sendable (Self) -> Void)?, failure: (@MainActor @Sendable (Self) -> Void)?) -> Self {
+    public func start(
+        success: (@MainActor @Sendable (Self) -> Void)?,
+        failure: (@MainActor @Sendable (Self) -> Void)?,
+        complete: (@MainActor @Sendable (Self) -> Void)? = nil
+    ) -> Self {
         successCompletionBlock = success != nil ? { @MainActor @Sendable in success?($0 as! Self) } : nil
         failureCompletionBlock = failure != nil ? { @MainActor @Sendable in failure?($0 as! Self) } : nil
+        if (complete != nil) { requestCompletedBlock = { @MainActor @Sendable in complete?($0 as! Self) } }
         return start()
     }
 
@@ -1322,10 +1331,17 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func start(completion: (@MainActor @Sendable (Self) -> Void)?) -> Self {
         start(success: completion, failure: completion)
     }
+    
+    /// 自定义请求结束句柄，成功失败都会触发
+    @discardableResult
+    public func requestCompleted(_ block: (@MainActor @Sendable (Self) -> Void)?) -> Self {
+        requestCompletedBlock = block != nil ? { @MainActor @Sendable in block?($0 as! Self) } : nil
+        return self
+    }
 
     /// 请求取消句柄，不一定主线程调用
     @discardableResult
-    public func requestCancelledBlock(_ block: (@Sendable (Self) -> Void)?) -> Self {
+    public func requestCancelled(_ block: (@Sendable (Self) -> Void)?) -> Self {
         requestCancelledBlock = block != nil ? { @Sendable in block?($0 as! Self) } : nil
         return self
     }
@@ -1616,7 +1632,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func response() async -> Self {
         await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
-                requestCancelledBlock { request in
+                requestCancelled { request in
                     if !Task.isCancelled {
                         continuation.resume(returning: request)
                     }
@@ -1635,7 +1651,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func responseSuccess() async throws -> Self {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }
@@ -1657,7 +1673,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func responseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T? where T: Sendable {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }
@@ -1679,7 +1695,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func safeResponseModel<T: AnyModel>(of type: T.Type, designatedPath: String? = nil) async throws -> T where T: Sendable {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }
@@ -1703,7 +1719,7 @@ extension ResponseModelRequest where Self: HTTPRequest {
     public func responseModel() async throws -> ResponseModel? where ResponseModel: Sendable {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }
@@ -1727,7 +1743,7 @@ extension ResponseModelRequest where Self: HTTPRequest, ResponseModel: AnyModel 
     public func safeResponseModel() async throws -> ResponseModel where ResponseModel: Sendable {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }

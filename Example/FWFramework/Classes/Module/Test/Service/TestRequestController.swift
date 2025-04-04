@@ -17,8 +17,8 @@ class AppRequest: HTTPRequest, @unchecked Sendable {
         }
     }
 
-    override func urlRequestFilter(_ urlRequest: inout URLRequest) {
-        super.urlRequestFilter(&urlRequest)
+    override func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
+        try super.urlRequestFilter(&urlRequest)
 
         urlRequest.setValue("", forHTTPHeaderField: "Authorization")
     }
@@ -69,7 +69,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
         30
     }
 
-    override func urlRequestFilter(_ urlRequest: inout URLRequest) {
+    override func urlRequestFilter(_ urlRequest: inout URLRequest) throws {
         urlRequest.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
 
         // 一般在filterUrlRequest中进行请求签名，注意header不能含有中文等非法字符
@@ -93,6 +93,15 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
             // 成功：必须为String且可以为Nil | 失败：必须为String且不能为空
             "nullName": (testFailed ? Validator<String>.isNotEmpty : Validator<String>.isValid).anyValidator
         ]
+    }
+    
+    override func requestFailedPreprocessor() {
+        super.requestFailedPreprocessor()
+        
+        if !isDataFromCache {
+            // 模拟网络请求慢的情况，以便显示loading
+            Thread.sleep(forTimeInterval: 0.5)
+        }
     }
 }
 
@@ -137,7 +146,7 @@ class TestWeatherRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable
         testFailed ? 30 : 30
     }
 
-    override func requestRetryValidator(_ response: HTTPURLResponse, responseObject: Any?, error: Error?) -> Bool {
+    override func requestRetryValidator(_ response: HTTPURLResponse?, responseObject: Any?, error: Error?) -> Bool {
         true
     }
 }
@@ -239,7 +248,7 @@ class TestRequestController: UIViewController {
     private var testPath: String {
         FileManager.app.pathDocument.app.appendingPath(["website", "test"])
     }
-    
+
     @MMAPValue("testHostName")
     private var testHostName: String? = "www.wuyong.site"
 
@@ -358,12 +367,12 @@ extension TestRequestController: ViewControllerProtocol {
                 } else if index == 2 {
                     self.app.showPrompt(title: nil, message: "DNS解析") { [weak self] textField in
                         guard let self else { return }
-                        textField.text = self.testHostName
+                        textField.text = testHostName
                     } confirmBlock: { [weak self] hostName in
                         guard let self else { return }
-                        self.testHostName = hostName
+                        testHostName = hostName
                         let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
-                        self.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
+                        app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
                     }
                 } else if index == 3 {
                     FileManager.app.removeItem(atPath: self.testPath)
@@ -469,10 +478,9 @@ extension TestRequestController {
     }
 
     @objc private func onFailed() {
+        app.showLoading()
         let request = TestModelRequest()
         request.testFailed = true
-        request.context = self
-        request.autoShowLoading = true
         request.start { [weak self] req in
             let message = "json请求成功: \n\(req.safeResponseModel.name)"
             self?.app.showMessage(text: message)
@@ -484,6 +492,8 @@ extension TestRequestController {
                 message += "\n当前服务器时间：\(serverTime)"
             }
             self?.app.showMessage(text: message)
+        } complete: { [weak self] _ in
+            self?.app.hideLoading()
         }
     }
 

@@ -96,12 +96,12 @@ open class RequestManager: @unchecked Sendable {
     }
 
     /// 过滤URL请求
-    open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {
-        request.urlRequestFilter(&urlRequest)
+    open func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {
+        try request.urlRequestFilter(&urlRequest)
 
         let filters = request.config.requestFilters
         for filter in filters {
-            filter.filterUrlRequest(&urlRequest, for: request)
+            try filter.filterUrlRequest(&urlRequest, for: request)
         }
 
         if request.requestSerializerType() == .JSON,
@@ -191,7 +191,7 @@ open class RequestManager: @unchecked Sendable {
         }
     }
 
-    private func retrySessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
+    private func retrySessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
         startSessionTask(for: request) { [weak self] response, responseObject, error in
             request.requestTotalCount += 1
             request.requestTotalTime = Date().timeIntervalSince1970 - request.requestStartTime
@@ -211,7 +211,7 @@ open class RequestManager: @unchecked Sendable {
         }
     }
 
-    private func startSessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
+    private func startSessionTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
         if request.requestMethod() == .GET, request.resumableDownloadPath != nil {
             startDownloadTask(for: request, completionHandler: completionHandler)
         } else {
@@ -219,11 +219,11 @@ open class RequestManager: @unchecked Sendable {
         }
     }
 
-    private func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, Any?, Error?) -> Void)?) {
+    private func startDataTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, Any?, Error?) -> Void)?) {
         request.config.requestPlugin.startDataTask(for: request, completionHandler: completionHandler)
     }
 
-    private func startDownloadTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse, URL?, Error?) -> Void)?) {
+    private func startDownloadTask(for request: HTTPRequest, completionHandler: (@Sendable (URLResponse?, URL?, Error?) -> Void)?) {
         let downloadPath = request.resumableDownloadPath ?? ""
         var downloadTargetPath = ""
         var isDirectory: ObjCBool = false
@@ -256,7 +256,7 @@ open class RequestManager: @unchecked Sendable {
         request.config.requestPlugin.startDownloadTask(for: request, resumeData: resumeData, destination: downloadTargetPath, completionHandler: completionHandler)
     }
 
-    private func handleResponse(with requestIdentifier: String, response: URLResponse, responseObject: Any?, error: Error?) {
+    private func handleResponse(with requestIdentifier: String, response: URLResponse?, responseObject: Any?, error: Error?) {
         lock.lock()
         let request = requestsRecord[requestIdentifier]
         lock.unlock()
@@ -352,6 +352,7 @@ open class RequestManager: @unchecked Sendable {
             request.requestCompleteFilter()
             request.delegate?.requestFinished(request)
             request.successCompletionBlock?(request)
+            request.requestCompletedBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
 
             self.finishRequest(request)
@@ -391,6 +392,7 @@ open class RequestManager: @unchecked Sendable {
             request.requestFailedFilter()
             request.delegate?.requestFailed(request)
             request.failureCompletionBlock?(request)
+            request.requestCompletedBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
 
             self.finishRequest(request)

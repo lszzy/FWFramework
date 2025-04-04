@@ -594,7 +594,7 @@ public class Router: NSObject, @unchecked Sendable {
         var parameters = extractParameters(from: url)
         if parameters[routeBlockKey] != nil { return parameters }
 
-        if let object = sharedLoader.load(url) {
+        if let object = try? sharedLoader.load(url) {
             registerClass(object, mapper: nil)
             parameters = extractParameters(from: url)
         }

@@ -307,8 +307,8 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendabl
 
 /// 导航栏样式配置
 open class NavigationBarAppearance {
-    actor Configuration {
-        static var appearanceChanged: (@MainActor @Sendable (UIViewController) -> Void)?
+    @_spi(FW) public actor Configuration {
+        public static var appearanceChanged: (@MainActor @Sendable (UIViewController) -> Void)?
         fileprivate static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
     }
 

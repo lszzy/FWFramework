@@ -8,32 +8,6 @@
 import Foundation
 import UIKit
 
-// MARK: - RequestFilter
-/// 请求过滤器协议
-public protocol RequestFilterProtocol: AnyObject {
-    /// 请求URL过滤器，返回处理后的URL
-    func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
-
-    /// 请求URLRequest过滤器，处理后才发送请求
-    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest)
-
-    /// 请求Response过滤器，处理后才调用回调
-    func filterResponse(for request: HTTPRequest) throws
-}
-
-extension RequestFilterProtocol {
-    /// 默认实现请求URL过滤器，返回处理后的URL
-    public func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String {
-        originUrl
-    }
-
-    /// 默认实现请求URLRequest过滤器，处理后才发送请求
-    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) {}
-
-    /// 默认实现请求Response过滤器，处理后才调用回调
-    public func filterResponse(for request: HTTPRequest) throws {}
-}
-
 // MARK: - RequestConfig
 /// 请求配置类
 open class RequestConfig: @unchecked Sendable {
@@ -55,6 +29,9 @@ open class RequestConfig: @unchecked Sendable {
     }
 
     private var _requestPlugin: RequestPlugin?
+    
+    /// 请求过滤器数组
+    open private(set) var requestFilters: [RequestFilterProtocol] = []
 
     /// 当前请求重试器，默认全局重试器，可清空
     open var requestRetrier: RequestRetrierProtocol? = RequestRetrier.default
@@ -64,9 +41,6 @@ open class RequestConfig: @unchecked Sendable {
 
     /// 当前请求缓存，默认文件缓存，可清空
     open var requestCache: RequestCacheProtocol? = RequestCache.default
-
-    /// 请求过滤器数组
-    open private(set) var requestFilters: [RequestFilterProtocol] = []
 
     /// 请求基准地址
     open var baseUrl: String = ""
@@ -98,11 +72,6 @@ open class RequestConfig: @unchecked Sendable {
     /// 调试Mock处理器，默认nil
     open var debugMockProcessor: (@Sendable (HTTPRequest) -> Bool)?
 
-    /// 内部显示错误和加载条句柄
-    var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
-    var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-    var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-
     public init() {}
 
     /// 添加请求过滤器
@@ -114,6 +83,32 @@ open class RequestConfig: @unchecked Sendable {
     open func clearRequestFilters() {
         requestFilters.removeAll()
     }
+}
+
+// MARK: - RequestFilter
+/// 请求过滤器协议
+public protocol RequestFilterProtocol: AnyObject {
+    /// 请求URL过滤器，返回处理后的URL
+    func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
+
+    /// 请求URLRequest过滤器，处理后才发送请求
+    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws
+
+    /// 请求Response过滤器，处理后才调用回调
+    func filterResponse(for request: HTTPRequest) throws
+}
+
+extension RequestFilterProtocol {
+    /// 默认实现请求URL过滤器，返回处理后的URL
+    public func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String {
+        originUrl
+    }
+
+    /// 默认实现请求URLRequest过滤器，处理后才发送请求
+    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {}
+
+    /// 默认实现请求Response过滤器，处理后才调用回调
+    public func filterResponse(for request: HTTPRequest) throws {}
 }
 
 // MARK: - RequestAccessory
@@ -162,6 +157,12 @@ open class RequestAccessory: RequestAccessoryProtocol {
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
+    @_spi(FW) public actor Configuration {
+        public static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
+        public static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+        public static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    }
+    
     /// 自定义显示错误方法，主线程优先调用，默认nil
     open var showErrorBlock: HTTPRequest.Completion?
     /// 自定义显示加载条方法，主线程优先调用，默认nil
@@ -252,7 +253,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         }
 
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.showErrorBlock?(request.context, error)
+            Configuration.showErrorBlock?(request.context, error)
         }
     }
 
@@ -269,7 +270,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.showLoadingBlock?(request.context)
+            Configuration.showLoadingBlock?(request.context)
         }
     }
 
@@ -284,7 +285,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            RequestConfig.shared.hideLoadingBlock?(request.context)
+            Configuration.hideLoadingBlock?(request.context)
         }
     }
 }
@@ -293,7 +294,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 /// 请求重试器协议
 public protocol RequestRetrierProtocol: AnyObject {
     /// 处理重试请求，处理完成回调是否需要重试
-    func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void)
+    func retryRequest(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void)
 }
 
 /// 默认请求重试器，直接调用request的钩子方法
@@ -301,7 +302,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     public static let `default` = RequestRetrier()
 
     /// 自定义重试过滤器，回调过滤结果(nil时继续判定，非nil时停止判定)，优先级最高且线程安全，可用于刷新授权等
-    open var requestRetryFilter: (@Sendable (_ request: HTTPRequest, _ response: URLResponse, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (_ filterResult: Bool?) -> Void) -> Void)?
+    open var requestRetryFilter: (@Sendable (_ request: HTTPRequest, _ response: URLResponse?, _ responseObject: Any?, _ error: Error?, _ completionHandler: @escaping @Sendable (_ filterResult: Bool?) -> Void) -> Void)?
 
     private lazy var retryQueue = DispatchQueue(label: "site.wuyong.queue.request.retrier.filter")
     private lazy var retrySemaphore = DispatchSemaphore(value: 1)
@@ -320,7 +321,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
     }
 
     // MARK: - RequestRetrierProtocol
-    open func retryRequest(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
+    open func retryRequest(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         if request.isCancelled { return }
 
         guard let filter = requestRetryFilter else {
@@ -345,7 +346,7 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
         }
     }
 
-    private func retryProcess(_ request: HTTPRequest, response: URLResponse, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
+    private func retryProcess(_ request: HTTPRequest, response: URLResponse?, responseObject: Any?, error: Error?, completionHandler: @escaping @Sendable (_ shouldRetry: Bool) -> Void) {
         let retryCount = request.requestRetryCount()
         let remainCount = retryCount - (request.requestTotalCount - 1)
         var canRetry = retryCount < 0 || remainCount > 0
@@ -356,14 +357,13 @@ open class RequestRetrier: RequestRetrierProtocol, @unchecked Sendable {
             canRetry = (timeoutInterval <= 0 || (Date().timeIntervalSince1970 - request.requestStartTime + waitTime) < timeoutInterval)
         }
 
-        guard canRetry, let response = response as? HTTPURLResponse,
-              request.requestRetryValidator(response, responseObject: responseObject, error: error) else {
+        guard canRetry, request.requestRetryValidator(response as? HTTPURLResponse, responseObject: responseObject, error: error) else {
             completionHandler(false)
             return
         }
 
         let sendableWaitTime = waitTime
-        request.requestRetryProcessor(response, responseObject: responseObject, error: error) { shouldRetry in
+        request.requestRetryProcessor(response as? HTTPURLResponse, responseObject: responseObject, error: error) { shouldRetry in
             if request.isCancelled { return }
 
             if shouldRetry {
