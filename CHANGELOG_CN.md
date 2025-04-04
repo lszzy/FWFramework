@@ -1,5 +1,19 @@
 # 更新日志
 
+## [7.0.0] - 2025-04-04
+
+### Changed
+* 拆分FWUIKit子模块，重构子模块列表，CocoaPods和SPM项目需迁移适配
+* 移除JSONModel读写内存方式，请实现KeyMappable或迁移至SmartModel
+* 重构Loader实现，新增AsyncLoader，新增文件Logger，Logger支持过滤分组
+* HTTPRequest新增请求结束回调，RequestFilter支持throws抛出异常
+* 移除废弃代码，重构部分类和方法命名，如遇代码报错请迁移适配
+
+### Migrate
+1. 由于子模块列表已重构，需将旧版子模块迁移到新版子模块列表
+2. 迁移JSONModel读写内存方式为KeyMappable方式或使用SmartModel等
+3. 如遇其他编译报错，请迁移至新的类名和方法名，或参考Example项目
+
 ## [6.1.0] - 2025-03-08
 
 ### Added
