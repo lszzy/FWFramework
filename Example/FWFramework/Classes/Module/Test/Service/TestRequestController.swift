@@ -94,6 +94,15 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
             "nullName": (testFailed ? Validator<String>.isNotEmpty : Validator<String>.isValid).anyValidator
         ]
     }
+    
+    override func requestFailedPreprocessor() {
+        super.requestFailedPreprocessor()
+        
+        if !isDataFromCache {
+            // 模拟网络请求慢的情况，以便显示loading
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+    }
 }
 
 // 解析ResponseModel数组实例
@@ -469,10 +478,9 @@ extension TestRequestController {
     }
 
     @objc private func onFailed() {
+        app.showLoading()
         let request = TestModelRequest()
         request.testFailed = true
-        request.context = self
-        request.autoShowLoading = true
         request.start { [weak self] req in
             let message = "json请求成功: \n\(req.safeResponseModel.name)"
             self?.app.showMessage(text: message)
@@ -484,6 +492,8 @@ extension TestRequestController {
                 message += "\n当前服务器时间：\(serverTime)"
             }
             self?.app.showMessage(text: message)
+        } complete: { [weak self] _ in
+            self?.app.hideLoading()
         }
     }
 

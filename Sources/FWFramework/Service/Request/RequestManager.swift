@@ -352,6 +352,7 @@ open class RequestManager: @unchecked Sendable {
             request.requestCompleteFilter()
             request.delegate?.requestFinished(request)
             request.successCompletionBlock?(request)
+            request.requestCompletedBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
 
             self.finishRequest(request)
@@ -391,6 +392,7 @@ open class RequestManager: @unchecked Sendable {
             request.requestFailedFilter()
             request.delegate?.requestFailed(request)
             request.failureCompletionBlock?(request)
+            request.requestCompletedBlock?(request)
             request.toggleAccessoriesDidStopCallBack()
 
             self.finishRequest(request)

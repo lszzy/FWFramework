@@ -39,7 +39,9 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open var successCompletionBlock: Completion?
     /// 失败完成回调
     open var failureCompletionBlock: Completion?
-    /// 自定义取消回调句柄，不一定主线程调用
+    /// 请求结束回调，成功失败都会触发
+    open var requestCompletedBlock: Completion?
+    /// 请求取消回调，不一定主线程调用
     open var requestCancelledBlock: (@Sendable (ChainRequest) -> Void)?
     /// 请求标签，默认0
     open var tag: Int = 0
@@ -116,11 +118,16 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         ChainRequestManager.shared.removeChainRequest(self)
     }
 
-    /// 开始请求并指定成功、失败句柄
+    /// 开始请求并指定成功、失败、结束句柄
     @discardableResult
-    open func start(success: Completion?, failure: Completion?) -> Self {
+    open func start(
+        success: Completion?,
+        failure: Completion?,
+        complete: Completion? = nil
+    ) -> Self {
         successCompletionBlock = success
         failureCompletionBlock = failure
+        if (complete != nil) { requestCompletedBlock = complete }
         return start()
     }
 
@@ -129,10 +136,17 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open func start(completion: Completion?) -> Self {
         start(success: completion, failure: completion)
     }
+    
+    /// 自定义请求结束句柄，成功失败都会触发
+    @discardableResult
+    open func requestCompleted(_ block: Completion?) -> Self {
+        requestCompletedBlock = block
+        return self
+    }
 
     /// 请求取消句柄，不一定主线程调用
     @discardableResult
-    open func requestCancelledBlock(_ block: (@Sendable (ChainRequest) -> Void)?) -> Self {
+    open func requestCancelled(_ block: (@Sendable (ChainRequest) -> Void)?) -> Self {
         requestCancelledBlock = block
         return self
     }
@@ -170,6 +184,7 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open func clearCompletionBlock() {
         successCompletionBlock = nil
         failureCompletionBlock = nil
+        requestCompletedBlock = nil
     }
 
     /// 显示网络错误，默认显示Toast提示
@@ -270,9 +285,11 @@ open class ChainRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
         if failedRequest == nil {
             delegate?.chainRequestFinished(self)
             successCompletionBlock?(self)
+            requestCompletedBlock?(self)
         } else {
             delegate?.chainRequestFailed(self)
             failureCompletionBlock?(self)
+            requestCompletedBlock?(self)
         }
 
         clearCompletionBlock()
@@ -328,7 +345,7 @@ extension ChainRequest {
     public func response() async -> ChainRequest {
         await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
-                requestCancelledBlock { request in
+                requestCancelled { request in
                     if !Task.isCancelled {
                         continuation.resume(returning: request)
                     }
@@ -347,7 +364,7 @@ extension ChainRequest {
     public func responseSuccess() async throws -> ChainRequest {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                requestCancelledBlock { _ in
+                requestCancelled { _ in
                     if !Task.isCancelled {
                         continuation.resume(throwing: CancellationError())
                     }
