@@ -8,32 +8,6 @@
 import Foundation
 import UIKit
 
-// MARK: - RequestFilter
-/// 请求过滤器协议
-public protocol RequestFilterProtocol: AnyObject {
-    /// 请求URL过滤器，返回处理后的URL
-    func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
-
-    /// 请求URLRequest过滤器，处理后才发送请求
-    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws
-
-    /// 请求Response过滤器，处理后才调用回调
-    func filterResponse(for request: HTTPRequest) throws
-}
-
-extension RequestFilterProtocol {
-    /// 默认实现请求URL过滤器，返回处理后的URL
-    public func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String {
-        originUrl
-    }
-
-    /// 默认实现请求URLRequest过滤器，处理后才发送请求
-    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {}
-
-    /// 默认实现请求Response过滤器，处理后才调用回调
-    public func filterResponse(for request: HTTPRequest) throws {}
-}
-
 // MARK: - RequestConfig
 /// 请求配置类
 open class RequestConfig: @unchecked Sendable {
@@ -55,6 +29,9 @@ open class RequestConfig: @unchecked Sendable {
     }
 
     private var _requestPlugin: RequestPlugin?
+    
+    /// 请求过滤器数组
+    open private(set) var requestFilters: [RequestFilterProtocol] = []
 
     /// 当前请求重试器，默认全局重试器，可清空
     open var requestRetrier: RequestRetrierProtocol? = RequestRetrier.default
@@ -64,9 +41,6 @@ open class RequestConfig: @unchecked Sendable {
 
     /// 当前请求缓存，默认文件缓存，可清空
     open var requestCache: RequestCacheProtocol? = RequestCache.default
-
-    /// 请求过滤器数组
-    open private(set) var requestFilters: [RequestFilterProtocol] = []
 
     /// 请求基准地址
     open var baseUrl: String = ""
@@ -109,6 +83,32 @@ open class RequestConfig: @unchecked Sendable {
     open func clearRequestFilters() {
         requestFilters.removeAll()
     }
+}
+
+// MARK: - RequestFilter
+/// 请求过滤器协议
+public protocol RequestFilterProtocol: AnyObject {
+    /// 请求URL过滤器，返回处理后的URL
+    func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String
+
+    /// 请求URLRequest过滤器，处理后才发送请求
+    func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws
+
+    /// 请求Response过滤器，处理后才调用回调
+    func filterResponse(for request: HTTPRequest) throws
+}
+
+extension RequestFilterProtocol {
+    /// 默认实现请求URL过滤器，返回处理后的URL
+    public func filterUrl(_ originUrl: String, for request: HTTPRequest) -> String {
+        originUrl
+    }
+
+    /// 默认实现请求URLRequest过滤器，处理后才发送请求
+    public func filterUrlRequest(_ urlRequest: inout URLRequest, for request: HTTPRequest) throws {}
+
+    /// 默认实现请求Response过滤器，处理后才调用回调
+    public func filterResponse(for request: HTTPRequest) throws {}
 }
 
 // MARK: - RequestAccessory
