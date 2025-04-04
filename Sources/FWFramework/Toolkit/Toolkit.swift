@@ -2598,6 +2598,11 @@ extension FrameworkAutoloader {
     }
 }
 
+// MARK: - FrameworkConfiguration+Toolkit
+extension FrameworkConfiguration {
+    public static var isViewControllerProtocol: (@Sendable (UIViewController) -> Bool)?
+}
+
 // MARK: - Concurrency+Toolkit
 @MainActor extension Wrapper where Base: UIApplication {
     /// 异步打开URL，支持NSString|NSURL，完成时回调，即使未配置URL SCHEME，实际也能打开成功，只要调用时已打开过对应App

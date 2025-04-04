@@ -165,11 +165,6 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 }
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
-    @_spi(FW) public actor Configuration {
-        public static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
-        fileprivate static var imageLock = NSLock()
-    }
-
     open var imageScale: CGFloat = UIScreen.fw.screenScale
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false
@@ -197,16 +192,16 @@ open class ImageResponseSerializer: HTTPResponseSerializer {
         }
 
         var image: UIImage?
-        Configuration.imageLock.lock()
-        if Configuration.imageDecodeBlock != nil {
-            image = Configuration.imageDecodeBlock?(data, scale, options)
+        FrameworkConfiguration.imageDecodeLock.lock()
+        if FrameworkConfiguration.imageDecodeBlock != nil {
+            image = FrameworkConfiguration.imageDecodeBlock?(data, scale, options)
         } else {
             image = UIImage(data: data)
             if image?.images == nil, let cgImage = image?.cgImage {
                 image = UIImage(cgImage: cgImage, scale: scale, orientation: image?.imageOrientation ?? .up)
             }
         }
-        Configuration.imageLock.unlock()
+        FrameworkConfiguration.imageDecodeLock.unlock()
         return image
     }
 
@@ -334,4 +329,10 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
 
         return try super.responseObject(for: response, data: data)
     }
+}
+
+// MARK: - FrameworkConfiguration+URLResponseSerialization
+extension FrameworkConfiguration {
+    public static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
+    fileprivate static var imageDecodeLock = NSLock()
 }

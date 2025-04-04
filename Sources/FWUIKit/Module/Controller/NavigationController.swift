@@ -325,7 +325,7 @@ extension FrameworkAutoloader {
     @objc static func loadModule_NavigationController() {
         swizzleNavigationController()
 
-        NavigationBarAppearance.Configuration.appearanceChanged = { viewController in
+        FrameworkConfiguration.appearanceChanged = { viewController in
             viewController.fw.barTransitionNeedsUpdate()
         }
     }

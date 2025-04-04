@@ -47,11 +47,6 @@ public enum BannerViewPageControlStyle: Int, Sendable {
 ///
 /// [SDCycleScrollView](https://github.com/gsdios/SDCycleScrollView)
 open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
-    @_spi(FW) public actor Configuration {
-        public static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
-        public static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
-    }
-
     // MARK: - Accessor
     /// 图片数组，支持String|URL|UIImage
     open var imagesGroup: [Any]? {
@@ -539,10 +534,10 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         var cellTracked = false
         if let cell = collectionView.cellForItem(at: indexPath) {
-            cellTracked = Configuration.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = FrameworkConfiguration.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
         }
         if !cellTracked {
-            cellTracked = Configuration.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
         }
     }
 
@@ -580,7 +575,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         let itemIndex = flowLayout.currentPage ?? 0
         // 快速滚动时不计曝光次数
-        Configuration.trackExposureBlock?(self)
+        FrameworkConfiguration.trackExposureBlock?(self)
 
         if infiniteLoop {
             if itemIndex == totalItemsCount - 1 {
@@ -606,7 +601,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         scrollToPageControlIndex(currentIndex, animated: animated)
 
         if !animated, currentIndex != previousIndex {
-            Configuration.trackExposureBlock?(self)
+            FrameworkConfiguration.trackExposureBlock?(self)
         }
 
         if autoScroll {
@@ -632,7 +627,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         }
     }
 
-    @_spi(FW) public func pageControlIndex(cellIndex index: Int) -> Int {
+    func pageControlIndex(cellIndex index: Int) -> Int {
         index % imagePathsGroup.count
     }
 
@@ -1100,4 +1095,10 @@ open class BannerViewCell: UICollectionViewCell {
             titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+BannerView
+extension FrameworkConfiguration {
+    static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
+    static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
 }
