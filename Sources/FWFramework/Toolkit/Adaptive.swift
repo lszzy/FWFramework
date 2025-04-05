@@ -261,27 +261,27 @@ extension WrapperGlobal {
 
     /// 设备宽度，跟横竖屏无关
     public nonisolated static var deviceWidth: CGFloat {
-        if let deviceWidth = AdaptiveConfiguration.deviceWidth { return deviceWidth }
+        if let deviceWidth = FrameworkConfiguration.deviceWidth { return deviceWidth }
 
         let deviceWidth = DispatchQueue.fw.mainSyncIf {
             min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         } otherwise: {
             min(UIScreen.fw.screenSize.width, UIScreen.fw.screenSize.height)
         }
-        AdaptiveConfiguration.deviceWidth = deviceWidth
+        FrameworkConfiguration.deviceWidth = deviceWidth
         return deviceWidth
     }
 
     /// 设备高度，跟横竖屏无关
     public nonisolated static var deviceHeight: CGFloat {
-        if let deviceHeight = AdaptiveConfiguration.deviceHeight { return deviceHeight }
+        if let deviceHeight = FrameworkConfiguration.deviceHeight { return deviceHeight }
 
         let deviceHeight = DispatchQueue.fw.mainSyncIf {
             max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         } otherwise: {
             max(UIScreen.fw.screenSize.width, UIScreen.fw.screenSize.height)
         }
-        AdaptiveConfiguration.deviceHeight = deviceHeight
+        FrameworkConfiguration.deviceHeight = deviceHeight
         return deviceHeight
     }
 
@@ -292,7 +292,7 @@ extension WrapperGlobal {
 
     /// 获取设备模型，格式："iPhone15,1"
     public nonisolated static var deviceModel: String {
-        if let deviceModel = AdaptiveConfiguration.deviceModel {
+        if let deviceModel = FrameworkConfiguration.deviceModel {
             return deviceModel
         }
 
@@ -307,7 +307,7 @@ extension WrapperGlobal {
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
         #endif
-        AdaptiveConfiguration.deviceModel = deviceModel
+        FrameworkConfiguration.deviceModel = deviceModel
         return deviceModel
     }
 
@@ -316,7 +316,7 @@ extension WrapperGlobal {
         let isLandscape = DispatchQueue.fw.mainSyncIf {
             UIDevice.current.orientation.isLandscape
         } otherwise: {
-            if let orientationValue = AdaptiveConfiguration.currentDevice?.fw.value(forKey: "orientation") as? Int,
+            if let orientationValue = FrameworkConfiguration.currentDevice?.fw.value(forKey: "orientation") as? Int,
                let orientation = UIDeviceOrientation(rawValue: orientationValue) {
                 return orientation.isLandscape
             }
@@ -364,7 +364,7 @@ extension WrapperGlobal {
         let screenBounds = DispatchQueue.fw.mainSyncIf {
             UIScreen.main.bounds
         } otherwise: {
-            AdaptiveConfiguration.mainScreen?.fw.value(forKey: "bounds") as? CGRect ?? .zero
+            FrameworkConfiguration.mainScreen?.fw.value(forKey: "bounds") as? CGRect ?? .zero
         }
         return screenBounds.size
     }
@@ -381,14 +381,14 @@ extension WrapperGlobal {
 
     /// 屏幕像素比例
     public nonisolated static var screenScale: CGFloat {
-        if let screenScale = AdaptiveConfiguration.screenScale { return screenScale }
+        if let screenScale = FrameworkConfiguration.screenScale { return screenScale }
 
         let screenScale = DispatchQueue.fw.mainSyncIf {
             UIScreen.main.scale
         } otherwise: {
-            AdaptiveConfiguration.mainScreen?.fw.value(forKey: "scale") as? CGFloat ?? 0
+            FrameworkConfiguration.mainScreen?.fw.value(forKey: "scale") as? CGFloat ?? 0
         }
-        AdaptiveConfiguration.screenScale = screenScale
+        FrameworkConfiguration.screenScale = screenScale
         return screenScale
     }
 
@@ -469,10 +469,10 @@ extension WrapperGlobal {
     public static var safeAreaInsets: UIEdgeInsets {
         var mainWindow = UIWindow.fw.main
         if mainWindow != nil {
-            if AdaptiveConfiguration.mainWindow != nil { AdaptiveConfiguration.mainWindow = nil }
+            if FrameworkConfiguration.mainWindow != nil { FrameworkConfiguration.mainWindow = nil }
         } else {
-            if AdaptiveConfiguration.mainWindow == nil { AdaptiveConfiguration.mainWindow = UIWindow(frame: UIScreen.main.bounds) }
-            mainWindow = AdaptiveConfiguration.mainWindow
+            if FrameworkConfiguration.mainWindow == nil { FrameworkConfiguration.mainWindow = UIWindow(frame: UIScreen.main.bounds) }
+            mainWindow = FrameworkConfiguration.mainWindow
         }
         return mainWindow?.safeAreaInsets ?? .zero
     }
@@ -481,18 +481,18 @@ extension WrapperGlobal {
     public static var statusBarHeight: CGFloat {
         // 1. 读取自定义状态栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
-        if let height = AdaptiveConfiguration.customStatusBarHeights[orientation] { return height }
+        if let height = FrameworkConfiguration.customStatusBarHeights[orientation] { return height }
 
         // 2. 获取实时statusBarManager状态栏高度并缓存
         let statusBarManager = UIWindow.fw.mainScene?.statusBarManager
         if let statusBarManager, !statusBarManager.isStatusBarHidden {
             let height = statusBarManager.statusBarFrame.height
-            AdaptiveConfiguration.cachedStatusBarHeights[orientation] = height
+            FrameworkConfiguration.cachedStatusBarHeights[orientation] = height
             return height
         }
 
         // 3. 当获取不到实时状态栏高度时读取缓存
-        if let height = AdaptiveConfiguration.cachedStatusBarHeights[orientation] {
+        if let height = FrameworkConfiguration.cachedStatusBarHeights[orientation] {
             return height
         }
 
@@ -500,7 +500,7 @@ extension WrapperGlobal {
         let heightSelector = NSSelectorFromString("defaultStatusBarHeightInOrientation:")
         if let statusBarManager, statusBarManager.responds(to: heightSelector),
            let height = statusBarManager.fw.invokeMethod(heightSelector, objects: [orientation.rawValue])?.takeUnretainedValue() as? CGFloat {
-            AdaptiveConfiguration.cachedStatusBarHeights[orientation] = height
+            FrameworkConfiguration.cachedStatusBarHeights[orientation] = height
             return height
         }
 
@@ -520,18 +520,18 @@ extension WrapperGlobal {
     public static var navigationBarHeight: CGFloat {
         // 1. 读取自定义导航栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
-        if let height = AdaptiveConfiguration.customNavigationBarHeights[orientation] { return height }
+        if let height = FrameworkConfiguration.customNavigationBarHeights[orientation] { return height }
 
         // 2. 获取实时根导航控制器高度并缓存
         if let navController = firstRootController(of: UINavigationController.self),
            !navController.navigationBar.prefersLargeTitles {
             let height = navController.navigationBar.frame.height
-            AdaptiveConfiguration.cachedNavigationBarHeights[orientation] = height
+            FrameworkConfiguration.cachedNavigationBarHeights[orientation] = height
             return height
         }
 
         // 3. 当获取不到实时导航栏高度时读取缓存
-        if let height = AdaptiveConfiguration.cachedNavigationBarHeights[orientation] {
+        if let height = FrameworkConfiguration.cachedNavigationBarHeights[orientation] {
             return height
         }
 
@@ -550,17 +550,17 @@ extension WrapperGlobal {
     public static var tabBarHeight: CGFloat {
         // 1. 读取自定义标签栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
-        if let height = AdaptiveConfiguration.customTabBarHeights[orientation] { return height }
+        if let height = FrameworkConfiguration.customTabBarHeights[orientation] { return height }
 
         // 2. 获取实时根标签控制器高度并缓存
         if let tabController = firstRootController(of: UITabBarController.self) {
             let height = tabController.tabBar.frame.height
-            AdaptiveConfiguration.cachedTabBarHeights[orientation] = height
+            FrameworkConfiguration.cachedTabBarHeights[orientation] = height
             return height
         }
 
         // 3. 当获取不到实时标签栏高度时读取缓存
-        if let height = AdaptiveConfiguration.cachedTabBarHeights[orientation] {
+        if let height = FrameworkConfiguration.cachedTabBarHeights[orientation] {
             return height
         }
 
@@ -574,17 +574,17 @@ extension WrapperGlobal {
     public static var toolBarHeight: CGFloat {
         // 1. 读取自定义工具栏高度，优先级最高
         let orientation = UIWindow.fw.mainScene?.interfaceOrientation ?? .unknown
-        if let height = AdaptiveConfiguration.customToolBarHeights[orientation] { return height }
+        if let height = FrameworkConfiguration.customToolBarHeights[orientation] { return height }
 
         // 2. 获取实时根导航控制器工具栏高度并缓存
         if let navController = firstRootController(of: UINavigationController.self) {
             let height = navController.toolbar.frame.height + safeAreaInsets.bottom
-            AdaptiveConfiguration.cachedToolBarHeights[orientation] = height
+            FrameworkConfiguration.cachedToolBarHeights[orientation] = height
             return height
         }
 
         // 3. 当获取不到实时工具栏高度时读取缓存
-        if let height = AdaptiveConfiguration.cachedToolBarHeights[orientation] {
+        if let height = FrameworkConfiguration.cachedToolBarHeights[orientation] {
             return height
         }
 
@@ -596,22 +596,22 @@ extension WrapperGlobal {
 
     /// 自定义指定界面方向状态栏高度，小于等于0时清空
     public static func setStatusBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
-        AdaptiveConfiguration.customStatusBarHeights[orientation] = height > 0 ? height : nil
+        FrameworkConfiguration.customStatusBarHeights[orientation] = height > 0 ? height : nil
     }
 
     /// 自定义指定界面方向导航栏高度，小于等于0时清空
     public static func setNavigationBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
-        AdaptiveConfiguration.customNavigationBarHeights[orientation] = height > 0 ? height : nil
+        FrameworkConfiguration.customNavigationBarHeights[orientation] = height > 0 ? height : nil
     }
 
     /// 自定义指定界面方向标签栏高度，小于等于0时清空
     public static func setTabBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
-        AdaptiveConfiguration.customTabBarHeights[orientation] = height > 0 ? height : nil
+        FrameworkConfiguration.customTabBarHeights[orientation] = height > 0 ? height : nil
     }
 
     /// 自定义指定界面方向工具栏高度，小于等于0时清空
     public static func setToolBarHeight(_ height: CGFloat, for orientation: UIInterfaceOrientation) {
-        AdaptiveConfiguration.customToolBarHeights[orientation] = height > 0 ? height : nil
+        FrameworkConfiguration.customToolBarHeights[orientation] = height > 0 ? height : nil
     }
 
     private static func firstRootController<T>(of type: T.Type) -> T? {
@@ -652,20 +652,20 @@ extension WrapperGlobal {
 
     /// 指定等比例缩放参考设计图尺寸，默认{375,812}，宽度常用
     public nonisolated static var referenceSize: CGSize {
-        get { AdaptiveConfiguration.referenceSize }
-        set { AdaptiveConfiguration.referenceSize = newValue }
+        get { FrameworkConfiguration.referenceSize }
+        set { FrameworkConfiguration.referenceSize = newValue }
     }
 
     /// 全局自定义屏幕宽度缩放比例句柄，默认nil
     public nonisolated static var relativeScaleBlock: (@Sendable () -> CGFloat)? {
-        get { AdaptiveConfiguration.relativeScaleBlock }
-        set { AdaptiveConfiguration.relativeScaleBlock = newValue }
+        get { FrameworkConfiguration.relativeScaleBlock }
+        set { FrameworkConfiguration.relativeScaleBlock = newValue }
     }
 
     /// 全局自定义屏幕高度缩放比例句柄，默认nil
     public nonisolated static var relativeHeightScaleBlock: (@Sendable () -> CGFloat)? {
-        get { AdaptiveConfiguration.relativeHeightScaleBlock }
-        set { AdaptiveConfiguration.relativeHeightScaleBlock = newValue }
+        get { FrameworkConfiguration.relativeHeightScaleBlock }
+        set { FrameworkConfiguration.relativeHeightScaleBlock = newValue }
     }
 
     /// 获取当前屏幕宽度缩放比例，宽度常用
@@ -929,8 +929,21 @@ extension UIEdgeInsets {
     public var ceilValue: UIEdgeInsets { UIEdgeInsets(top: top.ceilValue, left: left.ceilValue, bottom: bottom.ceilValue, right: right.ceilValue) }
 }
 
-// MARK: - AdaptiveConfiguration
-actor AdaptiveConfiguration {
+// MARK: - FrameworkAutoloader+Adaptive
+extension FrameworkAutoloader {
+    @objc static func loadToolkit_Adaptive() {
+        DispatchQueue.fw.mainAsync {
+            FrameworkConfiguration.currentDevice = UIDevice.current
+            FrameworkConfiguration.mainScreen = UIScreen.main
+            FrameworkConfiguration.deviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            FrameworkConfiguration.deviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            FrameworkConfiguration.screenScale = UIScreen.main.scale
+        }
+    }
+}
+
+// MARK: - FrameworkConfiguration+Adaptive
+extension FrameworkConfiguration {
     static var currentDevice: UIDevice? {
         get {
             if let currentDevice = cachedCurrentDevice { return currentDevice }
@@ -947,8 +960,8 @@ actor AdaptiveConfiguration {
             cachedCurrentDevice = newValue
         }
     }
-
     private static var cachedCurrentDevice: UIDevice?
+    
     fileprivate static var deviceWidth: CGFloat?
     fileprivate static var deviceHeight: CGFloat?
     fileprivate static var deviceModel: String?
@@ -969,10 +982,10 @@ actor AdaptiveConfiguration {
             cachedMainScreen = newValue
         }
     }
-
     private static var cachedMainScreen: UIScreen?
+    
     fileprivate static var screenScale: CGFloat?
-    fileprivate static var referenceSize: CGSize = .init(width: 375, height: 812)
+    fileprivate static var referenceSize = CGSize(width: 375, height: 812)
     fileprivate static var relativeScaleBlock: (@Sendable () -> CGFloat)?
     fileprivate static var relativeHeightScaleBlock: (@Sendable () -> CGFloat)?
     fileprivate static var mainWindow: UIWindow?
@@ -984,17 +997,4 @@ actor AdaptiveConfiguration {
     fileprivate static var cachedNavigationBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate static var cachedTabBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate static var cachedToolBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
-}
-
-// MARK: - FrameworkAutoloader+Adaptive
-extension FrameworkAutoloader {
-    @objc static func loadToolkit_Adaptive() {
-        DispatchQueue.fw.mainAsync {
-            AdaptiveConfiguration.currentDevice = UIDevice.current
-            AdaptiveConfiguration.mainScreen = UIScreen.main
-            AdaptiveConfiguration.deviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-            AdaptiveConfiguration.deviceHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-            AdaptiveConfiguration.screenScale = UIScreen.main.scale
-        }
-    }
 }

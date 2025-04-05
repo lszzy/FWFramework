@@ -21,11 +21,6 @@ extension CacheType {
 ///
 /// [MMKV](https://github.com/Tencent/MMKV)
 open class CacheMMKV: CacheEngine, @unchecked Sendable {
-    private actor Configuration {
-        static var initialized = false
-        static var cryptKey: Data?
-    }
-
     /// 单例模式
     public static let shared = CacheMMKV()
 
@@ -37,9 +32,9 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         logLevel: MMKVLogLevel = .info,
         handler: MMKVHandler? = nil
     ) {
-        guard !Configuration.initialized else { return }
-        Configuration.initialized = true
-        Configuration.cryptKey = cryptKey
+        guard !FrameworkConfiguration.mmkvInitialized else { return }
+        FrameworkConfiguration.mmkvInitialized = true
+        FrameworkConfiguration.mmkvCryptKey = cryptKey
         if let groupDir {
             MMKV.initialize(rootDir: rootDir, groupDir: groupDir, logLevel: logLevel, handler: handler)
         } else {
@@ -52,8 +47,8 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 
     /// 初始化默认MMKV缓存
     override public init() {
-        if !Configuration.initialized { Self.initializeMMKV() }
-        if let cryptKey = Configuration.cryptKey {
+        if !FrameworkConfiguration.mmkvInitialized { Self.initializeMMKV() }
+        if let cryptKey = FrameworkConfiguration.mmkvCryptKey {
             self.mmkv = MMKV.defaultMMKV(withCryptKey: cryptKey)
         } else {
             self.mmkv = MMKV.default()
@@ -68,7 +63,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         rootPath: String? = nil,
         mode: MMKVMode = .singleProcess
     ) {
-        if !Configuration.initialized { Self.initializeMMKV() }
+        if !FrameworkConfiguration.mmkvInitialized { Self.initializeMMKV() }
         self.mmkv = MMKV(mmapID: mmapID, cryptKey: cryptKey, rootPath: rootPath, mode: mode, expectedCapacity: 0)
         super.init()
     }
@@ -236,4 +231,10 @@ public struct MMAPValue<Value> {
     static func loadPlugin_MMKV() {
         CacheManager.presetCache(.mmkv) { CacheMMKV.shared }
     }
+}
+
+// MARK: - FrameworkConfiguration+MMKV
+extension FrameworkConfiguration {
+    fileprivate static var mmkvInitialized = false
+    fileprivate static var mmkvCryptKey: Data?
 }

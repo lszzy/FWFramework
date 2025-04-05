@@ -12,7 +12,7 @@ extension WrapperGlobal {
     /// 注册自定义Codable解码转换器
     /// - Parameter decodingConverter: 解码转换器
     public static func register(_ decodingConverter: CodableDecodingConverter) {
-        CodableConfiguration.codableDecodingConverters.append(decodingConverter)
+        FrameworkConfiguration.codableDecodingConverters.append(decodingConverter)
     }
 }
 
@@ -848,7 +848,7 @@ extension KeyedDecodingContainer {
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T }
         }
 
-        for converter in CodableConfiguration.codableDecodingConverters {
+        for converter in FrameworkConfiguration.codableDecodingConverters {
             if let value = try? converter.decode(self, codingKey: codingKey, as: type) {
                 return value
             }
@@ -880,7 +880,7 @@ extension DefaultCaseCodable where Self.RawValue: Decodable {
     }
 }
 
-// MARK: - CodableConfiguration
-private actor CodableConfiguration {
-    static var codableDecodingConverters: [CodableDecodingConverter] = []
+// MARK: - FrameworkConfiguration+Codable
+extension FrameworkConfiguration {
+    fileprivate static var codableDecodingConverters: [CodableDecodingConverter] = []
 }

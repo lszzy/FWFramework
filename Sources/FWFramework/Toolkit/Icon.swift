@@ -45,23 +45,19 @@ extension WrapperGlobal {
 ///
 /// [FontAwesomeKit](https://github.com/PrideChung/FontAwesomeKit)
 open class Icon {
-    private actor Configuration {
-        static var iconMappers: [String: Icon.Type] = [:]
-    }
-
     /// 图标加载器，访问未注册图标时会尝试调用并注册，block返回值为register方法class参数
     public static let sharedLoader = Loader<String, Icon.Type>()
 
     /// 注册图标实现类，必须继承Icon，用于name快速查找，注意name不要重复
     open class func registerClass(_ iconClass: Icon.Type) {
         for (key, _) in iconClass.iconMapper() {
-            Configuration.iconMappers[key] = iconClass
+            FrameworkConfiguration.iconMappers[key] = iconClass
         }
     }
 
     /// 指定名称和大小初始化图标对象
     open class func iconNamed(_ name: String, size: CGFloat) -> Icon? {
-        var iconClass = Configuration.iconMappers[name]
+        var iconClass = FrameworkConfiguration.iconMappers[name]
         if iconClass == nil {
             iconClass = try? sharedLoader.load(name)
             if let iconClass {
@@ -245,4 +241,9 @@ open class Icon {
     open class func iconFont(size: CGFloat) -> UIFont {
         UIFont.systemFont(ofSize: size)
     }
+}
+
+// MARK: - FrameworkConfiguration+Icon
+extension FrameworkConfiguration {
+    fileprivate static var iconMappers: [String: Icon.Type] = [:]
 }

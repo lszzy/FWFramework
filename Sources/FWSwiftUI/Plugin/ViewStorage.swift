@@ -15,8 +15,8 @@ import Combine
 /// [SwiftUIX](https://github.com/SwiftUIX/SwiftUIX)
 @frozen
 @propertyWrapper
-public struct ViewStorage<Value>: Identifiable, DynamicProperty {
-    public final class ValueBox: ViewStorageValue<Value> {
+public struct ViewStorage<Value>: Identifiable, DynamicProperty, @unchecked Sendable {
+    public final class ValueBox: ViewStorageValue<Value>, @unchecked Sendable {
         @Published fileprivate var value: Value
         
         public override var wrappedValue: Value {
@@ -86,7 +86,7 @@ extension ViewStorage: Hashable where Value: Hashable {
 
 // MARK: - ViewStorageValue
 @dynamicMemberLookup
-public class ViewStorageValue<Value>: ObservableObject {
+public class ViewStorageValue<Value>: ObservableObject, @unchecked Sendable {
     public var wrappedValue: Value {
         get {
             fatalError()
@@ -115,7 +115,7 @@ public class ViewStorageValue<Value>: ObservableObject {
 }
 
 // MARK: - ViewStorageMember
-final class ViewStorageMember<Root, Value>: ViewStorageValue<Value> {
+final class ViewStorageMember<Root, Value>: ViewStorageValue<Value>, @unchecked Sendable {
     unowned let root: ViewStorageValue<Root>
     
     let keyPath: WritableKeyPath<Root, Value>

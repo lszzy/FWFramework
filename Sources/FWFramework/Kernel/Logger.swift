@@ -205,20 +205,10 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
 /// 日志记录类。支持设置全局日志级别和自定义LoggerPlugin插件
 @objc(ObjCLogger)
 public class Logger: NSObject {
-    private actor Configuration {
-        static var level: LogLevel = {
-            #if DEBUG
-            .all
-            #else
-            .off
-            #endif
-        }()
-    }
-
     /// 全局日志级别，默认调试为All，正式为Off
     public static var level: LogLevel {
-        get { Configuration.level }
-        set { Configuration.level = newValue }
+        get { FrameworkConfiguration.logLevel }
+        set { FrameworkConfiguration.logLevel = newValue }
     }
 
     /// 记录类型日志，支持分组和用户信息
@@ -719,4 +709,15 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
             target.logger.log(logMessage)
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+Logger
+extension FrameworkConfiguration {
+    fileprivate static var logLevel: LogLevel = {
+        #if DEBUG
+        .all
+        #else
+        .off
+        #endif
+    }()
 }

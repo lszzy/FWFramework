@@ -41,24 +41,17 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 ///
 /// [SGQRCode](https://github.com/kingsic/SGQRCode)
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
-    private actor Configuration {
-        static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
-        static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
-            .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
-        ]
-    }
-
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
     public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] {
-        get { Configuration.metadataObjectTypesQRCode }
-        set { Configuration.metadataObjectTypesQRCode = newValue }
+        get { FrameworkConfiguration.metadataObjectTypesQRCode }
+        set { FrameworkConfiguration.metadataObjectTypesQRCode = newValue }
     }
 
     /// 默认条形码类型，可自定义
     public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] {
-        get { Configuration.metadataObjectTypesBarcode }
-        set { Configuration.metadataObjectTypesBarcode = newValue }
+        get { FrameworkConfiguration.metadataObjectTypesBarcode }
+        set { FrameworkConfiguration.metadataObjectTypesBarcode = newValue }
     }
 
     /// 预览视图，必须设置（传外界控制器视图）
@@ -956,4 +949,12 @@ open class ScanView: UIView {
             pinchScaleBlock?(gesture.scale)
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+ScanView
+extension FrameworkConfiguration {
+    fileprivate static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    fileprivate static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
+    ]
 }
