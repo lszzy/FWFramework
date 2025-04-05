@@ -197,8 +197,8 @@ extension Wrapper where Base: NSObject {
         objc_sync_enter(NSObject.self)
         defer { objc_sync_exit(NSObject.self) }
 
-        guard !FoundationConfiguration.onceTokens.contains(token) else { return }
-        FoundationConfiguration.onceTokens.append(token)
+        guard !FrameworkConfiguration.dispatchOnceTokens.contains(token) else { return }
+        FrameworkConfiguration.dispatchOnceTokens.append(token)
         closure()
     }
 
@@ -310,10 +310,10 @@ extension Wrapper where Base: NSObject {
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(deadline: .now() + start, repeating: interval, leeway: .seconds(0))
 
-        FoundationConfiguration.taskSemaphore.wait()
-        let taskId = "\(FoundationConfiguration.taskPool.count)"
-        FoundationConfiguration.taskPool[taskId] = timer
-        FoundationConfiguration.taskSemaphore.signal()
+        FrameworkConfiguration.performTaskSemaphore.wait()
+        let taskId = "\(FrameworkConfiguration.performTaskPool.count)"
+        FrameworkConfiguration.performTaskPool[taskId] = timer
+        FrameworkConfiguration.performTaskSemaphore.signal()
 
         timer.setEventHandler {
             task()
@@ -328,12 +328,12 @@ extension Wrapper where Base: NSObject {
     /// 指定任务Id取消轮询任务
     public static func cancelTask(_ taskId: String?) {
         guard let taskId, !taskId.isEmpty else { return }
-        FoundationConfiguration.taskSemaphore.wait()
-        if let timer = FoundationConfiguration.taskPool[taskId] as? DispatchSourceTimer {
+        FrameworkConfiguration.performTaskSemaphore.wait()
+        if let timer = FrameworkConfiguration.performTaskPool[taskId] as? DispatchSourceTimer {
             timer.cancel()
-            FoundationConfiguration.taskPool.removeObject(forKey: taskId)
+            FrameworkConfiguration.performTaskPool.removeObject(forKey: taskId)
         }
-        FoundationConfiguration.taskSemaphore.signal()
+        FrameworkConfiguration.performTaskSemaphore.signal()
     }
 }
 
@@ -343,7 +343,7 @@ extension Wrapper where Base == Date {
     public static var currentTime: TimeInterval {
         get {
             // 没有同步过返回本地时间
-            if FoundationConfiguration.currentBaseTime == 0 {
+            if FrameworkConfiguration.currentBaseTime == 0 {
                 // 是否本地有服务器时间
                 let preCurrentTime = UserDefaults.standard.object(forKey: "FWCurrentTime") as? NSNumber
                 let preLocalTime = UserDefaults.standard.object(forKey: "FWLocalTime") as? NSNumber
@@ -357,14 +357,14 @@ extension Wrapper where Base == Date {
                 }
                 // 同步过计算当前服务器时间
             } else {
-                let offsetTime = systemUptime - FoundationConfiguration.localBaseTime
-                return FoundationConfiguration.currentBaseTime + offsetTime
+                let offsetTime = systemUptime - FrameworkConfiguration.localBaseTime
+                return FrameworkConfiguration.currentBaseTime + offsetTime
             }
         }
         set {
-            FoundationConfiguration.currentBaseTime = newValue
+            FrameworkConfiguration.currentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
-            FoundationConfiguration.localBaseTime = systemUptime
+            FrameworkConfiguration.localBaseTime = systemUptime
 
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
@@ -393,13 +393,13 @@ extension Wrapper where Base == Date {
 
     /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
     public static var dateFormatter: DateFormatter {
-        get { FoundationConfiguration.dateFormatter }
-        set { FoundationConfiguration.dateFormatter = newValue }
+        get { FrameworkConfiguration.defaultDateFormatter }
+        set { FrameworkConfiguration.defaultDateFormatter = newValue }
     }
 
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
     public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
-        let formatter = FoundationConfiguration.dateFormatter
+        let formatter = FrameworkConfiguration.defaultDateFormatter
         formatter.dateFormat = format
         let date = formatter.date(from: string)
         return date
@@ -412,7 +412,7 @@ extension Wrapper where Base == Date {
 
     /// 转化为字符串，自定义格式
     public func string(format: String) -> String {
-        let formatter = FoundationConfiguration.dateFormatter
+        let formatter = FrameworkConfiguration.defaultDateFormatter
         formatter.dateFormat = format
         let string = formatter.string(from: base)
         return string
@@ -448,7 +448,7 @@ extension Wrapper where Base == Date {
 
     /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
     public static func formatServerDate(_ dateString: String) -> TimeInterval {
-        let dateFormatter = FoundationConfiguration.serverDateFormatter
+        let dateFormatter = FrameworkConfiguration.serverDateFormatter
         let date = dateFormatter.date(from: dateString)
         return date?.timeIntervalSince1970 ?? 0
     }
@@ -804,7 +804,7 @@ extension Wrapper where Base: FileManager {
     public static var pathResource: String {
         Bundle.main.resourcePath ?? ""
     }
-    
+
     /// 共享group路径，需先配置AppGroups能力，groupId默认为group.主bundleId
     public static func pathGroup(groupId: String? = nil) -> String {
         let groupIdentifier = groupId ?? "group." + (Bundle.main.bundleIdentifier ?? "")
@@ -856,7 +856,7 @@ extension Wrapper where Base: FileManager {
             return FileManager.default.fileExists(atPath: atPath)
         }
     }
-    
+
     /// 追加方式向文件写入数据
     @discardableResult
     public static func appendData(_ data: Data?, atPath: String) -> Bool {
@@ -1310,10 +1310,10 @@ extension Wrapper where Base: URLSession {
     /// 是否禁止网络代理抓包，不影响App请求，默认false
     public static var httpProxyDisabled: Bool {
         get {
-            FoundationConfiguration.httpProxyDisabled
+            FrameworkConfiguration.httpProxyDisabled
         }
         set {
-            FoundationConfiguration.httpProxyDisabled = newValue
+            FrameworkConfiguration.httpProxyDisabled = newValue
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
@@ -1406,39 +1406,11 @@ extension Wrapper where Base: UserDefaults {
     }
 }
 
-// MARK: - FoundationConfiguration
-private actor FoundationConfiguration {
-    static var onceTokens = [AnyHashable]()
-    static var taskPool = NSMutableDictionary()
-    static var taskSemaphore = DispatchSemaphore(value: 1)
-
-    static var currentBaseTime: TimeInterval = 0
-    static var localBaseTime: TimeInterval = 0
-    static var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = Calendar(identifier: .gregorian)
-        return formatter
-    }()
-
-    static var serverDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(abbreviation: "GMT")
-        formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter
-    }()
-
-    static var httpProxyDisabled = false
-
-    static var swizzleHttpProxy = false
-}
-
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
     fileprivate static func swizzleHttpProxy() {
-        guard !FoundationConfiguration.swizzleHttpProxy else { return }
-        FoundationConfiguration.swizzleHttpProxy = true
+        guard !FrameworkConfiguration.swizzleHttpProxy else { return }
+        FrameworkConfiguration.swizzleHttpProxy = true
 
         NSObject.fw.swizzleClassMethod(
             URLSession.self,
@@ -1446,7 +1418,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
         ) { store in { selfObject, configuration in
-            if FoundationConfiguration.httpProxyDisabled {
+            if FrameworkConfiguration.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration)
@@ -1458,10 +1430,39 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
         ) { store in { selfObject, configuration, delegate, delegateQueue in
-            if FoundationConfiguration.httpProxyDisabled {
+            if FrameworkConfiguration.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
         }}
     }
+}
+
+// MARK: - FrameworkConfiguration+Foundation
+extension FrameworkConfiguration {
+    fileprivate static var dispatchOnceTokens = [AnyHashable]()
+    fileprivate static var performTaskPool = NSMutableDictionary()
+    fileprivate static var performTaskSemaphore = DispatchSemaphore(value: 1)
+
+    fileprivate static var currentBaseTime: TimeInterval = 0
+    fileprivate static var localBaseTime: TimeInterval = 0
+
+    fileprivate static var defaultDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        return formatter
+    }()
+
+    fileprivate static var serverDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "GMT")
+        formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+
+    fileprivate static var httpProxyDisabled = false
+
+    fileprivate static var swizzleHttpProxy = false
 }

@@ -266,28 +266,22 @@ public struct NetworkMocker {
         }
     }
 
-    private actor Configuration {
-        static var mode: Mode = .optout
-        static var shared = NetworkMocker()
-        static var httpVersion: HTTPVersion = .http1_1
-    }
-
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
     public static var mode: Mode {
-        get { Configuration.mode }
-        set { Configuration.mode = newValue }
+        get { FrameworkConfiguration.mockerMode }
+        set { FrameworkConfiguration.mockerMode = newValue }
     }
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
     static var shared: NetworkMocker {
-        get { Configuration.shared }
-        set { Configuration.shared = newValue }
+        get { FrameworkConfiguration.mockerShared }
+        set { FrameworkConfiguration.mockerShared = newValue }
     }
 
     /// The HTTP Version to use in the mocked response.
     public static var httpVersion: HTTPVersion {
-        get { Configuration.httpVersion }
-        set { Configuration.httpVersion = newValue }
+        get { FrameworkConfiguration.mockerHttpVersion }
+        set { FrameworkConfiguration.mockerHttpVersion = newValue }
     }
 
     /// The registrated mocks.
@@ -303,7 +297,7 @@ public struct NetworkMocker {
     /// For Thread Safety access.
     private let queue = DispatchQueue(label: "mocker.mocks.access.queue", attributes: .concurrent)
 
-    private init() {
+    fileprivate init() {
         // Whenever someone is requesting the Mocker, we want the URL protocol to be activated.
         _ = URLProtocol.registerClass(NetworkMockerURLProtocol.self)
     }
@@ -636,6 +630,13 @@ extension URL {
         guard let scheme, let host else { return nil }
         return scheme + "://" + host + path
     }
+}
+
+// MARK: - FrameworkConfiguration+NetworkMocker
+extension FrameworkConfiguration {
+    fileprivate static var mockerShared = NetworkMocker()
+    fileprivate static var mockerMode: NetworkMocker.Mode = .optout
+    fileprivate static var mockerHttpVersion: NetworkMocker.HTTPVersion = .http1_1
 }
 
 #endif

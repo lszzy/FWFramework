@@ -16,10 +16,6 @@ import UIKit
 /// 3. ModuleBundle子模块类其次加载该模块的{模块名称}.bundle，如框架内FWFramework.bundle
 /// 4. ModuleBundle子模块类以上都不存在时返回nil加载主Bundle
 open class ModuleBundle: NSObject {
-    @_spi(FW) public actor Configuration {
-        public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
-    }
-
     private class Target: @unchecked Sendable {
         let identifier = UUID().uuidString
         var bundle: Bundle?
@@ -42,7 +38,7 @@ open class ModuleBundle: NSObject {
 
     /// 获取当前模块图片
     open class func imageNamed(_ name: String) -> UIImage? {
-        if let image = Configuration.imageNamedBlock?(name, bundle()) {
+        if let image = FrameworkConfiguration.imageNamedBlock?(name, bundle()) {
             return image
         } else if let image = UIImage(named: name, in: bundle(), compatibleWith: nil) {
             return image
@@ -417,4 +413,9 @@ public class FrameworkBundle: ModuleBundle {
             "fw.biometryReason": "Authenticate"
         ])
     }
+}
+
+// MARK: - FrameworkConfiguration+Bundle
+extension FrameworkConfiguration {
+    public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
 }

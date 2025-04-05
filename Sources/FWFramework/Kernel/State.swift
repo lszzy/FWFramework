@@ -97,7 +97,7 @@ public class StateMachine: @unchecked Sendable {
             self.object = object
         }
     }
-    
+
     /// 状态列表，只读
     public private(set) var states: [State] = []
 

@@ -21,7 +21,7 @@ open class HostingView<Content: View>: UIView {
         get { rootViewHostingController.shouldResizeToFitContent }
         set { rootViewHostingController.shouldResizeToFitContent = newValue }
     }
-    
+
     public var rootView: Content {
         get { rootViewHostingController.rootView.content }
         set {
@@ -37,10 +37,10 @@ open class HostingView<Content: View>: UIView {
     struct ContentContainer: View {
         weak var parent: ContentHostingController?
         var content: Content
-        
+
         var body: some View {
             content.onChangeOfFrame { [weak parent] _ in
-                guard let parent = parent else { return }
+                guard let parent else { return }
                 if parent.shouldResizeToFitContent {
                     parent.view.invalidateIntrinsicContentSize()
                 }
@@ -56,21 +56,21 @@ open class HostingView<Content: View>: UIView {
     class ContentHostingController: UIHostingController<ContentContainer> {
         weak var _navigationController: UINavigationController?
         var shouldResizeToFitContent: Bool = false
-        
+
         override var navigationController: UINavigationController? {
             super.navigationController ?? _navigationController
         }
-        
+
         override func viewDidLoad() {
             super.viewDidLoad()
             view.backgroundColor = .clear
         }
-        
+
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
             view.backgroundColor = .clear
         }
-        
+
         override func viewDidLayoutSubviews() {
             super.viewDidLayoutSubviews()
             if shouldResizeToFitContent {
@@ -82,9 +82,9 @@ open class HostingView<Content: View>: UIView {
     // MARK: - Lifecycle
     public required init(rootView: Content) {
         self.rootViewHostingController = .init(rootView: .init(parent: nil, content: rootView))
-        self.rootViewHostingController.rootView.parent = rootViewHostingController
+        rootViewHostingController.rootView.parent = rootViewHostingController
         super.init(frame: .zero)
-        
+
         addSubview(rootViewHostingController.view)
         rootViewHostingController.view.fw.pinEdges(autoScale: false)
         rootViewHostingController.view.backgroundColor = .clear
@@ -93,8 +93,8 @@ open class HostingView<Content: View>: UIView {
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    open override func invalidateIntrinsicContentSize() {
+
+    override open func invalidateIntrinsicContentSize() {
         rootViewHostingController.view.invalidateIntrinsicContentSize()
         super.invalidateIntrinsicContentSize()
     }
@@ -114,20 +114,20 @@ open class HostingView<Content: View>: UIView {
     override open var intrinsicContentSize: CGSize {
         rootViewHostingController.view.intrinsicContentSize
     }
-    
+
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
         rootViewHostingController.sizeThatFits(in: size)
     }
-    
+
     override open func sizeToFit() {
-        if let superview = superview {
+        if let superview {
             frame.size = rootViewHostingController.sizeThatFits(in: superview.frame.size)
         } else {
             frame.size = rootViewHostingController.view.intrinsicContentSize
         }
     }
-    
-    open override func safeAreaInsetsDidChange() {
+
+    override open func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         if shouldResizeToFitContent {
             invalidateIntrinsicContentSize()

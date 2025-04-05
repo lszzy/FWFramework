@@ -143,10 +143,6 @@ extension View {
 
 // MARK: - Color+Toolkit
 extension Color {
-    private actor Configuration {
-        static var colorCaches: [Color: UIColor] = [:]
-    }
-
     /// 从16进制创建Color
     /// - Parameters:
     ///   - hex: 十六进制值，格式0xFFFFFF
@@ -193,7 +189,7 @@ extension Color {
     /// Color转换为UIColor，失败时返回clear
     /// - Returns: UIColor
     public func toUIColor() -> UIColor {
-        if let cachedResult = Self.Configuration.colorCaches[self] {
+        if let cachedResult = FrameworkConfiguration.viewColorCaches[self] {
             return cachedResult
         } else {
             var result: UIColor
@@ -202,7 +198,7 @@ extension Color {
             } else {
                 result = toUIColor1() ?? toUIColor2() ?? .clear
             }
-            Self.Configuration.colorCaches[self] = result
+            FrameworkConfiguration.viewColorCaches[self] = result
             return result
         }
     }
@@ -287,14 +283,10 @@ extension Color {
 
 // MARK: - Font+Toolkit
 extension Font {
-    private actor Configuration {
-        static var fontBlock: (@Sendable (CGFloat, Font.Weight) -> Font?)?
-    }
-
     /// 全局自定义字体句柄，优先调用
     public static var fontBlock: (@Sendable (CGFloat, Font.Weight) -> Font?)? {
-        get { Configuration.fontBlock }
-        set { Configuration.fontBlock = newValue }
+        get { FrameworkConfiguration.viewFontBlock }
+        set { FrameworkConfiguration.viewFontBlock = newValue }
     }
 
     /// 返回系统Thin字体，自动等比例缩放
@@ -363,15 +355,10 @@ extension Font {
 // MARK: - Divider+Toolkit
 /// 修改分割线颜色使用background方法即可，示例：background(Color.gray)
 extension Divider {
-    private actor Configuration {
-        static var defaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
-        static var defaultColorConfiguration: (@Sendable () -> Color)?
-    }
-
     /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
     public nonisolated static var defaultSize: CGFloat {
-        get { Configuration.defaultSize }
-        set { Configuration.defaultSize = newValue }
+        get { FrameworkConfiguration.dividerDefaultSize }
+        set { FrameworkConfiguration.dividerDefaultSize = newValue }
     }
 
     /// 分割线默认颜色，未自定义时为灰色，仅影响Divider和Rectangle的dividerStyle方法
@@ -382,8 +369,8 @@ extension Divider {
 
     /// 自定义分割线默认颜色配置句柄，默认nil
     public nonisolated static var defaultColorConfiguration: (@Sendable () -> Color)? {
-        get { Configuration.defaultColorConfiguration }
-        set { Configuration.defaultColorConfiguration = newValue }
+        get { FrameworkConfiguration.dividerColorConfiguration }
+        set { FrameworkConfiguration.dividerColorConfiguration = newValue }
     }
 
     /// 自定义分割线尺寸，使用scale实现，参数nil时为Divider默认配置
@@ -526,6 +513,14 @@ extension Binding {
             set: { self.wrappedValue = $0 }
         )
     }
+}
+
+// MARK: - FrameworkConfiguration+ViewToolkit
+extension FrameworkConfiguration {
+    fileprivate static var viewColorCaches: [Color: UIColor] = [:]
+    fileprivate static var viewFontBlock: (@Sendable (CGFloat, Font.Weight) -> Font?)?
+    fileprivate static var dividerDefaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
+    fileprivate static var dividerColorConfiguration: (@Sendable () -> Color)?
 }
 
 #endif

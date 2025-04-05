@@ -741,7 +741,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueMacroCodableModel() {
         func testModel(_ model: TestMappedValueMacroCodableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -852,7 +852,7 @@ extension TestCodableController {
         tests += testModel(model, encode: true)
         showResults(tests)
     }
-    
+
     @objc func onMappedValueMacroJSONModel() {
         func testModel(_ model: TestMappedValueMacroJSONModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [

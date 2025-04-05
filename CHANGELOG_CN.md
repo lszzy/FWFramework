@@ -1,5 +1,11 @@
 # 更新日志
 
+## [7.0.1] - 2025-04-05
+
+### Fixed
+* 优化FWSwiftUI/Module仅依赖FWSwiftUI/Plugin
+* 代码优化，修复Swift Package Manager 5.x编译问题
+
 ## [7.0.0] - 2025-04-04
 
 ### Changed

@@ -158,7 +158,7 @@ extension Wrapper where Base: WrapperObject {
     /// 给对象绑定上另一个对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
     ///   - object: 对象，会被 strong 强引用
-    ///   - forKey: 键名
+    ///   - key: 键名
     public func bindObject(_ object: Any?, forKey key: String) {
         if let object {
             allBoundObjects[key] = object
@@ -170,7 +170,7 @@ extension Wrapper where Base: WrapperObject {
     /// 给对象绑定上另一个弱引用对象以供后续取出使用，如果 object 传入 nil 则会清除该 key 之前绑定的对象
     /// - Parameters:
     ///   - object: 对象，不会被 strong 强引用
-    ///   - forKey: 键名
+    ///   - key: 键名
     public func bindObjectWeak(_ object: AnyObject?, forKey key: String) {
         if let object {
             allBoundObjects[key] = WeakValue(object)
@@ -180,7 +180,7 @@ extension Wrapper where Base: WrapperObject {
     }
 
     /// 取出之前使用 bind 方法绑定的对象
-    /// - Parameter forKey: 键名
+    /// - Parameter key: 键名
     /// - Returns: 绑定的对象
     public func boundObject(forKey key: String) -> Any? {
         let object = allBoundObjects[key]
@@ -356,7 +356,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法列表
     public static func classMethods(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "M")
-        if let cacheNames = RuntimeConfiguration.classCaches[cacheKey] {
+        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -381,7 +381,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        RuntimeConfiguration.classCaches[cacheKey] = resultNames
+        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -391,7 +391,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 属性列表
     public static func classProperties(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "P")
-        if let cacheNames = RuntimeConfiguration.classCaches[cacheKey] {
+        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -416,7 +416,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        RuntimeConfiguration.classCaches[cacheKey] = resultNames
+        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -426,7 +426,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "V")
-        if let cacheNames = RuntimeConfiguration.classCaches[cacheKey] {
+        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -452,7 +452,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        RuntimeConfiguration.classCaches[cacheKey] = resultNames
+        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -724,7 +724,7 @@ extension Wrapper where Base: NSObject {
     }
 }
 
-// MARK: - RuntimeConfiguration
-private actor RuntimeConfiguration {
-    static var classCaches: [String: [String]] = [:]
+// MARK: - FrameworkConfiguration+Runtime
+extension FrameworkConfiguration {
+    fileprivate static var runtimeClassCaches: [String: [String]] = [:]
 }

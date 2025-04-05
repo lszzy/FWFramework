@@ -457,11 +457,11 @@ extension Wrapper where Base: UIImage {
 // MARK: - FrameworkAutoloader+ImagePlugin
 extension FrameworkAutoloader {
     @objc static func loadPlugin_ImagePlugin() {
-        ModuleBundle.Configuration.imageNamedBlock = { name, bundle in
+        FrameworkConfiguration.imageNamedBlock = { name, bundle in
             UIImage.fw.imageNamed(name, bundle: bundle)
         }
 
-        ImageResponseSerializer.Configuration.imageDecodeBlock = { data, scale, options in
+        FrameworkConfiguration.imageDecodeBlock = { data, scale, options in
             UIImage.fw.image(data: data, scale: scale, options: options)
         }
     }

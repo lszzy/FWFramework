@@ -9,7 +9,6 @@
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
-@_spi(FW) import FWUIKit
 #endif
 
 // MARK: - HostingController
@@ -20,21 +19,24 @@ open class HostingController: UIHostingController<AnyView> {
     // MARK: - Lifecyecle
     public init() {
         super.init(rootView: AnyView(EmptyView()))
-        if !(self is ViewControllerProtocol) {
+        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
+        if !isSetup {
             didInitialize()
         }
     }
 
     @MainActor public dynamic required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder, rootView: AnyView(EmptyView()))
-        if !(self is ViewControllerProtocol) {
+        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
+        if !isSetup {
             didInitialize()
         }
     }
-    
-    open override func viewDidLoad() {
+
+    override open func viewDidLoad() {
         super.viewDidLoad()
-        if !(self is ViewControllerProtocol) {
+        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
+        if !isSetup {
             setupNavbar()
             setupSubviews()
             setupLayout()
@@ -44,7 +46,7 @@ open class HostingController: UIHostingController<AnyView> {
     // MARK: - Setup
     /// 初始化完成，init自动调用，子类重写
     open func didInitialize() {}
-    
+
     /// 初始化导航栏，viewDidLoad自动调用，子类重写
     open func setupNavbar() {}
 

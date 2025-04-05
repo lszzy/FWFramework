@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '7.0.0'
+  s.version               = '7.0.1'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -59,7 +59,6 @@ Pod::Spec.new do |s|
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Module'
       sss.dependency 'FWFramework/FWSwiftUI/Plugin'
     end
     

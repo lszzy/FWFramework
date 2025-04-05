@@ -208,8 +208,8 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         return result
     }()
 
-    @_spi(FW) public var segmentWidth: CGFloat = 0
-    @_spi(FW) public var segmentWidthsArray: [CGFloat] = []
+    var segmentWidth: CGFloat = 0
+    var segmentWidthsArray: [CGFloat] = []
     private var titleBackgroundLayers: [CALayer] = []
     private var segmentBackgroundLayers: [CALayer] = []
 
@@ -950,7 +950,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.scrollRectToVisible(rectToScrollTo, animated: animated)
 
         if !animated {
-            BannerView.Configuration.trackExposureBlock?(self)
+            FrameworkConfiguration.trackExposureBlock?(self)
         }
     }
 
@@ -1031,7 +1031,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
 
         indexChangedBlock?(index)
-        _ = BannerView.Configuration.trackClickBlock?(self, IndexPath(row: index, section: 0))
+        _ = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: index, section: 0))
     }
 
     private func resultingTitleTextAttributes() -> [NSAttributedString.Key: Any] {
@@ -1068,16 +1068,16 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
 
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            BannerView.Configuration.trackExposureBlock?(self)
+            FrameworkConfiguration.trackExposureBlock?(self)
         }
     }
 
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        BannerView.Configuration.trackExposureBlock?(self)
+        FrameworkConfiguration.trackExposureBlock?(self)
     }
 
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        BannerView.Configuration.trackExposureBlock?(self)
+        FrameworkConfiguration.trackExposureBlock?(self)
     }
 
     // MARK: - SegmentedAccessibilityDelegate

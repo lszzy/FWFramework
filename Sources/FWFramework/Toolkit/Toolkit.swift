@@ -69,14 +69,14 @@ extension Wrapper where Base: UIApplication {
     /// 读取应用主版本号，可自定义，示例：1.0.0
     public static var appVersion: String {
         get {
-            if let appVersion = ToolkitConfiguration.appVersion {
+            if let appVersion = FrameworkConfiguration.customAppVersion {
                 return appVersion
             }
             let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
             return appVersion ?? appBuildVersion
         }
         set {
-            ToolkitConfiguration.appVersion = newValue
+            FrameworkConfiguration.customAppVersion = newValue
         }
     }
 
@@ -578,7 +578,7 @@ extension Wrapper where Base: UIColor {
 
         if a >= 1.0 {
             return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
-        } else if ToolkitConfiguration.colorStandardARGB {
+        } else if FrameworkConfiguration.colorStandardARGB {
             return String(format: "#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
         } else {
             return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255), lround(a * 255))
@@ -587,8 +587,8 @@ extension Wrapper where Base: UIColor {
 
     /// 设置十六进制颜色标准为ARGB|RGBA，启用为ARGB，默认为RGBA
     public static var colorStandardARGB: Bool {
-        get { ToolkitConfiguration.colorStandardARGB }
-        set { ToolkitConfiguration.colorStandardARGB = newValue }
+        get { FrameworkConfiguration.colorStandardARGB }
+        set { FrameworkConfiguration.colorStandardARGB = newValue }
     }
 
     /// 获取透明度为1.0的RGB随机颜色
@@ -628,7 +628,7 @@ extension Wrapper where Base: UIColor {
         var strA = ""
         if length < 5 {
             // ARGB
-            if ToolkitConfiguration.colorStandardARGB && length == 4 {
+            if FrameworkConfiguration.colorStandardARGB && length == 4 {
                 string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(1, 3)), string.fw.substring(with: NSMakeRange(0, 1)))
             }
             // RGB|RGBA
@@ -644,7 +644,7 @@ extension Wrapper where Base: UIColor {
             }
         } else {
             // AARRGGBB
-            if ToolkitConfiguration.colorStandardARGB && length == 8 {
+            if FrameworkConfiguration.colorStandardARGB && length == 8 {
                 string = String(format: "%@%@", string.fw.substring(with: NSMakeRange(2, 6)), string.fw.substring(with: NSMakeRange(0, 2)))
             }
             // RRGGBB|RRGGBBAA
@@ -780,31 +780,31 @@ extension Wrapper where Base: UIColor {
 extension Wrapper where Base: UIFont {
     /// 自定义全局自动等比例缩放适配句柄，默认nil，开启后如需固定大小调用fixed即可
     public static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)? {
-        get { ToolkitConfiguration.autoScaleBlock }
-        set { ToolkitConfiguration.autoScaleBlock = newValue }
+        get { FrameworkConfiguration.autoScaleBlock }
+        set { FrameworkConfiguration.autoScaleBlock = newValue }
     }
 
     /// 快捷启用全局自动等比例缩放适配，自动设置默认autoScaleBlock
     public static var autoScaleFont: Bool {
         get {
-            ToolkitConfiguration.autoScaleBlock != nil
+            FrameworkConfiguration.autoScaleBlock != nil
         }
         set {
             guard newValue != autoScaleFont else { return }
-            ToolkitConfiguration.autoScaleBlock = newValue ? { @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
+            FrameworkConfiguration.autoScaleBlock = newValue ? { @Sendable in UIScreen.fw.relativeValue($0, flat: autoFlatFont) } : nil
         }
     }
 
     /// 是否启用全局自动像素取整字体，默认false
     public static var autoFlatFont: Bool {
-        get { ToolkitConfiguration.autoFlatFont }
-        set { ToolkitConfiguration.autoFlatFont = newValue }
+        get { FrameworkConfiguration.autoFlatFont }
+        set { FrameworkConfiguration.autoFlatFont = newValue }
     }
 
     /// 全局自定义字体句柄，优先调用，返回nil时使用系统字体
     public static var fontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)? {
-        get { ToolkitConfiguration.fontBlock }
-        set { ToolkitConfiguration.fontBlock = newValue }
+        get { FrameworkConfiguration.customFontBlock }
+        set { FrameworkConfiguration.customFontBlock = newValue }
     }
 
     /// 返回系统Thin字体，自动等比例缩放
@@ -851,7 +851,7 @@ extension Wrapper where Base: UIFont {
     /// 获取指定名称、字重、斜体字体的完整规范名称
     public static func fontName(_ name: String, weight: UIFont.Weight, italic: Bool = false) -> String {
         var fontName = name
-        if let weightSuffix = ToolkitConfiguration.weightSuffixes[weight] {
+        if let weightSuffix = FrameworkConfiguration.fontWeightSuffixes[weight] {
             fontName += weightSuffix + (italic ? "Italic" : "")
         }
         return fontName
@@ -2311,30 +2311,6 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
     }
 }
 
-// MARK: - ToolkitConfiguration
-private actor ToolkitConfiguration {
-    static var appVersion: String?
-
-    static var colorStandardARGB = false
-
-    static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
-    static var autoFlatFont = false
-    static var fontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)?
-    static let weightSuffixes: [UIFont.Weight: String] = [
-        .ultraLight: "-Ultralight",
-        .thin: "-Thin",
-        .light: "-Light",
-        .regular: "-Regular",
-        .medium: "-Medium",
-        .semibold: "-Semibold",
-        .bold: "-Bold",
-        .heavy: "-Heavy",
-        .black: "-Black"
-    ]
-
-    static var swizzleToolkitNavigationController = false
-}
-
 // MARK: - FrameworkAutoloader+Toolkit
 extension FrameworkAutoloader {
     @objc static func loadToolkit_Toolkit() {
@@ -2531,8 +2507,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleToolkitNavigationController() {
-        guard !ToolkitConfiguration.swizzleToolkitNavigationController else { return }
-        ToolkitConfiguration.swizzleToolkitNavigationController = true
+        guard !FrameworkConfiguration.swizzleToolkitNavigationController else { return }
+        FrameworkConfiguration.swizzleToolkitNavigationController = true
 
         NSObject.fw.swizzleInstanceMethod(
             UINavigationController.self,
@@ -2596,6 +2572,29 @@ extension FrameworkAutoloader {
             return child
         }}
     }
+}
+
+// MARK: - FrameworkConfiguration+Toolkit
+extension FrameworkConfiguration {
+    public static var isViewControllerProtocol: (@Sendable (UIViewController) -> Bool)?
+
+    fileprivate static var swizzleToolkitNavigationController = false
+    fileprivate static var customAppVersion: String?
+    fileprivate static var colorStandardARGB = false
+    fileprivate static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
+    fileprivate static var autoFlatFont = false
+    fileprivate static var customFontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)?
+    fileprivate static let fontWeightSuffixes: [UIFont.Weight: String] = [
+        .ultraLight: "-Ultralight",
+        .thin: "-Thin",
+        .light: "-Light",
+        .regular: "-Regular",
+        .medium: "-Medium",
+        .semibold: "-Semibold",
+        .bold: "-Bold",
+        .heavy: "-Heavy",
+        .black: "-Black"
+    ]
 }
 
 // MARK: - Concurrency+Toolkit

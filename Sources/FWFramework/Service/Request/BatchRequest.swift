@@ -141,7 +141,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     ) -> Self {
         successCompletionBlock = success
         failureCompletionBlock = failure
-        if (complete != nil) { requestCompletedBlock = complete }
+        if complete != nil { requestCompletedBlock = complete }
         return start()
     }
 
@@ -150,7 +150,7 @@ open class BatchRequest: HTTPRequestProtocol, RequestDelegate, @unchecked Sendab
     open func start(completion: Completion?) -> Self {
         start(success: completion, failure: completion)
     }
-    
+
     /// 自定义请求结束句柄，成功失败都会触发
     @discardableResult
     open func requestCompleted(_ block: Completion?) -> Self {

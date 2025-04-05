@@ -25,27 +25,27 @@ public enum LoaderError: Int, Swift.Error, CustomNSError {
 /// 通用加载器抽象类
 open class LoaderAbstract<Input, Output>: Identifiable, Equatable, @unchecked Sendable {
     public init() {}
-    
+
     /// 指定输入，加载输出，子类必须实现
     open func load(_ input: Input) throws -> Output {
         fatalError("load(_:) has not been implemented")
     }
-    
-    public static func == (lhs: LoaderAbstract<Input, Output>, rhs: LoaderAbstract<Input, Output>) -> Bool {
-        return lhs.id == rhs.id
+
+    public static func ==(lhs: LoaderAbstract<Input, Output>, rhs: LoaderAbstract<Input, Output>) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
 /// 通用block加载器
 public class LoaderBlock<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Sendable {
     private let block: @Sendable (Input) throws -> Output
-    
+
     public init(_ block: @escaping @Sendable (Input) throws -> Output) {
         self.block = block
     }
-    
+
     /// 指定输入，加载输出
-    public override func load(_ input: Input) throws -> Output {
+    override public func load(_ input: Input) throws -> Output {
         try block(input)
     }
 }
@@ -54,14 +54,14 @@ public class LoaderBlock<Input, Output>: LoaderAbstract<Input, Output>, @uncheck
 public class LoaderTargetAction<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Sendable {
     private weak var target: AnyObject?
     private let action: Selector
-    
+
     public init(target: AnyObject?, action: Selector) {
         self.target = target
         self.action = action
     }
-    
+
     /// 指定输入，加载输出
-    public override func load(_ input: Input) throws -> Output {
+    override public func load(_ input: Input) throws -> Output {
         var result: Result<Output, Error> = .failure(LoaderError.failed)
         if let target, target.responds(to: action),
            let value = target.perform(action, with: input)?.takeUnretainedValue() {
@@ -73,10 +73,10 @@ public class LoaderTargetAction<Input, Output>: LoaderAbstract<Input, Output>, @
                 result = value
             }
         }
-        
+
         switch result {
-            case let .success(output): return output
-            case let .failure(error): throw error
+        case let .success(output): return output
+        case let .failure(error): throw error
         }
     }
 }
@@ -96,7 +96,7 @@ public class Loader<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Se
     public func remove(_ identifier: ObjectIdentifier) {
         allLoaders.removeAll { $0.id == identifier }
     }
-    
+
     /// 移除指定加载器
     public func remove(_ loader: LoaderAbstract<Input, Output>) {
         allLoaders.removeAll { $0 == loader }
@@ -108,23 +108,23 @@ public class Loader<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Se
     }
 
     /// 依次执行加载器，直到加载成功
-    public override func load(_ input: Input) throws -> Output {
+    override public func load(_ input: Input) throws -> Output {
         var result: Result<Output, Error> = .failure(LoaderError.failed)
         let loaders = allLoaders
         for loader in loaders {
             do {
-                result = .success(try loader.load(input))
+                result = try .success(loader.load(input))
                 break
             } catch {
                 result = .failure(error)
             }
         }
-        
+
         switch result {
-            case let .success(output):
-                return output
-            case let .failure(error):
-                throw error
+        case let .success(output):
+            return output
+        case let .failure(error):
+            throw error
         }
     }
 }
@@ -133,27 +133,27 @@ public class Loader<Input, Output>: LoaderAbstract<Input, Output>, @unchecked Se
 /// 通用异步加载器抽象类
 open class AsyncLoaderAbstract<Input, Output>: Identifiable, Equatable, @unchecked Sendable {
     public init() {}
-    
+
     /// 指定输入，异步加载输出，必须调用completion，子类必须实现
     open func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
         fatalError("load(_:completion:) has not been implemented")
     }
-    
-    public static func == (lhs: AsyncLoaderAbstract<Input, Output>, rhs: AsyncLoaderAbstract<Input, Output>) -> Bool {
-        return lhs.id == rhs.id
+
+    public static func ==(lhs: AsyncLoaderAbstract<Input, Output>, rhs: AsyncLoaderAbstract<Input, Output>) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
 /// 通用异步block加载器
 public class AsyncLoaderBlock<Input, Output>: AsyncLoaderAbstract<Input, Output>, @unchecked Sendable {
     private let block: @Sendable (_ input: Input, _ completion: @escaping @Sendable (Result<Output, Error>) -> Void) -> Void
-    
+
     public init(_ block: @escaping @Sendable (_ input: Input, _ completion: @escaping @Sendable (Result<Output, Error>) -> Void) -> Void) {
         self.block = block
     }
-    
+
     /// 指定输入，异步加载输出
-    public override func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
+    override public func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
         block(input, completion)
     }
 }
@@ -162,14 +162,14 @@ public class AsyncLoaderBlock<Input, Output>: AsyncLoaderAbstract<Input, Output>
 public class AsyncLoaderTargetAction<Input, Output>: AsyncLoaderAbstract<Input, Output>, @unchecked Sendable {
     private weak var target: AnyObject?
     private let action: Selector
-    
+
     public init(target: AnyObject?, action: Selector) {
         self.target = target
         self.action = action
     }
-    
+
     /// 指定输入，异步加载输出
-    public override func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
+    override public func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
         if let target, target.responds(to: action) {
             _ = target.perform(action, with: input, with: completion)
         } else {
@@ -193,7 +193,7 @@ public class AsyncLoader<Input, Output>: AsyncLoaderAbstract<Input, Output>, @un
     public func remove(_ identifier: ObjectIdentifier) {
         allLoaders.removeAll { $0.id == identifier }
     }
-    
+
     /// 移除指定加载器
     public func remove(_ loader: AsyncLoaderAbstract<Input, Output>) {
         allLoaders.removeAll { $0 == loader }
@@ -205,23 +205,23 @@ public class AsyncLoader<Input, Output>: AsyncLoaderAbstract<Input, Output>, @un
     }
 
     /// 依次执行加载器，直到加载成功
-    public override func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
+    override public func load(_ input: Input, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
         load(input, using: allLoaders, error: nil, completion: completion)
     }
-    
+
     private func load(_ input: Input, using loaders: [AsyncLoaderAbstract<Input, Output>], error: Error?, completion: @escaping @Sendable (Result<Output, Error>) -> Void) {
         guard let loader = loaders.first else {
             completion(.failure(error ?? LoaderError.failed))
             return
         }
-        
+
         let sendableInput = SendableValue(input)
         loader.load(input) { result in
             switch result {
-                case let .success(output):
-                    completion(.success(output))
-                case let .failure(error):
-                    self.load(sendableInput.value, using: Array(loaders.suffix(from: 1)), error: error, completion: completion)
+            case let .success(output):
+                completion(.success(output))
+            case let .failure(error):
+                self.load(sendableInput.value, using: Array(loaders.suffix(from: 1)), error: error, completion: completion)
             }
         }
     }
@@ -234,10 +234,10 @@ extension AsyncLoaderAbstract {
         try await withCheckedThrowingContinuation { continuation in
             load(input) { result in
                 switch result {
-                    case let .success(output):
-                        continuation.resume(returning: output)
-                    case let .failure(error):
-                        continuation.resume(throwing: error)
+                case let .success(output):
+                    continuation.resume(returning: output)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
                 }
             }
         }

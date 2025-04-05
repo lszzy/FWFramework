@@ -829,7 +829,7 @@ final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDel
 
     var didReachTop: (Double) -> Void = { _ in }
     var scrollEnded: (Double) -> Void = { _ in }
-    
+
     static func maxContentOffsetHeight(_ scrollView: UIScrollView?) -> CGFloat {
         guard let scrollView else { return 0 }
         let contentHeight = scrollView.contentSize.height
@@ -1153,16 +1153,18 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
         case .window:
             content
                 .onChange(of: showSheet) { newValue in
-                    if newValue {
-                        PopupWindowManager.showInNewWindow(id: id, dismissClosure: {
-                            dismissSource = .binding
-                            isPresented = false
-                            item = nil
-                        }) {
-                            constructPopup()
+                    DispatchQueue.fw.mainAsync {
+                        if newValue {
+                            PopupWindowManager.showInNewWindow(id: id, dismissClosure: {
+                                dismissSource = .binding
+                                isPresented = false
+                                item = nil
+                            }) {
+                                constructPopup()
+                            }
+                        } else {
+                            PopupWindowManager.closeWindow(id: id)
                         }
-                    } else {
-                        PopupWindowManager.closeWindow(id: id)
                     }
                 }
         }
@@ -1581,7 +1583,7 @@ class PopupPassthroughController<Content: View>: UIHostingController<Content> {
     static var pointFarAwayFromScreen: CGPoint {
         CGPoint(x: 2 * UIScreen.main.bounds.size.width, y: 2 * UIScreen.main.bounds.size.height)
     }
-    
+
     @Published var keyboardHeight: CGFloat = 0
     @Published var keyboardDisplayed: Bool = false
 

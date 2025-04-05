@@ -320,6 +320,7 @@ extension FrameworkAutoloader {
     @objc static func loadModule_ViewController() {
         swizzleViewController()
         ViewControllerManager.registerDefaultIntercepters()
+        FrameworkConfiguration.isViewControllerProtocol = { $0 is ViewControllerProtocol }
     }
 
     private static func swizzleViewController() {

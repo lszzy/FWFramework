@@ -315,17 +315,12 @@ private class FullscreenPopGestureRecognizerDelegate: NSObject, UIGestureRecogni
     }
 }
 
-// MARK: - NavigationConfiguration
-private actor NavigationConfiguration {
-    static var swizzleBarTransition = false
-}
-
 // MARK: - FrameworkAutoloader+NavigationController
 extension FrameworkAutoloader {
     @objc static func loadModule_NavigationController() {
         swizzleNavigationController()
 
-        NavigationBarAppearance.Configuration.appearanceChanged = { viewController in
+        FrameworkConfiguration.appearanceChanged = { viewController in
             viewController.fw.barTransitionNeedsUpdate()
         }
     }
@@ -413,8 +408,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleBarTransition() {
-        guard !NavigationConfiguration.swizzleBarTransition else { return }
-        NavigationConfiguration.swizzleBarTransition = true
+        guard !FrameworkConfiguration.swizzleBarTransition else { return }
+        FrameworkConfiguration.swizzleBarTransition = true
 
         NSObject.fw.swizzleInstanceMethod(
             UINavigationBar.self,
@@ -628,4 +623,9 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector, viewControllers, animated)
         }}
     }
+}
+
+// MARK: - FrameworkConfiguration+NavigationController
+extension FrameworkConfiguration {
+    fileprivate static var swizzleBarTransition = false
 }

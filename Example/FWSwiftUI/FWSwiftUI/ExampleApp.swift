@@ -6,6 +6,7 @@
 //
 
 import FWFramework
+import FWUIKit
 import SwiftUI
 
 @main
