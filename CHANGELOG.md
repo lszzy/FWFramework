@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.0.1] - 2025-04-05
+
+### Fixed
+* Optimize FWSwiftUI/Module to only depend on FWSwiftUI/Plugin
+* Code optimization, fix Swift Package Manager 5.x compilation problem
+
 ## [7.0.0] - 2025-04-04
 
 ### Changed
