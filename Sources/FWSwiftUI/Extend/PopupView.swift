@@ -1153,16 +1153,18 @@ public struct FullscreenPopup<Item: Equatable, PopupContent: View>: ViewModifier
         case .window:
             content
                 .onChange(of: showSheet) { newValue in
-                    if newValue {
-                        PopupWindowManager.showInNewWindow(id: id, dismissClosure: {
-                            dismissSource = .binding
-                            isPresented = false
-                            item = nil
-                        }) {
-                            constructPopup()
+                    DispatchQueue.fw.mainAsync {
+                        if newValue {
+                            PopupWindowManager.showInNewWindow(id: id, dismissClosure: {
+                                dismissSource = .binding
+                                isPresented = false
+                                item = nil
+                            }) {
+                                constructPopup()
+                            }
+                        } else {
+                            PopupWindowManager.closeWindow(id: id)
                         }
-                    } else {
-                        PopupWindowManager.closeWindow(id: id)
                     }
                 }
         }
