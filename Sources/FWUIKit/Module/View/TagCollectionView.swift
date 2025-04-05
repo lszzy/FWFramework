@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 public enum TagCollectionScrollDirection: Int, Sendable {
     case vertical = 0
