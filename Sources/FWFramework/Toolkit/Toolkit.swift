@@ -2577,7 +2577,7 @@ extension FrameworkAutoloader {
 // MARK: - FrameworkConfiguration+Toolkit
 extension FrameworkConfiguration {
     public static var isViewControllerProtocol: (@Sendable (UIViewController) -> Bool)?
-    
+
     fileprivate static var swizzleToolkitNavigationController = false
     fileprivate static var customAppVersion: String?
     fileprivate static var colorStandardARGB = false

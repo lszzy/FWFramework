@@ -960,8 +960,9 @@ extension FrameworkConfiguration {
             cachedCurrentDevice = newValue
         }
     }
+
     private static var cachedCurrentDevice: UIDevice?
-    
+
     fileprivate static var deviceWidth: CGFloat?
     fileprivate static var deviceHeight: CGFloat?
     fileprivate static var deviceModel: String?
@@ -982,8 +983,9 @@ extension FrameworkConfiguration {
             cachedMainScreen = newValue
         }
     }
+
     private static var cachedMainScreen: UIScreen?
-    
+
     fileprivate static var screenScale: CGFloat?
     fileprivate static var referenceSize = CGSize(width: 375, height: 812)
     fileprivate static var relativeScaleBlock: (@Sendable () -> CGFloat)?

@@ -94,10 +94,10 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
             "nullName": (testFailed ? Validator<String>.isNotEmpty : Validator<String>.isValid).anyValidator
         ]
     }
-    
+
     override func requestFailedPreprocessor() {
         super.requestFailedPreprocessor()
-        
+
         if !isDataFromCache {
             // 模拟网络请求慢的情况，以便显示loading
             Thread.sleep(forTimeInterval: 0.5)

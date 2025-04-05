@@ -829,7 +829,7 @@ final class PopupScrollViewDelegate: NSObject, ObservableObject, UIScrollViewDel
 
     var didReachTop: (Double) -> Void = { _ in }
     var scrollEnded: (Double) -> Void = { _ in }
-    
+
     static func maxContentOffsetHeight(_ scrollView: UIScrollView?) -> CGFloat {
         guard let scrollView else { return 0 }
         let contentHeight = scrollView.contentSize.height
@@ -1581,7 +1581,7 @@ class PopupPassthroughController<Content: View>: UIHostingController<Content> {
     static var pointFarAwayFromScreen: CGPoint {
         CGPoint(x: 2 * UIScreen.main.bounds.size.width, y: 2 * UIScreen.main.bounds.size.height)
     }
-    
+
     @Published var keyboardHeight: CGFloat = 0
     @Published var keyboardDisplayed: Bool = false
 

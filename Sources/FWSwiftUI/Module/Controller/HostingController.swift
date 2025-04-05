@@ -32,8 +32,8 @@ open class HostingController: UIHostingController<AnyView> {
             didInitialize()
         }
     }
-    
-    open override func viewDidLoad() {
+
+    override open func viewDidLoad() {
         super.viewDidLoad()
         let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
         if !isSetup {
@@ -46,7 +46,7 @@ open class HostingController: UIHostingController<AnyView> {
     // MARK: - Setup
     /// 初始化完成，init自动调用，子类重写
     open func didInitialize() {}
-    
+
     /// 初始化导航栏，viewDidLoad自动调用，子类重写
     open func setupNavbar() {}
 

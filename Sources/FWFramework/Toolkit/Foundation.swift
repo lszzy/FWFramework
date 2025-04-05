@@ -804,7 +804,7 @@ extension Wrapper where Base: FileManager {
     public static var pathResource: String {
         Bundle.main.resourcePath ?? ""
     }
-    
+
     /// 共享group路径，需先配置AppGroups能力，groupId默认为group.主bundleId
     public static func pathGroup(groupId: String? = nil) -> String {
         let groupIdentifier = groupId ?? "group." + (Bundle.main.bundleIdentifier ?? "")
@@ -856,7 +856,7 @@ extension Wrapper where Base: FileManager {
             return FileManager.default.fileExists(atPath: atPath)
         }
     }
-    
+
     /// 追加方式向文件写入数据
     @discardableResult
     public static func appendData(_ data: Data?, atPath: String) -> Bool {
@@ -1446,7 +1446,7 @@ extension FrameworkConfiguration {
 
     fileprivate static var currentBaseTime: TimeInterval = 0
     fileprivate static var localBaseTime: TimeInterval = 0
-    
+
     fileprivate static var defaultDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

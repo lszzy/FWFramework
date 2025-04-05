@@ -1322,7 +1322,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     ) -> Self {
         successCompletionBlock = success != nil ? { @MainActor @Sendable in success?($0 as! Self) } : nil
         failureCompletionBlock = failure != nil ? { @MainActor @Sendable in failure?($0 as! Self) } : nil
-        if (complete != nil) { requestCompletedBlock = { @MainActor @Sendable in complete?($0 as! Self) } }
+        if complete != nil { requestCompletedBlock = { @MainActor @Sendable in complete?($0 as! Self) } }
         return start()
     }
 
@@ -1331,7 +1331,7 @@ extension HTTPRequestProtocol where Self: HTTPRequest {
     public func start(completion: (@MainActor @Sendable (Self) -> Void)?) -> Self {
         start(success: completion, failure: completion)
     }
-    
+
     /// 自定义请求结束句柄，成功失败都会触发
     @discardableResult
     public func requestCompleted(_ block: (@MainActor @Sendable (Self) -> Void)?) -> Self {

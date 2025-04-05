@@ -31,8 +31,8 @@ public struct WaterfallGrid<Data, ID, Content>: View where Data: RandomAccessCol
     public var body: some View {
         VStack {
             GeometryReader { geometry in
-                let styleConfig = self.style
-                let scrollConfig = self.scrollOptions
+                let styleConfig = style
+                let scrollConfig = scrollOptions
                 grid(in: geometry)
                     .onPreferenceChange(ElementPreferenceKey.self, perform: { preferences in
                         let sendablePreferences = SendableValue(preferences)

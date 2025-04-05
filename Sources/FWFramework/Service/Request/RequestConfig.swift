@@ -29,7 +29,7 @@ open class RequestConfig: @unchecked Sendable {
     }
 
     private var _requestPlugin: RequestPlugin?
-    
+
     /// 请求过滤器数组
     open private(set) var requestFilters: [RequestFilterProtocol] = []
 
