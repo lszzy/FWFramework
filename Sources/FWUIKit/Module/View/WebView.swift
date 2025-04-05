@@ -1459,8 +1459,3 @@ private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDeleg
         }
     }
 }
-
-#if swift(<5.9)
-/// 适配Swift5.9以下URLAuthenticationChallenge未实现Sendable编译报错问题
-extension URLAuthenticationChallenge: @unchecked Sendable {}
-#endif
