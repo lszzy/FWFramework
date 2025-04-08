@@ -684,13 +684,11 @@ extension SmartAssociatedEnumerable {
 
 // MARK: - Cachable
 protocol Cachable {
-    associatedtype CacheType
+    associatedtype SomeSnapshot: Snapshot
 
-    var cacheType: CacheType? { get set }
+    var snapshots: [SomeSnapshot] { set get }
 
-    var snapshots: [Snapshot] { set get }
-
-    var topSnapshot: Snapshot? { get }
+    var topSnapshot: SomeSnapshot? { get }
 
     func cacheSnapshot<T>(for type: T.Type)
 
@@ -698,25 +696,17 @@ protocol Cachable {
 }
 
 extension Cachable {
-    var topSnapshot: Snapshot? {
+    var topSnapshot: SomeSnapshot? {
         snapshots.last
-    }
-
-    mutating func removeSnapshot<T>(for type: T.Type) {
-        if let _ = T.self as? CacheType {
-            if snapshots.count > 0 {
-                snapshots.removeLast()
-            }
-        }
     }
 }
 
-struct Snapshot {
-    var typeName: String = ""
+protocol Snapshot {
+    associatedtype ObjectType
 
-    var initialValues: [String: Any] = [:]
+    var objectType: ObjectType? { set get }
 
-    var transformers: [SmartValueTransformer] = []
+    var transformers: [SmartValueTransformer] { set get }
 }
 
 // MARK: - PropertyWrapper
@@ -2372,62 +2362,67 @@ extension Array<UInt8> {
 
 // MARK: - JSONEncoder
 class EncodingCache: Cachable {
-    typealias CacheType = SmartEncodable.Type
+    typealias SomeSnapshot = EncodingSnapshot
 
-    var cacheType: CacheType?
-    var snapshots: [Snapshot] = []
+    var snapshots: [EncodingSnapshot] = []
 
     func cacheSnapshot<T>(for type: T.Type) {
         if let object = type as? SmartEncodable.Type {
-            cacheType = object
-
-            var snapshot = Snapshot()
-            let instance = object.init()
-            let mirror = Mirror(reflecting: instance)
-            for child in mirror.children {
-                if let key = child.label {
-                    snapshot.initialValues[key] = child.value
-                }
-            }
-            snapshot.typeName = "\(type)"
+            var snapshot = EncodingSnapshot()
+            snapshot.objectType = object
             snapshot.transformers = object.mappingForValue() ?? []
             snapshots.append(snapshot)
+        }
+    }
+
+    func removeSnapshot<T>(for type: T.Type) {
+        if let _ = T.self as? SmartEncodable.Type {
+            if snapshots.count > 0 {
+                snapshots.removeLast()
+            }
         }
     }
 }
 
 extension EncodingCache {
     func tranform(from value: Any, with key: CodingKey?) -> JSONParserValue? {
-        if let trans = topSnapshot?.transformers, let key {
-            let wantKey = key.stringValue
-            let tran = trans.first(where: { transformer in
-                if wantKey == transformer.location.stringValue {
-                    return true
-                } else {
-                    if let keyTransformers = cacheType?.mappingForKey() {
-                        for keyTransformer in keyTransformers {
-                            if keyTransformer.from.contains(wantKey) {
-                                return true
-                            }
+        guard let top = topSnapshot, let key else { return nil }
+
+        let trans = top.transformers
+        let wantKey = key.stringValue
+        let targetTran = trans.first(where: { transformer in
+            if wantKey == transformer.location.stringValue {
+                return true
+            } else {
+                if let keyTransformers = top.objectType?.mappingForKey() {
+                    for keyTransformer in keyTransformers {
+                        if keyTransformer.from.contains(wantKey) {
+                            return true
                         }
                     }
-                    return false
                 }
-            })
-
-            if let tran, let decoded = tranform(decodedValue: value, transformer: tran.tranformer) {
-                return JSONParserValue.make(decoded)
+                return false
             }
+        })
+
+        if let tran = targetTran, let decoded = tranform(decodedValue: value, transformer: tran.tranformer) {
+            return JSONParserValue.make(decoded)
         }
         return nil
     }
 
     private func tranform<Transform: ValueTransformable>(decodedValue: Any, transformer: Transform) -> Any? {
-        if let value = decodedValue as? Transform.Object {
-            return transformer.transformToJSON(value)
-        }
-        return nil
+        guard let value = decodedValue as? Transform.Object else { return nil }
+        return transformer.transformToJSON(value)
     }
+}
+
+struct EncodingSnapshot: Snapshot {
+    typealias ObjectType = SmartEncodable.Type
+
+    var objectType: (any SmartEncodable.Type)?
+
+    var transformers: [SmartValueTransformer] = []
 }
 
 enum JSONFuture {
@@ -3113,8 +3108,16 @@ extension _SpecialTreatmentEncoder {
 
             let encoder = getEncoder(for: additionalKey)
             try encodable.encode(to: encoder)
-
             impl.cache.removeSnapshot(for: E.self)
+
+            if encodable is FlatType {
+                if let object = encoder.value?.object {
+                    for (key, value) in object {
+                        impl.object?.set(value, for: key)
+                    }
+                    return nil
+                }
+            }
 
             return encoder.value
         }
@@ -3198,7 +3201,7 @@ extension _SpecialTreatmentEncoder {
     func _converted(_ key: CodingKey) -> CodingKey {
         var newKey = key
 
-        if let objectType = impl.cache.cacheType {
+        if let objectType = impl.cache.topSnapshot?.objectType {
             if let mappings = objectType.mappingForKey() {
                 for mapping in mappings {
                     if mapping.to.stringValue == newKey.stringValue {
@@ -3322,19 +3325,14 @@ extension JSONEncoderImpl: _SpecialTreatmentEncoder {
 }
 
 // MARK: - JSONDecoder
-class DecodingCache {
-    private(set) var snapshots: [Snapshot] = []
+class DecodingCache: Cachable {
+    typealias SomeSnapshot = DecodingSnapshot
 
-    var decodedType: SmartDecodable.Type?
+    var snapshots: [DecodingSnapshot] = []
 
-    var topSnapshot: Snapshot? {
-        snapshots.last
-    }
-
-    func cacheInitialState<T: Decodable>(for type: T.Type) {
+    func cacheSnapshot<T>(for type: T.Type) {
         if let object = type as? SmartDecodable.Type {
-            decodedType = object
-            var snapshot = Snapshot()
+            var snapshot = DecodingSnapshot()
 
             let instance = object.init()
             // 递归处理所有的 superclassMirror
@@ -3352,56 +3350,38 @@ class DecodingCache {
             let mirror = Mirror(reflecting: instance)
             captureInitialValues(from: mirror)
 
-            snapshot.typeName = "\(type)"
+            snapshot.objectType = object
             snapshot.transformers = object.mappingForValue() ?? []
             snapshots.append(snapshot)
         }
     }
 
-    func clearLastState<T: Decodable>(for type: T.Type) {
-        if let _ = T.self as? SmartDecodable.Type {
-            if snapshots.count > 0 {
-                snapshots.removeLast()
-            }
+    func removeSnapshot<T>(for type: T.Type) {
+        guard T.self is SmartDecodable.Type else { return }
+        if !snapshots.isEmpty {
+            snapshots.removeLast()
         }
     }
+}
 
+extension DecodingCache {
     func getValue<T>(forKey key: CodingKey) -> T? {
-        if var cacheValue = snapshots.last?.initialValues[key.stringValue] {
-            if let temp = cacheValue as? CGFloat {
-                cacheValue = Double(temp)
-            }
-
-            if let value = cacheValue as? T {
-                return value
-            } else if let caseValue = cacheValue as? (any SmartCaseDefaultable) {
-                return caseValue.rawValue as? T
-            } else if let caseValue = cacheValue as? (any DefaultCaseCodable) {
-                return caseValue.rawValue as? T
-            }
-        } else {
-            if let cached = snapshots.last?.initialValues["_" + key.stringValue] {
-                if let value = cached as? IgnoredKey<T> {
-                    return value.wrappedValue
-                } else if let value = cached as? SmartAny<T> {
-                    return value.wrappedValue
-                } else if let value = cached as? T { // 当key缺失的时候，会进入
-                    return value
-                }
-            } else {
-                for item in snapshots.reversed() {
-                    if let cached = item.initialValues["_" + key.stringValue] {
-                        if let value = cached as? IgnoredKey<T> {
-                            return value.wrappedValue
-                        } else if let value = cached as? SmartAny<T> {
-                            return value.wrappedValue
-                        } else if let value = cached as? T {
-                            return value
-                        }
-                    }
-                }
-            }
+        guard let cacheValue = topSnapshot?.initialValues[key.stringValue] else {
+            return handlePropertyWrapperCases(for: key)
         }
+
+        if let temp = cacheValue as? CGFloat {
+            return Double(temp) as? T
+        }
+
+        if let value = cacheValue as? T {
+            return value
+        } else if let caseValue = cacheValue as? (any SmartCaseDefaultable) {
+            return caseValue.rawValue as? T
+        } else if let caseValue = cacheValue as? (any DefaultCaseCodable) {
+            return caseValue.rawValue as? T
+        }
+
         return nil
     }
 
@@ -3416,16 +3396,41 @@ class DecodingCache {
         }
         return nil
     }
+
+    private func handlePropertyWrapperCases<T>(for key: CodingKey) -> T? {
+        if let cached = topSnapshot?.initialValues["_" + key.stringValue] {
+            return extractWrappedValue(from: cached)
+        }
+
+        for item in snapshots.reversed() {
+            if let cached = item.initialValues["_" + key.stringValue] {
+                return extractWrappedValue(from: cached)
+            }
+        }
+
+        return nil
+    }
+
+    private func extractWrappedValue<T>(from value: Any) -> T? {
+        if let wrapper = value as? IgnoredKey<T> {
+            return wrapper.wrappedValue
+        } else if let wrapper = value as? SmartAny<T> {
+            return wrapper.wrappedValue
+        } else if let value = value as? T {
+            return value
+        }
+        return nil
+    }
 }
 
-extension DecodingCache {
-    struct Snapshot {
-        var typeName: String = ""
+struct DecodingSnapshot: Snapshot {
+    typealias ObjectType = SmartDecodable.Type
 
-        var initialValues: [String: Any] = [:]
+    var objectType: (any SmartDecodable.Type)?
 
-        var transformers: [SmartValueTransformer] = []
-    }
+    var transformers: [SmartValueTransformer] = []
+
+    var initialValues: [String: Any] = [:]
 }
 
 extension DecodingError {
@@ -4300,7 +4305,7 @@ private func _convertDictionary(_ dictionary: [String: JSONParserValue], impl: J
         }, uniquingKeysWith: { first, _ in first })
     }
 
-    guard let type = impl.cache.decodedType else { return dictionary }
+    guard let type = impl.cache.topSnapshot?.objectType else { return dictionary }
 
     if let tempValue = KeysMapper.convertFrom(JSONParserValue.object(dictionary), type: type), let dict = tempValue.object {
         return dict
@@ -4827,9 +4832,9 @@ extension JSONDecoderImpl {
             return try unwrapDictionary(as: type)
         }
 
-        cache.cacheInitialState(for: type)
+        cache.cacheSnapshot(for: type)
         let decoded = try type.init(from: self)
-        cache.clearLastState(for: type)
+        cache.removeSnapshot(for: type)
         return decoded
     }
 
