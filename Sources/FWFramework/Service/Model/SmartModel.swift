@@ -19,6 +19,13 @@ extension SmartModel where Self: AnyObject {
     }
 }
 
+public class SmartModelConfiguration: @unchecked Sendable {
+    public static let shared = SmartModelConfiguration()
+    
+    public var decodingOptions: Set<SmartDecodingOption>? = nil
+    public var encodingOptions: Set<SmartEncodingOption>? = nil
+}
+
 // MARK: - SmartCodable
 /// [SmartCodable](https://github.com/intsig171/SmartCodable)
 public typealias SmartCodable = SmartDecodable & SmartEncodable
@@ -226,7 +233,7 @@ extension Data {
     private func createDecoder<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) -> JSONDecoder {
         let _decoder = SmartJSONDecoder()
 
-        if let _options = options {
+        if let _options = options ?? SmartModelConfiguration.shared.decodingOptions {
             for _option in _options {
                 switch _option {
                 case let .data(strategy):
@@ -499,7 +506,7 @@ extension Array where Element: SmartEncodable {
 private func _transformToJson<T>(_ some: Encodable, type: Any.Type, options: Set<SmartEncodingOption>? = nil) -> T? {
     let jsonEncoder = SmartJSONEncoder()
 
-    if let _options = options {
+    if let _options = options ?? SmartModelConfiguration.shared.encodingOptions {
         for _option in _options {
             switch _option {
             case let .data(strategy):
