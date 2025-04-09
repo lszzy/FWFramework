@@ -1,5 +1,11 @@
 # 更新日志
 
+## [7.0.2] - 2025-04-09
+
+### Added
+* 新增SmartModelConfiguration全局编码解码配置
+* 同步SmartCodable到最新4.3.9版本
+
 ## [7.0.1] - 2025-04-05
 
 ### Fixed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.0.2] - 2025-04-09
+
+### Added
+* Added SmartModelConfiguration global encoding and decoding configuration
+* Synchronize SmartCodable to the latest version 4.3.9
+
 ## [7.0.1] - 2025-04-05
 
 ### Fixed
