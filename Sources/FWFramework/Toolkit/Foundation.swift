@@ -808,7 +808,7 @@ extension Wrapper where Base: FileManager {
     /// 共享group路径，需先配置AppGroups能力，groupId默认为group.主bundleId
     public static func pathGroup(groupId: String? = nil) -> String {
         let groupIdentifier = groupId ?? "group." + (Bundle.main.bundleIdentifier ?? "")
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupIdentifier)?.absoluteString ?? ""
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupIdentifier)?.path ?? ""
     }
 
     /// 递归创建目录，返回是否成功
