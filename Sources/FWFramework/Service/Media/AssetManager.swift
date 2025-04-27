@@ -1054,7 +1054,7 @@ public class AssetLivePhoto: @unchecked Sendable {
 
     private lazy var cacheDirectory: URL = {
         let fullDirectory = URL(fileURLWithPath: AssetManager.livePhotoPath, isDirectory: true)
-        if !FileManager.default.fileExists(atPath: fullDirectory.absoluteString) {
+        if !FileManager.default.fileExists(atPath: fullDirectory.path) {
             try? FileManager.default.createDirectory(at: fullDirectory, withIntermediateDirectories: true, attributes: nil)
         }
         return fullDirectory
@@ -1969,7 +1969,7 @@ extension AssetSessionExporter {
                 _completionHandler?(.failure(AssetSessionExporterError.cancelled))
                 return
             }
-            if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+            if FileManager.default.fileExists(atPath: outputURL.path) {
                 try? FileManager.default.removeItem(at: outputURL)
             }
             _completionHandler?(.failure(AssetSessionExporterError.cancelled))
@@ -1994,7 +1994,7 @@ extension AssetSessionExporter {
                 _completionHandler?(.failure(reader.error ?? AssetSessionExporterError.readingFailure))
                 return
             }
-            if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+            if FileManager.default.fileExists(atPath: outputURL.path) {
                 try? FileManager.default.removeItem(at: outputURL)
             }
             _completionHandler?(.failure(reader.error ?? AssetSessionExporterError.readingFailure))
@@ -2010,7 +2010,7 @@ extension AssetSessionExporter {
                 _completionHandler?(.failure(writer.error ?? AssetSessionExporterError.writingFailure))
                 return
             }
-            if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+            if FileManager.default.fileExists(atPath: outputURL.path) {
                 try? FileManager.default.removeItem(at: outputURL)
             }
             _completionHandler?(.failure(writer.error ?? AssetSessionExporterError.writingFailure))
