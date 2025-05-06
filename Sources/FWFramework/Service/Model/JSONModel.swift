@@ -1734,7 +1734,7 @@ extension ValidatedValue: JSONMappedValue {
     }
 }
 
-// MARK: - ObjectParameter
+// MARK: - JSONModel+ObjectParameter
 extension ObjectParameter where Self: JSONModel {
     public init(dictionaryValue: [AnyHashable: Any]) {
         self.init()
@@ -1755,7 +1755,7 @@ extension ObjectParameter where Self: JSONModel {
     }
 }
 
-// MARK: - AnyArchivable
+// MARK: - JSONModel+AnyArchivable
 extension AnyArchivable where Self: JSONModel {
     public static func archiveDecode(_ data: Data?) -> Self? {
         guard let data else { return nil }

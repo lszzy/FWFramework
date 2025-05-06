@@ -19,6 +19,7 @@ extension SmartModel where Self: AnyObject {
     }
 }
 
+// MARK: - SmartModelConfiguration
 public class SmartModelConfiguration: @unchecked Sendable {
     public static let shared = SmartModelConfiguration()
     
@@ -26,8 +27,64 @@ public class SmartModelConfiguration: @unchecked Sendable {
     public var encodingOptions: Set<SmartEncodingOption>? = nil
 }
 
+// MARK: - SmartModel+AnyArchivable
+extension AnyArchivable where Self: SmartModel {
+    public static func archiveDecode(_ data: Data?) -> Self? {
+        deserialize(from: data)
+    }
+
+    public func archiveEncode() -> Data? {
+        toJSONString()?.data(using: .utf8)
+    }
+}
+
+// MARK: - SmartModel+SmartDecodable
+extension SmartDecodable {
+    public static func deserializeAny(from object: Any?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
+        if let dict = object as? [String: Any] {
+            return deserialize(from: dict, designatedPath: designatedPath, options: options)
+        } else if let data = object as? Data {
+            return deserialize(from: data, designatedPath: designatedPath, options: options)
+        } else {
+            return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
+        }
+    }
+}
+
+extension Array where Element: SmartDecodable {
+    public static func deserializeAny(from object: Any?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
+        if let array = object as? [Any] {
+            return deserialize(from: array, designatedPath: designatedPath, options: options)
+        } else if let data = object as? Data {
+            return deserialize(from: data, designatedPath: designatedPath, options: options)
+        } else {
+            return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
+        }
+    }
+}
+
+extension SmartDecodable where Self: SmartEncodable {
+    public mutating func mergeAny(from object: Any?, designatedPath: String? = nil) {
+        if let dict = object as? [String: Any] {
+            SmartUpdater.update(&self, from: dict)
+        } else if let data = object as? Data {
+            SmartUpdater.update(&self, from: data)
+        } else {
+            SmartUpdater.update(&self, from: object as? String)
+        }
+    }
+}
+
 // MARK: - SmartCodable
 /// [SmartCodable](https://github.com/intsig171/SmartCodable)
+///
+/// SmartCodable改动如下：
+/// 1. 兼容DefaultCaseCodable
+/// 2. 移除Defaultable，改为BasicType
+/// 3. 新增SmartModelConfiguration全局配置
+/// 4. 移除useMappedKeys参数，默认true
+/// 5. 优化getInnerObject方法，兼容数组索引
+/// 6. Array元素为SmartCodable时不实现SmartCodable
 public typealias SmartCodable = SmartDecodable & SmartEncodable
 
 public protocol SmartDecodable: Decodable {
@@ -92,17 +149,6 @@ public enum SmartDecodingOption: Hashable {
 }
 
 extension SmartDecodable {
-    /// Deserializes any into a model
-    public static func deserializeAny(from object: Any?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
-        if let dict = object as? [String: Any] {
-            return deserialize(from: dict, designatedPath: designatedPath, options: options)
-        } else if let data = object as? Data {
-            return deserialize(from: data, designatedPath: designatedPath, options: options)
-        } else {
-            return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
-        }
-    }
-
     /// Deserializes into a model
     public static func deserialize(from dict: [String: Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
         guard let _dict = dict else {
@@ -161,17 +207,6 @@ extension SmartDecodable {
 }
 
 extension Array where Element: SmartDecodable {
-    /// Deserializes any into an array of models
-    public static func deserializeAny(from object: Any?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
-        if let array = object as? [Any] {
-            return deserialize(from: array, designatedPath: designatedPath, options: options)
-        } else if let data = object as? Data {
-            return deserialize(from: data, designatedPath: designatedPath, options: options)
-        } else {
-            return deserialize(from: object as? String, designatedPath: designatedPath, options: options)
-        }
-    }
-
     /// Deserializes into an array of models
     public static func deserialize(from array: [Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
         guard let _arr = array else {
@@ -545,19 +580,6 @@ private func _transformToJsonString(object: Any, prettyPrint: Bool = false, type
         } catch {}
     }
     return nil
-}
-
-extension SmartDecodable where Self: SmartEncodable {
-    /// Merge any info a model
-    public mutating func mergeAny(from object: Any?, designatedPath: String? = nil) {
-        if let dict = object as? [String: Any] {
-            SmartUpdater.update(&self, from: dict)
-        } else if let data = object as? Data {
-            SmartUpdater.update(&self, from: data)
-        } else {
-            SmartUpdater.update(&self, from: object as? String)
-        }
-    }
 }
 
 public struct SmartUpdater<T: SmartCodable> {
@@ -5563,16 +5585,5 @@ public struct SmartURLTransformer: ValueTransformable {
 
     public func transformToJSON(_ value: URL) -> String? {
         value.absoluteString
-    }
-}
-
-// MARK: - AnyArchivable
-extension AnyArchivable where Self: SmartModel {
-    public static func archiveDecode(_ data: Data?) -> Self? {
-        deserialize(from: data)
-    }
-
-    public func archiveEncode() -> Data? {
-        toJSONString()?.data(using: .utf8)
     }
 }
