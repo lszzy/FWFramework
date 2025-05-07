@@ -2336,14 +2336,14 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         if reloadData {
             collectionView.reloadData()
         } else {
-            selectedImageAssetArray.forEach { imageAsset in
-                guard let imageIndex = self.imagesAssetArray.firstIndex(of: imageAsset),
-                      let cell = self.collectionView.cellForItem(at: IndexPath(item: imageIndex, section: 0)) as? ImagePickerCollectionCell else { return }
+            for imageAsset in selectedImageAssetArray {
+                guard let imageIndex = imagesAssetArray.firstIndex(of: imageAsset),
+                      let cell = collectionView.cellForItem(at: IndexPath(item: imageIndex, section: 0)) as? ImagePickerCollectionCell else { continue }
 
                 if cell.selectable {
                     cell.checked = true
-                    cell.checkedIndex = self.selectedImageAssetArray.firstIndex(of: imageAsset)
-                    cell.disabled = !cell.checked && self.selectedImageAssetArray.count >= self.maximumSelectImageCount
+                    cell.checkedIndex = selectedImageAssetArray.firstIndex(of: imageAsset)
+                    cell.disabled = !cell.checked && selectedImageAssetArray.count >= maximumSelectImageCount
                 }
             }
         }

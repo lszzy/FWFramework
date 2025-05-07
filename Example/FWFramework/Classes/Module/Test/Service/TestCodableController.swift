@@ -528,7 +528,7 @@ struct TestSmartSubModel: SmartModel {
     var name: String?
 
     @SmartFlat
-    var parent: TestSmartSuperModel?
+    var model: TestSmartSuperModel?
 }
 
 enum TestSmartModelEnum: String, Codable {
@@ -920,6 +920,7 @@ extension TestCodableController {
             return results
         }
 
+        SmartSentinel.debugMode = .verbose
         var model: TestSmartModel? = TestSmartModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestSmartModel.decodeModel(from: model?.encodeObject())

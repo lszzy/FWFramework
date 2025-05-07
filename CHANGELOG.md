@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.0.3] - 2025-05-08
+
+### Fixed
+* Fix the problem of getting path path by FileManager.pathGroup method
+* Synchronize SmartCodable to the latest version 4.4.0
+
 ## [7.0.2] - 2025-04-09
 
 ### Added

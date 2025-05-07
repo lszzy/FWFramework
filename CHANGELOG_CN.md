@@ -1,5 +1,11 @@
 # 更新日志
 
+## [7.0.3] - 2025-05-08
+
+### Fixed
+* 修复FileManager.pathGroup方法获取path路径问题
+* 同步SmartCodable到最新4.4.0版本
+
 ## [7.0.2] - 2025-04-09
 
 ### Added
