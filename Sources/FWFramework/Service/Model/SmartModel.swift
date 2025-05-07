@@ -4650,6 +4650,19 @@ extension JSONDecoderImpl.KeyedContainer {
             }
             return nil
         }
+        
+        if let type = type as? FlatType.Type {
+            if type.isArray {
+                if let decoded = try? T(from: superDecoder(forKey: key)) {
+                    return didFinishMapping(decoded)
+                }
+            } else {
+                if let decoded = try? T(from: impl) {
+                    return didFinishMapping(decoded)
+                }
+            }
+            return nil
+        }
 
         guard let newDecoder = try? decoderForKeyCompatibleForJson(key, type: type) else { return _compatibleDecode(forKey: key) }
 
@@ -5596,7 +5609,7 @@ extension Patcher {
 
             // 处理 SmartCaseDefaultable 类型的对象
             if let caseDefaultable = T.self as? any SmartCaseDefaultable.Type {
-                if let firstCase = caseDefaultable.allCases.first as? T {
+                if let first = caseDefaultable.allCases.first, let firstCase = first as? T {
                     return firstCase
                 }
             }

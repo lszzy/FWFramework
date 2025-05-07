@@ -528,7 +528,7 @@ struct TestSmartSubModel: SmartModel {
     var name: String?
 
     @SmartFlat
-    var parent: TestSmartSuperModel?
+    var model: TestSmartSuperModel?
 }
 
 enum TestSmartModelEnum: String, Codable {
