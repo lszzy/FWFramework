@@ -4650,7 +4650,7 @@ extension JSONDecoderImpl.KeyedContainer {
             }
             return nil
         }
-        
+
         if let type = type as? FlatType.Type {
             if type.isArray {
                 if let decoded = try? T(from: superDecoder(forKey: key)) {
