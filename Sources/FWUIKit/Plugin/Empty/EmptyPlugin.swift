@@ -269,7 +269,7 @@ import UIKit
                 return totalCount
             }
 
-            var totalCount: Int = 0
+            var totalCount = 0
             if let tableView = base as? UITableView {
                 var sections = 1
                 if let sectionCount = tableView.dataSource?.numberOfSections?(in: tableView) {

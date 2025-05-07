@@ -23,9 +23,9 @@ extension SmartModel where Self: AnyObject {
 // MARK: - SmartModelConfiguration
 public class SmartModelConfiguration: @unchecked Sendable {
     public static let shared = SmartModelConfiguration()
-    
-    public var decodingOptions: Set<SmartDecodingOption>? = nil
-    public var encodingOptions: Set<SmartEncodingOption>? = nil
+
+    public var decodingOptions: Set<SmartDecodingOption>?
+    public var encodingOptions: Set<SmartEncodingOption>?
 }
 
 // MARK: - SmartModel+AnyArchivable
@@ -92,39 +92,35 @@ public typealias SmartCodable = SmartDecodable & SmartEncodable
 public protocol SmartDecodable: Decodable {
     /// Callback invoked after successful decoding for post-processing
     mutating func didFinishMapping()
-    
+
     /// Defines key mapping transformations during decoding
     /// First non-null mapping is preferred
     static func mappingForKey() -> [SmartKeyTransformer]?
-    
+
     /// Defines value transformation strategies during decoding
     static func mappingForValue() -> [SmartValueTransformer]?
-    
+
     init()
 }
 
-
 extension SmartDecodable {
-    public mutating func didFinishMapping() { }
-    public static func mappingForKey() -> [SmartKeyTransformer]? { return nil }
-    public static func mappingForValue() -> [SmartValueTransformer]? { return nil }
+    public mutating func didFinishMapping() {}
+    public static func mappingForKey() -> [SmartKeyTransformer]? { nil }
+    public static func mappingForValue() -> [SmartValueTransformer]? { nil }
 }
-
 
 /// Options for SmartCodable parsing
 public enum SmartDecodingOption: Hashable {
-    
-    
     /// The default policy for date is ReferenceDate (January 1, 2001 00:00:00 UTC), in seconds.
     case date(JSONDecoder.DateDecodingStrategy)
-    
+
     case data(JSONDecoder.SmartDataDecodingStrategy)
-    
+
     case float(JSONDecoder.NonConformingFloatDecodingStrategy)
-    
+
     /// The mapping strategy for keys during parsing
     case key(JSONDecoder.SmartKeyDecodingStrategy)
-    
+
     /// Handles the hash value, ignoring the impact of associated values.
     public func hash(into hasher: inout Hasher) {
         switch self {
@@ -138,8 +134,8 @@ public enum SmartDecodingOption: Hashable {
             hasher.combine(3)
         }
     }
-    
-    public static func == (lhs: SmartDecodingOption, rhs: SmartDecodingOption) -> Bool {
+
+    public static func ==(lhs: SmartDecodingOption, rhs: SmartDecodingOption) -> Bool {
         switch (lhs, rhs) {
         case (.date, .date):
             return true
@@ -155,30 +151,27 @@ public enum SmartDecodingOption: Hashable {
     }
 }
 
-
 extension SmartDecodable {
-    
     /// Deserializes into a model
     /// - Parameter dict: Dictionary
     /// - Parameter designatedPath: Specifies the data path to decode
     /// - Parameter options: Decoding strategy
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Model
-    public static func deserialize(from dict: [String: Any]?, designatedPath: String? = nil,  options: Set<SmartDecodingOption>? = nil) -> Self? {
-        
+    public static func deserialize(from dict: [String: Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
         guard let _dict = dict else {
             logNilValue(for: "Dictionary", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _dict, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return deserialize(from: _data, options: options)
     }
-    
+
     /// Deserializes into a model
     /// - Parameter json: JSON string
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -190,16 +183,15 @@ extension SmartDecodable {
             logNilValue(for: "JSON String", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _json, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return deserialize(from: _data, options: options)
     }
-    
-    
+
     /// Deserializes into a model
     /// - Parameter data: Data
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -207,20 +199,19 @@ extension SmartDecodable {
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Model
     public static func deserialize(from data: Data?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
-        guard let data = data else {
+        guard let data else {
             logNilValue(for: "Data", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: data, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return try? _data._deserializeDict(type: Self.self, options: options)
     }
-    
-    
+
     /// Deserializes into a model
     /// - Parameter data: Data
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -228,29 +219,25 @@ extension SmartDecodable {
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Model
     public static func deserializePlist(from data: Data?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> Self? {
-        
-        guard let data = data else {
+        guard let data else {
             logNilValue(for: "Data", on: Self.self)
             return nil
         }
-        
+
         guard let _tranData = data.tranformToJSONData(type: Self.self) else {
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _tranData, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return try? _data._deserializeDict(type: Self.self, options: options)
     }
-
 }
 
-
 extension Array where Element: SmartDecodable {
-    
     /// Deserializes into an array of models
     /// - Parameter array: Array
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -258,21 +245,19 @@ extension Array where Element: SmartDecodable {
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Array of models
     public static func deserialize(from array: [Any]?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
-        
         guard let _arr = array else {
             logNilValue(for: "Array", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _arr, by: nil) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return deserialize(from: _data, options: options)
     }
-    
-    
+
     /// Deserializes into an array of models
     /// - Parameter json: JSON string
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -284,15 +269,15 @@ extension Array where Element: SmartDecodable {
             logNilValue(for: "JSON String", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _json, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return deserialize(from: _data, options: options)
     }
-    
+
     /// Deserializes into an array of models
     /// - Parameter data: Data
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -300,19 +285,19 @@ extension Array where Element: SmartDecodable {
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Array of models
     public static func deserialize(from data: Data?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
-        guard let data = data else {
+        guard let data else {
             logNilValue(for: "Data", on: Self.self)
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: data, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return try? _data._deserializeArray(type: Self.self, options: options)
     }
-    
+
     /// Deserializes into an array of models
     /// - Parameter data: Data
     /// - Parameter designatedPath: Specifies the data path to decode
@@ -320,54 +305,50 @@ extension Array where Element: SmartDecodable {
     ///   Duplicate enumeration items are not allowed, e.g., multiple keyStrategies cannot be passed in [only the first one is effective].
     /// - Returns: Array of models
     public static func deserializePlist(from data: Data?, designatedPath: String? = nil, options: Set<SmartDecodingOption>? = nil) -> [Element]? {
-        
-        
-        guard let data = data else {
+        guard let data else {
             logNilValue(for: "Data", on: Self.self)
             return nil
         }
-        
+
         guard let _tranData = data.tranformToJSONData(type: Self.self) else {
             return nil
         }
-        
+
         guard let _data = getInnerData(inside: _tranData, by: designatedPath) else {
             logDataExtractionFailure(forPath: designatedPath, type: Self.self)
             return nil
         }
-        
+
         return try? _data._deserializeArray(type: Self.self, options: options)
     }
 }
 
-
 extension Data {
-    fileprivate func createDecoder<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) -> JSONDecoder {
+    private func createDecoder<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) -> JSONDecoder {
         let _decoder = SmartJSONDecoder()
-        
+
         if let _options = options ?? SmartModelConfiguration.shared.decodingOptions {
             for _option in _options {
                 switch _option {
-                case .data(let strategy):
+                case let .data(strategy):
                     _decoder.smartDataDecodingStrategy = strategy
-                    
-                case .date(let strategy):
+
+                case let .date(strategy):
                     _decoder.smartDateDecodingStrategy = strategy
-                    
-                case .float(let strategy):
+
+                case let .float(strategy):
                     _decoder.nonConformingFloatDecodingStrategy = strategy
-                case .key(let strategy):
+
+                case let .key(strategy):
                     _decoder.smartKeyDecodingStrategy = strategy
                 }
             }
         }
-        
+
         return _decoder
     }
-    
-    
-    fileprivate func _deserializeDict<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) throws -> T? where T: SmartDecodable {
 
+    fileprivate func _deserializeDict<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) throws -> T? where T: SmartDecodable {
         do {
             let _decoder = createDecoder(type: type, options: options)
             var obj = try _decoder.decode(type, from: self)
@@ -377,10 +358,8 @@ extension Data {
             return nil
         }
     }
-    
-    
-    fileprivate func _deserializeArray<T>(type: [T].Type, options: Set<SmartDecodingOption>? = nil) throws -> [T]? where T: SmartDecodable {
 
+    fileprivate func _deserializeArray<T>(type: [T].Type, options: Set<SmartDecodingOption>? = nil) throws -> [T]? where T: SmartDecodable {
         do {
             let _decoder = createDecoder(type: type, options: options)
             let decodeValue = try _decoder.decode(type, from: self)
@@ -389,25 +368,24 @@ extension Data {
             return nil
         }
     }
-    
+
     fileprivate func toObject() -> Any? {
         let jsonObject = try? JSONSerialization.jsonObject(with: self, options: .allowFragments)
         return jsonObject
     }
-    
-    
+
     /// 将Plist Data 转成 JSON Data
     fileprivate func tranformToJSONData(type: Any.Type) -> Data? {
         guard let jsonObject = try? PropertyListSerialization.propertyList(from: self, options: [], format: nil) else {
             SmartSentinel.monitorAndPrint(debugDescription: "Failed to convert PropertyList Data to JSON Data.", in: type)
             return nil
         }
-        
+
         guard JSONSerialization.isValidJSONObject(jsonObject) else {
             SmartSentinel.monitorAndPrint(debugDescription: "Failed to convert PropertyList Data to JSON Data.", in: type)
             return nil
         }
-        
+
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
             return jsonData
@@ -418,11 +396,10 @@ extension Data {
     }
 }
 
-extension Dictionary where Key == String, Value == Any {
-    
+extension Dictionary<String, Any> {
     /// 确保字典中的Value类型都支持JSON序列化。
     func toData() -> Data? {
-        let jsonCompatibleDict = self.toJSONCompatibleDict()
+        let jsonCompatibleDict = toJSONCompatibleDict()
         guard JSONSerialization.isValidJSONObject(jsonCompatibleDict) else { return nil }
         return try? JSONSerialization.data(withJSONObject: jsonCompatibleDict)
     }
@@ -434,7 +411,7 @@ extension Dictionary where Key == String, Value == Any {
         }
         return jsonCompatibleDict
     }
-    
+
     /// 目前只处理了Data类型。如有需要可以继续扩展补充。
     private func convertToJSONCompatible(value: Any) -> Any {
         if let data = value as? Data {
@@ -447,7 +424,7 @@ extension Dictionary where Key == String, Value == Any {
             return value
         }
     }
-    
+
     fileprivate func toJSONString() -> String? {
         guard let data = toData() else { return nil }
         return String(data: data, encoding: .utf8)
@@ -455,12 +432,11 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 extension Array {
-    
     fileprivate func toData() -> Data? {
         guard JSONSerialization.isValidJSONObject(self) else { return nil }
         return try? JSONSerialization.data(withJSONObject: self)
     }
-    
+
     fileprivate func toJSONString() -> String? {
         guard let data = toData() else { return nil }
         if let json = String(data: data, encoding: String.Encoding.utf8) {
@@ -471,10 +447,8 @@ extension Array {
 }
 
 /// 通过路径获取待解析的信息，再转换成data，提供给decoder解析。
-fileprivate func getInnerData(inside value: Any?, by designatedPath: String?) -> Data? {
-    
+private func getInnerData(inside value: Any?, by designatedPath: String?) -> Data? {
     func toObject(_ value: Any?) -> Any? {
-        
         switch value {
         case let data as Data:
             return data.toObject() // 确保这里 toObject() 方法是有效且能正确处理 Data 的。
@@ -488,7 +462,7 @@ fileprivate func getInnerData(inside value: Any?, by designatedPath: String?) ->
             return nil
         }
     }
-    
+
     func toData(_ value: Any?) -> Data? {
         switch value {
         case let data as Data:
@@ -504,7 +478,7 @@ fileprivate func getInnerData(inside value: Any?, by designatedPath: String?) ->
         }
         return nil
     }
-    
+
     func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
         var result: Any? = object
         var abort = false
@@ -534,8 +508,7 @@ fileprivate func getInnerData(inside value: Any?, by designatedPath: String?) ->
         }
         return abort ? nil : result
     }
-    
-    
+
     if let path = designatedPath, !path.isEmpty {
         let obj = toObject(value)
         let inner = getInnerObject(inside: obj, by: path)
@@ -545,44 +518,39 @@ fileprivate func getInnerData(inside value: Any?, by designatedPath: String?) ->
     }
 }
 
-
-fileprivate func logNilValue(for valueType: String, on modelType: Any.Type) {
+private func logNilValue(for valueType: String, on modelType: Any.Type) {
     SmartSentinel.monitorAndPrint(debugDescription: "Decoding \(modelType) failed because input \(valueType) is nil.", in: modelType)
 }
 
-fileprivate func logDataExtractionFailure(forPath path: String?, type: Any.Type) {
-    
+private func logDataExtractionFailure(forPath path: String?, type: Any.Type) {
     SmartSentinel.monitorAndPrint(debugDescription: "Decoding \(type) failed because it was unable to extract valid data from path '\(path ?? "nil")'.", in: type)
 }
 
 public protocol SmartEncodable: Encodable {
     /// The callback for when mapping is complete
     mutating func didFinishMapping()
-  
+
     /// The mapping relationship of decoding keys
     static func mappingForKey() -> [SmartKeyTransformer]?
-    
+
     /// The strategy for decoding values
     static func mappingForValue() -> [SmartValueTransformer]?
-    
+
     init()
 }
 
-
 /// Options for SmartCodable parsing
 public enum SmartEncodingOption: Hashable {
-    
-    
     /// date的默认策略是ReferenceDate（参考日期是指2001年1月1日 00:00:00 UTC），以秒为单位。
     case date(JSONEncoder.DateEncodingStrategy)
-    
+
     case data(JSONEncoder.SmartDataEncodingStrategy)
-    
+
     case float(JSONEncoder.NonConformingFloatEncodingStrategy)
-    
+
     /// The mapping strategy for keys during parsing
     case key(JSONEncoder.SmartKeyEncodingStrategy)
-    
+
     /// Handles the hash value, ignoring the impact of associated values.
     public func hash(into hasher: inout Hasher) {
         switch self {
@@ -596,8 +564,8 @@ public enum SmartEncodingOption: Hashable {
             hasher.combine(3)
         }
     }
-    
-    public static func == (lhs: SmartEncodingOption, rhs: SmartEncodingOption) -> Bool {
+
+    public static func ==(lhs: SmartEncodingOption, rhs: SmartEncodingOption) -> Bool {
         switch (lhs, rhs) {
         case (.date, .date):
             return true
@@ -613,16 +581,13 @@ public enum SmartEncodingOption: Hashable {
     }
 }
 
-
 extension SmartEncodable {
-
     /// Serializes into a dictionary
     /// - Parameter useMappedKeys: Whether to use the mapped key during encoding. The default value is false.
     ///   -- CodingKeys.array <--- "out_array", 为ture时，使用"out_array"。
     /// - Parameter options: encoding options
     /// - Returns: dictionary
-    
-    
+
     /// Serializes the object into a dictionary representation.
     ///
     /// - Parameters:
@@ -647,9 +612,9 @@ extension SmartEncodable {
     ///   let dict2 = model.toDictionary(useMappedKeys: true) // ["json_data": "value"]
     ///   ```
     public func toDictionary(options: Set<SmartEncodingOption>? = nil) -> [String: Any]? {
-        return _transformToJson(self, type: Self.self, options: options)
+        _transformToJson(self, type: Self.self, options: options)
     }
-    
+
     /// Serializes into a JSON string
     /// - Parameter useMappedKeys: Whether to use the mapped key during encoding. The default value is false.
     /// - Parameter options: encoding options
@@ -663,15 +628,14 @@ extension SmartEncodable {
     }
 }
 
-
 extension Array where Element: SmartEncodable {
     /// Serializes into a array
     /// - Parameter useMappedKeys: Whether to use the mapped key during encoding. The default value is false.
     /// - Returns: array
     public func toArray(options: Set<SmartEncodingOption>? = nil) -> [Any]? {
-        return _transformToJson(self,type: Element.self, options: options)
+        _transformToJson(self, type: Element.self, options: options)
     }
-    
+
     /// Serializes into a JSON string
     /// - Parameter useMappedKeys: Whether to use the mapped key during encoding. The default value is false.
     /// - Parameter options: encoding options
@@ -685,30 +649,27 @@ extension Array where Element: SmartEncodable {
     }
 }
 
-
-
-fileprivate func _transformToJson<T>(_ some: Encodable, type: Any.Type, options: Set<SmartEncodingOption>? = nil) -> T? {
-    
+private func _transformToJson<T>(_ some: Encodable, type: Any.Type, options: Set<SmartEncodingOption>? = nil) -> T? {
     let jsonEncoder = SmartJSONEncoder()
-    
+
     if let _options = options ?? SmartModelConfiguration.shared.encodingOptions {
         for _option in _options {
             switch _option {
-            case .data(let strategy):
+            case let .data(strategy):
                 jsonEncoder.smartDataEncodingStrategy = strategy
-                
-            case .date(let strategy):
+
+            case let .date(strategy):
                 jsonEncoder.dateEncodingStrategy = strategy
-                
-            case .float(let strategy):
+
+            case let .float(strategy):
                 jsonEncoder.nonConformingFloatEncodingStrategy = strategy
-            case .key(let strategy):
+
+            case let .key(strategy):
                 jsonEncoder.smartKeyEncodingStrategy = strategy
             }
         }
     }
-    
-    
+
     if let jsonData = try? jsonEncoder.encode(some) {
         do {
             let json = try JSONSerialization.jsonObject(with: jsonData, options: .fragmentsAllowed)
@@ -724,15 +685,13 @@ fileprivate func _transformToJson<T>(_ some: Encodable, type: Any.Type, options:
     return nil
 }
 
-
-
-fileprivate func _transformToJsonString(object: Any, prettyPrint: Bool = false, type: Any.Type) -> String? {
+private func _transformToJsonString(object: Any, prettyPrint: Bool = false, type: Any.Type) -> String? {
     if JSONSerialization.isValidJSONObject(object) {
         do {
             let options: JSONSerialization.WritingOptions = prettyPrint ? [.prettyPrinted] : []
             let jsonData = try JSONSerialization.data(withJSONObject: object, options: options)
             return String(data: jsonData, encoding: .utf8)
-            
+
         } catch {
             SmartSentinel.monitorAndPrint(debugDescription: "'JSONSerialization.data(:)' falied", error: error, in: type)
         }
@@ -743,44 +702,39 @@ fileprivate func _transformToJsonString(object: Any, prettyPrint: Bool = false, 
 }
 
 public struct SmartUpdater<T: SmartCodable> {
-    
     /// This method is used to parse JSON data from a Data object and use the resulting dictionary to update a target object.
     /// - Parameters:
     ///   - dest: A reference to the target object (the inout keyword indicates that this object will be modified within the method).
     ///   - src: A Data object containing the JSON data.
     public static func update(_ dest: inout T, from src: Data?) {
-        
-        guard let src = src else { return }
-        
+        guard let src else { return }
+
         guard let dict = try? JSONSerialization.jsonObject(with: src, options: .mutableContainers) as? [String: Any] else {
             return
         }
         update(&dest, from: dict)
     }
-    
-    
+
     /// This method is used to parse JSON data from a Data object and use the resulting dictionary to update a target object.
     /// - Parameters:
     ///   - dest: A reference to the target object (the inout keyword indicates that this object will be modified within the method).
     ///   - src: A String object containing the JSON data.
     public static func update(_ dest: inout T, from src: String?) {
-        
-        guard let src = src else { return }
-        
+        guard let src else { return }
+
         guard let data = src.data(using: .utf8) else { return }
-        
+
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
-        
+
         update(&dest, from: dict)
     }
-    
-    
+
     /// This method is used to parse JSON data from a Data object and use the resulting dictionary to update a target object.
     /// - Parameters:
     ///   - dest: A reference to the target object (the inout keyword indicates that this object will be modified within the method).
     ///   - src: A Dictionary object containing the JSON data.
     public static func update(_ dest: inout T, from src: [String: Any]?) {
-        guard let src = src else { return }
+        guard let src else { return }
         var destDict = dest.toDictionary() ?? [:]
         updateDict(&destDict, from: src)
         if let model = T.deserialize(from: destDict) {
@@ -790,25 +744,24 @@ public struct SmartUpdater<T: SmartCodable> {
 }
 
 extension SmartUpdater {
-    
     /// 合并字典，将src合并到dest
     /// - Parameters:
     ///   - dest: 目标字典
     ///   - src: 源字典
     fileprivate static func updateDict(_ dest: inout [String: Any], from src: [String: Any]) {
         dest.merge(src) { _, new in
-            return new
+            new
         }
     }
 }
 
 // MARK: - SmartType
-public protocol SmartCaseDefaultable: RawRepresentable, Codable, CaseIterable { }
-public extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Decodable {
-    init(from decoder: Decoder) throws {
+public protocol SmartCaseDefaultable: RawRepresentable, Codable, CaseIterable {}
+extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Decodable {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let decoded = try container.decode(RawValue.self)
-        if let v = Self.init(rawValue: decoded) {
+        if let v = Self(rawValue: decoded) {
             self = v
         } else {
             let des = "Cannot initialize \(Self.self) from invalid \(RawValue.self) value `\(decoded)`"
@@ -817,33 +770,31 @@ public extension SmartCaseDefaultable where Self: Decodable, Self.RawValue: Deco
     }
 }
 
-
-
 public protocol SmartAssociatedEnumerable: Codable {
     static var defaultCase: Self { get }
     /// 如果你需要考虑encode，请实现它
     func encodeValue() -> Encodable?
 }
+
 extension SmartAssociatedEnumerable {
-    public func encodeValue() -> Encodable? { return nil }
+    public func encodeValue() -> Encodable? { nil }
 }
 
-public extension SmartAssociatedEnumerable {
-    init(from decoder: Decoder) throws {
-        
+extension SmartAssociatedEnumerable {
+    public init(from decoder: Decoder) throws {
         guard let _decoder = decoder as? JSONDecoderImpl else {
             let des = "Cannot initiali"
             throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: des))
         }
-        
+
         guard let tranformer = _decoder.cache.valueTransformer(for: _decoder.codingPath.last),
-           let decoded = tranformer.tranform(value: _decoder.json) as? Self else {
-            throw DecodingError.valueNotFound(Self.self, DecodingError.Context.init(codingPath: _decoder.codingPath, debugDescription: "No custom parsing policy is implemented for associated value enumerations"))
+              let decoded = tranformer.tranform(value: _decoder.json) as? Self else {
+            throw DecodingError.valueNotFound(Self.self, DecodingError.Context(codingPath: _decoder.codingPath, debugDescription: "No custom parsing policy is implemented for associated value enumerations"))
         }
         self = decoded
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         if let value = encodeValue() {
             try container.encode(value)
@@ -853,64 +804,60 @@ public extension SmartAssociatedEnumerable {
 
 // MARK: - Sentinel
 /// Central logging configuration and utilities
-public struct SmartSentinel {
-    
+public enum SmartSentinel {
     /// Set debugging mode, default is none.
     /// Note: When not debugging, set to none to reduce overhead.
     public static var debugMode: Level {
-        get { return _mode }
+        get { _mode }
         set { _mode = newValue }
     }
-    
+
     /// 设置回调方法，传递解析完成时的日志记录
     public static func onLogGenerated(handler: @escaping (String) -> Void) {
-        self.logsHandler = handler
+        logsHandler = handler
     }
-    
+
     /// Set up different levels of padding
     public static var space: String = "   "
     /// Set the markup for the model
     public static var keyContainerSign: String = "╆━ "
-    
+
     public static var unKeyContainerSign: String = "╆━ "
-    
+
     /// Sets the tag for the property
     public static var attributeSign: String = "┆┄ "
-    
-    
+
     /// 是否满足日志记录的条件
     fileprivate static var isValid: Bool {
-        return debugMode != .none
+        debugMode != .none
     }
-    
+
     private static var _mode = Level.none
-    
+
     private static var cache = LogCache()
-    
+
     /// 回调闭包，用于在解析完成时传递日志
     private static var logsHandler: ((String) -> Void)?
 }
 
-
 extension SmartSentinel {
     static func monitorLog<T>(impl: JSONDecoderImpl, isOptionalLog: Bool = false,
                               forKey key: CodingKey?, value: JSONValue?, type: T.Type) {
-        
         guard SmartSentinel.debugMode != .none else { return }
-        guard let key = key else { return }
+        guard let key else { return }
         // 如果被忽略了，就不要输出log了。
         let typeString = String(describing: T.self)
         guard !typeString.starts(with: "IgnoredKey<") else { return }
-        
+
         let className = impl.cache.topSnapshot?.objectTypeName ?? ""
         var path = impl.codingPath
         path.append(key)
-        
+
         var address = ""
         if let parsingMark = CodingUserInfoKey.parsingMark {
             address = impl.userInfo[parsingMark] as? String ?? ""
         }
-        
+
         if let entry = value {
             if entry.isNull { // 值为null
                 if isOptionalLog { return }
@@ -926,61 +873,56 @@ extension SmartSentinel {
             SmartSentinel.verboseLog(error, className: className, parsingMark: address)
         }
     }
-    
+
     private static func verboseLog(_ error: DecodingError, className: String, parsingMark: String) {
         logIfNeeded(level: .verbose) {
             cache.save(error: error, className: className, parsingMark: parsingMark)
         }
     }
-    
+
     private static func alertLog(error: DecodingError, className: String, parsingMark: String) {
         logIfNeeded(level: .alert) {
             cache.save(error: error, className: className, parsingMark: parsingMark)
         }
     }
-    
+
     static func monitorLogs(in name: String, parsingMark: String) {
-        
         guard SmartSentinel.isValid else { return }
-        
+
         if let format = cache.formatLogs(parsingMark: parsingMark) {
-            var message: String = ""
+            var message = ""
             message += getHeader()
             message += name + " 👈🏻 👀\n"
             message += format
             message += getFooter()
             print(message)
-            
+
             logsHandler?(message)
         }
-        
+
         cache.clearCache(parsingMark: parsingMark)
     }
 }
-
-
 
 extension SmartSentinel {
     static func monitorAndPrint(level: SmartSentinel.Level = .alert, debugDescription: String, error: Error? = nil, in type: Any.Type?) {
         logIfNeeded(level: level) {
             let decodingError = (error as? DecodingError) ?? DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: debugDescription, underlyingError: error))
             if let logItem = LogItem.make(with: decodingError) {
-                
-                var message: String = ""
+                var message = ""
                 message += getHeader()
-                if let type = type {
+                if let type {
                     message += "\(type) 👈🏻 👀\n"
                 }
                 message += logItem.formartMessage + "\n"
                 message += getFooter()
                 print(message)
-                
+
                 logsHandler?(message)
             }
         }
     }
 }
-
 
 extension SmartSentinel {
     /// 生成唯一标记，用来标记是否本次解析。
@@ -990,9 +932,7 @@ extension SmartSentinel {
     }
 }
 
-
 extension SmartSentinel {
-    
     public enum Level: Int {
         /// 不记录日志
         case none
@@ -1001,17 +941,16 @@ extension SmartSentinel {
         /// 警告日志：仅仅包含类型不匹配的情况
         case alert
     }
-    
-    
+
     static func getHeader() -> String {
-        return "\n================================  [Smart Sentinel]  ================================\n"
+        "\n================================  [Smart Sentinel]  ================================\n"
     }
-    
+
     static func getFooter() -> String {
-        return "====================================================================================\n"
+        "====================================================================================\n"
     }
-    
-    private static func logIfNeeded(level: SmartSentinel.Level, callback: () -> ()) {
+
+    private static func logIfNeeded(level: SmartSentinel.Level, callback: () -> Void) {
         if SmartSentinel.debugMode.rawValue <= level.rawValue {
             callback()
         }
@@ -1019,54 +958,53 @@ extension SmartSentinel {
 }
 
 class SafeDictionary<Key: Hashable, Value> {
-    
     private var dictionary: [Key: Value] = [:]
-    
+
     private let lock = NSLock()
-    
+
     func getValue(forKey key: Key) -> Value? {
         lock.lock()
         defer { lock.unlock() }
         return dictionary[key]
     }
-    
+
     func setValue(_ value: Value, forKey key: Key) {
         lock.lock()
         defer { lock.unlock() }
         dictionary[key] = value
     }
-    
+
     func removeValue(forKey key: Key) {
         lock.lock()
         defer { lock.unlock() }
         dictionary.removeValue(forKey: key)
     }
-    
+
     /// 新增：按条件批量移除键值对
     func removeValue(where shouldRemove: (Key) -> Bool) {
         lock.lock()
         defer { lock.unlock() }
         dictionary = dictionary.filter { !shouldRemove($0.key) }
     }
-    
+
     func removeAll() {
         lock.lock()
         defer { lock.unlock() }
         dictionary.removeAll()
     }
-    
+
     func getAllValues() -> [Value] {
         lock.lock()
         defer { lock.unlock() }
         return Array(dictionary.values)
     }
-    
+
     func getAllKeys() -> [Key] {
         lock.lock()
         defer { lock.unlock() }
         return Array(dictionary.keys)
     }
-    
+
     func updateEach(_ body: (Key, inout Value) throws -> Void) rethrows {
         lock.lock()
         defer { lock.unlock() }
@@ -1080,44 +1018,41 @@ class SafeDictionary<Key: Hashable, Value> {
 }
 
 struct LogCache {
-    
     private var snapshotDict = SafeDictionary<String, LogContainer>()
-    
+
     /// Saves a decoding error to the log cache
     mutating func save(error: DecodingError, className: String, parsingMark: String) {
         let log = LogItem.make(with: error)
         cacheLog(log, className: className, parsingMark: parsingMark)
     }
-    
+
     /// Clears cached logs for a specific parsing session
     mutating func clearCache(parsingMark: String) {
         snapshotDict.removeValue { $0.hasPrefix(parsingMark) }
     }
-    
+
     /// Formats all logs for a parsing session into a readable string
     mutating func formatLogs(parsingMark: String) -> String? {
-        
         filterLogItem()
-        
+
         alignTypeNamesInAllSnapshots(parsingMark: parsingMark)
-        
+
         let keyOrder = sortKeys(snapshotDict.getAllKeys(), parsingMark: parsingMark)
-        
-        var lastPath: String = ""
+
+        var lastPath = ""
         let arr = keyOrder.compactMap {
             let container = snapshotDict.getValue(forKey: $0)
             let message = container?.formatMessage(previousPath: lastPath)
             lastPath = container?.path ?? ""
             return message
         }
-        
+
         if arr.isEmpty { return nil }
         return arr.joined()
     }
 }
 
 extension LogCache {
-    
     /// Sorts log keys for consistent output ordering
     func sortKeys(_ array: [String], parsingMark: String) -> [String] {
         //  获取当前解析的keys
@@ -1125,11 +1060,11 @@ extension LogCache {
             $0.starts(with: parsingMark)
         }
         guard !filterArray.isEmpty else { return [] }
-        
+
         let sortedArray = filterArray.sorted()
         return sortedArray
     }
-    
+
     /// Filters duplicate log items across containers
     mutating func filterLogItem() {
         let pattern = "Index \\d+"
@@ -1138,11 +1073,11 @@ extension LogCache {
             let range = NSRange(key.startIndex..<key.endIndex, in: key)
             return regex.firstMatch(in: key, options: [], range: range) != nil
         }
-        
-        matchedKeys = matchedKeys.sorted(by: < )
-        
+
+        matchedKeys = matchedKeys.sorted(by: <)
+
         var allLogs: [LogItem] = []
-        
+
         let tempDict = snapshotDict
         for key in matchedKeys {
             var lessLogs: [LogItem] = []
@@ -1154,7 +1089,7 @@ extension LogCache {
                         allLogs.append(log)
                     }
                 }
-                
+
                 if lessLogs.isEmpty {
                     tempDict.removeValue(forKey: key)
                 } else {
@@ -1165,15 +1100,14 @@ extension LogCache {
         }
         snapshotDict = tempDict
     }
-    
+
     /// Caches an individual log item
     private mutating func cacheLog(_ log: LogItem?, className: String, parsingMark: String) {
-        
-        guard let log = log else { return }
-        
+        guard let log else { return }
+
         let path = log.codingPath
         let key = createKey(path: path, parsingMark: parsingMark)
-        
+
         // 如果存在相同的typeName和path，则合并logs
         if var existingSnapshot = snapshotDict.getValue(forKey: key) {
             if !existingSnapshot.logs.contains(where: { $0 == log }) {
@@ -1186,16 +1120,16 @@ extension LogCache {
             snapshotDict.setValue(newSnapshot, forKey: key)
         }
     }
-    
+
     /// Creates a unique key for a log entry
     private func createKey(path: [CodingKey], parsingMark: String) -> String {
         let arr = path.map { $0.stringValue }
         return parsingMark + "\(arr.joined(separator: "-"))"
     }
-    
+
     /// Aligns field names for consistent visual output
     private mutating func alignTypeNamesInAllSnapshots(parsingMark: String) {
-        snapshotDict.updateEach { key, snapshot in
+        snapshotDict.updateEach { _, snapshot in
             let maxLength = snapshot.logs.max(by: { $0.fieldName.count < $1.fieldName.count })?.fieldName.count ?? 0
             snapshot.logs = snapshot.logs.map { log in
                 var modifiedLog = log
@@ -1208,10 +1142,9 @@ extension LogCache {
 
 /// Represents a container of related log entries with common coding path
 struct LogContainer {
-    
     /// 当前容器的类型（如果是unkeyed，就是Index+X。如果是keyed，就是Model的名称）
     var typeName: String
-    
+
     /// 容器的路径
     var codingPath: [CodingKey] = []
     var path: String {
@@ -1224,22 +1157,21 @@ struct LogContainer {
         }
         return arr.joined(separator: "/")
     }
-    
+
     // 当前容器下，解析错误的属性日志
     var logs: [LogItem] = []
-    
+
     /// 用来从属哪次解析，以便做聚合
     var parsingMark: String
-    
-    
+
     var isUnKeyed: Bool {
         codingPath.last?.intValue != nil
     }
+
     var formatTypeName: String {
         isUnKeyed ? "[\(typeName)]" : typeName
-
     }
-    
+
     /** pay attention to it
      1. 每一条path都是完整的解析路径。
      2. 路径中的每一个点都是container（keyed or unkeyed）。
@@ -1254,36 +1186,34 @@ struct LogContainer {
         let components = comparePaths(previousPath: previousPath, currentPath: path)
         let commons = components.commons
         let differents = components.differents
-        
+
         // 即将要显示的container距离左侧的距离
         let currentTabs = String(repeating: SmartSentinel.space, count: commons.count + 1)
-        
+
         // 容器的信息
         for (index, item) in differents.enumerated() {
-            
             let typeName = item.hasPrefix("Index ") ? "" : ": \(formatTypeName)"
-            
+
             let sign = isUnKeyed ? SmartSentinel.unKeyContainerSign : SmartSentinel.keyContainerSign
             let containerInfo = "\(sign)\(item)\(typeName)\n"
             let tabs = currentTabs + String(repeating: SmartSentinel.space, count: index)
             message += "\(tabs)\(containerInfo)"
         }
-        
+
         // 属性信息
         let fieldTabs = currentTabs + String(repeating: SmartSentinel.space, count: differents.count)
         for log in logs {
             message += "\(fieldTabs)\(SmartSentinel.attributeSign)\(log.formartMessage)"
         }
-        
+
         return message
     }
-    
+
     private func comparePaths(previousPath: String, currentPath: String) -> (commons: [String], differents: [String]) {
-        
         // 将路径按照斜杠分割为路径点（整体处理空格）
         let previousComponents = previousPath.split(separator: "/")
         let currentComponents = currentPath.split(separator: "/")
-        
+
         // 用于存储相同路径点
         var commonComponents: [String] = []
         // 找到相同路径点
@@ -1301,16 +1231,15 @@ struct LogContainer {
 
 extension LogItem: Equatable {
     static func ==(lhs: LogItem, rhs: LogItem) -> Bool {
-        return lhs.fieldName == rhs.fieldName &&
-        lhs.logType == rhs.logType &&
-        lhs.logDetail == rhs.logDetail &&
-        areCodingKeysEqual(lhs.codingPath, rhs.codingPath)
+        lhs.fieldName == rhs.fieldName &&
+            lhs.logType == rhs.logType &&
+            lhs.logDetail == rhs.logDetail &&
+            areCodingKeysEqual(lhs.codingPath, rhs.codingPath)
     }
-    
+
     static func areCodingKeysEqual(_ lhs: [CodingKey], _ rhs: [CodingKey]) -> Bool {
         guard lhs.count == rhs.count else { return false }
         return zip(lhs, rhs).allSatisfy {
-            
             let key0 = $0.intValue != nil ? "Index X" : $0.stringValue
             let key1 = $1.intValue != nil ? "Index X" : $1.stringValue
             return key0 == key1
@@ -1325,59 +1254,53 @@ struct LogItem {
     private var logType: String
     /// 错误原因
     private var logDetail: String
-    
+
     private(set) var codingPath: [CodingKey]
-    
-    
+
     init(fieldName: String, logType: String, logDetail: String, codingPath: [CodingKey]) {
         self.fieldName = fieldName
         self.logType = logType
         self.logDetail = logDetail
         self.codingPath = codingPath
     }
-    
-    
+
     var formartMessage: String {
         if fieldName.isEmpty {
-            return  "\(logDetail)"
+            return "\(logDetail)"
         } else {
             return "\(fieldName): \(logDetail)\n"
         }
     }
 }
 
-
 extension LogItem {
-    
-    
     static func make(with error: DecodingError) -> LogItem? {
-        
         switch error {
-        case .keyNotFound(let key, let context):
+        case let .keyNotFound(key, context):
             let codingPath = context.codingPath.removeFromEnd(1) ?? []
             return LogItem(fieldName: key.stringValue, logType: "MISSING KEY", logDetail: "No value associated with key.", codingPath: codingPath)
-            
-        case .valueNotFound( _, let context):
+
+        case let .valueNotFound(_, context):
             let codingPath = context.codingPath.removeFromEnd(1) ?? []
             let key = context.codingPath.last?.stringValue ?? ""
             return LogItem(fieldName: key, logType: "NULL VALUE", logDetail: context.debugDescription, codingPath: codingPath)
-            
-        case .typeMismatch( _, let context):
+
+        case let .typeMismatch(_, context):
             let codingPath = context.codingPath.removeFromEnd(1) ?? []
             let key = context.codingPath.last?.stringValue ?? ""
             return LogItem(fieldName: key, logType: "TYPE MISMATCH", logDetail: context.debugDescription, codingPath: codingPath)
-            
-        case .dataCorrupted(let context):
+
+        case let .dataCorrupted(context):
             let codingPath = context.codingPath.removeFromEnd(1) ?? []
             let key = context.codingPath.last?.stringValue ?? ""
             return LogItem(fieldName: key, logType: "DATA CORRUPTED", logDetail: context.debugDescription, codingPath: codingPath)
+
         default:
             break
         }
-        
+
         return nil
     }
-    
 }
 
 extension Array {
@@ -1385,20 +1308,18 @@ extension Array {
         guard count >= 0 else { return nil }
         let endIndex = self.count - count
         guard endIndex >= 0 else { return nil }
-        return Array(self.prefix(endIndex))
+        return Array(prefix(endIndex))
     }
 }
 
 // MARK: - PropertyWrapper
 @propertyWrapper
 public struct IgnoredKey<T>: Codable {
-    
     /// The underlying value being wrapped
     public var wrappedValue: T
 
     /// Determines whether this property should be included in encoding
     var isEncodable: Bool = true
-    
 
     /// Initializes an IgnoredKey with a wrapped value and encoding control
     /// - Parameters:
@@ -1412,43 +1333,42 @@ public struct IgnoredKey<T>: Codable {
     public init(from decoder: Decoder) throws {
         // Attempt to get default value first
         guard let impl = decoder as? JSONDecoderImpl else {
-            wrappedValue = try Patcher<T>.defaultForType()
+            self.wrappedValue = try Patcher<T>.defaultForType()
             return
         }
-        
+
         // Support for custom decoding strategies on IgnoredKey properties
         if let key = impl.codingPath.last {
             if let tranformer = impl.cache.valueTransformer(for: key) {
                 if let decoded = tranformer.tranform(value: impl.json) as? T {
-                    wrappedValue = decoded
+                    self.wrappedValue = decoded
                     return
                 }
             }
         }
-        
+
         /// Special handling for SmartJSONDecoder parser - throws exceptions to be handled by container
         if let key = CodingUserInfoKey.parsingMark, let _ = impl.userInfo[key] {
             throw DecodingError.typeMismatch(IgnoredKey<T>.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "\(Self.self) does not participate in the parsing, please ignore it.")
-            )
+                codingPath: decoder.codingPath, debugDescription: "\(Self.self) does not participate in the parsing, please ignore it."
+            ))
         }
-        
+
         /// The resolution triggered by the other three parties may be resolved here.
-        wrappedValue = try impl.smartDecode(type: T.self)
+        self.wrappedValue = try impl.smartDecode(type: T.self)
     }
 
     public func encode(to encoder: Encoder) throws {
-        
         guard isEncodable else { return }
-        
+
         if let impl = encoder as? JSONEncoderImpl,
-            let key = impl.codingPath.last,
-            let jsonValue = impl.cache.tranform(from: wrappedValue, with: key),
-            let value = jsonValue.peel as? Encodable {
+           let key = impl.codingPath.last,
+           let jsonValue = impl.cache.tranform(from: wrappedValue, with: key),
+           let value = jsonValue.peel as? Encodable {
             try value.encode(to: encoder)
             return
         }
-        
+
         // Manual encoding for Encodable types, nil otherwise
         if let encodableValue = wrappedValue as? Encodable {
             try encodableValue.encode(to: encoder)
@@ -1458,6 +1378,7 @@ public struct IgnoredKey<T>: Codable {
         }
     }
 }
+
 extension JSONDecoderImpl {
     fileprivate func smartDecode<T>(type: T.Type) throws -> T {
         try cache.initialValue(forKey: codingPath.last)
@@ -1466,31 +1387,29 @@ extension JSONDecoderImpl {
 
 /// A marker protocol for property wrappers that need lifecycle callbacks.
 protocol PostDecodingHookable {
-    
     /**
      Callback invoked when the wrapped value finishes decoding/mapping.
-     
+
      - Returns: An optional new instance of the wrapper with processed value
      - Note: Primarily used by property wrappers containing types conforming to SmartDecodable
      */
     func wrappedValueDidFinishMapping() -> Self?
 }
 
-
 /**
  Protocol defining requirements for types that can publish wrapped Codable values.
- 
+
  Provides a unified interface for any type conforming to this protocol.
  - WrappedValue: The generic type that must conform to Codable
  - createInstance: Attempts to create an instance from any value
  */
 public protocol PropertyWrapperInitializable {
     associatedtype WrappedValue
-    
+
     var wrappedValue: WrappedValue { get }
-    
+
     init(wrappedValue: WrappedValue)
-    
+
     static func createInstance(with value: Any) -> Self?
 }
 
@@ -1515,13 +1434,13 @@ public struct SmartDate: Codable {
         } else {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported date value")
         }
-        
+
         guard let (date, format) = DateParser.parse(raw) else {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format: \(raw)")
         }
-        
+
         self.wrappedValue = date
-        if self.encodeFormat == nil {
+        if encodeFormat == nil {
             self.encodeFormat = format
         }
     }
@@ -1533,7 +1452,7 @@ public struct SmartDate: Codable {
         }
 
         let format = encodeFormat ?? .timestamp
-        
+
         switch format {
         case .timestamp:
             try container.encode(date.timeIntervalSince1970)
@@ -1542,24 +1461,22 @@ public struct SmartDate: Codable {
         case .iso8601:
             let formatter = ISO8601DateFormatter()
             try container.encode(formatter.string(from: date))
-        case .formatted(let format):
+        case let .formatted(format):
             try container.encode(format.string(from: date))
         }
     }
 }
 
-
 extension SmartDate {
     public enum DateStrategy {
-        case timestamp                  // seconds
-        case timestampMilliseconds      // milliseconds
+        case timestamp // seconds
+        case timestampMilliseconds // milliseconds
         case iso8601
-        case formatted(DateFormatter)   // custom date format
+        case formatted(DateFormatter) // custom date format
     }
 }
 
-
-struct DateParser {
+enum DateParser {
     private static let knownFormats: [String] = [
         "yyyy-MM-dd HH:mm:ss",
         "yyyy-MM-dd",
@@ -1599,7 +1516,7 @@ struct DateParser {
 
         return nil
     }
-    
+
     private static func parseTimestamp(from raw: Any) -> (Date, SmartDate.DateStrategy)? {
         if let double = raw as? Double ?? Double(raw as? String ?? "") {
             if double > 1_000_000_000_000 {
@@ -1622,9 +1539,9 @@ public struct SmartFlat<T: Codable>: Codable {
 
     public init(from decoder: Decoder) throws {
         do {
-            wrappedValue = try T(from: decoder)
-        } catch  {
-            wrappedValue = try Patcher<T>.defaultForType()
+            self.wrappedValue = try T(from: decoder)
+        } catch {
+            self.wrappedValue = try Patcher<T>.defaultForType()
         }
     }
 
@@ -1643,7 +1560,6 @@ extension SmartFlat: PostDecodingHookable {
     }
 }
 
-
 extension SmartFlat: PropertyWrapperInitializable {
     /// Creates an instance from any value if possible
     public static func createInstance(with value: Any) -> SmartFlat? {
@@ -1653,7 +1569,6 @@ extension SmartFlat: PropertyWrapperInitializable {
         return nil
     }
 }
-
 
 // Used to mark the flat type
 protocol FlatType {
@@ -1667,32 +1582,31 @@ extension SmartFlat: FlatType {
 
 /**
  Marker protocol for array types with Decodable elements.
- 
+
  When T is an array with elements conforming to Decodable,
  T.self will be covered by the Array extension, making T.self is _ArrayMark.Type return true.
  */
-protocol _ArrayMark { }
-
+protocol _ArrayMark {}
 
 /// This extension marks Array types as _ArrayMark when their Element conforms to Decodable.
 /// This means only arrays with Decodable elements will be marked as _ArrayMark.
-extension Array: _ArrayMark where Element: Decodable { }
+extension Array: _ArrayMark where Element: Decodable {}
 
 @propertyWrapper
 public struct SmartHexColor: Codable {
     public var wrappedValue: UIColor?
-    
+
     private var encodeHexFormat: HexFormat?
 
     public init(wrappedValue: UIColor?, encodeHexFormat: HexFormat? = nil) {
         self.wrappedValue = wrappedValue
         self.encodeHexFormat = encodeHexFormat
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let hexString = try container.decode(String.self)
-        
+
         guard
             let format = SmartHexColor.HexFormat.format(for: hexString),
             let color = SmartHexColor.toColor(from: hexString, format: format)
@@ -1702,23 +1616,21 @@ public struct SmartHexColor: Codable {
                 debugDescription: "Cannot decode SmartHexColor from '\(hexString)'. Supported formats: HexFormat."
             )
         }
-        
+
         if encodeHexFormat == nil {
             self.encodeHexFormat = format
         }
         self.wrappedValue = color
     }
-    
-    
+
     public func encode(to encoder: Encoder) throws {
-        
         var container = encoder.singleValueContainer()
         guard let color = wrappedValue else {
             return try container.encodeNil() // 更明确地记录 nil
         }
 
         let format = encodeHexFormat ?? .rrggbb(.none)
-        
+
         guard let hexString = SmartHexColor.toHexString(from: color, format: format) else {
             throw EncodingError.invalidValue(
                 color,
@@ -1728,66 +1640,63 @@ public struct SmartHexColor: Codable {
                 )
             )
         }
-        
+
         try container.encode(hexString)
     }
 }
 
-
-
 extension SmartHexColor {
-    
     public static func toColor(from hex: String, format: SmartHexColor.HexFormat) -> UIColor? {
         // 1. 移除前缀
         let hexString = normalizedHexString(from: hex, prefix: format.prefix)
-        
+
         // 2. 将字符串转换为 UInt64
         guard let hexValue = UInt64(hexString, radix: 16) else { return nil }
-        
+
         // 3. 按格式解析颜色分量
         func component(_ value: UInt64, shift: Int, mask: UInt64) -> CGFloat {
-            return CGFloat((value >> shift) & mask) / 255
+            CGFloat((value >> shift) & mask) / 255
         }
-        
+
         let r, g, b, a: CGFloat
-        
+
         switch format {
         case .rgb:
             r = CGFloat((hexValue >> 8) & 0xF) / 15
             g = CGFloat((hexValue >> 4) & 0xF) / 15
             b = CGFloat(hexValue & 0xF) / 15
             a = 1.0
-            
+
         case .rgba:
             r = CGFloat((hexValue >> 12) & 0xF) / 15
             g = CGFloat((hexValue >> 8) & 0xF) / 15
             b = CGFloat((hexValue >> 4) & 0xF) / 15
             a = CGFloat(hexValue & 0xF) / 15
-            
+
         case .rrggbb:
             r = component(hexValue, shift: 16, mask: 0xFF)
             g = component(hexValue, shift: 8, mask: 0xFF)
             b = component(hexValue, shift: 0, mask: 0xFF)
             a = 1.0
-            
+
         case .rrggbbaa:
             r = component(hexValue, shift: 24, mask: 0xFF)
             g = component(hexValue, shift: 16, mask: 0xFF)
             b = component(hexValue, shift: 8, mask: 0xFF)
             a = component(hexValue, shift: 0, mask: 0xFF)
         }
-        
-#if os(macOS)
+
+        #if os(macOS)
         return NSColor(calibratedRed: r, green: g, blue: b, alpha: a)
-#else
+        #else
         return UIColor(red: r, green: g, blue: b, alpha: a)
-#endif
+        #endif
     }
-    
+
     /// 移除前缀并转小写
     private static func normalizedHexString(from hex: String, prefix: String) -> String {
         let trimmedHex = hex.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        
+
         if !prefix.isEmpty, trimmedHex.hasPrefix(prefix.lowercased()) {
             return String(trimmedHex.dropFirst(prefix.count))
         } else {
@@ -1795,40 +1704,35 @@ extension SmartHexColor {
         }
     }
 
-    
     static func toHexString(from color: UIColor, format: SmartHexColor.HexFormat) -> String? {
         guard let components = color.rgbaComponents else { return nil }
 
         func clamped255(_ value: CGFloat) -> Int {
-            return min(max(Int(value * 255), 0), 255)
+            min(max(Int(value * 255), 0), 255)
         }
-        
+
         let r = clamped255(components.r)
         let g = clamped255(components.g)
         let b = clamped255(components.b)
         let a = clamped255(components.a)
 
-        
-
         switch format {
-        case .rgb(let prefix):
-            return prefix.rawValue + String(format: "%01X%01X%01X", (r >> 4), (g >> 4), (b >> 4))
+        case let .rgb(prefix):
+            return prefix.rawValue + String(format: "%01X%01X%01X", r >> 4, g >> 4, b >> 4)
 
-        case .rgba(let prefix):
-            return prefix.rawValue + String(format: "%01X%01X%01X%01X", (r >> 4), (g >> 4), (b >> 4), (a >> 4))
+        case let .rgba(prefix):
+            return prefix.rawValue + String(format: "%01X%01X%01X%01X", r >> 4, g >> 4, b >> 4, a >> 4)
 
-        case .rrggbb(let prefix):
+        case let .rrggbb(prefix):
             return prefix.rawValue + String(format: "%02X%02X%02X", r, g, b)
 
-        case .rrggbbaa(let prefix):
+        case let .rrggbbaa(prefix):
             return prefix.rawValue + String(format: "%02X%02X%02X%02X", r, g, b, a)
         }
     }
 }
 
-
 extension SmartHexColor {
-    
     /// 定义 16 进制颜色代码的格式（支持带 `#` 和不带 `#` 的格式）
     ///
     /// ## 格式说明
@@ -1848,35 +1752,34 @@ extension SmartHexColor {
     public enum HexFormat {
         /// 3 位无透明度（如 `F00`）
         case rgb(Prefix)
-        
+
         /// 6 位无透明度（如 `FF0000`）
         case rrggbb(Prefix)
-        
+
         /// 4 位带透明度（如 `F008`）
         case rgba(Prefix)
-        
+
         /// 8 位带透明度（如 `FF000080`）
         case rrggbbaa(Prefix)
-        
-        
+
         var prefix: String {
             switch self {
-            case .rgb(let prefix):
+            case let .rgb(prefix):
                 return prefix.rawValue
-            case .rrggbb(let prefix):
+            case let .rrggbb(prefix):
                 return prefix.rawValue
-            case .rgba(let prefix):
+            case let .rgba(prefix):
                 return prefix.rawValue
-            case .rrggbbaa(let prefix):
+            case let .rrggbbaa(prefix):
                 return prefix.rawValue
             }
         }
-                
+
         public enum Prefix {
             case hash
             case zeroX
             case none
-            
+
             var rawValue: String {
                 switch self {
                 case .hash:
@@ -1888,11 +1791,11 @@ extension SmartHexColor {
                 }
             }
         }
-        
+
         /// 根据给定的 hex 字符串，自动识别并返回相应的 `HexFormat`
         static func format(for hexString: String) -> HexFormat? {
             let trimmedHex = hexString.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            
+
             // 判断是否有前缀并根据不同前缀选择不同的处理方法
             if trimmedHex.hasPrefix("#") {
                 let pureHex = String(trimmedHex.dropFirst())
@@ -1904,7 +1807,7 @@ extension SmartHexColor {
                 return detectFormat(from: trimmedHex, withPrefix: .none)
             }
         }
-        
+
         // 自动识别和推断 HexFormat
         private static func detectFormat(from hex: String, withPrefix prefix: Prefix) -> HexFormat? {
             switch hex.count {
@@ -1923,59 +1826,57 @@ extension SmartHexColor {
     }
 }
 
-
-
-private extension UIColor {
-    var rgbaComponents: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat)? {
-#if os(macOS)
+extension UIColor {
+    fileprivate var rgbaComponents: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat)? {
+        #if os(macOS)
         guard let converted = usingColorSpace(.deviceRGB) else { return nil }
         return (converted.redComponent, converted.greenComponent, converted.blueComponent, converted.alphaComponent)
-#else
+        #else
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         guard getRed(&r, green: &g, blue: &b, alpha: &a) else { return nil }
         return (r, g, b, a)
-#endif
+        #endif
     }
 }
 
 #if canImport(Combine)
-import SwiftUI
 import Combine
+import SwiftUI
 
 @propertyWrapper
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct SmartPublished<Value: Codable>: Codable {
-    
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let value = try container.decode(Value.self)
         self.wrappedValue = value
-        publisher = Publisher(wrappedValue)
+        self.publisher = Publisher(wrappedValue)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(self.wrappedValue)
+        try container.encode(wrappedValue)
     }
+
     public var wrappedValue: Value {
         // Notify subscribers before value changes
         willSet {
             publisher.subject.send(newValue)
         }
     }
-    
+
     /// The publisher that exposes the wrapped value's changes
     public var projectedValue: Publisher {
         publisher
     }
-    
+
     private var publisher: Publisher
-    
+
     // MARK: - Publisher Implementation
-    
+
     /**
      The publisher that broadcasts changes to the wrapped value.
-     
+
      Uses CurrentValueSubject which:
      - Maintains the current value
      - Sends current value to new subscribers
@@ -1984,30 +1885,29 @@ public struct SmartPublished<Value: Codable>: Codable {
     public struct Publisher: Combine.Publisher {
         public typealias Output = Value
         public typealias Failure = Never
-        
+
         // CurrentValueSubject 是 Combine 中的一种 Subject，它会保存当前值并向新订阅者发送当前值。相比于 PassthroughSubject，它在初始化时就要求有一个初始值，因此更适合这种包装属性的场景。
         var subject: CurrentValueSubject<Value, Never>
-        
+
         // 这个方法实现了 Publisher 协议，将 subscriber 传递给 subject，从而将订阅者连接到这个发布者上。
         public func receive<S>(subscriber: S) where S: Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
             subject.subscribe(subscriber)
         }
-        
+
         // Publisher 的构造函数接受一个初始值，并将其传递给 CurrentValueSubject 的初始化方法。
         init(_ output: Output) {
-            subject = .init(output)
+            self.subject = .init(output)
         }
     }
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
-        publisher = Publisher(wrappedValue)
+        self.publisher = Publisher(wrappedValue)
     }
-    
-    
+
     /**
      Custom subscript for property wrapper integration with ObservableObject.
-     
+
      - Parameters:
        - observed: The ObservableObject instance containing this property
        - wrappedKeyPath: Reference to the wrapped value
@@ -2043,7 +1943,6 @@ extension SmartPublished: PostDecodingHookable {
     }
 }
 
-
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension SmartPublished: PropertyWrapperInitializable {
     /// Creates an instance from any value if possible
@@ -2058,13 +1957,12 @@ extension SmartPublished: PropertyWrapperInitializable {
 
 @propertyWrapper
 public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
-    
     public var wrappedValue: T
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public static func createInstance(with value: Any) -> SmartAny<T>? {
         if let value = value as? T {
             return SmartAny(wrappedValue: value)
@@ -2075,8 +1973,8 @@ public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
     public init(from decoder: Decoder) throws {
         guard let decoder = decoder as? JSONDecoderImpl else {
             throw DecodingError.typeMismatch(SmartAnyImpl.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）")
-            )
+                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）"
+            ))
         }
         let value = decoder.json
         if let key = decoder.codingPath.last {
@@ -2087,15 +1985,15 @@ public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
                     return
                 } else {
                     throw DecodingError.typeMismatch(Self.self, DecodingError.Context(
-                        codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！"))
+                        codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！"
+                    ))
                 }
             }
         }
-                
+
         if let decoded = try? decoder.unwrap(as: SmartAnyImpl.self), let peel = decoded.peel as? T {
             self = .init(wrappedValue: peel)
         } else {
-            
             // 类型检查
             if let _type = T.self as? Decodable.Type {
                 if let decoded = try? _type.init(from: decoder) as? T {
@@ -2103,18 +2001,17 @@ public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
                     return
                 }
             }
-            
+
             // Exceptions thrown in the parse container will be compatible.
             throw DecodingError.typeMismatch(Self.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！")
-            )
+                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！"
+            ))
         }
     }
-    
+
     public func encode(to encoder: Encoder) throws {
-        
         var container = encoder.singleValueContainer()
-        
+
         if let dict = wrappedValue as? [String: Any] {
             let value = dict.cover
             try container.encode(value)
@@ -2130,7 +2027,6 @@ public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
     }
 }
 
-
 extension SmartAny: PostDecodingHookable {
     func wrappedValueDidFinishMapping() -> SmartAny<T>? {
         if var temp = wrappedValue as? SmartDecodable {
@@ -2142,7 +2038,6 @@ extension SmartAny: PostDecodingHookable {
 }
 
 enum SmartAnyImpl {
-    
     /// In Swift, NSNumber is a composite type that can accommodate various numeric types:
     ///  - All integer types: Int, Int8, Int16, Int32, Int64, UInt, UInt8, UInt16, UInt32, UInt64
     ///  - All floating-point types: Float, Double
@@ -2162,8 +2057,7 @@ enum SmartAnyImpl {
     case dict([String: SmartAnyImpl])
     case array([SmartAnyImpl])
     case null(NSNull)
-    
-    
+
     public init(from value: Any) {
         self = .convertToSmartAny(value)
     }
@@ -2171,12 +2065,12 @@ enum SmartAnyImpl {
 
 extension Dictionary where Key == String {
     /// Converts from [String: Any] type to [String: SmartAny]
-    internal var cover: [String: SmartAnyImpl] {
+    var cover: [String: SmartAnyImpl] {
         mapValues { SmartAnyImpl(from: $0) }
     }
-    
+
     /// Unwraps if it exists, otherwise returns itself.
-    internal var peelIfPresent: [String: Any] {
+    var peelIfPresent: [String: Any] {
         if let dict = self as? [String: SmartAnyImpl] {
             return dict.peel
         } else {
@@ -2186,12 +2080,12 @@ extension Dictionary where Key == String {
 }
 
 extension Array {
-    internal var cover: [ SmartAnyImpl] {
+    var cover: [SmartAnyImpl] {
         map { SmartAnyImpl(from: $0) }
     }
-    
+
     /// Unwraps if it exists, otherwise returns itself.
-    internal var peelIfPresent: [Any] {
+    var peelIfPresent: [Any] {
         if let arr = self as? [[String: SmartAnyImpl]] {
             return arr.peel
         } else if let arr = self as? [SmartAnyImpl] {
@@ -2202,84 +2096,79 @@ extension Array {
     }
 }
 
-
-extension Dictionary where Key == String, Value == SmartAnyImpl {
+extension Dictionary<String, SmartAnyImpl> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
-    internal var peel: [String: Any] {
+    var peel: [String: Any] {
         mapValues { $0.peel }
     }
 }
-extension Array where Element == SmartAnyImpl {
+
+extension Array<SmartAnyImpl> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
-    internal var peel: [Any] {
+    var peel: [Any] {
         map { $0.peel }
     }
 }
 
-extension Array where Element == [String: SmartAnyImpl] {
+extension Array<[String: SmartAnyImpl]> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
     public var peel: [Any] {
         map { $0.peel }
     }
 }
 
-
 extension SmartAnyImpl {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
     public var peel: Any {
         switch self {
-        case .number(let v):  return v
-        case .string(let v):  return v
-        case .dict(let v):    return v.peel
-        case .array(let v):   return v.peel
-        case .null:           return NSNull()
+        case let .number(v): return v
+        case let .string(v): return v
+        case let .dict(v): return v.peel
+        case let .array(v): return v.peel
+        case .null: return NSNull()
         }
     }
 }
 
-
-
 extension SmartAnyImpl: Codable {
     public init(from decoder: Decoder) throws {
-        
         guard let decoder = decoder as? JSONDecoderImpl,
               let container = try? decoder.singleValueContainer() as? JSONDecoderImpl.SingleValueContainer else {
             throw DecodingError.typeMismatch(SmartAnyImpl.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）")
-            )
+                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）"
+            ))
         }
-       
+
         if container.decodeNil() {
             self = .null(NSNull())
         } else if let value = try? decoder.unwrapSmartAny() {
             self = value
         } else {
             throw DecodingError.typeMismatch(SmartAnyImpl.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）")
-            )
+                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）"
+            ))
         }
     }
-        
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
         case .null:
             try container.encodeNil()
-        case .string(let value):
+        case let .string(value):
             try container.encode(value)
-        case .dict(let dictValue):
+        case let .dict(dictValue):
             try container.encode(dictValue)
-        case .array(let arrayValue):
+        case let .array(arrayValue):
             try container.encode(arrayValue)
-        case .number(let value):
+        case let .number(value):
             /**
              Swift为了与Objective-C的兼容性，提供了自动桥接功能，允许Swift的数值类型和NSNumber之间的无缝转换。这包括：
              所有的整数类型：Int, Int8, Int16, Int32, Int64, UInt, UInt8, UInt16, UInt32, UInt64
              所有的浮点类型：Float, Double
              布尔类型：Bool
              */
-            
+
             if value === kCFBooleanTrue as NSNumber || value === kCFBooleanFalse as NSNumber {
                 if let bool = value as? Bool {
                     try container.encode(bool)
@@ -2317,53 +2206,49 @@ extension SmartAnyImpl: Codable {
     }
 }
 
-
 extension SmartAnyImpl {
     private static func convertToSmartAny(_ value: Any) -> SmartAnyImpl {
         switch value {
-        case let v as NSNumber:      return .number(v)
-        case let v as String:        return .string(v)
+        case let v as NSNumber: return .number(v)
+        case let v as String: return .string(v)
         case let v as [String: Any]: return .dict(v.mapValues { convertToSmartAny($0) })
-        case let v as [Any]:         return .array(v.map { convertToSmartAny($0) })
-        case is NSNull:              return .null(NSNull())
-        default:                     return .null(NSNull())
+        case let v as [Any]: return .array(v.map { convertToSmartAny($0) })
+        case is NSNull: return .null(NSNull())
+        default: return .null(NSNull())
         }
     }
 }
 
-
 extension JSONDecoderImpl {
     fileprivate func unwrapSmartAny() throws -> SmartAnyImpl {
-        
         if let tranformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = tranformer.tranform(value: json) as? SmartAnyImpl {
                 return decoded
             } else {
                 throw DecodingError.dataCorrupted(
-                    DecodingError.Context(codingPath: self.codingPath,
+                    DecodingError.Context(codingPath: codingPath,
                                           debugDescription: "Invalid SmartAny."))
             }
         }
-        
-        let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
-        
-        
+
+        let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
+
         switch json {
         case .null:
             return .null(NSNull())
-        case .string(let string):
+        case let .string(string):
             return .string(string)
-        case .bool(let bool):
+        case let .bool(bool):
             return .number(bool as NSNumber)
-        case .object(_):
+        case .object:
             if let temp = container.decodeIfPresent([String: SmartAnyImpl].self) {
                 return .dict(temp)
             }
-        case .array(_):
+        case .array:
             if let temp = container.decodeIfPresent([SmartAnyImpl].self) {
                 return .array(temp)
             }
-        case .number(let number):
+        case let .number(number):
             if number.contains(".") { // 浮点数
                 if number.contains("e") { // 检查字符串中是否包含字符 e，这表示数字可能以科学计数法表示
                     if let temp = container.decodeIfPresent(Decimal.self) as? NSNumber {
@@ -2388,7 +2273,7 @@ extension JSONDecoderImpl {
                         return .number(temp)
                     } else if let temp = container.decodeIfPresent(UInt32.self) as? NSNumber {
                         return .number(temp)
-                    }  else if let temp = container.decodeIfPresent(Int64.self) as? NSNumber {
+                    } else if let temp = container.decodeIfPresent(Int64.self) as? NSNumber {
                         return .number(temp)
                     } else if let temp = container.decodeIfPresent(UInt64.self) as? NSNumber {
                         return .number(temp)
@@ -2402,17 +2287,16 @@ extension JSONDecoderImpl {
                 }
             }
         }
- 
+
         throw DecodingError.dataCorrupted(
-            DecodingError.Context(codingPath: self.codingPath,
+            DecodingError.Context(codingPath: codingPath,
                                   debugDescription: "Invalid SmartAny."))
     }
 }
 
 extension JSONDecoderImpl.SingleValueContainer {
-    
     fileprivate func decodeIfPresent(_: Bool.Type) -> Bool? {
-        guard case .bool(let bool) = self.value else {
+        guard case let .bool(bool) = value else {
             return nil
         }
 
@@ -2420,7 +2304,7 @@ extension JSONDecoderImpl.SingleValueContainer {
     }
 
     fileprivate func decodeIfPresent(_: String.Type) -> String? {
-        guard case .string(let string) = self.value else {
+        guard case let .string(string) = value else {
             return nil
         }
         return string
@@ -2473,25 +2357,24 @@ extension JSONDecoderImpl.SingleValueContainer {
     fileprivate func decodeIfPresent(_: UInt64.Type) -> UInt64? {
         decodeIfPresentFixedWidthInteger()
     }
-    
+
     fileprivate func decodeIfPresent<T>(_ type: T.Type) -> T? where T: Decodable {
-        if let decoded: T = try? self.impl.unwrap(as: type) {
+        if let decoded: T = try? impl.unwrap(as: type) {
             return decoded
         } else {
             return nil
         }
     }
-    
+
     @inline(__always) private func decodeIfPresentFixedWidthInteger<T: FixedWidthInteger>() -> T? {
-        guard let decoded = self.impl.unwrapFixedWidthInteger(from: self.value, as: T.self) else {
+        guard let decoded = impl.unwrapFixedWidthInteger(from: value, as: T.self) else {
             return nil
         }
         return decoded
     }
 
     @inline(__always) private func decodeIfPresentFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>() -> T? {
-        
-        guard let decoded = self.impl.unwrapFloatingPoint(from: self.value, as: T.self) else {
+        guard let decoded = impl.unwrapFloatingPoint(from: value, as: T.self) else {
             return nil
         }
         return decoded
@@ -2516,9 +2399,6 @@ public func <---(to: CodingKey, from: [String]) -> SmartKeyTransformer {
     SmartKeyTransformer(from: from, to: to)
 }
 
-
-
-
 public struct SmartValueTransformer {
     var location: CodingKey
     var performer: any ValueTransformable
@@ -2526,35 +2406,31 @@ public struct SmartValueTransformer {
         self.location = location
         self.performer = performer
     }
-    
+
     /// Transforms a JSON value using the appropriate transformer
     /// - Parameters:
     ///   - value: The JSON value to transform
     ///   - key: The associated coding key (if available)
     /// - Returns: The transformed value or nil if no transformer applies
     func tranform(value: JSONValue) -> Any? {
-        return performer.transformFromJSON(value.peel)
+        performer.transformFromJSON(value.peel)
     }
 }
-
 
 public protocol ValueTransformable {
     associatedtype Object
     associatedtype JSON
-    
+
     /// transform from ’json‘ to ’object‘
     func transformFromJSON(_ value: Any) -> Object?
-    
+
     /// transform to ‘json’ from ‘object’
     func transformToJSON(_ value: Object) -> JSON?
 }
 
-
 public func <---(location: CodingKey, performer: any ValueTransformable) -> SmartValueTransformer {
-    SmartValueTransformer.init(location: location, performer: performer)
+    SmartValueTransformer(location: location, performer: performer)
 }
-
-
 
 /** Fast Transformer
  static func mappingForValue() -> [SmartValueTransformer]? {
@@ -2573,11 +2449,9 @@ public func <---(location: CodingKey, performer: any ValueTransformable) -> Smar
  }
  */
 public struct FastTransformer<Object, JSON>: ValueTransformable {
-    
     private let fromJSON: (JSON?) -> Object?
     private let toJSON: ((Object?) -> JSON?)?
-    
-    
+
     /// 便捷的转换器
     /// - Parameters:
     ///   - fromJSON: json 转 object
@@ -2586,23 +2460,22 @@ public struct FastTransformer<Object, JSON>: ValueTransformable {
         self.fromJSON = fromJSON
         self.toJSON = toJSON
     }
-    
+
     public func transformFromJSON(_ value: Any) -> Object? {
-        return fromJSON(value as? JSON)
+        fromJSON(value as? JSON)
     }
-    
+
     public func transformToJSON(_ value: Object) -> JSON? {
-        return toJSON?(value)
+        toJSON?(value)
     }
 }
 
 public struct SmartDataTransformer: ValueTransformable {
-    
     public typealias JSON = String
     public typealias Object = Data
-    
+
     public init() {}
-    
+
     public func transformFromJSON(_ value: Any) -> Data? {
         guard let string = value as? String else {
             return nil
@@ -2611,37 +2484,32 @@ public struct SmartDataTransformer: ValueTransformable {
     }
 
     public func transformToJSON(_ value: Data) -> String? {
-        return value.base64EncodedString()
+        value.base64EncodedString()
     }
 }
 
 public struct SmartDateTransformer: ValueTransformable {
-    
-    public typealias JSON =  Any
+    public typealias JSON = Any
     public typealias Object = Date
-    
-    
+
     private var strategy: SmartDate.DateStrategy
-    
-    
+
     public init(strategy: SmartDate.DateStrategy) {
         self.strategy = strategy
     }
-    
+
     public func transformFromJSON(_ value: Any) -> Date? {
-        
         guard let (date, _) = DateParser.parse(value) else { return nil }
         return date
     }
-    
+
     public func transformToJSON(_ value: Date) -> Any? {
-        
         switch strategy {
         case .timestamp:
             return value.timeIntervalSince1970
         case .timestampMilliseconds:
             return value.timeIntervalSince1970 * 1000.0
-        case .formatted(let formatter):
+        case let .formatted(formatter):
             return formatter.string(from: value)
         case .iso8601:
             let formatter = ISO8601DateFormatter()
@@ -2651,29 +2519,27 @@ public struct SmartDateTransformer: ValueTransformable {
 }
 
 public struct SmartURLTransformer: ValueTransformable {
-
     public typealias JSON = String
     public typealias Object = URL
     private let shouldEncodeURLString: Bool
     private let prefix: String?
 
     /**
-     Initializes a URLTransformer with an option to encode the URL string before converting it to NSURL
-     - parameter shouldEncodeUrlString: When true (the default value), the string is encoded before being passed
-     - returns: an initialized transformer
-    */
+      Initializes a URLTransformer with an option to encode the URL string before converting it to NSURL
+      - parameter shouldEncodeUrlString: When true (the default value), the string is encoded before being passed
+      - returns: an initialized transformer
+     */
     public init(prefix: String? = nil, shouldEncodeURLString: Bool = true) {
         self.shouldEncodeURLString = shouldEncodeURLString
         self.prefix = prefix
     }
-    
-    
+
     public func transformFromJSON(_ value: Any) -> URL? {
         guard var URLString = value as? String else { return nil }
-        if let prefix = prefix, !URLString.hasPrefix(prefix) {
+        if let prefix, !URLString.hasPrefix(prefix) {
             URLString = prefix + URLString
         }
-        
+
         if !shouldEncodeURLString {
             return URL(string: URLString)
         }
@@ -2685,7 +2551,7 @@ public struct SmartURLTransformer: ValueTransformable {
     }
 
     public func transformToJSON(_ value: URL) -> String? {
-        return value.absoluteString
+        value.absoluteString
     }
 }
 
@@ -2693,44 +2559,40 @@ public struct SmartURLTransformer: ValueTransformable {
 /// A protocol defining caching capabilities for model snapshots
 /// Used to maintain state during encoding/decoding operations
 protocol Cachable {
-            
     associatedtype SomeSnapshot: Snapshot
 
     /// Array of snapshots representing the current parsing stack
     /// - Note: Using an array prevents confusion with multi-level nested models
     var snapshots: [SomeSnapshot] { set get }
-    
+
     /// The most recent snapshot in the stack (top of stack)
     var topSnapshot: SomeSnapshot? { get }
-    
+
     /// Caches a new snapshot for the given type
     /// - Parameter type: The model type being processed
     func cacheSnapshot<T>(for type: T.Type)
-    
+
     /// Removes the snapshot for the given type
     /// - Parameter type: The model type to remove from cache
     mutating func removeSnapshot<T>(for type: T.Type)
 }
 
-
 extension Cachable {
     var topSnapshot: SomeSnapshot? {
-        return snapshots.last
+        snapshots.last
     }
 }
 
-
 /// Represents a snapshot of model state during encoding/decoding
 protocol Snapshot {
-    
     associatedtype ObjectType
-    
+
     /// The current type being encoded/decoded
     var objectType: ObjectType? { set get }
 
     /// String representation of the object type
     var objectTypeName: String? { get }
-    
+
     /// Records the custom transformer for properties
     var transformers: [SmartValueTransformer]? { set get }
 }
@@ -2753,13 +2615,12 @@ enum JSONValue: Equatable {
 
     case array([JSONValue])
     case object([String: JSONValue])
-    
-    
+
     static func make(_ value: Any) -> Self? {
         if let jsonValue = value as? JSONValue {
             return jsonValue
         }
-        
+
         switch value {
         case is NSNull:
             return .null
@@ -2781,7 +2642,7 @@ enum JSONValue: Equatable {
     }
 }
 
-fileprivate func _toData(_ value: Any) -> Data? {
+private func _toData(_ value: Any) -> Data? {
     guard JSONSerialization.isValidJSONObject(value) else { return nil }
     return try? JSONSerialization.data(withJSONObject: value)
 }
@@ -2795,7 +2656,7 @@ extension JSONValue {
             return true
         }
     }
-    
+
     var isNull: Bool {
         switch self {
         case .null:
@@ -2804,7 +2665,7 @@ extension JSONValue {
             return false
         }
     }
-    
+
     var isContainer: Bool {
         switch self {
         case .array, .object:
@@ -2834,31 +2695,31 @@ extension JSONValue {
     }
 }
 
-private extension JSONValue {
-    func toObjcRepresentation(options: JSONSerialization.ReadingOptions) throws -> Any {
+extension JSONValue {
+    private func toObjcRepresentation(options: JSONSerialization.ReadingOptions) throws -> Any {
         switch self {
-        case .array(let values):
+        case let .array(values):
             let array = try values.map { try $0.toObjcRepresentation(options: options) }
             if !options.contains(.mutableContainers) {
                 return array
             }
             return NSMutableArray(array: array, copyItems: false)
-        case .object(let object):
+        case let .object(object):
             let dictionary = try object.mapValues { try $0.toObjcRepresentation(options: options) }
             if !options.contains(.mutableContainers) {
                 return dictionary
             }
             return NSMutableDictionary(dictionary: dictionary, copyItems: false)
-        case .bool(let bool):
+        case let .bool(bool):
             return NSNumber(value: bool)
-        case .number(let string):
+        case let .number(string):
             guard let number = NSNumber.fromJSONNumber(string) else {
                 throw JSONParserError.numberIsNotRepresentableInSwift(parsed: string)
             }
             return number
         case .null:
             return NSNull()
-        case .string(let string):
+        case let .string(string):
             if options.contains(.mutableLeaves) {
                 return NSMutableString(string: string)
             }
@@ -2867,7 +2728,6 @@ private extension JSONValue {
     }
 }
 
-
 extension NSNumber {
     static func fromJSONNumber(_ string: String) -> NSNumber? {
         let decIndex = string.firstIndex(of: ".")
@@ -2875,7 +2735,7 @@ extension NSNumber {
         let isInteger = decIndex == nil && expIndex == nil
         let isNegative = string.utf8[string.utf8.startIndex] == UInt8(ascii: "-")
         let digitCount = string[string.startIndex..<(expIndex ?? string.endIndex)].count
-        
+
         // Try Int64() or UInt64() first
         if isInteger {
             if isNegative {
@@ -2890,28 +2750,29 @@ extension NSNumber {
         }
 
         var exp = 0
-        
-        if let expIndex = expIndex {
+
+        if let expIndex {
             let expStartIndex = string.index(after: expIndex)
             if let parsed = Int(string[expStartIndex...]) {
                 exp = parsed
             }
         }
-        
+
         // Decimal holds more digits of precision but a smaller exponent than Double
         // so try that if the exponent fits and there are more digits than Double can hold
         if digitCount > 17, exp >= -128, exp <= 127, let decimal = Decimal(string: string), decimal.isFinite {
             return NSDecimalNumber(decimal: decimal)
         }
-        
+
         // Fall back to Double() for everything else
         if let doubleValue = Double(string), doubleValue.isFinite {
             return NSNumber(value: doubleValue)
         }
-        
+
         return nil
     }
 }
+
 enum JSONParserError: Swift.Error, Equatable {
     case cannotConvertInputDataToUTF8
     case unexpectedCharacter(ascii: UInt8, characterIndex: Int)
@@ -2928,12 +2789,9 @@ enum JSONParserError: Swift.Error, Equatable {
     case invalidUTF8Sequence(Data, characterIndex: Int)
 }
 
-
-
 // for encdoe
 extension JSONValue {
-
-    internal struct Writer {
+    struct Writer {
         let options: SmartJSONEncoder.OutputFormatting
 
         init(options: SmartJSONEncoder.OutputFormatting) {
@@ -2942,11 +2800,10 @@ extension JSONValue {
 
         func writeValue(_ value: JSONValue) -> [UInt8] {
             var bytes = [UInt8]()
-            if self.options.contains(.prettyPrinted) {
-                self.writeValuePretty(value, into: &bytes)
-            }
-            else {
-                self.writeValue(value, into: &bytes)
+            if options.contains(.prettyPrinted) {
+                writeValuePretty(value, into: &bytes)
+            } else {
+                writeValue(value, into: &bytes)
             }
             return bytes
         }
@@ -2959,49 +2816,48 @@ extension JSONValue {
                 bytes.append(contentsOf: [UInt8]._true)
             case .bool(false):
                 bytes.append(contentsOf: [UInt8]._false)
-            case .string(let string):
-                self.encodeString(string, to: &bytes)
-            case .number(let string):
+            case let .string(string):
+                encodeString(string, to: &bytes)
+            case let .number(string):
                 bytes.append(contentsOf: string.utf8)
-            case .array(let array):
+            case let .array(array):
                 var iterator = array.makeIterator()
                 bytes.append(._openbracket)
                 // we don't like branching, this is why we have this extra
                 if let first = iterator.next() {
-                    self.writeValue(first, into: &bytes)
+                    writeValue(first, into: &bytes)
                 }
                 while let item = iterator.next() {
                     bytes.append(._comma)
-                    self.writeValue(item, into:&bytes)
+                    writeValue(item, into: &bytes)
                 }
                 bytes.append(._closebracket)
-            case .object(let dict):
+            case let .object(dict):
                 if #available(macOS 10.13, *), options.contains(.sortedKeys) {
                     let sorted = dict.sorted { $0.key.compare($1.key, options: [.caseInsensitive, .diacriticInsensitive, .forcedOrdering, .numeric, .widthInsensitive]) == .orderedAscending }
                     self.writeObject(sorted, into: &bytes)
                 } else {
-                    self.writeObject(dict, into: &bytes)
+                    writeObject(dict, into: &bytes)
                 }
             }
         }
 
         private func writeObject<Object: Sequence>(_ object: Object, into bytes: inout [UInt8], depth: Int = 0)
-            where Object.Element == (key: String, value: JSONValue)
-        {
+            where Object.Element == (key: String, value: JSONValue) {
             var iterator = object.makeIterator()
             bytes.append(._openbrace)
             if let (key, value) = iterator.next() {
-                self.encodeString(key, to: &bytes)
+                encodeString(key, to: &bytes)
                 bytes.append(._colon)
-                self.writeValue(value, into: &bytes)
+                writeValue(value, into: &bytes)
             }
             while let (key, value) = iterator.next() {
                 bytes.append(._comma)
                 // key
-                self.encodeString(key, to: &bytes)
+                encodeString(key, to: &bytes)
                 bytes.append(._colon)
 
-                self.writeValue(value, into: &bytes)
+                writeValue(value, into: &bytes)
             }
             bytes.append(._closebrace)
         }
@@ -3018,57 +2874,56 @@ extension JSONValue {
                 bytes.append(contentsOf: [UInt8]._true)
             case .bool(false):
                 bytes.append(contentsOf: [UInt8]._false)
-            case .string(let string):
-                self.encodeString(string, to: &bytes)
-            case .number(let string):
+            case let .string(string):
+                encodeString(string, to: &bytes)
+            case let .number(string):
                 bytes.append(contentsOf: string.utf8)
-            case .array(let array):
+            case let .array(array):
                 var iterator = array.makeIterator()
                 bytes.append(contentsOf: [._openbracket, ._newline])
                 if let first = iterator.next() {
-                    self.addInset(to: &bytes, depth: depth + 1)
-                    self.writeValuePretty(first, into: &bytes, depth: depth + 1)
+                    addInset(to: &bytes, depth: depth + 1)
+                    writeValuePretty(first, into: &bytes, depth: depth + 1)
                 }
                 while let item = iterator.next() {
                     bytes.append(contentsOf: [._comma, ._newline])
-                    self.addInset(to: &bytes, depth: depth + 1)
-                    self.writeValuePretty(item, into: &bytes, depth: depth + 1)
+                    addInset(to: &bytes, depth: depth + 1)
+                    writeValuePretty(item, into: &bytes, depth: depth + 1)
                 }
                 bytes.append(._newline)
-                self.addInset(to: &bytes, depth: depth)
+                addInset(to: &bytes, depth: depth)
                 bytes.append(._closebracket)
-            case .object(let dict):
+            case let .object(dict):
                 if #available(macOS 10.13, *), options.contains(.sortedKeys) {
                     let sorted = dict.sorted { $0.key.compare($1.key, options: [.caseInsensitive, .diacriticInsensitive, .forcedOrdering, .numeric, .widthInsensitive]) == .orderedAscending }
                     self.writePrettyObject(sorted, into: &bytes, depth: depth)
                 } else {
-                    self.writePrettyObject(dict, into: &bytes, depth: depth)
+                    writePrettyObject(dict, into: &bytes, depth: depth)
                 }
             }
         }
 
         private func writePrettyObject<Object: Sequence>(_ object: Object, into bytes: inout [UInt8], depth: Int = 0)
-            where Object.Element == (key: String, value: JSONValue)
-        {
+            where Object.Element == (key: String, value: JSONValue) {
             var iterator = object.makeIterator()
             bytes.append(contentsOf: [._openbrace, ._newline])
             if let (key, value) = iterator.next() {
-                self.addInset(to: &bytes, depth: depth + 1)
-                self.encodeString(key, to: &bytes)
+                addInset(to: &bytes, depth: depth + 1)
+                encodeString(key, to: &bytes)
                 bytes.append(contentsOf: [._space, ._colon, ._space])
-                self.writeValuePretty(value, into: &bytes, depth: depth + 1)
+                writeValuePretty(value, into: &bytes, depth: depth + 1)
             }
             while let (key, value) = iterator.next() {
                 bytes.append(contentsOf: [._comma, ._newline])
-                self.addInset(to: &bytes, depth: depth + 1)
+                addInset(to: &bytes, depth: depth + 1)
                 // key
-                self.encodeString(key, to: &bytes)
+                encodeString(key, to: &bytes)
                 bytes.append(contentsOf: [._space, ._colon, ._space])
                 // value
-                self.writeValuePretty(value, into: &bytes, depth: depth + 1)
+                writeValuePretty(value, into: &bytes, depth: depth + 1)
             }
             bytes.append(._newline)
-            self.addInset(to: &bytes, depth: depth)
+            addInset(to: &bytes, depth: depth)
             bytes.append(._closebrace)
         }
 
@@ -3080,7 +2935,7 @@ extension JSONValue {
 
             while nextIndex != stringBytes.endIndex {
                 switch stringBytes[nextIndex] {
-                case 0 ..< 32, UInt8(ascii: "\""), UInt8(ascii: "\\"):
+                case 0..<32, UInt8(ascii: "\""), UInt8(ascii: "\\"):
                     // All Unicode characters may be placed within the
                     // quotation marks, except for the characters that MUST be escaped:
                     // quotation mark, reverse solidus, and the control characters (U+0000
@@ -3088,7 +2943,7 @@ extension JSONValue {
                     // https://tools.ietf.org/html/rfc8259#section-7
 
                     // copy the current range over
-                    bytes.append(contentsOf: stringBytes[startCopyIndex ..< nextIndex])
+                    bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
                     switch stringBytes[nextIndex] {
                     case UInt8(ascii: "\""): // quotation mark
                         bytes.append(contentsOf: [._backslash, ._quote])
@@ -3107,9 +2962,9 @@ extension JSONValue {
                     default:
                         func valueToAscii(_ value: UInt8) -> UInt8 {
                             switch value {
-                            case 0 ... 9:
+                            case 0...9:
                                 return value + UInt8(ascii: "0")
-                            case 10 ... 15:
+                            case 10...15:
                                 return value - 10 + UInt8(ascii: "a")
                             default:
                                 preconditionFailure()
@@ -3127,62 +2982,62 @@ extension JSONValue {
 
                     nextIndex = stringBytes.index(after: nextIndex)
                     startCopyIndex = nextIndex
+
                 case UInt8(ascii: "/"):
                     if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *), options.contains(.withoutEscapingSlashes) == false {
-                        bytes.append(contentsOf: stringBytes[startCopyIndex ..< nextIndex])
+                        bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
                         bytes.append(contentsOf: [._backslash, UInt8(ascii: "/")])
                         nextIndex = stringBytes.index(after: nextIndex)
                         startCopyIndex = nextIndex
                     } else {
-                        bytes.append(contentsOf: stringBytes[startCopyIndex ..< nextIndex])
+                        bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
                         bytes.append(contentsOf: [._backslash, UInt8(ascii: "/")])
                         nextIndex = stringBytes.index(after: nextIndex)
                         startCopyIndex = nextIndex
                     }
-                    
+
                 default:
                     nextIndex = stringBytes.index(after: nextIndex)
                 }
             }
 
             // copy everything, that hasn't been copied yet
-            bytes.append(contentsOf: stringBytes[startCopyIndex ..< nextIndex])
+            bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
             bytes.append(UInt8(ascii: "\""))
         }
     }
 }
 
 extension JSONValue {
-        
     var object: [String: JSONValue]? {
         switch self {
-        case .object(let v):
+        case let .object(v):
             return v
         default:
             return nil
         }
     }
-    
+
     var array: [JSONValue]? {
         switch self {
-        case .array(let v):
+        case let .array(v):
             return v
         default:
             return nil
         }
     }
-    
+
     var peel: Any {
         switch self {
-        case .array(let v):
+        case let .array(v):
             return v.peel
-        case .bool(let v):
+        case let .bool(v):
             return v
-        case .number(let v):
+        case let .number(v):
             return v
-        case .string(let v):
+        case let .string(v):
             return v
-        case .object(let v):
+        case let .object(v):
             return v.peel
         case .null:
             return NSNull()
@@ -3190,27 +3045,28 @@ extension JSONValue {
     }
 }
 
-extension Dictionary where Key == String, Value == JSONValue {
+extension Dictionary<String, JSONValue> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
     var peel: [String: Any] {
         mapValues { $0.peel }
     }
 }
-extension Array where Element == JSONValue {
+
+extension Array<JSONValue> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
     var peel: [Any] {
         map { $0.peel }
     }
 }
 
-extension Array where Element == [String: JSONValue] {
+extension Array<[String: JSONValue]> {
     /// The parsed value will be wrapped by SmartAny. Use this property to unwrap it.
     var peel: [Any] {
         map { $0.peel }
     }
 }
 
-internal struct JSONParser {
+struct JSONParser {
     var reader: DocumentReader
     var depth: Int = 0
 
@@ -3220,7 +3076,7 @@ internal struct JSONParser {
 
     mutating func parse() throws -> JSONValue {
         try reader.consumeWhitespace()
-        let value = try self.parseValue()
+        let value = try parseValue()
         #if DEBUG
         defer {
             guard self.depth == 0 else {
@@ -3252,7 +3108,7 @@ internal struct JSONParser {
             switch byte {
             case UInt8(ascii: "\""):
                 reader.moveReaderIndex(forwardBy: whitespace)
-                return .string(try reader.readString())
+                return try .string(reader.readString())
             case ._openbrace:
                 reader.moveReaderIndex(forwardBy: whitespace)
                 let object = try parseObject()
@@ -3269,30 +3125,29 @@ internal struct JSONParser {
                 reader.moveReaderIndex(forwardBy: whitespace)
                 try reader.readNull()
                 return .null
-            case UInt8(ascii: "-"), UInt8(ascii: "0") ... UInt8(ascii: "9"):
+            case UInt8(ascii: "-"), UInt8(ascii: "0")...UInt8(ascii: "9"):
                 reader.moveReaderIndex(forwardBy: whitespace)
-                let number = try self.reader.readNumber()
+                let number = try reader.readNumber()
                 return .number(number)
             case ._space, ._return, ._newline, ._tab:
                 whitespace += 1
                 continue
             default:
-                throw JSONParserError.unexpectedCharacter(ascii: byte, characterIndex: self.reader.readerIndex)
+                throw JSONParserError.unexpectedCharacter(ascii: byte, characterIndex: reader.readerIndex)
             }
         }
 
         throw JSONParserError.unexpectedEndOfFile
     }
 
-
     // MARK: - Parse Array -
 
     mutating func parseArray() throws -> [JSONValue] {
-        precondition(self.reader.read() == ._openbracket)
-        guard self.depth < 512 else {
-            throw JSONParserError.tooManyNestedArraysOrDictionaries(characterIndex: self.reader.readerIndex - 1)
+        precondition(reader.read() == ._openbracket)
+        guard depth < 512 else {
+            throw JSONParserError.tooManyNestedArraysOrDictionaries(characterIndex: reader.readerIndex - 1)
         }
-        self.depth += 1
+        depth += 1
         defer { depth -= 1 }
 
         // parse first value or end immediatly
@@ -3301,7 +3156,7 @@ internal struct JSONParser {
             preconditionFailure("Expected that all white space is consumed")
         case ._closebracket:
             // if the first char after whitespace is a closing bracket, we found an empty array
-            self.reader.moveReaderIndex(forwardBy: 1)
+            reader.moveReaderIndex(forwardBy: 1)
             return []
         default:
             break
@@ -3342,11 +3197,11 @@ internal struct JSONParser {
     // MARK: - Object parsing -
 
     mutating func parseObject() throws -> [String: JSONValue] {
-        precondition(self.reader.read() == ._openbrace)
-        guard self.depth < 512 else {
-            throw JSONParserError.tooManyNestedArraysOrDictionaries(characterIndex: self.reader.readerIndex - 1)
+        precondition(reader.read() == ._openbrace)
+        guard depth < 512 else {
+            throw JSONParserError.tooManyNestedArraysOrDictionaries(characterIndex: reader.readerIndex - 1)
         }
-        self.depth += 1
+        depth += 1
         defer { depth -= 1 }
 
         // parse first value or end immediatly
@@ -3355,7 +3210,7 @@ internal struct JSONParser {
             preconditionFailure("Expected that all white space is consumed")
         case ._closebrace:
             // if the first char after whitespace is a closing bracket, we found an empty array
-            self.reader.moveReaderIndex(forwardBy: 1)
+            reader.moveReaderIndex(forwardBy: 1)
             return [:]
         default:
             break
@@ -3372,7 +3227,7 @@ internal struct JSONParser {
             }
             reader.moveReaderIndex(forwardBy: 1)
             try reader.consumeWhitespace()
-            object[key] = try self.parseValue()
+            object[key] = try parseValue()
 
             let commaOrBrace = try reader.consumeWhitespace()
             switch commaOrBrace {
@@ -3395,62 +3250,60 @@ internal struct JSONParser {
 }
 
 extension JSONParser {
-
     struct DocumentReader {
         let array: [UInt8]
 
         private(set) var readerIndex: Int = 0
 
         private var readableBytes: Int {
-            self.array.endIndex - self.readerIndex
+            array.endIndex - readerIndex
         }
 
         var isEOF: Bool {
-            self.readerIndex >= self.array.endIndex
+            readerIndex >= array.endIndex
         }
-
 
         init(array: [UInt8]) {
             self.array = array
         }
 
         subscript<R: RangeExpression<Int>>(bounds: R) -> ArraySlice<UInt8> {
-            self.array[bounds]
+            array[bounds]
         }
 
         mutating func read() -> UInt8? {
-            guard self.readerIndex < self.array.endIndex else {
-                self.readerIndex = self.array.endIndex
+            guard readerIndex < array.endIndex else {
+                readerIndex = array.endIndex
                 return nil
             }
 
             defer { self.readerIndex += 1 }
 
-            return self.array[self.readerIndex]
+            return array[readerIndex]
         }
 
         func peek(offset: Int = 0) -> UInt8? {
-            guard self.readerIndex + offset < self.array.endIndex else {
+            guard readerIndex + offset < array.endIndex else {
                 return nil
             }
 
-            return self.array[self.readerIndex + offset]
+            return array[readerIndex + offset]
         }
 
         mutating func moveReaderIndex(forwardBy offset: Int) {
-            self.readerIndex += offset
+            readerIndex += offset
         }
 
         @discardableResult
         mutating func consumeWhitespace() throws -> UInt8 {
             var whitespace = 0
-            while let ascii = self.peek(offset: whitespace) {
+            while let ascii = peek(offset: whitespace) {
                 switch ascii {
                 case ._space, ._return, ._newline, ._tab:
                     whitespace += 1
                     continue
                 default:
-                    self.moveReaderIndex(forwardBy: whitespace)
+                    moveReaderIndex(forwardBy: whitespace)
                     return ascii
                 }
             }
@@ -3459,39 +3312,39 @@ extension JSONParser {
         }
 
         mutating func readString() throws -> String {
-            try self.readUTF8StringTillNextUnescapedQuote()
+            try readUTF8StringTillNextUnescapedQuote()
         }
 
         mutating func readNumber() throws -> String {
-            try self.parseNumber()
+            try parseNumber()
         }
 
         mutating func readBool() throws -> Bool {
-            switch self.read() {
+            switch read() {
             case UInt8(ascii: "t"):
-                guard self.read() == UInt8(ascii: "r"),
-                      self.read() == UInt8(ascii: "u"),
-                      self.read() == UInt8(ascii: "e")
+                guard read() == UInt8(ascii: "r"),
+                      read() == UInt8(ascii: "u"),
+                      read() == UInt8(ascii: "e")
                 else {
-                    guard !self.isEOF else {
+                    guard !isEOF else {
                         throw JSONParserError.unexpectedEndOfFile
                     }
 
-                    throw JSONParserError.unexpectedCharacter(ascii: self.peek(offset: -1)!, characterIndex: self.readerIndex - 1)
+                    throw JSONParserError.unexpectedCharacter(ascii: peek(offset: -1)!, characterIndex: readerIndex - 1)
                 }
 
                 return true
             case UInt8(ascii: "f"):
-                guard self.read() == UInt8(ascii: "a"),
-                      self.read() == UInt8(ascii: "l"),
-                      self.read() == UInt8(ascii: "s"),
-                      self.read() == UInt8(ascii: "e")
+                guard read() == UInt8(ascii: "a"),
+                      read() == UInt8(ascii: "l"),
+                      read() == UInt8(ascii: "s"),
+                      read() == UInt8(ascii: "e")
                 else {
-                    guard !self.isEOF else {
+                    guard !isEOF else {
                         throw JSONParserError.unexpectedEndOfFile
                     }
 
-                    throw JSONParserError.unexpectedCharacter(ascii: self.peek(offset: -1)!, characterIndex: self.readerIndex - 1)
+                    throw JSONParserError.unexpectedCharacter(ascii: peek(offset: -1)!, characterIndex: readerIndex - 1)
                 }
 
                 return false
@@ -3501,16 +3354,16 @@ extension JSONParser {
         }
 
         mutating func readNull() throws {
-            guard self.read() == UInt8(ascii: "n"),
-                  self.read() == UInt8(ascii: "u"),
-                  self.read() == UInt8(ascii: "l"),
-                  self.read() == UInt8(ascii: "l")
+            guard read() == UInt8(ascii: "n"),
+                  read() == UInt8(ascii: "u"),
+                  read() == UInt8(ascii: "l"),
+                  read() == UInt8(ascii: "l")
             else {
-                guard !self.isEOF else {
+                guard !isEOF else {
                     throw JSONParserError.unexpectedEndOfFile
                 }
 
-                throw JSONParserError.unexpectedCharacter(ascii: self.peek(offset: -1)!, characterIndex: self.readerIndex - 1)
+                throw JSONParserError.unexpectedCharacter(ascii: peek(offset: -1)!, characterIndex: readerIndex - 1)
             }
         }
 
@@ -3525,58 +3378,58 @@ extension JSONParser {
         }
 
         private mutating func readUTF8StringTillNextUnescapedQuote() throws -> String {
-            guard self.read() == ._quote else {
-                throw JSONParserError.unexpectedCharacter(ascii: self.peek(offset: -1)!, characterIndex: self.readerIndex - 1)
+            guard read() == ._quote else {
+                throw JSONParserError.unexpectedCharacter(ascii: peek(offset: -1)!, characterIndex: readerIndex - 1)
             }
-            var stringStartIndex = self.readerIndex
+            var stringStartIndex = readerIndex
             var copy = 0
             var output: String?
 
             while let byte = peek(offset: copy) {
                 switch byte {
                 case UInt8(ascii: "\""):
-                    self.moveReaderIndex(forwardBy: copy + 1)
+                    moveReaderIndex(forwardBy: copy + 1)
                     guard var result = output else {
                         // if we don't have an output string we create a new string
-                        return try makeString(at: stringStartIndex ..< stringStartIndex + copy)
+                        return try makeString(at: stringStartIndex..<stringStartIndex + copy)
                     }
                     // if we have an output string we append
-                    result += try makeString(at: stringStartIndex ..< stringStartIndex + copy)
+                    result += try makeString(at: stringStartIndex..<stringStartIndex + copy)
                     return result
 
-                case 0 ... 31:
+                case 0...31:
                     // All Unicode characters may be placed within the
                     // quotation marks, except for the characters that must be escaped:
                     // quotation mark, reverse solidus, and the control characters (U+0000
                     // through U+001F).
                     var string = output ?? ""
-                    let errorIndex = self.readerIndex + copy
-                    string += try makeString(at: stringStartIndex ... errorIndex)
+                    let errorIndex = readerIndex + copy
+                    string += try makeString(at: stringStartIndex...errorIndex)
                     throw JSONParserError.unescapedControlCharacterInString(ascii: byte, in: string, index: errorIndex)
 
                 case UInt8(ascii: "\\"):
-                    self.moveReaderIndex(forwardBy: copy)
+                    moveReaderIndex(forwardBy: copy)
                     if output != nil {
-                        output! += try makeString(at: stringStartIndex ..< stringStartIndex + copy)
+                        output! += try makeString(at: stringStartIndex..<stringStartIndex + copy)
                     } else {
-                        output = try makeString(at: stringStartIndex ..< stringStartIndex + copy)
+                        output = try makeString(at: stringStartIndex..<stringStartIndex + copy)
                     }
 
-                    let escapedStartIndex = self.readerIndex
+                    let escapedStartIndex = readerIndex
 
                     do {
                         let escaped = try parseEscapeSequence()
                         output! += escaped
-                        stringStartIndex = self.readerIndex
+                        stringStartIndex = readerIndex
                         copy = 0
-                    } catch EscapedSequenceError.unexpectedEscapedCharacter(let ascii, let failureIndex) {
-                        output! += try makeString(at: escapedStartIndex ..< self.readerIndex)
+                    } catch let EscapedSequenceError.unexpectedEscapedCharacter(ascii, failureIndex) {
+                        output! += try makeString(at: escapedStartIndex..<self.readerIndex)
                         throw JSONParserError.unexpectedEscapedCharacter(ascii: ascii, in: output!, index: failureIndex)
-                    } catch EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(let failureIndex) {
-                        output! += try makeString(at: escapedStartIndex ..< self.readerIndex)
+                    } catch let EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(failureIndex) {
+                        output! += try makeString(at: escapedStartIndex..<self.readerIndex)
                         throw JSONParserError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(in: output!, index: failureIndex)
-                    } catch EscapedSequenceError.couldNotCreateUnicodeScalarFromUInt32(let failureIndex, let unicodeScalarValue) {
-                        output! += try makeString(at: escapedStartIndex ..< self.readerIndex)
+                    } catch let EscapedSequenceError.couldNotCreateUnicodeScalarFromUInt32(failureIndex, unicodeScalarValue) {
+                        output! += try makeString(at: escapedStartIndex..<self.readerIndex)
                         throw JSONParserError.couldNotCreateUnicodeScalarFromUInt32(
                             in: output!, index: failureIndex, unicodeScalarValue: unicodeScalarValue
                         )
@@ -3600,8 +3453,8 @@ extension JSONParser {
         }
 
         private mutating func parseEscapeSequence() throws -> String {
-            precondition(self.read() == ._backslash, "Expected to have an backslash first")
-            guard let ascii = self.read() else {
+            precondition(read() == ._backslash, "Expected to have an backslash first")
+            guard let ascii = read() else {
                 throw JSONParserError.unexpectedEndOfFile
             }
 
@@ -3618,7 +3471,7 @@ extension JSONParser {
                 let character = try parseUnicodeSequence()
                 return String(character)
             default:
-                throw EscapedSequenceError.unexpectedEscapedCharacter(ascii: ascii, index: self.readerIndex - 1)
+                throw EscapedSequenceError.unexpectedEscapedCharacter(ascii: ascii, index: readerIndex - 1)
             }
         }
 
@@ -3631,14 +3484,14 @@ extension JSONParser {
             if isFirstByteHighSurrogate == 0xD800 {
                 // if we have a high surrogate we expect a low surrogate next
                 let highSurrogateBitPattern = bitPattern
-                guard let (escapeChar) = self.read(),
-                      let (uChar) = self.read()
+                guard let escapeChar = read(),
+                      let uChar = read()
                 else {
                     throw JSONParserError.unexpectedEndOfFile
                 }
 
                 guard escapeChar == UInt8(ascii: #"\"#), uChar == UInt8(ascii: "u") else {
-                    throw EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(index: self.readerIndex - 1)
+                    throw EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(index: readerIndex - 1)
                 }
 
                 let lowSurrogateBitBattern = try parseUnicodeHexSequence()
@@ -3646,7 +3499,7 @@ extension JSONParser {
                 guard isSecondByteLowSurrogate == 0xDC00 else {
                     // we are in an escaped sequence. for this reason an output string must have
                     // been initialized
-                    throw EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(index: self.readerIndex - 1)
+                    throw EscapedSequenceError.expectedLowSurrogateUTF8SequenceAfterHighSurrogate(index: readerIndex - 1)
                 }
 
                 let highValue = UInt32(highSurrogateBitPattern - 0xD800) * 0x400
@@ -3654,7 +3507,7 @@ extension JSONParser {
                 let unicodeValue = highValue + lowValue + 0x10000
                 guard let unicode = Unicode.Scalar(unicodeValue) else {
                     throw EscapedSequenceError.couldNotCreateUnicodeScalarFromUInt32(
-                        index: self.readerIndex, unicodeScalarValue: unicodeValue
+                        index: readerIndex, unicodeScalarValue: unicodeValue
                     )
                 }
                 return unicode
@@ -3662,7 +3515,7 @@ extension JSONParser {
 
             guard let unicode = Unicode.Scalar(bitPattern) else {
                 throw EscapedSequenceError.couldNotCreateUnicodeScalarFromUInt32(
-                    index: self.readerIndex, unicodeScalarValue: UInt32(bitPattern)
+                    index: readerIndex, unicodeScalarValue: UInt32(bitPattern)
                 )
             }
             return unicode
@@ -3671,11 +3524,11 @@ extension JSONParser {
         private mutating func parseUnicodeHexSequence() throws -> UInt16 {
             // As stated in RFC-8259 an escaped unicode character is 4 HEXDIGITs long
             // https://tools.ietf.org/html/rfc8259#section-7
-            let startIndex = self.readerIndex
-            guard let firstHex = self.read(),
-                  let secondHex = self.read(),
-                  let thirdHex = self.read(),
-                  let forthHex = self.read()
+            let startIndex = readerIndex
+            guard let firstHex = read(),
+                  let secondHex = read(),
+                  let thirdHex = read(),
+                  let forthHex = read()
             else {
                 throw JSONParserError.unexpectedEndOfFile
             }
@@ -3698,12 +3551,12 @@ extension JSONParser {
 
         private static func hexAsciiTo4Bits(_ ascii: UInt8) -> UInt8? {
             switch ascii {
-            case 48 ... 57:
+            case 48...57:
                 return ascii - 48
-            case 65 ... 70:
+            case 65...70:
                 // uppercase letters
                 return ascii - 55
-            case 97 ... 102:
+            case 97...102:
                 // lowercase letters
                 return ascii - 87
             default:
@@ -3727,7 +3580,7 @@ extension JSONParser {
 
             // parse first character
 
-            guard let ascii = self.peek() else {
+            guard let ascii = peek() else {
                 preconditionFailure("Why was this function called, if there is no 0...9 or -")
             }
             switch ascii {
@@ -3735,7 +3588,7 @@ extension JSONParser {
                 numbersSinceControlChar = 1
                 pastControlChar = .operand
                 hasLeadingZero = true
-            case UInt8(ascii: "1") ... UInt8(ascii: "9"):
+            case UInt8(ascii: "1")...UInt8(ascii: "9"):
                 numbersSinceControlChar = 1
                 pastControlChar = .operand
             case UInt8(ascii: "-"):
@@ -3748,7 +3601,7 @@ extension JSONParser {
             var numberchars = 1
 
             // parse everything else
-            while let byte = self.peek(offset: numberchars) {
+            while let byte = peek(offset: numberchars) {
                 switch byte {
                 case UInt8(ascii: "0"):
                     if hasLeadingZero {
@@ -3760,7 +3613,7 @@ extension JSONParser {
                     }
                     numberchars += 1
                     numbersSinceControlChar += 1
-                case UInt8(ascii: "1") ... UInt8(ascii: "9"):
+                case UInt8(ascii: "1")...UInt8(ascii: "9"):
                     if hasLeadingZero {
                         throw JSONParserError.numberWithLeadingZero(index: readerIndex + numberchars)
                     }
@@ -3775,7 +3628,6 @@ extension JSONParser {
                     hasLeadingZero = false
                     pastControlChar = .decimalPoint
                     numbersSinceControlChar = 0
-
                 case UInt8(ascii: "e"), UInt8(ascii: "E"):
                     guard numbersSinceControlChar > 0,
                           pastControlChar == .operand || pastControlChar == .decimalPoint
@@ -3799,10 +3651,10 @@ extension JSONParser {
                     guard numbersSinceControlChar > 0 else {
                         throw JSONParserError.unexpectedCharacter(ascii: byte, characterIndex: readerIndex + numberchars)
                     }
-                    let numberStartIndex = self.readerIndex
-                    self.moveReaderIndex(forwardBy: numberchars)
+                    let numberStartIndex = readerIndex
+                    moveReaderIndex(forwardBy: numberchars)
 
-                    return String(decoding: self[numberStartIndex ..< self.readerIndex], as: Unicode.UTF8.self)
+                    return String(decoding: self[numberStartIndex..<readerIndex], as: Unicode.UTF8.self)
                 default:
                     throw JSONParserError.unexpectedCharacter(ascii: byte, characterIndex: readerIndex + numberchars)
                 }
@@ -3813,57 +3665,52 @@ extension JSONParser {
             }
 
             defer { self.readerIndex = self.array.endIndex }
-            return String(decoding: self.array.suffix(from: readerIndex), as: Unicode.UTF8.self)
+            return String(decoding: array.suffix(from: readerIndex), as: Unicode.UTF8.self)
         }
     }
 }
 
 extension UInt8 {
+    static let _space = UInt8(ascii: " ")
+    static let _return = UInt8(ascii: "\r")
+    static let _newline = UInt8(ascii: "\n")
+    static let _tab = UInt8(ascii: "\t")
 
-    internal static let _space = UInt8(ascii: " ")
-    internal static let _return = UInt8(ascii: "\r")
-    internal static let _newline = UInt8(ascii: "\n")
-    internal static let _tab = UInt8(ascii: "\t")
+    static let _colon = UInt8(ascii: ":")
+    static let _comma = UInt8(ascii: ",")
 
-    internal static let _colon = UInt8(ascii: ":")
-    internal static let _comma = UInt8(ascii: ",")
+    static let _openbrace = UInt8(ascii: "{")
+    static let _closebrace = UInt8(ascii: "}")
 
-    internal static let _openbrace = UInt8(ascii: "{")
-    internal static let _closebrace = UInt8(ascii: "}")
+    static let _openbracket = UInt8(ascii: "[")
+    static let _closebracket = UInt8(ascii: "]")
 
-    internal static let _openbracket = UInt8(ascii: "[")
-    internal static let _closebracket = UInt8(ascii: "]")
-
-    internal static let _quote = UInt8(ascii: "\"")
-    internal static let _backslash = UInt8(ascii: "\\")
-
+    static let _quote = UInt8(ascii: "\"")
+    static let _backslash = UInt8(ascii: "\\")
 }
-extension Array where Element == UInt8 {
 
-    internal static let _true = [UInt8(ascii: "t"), UInt8(ascii: "r"), UInt8(ascii: "u"), UInt8(ascii: "e")]
-    internal static let _false = [UInt8(ascii: "f"), UInt8(ascii: "a"), UInt8(ascii: "l"), UInt8(ascii: "s"), UInt8(ascii: "e")]
-    internal static let _null = [UInt8(ascii: "n"), UInt8(ascii: "u"), UInt8(ascii: "l"), UInt8(ascii: "l")]
-
+extension Array<UInt8> {
+    static let _true = [UInt8(ascii: "t"), UInt8(ascii: "r"), UInt8(ascii: "u"), UInt8(ascii: "e")]
+    static let _false = [UInt8(ascii: "f"), UInt8(ascii: "a"), UInt8(ascii: "l"), UInt8(ascii: "s"), UInt8(ascii: "e")]
+    static let _null = [UInt8(ascii: "n"), UInt8(ascii: "u"), UInt8(ascii: "l"), UInt8(ascii: "l")]
 }
 
 // MARK: - JSONDecoder
 open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
-    
-    
     open var smartDataDecodingStrategy: SmartDataDecodingStrategy = .base64
-    
+
     /// Options set on the top-level encoder to pass down the decoding hierarchy.
     struct _Options {
         let dateDecodingStrategy: DateDecodingStrategy?
         let dataDecodingStrategy: SmartDataDecodingStrategy
         let nonConformingFloatDecodingStrategy: NonConformingFloatDecodingStrategy
         let keyDecodingStrategy: SmartKeyDecodingStrategy
-        let userInfo: [CodingUserInfoKey : Any]
+        let userInfo: [CodingUserInfoKey: Any]
     }
-    
+
     /// The options set on the top-level decoder.
     var options: _Options {
-        return _Options(
+        _Options(
             dateDecodingStrategy: smartDateDecodingStrategy,
             dataDecodingStrategy: smartDataDecodingStrategy,
             nonConformingFloatDecodingStrategy: nonConformingFloatDecodingStrategy,
@@ -3871,12 +3718,11 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
             userInfo: userInfo
         )
     }
-    
+
     open var smartDateDecodingStrategy: DateDecodingStrategy?
-    
+
     open var smartKeyDecodingStrategy: SmartKeyDecodingStrategy = .useDefaultKeys
 
-    
     // MARK: - Decoding Values
 
     /// Decodes a top-level value of the given type from the given JSON representation.
@@ -3886,8 +3732,7 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
     /// - returns: A value of the requested type.
     /// - throws: `DecodingError.dataCorrupted` if values requested from the payload are corrupted, or if the given data is not valid JSON.
     /// - throws: An error if any value throws an error during decoding.
-    open override func decode<T : Decodable>(_ type: T.Type, from data: Data) throws -> T {
-                
+    override open func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
         let mark = SmartSentinel.parsingMark()
         if let parsingMark = CodingUserInfoKey.parsingMark {
             userInfo.updateValue(mark, forKey: parsingMark)
@@ -3896,7 +3741,7 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
         do {
             var parser = JSONParser(bytes: Array(data))
             let json = try parser.parse()
-            let impl = JSONDecoderImpl(userInfo: self.userInfo, from: json, codingPath: [], options: self.options)
+            let impl = JSONDecoderImpl(userInfo: userInfo, from: json, codingPath: [], options: options)
             let value = try impl.unwrap(as: type)
             SmartSentinel.monitorLogs(in: "\(type)", parsingMark: mark)
             return value
@@ -3907,24 +3752,20 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
     }
 }
 
-
 extension CodingUserInfoKey {
     /// This parsing tag is used to summarize logs.
-    static var parsingMark = CodingUserInfoKey.init(rawValue: "Stamrt.parsingMark")
+    static var parsingMark = CodingUserInfoKey(rawValue: "Stamrt.parsingMark")
 }
 
 extension JSONDecoder {
-    public enum SmartDataDecodingStrategy : Sendable {
+    public enum SmartDataDecodingStrategy: Sendable {
         /// Decode the `Data` from a Base64-encoded string. This is the default strategy.
         case base64
     }
 }
 
-
-
 extension JSONDecoder {
-    public enum SmartKeyDecodingStrategy : Sendable {
-
+    public enum SmartKeyDecodingStrategy: Sendable {
         /// Use the keys specified by each type. This is the default strategy.
         case useDefaultKeys
 
@@ -3940,13 +3781,13 @@ extension JSONDecoder {
         ///
         /// - Note: Using a key decoding strategy has a nominal performance cost, as each string key has to be inspected for the `_` character.
         case fromSnakeCase
-        
+
         /// Convert the first letter of the key to lower case before attempting to match a key with the one specified by each type.
         /// For example, `OneTwoThree` becomes `oneTwoThree`.
         ///
         /// - Note: This strategy should be used with caution, especially if the key's first letter is intended to be uppercase for distinguishing purposes. It also incurs a nominal performance cost, as the first character of each key needs to be inspected and possibly modified.
         case firstLetterLower
-        
+
         /// Convert the first letter of the key to upper case before attempting to match a key with the one specified by each type.
         /// For example, `oneTwoThree` becomes `OneTwoThree`.
         ///
@@ -3956,40 +3797,37 @@ extension JSONDecoder {
 }
 
 extension JSONDecoder.SmartKeyDecodingStrategy {
-    
-    
-    
     static func _convertFirstLetterToLowercase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
 
         return stringKey.prefix(1).lowercased() + stringKey.dropFirst()
     }
-    
+
     static func _convertFirstLetterToUppercase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
 
         return stringKey.prefix(1).uppercased() + stringKey.dropFirst()
     }
-    
+
     static func _convertFromSnakeCase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
-        
+
         // Find the first non-underscore character
         guard let firstNonUnderscore = stringKey.firstIndex(where: { $0 != "_" }) else {
             // Reached the end without finding an _
             return stringKey
         }
-        
+
         // Find the last non-underscore character
         var lastNonUnderscore = stringKey.index(before: stringKey.endIndex)
         while lastNonUnderscore > firstNonUnderscore && stringKey[lastNonUnderscore] == "_" {
             stringKey.formIndex(before: &lastNonUnderscore)
         }
-        
+
         let keyRange = firstNonUnderscore...lastNonUnderscore
         let leadingUnderscoreRange = stringKey.startIndex..<firstNonUnderscore
         let trailingUnderscoreRange = stringKey.index(after: lastNonUnderscore)..<stringKey.endIndex
-        
+
         let components = stringKey[keyRange].split(separator: "_")
         let joinedString: String
         if components.count == 1 {
@@ -3998,7 +3836,7 @@ extension JSONDecoder.SmartKeyDecodingStrategy {
         } else {
             joinedString = ([components[0].lowercased()] + components[1...].map { $0.capitalized }).joined()
         }
-        
+
         // Do a cheap isEmpty check before creating and appending potentially empty strings
         let result: String
         if leadingUnderscoreRange.isEmpty && trailingUnderscoreRange.isEmpty {
@@ -4018,36 +3856,34 @@ extension JSONDecoder.SmartKeyDecodingStrategy {
 }
 
 /// Handles key mapping and conversion for JSON values during decoding
-struct KeysMapper {
-    
+enum KeysMapper {
     /// Converts JSON values according to the target type's key mapping rules
     /// - Parameters:
     ///   - jsonValue: The original JSON value to convert
     ///   - type: The target type for decoding
     /// - Returns: Converted JSON value or nil if conversion fails
     static func convertFrom(_ jsonValue: JSONValue, type: Any.Type) -> JSONValue? {
-        
         // Type is not Model, no key renaming needed
         guard let type = type as? SmartDecodable.Type else { return jsonValue }
-        
+
         switch jsonValue {
-        case .string(let stringValue):
+        case let .string(stringValue):
             // Handle string values that might contain JSON
             let value = parseJSON(from: stringValue, as: type)
             return JSONValue.make(value)
-            
-        case .object(let dictValue):
+
+        case let .object(dictValue):
             // Convert dictionary keys according to mapping rules
             if let dict = mapDictionary(dict: dictValue, using: type) as? [String: JSONValue] {
                 return JSONValue.object(dict)
             }
-            
+
         default:
             break
         }
         return nil
     }
-    
+
     /// Parses a string into JSON object and applies key mapping
     private static func parseJSON(from string: String, as type: SmartDecodable.Type) -> Any {
         guard let jsonObject = string.toJSONObject() else { return string }
@@ -4058,18 +3894,17 @@ struct KeysMapper {
             return jsonObject
         }
     }
-    
+
     /// Applies key mapping rules to a dictionary
     private static func mapDictionary(dict: [String: Any], using type: SmartDecodable.Type) -> [String: Any] {
-        
         guard let mappings = type.mappingForKey(), !mappings.isEmpty else {
             return dict
         }
-        
+
         var newDict = dict
-        mappings.forEach { mapping in
+        for mapping in mappings {
             let newKey = mapping.to.stringValue
-            
+
             /**
              * Check if the original field is an interference field (exists in mapping relationship)
              * Interference field scenario: Note cases like CodingKeys.name <--- ["newName"]
@@ -4078,7 +3913,7 @@ struct KeysMapper {
             if !(mapping.from.contains(newKey)) {
                 newDict.removeValue(forKey: newKey)
             }
-            
+
             // break effect: Prefer the first non-null field
             for oldKey in mapping.from {
                 // Mapping exists at current level
@@ -4086,7 +3921,7 @@ struct KeysMapper {
                     newDict[newKey] = value
                     break
                 }
-                
+
                 // Mapping requires cross-level path handling
                 if let pathValue = newDict.getValue(forKeyPath: oldKey) {
                     newDict.updateValue(pathValue, forKey: newKey)
@@ -4098,10 +3933,7 @@ struct KeysMapper {
     }
 }
 
-
-
 extension Dictionary {
-    
     /// Retrieves the value corresponding to the path in the dictionary.
     ///  let dict = [
     ///      "inDict": [
@@ -4124,7 +3956,7 @@ extension Dictionary {
                 } else {
                     return nil
                 }
-            } else if case JSONValue.object(let object) = currentAny, let temp = object[key] {
+            } else if case let JSONValue.object(object) = currentAny, let temp = object[key] {
                 currentAny = temp
             } else {
                 return nil
@@ -4133,8 +3965,6 @@ extension Dictionary {
         return currentAny
     }
 }
-
-
 
 extension String {
     func toJSONObject() -> Any? {
@@ -4146,7 +3976,6 @@ extension String {
 /// Caches default values during decoding operations
 /// Used to provide fallback values when decoding fails
 class DecodingCache: Cachable {
-    
     typealias SomeSnapshot = DecodingSnapshot
 
     /// Stack of decoding snapshots
@@ -4155,10 +3984,9 @@ class DecodingCache: Cachable {
     /// Creates and stores a snapshot of initial values for a Decodable type
     /// - Parameter type: The Decodable type to cache
     func cacheSnapshot<T>(for type: T.Type) {
-        
         // 减少动态派发开销，is 检查是编译时静态行为，比 as? 动态转换更高效。
         guard type is SmartDecodable.Type else { return }
-        
+
         if let object = type as? SmartDecodable.Type {
             let snapshot = DecodingSnapshot()
             // [initialValues] Lazy initialization:
@@ -4168,7 +3996,7 @@ class DecodingCache: Cachable {
             snapshots.append(snapshot)
         }
     }
-    
+
     /// Removes the most recent snapshot for the given type
     /// - Parameter type: The type to remove from cache
     func removeSnapshot<T>(for type: T.Type) {
@@ -4179,16 +4007,13 @@ class DecodingCache: Cachable {
     }
 }
 
-
 extension DecodingCache {
     /// Retrieves a cached value for the given coding key
     /// - Parameter key: The coding key to look up
     /// - Returns: The cached value if available, nil otherwise
     func initialValueIfPresent<T>(forKey key: CodingKey?) -> T? {
-                
-        guard let key = key else { return nil }
-        
-        
+        guard let key else { return nil }
+
         // Lazy initialization: Generate initial values via reflection only when first accessed,
         // using the recorded objectType to optimize parsing performance
         if topSnapshot?.initialValues.isEmpty ?? true {
@@ -4199,57 +4024,55 @@ extension DecodingCache {
             // Handle @propertyWrapper cases (prefixed with underscore)
             return handlePropertyWrapperCases(for: key)
         }
-        
+
         // When the CGFloat type is resolved,
         // it is resolved as Double. So we need to do a type conversion.
         if T.self == CGFloat.self, let temp = cacheValue as? CGFloat {
             return Double(temp) as? T
         }
-        
+
         if let value = cacheValue as? T {
             return value
         } else if let caseValue = cacheValue as? any SmartCaseDefaultable {
             return caseValue.rawValue as? T
         }
-        
+
         return nil
     }
-    
-    
+
     func initialValue<T>(forKey key: CodingKey?) throws -> T {
         guard let value: T = initialValueIfPresent(forKey: key) else {
             return try Patcher<T>.defaultForType()
         }
         return value
     }
-    
+
     /// 获取转换器
     func valueTransformer(for key: CodingKey?) -> SmartValueTransformer? {
         guard let lastKey = key else { return nil }
-        
+
         // Initialize transformers only once
         if topSnapshot?.transformers?.isEmpty ?? true {
             return nil
         }
-        
+
         let transformer = topSnapshot?.transformers?.first(where: {
             $0.location.stringValue == lastKey.stringValue
         })
         return transformer
     }
-    
-    
+
     /// Handles property wrapper cases (properties prefixed with underscore)
     private func handlePropertyWrapperCases<T>(for key: CodingKey) -> T? {
         if let cached = topSnapshot?.initialValues["_" + key.stringValue] {
             return extractWrappedValue(from: cached)
         }
-        
+
         return snapshots.reversed().lazy.compactMap {
             $0.initialValues["_" + key.stringValue]
         }.first.flatMap(extractWrappedValue)
     }
-    
+
     /// Extracts wrapped value from potential property wrapper types
     private func extractWrappedValue<T>(from value: Any) -> T? {
         if let wrapper = value as? IgnoredKey<T> {
@@ -4261,13 +4084,13 @@ extension DecodingCache {
         }
         return nil
     }
-    
+
     private func populateInitialValues() {
         guard let type = topSnapshot?.objectType else { return }
-        
+
         // Recursively captures initial values from a type and its superclasses
         func captureInitialValues(from mirror: Mirror) {
-            mirror.children.forEach { child in
+            for child in mirror.children {
                 if let key = child.label {
                     snapshots.last?.initialValues[key] = child.value
                 }
@@ -4276,39 +4099,34 @@ extension DecodingCache {
                 captureInitialValues(from: superclassMirror)
             }
         }
-        
+
         let mirror = Mirror(reflecting: type.init())
         captureInitialValues(from: mirror)
     }
 }
 
-
-
 /// Snapshot of decoding state for a particular model
 class DecodingSnapshot: Snapshot {
-    
     typealias ObjectType = SmartDecodable.Type
-    
+
     var objectType: (any SmartDecodable.Type)?
-    
-    lazy var transformers: [SmartValueTransformer]? = {
-        objectType?.mappingForValue()
-    }()
-    
+
+    lazy var transformers: [SmartValueTransformer]? = objectType?.mappingForValue()
+
     /// Dictionary storing initial values of properties
     /// Key: Property name, Value: Initial value
-    var initialValues: [String : Any] = [:]
+    var initialValues: [String: Any] = [:]
 }
 
 extension DecodingError {
     static func _keyNotFound(key: CodingKey, codingPath: [CodingKey]) -> DecodingError {
         DecodingError.keyNotFound(key, DecodingError.Context(codingPath: codingPath, debugDescription: "No value associated with key \(key)."))
     }
-    
+
     static func _valueNotFound(key: CodingKey, expectation: Any.Type, codingPath: [CodingKey]) -> DecodingError {
         DecodingError.valueNotFound(expectation, DecodingError.Context(codingPath: codingPath, debugDescription: "Expected to decode '\(expectation)' but found 'null' instead."))
     }
-    
+
     /// Returns a `.typeMismatch` error describing the expected type.
     ///
     /// - parameter path: The path of `CodingKey`s taken to decode a value of this type.
@@ -4319,8 +4137,7 @@ extension DecodingError {
         let description = "Expected to decode '\(expectation)' but found \(desc) instead."
         return .typeMismatch(expectation, Context(codingPath: path, debugDescription: description))
     }
-    
-    
+
     /// Returns a description of the type of `value` appropriate for an error message.
     ///
     /// - parameter value: The value whose type to describe.
@@ -4335,7 +4152,7 @@ extension DecodingError {
             return "a string/data"
         } else if value is [Any] {
             return "an array"
-        } else if value is [String : Any] {
+        } else if value is [String: Any] {
             return "a dictionary"
         } else {
             return "\(type(of: value))"
@@ -4346,14 +4163,13 @@ extension DecodingError {
 struct JSONDecoderImpl {
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
-    
+
     let json: JSONValue
     let options: SmartJSONDecoder._Options
-    
-    
+
     /// Records the initialization values of the properties in the keyed container.
     var cache: DecodingCache
-    
+
     init(userInfo: [CodingUserInfoKey: Any], from json: JSONValue, codingPath: [CodingKey], options: SmartJSONDecoder._Options) {
         self.userInfo = userInfo
         self.codingPath = codingPath
@@ -4363,23 +4179,21 @@ struct JSONDecoderImpl {
     }
 }
 
-
 // Regarding the generation of containers, there is no need for compatibility,
 // when the type is wrong, an exception is thrown,
 // and when the exception is handled, the initial value can be obtained.
 extension JSONDecoderImpl: Decoder {
     func container<Key>(keyedBy key: Key.Type) throws ->
-    KeyedDecodingContainer<Key> where Key: CodingKey {
-        
-        switch self.json {
-        case .object(let dictionary):
+        KeyedDecodingContainer<Key> where Key: CodingKey {
+        switch json {
+        case let .object(dictionary):
             let container = KeyedContainer<Key>(
                 impl: self,
                 codingPath: codingPath,
                 dictionary: dictionary
             )
             return KeyedDecodingContainer(container)
-        case .string(let string): // json string modeling compatibility
+        case let .string(string): // json string modeling compatibility
             if let dict = string.toJSONObject() as? [String: Any],
                let dictionary = JSONValue.make(dict)?.object {
                 let container = KeyedContainer<Key>(
@@ -4391,7 +4205,7 @@ extension JSONDecoderImpl: Decoder {
             }
         case .null:
             throw DecodingError.valueNotFound([String: JSONValue].self, DecodingError.Context(
-                codingPath: self.codingPath,
+                codingPath: codingPath,
                 debugDescription: "Cannot get keyed decoding container -- found null value instead"
             ))
         default:
@@ -4399,179 +4213,170 @@ extension JSONDecoderImpl: Decoder {
         }
         throw DecodingError._typeMismatch(at: codingPath, expectation: [String: JSONValue].self, desc: json.debugDataTypeDescription)
     }
-    
-    
+
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        switch self.json {
-        case .array(let array):
+        switch json {
+        case let .array(array):
             return UnkeyedContainer(
                 impl: self,
-                codingPath: self.codingPath,
+                codingPath: codingPath,
                 array: array
             )
-        case .string(let string): // json字符串的模型化兼容
+        case let .string(string): // json字符串的模型化兼容
             if let arr = string.toJSONObject() as? [Any],
                let array = JSONValue.make(arr)?.array {
                 return UnkeyedContainer(
                     impl: self,
-                    codingPath: self.codingPath,
+                    codingPath: codingPath,
                     array: array
                 )
             }
         case .null:
             throw DecodingError.valueNotFound([String: JSONValue].self, DecodingError.Context(
-                codingPath: self.codingPath,
+                codingPath: codingPath,
                 debugDescription: "Cannot get unkeyed decoding container -- found null value instead"
             ))
         default:
             break
         }
         throw DecodingError.typeMismatch([JSONValue].self, DecodingError.Context(
-            codingPath: self.codingPath,
-            debugDescription: "Expected to decode \([JSONValue].self) but found \(self.json.debugDataTypeDescription) instead."
+            codingPath: codingPath,
+            debugDescription: "Expected to decode \([JSONValue].self) but found \(json.debugDataTypeDescription) instead."
         ))
     }
-    
+
     func singleValueContainer() throws -> SingleValueDecodingContainer {
         SingleValueContainer(
             impl: self,
-            codingPath: self.codingPath,
-            json: self.json
+            codingPath: codingPath,
+            json: json
         )
     }
 }
 
-
-
-
-internal struct _JSONKey: CodingKey {
+struct _JSONKey: CodingKey {
     public var stringValue: String
     public var intValue: Int?
-    
+
     public init?(stringValue: String) {
         self.stringValue = stringValue
         self.intValue = nil
     }
-    
+
     public init?(intValue: Int) {
         self.stringValue = "\(intValue)"
         self.intValue = intValue
     }
-    
+
     public init(stringValue: String, intValue: Int?) {
         self.stringValue = stringValue
         self.intValue = intValue
     }
-    
-    internal init(index: Int) {
+
+    init(index: Int) {
         self.stringValue = "Index \(index)"
         self.intValue = index
     }
-    
-    internal static let `super` = _JSONKey(stringValue: "super")!
+
+    static let `super` = _JSONKey(stringValue: "super")!
 }
 
 extension JSONDecoderImpl {
     /// A container that provides a view into a JSON dictionary and decodes values from it
     struct KeyedContainer<K: CodingKey>: KeyedDecodingContainerProtocol {
         typealias Key = K
-        
+
         let impl: JSONDecoderImpl
         let codingPath: [CodingKey]
         let dictionary: [String: JSONValue]
-        
+
         init(impl: JSONDecoderImpl, codingPath: [CodingKey], dictionary: [String: JSONValue]) {
-            
             self.codingPath = codingPath
-            
+
             self.dictionary = _convertDictionary(dictionary, impl: impl)
             // The transformation of the dictionary does not affect the structure,
             // but only adds a new field to the data corresponding to the current container.
             // No impl changes are required
             self.impl = impl
         }
-        
+
         var allKeys: [K] {
-            self.dictionary.keys.compactMap { K(stringValue: $0) }
+            dictionary.keys.compactMap { K(stringValue: $0) }
         }
-        
+
         func contains(_ key: K) -> Bool {
             if let _ = dictionary[key.stringValue] {
                 return true
             }
             return false
         }
-        
+
         func decodeNil(forKey key: K) throws -> Bool {
             guard let value = getValue(forKey: key) else {
-                throw DecodingError._keyNotFound(key: key, codingPath: self.codingPath)
+                throw DecodingError._keyNotFound(key: key, codingPath: codingPath)
             }
             return value == .null
         }
-        
+
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws
-        -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey
-        {
+            -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
             try decoderForKey(key).container(keyedBy: type)
         }
-        
+
         func nestedUnkeyedContainer(forKey key: K) throws -> UnkeyedDecodingContainer {
             try decoderForKey(key).unkeyedContainer()
         }
-        
+
         func superDecoder() throws -> Decoder {
-            return decoderForKeyNoThrow(_JSONKey.super)
+            decoderForKeyNoThrow(_JSONKey.super)
         }
-        
+
         func superDecoder(forKey key: K) throws -> Decoder {
-            return decoderForKeyNoThrow(key)
+            decoderForKeyNoThrow(key)
         }
-        
+
         private func decoderForKey<LocalKey: CodingKey>(_ key: LocalKey) throws -> JSONDecoderImpl {
-            
             guard let value = getValue(forKey: key) else {
-                throw DecodingError._keyNotFound(key: key, codingPath: self.codingPath)
+                throw DecodingError._keyNotFound(key: key, codingPath: codingPath)
             }
-            
-            var newPath = self.codingPath
+
+            var newPath = codingPath
             newPath.append(key)
-            
-            return JSONDecoderImpl(userInfo: self.impl.userInfo, from: value, codingPath: newPath, options: self.impl.options)
+
+            return JSONDecoderImpl(userInfo: impl.userInfo, from: value, codingPath: newPath, options: impl.options)
         }
-        
-        
+
         private func decoderForKeyCompatibleForJson<LocalKey: CodingKey, T>(_ key: LocalKey, type: T.Type) throws -> JSONDecoderImpl {
             guard let value = getValue(forKey: key) else {
-                throw DecodingError._keyNotFound(key: key, codingPath: self.codingPath)
+                throw DecodingError._keyNotFound(key: key, codingPath: codingPath)
             }
-            var newPath = self.codingPath
+            var newPath = codingPath
             newPath.append(key)
-            
-            var newImpl = JSONDecoderImpl(userInfo: self.impl.userInfo, from: value, codingPath: newPath, options: self.impl.options)
-            
+
+            var newImpl = JSONDecoderImpl(userInfo: impl.userInfo, from: value, codingPath: newPath, options: impl.options)
+
             // If the new parser is not a parse Model,
             // it inherits the cache from the previous one.
             if !(type is SmartDecodable.Type) {
                 newImpl.cache = impl.cache
             }
-            
+
             return newImpl
         }
-        
-        
+
         private func decoderForKeyNoThrow<LocalKey: CodingKey>(_ key: LocalKey) -> JSONDecoderImpl {
             let value: JSONValue = getValue(forKey: key) ?? .null
-            var newPath = self.codingPath
+            var newPath = codingPath
             newPath.append(key)
-            
+
             return JSONDecoderImpl(
-                userInfo: self.impl.userInfo,
+                userInfo: impl.userInfo,
                 from: value,
                 codingPath: newPath,
-                options: self.impl.options
+                options: impl.options
             )
         }
-        
+
         @inline(__always) private func getValue<LocalKey: CodingKey>(forKey key: LocalKey) -> JSONValue? {
             guard let value = dictionary[key.stringValue] else { return nil }
             return value
@@ -4579,158 +4384,151 @@ extension JSONDecoderImpl {
     }
 }
 
-
 extension JSONDecoderImpl.KeyedContainer {
     func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
         try _decodeBoolValue(key: key)
     }
-    
+
     func decode(_ type: String.Type, forKey key: K) throws -> String {
         try _decodeStringValue(key: key)
     }
-    
+
     func decode(_: Double.Type, forKey key: K) throws -> Double {
         try _decodeFloatingPoint(key: key)
     }
-    
+
     func decode(_: CGFloat.Type, forKey key: K) throws -> CGFloat {
         let value = try decode(Double.self, forKey: key)
         return CGFloat(value)
     }
-    
+
     func decode(_: Float.Type, forKey key: K) throws -> Float {
         try _decodeFloatingPoint(key: key)
     }
-    
+
     func decode(_: Int.Type, forKey key: K) throws -> Int {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: Int8.Type, forKey key: K) throws -> Int8 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: Int16.Type, forKey key: K) throws -> Int16 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: Int32.Type, forKey key: K) throws -> Int32 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: Int64.Type, forKey key: K) throws -> Int64 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: UInt.Type, forKey key: K) throws -> UInt {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: UInt8.Type, forKey key: K) throws -> UInt8 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: UInt16.Type, forKey key: K) throws -> UInt16 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: UInt32.Type, forKey key: K) throws -> UInt32 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode(_: UInt64.Type, forKey key: K) throws -> UInt64 {
         try _decodeFixedWidthInteger(key: key)
     }
-    
+
     func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T: Decodable {
         try _decodeDecodable(type, forKey: key)
     }
 }
 
-
 extension JSONDecoderImpl.KeyedContainer {
-    
     func decodeIfPresent(_ type: Bool.Type, forKey key: K) throws -> Bool? {
         _decodeBoolValueIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: String.Type, forKey key: K) throws -> String? {
         _decodeStringValueIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: Float.Type, forKey key: K) throws -> Float? {
         _decodeFloatingPointIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: CGFloat.Type, forKey key: K) throws -> CGFloat? {
         if let value = try decodeIfPresent(Double.self, forKey: key) {
             return CGFloat(value)
         }
         return nil
     }
-    
+
     func decodeIfPresent(_ type: Double.Type, forKey key: K) throws -> Double? {
         _decodeFloatingPointIfPresent(key: key)
     }
-    
-    
+
     func decodeIfPresent(_ type: Int.Type, forKey key: K) throws -> Int? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: Int8.Type, forKey key: K) throws -> Int8? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: Int16.Type, forKey key: K) throws -> Int16? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: Int32.Type, forKey key: K) throws -> Int32? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: Int64.Type, forKey key: K) throws -> Int64? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: UInt.Type, forKey key: K) throws -> UInt? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: UInt8.Type, forKey key: K) throws -> UInt8? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: UInt16.Type, forKey key: K) throws -> UInt16? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: UInt32.Type, forKey key: K) throws -> UInt32? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent(_ type: UInt64.Type, forKey key: K) throws -> UInt64? {
         _decodeFixedWidthIntegerIfPresent(key: key)
     }
-    
+
     func decodeIfPresent<T>(_ type: T.Type, forKey key: K) throws -> T? where T: Decodable {
         _decodeDecodableIfPresent(type, forKey: key)
     }
 }
 
-
 extension JSONDecoderImpl.KeyedContainer {
-    
     fileprivate func _compatibleDecode<T>(forKey key: Key, needConvert: Bool = true) -> T? {
-        
         guard let value = getValue(forKey: key) else {
             SmartSentinel.monitorLog(impl: impl, forKey: key, value: nil, type: T.self)
             return impl.cache.initialValueIfPresent(forKey: key)
         }
-        
+
         SmartSentinel.monitorLog(impl: impl, forKey: key, value: value, type: T.self)
-        
+
         if needConvert {
             if let decoded = Patcher<T>.convertToType(from: value, impl: impl) {
                 return decoded
@@ -4738,8 +4536,7 @@ extension JSONDecoderImpl.KeyedContainer {
         }
         return impl.cache.initialValueIfPresent(forKey: key)
     }
-    
-    
+
     /// Performs post-mapping cleanup and notifications
     fileprivate func didFinishMapping<T>(_ decodeValue: T) -> T {
         // Properties wrapped by property wrappers don't conform to SmartDecodable protocol.
@@ -4754,7 +4551,7 @@ extension JSONDecoderImpl.KeyedContainer {
         }
         return decodeValue
     }
-    
+
     private func decodeWithTransformer<T>(_ transformer: SmartValueTransformer,
                                           type: T.Type,
                                           key: K) -> T? where T: Decodable {
@@ -4764,14 +4561,14 @@ extension JSONDecoderImpl.KeyedContainer {
                let wrapperValue = propertyWrapperType.createInstance(with: decoded) as? T {
                 return didFinishMapping(wrapperValue)
             }
-            
+
             if let value = getValue(forKey: key),
                let decoded = transformer.tranform(value: value),
                let wrapperValue = propertyWrapperType.createInstance(with: decoded) as? T {
                 return didFinishMapping(wrapperValue)
             }
         }
-        
+
         // 处理普通类型转换
         if let value = getValue(forKey: key),
            let decoded = transformer.tranform(value: value) as? T {
@@ -4781,39 +4578,35 @@ extension JSONDecoderImpl.KeyedContainer {
     }
 }
 
-
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeFixedWidthIntegerIfPresent<T: FixedWidthInteger>(key: Self.Key) -> T? {
         guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = self.impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
+        guard let decoded = impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
             return _compatibleDecode(forKey: key)
         }
         return decoded
     }
-    
+
     @inline(__always) private func _decodeFixedWidthInteger<T: FixedWidthInteger>(key: Self.Key) throws -> T {
         if let decoded: T = _decodeFixedWidthIntegerIfPresent(key: key) { return decoded }
         return try Patcher<T>.defaultForType()
     }
 }
 
-
 extension JSONDecoderImpl.KeyedContainer {
-
     @inline(__always) private func _decodeFloatingPointIfPresent<T: LosslessStringConvertible & BinaryFloatingPoint>(key: K) -> T? {
         guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = self.impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
+        guard let decoded = impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
             return _compatibleDecode(forKey: key)
         }
         return decoded
     }
-    
+
     @inline(__always) private func _decodeFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(key: K) throws -> T {
         if let decoded: T = _decodeFloatingPointIfPresent(key: key) { return decoded }
         return try Patcher<T>.defaultForType()
     }
 }
-
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeBoolValueIfPresent(key: K) -> Bool? {
@@ -4823,13 +4616,12 @@ extension JSONDecoderImpl.KeyedContainer {
         }
         return decoded
     }
-    
+
     @inline(__always) private func _decodeBoolValue(key: K) throws -> Bool {
         if let decoded = _decodeBoolValueIfPresent(key: key) { return decoded }
         return try Patcher<Bool>.defaultForType()
     }
 }
-
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeStringValueIfPresent(key: K) -> String? {
@@ -4839,7 +4631,7 @@ extension JSONDecoderImpl.KeyedContainer {
         }
         return decoded
     }
-    
+
     @inline(__always) private func _decodeStringValue(key: K) throws -> String {
         if let decoded = _decodeStringValueIfPresent(key: key) { return decoded }
         return try Patcher<String>.defaultForType()
@@ -4847,8 +4639,7 @@ extension JSONDecoderImpl.KeyedContainer {
 }
 
 extension JSONDecoderImpl.KeyedContainer {
-    @inline(__always)private func _decodeDecodableIfPresent<T: Decodable>(_ type: T.Type, forKey key: K) -> T? {
-        
+    @inline(__always) private func _decodeDecodableIfPresent<T: Decodable>(_ type: T.Type, forKey key: K) -> T? {
         // 检查是否有值转换器
         if let transformer = impl.cache.valueTransformer(for: key) {
             if let decoded = decodeWithTransformer(transformer, type: type, key: key) {
@@ -4861,31 +4652,28 @@ extension JSONDecoderImpl.KeyedContainer {
         }
 
         guard let newDecoder = try? decoderForKeyCompatibleForJson(key, type: type) else { return _compatibleDecode(forKey: key) }
-        
+
         if let decoded = try? newDecoder.unwrap(as: type) {
             return didFinishMapping(decoded)
         }
-        
+
         if let decoded: T = _compatibleDecode(forKey: key) {
             return didFinishMapping(decoded)
         } else {
             return nil
         }
     }
-    
-    @inline(__always)private func _decodeDecodable<T: Decodable>(_ type: T.Type, forKey key: K) throws -> T {
+
+    @inline(__always) private func _decodeDecodable<T: Decodable>(_ type: T.Type, forKey key: K) throws -> T {
         if let decoded: T = _decodeDecodableIfPresent(type, forKey: key) { return decoded }
         return try Patcher<T>.defaultForType()
     }
 }
 
-
-
 /// Handles correspondence between field names that need to be parsed.
-fileprivate func _convertDictionary(_ dictionary: [String: JSONValue], impl: JSONDecoderImpl) -> [String: JSONValue] {
-    
+private func _convertDictionary(_ dictionary: [String: JSONValue], impl: JSONDecoderImpl) -> [String: JSONValue] {
     var dictionary = dictionary
-    
+
     switch impl.options.keyDecodingStrategy {
     case .useDefaultKeys:
         break
@@ -4894,19 +4682,19 @@ fileprivate func _convertDictionary(_ dictionary: [String: JSONValue], impl: JSO
         // If we hit a duplicate key after conversion, then we'll use the first one we saw. Effectively an undefined behavior with JSON dictionaries.
         dictionary = Dictionary(dictionary.map {
             dict in (JSONDecoder.SmartKeyDecodingStrategy._convertFromSnakeCase(dict.key), dict.value)
-        }, uniquingKeysWith: { (first, _) in first })
+        }, uniquingKeysWith: { first, _ in first })
     case .firstLetterLower:
         dictionary = Dictionary(dictionary.map {
             dict in (JSONDecoder.SmartKeyDecodingStrategy._convertFirstLetterToLowercase(dict.key), dict.value)
-        }, uniquingKeysWith: { (first, _) in first })
+        }, uniquingKeysWith: { first, _ in first })
     case .firstLetterUpper:
         dictionary = Dictionary(dictionary.map {
             dict in (JSONDecoder.SmartKeyDecodingStrategy._convertFirstLetterToUppercase(dict.key), dict.value)
-        }, uniquingKeysWith: { (first, _) in first })
+        }, uniquingKeysWith: { first, _ in first })
     }
-    
+
     guard let type = impl.cache.topSnapshot?.objectType else { return dictionary }
-    
+
     if let tempValue = KeysMapper.convertFrom(JSONValue.object(dictionary), type: type), let dict = tempValue.object {
         return dict
     }
@@ -4926,29 +4714,29 @@ extension JSONDecoderImpl {
         }
 
         func decodeNil() -> Bool {
-            self.value == .null
+            value == .null
         }
     }
 }
 
 extension JSONDecoderImpl.SingleValueContainer {
     func decode(_: Bool.Type) throws -> Bool {
-        guard case .bool(let bool) = self.value else {
+        guard case let .bool(bool) = value else {
             if let trans = Patcher<Bool>.convertToType(from: value, impl: impl) {
                 return trans
             }
-            throw self.impl.createTypeMismatchError(type: Bool.self, value: self.value)
+            throw impl.createTypeMismatchError(type: Bool.self, value: value)
         }
 
         return bool
     }
 
     func decode(_: String.Type) throws -> String {
-        guard case .string(let string) = self.value else {
+        guard case let .string(string) = value else {
             if let trans = Patcher<String>.convertToType(from: value, impl: impl) {
                 return trans
             }
-            throw self.impl.createTypeMismatchError(type: String.self, value: self.value)
+            throw impl.createTypeMismatchError(type: String.self, value: value)
         }
         return string
     }
@@ -5002,12 +4790,11 @@ extension JSONDecoderImpl.SingleValueContainer {
     }
 
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        try self.impl.unwrap(as: type)
+        try impl.unwrap(as: type)
     }
-    
+
     @inline(__always) private func decodeFixedWidthInteger<T: FixedWidthInteger>() throws -> T {
-        
-        if let decoded = impl.unwrapFixedWidthInteger(from: self.value, as: T.self) {
+        if let decoded = impl.unwrapFixedWidthInteger(from: value, as: T.self) {
             return decoded
         }
         if let trnas = Patcher<T>.convertToType(from: value, impl: impl) {
@@ -5015,12 +4802,12 @@ extension JSONDecoderImpl.SingleValueContainer {
         } else {
             throw DecodingError.dataCorrupted(.init(
                 codingPath: codingPath,
-                debugDescription: "Parsed JSON number does not fit in \(T.self)."))
+                debugDescription: "Parsed JSON number does not fit in \(T.self)."
+            ))
         }
     }
 
     @inline(__always) private func decodeFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>() throws -> T {
-        
         if let decoded = impl.unwrapFloatingPoint(from: value, as: T.self) {
             return decoded
         }
@@ -5041,8 +4828,8 @@ extension JSONDecoderImpl {
         let codingPath: [CodingKey]
         let array: [JSONValue]
 
-        var count: Int? { self.array.count }
-        var isAtEnd: Bool { self.currentIndex >= (self.count ?? 0) }
+        var count: Int? { array.count }
+        var isAtEnd: Bool { currentIndex >= (count ?? 0) }
         var currentIndex = 0
 
         init(impl: JSONDecoderImpl, codingPath: [CodingKey], array: [JSONValue]) {
@@ -5052,8 +4839,8 @@ extension JSONDecoderImpl {
         }
 
         mutating func decodeNil() throws -> Bool {
-            if try self.getNextValue(ofType: Never.self) == .null {
-                self.currentIndex += 1
+            if try getNextValue(ofType: Never.self) == .null {
+                currentIndex += 1
                 return true
             }
 
@@ -5061,14 +4848,13 @@ extension JSONDecoderImpl {
             //   If the value is not null, does not increment currentIndex.
             return false
         }
-        
+
         mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws
-            -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey
-        {
+            -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
             let decoder = decoderForNextElement(ofType: KeyedDecodingContainer<NestedKey>.self)
             let container = try decoder.container(keyedBy: type)
 
-            self.currentIndex += 1
+            currentIndex += 1
             return container
         }
 
@@ -5076,13 +4862,13 @@ extension JSONDecoderImpl {
             let decoder = decoderForNextElement(ofType: UnkeyedDecodingContainer.self)
             let container = try decoder.unkeyedContainer()
 
-            self.currentIndex += 1
+            currentIndex += 1
             return container
         }
 
         mutating func superDecoder() throws -> Decoder {
             let decoder = decoderForNextElement(ofType: Decoder.self)
-            self.currentIndex += 1
+            currentIndex += 1
             return decoder
         }
 
@@ -5093,19 +4879,18 @@ extension JSONDecoderImpl {
             } catch {
                 value = JSONValue.array([])
             }
-            
-            let newPath = self.codingPath + [_JSONKey(index: self.currentIndex)]
-            
+
+            let newPath = codingPath + [_JSONKey(index: currentIndex)]
+
             return JSONDecoderImpl(
-                userInfo: self.impl.userInfo,
+                userInfo: impl.userInfo,
                 from: value,
                 codingPath: newPath,
-                options: self.impl.options
+                options: impl.options
             )
         }
     }
 }
-
 
 // Because UnkeyedDecodingContainer itself is not directly associated with a particular model property,
 // but is used to parse unlabeled sequences,
@@ -5115,24 +4900,24 @@ extension JSONDecoderImpl {
 // `let first = try unkeyedContainer.decode(Int.self) '.
 extension JSONDecoderImpl.UnkeyedContainer {
     mutating func decode(_ type: Bool.Type) throws -> Bool {
-        guard let value = try? self.getNextValue(ofType: Bool.self) else {
+        guard let value = try? getNextValue(ofType: Bool.self) else {
             return try forceDecode()
         }
-        guard case .bool(let bool) = value else {
+        guard case let .bool(bool) = value else {
             return try forceDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return bool
     }
 
     mutating func decode(_ type: String.Type) throws -> String {
-        guard let value = try? self.getNextValue(ofType: Bool.self) else {
+        guard let value = try? getNextValue(ofType: Bool.self) else {
             return try forceDecode()
         }
-        guard case .string(let string) = value else {
+        guard case let .string(string) = value else {
             return try forceDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return string
     }
 
@@ -5185,12 +4970,11 @@ extension JSONDecoderImpl.UnkeyedContainer {
     }
 
     mutating func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        
         // If it is a basic data type,
         // a new decoder is still created for parsing.
         // If type is of type Int, then SingleContainer is created.
         let newDecoder = decoderForNextElement(ofType: type)
-        
+
         // Because of the requirement that the index not be incremented unless
         // decoding the desired result type succeeds, it can not be a tail call.
         // Hopefully the compiler still optimizes well enough that the result
@@ -5200,207 +4984,202 @@ extension JSONDecoderImpl.UnkeyedContainer {
                 let decoded: T = try forceDecode()
                 return didFinishMapping(decoded)
             }
-            self.currentIndex += 1
+            currentIndex += 1
             return didFinishMapping(result)
         } else {
             // If it is not the first level of array model parsing, it is not compatible.
             // Throw an exception to make keyedController compatible.
             let result = try newDecoder.unwrap(as: type)
-            self.currentIndex += 1
+            currentIndex += 1
             return didFinishMapping(result)
         }
     }
-    
+
     @inline(__always) private mutating func decodeFixedWidthInteger<T: FixedWidthInteger>() throws -> T {
-        guard let value = try? self.getNextValue(ofType: T.self) else {
+        guard let value = try? getNextValue(ofType: T.self) else {
             return try forceDecode()
         }
-        
-        let key = _JSONKey(index: self.currentIndex)
-        guard let result = self.impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
+
+        let key = _JSONKey(index: currentIndex)
+        guard let result = impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
             return try forceDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return result
     }
+
     @inline(__always) private mutating func decodeFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>() throws -> T {
-        guard let value = try? self.getNextValue(ofType: T.self) else {
+        guard let value = try? getNextValue(ofType: T.self) else {
             return try forceDecode()
         }
-        
-        let key = _JSONKey(index: self.currentIndex)
-        guard let result = self.impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
+
+        let key = _JSONKey(index: currentIndex)
+        guard let result = impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
             return try forceDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return result
     }
-    
-    
+
     fileprivate mutating func forceDecode<T>() throws -> T {
-        
         let key = _JSONKey(index: currentIndex)
 
-        guard let value = try? self.getNextValue(ofType: T.self) else {
+        guard let value = try? getNextValue(ofType: T.self) else {
             let decoded: T = try impl.cache.initialValue(forKey: key)
             SmartSentinel.monitorLog(impl: impl, forKey: key, value: nil, type: T.self)
-            self.currentIndex += 1
+            currentIndex += 1
             return decoded
         }
-        
+
         SmartSentinel.monitorLog(impl: impl, forKey: key, value: value, type: T.self)
 
-        
         if let decoded = Patcher<T>.convertToType(from: value, impl: impl) {
-            self.currentIndex += 1
+            currentIndex += 1
             return decoded
         } else {
             let decoded: T = try impl.cache.initialValue(forKey: key)
-            self.currentIndex += 1
+            currentIndex += 1
             return decoded
         }
     }
 }
 
 extension JSONDecoderImpl.UnkeyedContainer {
-
     mutating func decodeIfPresent(_ type: Bool.Type) throws -> Bool? {
-        guard let value = try? self.getNextValue(ofType: Bool.self) else {
+        guard let value = try? getNextValue(ofType: Bool.self) else {
             return optionalDecode()
         }
-        guard case .bool(let bool) = value else {
+        guard case let .bool(bool) = value else {
             return optionalDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return bool
     }
 
-    
     mutating func decodeIfPresent(_ type: String.Type) throws -> String? {
-        self.currentIndex += 1
-        guard let value = try? self.getNextValue(ofType: String.self) else {
+        currentIndex += 1
+        guard let value = try? getNextValue(ofType: String.self) else {
             return optionalDecode()
         }
-        guard case .string(let string) = value else {
+        guard case let .string(string) = value else {
             return optionalDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return string
     }
-    
+
     mutating func decodeIfPresent(_ type: Double.Type) throws -> Double? {
-        return decodeIfPresentFloatingPoint()
+        decodeIfPresentFloatingPoint()
     }
-    
+
     mutating func decodeIfPresent(_ type: Float.Type) throws -> Float? {
-        return decodeIfPresentFloatingPoint()
+        decodeIfPresentFloatingPoint()
     }
-    
+
     mutating func decodeIfPresent(_ type: Int.Type) throws -> Int? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: Int8.Type) throws -> Int8? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
 
     mutating func decodeIfPresent(_ type: Int16.Type) throws -> Int16? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: Int32.Type) throws -> Int32? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
 
     mutating func decodeIfPresent(_ type: Int64.Type) throws -> Int64? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
 
     mutating func decodeIfPresent(_ type: UInt.Type) throws -> UInt? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
-    
+
     mutating func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? {
-        return decodeIfPresentFixedWidthInteger()
+        decodeIfPresentFixedWidthInteger()
     }
 
     ///   is not convertible to the requested type.
-    mutating func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
+    mutating func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T: Decodable {
         let newDecoder = decoderForNextElement(ofType: type)
         if let decoded = try? newDecoder.unwrap(as: type) {
-            self.currentIndex += 1
+            currentIndex += 1
             return didFinishMapping(decoded)
         } else if let decoded: T = optionalDecode() {
-            self.currentIndex += 1
+            currentIndex += 1
             return didFinishMapping(decoded)
         } else {
-            self.currentIndex += 1
+            currentIndex += 1
             return nil
         }
     }
-    
+
     @inline(__always) private mutating func decodeIfPresentFixedWidthInteger<T: FixedWidthInteger>() -> T? {
-        guard let value = try? self.getNextValue(ofType: T.self) else {
+        guard let value = try? getNextValue(ofType: T.self) else {
             return optionalDecode()
         }
-        
-        let key = _JSONKey(index: self.currentIndex)
-        guard let result = self.impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
+
+        let key = _JSONKey(index: currentIndex)
+        guard let result = impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
             return optionalDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return result
     }
-    @inline(__always) private mutating func decodeIfPresentFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>() -> T?  {
-        guard let value = try? self.getNextValue(ofType: T.self) else {
+
+    @inline(__always) private mutating func decodeIfPresentFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>() -> T? {
+        guard let value = try? getNextValue(ofType: T.self) else {
             return optionalDecode()
         }
-        
-        let key = _JSONKey(index: self.currentIndex)
-        guard let result = self.impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
+
+        let key = _JSONKey(index: currentIndex)
+        guard let result = impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
             return optionalDecode()
         }
-        self.currentIndex += 1
+        currentIndex += 1
         return result
     }
-    
+
     fileprivate mutating func optionalDecode<T>() -> T? {
-        guard let value = try? self.getNextValue(ofType: T.self) else {
-            self.currentIndex += 1
+        guard let value = try? getNextValue(ofType: T.self) else {
+            currentIndex += 1
             return nil
         }
-        let key = _JSONKey(index: self.currentIndex)
+        let key = _JSONKey(index: currentIndex)
         SmartSentinel.monitorLog(impl: impl, forKey: key, value: value, type: T.self)
         if let decoded = Patcher<T>.convertToType(from: value, impl: impl) {
-            self.currentIndex += 1
+            currentIndex += 1
             return decoded
         } else {
-            self.currentIndex += 1
+            currentIndex += 1
             return nil
         }
     }
 }
-
 
 extension JSONDecoderImpl.UnkeyedContainer {
     // 被属性包装器包裹的，不会调用该方法。Swift的类型系统在运行时无法直接识别出wrappedValue的实际类型.
     fileprivate func didFinishMapping<T>(_ decodeValue: T) -> T {
-        
         // 减少动态派发开销，is 检查是编译时静态行为，比 as? 动态转换更高效。
         guard T.self is SmartDecodable.Type else { return decodeValue }
-        
+
         if var value = decodeValue as? SmartDecodable {
             value.didFinishMapping()
             if let temp = value as? T { return temp }
@@ -5413,13 +5192,12 @@ extension JSONDecoderImpl.UnkeyedContainer {
     }
 }
 
-
 extension JSONDecoderImpl.UnkeyedContainer {
     @inline(__always)
     private func getNextValue<T>(ofType: T.Type) throws -> JSONValue {
-        guard !self.isAtEnd else {
+        guard !isAtEnd else {
             var message = "Unkeyed container is at end."
-            
+
             if T.self == JSONDecoderImpl.UnkeyedContainer.self {
                 message = "Cannot get nested unkeyed container -- unkeyed container is at end."
             }
@@ -5427,209 +5205,207 @@ extension JSONDecoderImpl.UnkeyedContainer {
                 message = "Cannot get superDecoder() -- unkeyed container is at end."
             }
 
-            var path = self.codingPath
-            path.append(_JSONKey(index: self.currentIndex))
+            var path = codingPath
+            path.append(_JSONKey(index: currentIndex))
 
             throw DecodingError.valueNotFound(
                 T.self,
                 .init(codingPath: path,
                       debugDescription: message,
-                      underlyingError: nil))
+                      underlyingError: nil)
+            )
         }
-        return self.array[self.currentIndex]
+        return array[currentIndex]
     }
 }
 
-fileprivate protocol _JSONStringDictionaryDecodableMarker {
+private protocol _JSONStringDictionaryDecodableMarker {
     static var elementType: Decodable.Type { get }
 }
 
 extension Dictionary: _JSONStringDictionaryDecodableMarker where Key == String, Value: Decodable {
-    static var elementType: Decodable.Type { return Value.self }
+    static var elementType: Decodable.Type { Value.self }
 }
 
 extension JSONDecoderImpl {
     // MARK: Special case handling
-    
+
     func unwrap<T: Decodable>(as type: T.Type) throws -> T {
         if type == Date.self {
-            return try self.unwrapDate() as! T
+            return try unwrapDate() as! T
         }
         if type == Data.self {
-            return try self.unwrapData() as! T
+            return try unwrapData() as! T
         }
         if type == URL.self {
-            return try self.unwrapURL() as! T
+            return try unwrapURL() as! T
         }
         if type == Decimal.self {
-            return try self.unwrapDecimal() as! T
+            return try unwrapDecimal() as! T
         }
         if type == CGFloat.self {
             return try unwrapCGFloat() as! T
         }
-        
+
         if type is _JSONStringDictionaryDecodableMarker.Type {
-            return try self.unwrapDictionary(as: type)
+            return try unwrapDictionary(as: type)
         }
-        
+
         cache.cacheSnapshot(for: type)
         let decoded = try type.init(from: self)
         cache.removeSnapshot(for: type)
         return decoded
     }
-    
-    func unwrapFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(
-        from value: JSONValue, for additionalKey: CodingKey? = nil, as type: T.Type) -> T? {
-            
-            if let tranformer = cache.valueTransformer(for: additionalKey) {
-                guard let decoded = tranformer.tranform(value: value) as? T else { return nil }
-                return decoded
-            }
-            
-            if case .number(let number) = value {
-                guard let floatingPoint = T(number), floatingPoint.isFinite else { return nil }
-                return floatingPoint
-            }
-            
-            if case .string(let string) = value,
-               case .convertFromString(let posInfString, let negInfString, let nanString) = self.options.nonConformingFloatDecodingStrategy {
-                if string == posInfString {
-                    return T.infinity
-                } else if string == negInfString {
-                    return -T.infinity
-                } else if string == nanString {
-                    return T.nan
-                }
-            }
 
-            return nil
+    func unwrapFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(
+        from value: JSONValue, for additionalKey: CodingKey? = nil, as type: T.Type
+    ) -> T? {
+        if let tranformer = cache.valueTransformer(for: additionalKey) {
+            guard let decoded = tranformer.tranform(value: value) as? T else { return nil }
+            return decoded
         }
-    
+
+        if case let .number(number) = value {
+            guard let floatingPoint = T(number), floatingPoint.isFinite else { return nil }
+            return floatingPoint
+        }
+
+        if case let .string(string) = value,
+           case let .convertFromString(posInfString, negInfString, nanString) = options.nonConformingFloatDecodingStrategy {
+            if string == posInfString {
+                return T.infinity
+            } else if string == negInfString {
+                return -T.infinity
+            } else if string == nanString {
+                return T.nan
+            }
+        }
+
+        return nil
+    }
+
     func unwrapFixedWidthInteger<T: FixedWidthInteger>(
-        from value: JSONValue, for additionalKey: CodingKey? = nil, as type: T.Type) -> T? {
-            
-            if let tranformer = cache.valueTransformer(for: additionalKey) {
-                return tranformer.tranform(value: value) as? T
-            }
-            
-            guard case .number(let number) = value else { return nil }
-            
-            // this is the fast pass. Number directly convertible to Integer
-            if let integer = T(number) {
-                return integer
-            }
-            
-            // this is the really slow path... If the fast path has failed. For example for "34.0" as
-            // an integer, we try to go through NSNumber
-            if let nsNumber = NSNumber.fromJSONNumber(number) {
-                if type == UInt8.self, NSNumber(value: nsNumber.uint8Value) == nsNumber {
-                    return nsNumber.uint8Value as? T
-                }
-                if type == Int8.self, NSNumber(value: nsNumber.int8Value) == nsNumber {
-                    return nsNumber.int8Value as? T
-                }
-                if type == UInt16.self, NSNumber(value: nsNumber.uint16Value) == nsNumber {
-                    return nsNumber.uint16Value as? T
-                }
-                if type == Int16.self, NSNumber(value: nsNumber.int16Value) == nsNumber {
-                    return nsNumber.int16Value as? T
-                }
-                if type == UInt32.self, NSNumber(value: nsNumber.uint32Value) == nsNumber {
-                    return nsNumber.uint32Value as? T
-                }
-                if type == Int32.self, NSNumber(value: nsNumber.int32Value) == nsNumber {
-                    return nsNumber.int32Value as? T
-                }
-                if type == UInt64.self, NSNumber(value: nsNumber.uint64Value) == nsNumber {
-                    return nsNumber.uint64Value as? T
-                }
-                if type == Int64.self, NSNumber(value: nsNumber.int64Value) == nsNumber {
-                    return nsNumber.int64Value as? T
-                }
-                if type == UInt.self, NSNumber(value: nsNumber.uintValue) == nsNumber {
-                    return nsNumber.uintValue as? T
-                }
-                if type == Int.self, NSNumber(value: nsNumber.intValue) == nsNumber {
-                    return nsNumber.intValue as? T
-                }
-            }
-            return nil
+        from value: JSONValue, for additionalKey: CodingKey? = nil, as type: T.Type
+    ) -> T? {
+        if let tranformer = cache.valueTransformer(for: additionalKey) {
+            return tranformer.tranform(value: value) as? T
         }
-    
+
+        guard case let .number(number) = value else { return nil }
+
+        // this is the fast pass. Number directly convertible to Integer
+        if let integer = T(number) {
+            return integer
+        }
+
+        // this is the really slow path... If the fast path has failed. For example for "34.0" as
+        // an integer, we try to go through NSNumber
+        if let nsNumber = NSNumber.fromJSONNumber(number) {
+            if type == UInt8.self, NSNumber(value: nsNumber.uint8Value) == nsNumber {
+                return nsNumber.uint8Value as? T
+            }
+            if type == Int8.self, NSNumber(value: nsNumber.int8Value) == nsNumber {
+                return nsNumber.int8Value as? T
+            }
+            if type == UInt16.self, NSNumber(value: nsNumber.uint16Value) == nsNumber {
+                return nsNumber.uint16Value as? T
+            }
+            if type == Int16.self, NSNumber(value: nsNumber.int16Value) == nsNumber {
+                return nsNumber.int16Value as? T
+            }
+            if type == UInt32.self, NSNumber(value: nsNumber.uint32Value) == nsNumber {
+                return nsNumber.uint32Value as? T
+            }
+            if type == Int32.self, NSNumber(value: nsNumber.int32Value) == nsNumber {
+                return nsNumber.int32Value as? T
+            }
+            if type == UInt64.self, NSNumber(value: nsNumber.uint64Value) == nsNumber {
+                return nsNumber.uint64Value as? T
+            }
+            if type == Int64.self, NSNumber(value: nsNumber.int64Value) == nsNumber {
+                return nsNumber.int64Value as? T
+            }
+            if type == UInt.self, NSNumber(value: nsNumber.uintValue) == nsNumber {
+                return nsNumber.uintValue as? T
+            }
+            if type == Int.self, NSNumber(value: nsNumber.intValue) == nsNumber {
+                return nsNumber.intValue as? T
+            }
+        }
+        return nil
+    }
+
     func unwrapBoolValue(from value: JSONValue, for additionalKey: CodingKey? = nil) -> Bool? {
-        
         if let tranformer = cache.valueTransformer(for: additionalKey) {
             return tranformer.tranform(value: value) as? Bool
         }
-        
-        guard case .bool(let bool) = value else { return nil }
+
+        guard case let .bool(bool) = value else { return nil }
         return bool
     }
-    
+
     func unwrapStringValue(from value: JSONValue, for additionalKey: CodingKey? = nil) -> String? {
-        
         if let tranformer = cache.valueTransformer(for: additionalKey) {
             return tranformer.tranform(value: value) as? String
         }
-        
-        guard case .string(let string) = value else { return nil }
+
+        guard case let .string(string) = value else { return nil }
         return string
     }
 }
 
 extension JSONDecoderImpl {
     private func unwrapDate() throws -> Date {
-        
         if let tranformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = tranformer.tranform(value: json) as? Date {
                 return decoded
             } else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Encountered Date is not valid , unknown anomaly"))
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Encountered Date is not valid , unknown anomaly"))
             }
         }
-        
+
         let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
 
-        
-        if let dateDecodingStrategy = self.options.dateDecodingStrategy  {
+        if let dateDecodingStrategy = options.dateDecodingStrategy {
             switch dateDecodingStrategy {
             case .deferredToDate:
                 return try Date(from: self)
-                
+
             case .secondsSince1970:
                 let double = try container.decode(Double.self)
                 return Date(timeIntervalSince1970: double)
-                
+
             case .millisecondsSince1970:
                 let double = try container.decode(Double.self)
                 return Date(timeIntervalSince1970: double / 1000.0)
-                
+
             case .iso8601:
                 if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
                     let string = try container.decode(String.self)
                     guard let date = _iso8601Formatter.date(from: string) else {
                         throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
                     }
-                    
+
                     return date
                 } else {
                     fatalError("ISO8601DateFormatter is unavailable on this platform.")
                 }
-                
-            case .formatted(let formatter):
+
+            case let .formatted(formatter):
                 let string = try container.decode(String.self)
                 guard let date = formatter.date(from: string) else {
-                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Date string does not match format expected by formatter."))
+                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Date string does not match format expected by formatter."))
                 }
                 return date
-                
-            case .custom(let closure):
+
+            case let .custom(closure):
                 return try closure(self)
+
             @unknown default:
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Encountered Date is not valid , unknown anomaly"))
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Encountered Date is not valid , unknown anomaly"))
             }
         }
-        
+
         // 如果没有设置策略，使用 DateParser 做兜底解析
         if let (date, _) = DateParser.parse(json.peel) {
             return date
@@ -5637,143 +5413,142 @@ extension JSONDecoderImpl {
             throw DecodingError.dataCorrupted(.init(codingPath: codingPath, debugDescription: "Unsupported date format: \(json)"))
         }
     }
-    
+
     private func unwrapData() throws -> Data {
-        
         if let tranformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = tranformer.tranform(value: json) as? Data {
                 return decoded
             }
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Encountered Data is not valid Base64."))
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Encountered Data is not valid Base64."))
         }
-        
-        switch self.options.dataDecodingStrategy {
+
+        switch options.dataDecodingStrategy {
         case .base64:
-            let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
+            let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
             let string = try container.decode(String.self)
-            
+
             guard let data = Data(base64Encoded: string) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Encountered Data is not valid Base64."))
+                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Encountered Data is not valid Base64."))
             }
-            
+
             return data
         }
     }
-    
+
     private func unwrapURL() throws -> URL {
-        
         if let tranformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = tranformer.tranform(value: json) as? URL {
                 return decoded
             }
             throw DecodingError.dataCorrupted(
-                DecodingError.Context(codingPath: self.codingPath,
+                DecodingError.Context(codingPath: codingPath,
                                       debugDescription: "Invalid URL string."))
         }
-        
-        
-        let container = SingleValueContainer(impl: self, codingPath: self.codingPath, json: self.json)
+
+        let container = SingleValueContainer(impl: self, codingPath: codingPath, json: json)
         let string = try container.decode(String.self)
-        
+
         guard let url = URL(string: string) else {
             throw DecodingError.dataCorrupted(
-                DecodingError.Context(codingPath: self.codingPath,
+                DecodingError.Context(codingPath: codingPath,
                                       debugDescription: "Invalid URL string."))
         }
         return url
     }
-    
+
     private func unwrapDecimal() throws -> Decimal {
-        
         if let tranformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = tranformer.tranform(value: json) as? Decimal {
                 return decoded
             }
             throw DecodingError.dataCorrupted(.init(
-                codingPath: self.codingPath,
-                debugDescription: "Parsed JSON number does not fit in \(Decimal.self)."))
+                codingPath: codingPath,
+                debugDescription: "Parsed JSON number does not fit in \(Decimal.self)."
+            ))
         }
-        
-        guard case .number(let numberString) = self.json else {
-            throw DecodingError.typeMismatch(Decimal.self, DecodingError.Context(codingPath: self.codingPath, debugDescription: ""))
+
+        guard case let .number(numberString) = json else {
+            throw DecodingError.typeMismatch(Decimal.self, DecodingError.Context(codingPath: codingPath, debugDescription: ""))
         }
-        
+
         guard let decimal = Decimal(string: numberString) else {
             throw DecodingError.dataCorrupted(.init(
-                codingPath: self.codingPath,
-                debugDescription: "Parsed JSON number <\(numberString)> does not fit in \(Decimal.self)."))
+                codingPath: codingPath,
+                debugDescription: "Parsed JSON number <\(numberString)> does not fit in \(Decimal.self)."
+            ))
         }
-        
+
         return decimal
     }
-    
-    
+
     private func unwrapCGFloat() throws -> CGFloat {
         if let transformer = cache.valueTransformer(for: codingPath.last) {
             if let decoded = transformer.tranform(value: json) as? CGFloat {
                 return decoded
             }
             throw DecodingError.dataCorrupted(.init(
-                codingPath: self.codingPath,
-                debugDescription: "Parsed JSON value cannot be transformed to \(CGFloat.self)."))
+                codingPath: codingPath,
+                debugDescription: "Parsed JSON value cannot be transformed to \(CGFloat.self)."
+            ))
         }
-        
-        guard case .number(let numberString) = self.json else {
+
+        guard case let .number(numberString) = json else {
             throw DecodingError.typeMismatch(CGFloat.self, DecodingError.Context(
-                codingPath: self.codingPath,
-                debugDescription: "Expected a JSON number for \(CGFloat.self), but found."))
+                codingPath: codingPath,
+                debugDescription: "Expected a JSON number for \(CGFloat.self), but found."
+            ))
         }
-        
+
         guard let doubleValue = Double(numberString) else {
             throw DecodingError.dataCorrupted(.init(
-                codingPath: self.codingPath,
-                debugDescription: "Parsed JSON number <\(numberString)> is not a valid Double for conversion to \(CGFloat.self)."))
+                codingPath: codingPath,
+                debugDescription: "Parsed JSON number <\(numberString)> is not a valid Double for conversion to \(CGFloat.self)."
+            ))
         }
-        
+
         return CGFloat(doubleValue)
     }
-    
-    
+
     private func unwrapDictionary<T: Decodable>(as: T.Type) throws -> T {
         guard let dictType = T.self as? (_JSONStringDictionaryDecodableMarker & Decodable).Type else {
             preconditionFailure("Must only be called of T implements _JSONStringDictionaryDecodableMarker")
         }
-        
-        guard case .object(let object) = self.json else {
+
+        guard case let .object(object) = json else {
             throw DecodingError.typeMismatch([String: JSONValue].self, DecodingError.Context(
-                codingPath: self.codingPath,
-                debugDescription: "Expected to decode \([String: JSONValue].self) but found \(self.json.debugDataTypeDescription) instead."
+                codingPath: codingPath,
+                debugDescription: "Expected to decode \([String: JSONValue].self) but found \(json.debugDataTypeDescription) instead."
             ))
         }
-        
+
         var result = [String: Any]()
-        
+
         for (key, value) in object {
-            var newPath = self.codingPath
+            var newPath = codingPath
             newPath.append(_JSONKey(stringValue: key)!)
             let newDecoder = JSONDecoderImpl(
-                userInfo: self.userInfo,
+                userInfo: userInfo,
                 from: value,
                 codingPath: newPath,
-                options: self.options)
+                options: options
+            )
             result[key] = try dictType.elementType.createByDirectlyUnwrapping(from: newDecoder)
         }
         return result as! T
     }
-    
+
     func createTypeMismatchError(type: Any.Type, for additionalKey: CodingKey? = nil, value: JSONValue) -> DecodingError {
-        var path = self.codingPath
-        if let additionalKey = additionalKey {
+        var path = codingPath
+        if let additionalKey {
             path.append(additionalKey)
         }
-        
+
         return DecodingError.typeMismatch(type, .init(
             codingPath: path,
             debugDescription: "Expected to decode \(type) but found \(value.debugDataTypeDescription) instead."
         ))
     }
 }
-
 
 extension Decodable {
     fileprivate static func createByDirectlyUnwrapping(from decoder: JSONDecoderImpl) throws -> Self {
@@ -5782,62 +5557,60 @@ extension Decodable {
             || Self.self == Data.self
             || Self.self == Decimal.self
             || Self.self == SmartAnyImpl.self
-            || Self.self is _JSONStringDictionaryDecodableMarker.Type
-        {
+            || Self.self is _JSONStringDictionaryDecodableMarker.Type {
             return try decoder.unwrap(as: Self.self)
         }
-        return try Self.init(from: decoder)
+        return try Self(from: decoder)
     }
 }
 
 @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-internal var _iso8601Formatter: ISO8601DateFormatter = {
+var _iso8601Formatter: ISO8601DateFormatter = {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = .withInternetDateTime
     return formatter
 }()
 
-struct Patcher<T> {
-    
+enum Patcher<T> {
     static func defaultForType() throws -> T {
-        return try Provider.defaultValue()
+        try Provider.defaultValue()
     }
-    
+
     static func convertToType(from value: JSONValue?, impl: JSONDecoderImpl) -> T? {
-        guard let value = value else { return nil }
+        guard let value else { return nil }
         return Transformer.typeTransform(from: value, impl: impl)
     }
 }
 
 extension Patcher {
-    struct Provider {
+    enum Provider {
         static func defaultValue() throws -> T {
             if let value = T.self as? BasicType.Type {
                 return value.init() as! T
             }
-            
+
             // 处理 SmartDecodable 类型的对象
             if let decodable = T.self as? SmartDecodable.Type {
                 return decodable.init() as! T
             }
-            
+
             // 处理 SmartCaseDefaultable 类型的对象
             if let caseDefaultable = T.self as? any SmartCaseDefaultable.Type {
                 if let firstCase = caseDefaultable.allCases.first as? T {
                     return firstCase
                 }
             }
-            
+
             // ***处理 DefaultCaseCodable 类型的对象***
             if let caseCodable = T.self as? any DefaultCaseCodable.Type {
                 return caseCodable.defaultCase as! T
             }
-            
+
             // 处理 SmartAssociatedEnumerable 类型的对象
             if let associatedEnumerable = T.self as? any SmartAssociatedEnumerable.Type {
                 return associatedEnumerable.defaultCase as! T
             }
-            
+
             // 如果都没有匹配的类型，抛出错误
             throw DecodingError.valueNotFound(T.self, DecodingError.Context(codingPath: [], debugDescription: "Expected \(T.self) value，but an exception occurred！Please report this issue（请上报该问题）"))
         }
@@ -5845,29 +5618,26 @@ extension Patcher {
 }
 
 extension Patcher {
-    struct Transformer {
+    enum Transformer {
         static func typeTransform(from jsonValue: JSONValue, impl: JSONDecoderImpl) -> T? {
-            return (T.self as? TypeTransformable.Type)?.transformValue(from: jsonValue, impl: impl) as? T
+            (T.self as? TypeTransformable.Type)?.transformValue(from: jsonValue, impl: impl) as? T
         }
     }
 }
 
-
-fileprivate protocol TypeTransformable {
+private protocol TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Self?
 }
 
-
 extension Bool: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Bool? {
-        
         switch value {
-        case .bool(let bool):
+        case let .bool(bool):
             return bool
-        case .string(let string):
-            if ["1","YES","Yes","yes","TRUE","True","true"].contains(string) { return true }
-            if ["0","NO","No","no","FALSE","False","false"].contains(string) { return false }
-        case .number(_):
+        case let .string(string):
+            if ["1", "YES", "Yes", "yes", "TRUE", "True", "true"].contains(string) { return true }
+            if ["0", "NO", "No", "no", "FALSE", "False", "false"].contains(string) { return false }
+        case .number:
             if let int = impl.unwrapFixedWidthInteger(from: value, as: Int.self) {
                 if int == 1 {
                     return true
@@ -5882,13 +5652,12 @@ extension Bool: TypeTransformable {
     }
 }
 
-
 extension String: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> String? {
         switch value {
-        case .string(let string):
+        case let .string(string):
             return string
-        case .number(let number):
+        case let .number(number):
             if let int = impl.unwrapFixedWidthInteger(from: value, as: Int.self) {
                 return "\(int)"
             } else if let double = impl.unwrapFloatingPoint(from: value, as: Double.self) {
@@ -5902,69 +5671,65 @@ extension String: TypeTransformable {
     }
 }
 
-
 extension Int: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Int? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension Int8: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Int8? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension Int16: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Int16? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
-
 extension Int32: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Int32? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension Int64: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Int64? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension UInt: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> UInt? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension UInt8: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> UInt8? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension UInt16: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> UInt16? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
-
 extension UInt32: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> UInt32? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
 
 extension UInt64: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> UInt64? {
-        return _fixedWidthInteger(from: value)
+        _fixedWidthInteger(from: value)
     }
 }
-
 
 extension Float: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Float? {
@@ -5972,13 +5737,11 @@ extension Float: TypeTransformable {
     }
 }
 
-
 extension Double: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> Double? {
         _floatingPoint(from: value)
     }
 }
-
 
 extension CGFloat: TypeTransformable {
     static func transformValue(from value: JSONValue, impl: JSONDecoderImpl) -> CGFloat? {
@@ -5989,12 +5752,11 @@ extension CGFloat: TypeTransformable {
     }
 }
 
-
 private func _floatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(from value: JSONValue) -> T? {
     switch value {
-    case .string(let string):
+    case let .string(string):
         return T(string)
-    case .number(let number):
+    case let .number(number):
         return T(number)
     default:
         break
@@ -6002,16 +5764,15 @@ private func _floatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(
     return nil
 }
 
-
 private func _fixedWidthInteger<T: FixedWidthInteger>(from value: JSONValue) -> T? {
     switch value {
-    case .string(let string):
+    case let .string(string):
         if let integer = T(string) {
             return integer
         } else if let float = Double(string), float.isFinite, float >= Double(T.min) && float <= Double(T.max), let integer = T(exactly: float) {
             return integer
         }
-    case .number(let number):
+    case let .number(number):
         if let integer = T(number) {
             return integer
         } else if let float = Double(number), float.isFinite, float >= Double(T.min) && float <= Double(T.max), let integer = T(exactly: float) {
@@ -6025,11 +5786,8 @@ private func _fixedWidthInteger<T: FixedWidthInteger>(from value: JSONValue) -> 
 
 // MARK: - JSONEncoder
 open class SmartJSONEncoder: JSONEncoder, @unchecked Sendable {
-
     open var smartKeyEncodingStrategy: SmartKeyEncodingStrategy = .useDefaultKeys
     open var smartDataEncodingStrategy: SmartDataEncodingStrategy = .base64
-
-   
 
     /// Options set on the top-level encoder to pass down the encoding hierarchy.
     struct _Options {
@@ -6042,13 +5800,12 @@ open class SmartJSONEncoder: JSONEncoder, @unchecked Sendable {
 
     /// The options set on the top-level encoder.
     fileprivate var options: _Options {
-        return _Options(dateEncodingStrategy: .secondsSince1970,
-                        dataEncodingStrategy: smartDataEncodingStrategy,
-                        nonConformingFloatEncodingStrategy: nonConformingFloatEncodingStrategy,
-                        keyEncodingStrategy: smartKeyEncodingStrategy,
-                        userInfo: userInfo)
+        _Options(dateEncodingStrategy: .secondsSince1970,
+                 dataEncodingStrategy: smartDataEncodingStrategy,
+                 nonConformingFloatEncodingStrategy: nonConformingFloatEncodingStrategy,
+                 keyEncodingStrategy: smartKeyEncodingStrategy,
+                 userInfo: userInfo)
     }
-
 
     // MARK: - Encoding Values
 
@@ -6058,16 +5815,16 @@ open class SmartJSONEncoder: JSONEncoder, @unchecked Sendable {
     /// - returns: A new `Data` value containing the encoded JSON data.
     /// - throws: `EncodingError.invalidValue` if a non-conforming floating-point value is encountered during encoding, and the encoding strategy is `.throw`.
     /// - throws: An error if any value throws an error during encoding.
-    open override func encode<T: Encodable>(_ value: T) throws -> Data {
+    override open func encode<T: Encodable>(_ value: T) throws -> Data {
         let value: JSONValue = try encodeAsJSONValue(value)
-        let writer = JSONValue.Writer(options: self.outputFormatting)
+        let writer = JSONValue.Writer(options: outputFormatting)
         let bytes = writer.writeValue(value)
 
         return Data(bytes)
     }
 
     func encodeAsJSONValue<T: Encodable>(_ value: T) throws -> JSONValue {
-        let encoder = JSONEncoderImpl(options: self.options, codingPath: [])
+        let encoder = JSONEncoderImpl(options: options, codingPath: [])
         guard let topLevel = try encoder.wrapEncodable(value, for: nil) else {
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: [], debugDescription: "Top-level \(T.self) did not encode any values."))
         }
@@ -6110,11 +5867,8 @@ extension JSONEncoder {
     }
 }
 
-
 extension JSONEncoder {
-    
-    public enum SmartKeyEncodingStrategy : Sendable {
-        
+    public enum SmartKeyEncodingStrategy: Sendable {
         /// Use the keys specified by each type. This is the default strategy.
         case useDefaultKeys
 
@@ -6133,13 +5887,13 @@ extension JSONEncoder {
         ///
         /// - Note: Using a key encoding strategy has a nominal performance cost, as each string key has to be converted.
         case toSnakeCase
-        
+
         /// Convert the first letter of the key to lower case before attempting to match a key with the one specified by each type.
         /// For example, `OneTwoThree` becomes `oneTwoThree`.
         ///
         /// - Note: This strategy should be used with caution, especially if the key's first letter is intended to be uppercase for distinguishing purposes. It also incurs a nominal performance cost, as the first character of each key needs to be inspected and possibly modified.
         case firstLetterLower
-        
+
         /// Convert the first letter of the key to upper case before attempting to match a key with the one specified by each type.
         /// For example, `oneTwoThree` becomes `OneTwoThree`.
         ///
@@ -6148,21 +5902,19 @@ extension JSONEncoder {
     }
 }
 
-
 extension JSONEncoder.SmartKeyEncodingStrategy {
-    
     static func _convertFirstLetterToLowercase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
 
         return stringKey.prefix(1).lowercased() + stringKey.dropFirst()
     }
-    
+
     static func _convertFirstLetterToUppercase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
 
         return stringKey.prefix(1).uppercased() + stringKey.dropFirst()
     }
-    
+
     static func _convertToSnakeCase(_ stringKey: String) -> String {
         guard !stringKey.isEmpty else { return stringKey }
 
@@ -6206,9 +5958,9 @@ extension JSONEncoder.SmartKeyEncodingStrategy {
             searchRange = lowerCaseRange.upperBound..<searchRange.upperBound
         }
         words.append(wordStart..<searchRange.upperBound)
-        let result = words.map({ (range) in
-            return stringKey[range].lowercased()
-        }).joined(separator: "_")
+        let result = words.map { range in
+            stringKey[range].lowercased()
+        }.joined(separator: "_")
         return result
     }
 }
@@ -6217,18 +5969,17 @@ class EncodingCache: Cachable {
     typealias SomeSnapshot = EncodingSnapshot
 
     var snapshots: [EncodingSnapshot] = []
-    
+
     /// Caches a snapshot for an Encodable type
     func cacheSnapshot<T>(for type: T.Type) {
         if let object = type as? SmartEncodable.Type {
-            
             var snapshot = EncodingSnapshot()
             snapshot.objectType = object
             snapshot.transformers = object.mappingForValue()
             snapshots.append(snapshot)
         }
     }
-    
+
     /// Removes the most recent snapshot for the given type
     func removeSnapshot<T>(for type: T.Type) {
         if let _ = T.self as? SmartEncodable.Type {
@@ -6240,16 +5991,14 @@ class EncodingCache: Cachable {
 }
 
 extension EncodingCache {
-    
     /// Transforms a value to JSON using the appropriate transformer
     /// - Parameters:
     ///   - value: The value to transform
     ///   - key: The associated coding key
     /// - Returns: The transformed JSON value or nil if no transformer applies
     func tranform(from value: Any, with key: CodingKey?) -> JSONValue? {
-        
-        guard let top = topSnapshot, let key = key else { return nil }
-                
+        guard let top = topSnapshot, let key else { return nil }
+
         let wantKey = key.stringValue
         let targetTran = top.transformers?.first(where: { transformer in
             if wantKey == transformer.location.stringValue {
@@ -6265,14 +6014,14 @@ extension EncodingCache {
                 return false
             }
         })
-        
+
         if let tran = targetTran, let decoded = transform(decodedValue: value, performer: tran.performer) {
             return JSONValue.make(decoded)
         }
-        
+
         return nil
     }
-    
+
     /// Performs the actual value transformation
     private func transform<Transform: ValueTransformable>(decodedValue: Any, performer: Transform) -> Any? {
         // 首先检查是否是属性包装器
@@ -6287,15 +6036,12 @@ extension EncodingCache {
     }
 }
 
-
-
-
 /// Snapshot of encoding state for a particular model
 struct EncodingSnapshot: Snapshot {
     var objectType: (any SmartEncodable.Type)?
-    
+
     typealias ObjectType = SmartEncodable.Type
-        
+
     var transformers: [SmartValueTransformer]?
 }
 
@@ -6309,15 +6055,15 @@ enum JSONFuture {
         private(set) var array: [JSONFuture] = []
 
         init() {
-            self.array.reserveCapacity(10)
+            array.reserveCapacity(10)
         }
 
         @inline(__always) func append(_ element: JSONValue) {
-            self.array.append(.value(element))
+            array.append(.value(element))
         }
 
         @inline(__always) func append(_ encoder: JSONEncoderImpl) {
-            self.array.append(.encoder(encoder))
+            array.append(.encoder(encoder))
         }
 
         @inline(__always) func appendArray() -> RefArray {
@@ -6328,20 +6074,20 @@ enum JSONFuture {
 
         @inline(__always) func appendObject() -> RefObject {
             let object = RefObject()
-            self.array.append(.nestedObject(object))
+            array.append(.nestedObject(object))
             return object
         }
 
         var values: [JSONValue] {
-            self.array.map { (future) -> JSONValue in
+            array.map { future -> JSONValue in
                 switch future {
-                case .value(let value):
+                case let .value(value):
                     return value
-                case .nestedArray(let array):
+                case let .nestedArray(array):
                     return .array(array.values)
-                case .nestedObject(let object):
+                case let .nestedObject(object):
                     return .object(object.values)
-                case .encoder(let encoder):
+                case let .encoder(encoder):
                     return encoder.value ?? .object([:])
                 }
             }
@@ -6352,20 +6098,20 @@ enum JSONFuture {
         private(set) var dict: [String: JSONFuture] = [:]
 
         init() {
-            self.dict.reserveCapacity(20)
+            dict.reserveCapacity(20)
         }
 
         @inline(__always) func set(_ value: JSONValue, for key: String) {
-            self.dict[key] = .value(value)
+            dict[key] = .value(value)
         }
 
         @inline(__always) func setArray(for key: String) -> RefArray {
-            switch self.dict[key] {
+            switch dict[key] {
             case .encoder:
                 preconditionFailure("For key \"\(key)\" an encoder has already been created.")
             case .nestedObject:
                 preconditionFailure("For key \"\(key)\" a keyed container has already been created.")
-            case .nestedArray(let array):
+            case let .nestedArray(array):
                 return array
             case .none, .value:
                 let array = RefArray()
@@ -6375,10 +6121,10 @@ enum JSONFuture {
         }
 
         @inline(__always) func setObject(for key: String) -> RefObject {
-            switch self.dict[key] {
+            switch dict[key] {
             case .encoder:
                 preconditionFailure("For key \"\(key)\" an encoder has already been created.")
-            case .nestedObject(let object):
+            case let .nestedObject(object):
                 return object
             case .nestedArray:
                 preconditionFailure("For key \"\(key)\" a unkeyed container has already been created.")
@@ -6390,7 +6136,7 @@ enum JSONFuture {
         }
 
         @inline(__always) func set(_ encoder: JSONEncoderImpl, for key: String) {
-            switch self.dict[key] {
+            switch dict[key] {
             case .encoder:
                 preconditionFailure("For key \"\(key)\" an encoder has already been created.")
             case .nestedObject:
@@ -6403,15 +6149,15 @@ enum JSONFuture {
         }
 
         var values: [String: JSONValue] {
-            self.dict.mapValues { (future) -> JSONValue in
+            dict.mapValues { future -> JSONValue in
                 switch future {
-                case .value(let value):
+                case let .value(value):
                     return value
-                case .nestedArray(let array):
+                case let .nestedArray(array):
                     return .array(array.values)
-                case .nestedObject(let object):
+                case let .nestedObject(object):
                     return .object(object.values)
-                case .encoder(let encoder):
+                case let .encoder(encoder):
                     return encoder.value ?? .object([:])
                 }
             }
@@ -6428,7 +6174,7 @@ struct JSONKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProtocol,
 
     private var firstValueWritten: Bool = false
     var options: SmartJSONEncoder._Options {
-        return self.impl.options
+        impl.options
     }
 
     init(impl: JSONEncoderImpl, codingPath: [CodingKey]) {
@@ -6445,136 +6191,132 @@ struct JSONKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProtocol,
     }
 
     mutating func encodeNil(forKey key: Self.Key) throws {
-        self.object.set(.null, for: self._converted(key).stringValue)
+        object.set(.null, for: _converted(key).stringValue)
     }
 
     mutating func encode(_ value: Bool, forKey key: Self.Key) throws {
-        
-        let convertedKey = self._converted(key)
+        let convertedKey = _converted(key)
         if let jsonValue = impl.cache.tranform(from: value, with: convertedKey) {
-            self.object.set(jsonValue, for: convertedKey.stringValue)
+            object.set(jsonValue, for: convertedKey.stringValue)
         } else {
-            self.object.set(.bool(value), for: self._converted(key).stringValue)
+            object.set(.bool(value), for: _converted(key).stringValue)
         }
     }
 
     mutating func encode(_ value: String, forKey key: Self.Key) throws {
-        let convertedKey = self._converted(key)
+        let convertedKey = _converted(key)
         if let jsonValue = impl.cache.tranform(from: value, with: convertedKey) {
-            self.object.set(jsonValue, for: convertedKey.stringValue)
+            object.set(jsonValue, for: convertedKey.stringValue)
         } else {
-            self.object.set(.string(value), for: convertedKey.stringValue)
+            object.set(.string(value), for: convertedKey.stringValue)
         }
     }
 
     mutating func encode(_ value: Double, forKey key: Self.Key) throws {
-        try encodeFloatingPoint(value, key: self._converted(key))
+        try encodeFloatingPoint(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Float, forKey key: Self.Key) throws {
-        try encodeFloatingPoint(value, key: self._converted(key))
+        try encodeFloatingPoint(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Int, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Int8, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Int16, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Int32, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: Int64, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: UInt, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: UInt8, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: UInt16, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: UInt32, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode(_ value: UInt64, forKey key: Self.Key) throws {
-        try encodeFixedWidthInteger(value, key: self._converted(key))
+        try encodeFixedWidthInteger(value, key: _converted(key))
     }
 
     mutating func encode<T>(_ value: T, forKey key: Self.Key) throws where T: Encodable {
-        let convertedKey = self._converted(key)
+        let convertedKey = _converted(key)
         if let jsonValue = impl.cache.tranform(from: value, with: convertedKey) {
-            self.object.set(jsonValue, for: convertedKey.stringValue)
+            object.set(jsonValue, for: convertedKey.stringValue)
         } else {
-            if let encoded = try? self.wrapEncodable(value, for: convertedKey) {
-                self.object.set(encoded, for: convertedKey.stringValue)
+            if let encoded = try? wrapEncodable(value, for: convertedKey) {
+                object.set(encoded, for: convertedKey.stringValue)
             }
         }
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy _: NestedKey.Type, forKey key: Self.Key) ->
-        KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey
-    {
-        let convertedKey = self._converted(key)
-        let newPath = self.codingPath + [convertedKey]
-        let object = self.object.setObject(for: convertedKey.stringValue)
+        KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
+        let convertedKey = _converted(key)
+        let newPath = codingPath + [convertedKey]
+        let object = object.setObject(for: convertedKey.stringValue)
         let nestedContainer = JSONKeyedEncodingContainer<NestedKey>(impl: impl, object: object, codingPath: newPath)
         return KeyedEncodingContainer(nestedContainer)
     }
 
     mutating func nestedUnkeyedContainer(forKey key: Self.Key) -> UnkeyedEncodingContainer {
-        let convertedKey = self._converted(key)
-        let newPath = self.codingPath + [convertedKey]
-        let array = self.object.setArray(for: convertedKey.stringValue)
+        let convertedKey = _converted(key)
+        let newPath = codingPath + [convertedKey]
+        let array = object.setArray(for: convertedKey.stringValue)
         let nestedContainer = JSONUnkeyedEncodingContainer(impl: impl, array: array, codingPath: newPath)
         return nestedContainer
     }
 
     mutating func superEncoder() -> Encoder {
-        let newEncoder = self.getEncoder(for: _JSONKey.super)
-        self.object.set(newEncoder, for: _JSONKey.super.stringValue)
+        let newEncoder = getEncoder(for: _JSONKey.super)
+        object.set(newEncoder, for: _JSONKey.super.stringValue)
         return newEncoder
     }
 
     mutating func superEncoder(forKey key: Self.Key) -> Encoder {
-        let convertedKey = self._converted(key)
-        let newEncoder = self.getEncoder(for: convertedKey)
-        self.object.set(newEncoder, for: convertedKey.stringValue)
+        let convertedKey = _converted(key)
+        let newEncoder = getEncoder(for: convertedKey)
+        object.set(newEncoder, for: convertedKey.stringValue)
         return newEncoder
     }
 }
 
 extension JSONKeyedEncodingContainer {
     @inline(__always) private mutating func encodeFloatingPoint<F: FloatingPoint & CustomStringConvertible>(_ float: F, key: CodingKey) throws {
-        
         if let jsonValue = impl.cache.tranform(from: float, with: key) {
-            self.object.set(jsonValue, for: key.stringValue)
+            object.set(jsonValue, for: key.stringValue)
         } else {
-            let value = try self.wrapFloat(float, for: key)
-            self.object.set(value, for: key.stringValue)
+            let value = try wrapFloat(float, for: key)
+            object.set(value, for: key.stringValue)
         }
     }
 
     @inline(__always) private mutating func encodeFixedWidthInteger<N: FixedWidthInteger>(_ value: N, key: CodingKey) throws {
-        
         if let jsonValue = impl.cache.tranform(from: value, with: key) {
-            self.object.set(jsonValue, for: key.stringValue)
+            object.set(jsonValue, for: key.stringValue)
         } else {
-            self.object.set(.number(value.description), for: key.stringValue)
+            object.set(.number(value.description), for: key.stringValue)
         }
     }
 }
@@ -6584,8 +6326,8 @@ struct JSONSingleValueEncodingContainer: SingleValueEncodingContainer, _SpecialT
     let codingPath: [CodingKey]
 
     private var firstValueWritten: Bool = false
-    internal var options: SmartJSONEncoder._Options {
-        return self.impl.options
+    var options: SmartJSONEncoder._Options {
+        impl.options
     }
 
     init(impl: JSONEncoderImpl, codingPath: [CodingKey]) {
@@ -6594,13 +6336,13 @@ struct JSONSingleValueEncodingContainer: SingleValueEncodingContainer, _SpecialT
     }
 
     mutating func encodeNil() throws {
-        self.preconditionCanEncodeNewValue()
-        self.impl.singleValue = .null
+        preconditionCanEncodeNewValue()
+        impl.singleValue = .null
     }
 
     mutating func encode(_ value: Bool) throws {
-        self.preconditionCanEncodeNewValue()
-        self.impl.singleValue = .bool(value)
+        preconditionCanEncodeNewValue()
+        impl.singleValue = .bool(value)
     }
 
     mutating func encode(_ value: Int) throws {
@@ -6652,30 +6394,30 @@ struct JSONSingleValueEncodingContainer: SingleValueEncodingContainer, _SpecialT
     }
 
     mutating func encode(_ value: String) throws {
-        self.preconditionCanEncodeNewValue()
-        self.impl.singleValue = .string(value)
+        preconditionCanEncodeNewValue()
+        impl.singleValue = .string(value)
     }
 
     mutating func encode<T: Encodable>(_ value: T) throws {
-        self.preconditionCanEncodeNewValue()
-        self.impl.singleValue = try self.wrapEncodable(value, for: nil)
+        preconditionCanEncodeNewValue()
+        impl.singleValue = try wrapEncodable(value, for: nil)
     }
 
     func preconditionCanEncodeNewValue() {
-        precondition(self.impl.singleValue == nil, "Attempt to encode value through single value container when previously value already encoded.")
+        precondition(impl.singleValue == nil, "Attempt to encode value through single value container when previously value already encoded.")
     }
 }
 
 extension JSONSingleValueEncodingContainer {
     @inline(__always) private mutating func encodeFixedWidthInteger<N: FixedWidthInteger>(_ value: N) throws {
-        self.preconditionCanEncodeNewValue()
-        self.impl.singleValue = .number(value.description)
+        preconditionCanEncodeNewValue()
+        impl.singleValue = .number(value.description)
     }
 
     @inline(__always) private mutating func encodeFloatingPoint<F: FloatingPoint & CustomStringConvertible>(_ float: F) throws {
-        self.preconditionCanEncodeNewValue()
-        let value = try self.wrapFloat(float, for: nil)
-        self.impl.singleValue = value
+        preconditionCanEncodeNewValue()
+        let value = try wrapFloat(float, for: nil)
+        impl.singleValue = value
     }
 }
 
@@ -6685,11 +6427,12 @@ struct JSONUnkeyedEncodingContainer: UnkeyedEncodingContainer, _SpecialTreatment
     let codingPath: [CodingKey]
 
     var count: Int {
-        self.array.array.count
+        array.array.count
     }
+
     private var firstValueWritten: Bool = false
-    internal var options: SmartJSONEncoder._Options {
-        return self.impl.options
+    var options: SmartJSONEncoder._Options {
+        impl.options
     }
 
     init(impl: JSONEncoderImpl, codingPath: [CodingKey]) {
@@ -6706,15 +6449,15 @@ struct JSONUnkeyedEncodingContainer: UnkeyedEncodingContainer, _SpecialTreatment
     }
 
     mutating func encodeNil() throws {
-        self.array.append(.null)
+        array.append(.null)
     }
 
     mutating func encode(_ value: Bool) throws {
-        self.array.append(.bool(value))
+        array.append(.bool(value))
     }
 
     mutating func encode(_ value: String) throws {
-        self.array.append(.string(value))
+        array.append(.string(value))
     }
 
     mutating func encode(_ value: Double) throws {
@@ -6766,42 +6509,41 @@ struct JSONUnkeyedEncodingContainer: UnkeyedEncodingContainer, _SpecialTreatment
     }
 
     mutating func encode<T>(_ value: T) throws where T: Encodable {
-        let key = _JSONKey(stringValue: "Index \(self.count)", intValue: self.count)
-        let encoded = try self.wrapEncodable(value, for: key)
-        self.array.append(encoded ?? .object([:]))
+        let key = _JSONKey(stringValue: "Index \(count)", intValue: count)
+        let encoded = try wrapEncodable(value, for: key)
+        array.append(encoded ?? .object([:]))
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy _: NestedKey.Type) ->
-        KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey
-    {
-        let newPath = self.codingPath + [_JSONKey(index: self.count)]
-        let object = self.array.appendObject()
+        KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
+        let newPath = codingPath + [_JSONKey(index: count)]
+        let object = array.appendObject()
         let nestedContainer = JSONKeyedEncodingContainer<NestedKey>(impl: impl, object: object, codingPath: newPath)
         return KeyedEncodingContainer(nestedContainer)
     }
 
     mutating func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-        let newPath = self.codingPath + [_JSONKey(index: self.count)]
-        let array = self.array.appendArray()
+        let newPath = codingPath + [_JSONKey(index: count)]
+        let array = array.appendArray()
         let nestedContainer = JSONUnkeyedEncodingContainer(impl: impl, array: array, codingPath: newPath)
         return nestedContainer
     }
 
     mutating func superEncoder() -> Encoder {
-        let encoder = self.getEncoder(for: _JSONKey(index: self.count))
-        self.array.append(encoder)
+        let encoder = getEncoder(for: _JSONKey(index: count))
+        array.append(encoder)
         return encoder
     }
 }
 
 extension JSONUnkeyedEncodingContainer {
     @inline(__always) private mutating func encodeFixedWidthInteger<N: FixedWidthInteger>(_ value: N) throws {
-        self.array.append(.number(value.description))
+        array.append(.number(value.description))
     }
 
     @inline(__always) private mutating func encodeFloatingPoint<F: FloatingPoint & CustomStringConvertible>(_ float: F) throws {
-        let value = try self.wrapFloat(float, for: _JSONKey(index: self.count))
-        self.array.append(value)
+        let value = try wrapFloat(float, for: _JSONKey(index: count))
+        array.append(value)
     }
 }
 
@@ -6821,13 +6563,13 @@ class JSONEncoderImpl {
     var object: JSONFuture.RefObject?
 
     var value: JSONValue? {
-        if let object = self.object {
+        if let object {
             return .object(object.values)
         }
-        if let array = self.array {
+        if let array {
             return .array(array.values)
         }
-        return self.singleValue
+        return singleValue
     }
 
     init(options: SmartJSONEncoder._Options, codingPath: [CodingKey], cache: EncodingCache? = nil) {
@@ -6844,67 +6586,66 @@ extension JSONEncoderImpl: Encoder {
             return KeyedEncodingContainer(container)
         }
 
-        guard self.singleValue == nil, self.array == nil else {
+        guard singleValue == nil, array == nil else {
             preconditionFailure()
         }
 
-        self.object = JSONFuture.RefObject()
+        object = JSONFuture.RefObject()
         let container = JSONKeyedEncodingContainer<Key>(impl: self, codingPath: codingPath)
         return KeyedEncodingContainer(container)
     }
 
     func unkeyedContainer() -> UnkeyedEncodingContainer {
         if let _ = array {
-            return JSONUnkeyedEncodingContainer(impl: self, codingPath: self.codingPath)
+            return JSONUnkeyedEncodingContainer(impl: self, codingPath: codingPath)
         }
 
-        guard self.singleValue == nil, self.object == nil else {
+        guard singleValue == nil, object == nil else {
             preconditionFailure()
         }
 
-        self.array = JSONFuture.RefArray()
-        return JSONUnkeyedEncodingContainer(impl: self, codingPath: self.codingPath)
+        array = JSONFuture.RefArray()
+        return JSONUnkeyedEncodingContainer(impl: self, codingPath: codingPath)
     }
 
     func singleValueContainer() -> SingleValueEncodingContainer {
-        guard self.object == nil, self.array == nil else {
+        guard object == nil, array == nil else {
             preconditionFailure()
         }
 
-        return JSONSingleValueEncodingContainer(impl: self, codingPath: self.codingPath)
+        return JSONSingleValueEncodingContainer(impl: self, codingPath: codingPath)
     }
 }
 
 // this is a private protocol to implement convenience methods directly on the EncodingContainers
 extension JSONEncoderImpl: _SpecialTreatmentEncoder {
     var impl: JSONEncoderImpl {
-        return self
+        self
     }
 
     // untyped escape hatch. needed for `wrapObject`
     func wrapUntyped(_ encodable: Encodable) throws -> JSONValue {
         switch encodable {
         case let date as Date:
-            return try self.wrapDate(date, for: nil)
+            return try wrapDate(date, for: nil)
         case let data as Data:
-            return try self.wrapData(data, for: nil)
+            return try wrapData(data, for: nil)
         case let url as URL:
             return .string(url.absoluteString)
         case let decimal as Decimal:
             return .number(decimal.description)
         case let object as [String: Encodable]: // this emits a warning, but it works perfectly
-            return try self.wrapObject(object, for: nil)
+            return try wrapObject(object, for: nil)
         default:
             try encodable.encode(to: self)
-            return self.value ?? .object([:])
+            return value ?? .object([:])
         }
     }
 }
 
-protocol _JSONStringDictionaryEncodableMarker { }
+protocol _JSONStringDictionaryEncodableMarker {}
 
-extension Dictionary: _JSONStringDictionaryEncodableMarker where Key == String, Value: Encodable { }
-
+extension Dictionary: _JSONStringDictionaryEncodableMarker where Key == String, Value: Encodable {}
 
 protocol _SpecialTreatmentEncoder {
     var codingPath: [CodingKey] { get }
@@ -6916,7 +6657,7 @@ extension _SpecialTreatmentEncoder {
     @inline(__always)
     func wrapFloat<F: FloatingPoint & CustomStringConvertible>(_ float: F, for additionalKey: CodingKey?) throws -> JSONValue {
         guard !float.isNaN, !float.isInfinite else {
-            if case .convertToString(let posInfString, let negInfString, let nanString) = self.options.nonConformingFloatEncodingStrategy {
+            if case let .convertToString(posInfString, negInfString, nanString) = options.nonConformingFloatEncodingStrategy {
                 switch float {
                 case F.infinity:
                     return .string(posInfString)
@@ -6928,8 +6669,8 @@ extension _SpecialTreatmentEncoder {
                 }
             }
 
-            var path = self.codingPath
-            if let additionalKey = additionalKey {
+            var path = codingPath
+            if let additionalKey {
                 path.append(additionalKey)
             }
 
@@ -6949,20 +6690,20 @@ extension _SpecialTreatmentEncoder {
     func wrapEncodable<E: Encodable>(_ encodable: E, for additionalKey: CodingKey?) throws -> JSONValue? {
         switch encodable {
         case let date as Date:
-            return try self.wrapDate(date, for: additionalKey)
+            return try wrapDate(date, for: additionalKey)
         case let data as Data:
-            return try self.wrapData(data, for: additionalKey)
+            return try wrapData(data, for: additionalKey)
         case let url as URL:
             return .string(url.absoluteString)
         case let decimal as Decimal:
             return .number(decimal.description)
         case let object as _JSONStringDictionaryEncodableMarker:
-            return try self.wrapObject(object as! [String: Encodable], for: additionalKey)
+            return try wrapObject(object as! [String: Encodable], for: additionalKey)
         default:
-            
+
             impl.cache.cacheSnapshot(for: E.self)
-            
-            let encoder = self.getEncoder(for: additionalKey)
+
+            let encoder = getEncoder(for: additionalKey)
             try encodable.encode(to: encoder)
             impl.cache.removeSnapshot(for: E.self)
 
@@ -6970,25 +6711,24 @@ extension _SpecialTreatmentEncoder {
             if encodable is FlatType {
                 if let object = encoder.value?.object {
                     for (key, value) in object {
-                        self.impl.object?.set(value, for: key)
+                        impl.object?.set(value, for: key)
                     }
                     return nil
                 }
             }
-        
+
             return encoder.value
         }
     }
 
     func wrapDate(_ date: Date, for additionalKey: CodingKey?) throws -> JSONValue {
-        
         if let value = impl.cache.tranform(from: date, with: additionalKey) {
             return value
         }
 
-        switch self.options.dateEncodingStrategy {
+        switch options.dateEncodingStrategy {
         case .deferredToDate:
-            let encoder = self.getEncoder(for: additionalKey)
+            let encoder = getEncoder(for: additionalKey)
             try date.encode(to: encoder)
             return encoder.value ?? .null
 
@@ -7005,23 +6745,24 @@ extension _SpecialTreatmentEncoder {
                 fatalError("ISO8601DateFormatter is unavailable on this platform.")
             }
 
-        case .formatted(let formatter):
+        case let .formatted(formatter):
             return .string(formatter.string(from: date))
 
-        case .custom(let closure):
-            let encoder = self.getEncoder(for: additionalKey)
+        case let .custom(closure):
+            let encoder = getEncoder(for: additionalKey)
             try closure(date, encoder)
             // The closure didn't encode anything. Return the default keyed container.
             return encoder.value ?? .object([:])
+
         @unknown default:
-            let encoder = self.getEncoder(for: additionalKey)
+            let encoder = getEncoder(for: additionalKey)
             try date.encode(to: encoder)
             return encoder.value ?? .null
         }
     }
 
     func wrapData(_ data: Data, for additionalKey: CodingKey?) throws -> JSONValue {
-        switch self.options.dataEncodingStrategy {
+        switch options.dataEncodingStrategy {
         case .base64:
             let base64 = data.base64EncodedString()
             return .string(base64)
@@ -7029,14 +6770,14 @@ extension _SpecialTreatmentEncoder {
     }
 
     func wrapObject(_ object: [String: Encodable], for additionalKey: CodingKey?) throws -> JSONValue {
-        var baseCodingPath = self.codingPath
-        if let additionalKey = additionalKey {
+        var baseCodingPath = codingPath
+        if let additionalKey {
             baseCodingPath.append(additionalKey)
         }
         var result = [String: JSONValue]()
         result.reserveCapacity(object.count)
 
-        try object.forEach { (key, value) in
+        try object.forEach { key, value in
             var elemCodingPath = baseCodingPath
             elemCodingPath.append(_JSONKey(stringValue: key, intValue: nil))
             let encoder = JSONEncoderImpl(options: self.options, codingPath: elemCodingPath)
@@ -7048,27 +6789,25 @@ extension _SpecialTreatmentEncoder {
     }
 
     func getEncoder(for additionalKey: CodingKey?) -> JSONEncoderImpl {
-        if let additionalKey = additionalKey {
-            var newCodingPath = self.codingPath
+        if let additionalKey {
+            var newCodingPath = codingPath
             newCodingPath.append(additionalKey)
-            return JSONEncoderImpl(options: self.options, codingPath: newCodingPath, cache: impl.cache)
+            return JSONEncoderImpl(options: options, codingPath: newCodingPath, cache: impl.cache)
         }
-        return self.impl
+        return impl
     }
 }
 
-
 extension _SpecialTreatmentEncoder {
-    internal func _converted(_ key: CodingKey) -> CodingKey {
-        
+    func _converted(_ key: CodingKey) -> CodingKey {
         var newKey = key
-            
+
         if let objectType = impl.cache.topSnapshot?.objectType {
             if let mappings = objectType.mappingForKey() {
                 for mapping in mappings {
                     if mapping.to.stringValue == newKey.stringValue {
                         if let first = mapping.from.first {
-                            newKey = _JSONKey.init(stringValue: first, intValue: nil)
+                            newKey = _JSONKey(stringValue: first, intValue: nil)
                         } else {
                             newKey = mapping.to
                         }
@@ -7076,8 +6815,8 @@ extension _SpecialTreatmentEncoder {
                 }
             }
         }
-        
-        switch self.options.keyEncodingStrategy {
+
+        switch options.keyEncodingStrategy {
         case .toSnakeCase:
             let newKeyString = SmartJSONEncoder.SmartKeyEncodingStrategy._convertToSnakeCase(newKey.stringValue)
             return _JSONKey(stringValue: newKeyString, intValue: newKey.intValue)

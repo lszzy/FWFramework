@@ -920,6 +920,7 @@ extension TestCodableController {
             return results
         }
 
+        SmartSentinel.debugMode = .verbose
         var model: TestSmartModel? = TestSmartModel.decodeModel(from: testCodableData())
         var tests = testModel(model)
         model = TestSmartModel.decodeModel(from: model?.encodeObject())
