@@ -520,15 +520,14 @@ struct TestSmartModel: SmartModel {
     }
 }
 
-struct TestSmartSuperModel: SmartModel {
+class TestSmartSuperModel: SmartModel {
     var id: Int = 0
+    required init() {}
 }
 
-struct TestSmartSubModel: SmartModel {
+@SmartSubclass
+class TestSmartSubModel: TestSmartSuperModel {
     var name: String?
-
-    @SmartFlat
-    var model: TestSmartSuperModel?
 }
 
 enum TestSmartModelEnum: String, Codable {

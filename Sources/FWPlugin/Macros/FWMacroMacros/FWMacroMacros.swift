@@ -5,6 +5,7 @@ import SwiftSyntaxMacros
 struct FWMacroMacros: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         MappedValueMacro.self,
-        PropertyWrapperMacro.self
+        PropertyWrapperMacro.self,
+        SmartSubclassMacro.self
     ]
 }
