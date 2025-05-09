@@ -560,19 +560,20 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
 
     /// 自定义日志格式化处理器
     public var logFormatter: LogFormatter?
-    /// 自定义日志保留天数，默认7天
-    public var logKeepDays: Int = 7
+    /// 自定义日志最大保留天数，默认7天
+    public var maxAliveDays: Int = 7
     /// 自定义日志文件最大大小，小于等于0不限制，默认1M
     public var maxFileSize: Int64 = 1024 * 1024
-    /// 是否按天合并日志文件，默认true
-    public var shouldMergeFiles: Bool = true
     /// 日志根目录路径
     public private(set) var logPath: String = ""
     /// 当前日志文件路径
     public private(set) var logFile: String = ""
 
+    private var logDate = ""
+    private var logIndex = 0
+    private var logFirst = false
     private var logQueue = DispatchQueue(label: "site.wuyong.queue.logger.file")
-
+    
     override public convenience init() {
         self.init(path: nil)
     }
@@ -591,108 +592,94 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
             self.logPath = (logPath as NSString).appendingPathComponent(!fileName.isEmpty ? fileName : "shared")
         }
 
-        // 当前日志文件路径
-        initializeFileName()
-        // 处理之前的日志文件
-        processFileLogs()
+        processLogFiles()
     }
     
-    private func initializeFileName() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyyMMdd-HHmmss"
-        self.logFile = (logPath as NSString).appendingPathComponent(dateFormatter.string(from: Date()) + ".log")
-    }
-    
-    private func exceedFileSize(_ path: String, _ path2: String? = nil, size: Int = 0) -> Bool {
-        guard maxFileSize > 0 else { return false }
-        let fileAttrs = try? FileManager.default.attributesOfItem(atPath: path)
-        var fileSize = fileAttrs?[.size] as? Int64 ?? 0
-        if let path2, let file2Attrs = try? FileManager.default.attributesOfItem(atPath: path2) {
-            fileSize += file2Attrs[.size] as? Int64 ?? 0
-        }
-        return fileSize + Int64(size) >= maxFileSize
-    }
-
-    private func processFileLogs() {
-        guard FileManager.default.fileExists(atPath: logPath) else {
-            try? FileManager.default.createDirectory(atPath: logPath, withIntermediateDirectories: true)
-            return
-        }
-        var fileNames = try? FileManager.default.contentsOfDirectory(atPath: logPath)
-        fileNames = fileNames?.filter({ $0.hasSuffix(".log") && $0.count >= 12 })
-        fileNames = fileNames?.sorted(by: { file1, file2 in
-            if (file1.count < file2.count) { return true }
-            if (file1.count > file2.count) { return false }
-            return file1 < file2
-        })
-        guard let fileNames, !fileNames.isEmpty else {
-            return
-        }
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let currentTime = Date().timeIntervalSince1970
-        var dateIndexes: [String: Int] = [:]
-
-        for fileName in fileNames {
-            let fileDate = String(fileName.prefix(8))
-            if let fileTime = dateFormatter.date(from: fileDate),
-               (currentTime - fileTime.timeIntervalSince1970) >= Double(logKeepDays) * 86_400 {
-                try? FileManager.default.removeItem(atPath: (logPath as NSString).appendingPathComponent(fileName))
-                continue
-            }
-            
-            let fileParts = fileName.components(separatedBy: ".")
-            if (fileParts.count == 3) {
-                let fileIndex = Int(fileParts[1]) ?? 0
-                if (fileIndex > (dateIndexes[fileDate] ?? 0)) {
-                    dateIndexes[fileDate] = fileIndex
-                }
-                continue
-            }
-
-            if !shouldMergeFiles || fileName.count != 19 { continue }
-            let filePath = (logPath as NSString).appendingPathComponent(fileName)
-            let fileIndex = dateIndexes[fileDate] ?? 0
-            var targetPath = (logPath as NSString).appendingPathComponent(fileDate + (fileIndex > 0 ? ".\(fileIndex)" : "") + ".log")
-            if (exceedFileSize(targetPath, filePath)) {
-                dateIndexes[fileDate] = fileIndex + 1
-                targetPath = (logPath as NSString).appendingPathComponent(fileDate + ".\(fileIndex + 1).log")
-            }
-            
-            var logText = String(format: "\n=====%@=====\n", fileName)
-            logText += (try? String(contentsOfFile: filePath, encoding: .utf8)) ?? ""
-            LoggerPluginFile.appendText(logText, atPath: targetPath)
-            try? FileManager.default.removeItem(atPath: filePath)
-        }
-    }
-
-    private static func appendText(_ text: String, atPath: String) {
-        guard let data = text.data(using: .utf8) as? NSData, !data.isEmpty else { return }
-        guard let outputStream = OutputStream(toFileAtPath: atPath, append: true) else { return }
-        outputStream.open()
-        defer { outputStream.close() }
-        outputStream.write(data.bytes, maxLength: data.length)
-    }
-
     /// 记录日志协议方法
     public func log(_ logMessage: LogMessage) {
         let formatter = logFormatter ?? LogFormatterImpl.shared
         guard let message = formatter.format(logMessage), !message.isEmpty else { return }
-
+        
         let logTime = LogFormatterImpl.shared.formatDate(logMessage)
         let logText = String(format: "%@: %@\n", logTime, message)
-        var targetPath = logFile
         logQueue.async { [weak self] in
-            if let self, exceedFileSize(targetPath, size: logText.count) {
-                initializeFileName()
-                targetPath = logFile
+            self?.processFileSize()
+            self?.writeLog(logText)
+        }
+    }
+
+    private func processLogFiles() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyyMMdd"
+        logDate = dateFormatter.string(from: Date())
+        processFileName()
+        
+        guard FileManager.default.fileExists(atPath: logPath) else {
+            try? FileManager.default.createDirectory(atPath: logPath, withIntermediateDirectories: true)
+            return
+        }
+        let fileNames = try? FileManager.default.contentsOfDirectory(atPath: logPath)
+        guard let fileNames = fileNames?.filter({ $0.hasSuffix(".log") && $0.count >= 12 }),
+              !fileNames.isEmpty else {
+            return
+        }
+
+        let currentTime = Date().timeIntervalSince1970
+        for fileName in fileNames {
+            let fileDate = String(fileName.prefix(8))
+            if let fileTime = dateFormatter.date(from: fileDate),
+               (currentTime - fileTime.timeIntervalSince1970) >= Double(maxAliveDays) * 86_400 {
+                try? FileManager.default.removeItem(atPath: (logPath as NSString).appendingPathComponent(fileName))
+                continue
             }
             
-            LoggerPluginFile.appendText(logText, atPath: targetPath)
+            guard fileDate == logDate else { continue }
+            let fileParts = fileName.components(separatedBy: ".")
+            guard fileParts.count == 3 else { continue }
+            let fileIndex = Int(fileParts[1]) ?? 0
+            if fileIndex > logIndex {
+                logIndex = fileIndex
+            }
         }
+        
+        if (logIndex > 0) {
+            processFileName()
+        }
+    }
+    
+    private func processFileName() {
+        let fileName = logDate + (logIndex > 0 ? ".\(logIndex)" : "") + ".log"
+        self.logFile = (logPath as NSString).appendingPathComponent(fileName)
+    }
+    
+    private func processFileSize() {
+        guard maxFileSize > 0 else { return }
+        let fileAttrs = try? FileManager.default.attributesOfItem(atPath: logFile)
+        let fileSize = fileAttrs?[.size] as? Int64 ?? 0
+        guard fileSize >= maxFileSize else { return }
+        
+        logIndex += 1
+        processFileName()
+    }
+
+    private func writeLog(_ logText: String) {
+        var text = logText
+        if (!logFirst) {
+            logFirst = true
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let currentTime = dateFormatter.string(from: Date())
+            text = String(format: "\n=====%@=====\n\n", currentTime) + text
+        }
+        
+        guard let data = text.data(using: .utf8) as? NSData, !data.isEmpty else { return }
+        guard let outputStream = OutputStream(toFileAtPath: logFile, append: true) else { return }
+        outputStream.open()
+        defer { outputStream.close() }
+        outputStream.write(data.bytes, maxLength: data.length)
     }
 }
 
@@ -721,7 +708,6 @@ public class LoggerPluginImpl: NSObject, LoggerPlugin, @unchecked Sendable {
     override public init() {
         super.init()
         addLogger(LoggerPluginNSLog.shared)
-        addLogger(LoggerPluginFile.shared)
     }
 
     /// 添加日志插件，并在指定等级(默认all)和指定分组(默认所有)生效
