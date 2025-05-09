@@ -601,10 +601,22 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
         guard let message = formatter.format(logMessage), !message.isEmpty else { return }
         
         let logTime = LogFormatterImpl.shared.formatDate(logMessage)
-        let logText = String(format: "%@: %@\n", logTime, message)
         logQueue.async { [weak self] in
-            self?.processFileSize()
-            self?.writeLog(logText)
+            guard let self else { return }
+            
+            var logText = String(format: "%@: %@\n", logTime, message)
+            if (!logFirst) {
+                logFirst = true
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let firstTime = dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
+                logText = String(format: "\n=====%@=====\n\n%@", firstTime, logText)
+            }
+            
+            processFileSize()
+            writeLog(logText)
         }
     }
 
@@ -663,18 +675,7 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
         processFileName()
     }
 
-    private func writeLog(_ logText: String) {
-        var text = logText
-        if (!logFirst) {
-            logFirst = true
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let currentTime = dateFormatter.string(from: Date())
-            text = String(format: "\n=====%@=====\n\n", currentTime) + text
-        }
-        
+    private func writeLog(_ text: String) {
         guard let data = text.data(using: .utf8) as? NSData, !data.isEmpty else { return }
         guard let outputStream = OutputStream(toFileAtPath: logFile, append: true) else { return }
         outputStream.open()
