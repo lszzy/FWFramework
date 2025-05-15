@@ -619,6 +619,20 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
             writeLog(logText)
         }
     }
+    
+    /// 同步刷新日志文件并回调，可用于日志上传等
+    public func flush(_ completion: (() -> Void)? = nil) {
+        logQueue.sync { [weak self] in
+            guard let self else { return }
+            
+            if FileManager.default.fileExists(atPath: logFile) {
+                logIndex += 1
+                processFileName()
+            }
+            
+            completion?()
+        }
+    }
 
     private func processLogFiles() {
         let dateFormatter = DateFormatter()
