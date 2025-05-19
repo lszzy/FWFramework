@@ -573,7 +573,7 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
     private var logIndex = 0
     private var logFirst = false
     private var logQueue = DispatchQueue(label: "site.wuyong.queue.logger.file")
-    
+
     override public convenience init() {
         self.init(path: nil)
     }
@@ -594,42 +594,42 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
 
         processLogFiles()
     }
-    
+
     /// 记录日志协议方法
     public func log(_ logMessage: LogMessage) {
         let formatter = logFormatter ?? LogFormatterImpl.shared
         guard let message = formatter.format(logMessage), !message.isEmpty else { return }
-        
+
         let logTime = LogFormatterImpl.shared.formatDate(logMessage)
         logQueue.async { [weak self] in
             guard let self else { return }
-            
+
             var logText = String(format: "%@: %@\n", logTime, message)
-            if (!logFirst) {
+            if !logFirst {
                 logFirst = true
-                
+
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let firstTime = dateFormatter.string(from: Date(timeIntervalSince1970: logMessage.timestamp))
                 logText = String(format: "\n=====%@=====\n\n%@", firstTime, logText)
             }
-            
+
             processFileSize()
             writeLog(logText)
         }
     }
-    
+
     /// 同步刷新日志文件并回调，可用于日志上传等
     public func flush(_ completion: (() -> Void)? = nil) {
         logQueue.sync { [weak self] in
             guard let self else { return }
-            
+
             if FileManager.default.fileExists(atPath: logFile) {
                 logIndex += 1
                 processFileName()
             }
-            
+
             completion?()
         }
     }
@@ -640,7 +640,7 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
         dateFormatter.dateFormat = "yyyyMMdd"
         logDate = dateFormatter.string(from: Date())
         processFileName()
-        
+
         guard FileManager.default.fileExists(atPath: logPath) else {
             try? FileManager.default.createDirectory(atPath: logPath, withIntermediateDirectories: true)
             return
@@ -659,7 +659,7 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
                 try? FileManager.default.removeItem(atPath: (logPath as NSString).appendingPathComponent(fileName))
                 continue
             }
-            
+
             guard fileDate == logDate else { continue }
             let fileParts = fileName.components(separatedBy: ".")
             guard fileParts.count == 3 else { continue }
@@ -668,23 +668,23 @@ public class LoggerPluginFile: NSObject, LoggerPlugin, @unchecked Sendable {
                 logIndex = fileIndex
             }
         }
-        
-        if (logIndex > 0) {
+
+        if logIndex > 0 {
             processFileName()
         }
     }
-    
+
     private func processFileName() {
         let fileName = logDate + (logIndex > 0 ? ".\(logIndex)" : "") + ".log"
-        self.logFile = (logPath as NSString).appendingPathComponent(fileName)
+        logFile = (logPath as NSString).appendingPathComponent(fileName)
     }
-    
+
     private func processFileSize() {
         guard maxFileSize > 0 else { return }
         let fileAttrs = try? FileManager.default.attributesOfItem(atPath: logFile)
         let fileSize = fileAttrs?[.size] as? Int64 ?? 0
         guard fileSize >= maxFileSize else { return }
-        
+
         logIndex += 1
         processFileName()
     }

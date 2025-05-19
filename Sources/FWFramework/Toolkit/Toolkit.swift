@@ -114,10 +114,10 @@ extension Wrapper where Base: UIApplication {
         }
         return nil
     }
-    
+
     /// 读取应用启动远程推送通知
     public static func appLaunchNotification(_ options: [UIApplication.LaunchOptionsKey: Any]?) -> [AnyHashable: Any]? {
-        return options?[.remoteNotification] as? [AnyHashable: Any]
+        options?[.remoteNotification] as? [AnyHashable: Any]
     }
 
     /// 能否打开URL(NSString|NSURL)，需配置对应URL SCHEME到Info.plist才能返回YES
@@ -433,15 +433,15 @@ extension Wrapper where Base: UIApplication {
         speechSynthesizer.speak(speechUtterance)
         return speechSynthesizer
     }
-    
+
     /// 读取当前进程名称
     public static var processName: String {
         ProcessInfo.processInfo.processName
     }
-    
+
     /// 判断当前是否为应用主进程
     public static var isMainProcess: Bool {
-        return Bundle.main.object(forInfoDictionaryKey: "NSExtension") != nil
+        Bundle.main.object(forInfoDictionaryKey: "NSExtension") != nil
     }
 
     /// 是否是盗版(不是从AppStore安装)
