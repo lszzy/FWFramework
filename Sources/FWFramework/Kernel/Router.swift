@@ -283,34 +283,14 @@ public class Router: NSObject, @unchecked Sendable {
         return URLParameters[routeBlockKey] != nil
     }
 
-    /// 打开此 URL，带上附加信息，同时当操作完成时，执行额外的代码
+    /// 打开指定 URL，带上附加信息，同时当操作完成时，执行额外的代码
     /// - Parameters:
     ///   - url: 带 Scheme 的 URL，如 app://beauty/4
     ///   - userInfo: 附加信息
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
-    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
-        let rewriteURL = rewriteURL(url)
-        guard !rewriteURL.isEmpty else { return }
-
-        let urlParameters = routeParameters(from: rewriteURL)
-        let handler = urlParameters[routeBlockKey] as? Handler
-        urlParameters.removeObject(forKey: routeBlockKey)
-
-        let context = Context(url: rewriteURL, userInfo: userInfo, completion: completion)
-        context.urlParameters = urlParameters as! [AnyHashable: Any]
-        context.isOpening = true
-
-        if let routeFilter {
-            if !routeFilter(context) { return }
-        }
-        if let handler {
-            let object = handler(context)
-            if let object, let routeHandler {
-                _ = routeHandler(context, object)
-            }
-            return
-        }
-        errorHandler?(context)
+    @discardableResult
+    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) -> Any? {
+        return openURL(url, userInfo: userInfo, isOpening: true, completion: completion)
     }
 
     /// 快速调用Handler参数中的回调句柄，指定回调结果
@@ -327,29 +307,7 @@ public class Router: NSObject, @unchecked Sendable {
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
     @MainActor public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
-        let rewriteURL = rewriteURL(url)
-        guard !rewriteURL.isEmpty else { return nil }
-
-        let urlParameters = routeParameters(from: rewriteURL)
-        let handler = urlParameters[routeBlockKey] as? Handler
-        urlParameters.removeObject(forKey: routeBlockKey)
-
-        let context = Context(url: rewriteURL, userInfo: userInfo, completion: nil)
-        context.urlParameters = urlParameters as! [AnyHashable: Any]
-        context.isOpening = false
-
-        if let routeFilter {
-            if !routeFilter(context) { return nil }
-        }
-        if let handler {
-            let object = handler(context)
-            if let object, let routeHandler {
-                return routeHandler(context, object)
-            }
-            return object
-        }
-        errorHandler?(context)
-        return nil
+        return openURL(url, userInfo: userInfo, isOpening: false, completion: nil)
     }
 
     /// 调用此方法来拼接 pattern 和 parameters
@@ -539,6 +497,32 @@ public class Router: NSObject, @unchecked Sendable {
             subRoutes = subRoutes[pathComponent] as? NSMutableDictionary ?? NSMutableDictionary()
         }
         return subRoutes
+    }
+    
+    @MainActor private class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]?, isOpening: Bool, completion: Completion?) -> Any? {
+        let rewriteURL = rewriteURL(url)
+        guard !rewriteURL.isEmpty else { return nil }
+
+        let urlParameters = routeParameters(from: rewriteURL)
+        let handler = urlParameters[routeBlockKey] as? Handler
+        urlParameters.removeObject(forKey: routeBlockKey)
+
+        let context = Context(url: rewriteURL, userInfo: userInfo, completion: completion)
+        context.urlParameters = urlParameters as! [AnyHashable: Any]
+        context.isOpening = isOpening
+
+        if let routeFilter {
+            if !routeFilter(context) { return nil }
+        }
+        if let handler {
+            let object = handler(context)
+            if let object, let routeHandler {
+                return routeHandler(context, object)
+            }
+            return object
+        }
+        errorHandler?(context)
+        return nil
     }
 
     private class func pathComponents(from url: String) -> [String] {
@@ -820,5 +804,18 @@ extension Router {
             convertValue = originalValue.removingPercentEncoding ?? ""
         }
         return convertValue
+    }
+}
+
+// MARK: - Concurrency+Router
+@MainActor extension Router {
+    /// 协程方式打开指定 URL，带上附加信息。注意业务必须调用 completeURL 指定回调结果，否则会造成 continuation 内存泄漏
+    @discardableResult
+    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> Any? {
+        await withCheckedContinuation { continuation in
+            openURL(url, userInfo: userInfo) { result in
+                continuation.resume(returning: result)
+            }
+        }
     }
 }
