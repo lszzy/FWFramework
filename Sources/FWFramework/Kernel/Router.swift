@@ -835,10 +835,10 @@ extension Router {
 }
 
 // MARK: - Concurrency+Router
-@MainActor extension Router {
+extension Router {
     /// 协程方式打开指定 URL，带上附加信息。业务侧需调用 completeURL 指定回调结果；如果未调用Context释放时会自动回调nil
     @discardableResult
-    public class func openURL<T>(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> T? where T: Sendable {
+    @MainActor public class func open<T>(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> T? where T: Sendable {
         await withCheckedContinuation { continuation in
             var userInfo = userInfo ?? [:]
             userInfo[Router.Parameter.routerCompletedKey] = true
