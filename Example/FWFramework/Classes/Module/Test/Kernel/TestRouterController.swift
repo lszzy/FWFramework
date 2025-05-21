@@ -226,7 +226,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 
     func onOpenAsync() {
         Task {
-            let result: String? = await Router.open("\(TestRouter.wildcardTestUrl)?id=2")
+            let result = await Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") as? String
             UIWindow.app.showMessage(text: result ?? "自动回调nil")
         }
     }

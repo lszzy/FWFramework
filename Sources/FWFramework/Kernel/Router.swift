@@ -68,7 +68,7 @@ public class Router: NSObject, @unchecked Sendable {
         }
 
         /// 完成路由并回调结果
-        @MainActor public func complete(_ result: Any? = nil) {
+        @MainActor public func complete(_ result: Sendable? = nil) {
             isCompleted = true
             completion?(result)
         }
@@ -89,7 +89,7 @@ public class Router: NSObject, @unchecked Sendable {
     /// 路由处理句柄，仅支持openURL时可返回nil
     public typealias Handler = @MainActor @Sendable (Context) -> Any?
     /// 路由完成回调句柄
-    public typealias Completion = @MainActor @Sendable (Any?) -> Void
+    public typealias Completion = @MainActor @Sendable (Sendable?) -> Void
 
     /// 路由参数类，可直接使用，也可完全自定义
     open class Parameter: ObjectParameter, @unchecked Sendable {
@@ -324,7 +324,7 @@ public class Router: NSObject, @unchecked Sendable {
     /// - Parameters:
     ///   - context: Handler中的模型参数
     ///   - result: URL处理完成后的回调结果
-    @MainActor public class func completeURL(_ context: Context, result: Any?) {
+    @MainActor public class func completeURL(_ context: Context, result: Sendable?) {
         context.complete(result)
     }
 
@@ -836,14 +836,14 @@ extension Router {
 
 // MARK: - Concurrency+Router
 extension Router {
-    /// 协程方式打开指定 URL，带上附加信息。业务侧需调用 completeURL 指定回调结果；如果未调用Context释放时会自动回调nil
+    /// 协程方式打开指定 URL，带上附加信息。业务侧需调用 completeURL 指定回调结果，如果未调用则会在Context释放时自动回调nil
     @discardableResult
-    @MainActor public class func open<T>(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> T? where T: Sendable {
+    @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> Sendable? {
         await withCheckedContinuation { continuation in
             var userInfo = userInfo ?? [:]
             userInfo[Router.Parameter.routerCompletedKey] = true
             openURL(url, userInfo: userInfo) { result in
-                continuation.resume(returning: result as? T)
+                continuation.resume(returning: result)
             }
         }
     }
